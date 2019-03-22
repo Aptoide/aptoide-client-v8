@@ -54,7 +54,7 @@ public class EditorialService {
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .flatMap(editorialCard -> mapEditorial(editorialCard))
+        .flatMap(editorialCard -> mapEditorial(editorialCard, cardId))
         .toSingle()
         .onErrorReturn(throwable -> createErrorEditorialModel(throwable));
   }
@@ -67,7 +67,7 @@ public class EditorialService {
     }
   }
 
-  private Observable<EditorialViewModel> mapEditorial(EditorialCard editorialCard) {
+  private Observable<EditorialViewModel> mapEditorial(EditorialCard editorialCard, String cardId) {
     if (editorialCard.isOk()) {
       Data card = editorialCard.getData();
 
@@ -88,7 +88,7 @@ public class EditorialService {
 
       EditorialViewModel editorialViewModel =
           buildEditorialViewModel(editorialContentList, card, placeHolderPositions,
-              placeHolderContent, bottomCardPlaceHolderContent);
+              placeHolderContent, bottomCardPlaceHolderContent, cardId);
 
       return Observable.just(editorialViewModel);
     } else {
@@ -179,7 +179,7 @@ public class EditorialService {
 
   private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
       Data card, List<Integer> placeHolderPositions, List<EditorialContent> placeHolderContent,
-      EditorialContent bottomCardPlaceHolderContent) {
+      EditorialContent bottomCardPlaceHolderContent, String cardId) {
     if (bottomCardPlaceHolderContent != null) {
       return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
           card.getBackground(), placeHolderPositions, placeHolderContent,
@@ -187,9 +187,10 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getId(), bottomCardPlaceHolderContent.getPackageName(),
           bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
           bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
-          bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true);
+          bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
+          cardId);
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
-        card.getBackground(), placeHolderPositions, placeHolderContent, false);
+        card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId);
   }
 }

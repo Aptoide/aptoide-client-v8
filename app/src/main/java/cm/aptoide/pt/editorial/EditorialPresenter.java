@@ -7,11 +7,11 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
 /**
@@ -49,6 +49,10 @@ public class EditorialPresenter implements Presenter {
     handleClickOnMedia();
     handleClickOnAppCard();
     handlePaletteColor();
+    handleReactionClick();
+    handleUserReaction();
+    handleLogInClick();
+    onCreateLoadReactionModel();
 
     handleInstallClick();
     pauseDownload();
@@ -257,9 +261,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(view::showDownloadModel)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handlePlaceHolderVisibility() {
@@ -270,9 +272,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(model -> view.managePlaceHolderVisibity())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, error -> crashReporter.log(error));
   }
 
   private Completable openInstalledApp(String packageName) {
@@ -292,9 +292,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handlePaletteColor() {
@@ -307,7 +305,7 @@ public class EditorialPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           view.applyPaletteSwatch(null);
-          throw new OnErrorNotImplementedException(error);
+          crashReporter.log(error);
         });
   }
 
@@ -328,9 +326,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleMovingCollapse() {
@@ -347,9 +343,75 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  @VisibleForTesting public void handleReactionClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .flatMap(click -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .observeOn(viewScheduler)
+        .doOnNext(editorialViewModel -> {
+          editorialAnalytics.sendReactionButtonClickEvent(
+              editorialViewModel.getCardId()); //TODO implementation
+          view.showReactionsPopup(editorialViewModel.getCardId());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  @VisibleForTesting public void onCreateLoadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMap(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private Observable<FakeReactionModel> loadReactionModel(String cardId) {
+    return editorialManager.loadReactionModel(cardId)
+        .observeOn(viewScheduler)
+        .doOnNext(reactionModel -> view.setReactions(reactionModel.getUserReaction(),
+            reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()));
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
+            reactionEvent.getReactionType())
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                reactionEvent.getReactionType()))
+            .flatMap(__ -> loadReactionModel(reactionEvent.getCardId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, ReactionType reaction) {
+    if (reactionsResponse.wasSuccess()) {
+      view.setUserReaction(reaction);
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else {
+      view.showErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> editorialNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {

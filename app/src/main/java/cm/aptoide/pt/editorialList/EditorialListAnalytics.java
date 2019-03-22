@@ -43,4 +43,8 @@ public class EditorialListAnalytics {
     analyticsManager.logEvent(data, EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         AnalyticsManager.Action.IMPRESSION, navigationTracker.getViewName(true));
   }
+
+  public void sendReactionButtonClickEvent(String cardId, int bundlePosition) {
+    //TODO
+  }
 }

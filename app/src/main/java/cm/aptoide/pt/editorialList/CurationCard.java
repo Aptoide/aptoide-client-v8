@@ -8,7 +8,6 @@ public class CurationCard {
   private final String views;
 
   public CurationCard(String id, String subTitle, String icon, String title, String views) {
-
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;

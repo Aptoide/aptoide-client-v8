@@ -2,6 +2,8 @@ package cm.aptoide.pt.editorial;
 
 import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.data.ReactionType;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -65,4 +67,21 @@ public interface EditorialView extends View {
   Observable<Boolean> showDowngradeMessage();
 
   void showDowngradingMessage();
+
+  Observable<Void> reactionsButtonClicked();
+
+  void setReactions(ReactionType userReaction, List<ReactionType> reactions,
+      String numberOfReactions);
+
+  void showReactionsPopup(String cardId);
+
+  Observable<ReactionEvent> reactionClicked();
+
+  void setUserReaction(ReactionType reaction);
+
+  void showLogInDialog();
+
+  Observable<Void> snackLogInClick();
+
+  void showErrorToast();
 }

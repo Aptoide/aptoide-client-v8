@@ -27,12 +27,13 @@ public class EditorialViewModel {
   private final String pathAlt;
   private final Obb obb;
   private final boolean shouldHaveAnimation;
+  private final String cardId;
   private final boolean loading;
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
-      List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation) {
+      List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation, String cardId) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -40,6 +41,7 @@ public class EditorialViewModel {
     this.placeHolderPositions = placeHolderPositions;
     this.placeHolderContent = placeHolderContent;
     this.shouldHaveAnimation = shouldHaveAnimation;
+    this.cardId = cardId;
     appName = "";
     icon = null;
     id = -1;
@@ -72,6 +74,7 @@ public class EditorialViewModel {
     path = "";
     pathAlt = "";
     obb = null;
+    cardId = "";
     shouldHaveAnimation = false;
     error = null;
   }
@@ -94,6 +97,7 @@ public class EditorialViewModel {
     versionName = "";
     path = "";
     pathAlt = "";
+    cardId = "";
     obb = null;
     shouldHaveAnimation = false;
   }
@@ -102,7 +106,7 @@ public class EditorialViewModel {
       String caption, String background, List<Integer> placeHolderPositions,
       List<EditorialContent> placeHolderContent, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
-      String pathAlt, Obb obb, boolean shouldHaveAnimation) {
+      String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -120,6 +124,7 @@ public class EditorialViewModel {
     this.pathAlt = pathAlt;
     this.obb = obb;
     this.shouldHaveAnimation = shouldHaveAnimation;
+    this.cardId = cardId;
     error = null;
     loading = false;
   }
@@ -214,6 +219,10 @@ public class EditorialViewModel {
 
   boolean shouldHaveAnimation() {
     return shouldHaveAnimation;
+  }
+
+  public String getCardId() {
+    return cardId;
   }
 
   public enum Error {

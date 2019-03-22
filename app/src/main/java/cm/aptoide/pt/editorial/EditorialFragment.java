@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,9 +38,12 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
+import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -56,6 +60,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
 import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -96,6 +101,11 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView resumeDownload;
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
+  private ImageButton reactButton;
+  private ImageView firstReaction;
+  private ImageView secondReaction;
+  private ImageView thirdReaction;
+  private TextView numberOfReactions;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -112,6 +122,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private PublishSubject<EditorialEvent> uiEventsListener;
   private PublishSubject<EditorialDownloadEvent> downloadEventListener;
+  private PublishSubject<ReactionEvent> reactionEventListener;
+  private PublishSubject<Void> snackListener;
   private PublishSubject<Palette.Swatch> paletteSwatchSubject;
   private PublishSubject<Boolean> movingCollapseSubject;
   private boolean shouldAnimate;
@@ -125,6 +137,8 @@ public class EditorialFragment extends NavigationTrackFragment
     uiEventsListener = PublishSubject.create();
     downloadEventListener = PublishSubject.create();
     movingCollapseSubject = PublishSubject.create();
+    reactionEventListener = PublishSubject.create();
+    snackListener = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -166,6 +180,12 @@ public class EditorialFragment extends NavigationTrackFragment
         downloadEventListener);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
+
+    reactButton = view.findViewById(R.id.add_reactions);
+    firstReaction = view.findViewById(R.id.reaction_1);
+    secondReaction = view.findViewById(R.id.reaction_2);
+    thirdReaction = view.findViewById(R.id.reaction_3);
+    numberOfReactions = view.findViewById(R.id.number_of_reactions);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
@@ -227,6 +247,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void onDestroy() {
     uiEventsListener = null;
+    snackListener = null;
+    reactionEventListener = null;
     downloadEventListener = null;
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
@@ -540,6 +562,61 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void showDowngradingMessage() {
     Snackbar.make(getView(), R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
+  @Override public Observable<Void> reactionsButtonClicked() {
+    return RxView.clicks(reactButton);
+  }
+
+  @Override public void setReactions(ReactionType userReaction, List<ReactionType> reactions,
+      String numberOfReactions) {
+    ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
+    if (userReaction != null) {
+      setUserReaction(userReaction);
+    }
+    for (int i = 0; i < reactions.size(); i++) {
+      if (i < imageViews.length) {
+        ImageLoader.with(getContext())
+            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)), imageViews[i]);
+        imageViews[i].setVisibility(View.VISIBLE);
+      }
+    }
+    if (!numberOfReactions.equals("0")) {
+      this.numberOfReactions.setText(numberOfReactions);
+      this.numberOfReactions.setVisibility(View.VISIBLE);
+    }
+  }
+
+  @Override public void showReactionsPopup(String cardId) {
+    ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
+    reactionsPopup.show();
+    reactionsPopup.setOnReactionsItemClickListener(item -> {
+      reactionEventListener.onNext(new ReactionEvent(cardId, item));
+      reactionsPopup.dismiss();
+      reactionsPopup.setOnReactionsItemClickListener(null);
+    });
+  }
+
+  @Override public Observable<ReactionEvent> reactionClicked() {
+    return reactionEventListener;
+  }
+
+  @Override public void setUserReaction(ReactionType reaction) {
+    reactButton.setImageResource(mapReaction(reaction));
+  }
+
+  @Override public void showLogInDialog() {
+    ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+        snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
+  }
+
+  @Override public Observable<Void> snackLogInClick() {
+    return snackListener;
+  }
+
+  @Override public void showErrorToast() {
+    Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
   }
 
