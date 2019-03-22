@@ -55,6 +55,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.GetSocialRecommendsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
@@ -272,6 +273,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("listAppcAppsUpgrades") Observable<ListAppsUpdates> listAppcAppssUpgrades(
+        @Body ListAppcAppsUpgradesRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("home/get") Observable<GetHome> getHome(@Body GetHomeBody body,

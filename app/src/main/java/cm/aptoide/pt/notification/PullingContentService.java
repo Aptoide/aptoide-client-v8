@@ -40,7 +40,7 @@ public class PullingContentService extends BaseService {
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
-  public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_HALF_DAY;
+  public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_DAY;
   public static final int UPDATE_NOTIFICATION_ID = 123;
   @Inject @Named("marketName") String marketName;
   @Inject DownloadFactory downloadFactory;
