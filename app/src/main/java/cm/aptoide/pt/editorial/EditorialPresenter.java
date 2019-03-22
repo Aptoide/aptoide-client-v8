@@ -8,6 +8,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
@@ -367,26 +368,26 @@ public class EditorialPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId()))
+        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Observable<FakeReactionModel> loadReactionModel(String cardId) {
+  private Single<LoadReactionModel> loadReactionModel(String cardId) {
     return editorialManager.loadReactionModel(cardId)
         .observeOn(viewScheduler)
-        .doOnNext(reactionModel -> view.setReactions(reactionModel.getUserReaction(),
-            reactionModel.getReactionTypes(), reactionModel.getNumberOfReactions()));
+        .doOnSuccess(reactionModel -> view.setReactions(reactionModel.getMyReaction(),
+            reactionModel.getTopReactionList(), reactionModel.getTotal()));
   }
 
   @VisibleForTesting public void handleUserReaction() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
+        .flatMapSingle(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
             reactionEvent.getReactionType())
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 reactionEvent.getReactionType()))
             .flatMap(__ -> loadReactionModel(reactionEvent.getCardId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -394,7 +395,7 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, ReactionType reaction) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, String reaction) {
     if (reactionsResponse.wasSuccess()) {
       view.setUserReaction(reaction);
     } else if (reactionsResponse.reactionsExceeded()) {

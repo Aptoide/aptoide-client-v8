@@ -1,8 +1,8 @@
 package cm.aptoide.pt.reactions;
 
-import cm.aptoide.pt.reactions.data.ReactionType;
+import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.ReactionsService;
-import rx.Completable;
+import rx.Single;
 
 public class Reactions {
 
@@ -12,7 +12,7 @@ public class Reactions {
     this.reactionsService = reactionsService;
   }
 
-  public Completable react(String id, ReactionType type) {
+  public Single<ReactionsResponse> react(String id, String type) {
     return reactionsService.setReaction(id, type);
   }
 }
