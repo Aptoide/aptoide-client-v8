@@ -1,36 +1,49 @@
 package cm.aptoide.pt.reactions.network;
 
-import android.content.SharedPreferences;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.reactions.SetReactionRequest;
+import cm.aptoide.pt.reactions.TopReaction;
 import cm.aptoide.pt.reactions.data.ReactionType;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
+import java.util.ArrayList;
+import java.util.List;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 import rx.Completable;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Single;
 
 public class ReactionsRemoteService implements ReactionsService {
 
-  private final OkHttpClient okHttpClient;
-  private final BodyInterceptor<BaseBody> bodyInterceptor;
-  private final Converter.Factory converterFactory;
-  private final TokenInvalidator tokenInvalidator;
-  private final SharedPreferences sharedPreferences;
+  private ServiceV8 service;
+  private Scheduler ioScheduler;
+  private boolean loading;
 
-  public ReactionsRemoteService(OkHttpClient okHttpClient,
-      BodyInterceptor<BaseBody> bodyInterceptor, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    this.okHttpClient = okHttpClient;
-    this.bodyInterceptor = bodyInterceptor;
-    this.converterFactory = converterFactory;
-    this.tokenInvalidator = tokenInvalidator;
-    this.sharedPreferences = sharedPreferences;
+  public ReactionsRemoteService(ServiceV8 service, Scheduler ioScheduler) {
+    this.service = service;
+    this.ioScheduler = ioScheduler;
   }
 
   @Override public Completable setReaction(String id, ReactionType like) {
-    return new SetReactionRequest(new SetReactionRequest.Body(id), okHttpClient, converterFactory,
-        bodyInterceptor, tokenInvalidator, sharedPreferences).observe()
-        .toCompletable();
+    return null;
+  }
+
+  @Override public Single<LoadReactionModel> loadReactionModel(String cardId) {
+    return service.getTopReactionsResponse(cardId)
+        .observeOn(ioScheduler)
+        .map(this::mapToTopReactionsList)
+        .toSingle();
+  }
+
+  private LoadReactionModel mapToTopReactionsList(TopReactionsResponse topReactionsResponse) {
+    List<TopReaction> topReactionList = new ArrayList<>();
+
+    for (TopReactionsResponse.ReactionTypeResponse reaction : topReactionsResponse.getTop())
+      topReactionList.add(new TopReaction(reaction.getType(), reaction.getTotal()));
+    return new LoadReactionModel(topReactionsResponse.getTotal(), topReactionsResponse.getMy()
+        .getType(), topReactionList);
+  }
+
+  public interface ServiceV8 {
+    @GET("echo/8.20181116/groups/apps-group/objects/{id}/reactions/summary")
+    Observable<TopReactionsResponse> getTopReactionsResponse(@Path("id") String id);
   }
 }
