@@ -44,7 +44,7 @@ public class DownloadModel {
         || downloadState.equals(DownloadState.INDETERMINATE);
   }
 
-  public boolean isActive() {
+  public boolean isDownloadingOrInstalling() {
     return isDownloading() || downloadState.equals(DownloadState.INSTALLING);
   }
 
