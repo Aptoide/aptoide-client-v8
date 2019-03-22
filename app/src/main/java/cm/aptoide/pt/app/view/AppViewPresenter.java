@@ -128,6 +128,8 @@ public class AppViewPresenter implements Presenter {
     handleInterstitialAdLoaded();
     showInterstitialAd();
 
+    handleWalletPromotion();
+
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
 
@@ -240,10 +242,22 @@ public class AppViewPresenter implements Presenter {
                 return Single.just(app);
               }
             }))
-        .flatMap(appViewModel -> updateWalletPromotion(appViewModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void handleWalletPromotion() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+        .flatMap(this::updateWalletPromotion)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(walletPromotionViewModel -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
