@@ -64,6 +64,8 @@ public class AppsPresenter implements Presenter {
 
     handleUpdateAppClick();
 
+    handleAppcUpgradeAppClick();
+
     handlePauseUpdateClick();
 
     handleCancelUpdateClick();
@@ -73,6 +75,8 @@ public class AppsPresenter implements Presenter {
     handleUpdateCardClick();
 
     observeUpdatesList();
+
+    observeAppcUpgradesList();
 
     handleUpdateCardLongClick();
 
@@ -181,6 +185,19 @@ public class AppsPresenter implements Presenter {
         }, error -> crashReport.log(error));
   }
 
+  private void observeAppcUpgradesList() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(ioScheduler)
+        .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
+        .observeOn(viewScheduler)
+        .doOnNext(list -> view.showAppcUpgradesDownloadList(list))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+
   private void handleResumeUpdateClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -237,6 +254,31 @@ public class AppsPresenter implements Presenter {
                 .doOnNext(__ -> view.setStandbyState(app))
                 .observeOn(ioScheduler)
                 .flatMapCompletable(__3 -> appsManager.updateApp(app)))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          crashReport.log(error);
+        });
+  }
+
+  private void handleAppcUpgradeAppClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.upgradeAppcApp()
+            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+                .flatMap(success -> {
+                  if (appsManager.showWarning()) {
+                    return view.showRootWarning()
+                        .doOnNext(answer -> appsManager.storeRootAnswer(answer));
+                  }
+                  return Observable.just(true);
+                })
+                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .doOnNext(__ -> view.setAppcStandbyState(app))
+                .observeOn(ioScheduler)
+                .flatMapCompletable(__3 -> appsManager.upgradeAppcApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

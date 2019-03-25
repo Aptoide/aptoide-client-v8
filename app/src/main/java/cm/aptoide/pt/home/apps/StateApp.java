@@ -13,6 +13,6 @@ public interface StateApp extends App {
   int getProgress();
 
   enum Status {
-    ACTIVE, STANDBY, COMPLETED, ERROR, UPDATE, UPDATING, PAUSING
+    ACTIVE, STANDBY, COMPLETED, ERROR, UPDATE, UPDATING, PAUSING, APPC_UPGRADE, APPC_UPGRADING
   }
 }

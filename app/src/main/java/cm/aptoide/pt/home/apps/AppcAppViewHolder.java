@@ -31,7 +31,7 @@ public class AppcAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     updateAppButton.setOnClickListener(
-        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_APP)));
+        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.APPC_UPGRADE_APP)));
 
     itemView.setOnClickListener(
         __ -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));

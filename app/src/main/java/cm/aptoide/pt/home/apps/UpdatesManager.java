@@ -56,6 +56,14 @@ public class UpdatesManager {
     return updateRepository.get(packageName);
   }
 
+  public Observable<AppcUpgrade> getAppcUpgrade(String packageName) {
+    return upgradeRepository.get(packageName);
+  }
+
+  public Observable<Boolean> isAppcUpgrade(String packageName) {
+    return getAppcUpgrade(packageName).flatMap(upgrade -> Observable.just(upgrade != null));
+  }
+
   public Observable<List<Update>> getAllUpdates() {
     return updateRepository.getAll(false);
   }

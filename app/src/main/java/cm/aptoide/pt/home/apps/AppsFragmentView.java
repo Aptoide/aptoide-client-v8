@@ -30,6 +30,8 @@ public interface AppsFragmentView extends View {
 
   Observable<App> updateApp();
 
+  Observable<App> upgradeAppcApp();
+
   Observable<App> pauseUpdate();
 
   Observable<App> cancelUpdate();
@@ -39,6 +41,8 @@ public interface AppsFragmentView extends View {
   Observable<Boolean> showRootWarning();
 
   void showUpdatesDownloadList(List<App> updatesDownloadList);
+
+  void showAppcUpgradesDownloadList(List<App> updatesDownloadList);
 
   Observable<Void> updateAll();
 
@@ -73,6 +77,8 @@ public interface AppsFragmentView extends View {
   void removeCanceledAppDownload(App app);
 
   void setStandbyState(App app);
+
+  void setAppcStandbyState(App app);
 
   void showIndeterminateAllUpdates();
 

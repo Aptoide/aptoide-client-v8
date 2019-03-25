@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +28,11 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private LinearLayout downloadAppInfoLayout;
 
   public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction) {
+    this(itemView, updateAction, false);
+  }
+
+  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction,
+      boolean appcStyling) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -39,6 +45,11 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
     downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
     this.updateAction = updateAction;
+
+    if (appcStyling) {
+      progressBar.setProgressDrawable(
+          ContextCompat.getDrawable(itemView.getContext(), R.drawable.appc_progress));
+    }
   }
 
   @Override public void setApp(App app) {

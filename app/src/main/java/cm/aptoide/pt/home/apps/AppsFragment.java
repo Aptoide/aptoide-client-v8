@@ -221,6 +221,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
+  @Override public Observable<App> upgradeAppcApp() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
+        .map(appClick -> appClick.getApp());
+  }
+
   @Override public Observable<App> pauseUpdate() {
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE)
@@ -252,6 +258,16 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     showUpdates = true;
     if (shouldShowAppsList()) {
       showAppsList();
+    }
+  }
+
+  @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      appcAppsAdapter.addApps(updatesDownloadList);
+    }
+    showAppcUpgrades = true;
+    if (shouldShowAppcAppsList()) {
+      setShowAppcUpgrades();
     }
   }
 
@@ -336,6 +352,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void setStandbyState(App app) {
     adapter.setAppStandby(app);
+  }
+
+  @Override public void setAppcStandbyState(App app) {
+    appcAppsAdapter.setAppStandby(app);
   }
 
   @Override public void showIndeterminateAllUpdates() {

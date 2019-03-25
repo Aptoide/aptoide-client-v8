@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,6 +24,11 @@ class UpdatingAppViewHolder extends AppsViewHolder {
   private PublishSubject<AppClick> pauseUpdate;
 
   public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate) {
+    this(itemView, pauseUpdate, false);
+  }
+
+  public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate,
+      boolean appcStyling) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -32,6 +38,11 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     updateProgress = (TextView) itemView.findViewById(R.id.apps_updates_progress_number);
     pauseButton = (ImageView) itemView.findViewById(R.id.apps_updates_pause_button);
     this.pauseUpdate = pauseUpdate;
+
+    if (appcStyling) {
+      progressBar.setProgressDrawable(
+          ContextCompat.getDrawable(itemView.getContext(), R.drawable.appc_progress));
+    }
   }
 
   @Override public void setApp(App app) {

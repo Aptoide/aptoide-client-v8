@@ -77,7 +77,7 @@ public class AppMapper {
     for (AppcUpgrade upgrade : upgrades) {
       updatesList.add(new UpdateApp(upgrade.getLabel(), upgrade.getMd5(), upgrade.getIcon(),
           upgrade.getPackageName(), 0, false, upgrade.getUpdateVersionName(),
-          upgrade.getVersionCode(), StateApp.Status.UPDATE, upgrade.getAppId()));
+          upgrade.getVersionCode(), StateApp.Status.APPC_UPGRADE, upgrade.getAppId()));
     }
     return updatesList;
   }
@@ -88,6 +88,17 @@ public class AppMapper {
       updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
           install.getPackageName(), install.getProgress(), install.isIndeterminate(),
           install.getVersionName(), install.getVersionCode(), mapUpdateStatus(install.getState()),
+          -1)); //Updates in progress (downloads) dont have app id.
+    }
+    return updatesList;
+  }
+
+  public List<App> getAppcUpgradesList(List<Install> installs) {
+    List<App> updatesList = new ArrayList<>();
+    for (Install install : installs) {
+      updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
+          install.getPackageName(), install.getProgress(), install.isIndeterminate(),
+          install.getVersionName(), install.getVersionCode(), mapUpgradeStatus(install.getState()),
           -1)); //Updates in progress (downloads) dont have app id.
     }
     return updatesList;
@@ -116,6 +127,34 @@ public class AppMapper {
         break;
       default:
         status = StateApp.Status.UPDATE;
+        break;
+    }
+    return status;
+  }
+
+  private StateApp.Status mapUpgradeStatus(Install.InstallationStatus state) {
+    StateApp.Status status;
+
+    switch (state) {
+      case GENERIC_ERROR:
+      case INSTALLATION_TIMEOUT:
+      case NOT_ENOUGH_SPACE_ERROR:
+        status = StateApp.Status.ERROR;
+        break;
+      case PAUSED:
+      case IN_QUEUE:
+      case INITIAL_STATE:
+        status = StateApp.Status.STANDBY;
+        break;
+      case INSTALLING:
+        status = StateApp.Status.APPC_UPGRADING;
+        break;
+      case INSTALLED:
+      case UNINSTALLED:
+        status = StateApp.Status.APPC_UPGRADE;
+        break;
+      default:
+        status = StateApp.Status.APPC_UPGRADE;
         break;
     }
     return status;

@@ -164,4 +164,8 @@ public class AppcUpgradeRepository {
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
         patchObbMd5);
   }
+
+  public Observable<AppcUpgrade> get(String packageName) {
+    return upgradeAccessor.get(packageName);
+  }
 }

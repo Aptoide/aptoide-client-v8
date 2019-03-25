@@ -85,10 +85,48 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
+              .flatMap(install -> filterNonMigratorApps(install))
               .toList()
               .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
   }
+
+  public Observable<List<App>> getAppcUpgradeDownloadsList() {
+    return installManager.getInstallations()
+        .distinctUntilChanged()
+        .throttleLast(200, TimeUnit.MILLISECONDS)
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .flatMap(install -> filterMigratorApps(install))
+              .toList()
+              .map(updatesList -> appMapper.getAppcUpgradesList(updatesList));
+        });
+  }
+
+  private Observable<Install> filterMigratorApps(Install install) {
+    return updatesManager.isAppcUpgrade(install.getPackageName())
+        .flatMap(isUpgrade -> {
+          if (isUpgrade) {
+            return Observable.just(install);
+          }
+          return Observable.empty();
+        });
+  }
+
+  private Observable<Install> filterNonMigratorApps(Install install) {
+    return updatesManager.isAppcUpgrade(install.getPackageName())
+        .flatMap(isUpgrade -> {
+          if (isUpgrade) {
+            return Observable.empty();
+          }
+          return Observable.just(install);
+        });
+  }
+
 
   public Observable<List<App>> getInstalledApps() {
     return installManager.fetchInstalled()
@@ -144,8 +182,7 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, NO_ADS);
                 return Single.just(false);
@@ -219,12 +256,28 @@ public class AppsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
                 return Single.just(false);
               }
+            })
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
+        .toCompletable();
+  }
+
+  public Completable upgradeAppcApp(App app) {
+    String packageName = ((UpdateApp) app).getPackageName();
+    return updatesManager.getAppcUpgrade(packageName)
+        .flatMap(update -> {
+          Download value = downloadFactory.create(update);
+          return Observable.just(value);
+        })
+        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
+            .flatMap(__ -> {
+              setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
+              return Single.just(false);
             })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
