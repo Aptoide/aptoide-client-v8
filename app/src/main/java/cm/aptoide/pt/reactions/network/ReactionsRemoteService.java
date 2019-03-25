@@ -14,7 +14,6 @@ public class ReactionsRemoteService implements ReactionsService {
 
   private ServiceV8 service;
   private Scheduler ioScheduler;
-  private boolean loading;
 
   public ReactionsRemoteService(ServiceV8 service, Scheduler ioScheduler) {
     this.service = service;
@@ -25,8 +24,8 @@ public class ReactionsRemoteService implements ReactionsService {
     return null;
   }
 
-  @Override public Single<LoadReactionModel> loadReactionModel(String cardId) {
-    return service.getTopReactionsResponse(cardId)
+  @Override public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return service.getTopReactionsResponse(groupId, cardId)
         .observeOn(ioScheduler)
         .map(this::mapToTopReactionsList)
         .toSingle();
@@ -35,15 +34,21 @@ public class ReactionsRemoteService implements ReactionsService {
   private LoadReactionModel mapToTopReactionsList(TopReactionsResponse topReactionsResponse) {
     List<TopReaction> topReactionList = new ArrayList<>();
 
-    for (TopReactionsResponse.ReactionTypeResponse reaction : topReactionsResponse.getTop())
+    for (TopReactionsResponse.ReactionTypeResponse reaction : topReactionsResponse.getTop()) {
       topReactionList.add(new TopReaction(reaction.getType(), reaction.getTotal()));
-    return new LoadReactionModel(topReactionsResponse.getTotal(), topReactionsResponse.getMy()
-        .getType(), topReactionList);
+    }
+    String userReaction = "";
+    if (topReactionsResponse.getMy() != null) {
+      userReaction = topReactionsResponse.getMy()
+          .getType();
+    }
+    return new LoadReactionModel(topReactionsResponse.getTotal(), userReaction, topReactionList);
   }
 
   public interface ServiceV8 {
-    //@GET("echo/8.20181116/groups/apps-group/objects/{id}/reactions/summary")
-    @GET("echo/8.20181116/groups/apps-group/objects/{id}/reactions/summary")
-    Observable<TopReactionsResponse> getTopReactionsResponse(@Path("id") String id);
+    @GET("echo/8.22112018/groups/{group_id}/objects/{id}/reactions/summary") //test
+      //@GET("echo/8.20181116/groups/{group_id}/objects/{id}/reactions/summary") //prod
+    Observable<TopReactionsResponse> getTopReactionsResponse(@Path("group_id") String groupId,
+        @Path("id") String id);
   }
 }

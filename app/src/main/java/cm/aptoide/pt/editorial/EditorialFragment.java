@@ -584,17 +584,17 @@ public class EditorialFragment extends NavigationTrackFragment
       }
     }
     if (numberOfReactions != 0) {
-      this.numberOfReactions.setText(numberOfReactions);
+      this.numberOfReactions.setText(String.valueOf(numberOfReactions));
       this.numberOfReactions.setVisibility(View.VISIBLE);
     }
   }
 
-  @Override public void showReactionsPopup(String cardId) {
+  @Override public void showReactionsPopup(String cardId, String groupId) {
     ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
       reactionEventListener.onNext(new ReactionEvent(cardId, item.toString()
-          .toLowerCase()));
+          .toLowerCase(), groupId));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });

@@ -1,10 +1,8 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Observable;
@@ -52,7 +50,7 @@ public interface EditorialListView extends View {
 
   Observable<ReactionsHomeEvent> reactionClicked();
 
-  void showReactionsPopup(String cardId, int bundlePosition);
+  void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 
   void setUserReaction(int bundlePosition, String reaction);
 

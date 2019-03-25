@@ -28,12 +28,14 @@ public class EditorialViewModel {
   private final Obb obb;
   private final boolean shouldHaveAnimation;
   private final String cardId;
+  private final String groupId;
   private final boolean loading;
   private final Error error;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
-      List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation, String cardId) {
+      List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation, String cardId,
+      String groupId) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -42,6 +44,7 @@ public class EditorialViewModel {
     this.placeHolderContent = placeHolderContent;
     this.shouldHaveAnimation = shouldHaveAnimation;
     this.cardId = cardId;
+    this.groupId = groupId;
     appName = "";
     icon = null;
     id = -1;
@@ -67,6 +70,7 @@ public class EditorialViewModel {
     appName = "";
     icon = null;
     id = -1;
+    groupId = "";
     packageName = "";
     md5sum = "";
     versionCode = -1;
@@ -91,6 +95,7 @@ public class EditorialViewModel {
     appName = "";
     icon = null;
     id = -1;
+    groupId = "";
     packageName = "";
     md5sum = "";
     versionCode = -1;
@@ -106,7 +111,7 @@ public class EditorialViewModel {
       String caption, String background, List<Integer> placeHolderPositions,
       List<EditorialContent> placeHolderContent, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
-      String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId) {
+      String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -125,6 +130,7 @@ public class EditorialViewModel {
     this.obb = obb;
     this.shouldHaveAnimation = shouldHaveAnimation;
     this.cardId = cardId;
+    this.groupId = groupId;
     error = null;
     loading = false;
   }
@@ -223,6 +229,10 @@ public class EditorialViewModel {
 
   public String getCardId() {
     return cardId;
+  }
+
+  public String getGroupId() {
+    return groupId;
   }
 
   public enum Error {

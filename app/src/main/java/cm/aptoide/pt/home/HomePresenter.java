@@ -4,12 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
@@ -88,14 +86,14 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
         .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getBundlePosition()))
+            editorialHomeEvent.getGroupId(), editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Single<LoadReactionModel> loadReactionModel(String cardId, int position) {
-    return home.loadReactionModel(cardId)
+  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId, int position) {
+    return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
         .doOnSuccess(reactionModel -> view.updateReactions(reactionModel, position));
   }
@@ -156,7 +154,8 @@ public class HomePresenter implements Presenter {
         .doOnNext(homeEvent -> {
           homeAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
               homeEvent.getBundlePosition()); //TODO implementation
-          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
+              homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
@@ -170,7 +169,8 @@ public class HomePresenter implements Presenter {
         .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
             .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 homeEvent.getBundlePosition(), homeEvent.getReaction()))
-            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
+            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId(),
+                homeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

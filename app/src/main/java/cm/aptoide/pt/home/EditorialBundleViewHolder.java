@@ -56,11 +56,12 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), position, homeBundle);
+        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(), position,
+        homeBundle);
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      String numberOfViews, int position, HomeBundle homeBundle) {
+      String numberOfViews, String type, int position, HomeBundle homeBundle) {
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
@@ -69,13 +70,14 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
     reactButton.setOnClickListener(view -> uiEventsListener.onNext(
-        new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.REACTION_BUTTON)));
+        new EditorialHomeEvent(cardId, type, homeBundle, position,
+            HomeEvent.Type.REACTION_BUTTON)));
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
-        new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.EDITORIAL)));
+        new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
     if (firstCreation) {
       firstCreation = false;
-      uiEventsListener.onNext(
-          new EditorialHomeEvent(cardId, homeBundle, position, HomeEvent.Type.EDITORIAL_CREATED));
+      uiEventsListener.onNext(new EditorialHomeEvent(cardId, type, homeBundle, position,
+          HomeEvent.Type.EDITORIAL_CREATED));
     }
   }
 
@@ -94,29 +96,33 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
       }
     }
     if (numberOfReactions > 0) {
-      this.numberOfReactions.setText(numberOfReactions);
+      this.numberOfReactions.setText(String.valueOf(numberOfReactions));
       this.numberOfReactions.setVisibility(View.VISIBLE);
     }
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
-        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(), position, null);
+        curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
+        curationCard.getType(), position, null);
   }
 
-  public void showReactions(String cardId, int position) {
+  public void showReactions(String cardId, String groupId, int position) {
     ReactionsPopup reactionsPopup = new ReactionsPopup(itemView.getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
       uiEventsListener.onNext(
-          new ReactionsHomeEvent(cardId, null, position, HomeEvent.Type.REACTION, item.toString()
-              .toLowerCase()));
+          new ReactionsHomeEvent(cardId, groupId, null, position, HomeEvent.Type.REACTION,
+              item.toString()
+                  .toLowerCase()));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
   }
 
   public void setUserReaction(String reaction) {
-    reactButton.setImageResource(mapReaction(reaction));
+    if (!reaction.equals("")) {
+      reactButton.setImageResource(mapReaction(reaction));
+    }
   }
 }
