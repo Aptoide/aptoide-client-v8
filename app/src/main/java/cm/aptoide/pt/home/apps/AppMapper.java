@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.install.Install;
@@ -67,6 +68,16 @@ public class AppMapper {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
           StateApp.Status.UPDATE, update.getAppId()));
+    }
+    return updatesList;
+  }
+
+  public List<App> mapAppcUpgradeToUpdateAppList(List<AppcUpgrade> upgrades) {
+    List<App> updatesList = new ArrayList<>();
+    for (AppcUpgrade upgrade : upgrades) {
+      updatesList.add(new UpdateApp(upgrade.getLabel(), upgrade.getMd5(), upgrade.getIcon(),
+          upgrade.getPackageName(), 0, false, upgrade.getUpdateVersionName(),
+          upgrade.getVersionCode(), StateApp.Status.UPDATE, upgrade.getAppId()));
     }
     return updatesList;
   }

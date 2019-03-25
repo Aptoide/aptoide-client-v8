@@ -1,7 +1,9 @@
 package cm.aptoide.pt.home.apps;
 
+import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -14,9 +16,12 @@ import rx.Observable;
 
 public class UpdatesManager {
   private UpdateRepository updateRepository;
+  private AppcUpgradeRepository upgradeRepository;
 
-  public UpdatesManager(UpdateRepository updateRepository) {
+  public UpdatesManager(UpdateRepository updateRepository,
+      AppcUpgradeRepository upgradeRepository) {
     this.updateRepository = updateRepository;
+    this.upgradeRepository = upgradeRepository;
   }
 
   /**
@@ -42,6 +47,11 @@ public class UpdatesManager {
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
+  public Observable<List<AppcUpgrade>> getAppcUpgradesList(boolean isExcluded) {
+    return upgradeRepository.getAll(isExcluded)
+        .sample(750, TimeUnit.MILLISECONDS);
+  }
+
   public Observable<Update> getUpdate(String packageName) {
     return updateRepository.get(packageName);
   }
@@ -55,7 +65,8 @@ public class UpdatesManager {
   }
 
   public Completable refreshUpdates() {
-    return updateRepository.sync(true, false);
+    return updateRepository.sync(true, false)
+        .andThen(upgradeRepository.syncAppcUpgrades(true, false));
   }
 
   public Observable<Integer> getUpdatesNumber() {

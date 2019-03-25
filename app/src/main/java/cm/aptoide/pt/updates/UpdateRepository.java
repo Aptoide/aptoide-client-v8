@@ -72,31 +72,7 @@ public class UpdateRepository {
           // save the new updates
           // return all the local (non-excluded) updates
           // this is a non-closing Observable, so new db modifications will trigger this observable
-          return removeAllNonExcluded().andThen(saveNewUpdates(updates, false));
-        })
-        .andThen(syncAppcUpgrades(bypassCache, bypassServerCache));
-  }
-
-  public @NonNull Completable syncAppcUpgrades(boolean bypassCache, boolean bypassServerCache) {
-    return storeAccessor.getAll()
-        .first()
-        .observeOn(Schedulers.io())
-        .flatMap(__ -> getNetworkAppcUpgrades(bypassCache, bypassServerCache))
-        .toSingle()
-        .flatMapCompletable(
-            updates -> removeAllNonExcluded().andThen(saveNewUpdates(updates, true)));
-  }
-
-  private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
-      boolean bypassServerCache) {
-    return ListAppcAppsUpgradesRequest.of(idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
-        .observe(bypassCache, bypassServerCache)
-        .map(result -> {
-          if (result != null && result.isOk()) {
-            return result.getList();
-          }
-          return Collections.emptyList();
+          return removeAllNonExcluded().andThen(saveNewUpdates(updates));
         });
   }
 
@@ -122,9 +98,9 @@ public class UpdateRepository {
         .flatMapCompletable(updates -> removeAll(updates));
   }
 
-  private Completable saveNewUpdates(List<App> updates, boolean isAppcUpgrade) {
+  private Completable saveNewUpdates(List<App> updates) {
     return Completable.fromSingle(Observable.from(updates)
-        .map(app -> mapAppUpdate(app, isAppcUpgrade))
+        .map(app -> mapAppUpdate(app))
         .toList()
         .toSingle()
         .flatMap(updateList -> {
@@ -135,7 +111,7 @@ public class UpdateRepository {
         }));
   }
 
-  private Update mapAppUpdate(App app, boolean appcUpgrade) {
+  private Update mapAppUpdate(App app) {
 
     final Obb obb = app.getObb();
 
@@ -172,7 +148,7 @@ public class UpdateRepository {
         .getMalware()
         .getRank()
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, appcUpgrade);
+        patchObbMd5);
   }
 
   public Completable removeAll(List<Update> updates) {

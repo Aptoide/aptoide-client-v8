@@ -46,6 +46,8 @@ public class AppsPresenter implements Presenter {
 
     getAvailableUpdatesList();
 
+    getAvailableAppcUpgradesList();
+
     getInstalledApps();
 
     getDownloads();
@@ -358,6 +360,21 @@ public class AppsPresenter implements Presenter {
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void getAvailableAppcUpgradesList() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(ioScheduler)
+        .flatMap(__ -> appsManager.getAppcUpgradesList(false))
+        .observeOn(viewScheduler)
+        .doOnNext(list -> view.showAppcUpgradesList(list))
+        .flatMap(list -> view.moreAppcClick()
+            .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc(list))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));

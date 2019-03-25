@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -42,6 +43,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Inject AppsPresenter appsPresenter;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
+  private View appcAppsLayout;
+  private RecyclerView appcAppsRecyclerView;
+  private AppcAppsAdapter appcAppsAdapter;
+  private Button appcSeeMoreButton;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
@@ -51,6 +56,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private SwipeRefreshLayout swipeRefreshLayout;
   private boolean showDownloads;
   private boolean showUpdates;
+  private boolean showAppcUpgrades;
   private boolean showInstalled;
   private List<App> blackListDownloads;
 
@@ -72,8 +78,17 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
+    recyclerView.setNestedScrollingEnabled(false);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
+
+    appcAppsLayout = view.findViewById(R.id.appc_apps_layout);
+    appcAppsRecyclerView = view.findViewById(R.id.appc_apps_recycler_view);
+    appcAppsRecyclerView.setNestedScrollingEnabled(false);
+    appcSeeMoreButton = view.findViewById(R.id.appc_see_more_btn);
+
+    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks);
+
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
@@ -118,6 +133,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setItemAnimator(null);
+
+    appcAppsRecyclerView.setAdapter(appcAppsAdapter);
+    appcAppsRecyclerView.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    appcAppsRecyclerView.setItemAnimator(null);
   }
 
   @Nullable @Override
@@ -263,6 +283,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeUpdatesList(excludedUpdatesList);
   }
 
+  @Override public Observable<Void> moreAppcClick() {
+    return RxView.clicks(appcSeeMoreButton);
+  }
+
   @Override public Observable<App> updateClick() {
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_CLICK)
@@ -327,10 +351,32 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppOnPausing(app);
   }
 
+  @Override public void showAppcUpgradesList(List<App> list) {
+    if (list != null && !list.isEmpty()) {
+      if (list.size() > 2) {
+        appcAppsAdapter.setAvailableUpgradesList(list.subList(0, 2));
+        appcSeeMoreButton.setVisibility(View.VISIBLE);
+      } else {
+        appcAppsAdapter.setAvailableUpgradesList(list);
+        appcSeeMoreButton.setVisibility(View.GONE);
+      }
+      showAppcUpgrades = true;
+      if (shouldShowAppcAppsList()) {
+        setShowAppcUpgrades();
+      }
+    }
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
     recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private void setShowAppcUpgrades() {
+    appcAppsRecyclerView.scrollToPosition(0);
+    hideLoadingProgressBar();
+    appcAppsLayout.setVisibility(View.VISIBLE);
   }
 
   private boolean shouldShowAppsList() {
@@ -338,6 +384,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         && showUpdates
         && showInstalled
         && recyclerView.getVisibility() != View.VISIBLE;
+  }
+
+  private boolean shouldShowAppcAppsList() {
+    return showAppcUpgrades;
   }
 
   private void hideLoadingProgressBar() {

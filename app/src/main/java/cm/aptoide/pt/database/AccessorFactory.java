@@ -2,6 +2,7 @@ package cm.aptoide.pt.database;
 
 import android.support.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.Accessor;
+import cm.aptoide.pt.database.accessors.AppcUpgradeAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -10,6 +11,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
@@ -33,6 +35,8 @@ import io.realm.RealmObject;
       return (A) new DownloadAccessor(database);
     } else if (clazz.equals(Update.class)) {
       return (A) new UpdateAccessor(database);
+    } else if (clazz.equals(AppcUpgrade.class)) {
+      return (A) new AppcUpgradeAccessor(database);
     } else if (clazz.equals(Store.class)) {
       return (A) new StoreAccessor(database);
     } else if (clazz.equals(StoredMinimalAd.class)) {

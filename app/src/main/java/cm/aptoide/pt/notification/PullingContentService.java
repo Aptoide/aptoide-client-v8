@@ -22,6 +22,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class PullingContentService extends BaseService {
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private UpdateRepository updateRepository;
+  private AppcUpgradeRepository upgradeRepository;
   private SharedPreferences sharedPreferences;
   private NotificationAnalytics notificationAnalytics;
 
@@ -66,6 +68,7 @@ public class PullingContentService extends BaseService {
     sharedPreferences = application.getDefaultSharedPreferences();
     installManager = application.getInstallManager();
     updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
+    upgradeRepository = RepositoryFactory.getUpgradeAppcRepository(this, sharedPreferences);
     notificationAnalytics = application.getNotificationAnalytics();
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -111,6 +114,7 @@ public class PullingContentService extends BaseService {
    */
   private void setUpdatesAction(int startId) {
     subscriptions.add(updateRepository.sync(true, false)
+        .andThen(upgradeRepository.syncAppcUpgrades(true, true))
         .andThen(updateRepository.getAll(false))
         .first()
         .observeOn(Schedulers.computation())

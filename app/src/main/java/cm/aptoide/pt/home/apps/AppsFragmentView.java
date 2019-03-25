@@ -52,6 +52,8 @@ public interface AppsFragmentView extends View {
 
   void removeExcludedUpdates(List<App> excludedUpdatesList);
 
+  Observable<Void> moreAppcClick();
+
   Observable<App> updateClick();
 
   void setUserImage(String userAvatarUrl);
@@ -77,4 +79,6 @@ public interface AppsFragmentView extends View {
   void setDefaultUserImage();
 
   void setPausingDownloadState(App app);
+
+  void showAppcUpgradesList(List<App> list);
 }

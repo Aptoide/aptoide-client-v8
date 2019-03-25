@@ -1,19 +1,9 @@
-/*
- * Copyright (c) 2016.
- * Modified on 24/08/2016.
- */
-
 package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created on 12/05/16.
- */
-
-public class Update extends RealmObject {
-
+public class AppcUpgrade extends RealmObject {
   public static final String APP_ID = "appId";
   public static final String LABEL = "label";
   public static final String ICON = "icon";
@@ -53,13 +43,13 @@ public class Update extends RealmObject {
   private String patchObbPath;
   private String patchObbMd5;
 
-  public Update() {
+  public AppcUpgrade() {
   }
 
-  public Update(long id, String name, String icon, String packageName, String md5sum, String path,
-      double fileSize, String versionName, String pathAlt, int versionCode, String rankName,
-      String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
-      String patchObbPath, String patchObbMd5) {
+  public AppcUpgrade(long id, String name, String icon, String packageName, String md5sum,
+      String path, double fileSize, String versionName, String pathAlt, int versionCode,
+      String rankName, String mainObbFileName, String mainObbPath, String mainObbMd5,
+      String patchObbFileName, String patchObbPath, String patchObbMd5) {
     this.appId = id;
     this.label = name;
     this.icon = icon;

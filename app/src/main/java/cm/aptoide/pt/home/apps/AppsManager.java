@@ -68,6 +68,12 @@ public class AppsManager {
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
+  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded) {
+    return updatesManager.getAppcUpgradesList(isExcluded)
+        .distinctUntilChanged()
+        .map(updates -> appMapper.mapAppcUpgradeToUpdateAppList(updates));
+  }
+
   public Observable<List<App>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
