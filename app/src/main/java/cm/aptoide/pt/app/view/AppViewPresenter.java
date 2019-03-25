@@ -164,7 +164,6 @@ public class AppViewPresenter implements Presenter {
         .filter(loadInterstitial -> loadInterstitial)
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.initInterstitialAd())
-        .doOnNext(__ -> view.loadInterstitialAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
