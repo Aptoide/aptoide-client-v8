@@ -47,7 +47,7 @@ public class CommentWidget extends Widget<CommentDisplayable> {
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }
 
-  @Override public void bindView(CommentDisplayable displayable) {
+  @Override public void bindView(CommentDisplayable displayable, int position) {
     Comment comment = displayable.getComment();
 
     final FragmentActivity context = getContext();

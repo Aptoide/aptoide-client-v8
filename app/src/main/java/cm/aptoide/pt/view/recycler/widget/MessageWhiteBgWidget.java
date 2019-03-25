@@ -22,7 +22,7 @@ public class MessageWhiteBgWidget extends Widget<MessageWhiteBgDisplayable> {
     message = (TextView) itemView.findViewById(R.id.message);
   }
 
-  @Override public void bindView(MessageWhiteBgDisplayable displayable) {
+  @Override public void bindView(MessageWhiteBgDisplayable displayable, int position) {
     String messageText = displayable.getMessage();
     if (TextUtils.isEmpty(messageText)) {
       message.setVisibility(View.GONE);

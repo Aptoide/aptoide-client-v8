@@ -84,7 +84,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     separator = itemView.findViewById(R.id.separator);
   }
 
-  @Override public void bindView(GridStoreMetaDisplayable displayable) {
+  @Override public void bindView(GridStoreMetaDisplayable displayable, int position) {
     badgeDialogFactory = displayable.getBadgeDialogFactory();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();

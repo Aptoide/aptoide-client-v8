@@ -187,6 +187,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView sizeInfo;
   private TextView ratingInfo;
   private View appcRewardView;
+  private View appcMigrationWarningMessage;
   private TextView appcRewardValue;
   private View versionsLayout;
   private TextView latestVersionTitle;
@@ -316,6 +317,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     sizeInfo = view.findViewById(R.id.header_size);
     ratingInfo = view.findViewById(R.id.header_rating);
     appcRewardView = view.findViewById(R.id.appc_layout);
+    appcMigrationWarningMessage = view.findViewById(R.id.migration_warning);
     appcRewardValue = view.findViewById(R.id.appcoins_reward_message);
     appcInfoView =
         new AppViewAppcInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label),
@@ -1414,8 +1416,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
-          formatAppCoinsRewardMessage());
+      if (!action.equals(DownloadModel.Action.MIGRATE)) {
+        appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
+            formatAppCoinsRewardMessage());
+      } else {
+        appcRewardView.setVisibility(View.GONE);
+        appcMigrationWarningMessage.setVisibility(View.VISIBLE);
+      }
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
@@ -1612,6 +1619,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
                     .getSymbol(), model.getPay()
                     .getPrice()));
         break;
+      case MIGRATE:
+        install.setText(getResources().getString(R.string.appview_button_update_to_appc));
     }
   }
 

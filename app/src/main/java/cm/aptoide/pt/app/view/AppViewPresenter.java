@@ -146,7 +146,8 @@ public class AppViewPresenter implements Presenter {
         .filter(app -> !app.isLoading())
         .filter(app -> !app.isAppCoinApp())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay())
+            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
+                .getId(), app.hasAdvertising() || app.hasBilling())
             .filter(model -> model.getDownloadModel()
                 .isDownloading()
                 && model.getDownloadModel()
@@ -231,7 +232,9 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(donations -> view.showDonations(donations)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
+        }, throwable -> {
+          crashReport.log(throwable);
+        });
   }
 
   private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
@@ -675,7 +678,9 @@ public class AppViewPresenter implements Presenter {
         .flatMap(
             appViewViewModel -> appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
                 appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-                appViewViewModel.isPaid(), appViewViewModel.getPay())
+                appViewViewModel.isPaid(), appViewViewModel.getPay(),
+                appViewViewModel.getSignature(), appViewViewModel.getStore()
+                    .getId(), appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
                 .first()
                 .observeOn(viewScheduler)
                 .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
@@ -941,6 +946,11 @@ public class AppViewPresenter implements Presenter {
                       .observeOn(viewScheduler)
                       .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
                   break;
+                case MIGRATE:
+                  completable = appViewManager.loadAppViewViewModel()
+                      .observeOn(viewScheduler)
+                      .flatMapCompletable(appViewViewModel -> migrateApp(action, appViewViewModel));
+                  break;
                 default:
                   completable =
                       Completable.error(new IllegalArgumentException("Invalid type of action"));
@@ -981,6 +991,10 @@ public class AppViewPresenter implements Presenter {
         .toCompletable();
   }
 
+  private Completable migrateApp(DownloadModel.Action action, AppViewViewModel appViewViewModel) {
+    return downloadApp(action, appViewViewModel);
+  }
+
   private Completable openInstalledApp(String packageName) {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
@@ -1014,7 +1028,8 @@ public class AppViewPresenter implements Presenter {
             .toObservable())
         .filter(app -> !app.isLoading())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay())
+            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
+                .getId(), app.hasAdvertising() || app.hasBilling())
             .observeOn(viewScheduler)
             .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -61,7 +61,7 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
     recyclerView = (RecyclerView) itemView.findViewById(R.id.comments);
   }
 
-  @Override public void bindView(StoreLatestCommentsDisplayable displayable) {
+  @Override public void bindView(StoreLatestCommentsDisplayable displayable, int position) {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     tokenInvalidator =

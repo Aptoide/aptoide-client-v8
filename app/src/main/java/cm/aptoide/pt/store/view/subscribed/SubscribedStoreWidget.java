@@ -32,7 +32,7 @@ public class SubscribedStoreWidget extends Widget<SubscribedStoreDisplayable> {
     storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
   }
 
-  @Override public void bindView(SubscribedStoreDisplayable displayable) {
+  @Override public void bindView(SubscribedStoreDisplayable displayable, int position) {
 
     final Store store = displayable.getPojo();
 

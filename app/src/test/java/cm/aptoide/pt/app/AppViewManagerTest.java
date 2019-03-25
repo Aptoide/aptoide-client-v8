@@ -72,6 +72,7 @@ public class AppViewManagerTest {
   @Mock private DownloadFactory downloadFactory;
   @Mock private AppCoinsManager appCoinsManager;
   @Mock private MoPubAdsManager moPubAdsManager;
+  @Mock private AppcMigrationManager migrationManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -89,7 +90,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -98,7 +99,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
@@ -110,7 +111,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -149,7 +150,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
@@ -160,7 +161,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -199,7 +200,8 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
             null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false);
+            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false,
+            "");
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
@@ -210,7 +212,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -249,7 +251,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
             null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
-            null, null, null, true, true, "uniqueName", false, false, bdsFlags, false);
+            null, null, null, true, true, "uniqueName", false, false, bdsFlags, false, "");
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
     AppViewConfiguration appViewConfiguration =
         new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "", "");
@@ -259,7 +261,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -302,7 +304,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -329,7 +331,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -356,7 +358,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -453,7 +455,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false);
+            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
             (long) 1);
@@ -468,7 +470,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "marketName", appCoinsManager);
+            socialRepository, "marketName", appCoinsManager, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -562,7 +564,7 @@ public class AppViewManagerTest {
     DetailedApp detailedApp =
         new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
             null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "", false, false, bdsFlags, false);
+            appStats, null, null, null, true, true, "", false, false, bdsFlags, false, "");
 
     DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
 
@@ -575,7 +577,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            socialRepository, "anyString", appCoinsManager);
+            socialRepository, "anyString", appCoinsManager, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -626,13 +628,15 @@ public class AppViewManagerTest {
 
     //When the presenter asks for the downloadModel
     when(installManager.getInstall("md5", "packageName", 1)).thenReturn(Observable.just(install));
+    when(migrationManager.isMigrationApp("packageName", "", 1, 2, false)).thenReturn(
+        Observable.just(false));
 
     DownloadModel downloadModel =
-        appViewManager.loadDownloadModel("md5", "packageName", 1, false, null)
+        appViewManager.loadDownloadModel("md5", "packageName", 1, false, null, "", 2, false)
             .toBlocking()
             .first();
 
-    //Then it should ask the installManager to start the install
+    ////Then it should ask the installManager to start the install
     verify(installManager).getInstall("md5", "packageName", 1);
 
     //And it should return a DownloadViewModel with the correct progress, action and download state

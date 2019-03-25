@@ -49,6 +49,7 @@ public class DetailedApp {
   private boolean hasAdvertising;
   private List<String> bdsFlags;
   private boolean isMature;
+  private String signature;
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
       String graphic, String added, String modified, boolean isGoodApp, Malware malware,
@@ -57,7 +58,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
-      boolean hasAdvertising, List<String> bdsFlags, boolean isMature) {
+      boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature) {
 
     this.id = id;
     this.name = name;
@@ -96,6 +97,7 @@ public class DetailedApp {
     this.hasAdvertising = hasAdvertising;
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
+    this.signature = signature;
   }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -105,7 +107,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
       String uniqueName, boolean hasBilling, boolean hasAdvertising, List<String> bdsFlags,
-      boolean isMature) {
+      boolean isMature, String signature) {
 
     this.id = id;
     this.name = name;
@@ -142,6 +144,7 @@ public class DetailedApp {
     this.wasPaid = false;
     this.paidAppPath = "";
     this.paymentStatus = "";
+    this.signature = signature;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
   }
@@ -304,5 +307,9 @@ public class DetailedApp {
 
   public boolean isMature() {
     return isMature;
+  }
+
+  public String getSignature() {
+    return signature;
   }
 }

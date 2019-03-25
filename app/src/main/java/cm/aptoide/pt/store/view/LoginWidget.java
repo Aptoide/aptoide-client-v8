@@ -27,7 +27,7 @@ public class LoginWidget extends Widget<LoginDisplayable> {
     loginButton = itemView.findViewById(R.id.login_button);
   }
 
-  @Override public void bindView(LoginDisplayable displayable) {
+  @Override public void bindView(LoginDisplayable displayable, int position) {
 
     final AccountNavigator accountNavigator =
         ((ActivityResultNavigator) getContext()).getAccountNavigator();

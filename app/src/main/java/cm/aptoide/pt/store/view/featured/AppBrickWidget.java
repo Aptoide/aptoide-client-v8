@@ -30,7 +30,7 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
     graphic = (ImageView) itemView.findViewById(R.id.featured_graphic);
   }
 
-  @Override public void bindView(AppBrickDisplayable displayable) {
+  @Override public void bindView(AppBrickDisplayable displayable, int position) {
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .load(displayable.getPojo()

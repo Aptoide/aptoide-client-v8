@@ -33,7 +33,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
     rating = (TextView) itemView.findViewById(R.id.rating_label);
   }
 
-  @Override public void bindView(GridAdDisplayable displayable) {
+  @Override public void bindView(GridAdDisplayable displayable, int position) {
     MinimalAd pojo = displayable.getPojo();
     name.setText(pojo.getName());
 

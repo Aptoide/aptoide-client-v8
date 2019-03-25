@@ -22,6 +22,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int INFO = 7;
   private static final int SMALL_BANNER = 8;
   private static final int WALLET_ADS_OFFER = 9;
+  private static final int TOP = 10;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -70,6 +71,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case WALLET_ADS_OFFER:
         return new WalletAdsOfferViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
+      case TOP:
+        return new TopBundleViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener,
+            oneDecimalFormatter, marketName);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -101,6 +106,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return SMALL_BANNER;
       case WALLET_ADS_OFFER:
         return WALLET_ADS_OFFER;
+      case TOP:
+        return TOP;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)

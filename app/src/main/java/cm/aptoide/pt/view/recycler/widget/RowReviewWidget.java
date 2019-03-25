@@ -37,7 +37,7 @@ public class RowReviewWidget extends Widget<RowReviewDisplayable> {
     reviewBody = (TextView) itemView.findViewById(R.id.description);
   }
 
-  @Override public void bindView(RowReviewDisplayable displayable) {
+  @Override public void bindView(RowReviewDisplayable displayable, int position) {
     final FragmentActivity context = getContext();
 
     FullReview review = displayable.getPojo();

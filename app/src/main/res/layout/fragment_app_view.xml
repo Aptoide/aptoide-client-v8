@@ -6,9 +6,9 @@
     android:id="@+id/coordinator_layout_appview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
-    android:background="@color/white"
     >
 
   <include
@@ -255,7 +255,15 @@
                 tools:visibility="visible"
                 />
           </FrameLayout>
-
+          <include
+              layout="@layout/appview_migration_warning"
+              android:id="@+id/migration_warning"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:layout_marginTop="12dp"
+              android:visibility="gone"
+              />
           <View
               android:id="@+id/similar_download_placeholder"
               android:layout_width="0dp"

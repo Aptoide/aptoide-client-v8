@@ -70,7 +70,7 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     separatorView = itemView.findViewById(R.id.separator_vertical);
   }
 
-  @Override public void bindView(FollowUserDisplayable displayable) {
+  @Override public void bindView(FollowUserDisplayable displayable, int position) {
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     accountManager = application.getAccountManager();

@@ -59,7 +59,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     exploreButton = itemView.findViewById(R.id.explore_button);
   }
 
-  @Override public void bindView(StoreDisplayable displayable) {
+  @Override public void bindView(StoreDisplayable displayable, int position) {
     final FragmentActivity context = getContext();
     Store store = displayable.getStore();
     showStoreDescription(displayable, context);

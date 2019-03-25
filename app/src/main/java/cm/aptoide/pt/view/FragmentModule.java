@@ -37,6 +37,7 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
@@ -99,6 +100,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -323,6 +325,11 @@ import rx.subscriptions.CompositeSubscription;
         okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
+  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository) {
+    return new AppcMigrationManager(repository);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -332,13 +339,13 @@ import rx.subscriptions.CompositeSubscription;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        socialRepository, marketName, appCoinsManager);
+        socialRepository, marketName, appCoinsManager, appcMigrationManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

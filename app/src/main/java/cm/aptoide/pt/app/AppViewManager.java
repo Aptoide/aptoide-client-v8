@@ -66,6 +66,7 @@ public class AppViewManager {
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
+  private AppcMigrationManager appcMigrationManager;
   private AppCoinsViewModel cachedAppCoinsViewModel;
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
@@ -78,7 +79,7 @@ public class AppViewManager {
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
       Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
-      AppCoinsManager appCoinsManager) {
+      AppCoinsManager appCoinsManager, AppcMigrationManager appcMigrationManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -100,6 +101,7 @@ public class AppViewManager {
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
+    this.appcMigrationManager = appcMigrationManager;
     this.isFirstLoad = true;
   }
 
@@ -192,8 +194,10 @@ public class AppViewManager {
   }
 
   public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay).map(
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay, signature, storeId,
+        hasAppc).map(
         downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
             cachedAppcSimilarAppsViewModel, cachedAppCoinsViewModel));
   }
@@ -288,7 +292,7 @@ public class AppViewManager {
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl()));
+            appViewConfiguration.getCampaignUrl(), app.getSignature()));
   }
 
   private Single<AppViewViewModel> map(DetailedAppRequestResult result) {
@@ -359,11 +363,13 @@ public class AppViewManager {
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay) {
-    return installManager.getInstall(md5, packageName, versionCode)
-        .map(install -> new DownloadModel(
+      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
+      boolean hasAppc) {
+    return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
+        appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
+        (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid()), install.getProgress(),
+                pay != null && pay.isPaid(), isMigration), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay));
   }
 
@@ -489,7 +495,7 @@ public class AppViewManager {
             return moPubAdsManager.shouldShowAds()
                 .doOnSuccess(showAds -> {
                   if (!showAds) {
-                    sendAdsWalletPromotionEvent();
+                    sendAdsBlockByOfferEvent();
                   }
                 });
           } else {
@@ -502,8 +508,8 @@ public class AppViewManager {
             && !cachedApp.isMature()));
   }
 
-  private void sendAdsWalletPromotionEvent() {
-    appViewAnalytics.sendAdsWalletPromotionEvent();
+  private void sendAdsBlockByOfferEvent() {
+    appViewAnalytics.sendAdsBlockByOfferEvent();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
