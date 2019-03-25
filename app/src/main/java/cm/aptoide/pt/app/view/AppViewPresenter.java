@@ -121,16 +121,17 @@ public class AppViewPresenter implements Presenter {
     handleInterstitialAdClick();
 
     loadInterstitialAd();
-    showInterstitialNew();
+    showInterstitial();
   }
 
-  private void showInterstitialNew() {
+  private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.isAppViewReadyToDownload())
         .flatMap(__ -> Observable.zip(downloadStarted(), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
+        .observeOn(viewScheduler)
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
         .observeOn(Schedulers.io())
