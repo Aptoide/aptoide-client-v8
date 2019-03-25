@@ -174,8 +174,8 @@ public class AppViewPresenter implements Presenter {
   private Completable showBannerAd() {
     return appViewManager.shouldLoadBannerAd()
         .observeOn(viewScheduler)
-        .flatMapCompletable(loadBanner -> {
-          if (loadBanner) {
+        .flatMapCompletable(shouldLoadBanner -> {
+          if (shouldLoadBanner) {
             view.showBannerAd();
           }
           return Completable.complete();
