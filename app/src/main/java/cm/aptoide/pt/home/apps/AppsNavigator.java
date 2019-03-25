@@ -44,7 +44,7 @@ public class AppsNavigator {
             .equals(BottomNavigationItem.APPS));
   }
 
-  public void navigateToSeeMoreAppc(List<App> list) {
-    // Todo
+  public void navigateToSeeMoreAppc() {
+    fragmentNavigator.navigateTo(SeeMoreAppcFragment.newInstance(), true);
   }
 }

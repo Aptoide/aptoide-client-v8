@@ -373,7 +373,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesList(list))
         .flatMap(list -> view.moreAppcClick()
-            .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc(list))
+            .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
