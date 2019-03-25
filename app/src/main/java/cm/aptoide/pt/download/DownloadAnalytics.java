@@ -53,7 +53,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String TELECO = "teleco";
   private static final String TRUSTED_BADGE = "Trusted Badge";
   private static final String URL = "url";
-  private static final String ADS_WALLET_PROMOTION = "ads_wallet_promotion";
+  private static final String ADS_BLOCK_BY_OFFER = "ads_block_by_offer";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
@@ -266,7 +266,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
           previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
@@ -282,7 +282,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext);
@@ -294,7 +294,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       String previousContext, boolean areAdsBlockedByOffer) {
     HashMap<String, Object> downloadMap =
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue);
-    downloadMap.put(ADS_WALLET_PROMOTION, areAdsBlockedByOffer);
+    downloadMap.put(ADS_BLOCK_BY_OFFER, areAdsBlockedByOffer);
     DownloadEvent downloadEvent =
         new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, previousContext, action);
     cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
@@ -377,7 +377,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
     } else {
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           previousContext);

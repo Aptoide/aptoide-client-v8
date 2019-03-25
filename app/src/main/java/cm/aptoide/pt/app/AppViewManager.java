@@ -491,7 +491,7 @@ public class AppViewManager {
             return moPubAdsManager.shouldShowAds()
                 .doOnSuccess(showAds -> {
                   if (!showAds) {
-                    sendAdsWalletPromotionEvent();
+                    sendAdsBlockByOfferEvent();
                   }
                 });
           } else {
@@ -504,8 +504,8 @@ public class AppViewManager {
             && !cachedApp.isMature()));
   }
 
-  private void sendAdsWalletPromotionEvent() {
-    appViewAnalytics.sendAdsWalletPromotionEvent();
+  private void sendAdsBlockByOfferEvent() {
+    appViewAnalytics.sendAdsBlockByOfferEvent();
   }
 
   public Single<Boolean> shouldLoadBannerAd() {
