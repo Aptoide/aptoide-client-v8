@@ -4,11 +4,9 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 import rx.Scheduler;
@@ -57,14 +55,14 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
         .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getBundlePosition()))
+            editorialHomeEvent.getGroupId(), editorialHomeEvent.getBundlePosition()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Single<LoadReactionModel> loadReactionModel(String cardId, int position) {
-    return editorialListManager.loadReactionModel(cardId)
+  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId, int position) {
+    return editorialListManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
         .doOnSuccess(reactionModel -> view.updateReactions(reactionModel, position));
   }
@@ -212,8 +210,10 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
-          editorialListAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
+          editorialListAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
+              homeEvent.getBundlePosition()); //TODO implementation
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
+              homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
@@ -224,11 +224,13 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMapSingle(homeEvent -> editorialListManager.setReaction(homeEvent.getCardId(),
-            homeEvent.getReaction())
-            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                homeEvent.getBundlePosition(), homeEvent.getReaction()))
-            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getBundlePosition())))
+        .flatMapSingle(
+            reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
+                reactionsHomeEvent.getReaction())
+                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
+                    reactionsHomeEvent.getBundlePosition(), reactionsHomeEvent.getReaction()))
+                .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
+                    reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getBundlePosition())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

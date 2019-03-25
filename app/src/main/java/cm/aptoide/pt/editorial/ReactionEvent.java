@@ -4,11 +4,13 @@ class ReactionEvent {
 
   private final String cardId;
   private final String reactionType;
+  private final String groupId;
 
-  public ReactionEvent(String cardId, String reactionType) {
+  public ReactionEvent(String cardId, String reactionType, String groupId) {
 
     this.cardId = cardId;
     this.reactionType = reactionType;
+    this.groupId = groupId;
   }
 
   public String getCardId() {
@@ -17,5 +19,9 @@ class ReactionEvent {
 
   public String getReactionType() {
     return reactionType;
+  }
+
+  public String getGroupId() {
+    return groupId;
   }
 }

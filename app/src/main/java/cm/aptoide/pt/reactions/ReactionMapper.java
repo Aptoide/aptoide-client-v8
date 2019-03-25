@@ -1,17 +1,16 @@
 package cm.aptoide.pt.reactions;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.reactions.data.ReactionType;
 
 public class ReactionMapper {
 
   public static int mapReaction(String reactionType) {
     int reaction = R.drawable.ic_react_placeholder;
     switch (reactionType) {
-      case "like":
+      case "thumbs_up":
         reaction = R.drawable.ic_react_thumbs_up;
         break;
-      case "down":
+      case "thumbs_down":
         reaction = R.drawable.ic_react_thumbs_down;
         break;
       case "love":

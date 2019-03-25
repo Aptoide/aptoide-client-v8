@@ -6,13 +6,16 @@ public class CurationCard {
   private final String icon;
   private final String title;
   private final String views;
+  private final String type;
 
-  public CurationCard(String id, String subTitle, String icon, String title, String views) {
+  public CurationCard(String id, String subTitle, String icon, String title, String views,
+      String type) {
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
     this.title = title;
     this.views = views;
+    this.type = type;
   }
 
   public String getId() {
@@ -33,5 +36,9 @@ public class CurationCard {
 
   public String getViews() {
     return views;
+  }
+
+  public String getType() {
+    return type;
   }
 }

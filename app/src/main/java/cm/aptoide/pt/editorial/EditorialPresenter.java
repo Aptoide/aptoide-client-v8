@@ -7,7 +7,6 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Completable;
 import rx.Observable;
@@ -355,8 +354,9 @@ public class EditorialPresenter implements Presenter {
             .toObservable())
         .observeOn(viewScheduler)
         .doOnNext(editorialViewModel -> {
-          editorialAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(editorialViewModel.getCardId());
+          editorialAnalytics.sendReactionButtonClickEvent(
+              editorialViewModel.getCardId()); //TODO implementation
+          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
@@ -367,14 +367,15 @@ public class EditorialPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId()))
+        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId(),
+            editorialViewModel.getGroupId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Single<LoadReactionModel> loadReactionModel(String cardId) {
-    return editorialManager.loadReactionModel(cardId)
+  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return editorialManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
         .doOnSuccess(reactionModel -> view.setReactions(reactionModel.getMyReaction(),
             reactionModel.getTopReactionList(), reactionModel.getTotal()));
@@ -388,7 +389,8 @@ public class EditorialPresenter implements Presenter {
             reactionEvent.getReactionType())
             .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 reactionEvent.getReactionType()))
-            .flatMap(__ -> loadReactionModel(reactionEvent.getCardId())))
+            .flatMap(
+                __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

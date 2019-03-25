@@ -18,13 +18,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.editorial.EditorialFragment;
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -251,11 +249,11 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(ReactionsHomeEvent.class);
   }
 
-  @Override public void showReactionsPopup(String cardId, int bundlePosition) {
+  @Override public void showReactionsPopup(String cardId, String groupId, int bundlePosition) {
     EditorialBundleViewHolder editorialBundleViewHolder =
         getViewHolderForAdapterPosition(bundlePosition);
     if (editorialBundleViewHolder != null) {
-      editorialBundleViewHolder.showReactions(cardId, bundlePosition);
+      editorialBundleViewHolder.showReactions(cardId, groupId, bundlePosition);
     }
   }
 

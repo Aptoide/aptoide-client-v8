@@ -88,7 +88,7 @@ public class EditorialService {
 
       EditorialViewModel editorialViewModel =
           buildEditorialViewModel(editorialContentList, card, placeHolderPositions,
-              placeHolderContent, bottomCardPlaceHolderContent, cardId);
+              placeHolderContent, bottomCardPlaceHolderContent, cardId, card.getType());
 
       return Observable.just(editorialViewModel);
     } else {
@@ -179,7 +179,7 @@ public class EditorialService {
 
   private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
       Data card, List<Integer> placeHolderPositions, List<EditorialContent> placeHolderContent,
-      EditorialContent bottomCardPlaceHolderContent, String cardId) {
+      EditorialContent bottomCardPlaceHolderContent, String cardId, String groupId) {
     if (bottomCardPlaceHolderContent != null) {
       return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
           card.getBackground(), placeHolderPositions, placeHolderContent,
@@ -188,9 +188,9 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
           bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
           bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
-          cardId);
+          cardId, groupId);
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
-        card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId);
+        card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId);
   }
 }

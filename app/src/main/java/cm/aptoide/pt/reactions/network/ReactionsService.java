@@ -6,5 +6,5 @@ import rx.Single;
 public interface ReactionsService {
   Single<ReactionsResponse> setReaction(String id, String reaction);
 
-  Single<LoadReactionModel> loadReactionModel(String cardId);
+  Single<LoadReactionModel> loadReactionModel(String cardId, String groupId);
 }

@@ -6,14 +6,21 @@ package cm.aptoide.pt.home;
 
 public class EditorialHomeEvent extends HomeEvent {
 
-  private String cardId;
+  private final String cardId;
+  private final String groupId;
 
-  public EditorialHomeEvent(String cardId, HomeBundle bundle, int bundlePosition, Type clickType) {
+  public EditorialHomeEvent(String cardId, String groupId, HomeBundle bundle, int bundlePosition,
+      Type clickType) {
     super(bundle, bundlePosition, clickType);
     this.cardId = cardId;
+    this.groupId = groupId;
   }
 
   public String getCardId() {
     return cardId;
+  }
+
+  public String getGroupId() {
+    return groupId;
   }
 }
