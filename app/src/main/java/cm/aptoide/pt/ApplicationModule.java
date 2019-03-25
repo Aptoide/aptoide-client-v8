@@ -1861,7 +1861,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
         PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
-        AppViewAnalytics.ADS_WALLET_PROMOTION_EVENT);
+        AppViewAnalytics.ADS_BLOCK_BY_OFFER);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

@@ -22,15 +22,6 @@ public class MoPubAdsManager {
     this.walletAdsOfferManager = walletAdsOfferManager;
   }
 
-  public Single<Boolean> shouldLoadInterstitialAd() {
-    return shouldShowAds().flatMap(requestInterstitialAd -> {
-      if (requestInterstitialAd) {
-        return shouldHaveInterstitialAds();
-      }
-      return Single.just(false);
-    });
-  }
-
   public Single<Boolean> shouldHaveInterstitialAds() {
     return moPubInterstitialAdExperiment.shouldLoadInterstitial();
   }

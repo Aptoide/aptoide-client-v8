@@ -57,7 +57,7 @@
   <string name="appview_button_open">Open</string>
   <string name="appview_button_update">Update</string>
   <string name="appview_button_buy">Buy</string>
-  <string name="appview_button_update_to_appc">Update to Appc</string>
+  <string name="appview_button_update_to_appc">Update to AppCoins</string>
   <string name="appview_followers_count_text">%1$s   followers</string>
   <string name="appview_other_versions">Other versions</string>
   <string name="appview_newer_version">Newer version available</string>
@@ -647,7 +647,7 @@
   <string name="promo_update2appc_title">Get APPC Credits Now!</string>
   <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
-  <string name="promo_update2appc_appcard_short">Update to AppCoins version</string>
+  <string name="promo_update2appc_appcard_short">Update to AppCoins</string>
   <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credtis</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins Version</string>

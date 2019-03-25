@@ -16,6 +16,7 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.CampaignAnalytics;
+import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -125,8 +126,6 @@ public class AppViewPresenter implements Presenter {
     handleDonateCardImpressions();
 
     handleInterstitialAdClick();
-    handleInterstitialAdLoaded();
-    showInterstitialAd();
 
     handleWalletPromotion();
 
@@ -137,41 +136,51 @@ public class AppViewPresenter implements Presenter {
     resumePromotionDownload();
     cancelPromotionDownload();
     pausePromotionDownload();
+    loadInterstitialAd();
+    showInterstitial();
   }
 
-  private Completable showBannerAd() {
-    return appViewManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
-        .flatMapCompletable(loadBanner -> {
-          if (loadBanner) {
-            view.showBannerAd();
-          }
-          return Completable.complete();
-        });
-  }
-
-  private void showInterstitialAd() {
+  private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.installAppClick())
-        .flatMap(create -> appViewManager.loadAppViewViewModel()
-            .toObservable())
+        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> Observable.zip(downloadStarted(), view.interstitialAdLoaded(),
+            (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
+                downloadAppViewModel)))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showInterstitialAd())
+        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
+        .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
+
+  private Observable<DownloadAppViewModel> downloadStarted() {
+    return appViewManager.loadAppViewViewModel()
+        .toObservable()
         .filter(app -> !app.isLoading())
         .filter(app -> !app.isAppCoinApp())
         .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
             app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
                 .getId(), app.hasAdvertising() || app.hasBilling())
             .filter(model -> model.getDownloadModel()
-                .isDownloading())
-            .first()
-            .observeOn(Schedulers.io())
-            .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
-            .filter(loadInterstitial -> loadInterstitial)
-            .observeOn(viewScheduler)
-            .doOnNext(__ -> view.initInterstitialAd())
-            .delay(1, TimeUnit.SECONDS)
-            .observeOn(viewScheduler)
-            .doOnNext(__ -> view.loadInterstitialAd()))
+                .isDownloading()
+                && model.getDownloadModel()
+                .getProgress() >= 5
+                && model.getDownloadModel()
+                .getProgress() < 100)
+            .first());
+  }
+
+  private void loadInterstitialAd() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.initInterstitialAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -179,17 +188,15 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleInterstitialAdLoaded() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.interstitialAdLoaded())
-        .doOnNext(__ -> view.showInterstitialAd())
-        .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
-        .observeOn(Schedulers.io())
-        .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
+  private Completable showBannerAd() {
+    return appViewManager.shouldLoadBannerAd()
+        .observeOn(viewScheduler)
+        .flatMapCompletable(shouldLoadBanner -> {
+          if (shouldLoadBanner) {
+            view.showBannerAd();
+          }
+          return Completable.complete();
+        });
   }
 
   private void handleInterstitialAdClick() {
