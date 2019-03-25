@@ -575,18 +575,15 @@ public class AppViewManager {
           .flatMapObservable(viewModel -> installManager.getInstall(viewModel.getMd5sum(),
               viewModel.getPackageName(), viewModel.getVersionCode())
               .flatMap(install -> installedRepository.getInstalled(cachedApp.getPackageName())
-                  .map(installed -> new PromotionInstallDependency(install, installed != null)))
-              .map(installDependency -> new WalletPromotionViewModel(mapToDownloadModel(
-                  installDependency.getInstall()
-                      .getType(), installDependency.getInstall()
-                      .getProgress(), installDependency.getInstall()
-                      .getState()), viewModel.getAppName(), viewModel.getIcon(), viewModel.getId(),
-                  viewModel.getPackageName(), viewModel.getMd5sum(), viewModel.getVersionCode(),
-                  viewModel.getVersionName(), viewModel.getPath(), viewModel.getPathAlt(),
-                  viewModel.getObb(), viewModel.getAppcValue(), installDependency.getInstall()
-                  .getState()
-                  .equals(Install.InstallationStatus.INSTALLED), viewModel.shouldShowOffer(),
-                  installDependency.isAppInstalled())));
+                  .map(installed -> new WalletPromotionViewModel(
+                      mapToDownloadModel(install.getType(), install.getProgress(),
+                          install.getState()), viewModel.getAppName(), viewModel.getIcon(),
+                      viewModel.getId(), viewModel.getPackageName(), viewModel.getMd5sum(),
+                      viewModel.getVersionCode(), viewModel.getVersionName(), viewModel.getPath(),
+                      viewModel.getPathAlt(), viewModel.getObb(), viewModel.getAppcValue(),
+                      install.getState()
+                          .equals(Install.InstallationStatus.INSTALLED),
+                      viewModel.shouldShowOffer(), installed != null))));
     }
   }
 
