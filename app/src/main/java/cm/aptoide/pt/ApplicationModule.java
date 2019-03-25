@@ -1893,10 +1893,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
         DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
         EditorialAnalytics.CURATION_CARD_INSTALL,
-        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
-        PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
-        AppViewAnalytics.ADS_BLOCK_BY_OFFER, AppViewAnalytics.APPC_SIMILAR_APP_INTERACT,
-        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
+        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
+        PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
+        PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
+        AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
