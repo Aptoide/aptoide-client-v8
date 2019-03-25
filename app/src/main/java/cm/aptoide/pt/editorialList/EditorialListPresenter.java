@@ -212,8 +212,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
-          editorialListAnalytics.sendReactionButtonClickEvent(homeEvent.getCardId(),
-              homeEvent.getBundlePosition()); //TODO implementation
+          editorialListAnalytics.sendReactionButtonClickEvent();
           view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getBundlePosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -239,6 +238,7 @@ public class EditorialListPresenter implements Presenter {
       String reaction) {
     if (reactionsResponse.wasSuccess()) {
       view.setUserReaction(bundlePosition, reaction);
+      editorialListAnalytics.sendReactedEvent();
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {
