@@ -337,8 +337,8 @@ import rx.subscriptions.CompositeSubscription;
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager);
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
+        socialRepository, marketName, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

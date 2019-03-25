@@ -30,6 +30,7 @@ import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Single;
 
 import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
@@ -54,6 +55,7 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final MoPubAdsManager moPubAdsManager;
+  private final Scheduler ioScheduler;
   private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
@@ -75,7 +77,8 @@ public class AppViewManager {
       MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager) {
+      Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
+      AppCoinsManager appCoinsManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -92,6 +95,7 @@ public class AppViewManager {
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
+    this.ioScheduler = ioScheduler;
     this.socialRepository = socialRepository;
     this.limit = limit;
     this.marketName = marketName;
@@ -179,7 +183,8 @@ public class AppViewManager {
   }
 
   public Single<Boolean> recordInterstitialImpression() {
-    return moPubAdsManager.recordInterstitialAdImpression();
+    return moPubAdsManager.recordInterstitialAdImpression()
+        .subscribeOn(ioScheduler);
   }
 
   public Single<Boolean> recordInterstitialClick() {

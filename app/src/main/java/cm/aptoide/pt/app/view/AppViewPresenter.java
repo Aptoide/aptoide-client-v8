@@ -134,7 +134,6 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
-        .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
