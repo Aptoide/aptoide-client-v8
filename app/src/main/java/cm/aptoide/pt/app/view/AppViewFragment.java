@@ -287,6 +287,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView cancelWalletDownload;
   private ImageView pauseWalletDownload;
   private ImageView resumeWalletDownload;
+  private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -446,6 +447,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         walletPromotionDownloadLayout.findViewById(R.id.wallet_download_resume_download);
     walletPromotionClaimLayout = view.findViewById(R.id.wallet_claim_appc_layout);
     walletPromotionClaimButton = view.findViewById(R.id.wallet_claim_appc_button);
+    walletDownloadControlsLayout = view.findViewById(R.id.wallet_install_controls_layout);
     walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
     walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
@@ -1379,7 +1381,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
         cancelWalletDownload.setVisibility(View.GONE);
         resumeWalletDownload.setVisibility(View.GONE);
-        downloadControlsLayout.setLayoutParams(pauseShowing);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case INDETERMINATE:
         downloadWalletProgressBar.setIndeterminate(true);
@@ -1388,7 +1390,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
         cancelWalletDownload.setVisibility(View.GONE);
         resumeWalletDownload.setVisibility(View.GONE);
-        downloadControlsLayout.setLayoutParams(pauseShowing);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case PAUSE:
         downloadWalletProgressBar.setIndeterminate(false);
@@ -1403,7 +1405,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         resumeWalletDownload.setVisibility(View.VISIBLE);
         resumeWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionEvent(viewModel, PromotionEvent.ClickType.RESUME_DOWNLOAD)));
-        downloadControlsLayout.setLayoutParams(pauseHidden);
+        walletDownloadControlsLayout.setLayoutParams(pauseHidden);
         break;
       case COMPLETE:
         downloadWalletProgressBar.setIndeterminate(true);
@@ -1412,7 +1414,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
         cancelWalletDownload.setVisibility(View.GONE);
         resumeWalletDownload.setVisibility(View.GONE);
-        downloadControlsLayout.setLayoutParams(pauseShowing);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
         break;
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));
