@@ -11,7 +11,6 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.reactions.ReactionsManager;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Completable;
 import rx.Observable;
@@ -118,8 +117,8 @@ public class EditorialManager {
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
   }
 
-  public Single<LoadReactionModel> loadReactionModel(String cardId) {
-    return reactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String reaction) {

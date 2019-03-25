@@ -1,19 +1,18 @@
 package cm.aptoide.pt.home;
 
+import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 
 /**
@@ -48,7 +47,6 @@ public class Home {
     this.reactionsManager = reactionsManager;
     this.promotionId = promotionId;
     this.blacklistManager = blacklistManager;
-    this.fakeReactionsManager = fakeReactionsManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -150,8 +148,8 @@ public class Home {
     return moPubAdsManager.shouldLoadNativeAds();
   }
 
-  public Single<LoadReactionModel> loadReactionModel(String cardId) {
-    return reactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String reaction) {

@@ -3,7 +3,6 @@ package cm.aptoide.pt.editorial;
 import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.TopReaction;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.List;
 import rx.Observable;
 
@@ -71,10 +70,9 @@ public interface EditorialView extends View {
 
   Observable<Void> reactionsButtonClicked();
 
-  void setReactions(String userReaction, List<TopReaction> reactions,
-      int numberOfReactions);
+  void setReactions(String userReaction, List<TopReaction> reactions, int numberOfReactions);
 
-  void showReactionsPopup(String cardId);
+  void showReactionsPopup(String cardId, String groupId);
 
   Observable<ReactionEvent> reactionClicked();
 

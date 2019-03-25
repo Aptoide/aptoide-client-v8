@@ -1,9 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.apps.BundleView;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 
@@ -41,7 +39,7 @@ public interface HomeView extends BundleView {
 
   Observable<ReactionsHomeEvent> reactionClicked();
 
-  void showReactionsPopup(String cardId, int bundlePosition);
+  void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 
   void setUserReaction(int bundlePosition, String reaction);
 

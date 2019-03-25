@@ -1,11 +1,8 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.editorial.FakeReactionModel;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.ReactionsManager;
-import cm.aptoide.pt.reactions.data.ReactionType;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
-import rx.Observable;
 import rx.Single;
 
 public class EditorialListManager {
@@ -36,8 +33,8 @@ public class EditorialListManager {
     return editorialListRepository.loadMoreCurationCards();
   }
 
-  public Single<LoadReactionModel> loadReactionModel(String cardId) {
-    return reactionsManager.loadReactionModel(cardId);
+  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
