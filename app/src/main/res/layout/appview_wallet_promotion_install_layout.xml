@@ -16,13 +16,15 @@
       android:layout_marginLeft="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginStart="16dp"
-      android:layout_marginTop="13dp"
+      android:layout_marginTop="16dp"
       >
 
     <ImageView
         android:id="@+id/wallet_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/appcoins_wallet_icon"
         />
 
@@ -30,8 +32,6 @@
         android:id="@+id/wallet_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_toEndOf="@id/wallet_icon"
         android:layout_toRightOf="@id/wallet_icon"
         tools:text="Get 10 APPC Credits now!"
@@ -43,8 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wallet_title"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
         android:layout_toEndOf="@id/wallet_icon"
         android:layout_toRightOf="@id/wallet_icon"
         tools:text="Install this app and get 10 APPC Credits. You need the AppCoins wallet to receive them."
