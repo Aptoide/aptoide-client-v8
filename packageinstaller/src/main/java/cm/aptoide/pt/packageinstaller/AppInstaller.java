@@ -2,6 +2,7 @@ package cm.aptoide.pt.packageinstaller;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -93,7 +94,12 @@ public final class AppInstaller {
               confirmIntent.setFlags(
                   Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             }
-            context.startActivity(confirmIntent);
+            try {
+              context.startActivity(confirmIntent);
+            } catch (ActivityNotFoundException exception) {
+              installResultCallback.onInstallationResult(
+                  new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found"));
+            }
           }
         });
     context.registerReceiver(installResultReceiver,

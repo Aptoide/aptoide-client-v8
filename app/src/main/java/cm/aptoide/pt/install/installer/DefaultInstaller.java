@@ -112,10 +112,17 @@ public class DefaultInstaller implements Installer {
                 installation.save();
                 return Observable.just(null);
               } else {
-                if (forceDefaultInstall) {
-                  return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
+                if (forceDefaultInstall || shouldSetPackageInstaller) {
+                  return startDefaultInstallation(context, installation,
+                      shouldSetPackageInstaller).onErrorResumeNext(throwable -> {
+                    if (throwable instanceof InstallationException) {
+                      return startInstallation(context, installation, false);
+                    } else {
+                      throw new IllegalStateException(throwable);
+                    }
+                  });
                 } else {
-                  return startInstallation(context, installation, shouldSetPackageInstaller);
+                  return startInstallation(context, installation, false);
                 }
               }
             }))
@@ -281,7 +288,13 @@ public class DefaultInstaller implements Installer {
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
                 .doOnNext(installStatus -> updateInstallation(installation,
                     shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                        : Installed.TYPE_DEFAULT, map(installStatus)))))
+                        : Installed.TYPE_DEFAULT, map(installStatus)))
+                .filter(installStatus -> installStatus.getStatus()
+                    .equals(InstallStatus.Status.FAIL) || installStatus.getStatus()
+                    .equals(InstallStatus.Status.UNKNOWN_ERROR))
+                .doOnNext(installStatus -> {
+                  throw new InstallationException("Fail/Unknown error in the package installer");
+                })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
             shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
