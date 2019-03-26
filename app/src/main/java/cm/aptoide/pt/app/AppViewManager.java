@@ -363,7 +363,7 @@ public class AppViewManager {
             .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
-        promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
+        promotionViewApp.getPathAlt(), promotionViewApp.getObb(), false))
         .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
             .flatMap(hasAds -> {
               if (hasAds) {
