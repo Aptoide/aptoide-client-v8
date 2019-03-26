@@ -633,6 +633,10 @@
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
+  <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
+  <string name="wallet_promotion_button_claim">Claim your %s APPC Credits</string>
+
+  <!--AppCoins Remove Ads Wallet Promotion -->
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
 

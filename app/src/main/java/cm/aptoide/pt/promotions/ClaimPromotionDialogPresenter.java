@@ -11,26 +11,26 @@ import rx.subscriptions.CompositeSubscription;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
-
+  private final String promotionId;
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
   private PromotionsAnalytics promotionsAnalytics;
   private ClaimPromotionsNavigator navigator;
-
   private boolean shouldSendIntent;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator) {
+      ClaimPromotionsNavigator navigator, String promotionId) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
     this.navigator = navigator;
+    this.promotionId = promotionId;
     this.shouldSendIntent = true;
   }
 
@@ -153,7 +153,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           view.showLoading();
         })
         .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
-            wrapper.getCaptcha()))
+            wrapper.getCaptcha(), promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()

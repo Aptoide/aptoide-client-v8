@@ -11,6 +11,7 @@ import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
@@ -49,6 +50,7 @@ public class AppViewPresenterTest {
   @Mock private AptoideAccountManager accountManager;
   @Mock private CrashReport crashReporter;
   @Mock private CampaignAnalytics campaignAnalytics;
+  @Mock private PromotionsNavigator promotionsNavigator;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -60,7 +62,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
         appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService);
+        permissionManager, permissionService, promotionsNavigator, "");
 
     lifecycleEvent = PublishSubject.create();
 

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:orientation="vertical"
     android:clipChildren="false"
+    android:orientation="vertical"
     >
 
   <include layout="@layout/home_bundle_header"/>
@@ -14,8 +14,8 @@
       android:id="@+id/apps_list"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="horizontal"
       android:clipChildren="false"
+      android:orientation="horizontal"
       />
 
 </LinearLayout>

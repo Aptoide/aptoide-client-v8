@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
+import cm.aptoide.pt.app.WalletPromotionViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -134,11 +135,16 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class AppViewFragment extends NavigationTrackFragment implements AppViewView {
+  private static final int DOWNLOADING = 1;
+  private static final int DOWNGRADE = 2;
+  private static final int INSTALL = 3;
+  private static final int CLAIM = 4;
+  private static final int UPDATE = 5;
+  private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int PAY_APP_REQUEST_CODE = 12;
   private static final int APPC_TRANSITION_MS = 1000;
-
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
@@ -264,6 +270,26 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View flagThisAppSection;
   private View collapsingAppcBackground;
 
+  //wallet promotion
+  private View promotionView;
+  private View walletPromotionDownloadLayout;
+  private View walletPromotionClaimLayout;
+  private Button walletPromotionClaimButton;
+  private View walletPromotionInstallDisableLayout;
+  private Button walletPromotionInstallDisableButton;
+  private TextView walletPromotionTitle;
+  private TextView walletPromotionMessage;
+  private View walletPromotionButtonsLayout;
+  private Button walletPromotionCancelButton;
+  private Button walletPromotionDownloadButton;
+  private ProgressBar downloadWalletProgressBar;
+  private TextView downloadWalletProgressValue;
+  private ImageView cancelWalletDownload;
+  private ImageView pauseWalletDownload;
+  private ImageView resumeWalletDownload;
+  private View walletDownloadControlsLayout;
+  private PublishSubject<PromotionEvent> promotionAppClick;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
@@ -286,6 +312,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
     interstitialClick = PublishSubject.create();
+    promotionAppClick = PublishSubject.create();
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -400,6 +427,29 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+
+    promotionView = view.findViewById(R.id.wallet_install_promotion);
+    walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
+    walletPromotionMessage = promotionView.findViewById(R.id.wallet_message);
+    walletPromotionButtonsLayout = promotionView.findViewById(R.id.buttons_layout);
+    walletPromotionCancelButton = promotionView.findViewById(R.id.cancel_button);
+    walletPromotionDownloadButton = promotionView.findViewById(R.id.download_button);
+    walletPromotionDownloadLayout = view.findViewById(R.id.wallet_download_info);
+    downloadWalletProgressBar =
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_progress_bar);
+    downloadWalletProgressValue =
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_progress_number);
+    cancelWalletDownload =
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_cancel_button);
+    pauseWalletDownload =
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_pause_download);
+    resumeWalletDownload =
+        walletPromotionDownloadLayout.findViewById(R.id.wallet_download_resume_download);
+    walletPromotionClaimLayout = view.findViewById(R.id.wallet_claim_appc_layout);
+    walletPromotionClaimButton = view.findViewById(R.id.wallet_claim_appc_button);
+    walletDownloadControlsLayout = view.findViewById(R.id.wallet_install_controls_layout);
+    walletPromotionInstallDisableLayout = view.findViewById(R.id.wallet_install_disabled_layout);
+    walletPromotionInstallDisableButton = view.findViewById(R.id.wallet_install_disabled_button);
 
     donationsAdapter = new DonationsAdapter(new ArrayList<>());
     donationsList.setAdapter(donationsAdapter);
@@ -1147,6 +1197,230 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
     flagThisAppSection.setVisibility(View.GONE);
+  }
+
+  @Override public void showAppcWalletPromotionView(WalletPromotionViewModel viewModel) {
+    if (viewModel.isWalletInstalled()) {
+      if (!viewModel.isAppViewAppInstalled()) {
+        setupInstallDependencyApp(viewModel);
+      } else {
+        setupClaimWalletPromotion(viewModel);
+      }
+    } else {
+      if (viewModel.getDownloadModel()
+          .isDownloading()) {
+        setupActiveWalletPromotion(viewModel);
+      } else {
+        setupInactiveWalletPromotion(viewModel);
+      }
+    }
+    promotionView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> dismissWalletPromotionClick() {
+    return RxView.clicks(walletPromotionCancelButton);
+  }
+
+  @Override public void dismissWalletPromotionView() {
+    promotionView.setVisibility(View.GONE);
+  }
+
+  @Override public Observable<WalletPromotionViewModel> installWalletButtonClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.UPDATE
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.INSTALL_APP
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNLOAD
+            || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNGRADE)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> pausePromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> cancelPromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> resumePromotionDownload() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        == PromotionEvent.ClickType.RESUME_DOWNLOAD)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  @Override public Observable<WalletPromotionViewModel> claimAppClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
+        .map(promotionAppClick -> promotionAppClick.getApp());
+  }
+
+  private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+    walletPromotionInstallDisableButton.setText(
+        String.format(getString(R.string.wallet_promotion_button_install_disabled),
+            String.valueOf(viewModel.getAppcValue())));
+    walletPromotionInstallDisableLayout.setVisibility(View.VISIBLE);
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.GONE);
+  }
+
+  private void setupClaimWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+    walletPromotionClaimButton.setText(
+        String.format(getString(R.string.wallet_promotion_button_claim),
+            String.valueOf(viewModel.getAppcValue())));
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionInstallDisableLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.VISIBLE);
+    walletPromotionClaimButton.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionEvent(viewModel, getClickType(getState(viewModel)))));
+  }
+
+  private void setupInstalledWalletPromotionText(WalletPromotionViewModel viewModel) {
+    walletPromotionTitle.setText(String.format(getString(R.string.wallet_promotion_title),
+        String.valueOf(viewModel.getAppcValue())));
+    walletPromotionMessage.setText(
+        String.format(getString(R.string.wallet_promotion__wallet_installed_message),
+            String.valueOf(viewModel.getAppcValue())));
+  }
+
+  private int getState(WalletPromotionViewModel app) {
+    int state;
+    DownloadModel downloadModel = app.getDownloadModel();
+    if (downloadModel.isDownloading()) {
+      return DOWNLOADING;
+    } else {
+      switch (downloadModel.getAction()) {
+        case DOWNGRADE:
+          state = DOWNGRADE;
+          break;
+        case INSTALL:
+          state = INSTALL;
+          break;
+        case OPEN:
+          state = CLAIM;
+          break;
+        case UPDATE:
+          state = UPDATE;
+          break;
+        default:
+          throw new IllegalArgumentException("Invalid type of download action");
+      }
+      return state;
+    }
+  }
+
+  private PromotionEvent.ClickType getClickType(int appState) {
+    PromotionEvent.ClickType clickType;
+    switch (appState) {
+      case DOWNGRADE:
+        clickType = PromotionEvent.ClickType.DOWNGRADE;
+        break;
+      case UPDATE:
+        clickType = PromotionEvent.ClickType.UPDATE;
+        break;
+      case DOWNLOAD:
+        clickType = PromotionEvent.ClickType.DOWNLOAD;
+        break;
+      case INSTALL:
+        clickType = PromotionEvent.ClickType.INSTALL_APP;
+        break;
+      case CLAIM:
+        clickType = PromotionEvent.ClickType.CLAIM;
+        break;
+      default:
+        throw new IllegalArgumentException("Wrong view type of promotion app");
+    }
+    return clickType;
+  }
+
+  private void setupInactiveWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+
+    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionInstallDisableLayout.setVisibility(View.GONE);
+    walletPromotionClaimLayout.setVisibility(View.GONE);
+    walletPromotionButtonsLayout.setVisibility(View.VISIBLE);
+    walletPromotionDownloadButton.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionEvent(viewModel, PromotionEvent.ClickType.INSTALL_APP)));
+  }
+
+  private void setupActiveWalletPromotion(WalletPromotionViewModel viewModel) {
+    setupInstalledWalletPromotionText(viewModel);
+
+    walletPromotionDownloadLayout.setVisibility(View.VISIBLE);
+    walletPromotionButtonsLayout.setVisibility(View.GONE);
+
+    DownloadModel.DownloadState downloadState = viewModel.getDownloadModel()
+        .getDownloadState();
+
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+    switch (downloadState) {
+      case ACTIVE:
+        downloadWalletProgressBar.setIndeterminate(false);
+        downloadWalletProgressBar.setProgress(viewModel.getDownloadModel()
+            .getProgress());
+        downloadWalletProgressValue.setText(String.valueOf(viewModel.getDownloadModel()
+            .getProgress()) + "%");
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case INDETERMINATE:
+        downloadWalletProgressBar.setIndeterminate(true);
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case PAUSE:
+        downloadWalletProgressBar.setIndeterminate(false);
+        downloadWalletProgressBar.setProgress(viewModel.getDownloadModel()
+            .getProgress());
+        downloadWalletProgressValue.setText(String.valueOf(viewModel.getDownloadModel()
+            .getProgress()) + "%");
+        pauseWalletDownload.setVisibility(View.GONE);
+        cancelWalletDownload.setVisibility(View.VISIBLE);
+        cancelWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.CANCEL_DOWNLOAD)));
+        resumeWalletDownload.setVisibility(View.VISIBLE);
+        resumeWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.RESUME_DOWNLOAD)));
+        walletDownloadControlsLayout.setLayoutParams(pauseHidden);
+        break;
+      case COMPLETE:
+        downloadWalletProgressBar.setIndeterminate(true);
+        pauseWalletDownload.setVisibility(View.VISIBLE);
+        pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
+            new PromotionEvent(viewModel, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
+        cancelWalletDownload.setVisibility(View.GONE);
+        resumeWalletDownload.setVisibility(View.GONE);
+        walletDownloadControlsLayout.setLayoutParams(pauseShowing);
+        break;
+      case ERROR:
+        showErrorDialog("", getContext().getString(R.string.error_occured));
+        break;
+      case NOT_ENOUGH_STORAGE_ERROR:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
+        break;
+    }
   }
 
   private void setSimilarAppsAdapters() {

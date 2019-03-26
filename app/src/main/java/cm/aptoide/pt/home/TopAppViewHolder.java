@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home;
 
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +32,6 @@ public class TopAppViewHolder extends AppViewHolder {
     appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, oneDecimalFormatter);
     TextView rating = itemView.findViewById(R.id.rating_label);
     rating.setTextAppearance(itemView.getContext(), R.style.Aptoide_TextView_Medium_XXS_Black);
-
   }
 
   @Override

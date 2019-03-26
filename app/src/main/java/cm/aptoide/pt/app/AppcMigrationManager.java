@@ -20,6 +20,7 @@ public class AppcMigrationManager {
             && !installed.getSignature()
             .equals(signature)
             && installed.getVersionCode() <= versionCode
-            && storeId == BDS_STORE_ID && hasAppc);
+            && storeId == BDS_STORE_ID
+            && hasAppc);
   }
 }
