@@ -68,9 +68,15 @@ public class AppsPresenter implements Presenter {
 
     handlePauseUpdateClick();
 
+    handlePauseAppcUpgradeClick();
+
     handleCancelUpdateClick();
 
+    handleCancelAppcUpgradeClick();
+
     handleResumeUpdateClick();
+
+    handleResumeAppcUpgradeClick();
 
     handleUpdateCardClick();
 
@@ -81,6 +87,8 @@ public class AppsPresenter implements Presenter {
     handleUpdateCardLongClick();
 
     observeExcludedUpdates();
+
+    observeExcludedAppcUpgrades();
 
     loadUserImage();
 
@@ -155,6 +163,23 @@ public class AppsPresenter implements Presenter {
           crashReport.log(error);
         });
   }
+
+  private void observeExcludedAppcUpgrades() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(ioScheduler)
+        .flatMap(__ -> appsManager.getAppcUpgradesList(true))
+        .distinctUntilChanged()
+        .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
+        .observeOn(viewScheduler)
+        .doOnNext(excludedUpdatesList -> view.removeExcludedAppcUpgrades(excludedUpdatesList))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          crashReport.log(error);
+        });
+  }
+
 
   private void handleUpdateCardLongClick() {
     view.getLifecycleEvent()
@@ -260,6 +285,45 @@ public class AppsPresenter implements Presenter {
         }, error -> {
           crashReport.log(error);
         });
+  }
+
+  private void handleResumeAppcUpgradeClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> Observable.merge(view.resumeAppcUpgrade(), view.retryAppcUpgrade()))
+        .doOnNext(app -> view.setAppcStandbyState(app))
+        .observeOn(ioScheduler)
+        .flatMapCompletable(app -> appsManager.resumeAppcUpgrade(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleCancelAppcUpgradeClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.cancelAppcUpgrade())
+        .doOnNext(app -> view.removeAppcCanceledAppDownload(app))
+        .observeOn(ioScheduler)
+        .doOnNext(app -> appsManager.cancelAppcUpgrade(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handlePauseAppcUpgradeClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.pauseAppcUpgrade())
+        .doOnNext(app -> view.setAppcPausingDownloadState(app))
+        .observeOn(ioScheduler)
+        .flatMapCompletable(app -> appsManager.pauseAppcUpgrade(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleAppcUpgradeAppClick() {

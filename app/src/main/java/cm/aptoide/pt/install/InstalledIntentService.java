@@ -24,6 +24,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -44,6 +45,7 @@ public class InstalledIntentService extends IntentService {
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
+  private AppcUpgradeRepository upgradeRepository;
   private CompositeSubscription subscriptions;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -71,6 +73,7 @@ public class InstalledIntentService extends IntentService {
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
     adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
+    upgradeRepository = RepositoryFactory.getUpgradeAppcRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
     installManager = ((AptoideApplication) getApplicationContext()).getInstallManager();
     rootAvailabilityManager =
@@ -209,6 +212,7 @@ public class InstalledIntentService extends IntentService {
   private void databaseOnPackageRemoved(String packageName) {
     installManager.onAppRemoved(packageName)
         .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
+        .andThen(Completable.fromAction(() -> upgradeRepository.remove(packageName)))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageRemoved: " + packageName),
             throwable -> CrashReport.getInstance()

@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 
 /**
@@ -37,6 +38,14 @@ public interface AppsFragmentView extends View {
   Observable<App> cancelUpdate();
 
   Observable<App> resumeUpdate();
+
+  Observable<App> resumeAppcUpgrade();
+
+  Observable<App> retryAppcUpgrade();
+
+  Observable<App> cancelAppcUpgrade();
+
+  Observable<App> pauseAppcUpgrade();
 
   Observable<Boolean> showRootWarning();
 
@@ -76,6 +85,8 @@ public interface AppsFragmentView extends View {
 
   void removeCanceledAppDownload(App app);
 
+  void removeAppcCanceledAppDownload(App app);
+
   void setStandbyState(App app);
 
   void setAppcStandbyState(App app);
@@ -86,5 +97,9 @@ public interface AppsFragmentView extends View {
 
   void setPausingDownloadState(App app);
 
+  void setAppcPausingDownloadState(App app);
+
   void showAppcUpgradesList(List<App> list);
+
+  void removeExcludedAppcUpgrades(List<App> excludedUpdatesList);
 }

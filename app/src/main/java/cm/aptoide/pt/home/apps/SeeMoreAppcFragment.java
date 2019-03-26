@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeMoreAppcView {
 
@@ -112,6 +116,60 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
   @Override public void hidePullToRefresh() {
     if (swipeRefreshLayout.isRefreshing()) {
       swipeRefreshLayout.setRefreshing(false);
+    }
+  }
+
+  @Override public Observable<App> upgradeAppcApp() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> resumeAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> retryAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> cancelAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> pauseAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<Boolean> showRootWarning() {
+    return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()))
+        .map(response -> (response.equals(YES)));
+  }
+
+  @Override public void setAppcStandbyState(App app) {
+    appcAppsAdapter.setAppStandby(app);
+  }
+
+  @Override public void removeAppcCanceledAppDownload(App app) {
+    appcAppsAdapter.removeCanceledAppDownload(app);
+  }
+
+  @Override public void setAppcPausingDownloadState(App app) {
+    appcAppsAdapter.setAppOnPausing(app);
+  }
+
+  @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      appcAppsAdapter.addApps(updatesDownloadList);
     }
   }
 }

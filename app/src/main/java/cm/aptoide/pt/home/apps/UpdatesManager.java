@@ -3,6 +3,7 @@ package cm.aptoide.pt.home.apps;
 import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
@@ -60,8 +61,24 @@ public class UpdatesManager {
     return upgradeRepository.get(packageName);
   }
 
-  public Observable<Boolean> isAppcUpgrade(String packageName) {
-    return getAppcUpgrade(packageName).flatMap(upgrade -> Observable.just(upgrade != null));
+  public Observable<Install> filterNonAppcApp(Install install) {
+    return upgradeRepository.contains(install.getPackageName(), false)
+        .flatMap(isUpgrade -> {
+          if (isUpgrade) {
+            return Observable.empty();
+          }
+          return Observable.just(install);
+        });
+  }
+
+  public Observable<Install> filterAppcUpgrade(Install install) {
+    return upgradeRepository.contains(install.getPackageName(), false)
+        .flatMap(isUpgrade -> {
+          if (isUpgrade) {
+            return Observable.just(install);
+          }
+          return Observable.empty();
+        });
   }
 
   public Observable<List<Update>> getAllUpdates() {

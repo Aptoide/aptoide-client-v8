@@ -538,8 +538,10 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(
-      AppsManager appsManager, AptoideAccountManager aptoideAccountManager, AppsNavigator appsNavigator) {
+      AppsManager appsManager, AptoideAccountManager aptoideAccountManager,
+      AppsNavigator appsNavigator) {
     return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
-        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(), appsManager);
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), appsManager);
   }
 }

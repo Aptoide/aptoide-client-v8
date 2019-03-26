@@ -245,6 +245,30 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
+  @Override public Observable<App> resumeAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> retryAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> cancelAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> pauseAppcUpgrade() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
+        .map(appClick -> appClick.getApp());
+  }
+
   @Override public Observable<Boolean> showRootWarning() {
     return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
         AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()))
@@ -264,10 +288,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
+      showAppcUpgrades = true;
+    } else {
+      showAppcUpgrades = false;
     }
-    showAppcUpgrades = true;
     if (shouldShowAppcAppsList()) {
       setShowAppcUpgrades();
+    } else {
+      hideAppcUpgrades();
     }
   }
 
@@ -350,6 +378,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeCanceledAppDownload(app);
   }
 
+  @Override public void removeAppcCanceledAppDownload(App app) {
+    appcAppsAdapter.removeCanceledAppDownload(app);
+  }
+
   @Override public void setStandbyState(App app) {
     adapter.setAppStandby(app);
   }
@@ -371,6 +403,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppOnPausing(app);
   }
 
+  @Override public void setAppcPausingDownloadState(App app) {
+    appcAppsAdapter.setAppOnPausing(app);
+  }
+
   @Override public void showAppcUpgradesList(List<App> list) {
     if (list != null && !list.isEmpty()) {
       if (list.size() > 2) {
@@ -381,9 +417,20 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         appcSeeMoreButton.setVisibility(View.GONE);
       }
       showAppcUpgrades = true;
-      if (shouldShowAppcAppsList()) {
-        setShowAppcUpgrades();
-      }
+    } else {
+      showAppcUpgrades = false;
+    }
+    if (shouldShowAppcAppsList()) {
+      setShowAppcUpgrades();
+    } else {
+      hideAppcUpgrades();
+    }
+  }
+
+  @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
+    appcAppsAdapter.removeAppcUpgradesList(excludedUpdatesList);
+    if (appcAppsAdapter.getItemCount() == 0) {
+      appcAppsLayout.setVisibility(View.GONE);
     }
   }
 
@@ -397,6 +444,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appcAppsRecyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
     appcAppsLayout.setVisibility(View.VISIBLE);
+  }
+
+  private void hideAppcUpgrades() {
+    appcAppsLayout.setVisibility(View.GONE);
   }
 
   private boolean shouldShowAppsList() {

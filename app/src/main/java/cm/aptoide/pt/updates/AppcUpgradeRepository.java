@@ -168,4 +168,12 @@ public class AppcUpgradeRepository {
   public Observable<AppcUpgrade> get(String packageName) {
     return upgradeAccessor.get(packageName);
   }
+
+  public Observable<Boolean> contains(String packageName, boolean isExcluded) {
+    return upgradeAccessor.contains(packageName, isExcluded);
+  }
+
+  public void remove(String packageName) {
+    upgradeAccessor.remove(packageName);
+  }
 }

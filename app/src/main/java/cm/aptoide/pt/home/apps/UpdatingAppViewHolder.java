@@ -23,12 +23,14 @@ class UpdatingAppViewHolder extends AppsViewHolder {
   private ImageView pauseButton;
   private PublishSubject<AppClick> pauseUpdate;
 
+  private boolean isAppcUpgrade;
+
   public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate) {
     this(itemView, pauseUpdate, false);
   }
 
   public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate,
-      boolean appcStyling) {
+      boolean isAppcUpgrade) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -39,7 +41,8 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     pauseButton = (ImageView) itemView.findViewById(R.id.apps_updates_pause_button);
     this.pauseUpdate = pauseUpdate;
 
-    if (appcStyling) {
+    this.isAppcUpgrade = isAppcUpgrade;
+    if (isAppcUpgrade) {
       progressBar.setProgressDrawable(
           ContextCompat.getDrawable(itemView.getContext(), R.drawable.appc_progress));
     }
@@ -54,7 +57,7 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     progressBar.setProgress(((UpdateApp) app).getProgress());
     updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
 
-    pauseButton.setOnClickListener(
-        pause -> pauseUpdate.onNext(new AppClick(app, AppClick.ClickType.PAUSE_UPDATE)));
+    pauseButton.setOnClickListener(pause -> pauseUpdate.onNext(new AppClick(app,
+        isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_PAUSE : AppClick.ClickType.PAUSE_UPDATE)));
   }
 }

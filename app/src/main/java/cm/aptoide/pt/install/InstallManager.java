@@ -159,14 +159,14 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false);
+    return install(download, false, false);
   }
 
   public Completable defaultInstall(Download download) {
-    return install(download, true);
+    return install(download, true, false);
   }
 
-  public Completable install(Download download, boolean forceDefaultInstall) {
+  public Completable install(Download download, boolean forceDefaultInstall, boolean isDowngrade) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -179,10 +179,11 @@ public class InstallManager {
         })
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall))
+        .flatMap(install -> installInBackground(install, forceDefaultInstall, isDowngrade))
         .first()
         .toCompletable();
   }
+
 
   public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
@@ -382,7 +383,8 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall) {
+  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
+      boolean isDowngrade) {
     return getInstall(install.getMd5(), install.getPackageName(),
         install.getVersionCode()).mergeWith(
         startBackgroundInstallationAndWait(install, forceDefaultInstall));

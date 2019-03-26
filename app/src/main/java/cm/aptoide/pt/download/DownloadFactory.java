@@ -146,7 +146,7 @@ public class DownloadFactory {
       download.setMd5(update.getMd5());
       download.setIcon(update.getIcon());
       download.setAppName(update.getLabel());
-      download.setAction(Download.ACTION_UPDATE);
+      download.setAction(Download.ACTION_DOWNGRADE);
       download.setPackageName(update.getPackageName());
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());

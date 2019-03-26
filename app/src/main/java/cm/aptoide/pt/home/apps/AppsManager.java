@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
@@ -85,7 +86,7 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
-              .flatMap(install -> filterNonMigratorApps(install))
+              .flatMap(install -> updatesManager.filterNonAppcApp(install))
               .toList()
               .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
@@ -101,29 +102,9 @@ public class AppsManager {
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .flatMap(install -> filterMigratorApps(install))
+              .flatMap(install -> updatesManager.filterAppcUpgrade(install))
               .toList()
               .map(updatesList -> appMapper.getAppcUpgradesList(updatesList));
-        });
-  }
-
-  private Observable<Install> filterMigratorApps(Install install) {
-    return updatesManager.isAppcUpgrade(install.getPackageName())
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Observable.just(install);
-          }
-          return Observable.empty();
-        });
-  }
-
-  private Observable<Install> filterNonMigratorApps(Install install) {
-    return updatesManager.isAppcUpgrade(install.getPackageName())
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Observable.empty();
-          }
-          return Observable.just(install);
         });
   }
 
@@ -149,6 +130,7 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(item -> installManager.filterInstalled(item))
+              .flatMap(item -> updatesManager.filterNonAppcApp(item))
               .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
@@ -267,6 +249,21 @@ public class AppsManager {
         .toCompletable();
   }
 
+  public Completable resumeAppcUpgrade(App app) {
+    return installManager.getDownload(((AppcUpgrade) app).getMd5())
+        .flatMapCompletable(download -> installManager.install(download));
+  }
+
+  public void cancelAppcUpgrade(App app) {
+    installManager.removeInstallationFile(((AppcUpgrade) app).getMd5(),
+        ((AppcUpgrade) app).getPackageName(), ((AppcUpgrade) app).getVersionCode());
+  }
+
+  public Completable pauseAppcUpgrade(App app) {
+    return Completable.fromAction(
+        () -> installManager.stopInstallation(((AppcUpgrade) app).getMd5()));
+  }
+
   public Completable upgradeAppcApp(App app) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getAppcUpgrade(packageName)
@@ -280,7 +277,7 @@ public class AppsManager {
               return Single.just(false);
             })
             .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download))
+        .flatMapCompletable(download -> installManager.install(download, true, true))
         .toCompletable();
   }
 

@@ -15,7 +15,10 @@ public class ErrorUpgradeAppViewHolder extends AppsViewHolder {
   private ImageView retryButton;
   private PublishSubject<AppClick> retryUpdate;
 
-  public ErrorUpgradeAppViewHolder(View itemView, PublishSubject<AppClick> retryUpdate) {
+  private boolean isAppcUpgrade;
+
+  public ErrorUpgradeAppViewHolder(View itemView, PublishSubject<AppClick> retryUpdate,
+      boolean isAppcUpgrade) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -24,13 +27,16 @@ public class ErrorUpgradeAppViewHolder extends AppsViewHolder {
     retryButton.setImageDrawable(
         ContextCompat.getDrawable(itemView.getContext(), R.drawable.ic_refresh_appc));
     this.retryUpdate = retryUpdate;
+
+    this.isAppcUpgrade = isAppcUpgrade;
   }
 
   @Override public void setApp(App app) {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     appName.setText(((UpdateApp) app).getName());
-    retryButton.setOnClickListener(
-        install -> retryUpdate.onNext(new AppClick(app, AppClick.ClickType.APPC_UPGRADE_RETRY)));
+    retryButton.setOnClickListener(install -> retryUpdate.onNext(new AppClick(app,
+        isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_RETRY
+            : AppClick.ClickType.APPC_UPGRADE_RETRY)));
   }
 }
