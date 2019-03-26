@@ -22,18 +22,20 @@ public class Home {
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final BlacklistManager blacklistManager;
+  private final String promotionId;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
-      BlacklistManager blacklistManager) {
+      BlacklistManager blacklistManager, String promotionId) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
+    this.promotionId = promotionId;
     this.blacklistManager = blacklistManager;
   }
 
@@ -105,7 +107,7 @@ public class Home {
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
-    return promotionsManager.getPromotionApps()
+    return promotionsManager.getPromotionApps(promotionId)
         .map(this::mapPromotions);
   }
 

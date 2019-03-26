@@ -69,7 +69,7 @@ public class DownloadModel {
   }
 
   public enum Action {
-    UPDATE, INSTALL, DOWNGRADE, OPEN, PAY
+    UPDATE, INSTALL, DOWNGRADE, OPEN, PAY, MIGRATE
   }
 
   public enum DownloadState {

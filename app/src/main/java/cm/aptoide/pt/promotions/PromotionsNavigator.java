@@ -7,18 +7,17 @@ import rx.Observable;
 
 public class PromotionsNavigator {
   static final int CLAIM_REQUEST_CODE = 6666;
-
   private final FragmentNavigator fragmentNavigator;
-  private ClaimPromotionDialogFragment fragment;
 
   public PromotionsNavigator(FragmentNavigator fragmentNavigator) {
     this.fragmentNavigator = fragmentNavigator;
   }
 
-  public void navigateToClaimDialog(String packageName) {
-    fragment = new ClaimPromotionDialogFragment();
+  public void navigateToClaimDialog(String packageName, String promotionId) {
+    ClaimPromotionDialogFragment fragment = new ClaimPromotionDialogFragment();
     Bundle args = new Bundle();
     args.putString("package_name", packageName);
+    args.putString("promotion_id", promotionId);
     fragment.setArguments(args);
     fragmentNavigator.navigateToDialogForResult(fragment, CLAIM_REQUEST_CODE);
   }

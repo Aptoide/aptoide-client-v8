@@ -94,7 +94,7 @@ public class EditorialManager {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid()), install.getProgress(),
+                pay != null && pay.isPaid(), false), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay, position));
   }
 

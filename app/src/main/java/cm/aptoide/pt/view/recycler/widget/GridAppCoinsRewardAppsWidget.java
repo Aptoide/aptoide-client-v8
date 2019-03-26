@@ -35,7 +35,7 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
     super.unbindView();
   }
 
-  @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable) {
+  @Override public void bindView(GridAppCoinsRewardAppsDisplayable displayable, int position) {
     Application app = displayable.getPojo();
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);

@@ -20,11 +20,12 @@ public class PromotionsPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final PromotionsNavigator promotionsNavigator;
   private final PromotionsAnalytics promotionsAnalytics;
+  private final String promotionId;
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
       Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, String promotionId) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
@@ -32,6 +33,7 @@ public class PromotionsPresenter implements Presenter {
     this.viewScheduler = viewScheduler;
     this.promotionsAnalytics = promotionsAnalytics;
     this.promotionsNavigator = promotionsNavigator;
+    this.promotionId = promotionId;
   }
 
   @Override public void present() {
@@ -52,7 +54,7 @@ public class PromotionsPresenter implements Presenter {
             .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractClaimEvent(
                 promotionViewApp.getPackageName(), promotionViewApp.getAppcValue()))
             .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
-                promotionViewApp.getPackageName()))
+                promotionViewApp.getPackageName(), promotionId))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -185,7 +187,7 @@ public class PromotionsPresenter implements Presenter {
   }
 
   private Observable<PromotionViewApp> loadPromotionApps() {
-    return promotionsManager.getPromotionsModel()
+    return promotionsManager.getPromotionsModel(promotionId)
         .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
         .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))

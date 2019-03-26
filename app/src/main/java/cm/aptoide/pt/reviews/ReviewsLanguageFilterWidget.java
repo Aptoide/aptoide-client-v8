@@ -21,7 +21,7 @@ public class ReviewsLanguageFilterWidget extends Widget<ReviewsLanguageFilterDis
     spinner = (Spinner) itemView.findViewById(R.id.comments_filter_language_spinner);
   }
 
-  @Override public void bindView(ReviewsLanguageFilterDisplayable displayable) {
+  @Override public void bindView(ReviewsLanguageFilterDisplayable displayable, int position) {
     displayable.setup(spinner);
   }
 }

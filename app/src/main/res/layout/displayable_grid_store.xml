@@ -1,8 +1,10 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="110dp"
+    app:cardCornerRadius="4dp"
     >
   <LinearLayout
       xmlns:android="http://schemas.android.com/apk/res/android"

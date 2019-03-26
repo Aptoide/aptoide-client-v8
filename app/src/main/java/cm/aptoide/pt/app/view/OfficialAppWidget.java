@@ -56,7 +56,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     appSize = (TextView) itemView.findViewById(R.id.app_size);
   }
 
-  @Override public void bindView(OfficialAppDisplayable displayable) {
+  @Override public void bindView(OfficialAppDisplayable displayable, int position) {
 
     final FragmentActivity context = getContext();
     final Pair<String, GetAppMeta> appMeta = displayable.getMessageGetApp();

@@ -37,6 +37,7 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
@@ -99,6 +100,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -274,9 +276,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
       ImpressionManager impressionManager, PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager) {
+      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
+      @Named("homePromotionsId") String promotionsId) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager);
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -323,6 +326,11 @@ import rx.subscriptions.CompositeSubscription;
         okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
+  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository) {
+    return new AppcMigrationManager(repository);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -332,24 +340,28 @@ import rx.subscriptions.CompositeSubscription;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
+      @Named("wallet-offer-promotion-id") String promotionId,
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager);
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
+        socialRepository, marketName, appCoinsManager, promotionsManager, promotionId,
+        installedRepository, appcMigrationManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      PromotionsNavigator promotionsNavigator,
+      @Named("wallet-offer-promotion-id") String promotionId) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), promotionsNavigator, promotionId);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -436,10 +448,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsId) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsId);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -452,7 +464,7 @@ import rx.subscriptions.CompositeSubscription;
       ClaimPromotionsNavigator navigator) {
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
-        promotionsAnalytics, navigator);
+        promotionsAnalytics, navigator, arguments.getString("promotion_id", "default"));
   }
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(

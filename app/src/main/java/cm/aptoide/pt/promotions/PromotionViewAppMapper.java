@@ -26,7 +26,7 @@ public class PromotionViewAppMapper {
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,
       Install.InstallationStatus state) {
-    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false), progress,
-        downloadStateParser.parseDownloadState(state), null);
+    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
+        progress, downloadStateParser.parseDownloadState(state), null);
   }
 }
