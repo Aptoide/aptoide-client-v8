@@ -20,7 +20,7 @@ public class ReactionsRemoteService implements ReactionsService {
     this.ioScheduler = ioScheduler;
   }
 
-  @Override public Single<ReactionsResponse> setReaction(String id, String like) {
+  @Override public Single<ReactionsResponse> setReaction(String id, String reaction) {
     return null;
   }
 
@@ -38,11 +38,15 @@ public class ReactionsRemoteService implements ReactionsService {
       topReactionList.add(new TopReaction(reaction.getType(), reaction.getTotal()));
     }
     String userReaction = "";
+    String userId = "";
     if (topReactionsResponse.getMy() != null) {
       userReaction = topReactionsResponse.getMy()
           .getType();
+      userId = topReactionsResponse.getMy()
+          .getUid();
     }
-    return new LoadReactionModel(topReactionsResponse.getTotal(), userReaction, topReactionList);
+    return new LoadReactionModel(topReactionsResponse.getTotal(), userReaction, userId,
+        topReactionList);
   }
 
   public interface ServiceV8 {

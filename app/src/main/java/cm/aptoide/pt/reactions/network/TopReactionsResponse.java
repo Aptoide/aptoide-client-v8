@@ -37,6 +37,7 @@ public class TopReactionsResponse {
 
   public static class My {
     private String type;
+    private String uid;
 
     public My() {
     }
@@ -47,6 +48,14 @@ public class TopReactionsResponse {
 
     public void setType(String type) {
       this.type = type;
+    }
+
+    public String getUid() {
+      return uid;
+    }
+
+    public void setUid(String uid) {
+      this.uid = uid;
     }
   }
 
