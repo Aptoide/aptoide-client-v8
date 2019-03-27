@@ -217,20 +217,22 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.similarAppsVisibility())
         .observeOn(Schedulers.io())
         .doOnNext(similarAppsVisible -> {
-          SimilarAppsViewModel similarAppsViewModel =
-              appViewManager.getCachedSimilarAppsViewModel();
-          if (similarAppsViewModel != null
-              && similarAppsViewModel.hasAd()
-              && !similarAppsViewModel.hasRecordedAdImpression()) {
-            similarAppsViewModel.setHasRecordedAdImpression(true);
-            appViewAnalytics.
-                similarAppBundleImpression(similarAppsViewModel.getAd()
-                    .getNetwork(), true);
-          }
+          sendSimilarAppsAdImpressionEvent(appViewManager.getCachedSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void sendSimilarAppsAdImpressionEvent(SimilarAppsViewModel similarAppsViewModel) {
+    if (similarAppsViewModel != null
+        && similarAppsViewModel.hasAd()
+        && !similarAppsViewModel.hasRecordedAdImpression()) {
+      similarAppsViewModel.setHasRecordedAdImpression(true);
+      appViewAnalytics.
+          similarAppBundleImpression(similarAppsViewModel.getAd()
+              .getNetwork(), true);
+    }
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -289,20 +291,16 @@ public class AppViewPresenter implements Presenter {
         .takeUntil(__ -> view.isSimilarAppsVisible())
         .observeOn(Schedulers.io())
         .doOnNext(__ -> {
-          SimilarAppsViewModel similarAppsViewModel =
-              appViewManager.getCachedSimilarAppsViewModel();
-          if (similarAppsViewModel != null
-              && similarAppsViewModel.getAd() != null
-              && !similarAppsViewModel.hasRecordedAdImpression()) {
-            similarAppsViewModel.setHasRecordedAdImpression(true);
-            appViewAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
-                .getNetwork(), true);
-          }
-          appViewAnalytics.similarAppBundleImpression(null, false);
+          sendSimilarAppInteractEvent(appViewManager.getCachedSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private void sendSimilarAppInteractEvent(SimilarAppsViewModel similarAppsViewModel) {
+    sendSimilarAppsAdImpressionEvent(similarAppsViewModel);
+    appViewAnalytics.similarAppBundleImpression(null, false);
   }
 
   private void handleAdsLogic(SearchAdResult searchAdResult) {
