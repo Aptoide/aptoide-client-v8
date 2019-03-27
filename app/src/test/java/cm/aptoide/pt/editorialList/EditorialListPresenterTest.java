@@ -58,8 +58,7 @@ public class EditorialListPresenterTest {
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
         editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
-    CurationCard curationCard =
-        new CurationCard("1", "sub", "icon", "title", "1000", actionItemData.getType());
+    CurationCard curationCard = new CurationCard("1", "sub", "icon", "title", "1000", "CURATION_1");
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);
     successEditorialViewModel = new EditorialListViewModel(curationCardList, 0, 0);
     loadingEditorialViewModel = new EditorialListViewModel(true);
@@ -153,7 +152,8 @@ public class EditorialListPresenterTest {
     presenter.handleEditorialCardClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When there's is a click on an Editorial Card, it should emit an EditorialHomeEvent
-    cardClickEvent.onNext(new EditorialHomeEvent("1", null, 1, HomeEvent.Type.EDITORIAL));
+    cardClickEvent.onNext(
+        new EditorialHomeEvent("1", "CURATION_1", null, 1, HomeEvent.Type.EDITORIAL));
     //Then it should send editorial interact analytic event
     verify(editorialListAnalytics).sendEditorialInteractEvent("1", 1);
     //And navigate to the specified editorial view
