@@ -17,7 +17,7 @@ public class ReactionsManager {
     return reactionsService.loadReactionModel(cardId, groupId);
   }
 
-  public Single<ReactionsResponse> setReaction(String id, String reactionType) {
-    return reactionsService.setReaction(id, reactionType);
+  public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reactionType) {
+    return reactionsService.setReaction(cardId, groupId, reactionType);
   }
 }

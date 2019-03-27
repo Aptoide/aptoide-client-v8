@@ -190,7 +190,9 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getReaction())
+        .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
+            homeEvent.getReaction())
+            .observeOn(viewScheduler)
             .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 homeEvent.getBundlePosition(), homeEvent.getReaction()))
             .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId(),

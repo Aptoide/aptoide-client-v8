@@ -206,7 +206,6 @@ import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
-import cm.aptoide.pt.reactions.Reactions;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
@@ -1962,10 +1961,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
-  }
-
-  @Singleton @Provides Reactions providesReactionsInteractor(ReactionsService reactionsService) {
-    return new Reactions(reactionsService);
   }
 
   @Singleton @Provides ReactionsManager providesReactionsManager(

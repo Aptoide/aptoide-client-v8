@@ -386,7 +386,8 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
         .flatMapSingle(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
-            reactionEvent.getReactionType())
+            reactionEvent.getGroupId(), reactionEvent.getReactionType())
+            .observeOn(viewScheduler)
             .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                 reactionEvent.getReactionType()))
             .flatMap(
