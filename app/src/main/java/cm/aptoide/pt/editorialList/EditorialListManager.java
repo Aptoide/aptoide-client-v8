@@ -37,7 +37,7 @@ public class EditorialListManager {
     return reactionsManager.loadReactionModel(cardId, groupId);
   }
 
-  public Single<ReactionsResponse> setReaction(String cardId, String reaction) {
-    return reactionsManager.setReaction(cardId, reaction);
+  public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
+    return reactionsManager.setReaction(cardId, groupId, reaction);
   }
 }

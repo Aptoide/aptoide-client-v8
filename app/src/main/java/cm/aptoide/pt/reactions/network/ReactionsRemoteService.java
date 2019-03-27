@@ -1,14 +1,19 @@
 package cm.aptoide.pt.reactions.network;
 
+import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.TopReaction;
 import java.util.ArrayList;
 import java.util.List;
+import retrofit2.Response;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+
+import static cm.aptoide.pt.editorial.ReactionsResponse.ReactionResponseMapper.mapReactionResponse;
 
 public class ReactionsRemoteService implements ReactionsService {
 
@@ -20,15 +25,24 @@ public class ReactionsRemoteService implements ReactionsService {
     this.ioScheduler = ioScheduler;
   }
 
-  @Override public Single<ReactionsResponse> setReaction(String id, String reaction) {
-    return null;
+  @Override
+  public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
+    Body body = new Body(cardId, groupId, reaction);
+    return service.setFirstUserReaction(body)
+        .map(this::mapResponse)
+        .toSingle()
+        .subscribeOn(ioScheduler);
   }
 
   @Override public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
     return service.getTopReactionsResponse(groupId, cardId)
-        .observeOn(ioScheduler)
         .map(this::mapToTopReactionsList)
-        .toSingle();
+        .toSingle()
+        .subscribeOn(ioScheduler);
+  }
+
+  private ReactionsResponse mapResponse(Response response) {
+    return new ReactionsResponse(mapReactionResponse(response));
   }
 
   private LoadReactionModel mapToTopReactionsList(TopReactionsResponse topReactionsResponse) {
@@ -54,5 +68,46 @@ public class ReactionsRemoteService implements ReactionsService {
       //@GET("echo/8.20181116/groups/{group_id}/objects/{id}/reactions/summary") //prod
     Observable<TopReactionsResponse> getTopReactionsResponse(@Path("group_id") String groupId,
         @Path("id") String id);
+
+    @POST("echo/8.22112018/reactions/") //@POST("echo/20181116/reactions
+    Observable<Response<EmptyResponse>> setFirstUserReaction(@retrofit2.http.Body Body body);
+  }
+
+  public static class Body extends BaseBody {
+
+    private String objectUid;
+    private String groupUid;
+    private String type;
+
+    public Body(String cardId, String groupId, String reaction) {
+
+      this.objectUid = cardId;
+      this.groupUid = groupId;
+      this.type = reaction;
+    }
+
+    public String getObjectUid() {
+      return objectUid;
+    }
+
+    public void setObjectUid(String objectUid) {
+      this.objectUid = objectUid;
+    }
+
+    public String getGroupUid() {
+      return groupUid;
+    }
+
+    public void setGroupUid(String groupUid) {
+      this.groupUid = groupUid;
+    }
+
+    public String getType() {
+      return type;
+    }
+
+    public void setType(String type) {
+      this.type = type;
+    }
   }
 }

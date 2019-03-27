@@ -605,7 +605,9 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void setUserReaction(String reaction) {
-    reactButton.setImageResource(mapReaction(reaction));
+    if (!reaction.equals("")) {
+      reactButton.setImageResource(mapReaction(reaction));
+    }
   }
 
   @Override public void showLogInDialog() {

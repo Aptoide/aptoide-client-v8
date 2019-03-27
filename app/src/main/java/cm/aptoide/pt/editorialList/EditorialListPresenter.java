@@ -226,7 +226,8 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(created -> view.reactionClicked())
         .flatMapSingle(
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
-                reactionsHomeEvent.getReaction())
+                reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
+                .observeOn(viewScheduler)
                 .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
                     reactionsHomeEvent.getBundlePosition(), reactionsHomeEvent.getReaction()))
                 .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
