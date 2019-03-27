@@ -354,8 +354,7 @@ public class EditorialPresenter implements Presenter {
             .toObservable())
         .observeOn(viewScheduler)
         .doOnNext(editorialViewModel -> {
-          editorialAnalytics.sendReactionButtonClickEvent(
-              editorialViewModel.getCardId()); //TODO implementation
+          editorialAnalytics.sendReactionButtonClickEvent();
           view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -400,6 +399,7 @@ public class EditorialPresenter implements Presenter {
   private void handleReactionsResponse(ReactionsResponse reactionsResponse, String reaction) {
     if (reactionsResponse.wasSuccess()) {
       view.setUserReaction(reaction);
+      editorialAnalytics.sendReactedEvent();
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {
