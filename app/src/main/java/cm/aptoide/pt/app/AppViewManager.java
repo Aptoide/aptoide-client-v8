@@ -618,4 +618,8 @@ public class AppViewManager {
     return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
         progress, downloadStateParser.parseDownloadState(state), null);
   }
+
+  public SimilarAppsViewModel getCachedAppcSimilarAppsViewModel() {
+    return cachedAppcSimilarAppsViewModel;
+  }
 }

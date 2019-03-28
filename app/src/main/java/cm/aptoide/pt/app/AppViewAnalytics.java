@@ -32,6 +32,7 @@ public class AppViewAnalytics {
   public static final String DONATIONS_IMPRESSION = "Donations_Impression";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   public static final String ADS_BLOCK_BY_OFFER = "Ads_Block_By_Offer";
+  public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -402,6 +403,13 @@ public class AppViewAnalytics {
 
   public void sendAdsBlockByOfferEvent() {
     analyticsManager.logEvent(null, ADS_BLOCK_BY_OFFER, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void similarAppcAppBundleImpression() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(IS_AD, false);
+    analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 }

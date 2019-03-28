@@ -218,10 +218,17 @@ public class AppViewPresenter implements Presenter {
         .observeOn(Schedulers.io())
         .doOnNext(similarAppsVisible -> {
           sendSimilarAppsAdImpressionEvent(appViewManager.getCachedSimilarAppsViewModel());
+          sendSimilarAppcAppsImpressionEvent(appViewManager.getCachedAppcSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void sendSimilarAppcAppsImpressionEvent(SimilarAppsViewModel appcSimilarAppsViewModel) {
+    if (appcSimilarAppsViewModel != null) {
+      appViewAnalytics.similarAppcAppBundleImpression();
+    }
   }
 
   private void sendSimilarAppsAdImpressionEvent(SimilarAppsViewModel similarAppsViewModel) {
@@ -292,6 +299,7 @@ public class AppViewPresenter implements Presenter {
         .observeOn(Schedulers.io())
         .doOnNext(__ -> {
           sendSimilarAppInteractEvent(appViewManager.getCachedSimilarAppsViewModel());
+          sendSimilarAppcAppsImpressionEvent(appViewManager.getCachedAppcSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
