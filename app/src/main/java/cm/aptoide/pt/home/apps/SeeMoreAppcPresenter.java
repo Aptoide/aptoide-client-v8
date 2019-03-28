@@ -34,6 +34,8 @@ public class SeeMoreAppcPresenter implements Presenter {
   @Override public void present() {
     handleRefreshApps();
 
+    observeAppcUpgradesList();
+
     getAvailableAppcUpgradesList();
 
     handleAppcUpgradeAppClick();

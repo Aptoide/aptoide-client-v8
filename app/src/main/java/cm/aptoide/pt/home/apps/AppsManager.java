@@ -250,18 +250,18 @@ public class AppsManager {
   }
 
   public Completable resumeAppcUpgrade(App app) {
-    return installManager.getDownload(((AppcUpgrade) app).getMd5())
+    return installManager.getDownload(((UpdateApp) app).getMd5())
         .flatMapCompletable(download -> installManager.install(download));
   }
 
   public void cancelAppcUpgrade(App app) {
-    installManager.removeInstallationFile(((AppcUpgrade) app).getMd5(),
-        ((AppcUpgrade) app).getPackageName(), ((AppcUpgrade) app).getVersionCode());
+    installManager.removeInstallationFile(((UpdateApp) app).getMd5(),
+        ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
   }
 
   public Completable pauseAppcUpgrade(App app) {
     return Completable.fromAction(
-        () -> installManager.stopInstallation(((AppcUpgrade) app).getMd5()));
+        () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
   }
 
   public Completable upgradeAppcApp(App app) {
