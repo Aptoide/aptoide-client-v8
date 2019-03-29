@@ -71,6 +71,16 @@ public class UpdatesManager {
         });
   }
 
+  public Observable<Update> filterNonAppcApp(Update update) {
+    return upgradeRepository.contains(update.getPackageName(), false)
+        .flatMap(isUpgrade -> {
+          if (isUpgrade) {
+            return Observable.empty();
+          }
+          return Observable.just(update);
+        });
+  }
+
   public Observable<Install> filterAppcUpgrade(Install install) {
     return upgradeRepository.contains(install.getPackageName(), false)
         .flatMap(isUpgrade -> {

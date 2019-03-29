@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
@@ -66,6 +65,10 @@ public class AppsManager {
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
     return updatesManager.getUpdatesList(isExcluded)
         .distinctUntilChanged()
+        .flatMap(updates -> Observable.just(updates)
+            .flatMapIterable(upd -> upd)
+            .flatMap(update -> updatesManager.filterNonAppcApp(update))
+            .toList())
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
@@ -107,7 +110,6 @@ public class AppsManager {
               .map(updatesList -> appMapper.getAppcUpgradesList(updatesList));
         });
   }
-
 
   public Observable<List<App>> getInstalledApps() {
     return installManager.fetchInstalled()
