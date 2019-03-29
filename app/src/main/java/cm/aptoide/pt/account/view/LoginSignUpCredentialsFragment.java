@@ -359,8 +359,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void setCobrandText() {
-    buttonSignUp.setText(String.format(getString(R.string.join_company), marketName));
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company), marketName));
+    buttonSignUp.setText(String.format(getString(R.string.join_company),
+        getResources().getString(R.string.app_name)));
+    signUpSelectionButton.setText(String.format(getString(R.string.join_company),
+        getResources().getString(R.string.app_name)));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
