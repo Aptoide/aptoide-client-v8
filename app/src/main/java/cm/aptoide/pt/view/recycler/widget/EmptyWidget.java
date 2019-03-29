@@ -23,7 +23,7 @@ public class EmptyWidget extends Widget {
     // TODO
   }
 
-  @Override public void bindView(Displayable displayable) {
+  @Override public void bindView(Displayable displayable, int position) {
     // TODO
   }
 }

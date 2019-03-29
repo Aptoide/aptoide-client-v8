@@ -36,7 +36,6 @@ public class PromotionsManager {
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
-  private final String promotionId;
   private final MoPubAdsManager moPubAdsManager;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
@@ -45,7 +44,7 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PreferencesManager preferencesManager, PackageManager packageManager,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      String promotionId, MoPubAdsManager moPubAdsManager) {
+      MoPubAdsManager moPubAdsManager) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -57,16 +56,15 @@ public class PromotionsManager {
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
-    this.promotionId = promotionId;
     this.moPubAdsManager = moPubAdsManager;
   }
 
-  public Single<List<PromotionApp>> getPromotionApps() {
+  public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
     return promotionsService.getPromotionApps(promotionId);
   }
 
-  public Observable<PromotionsModel> getPromotionsModel() {
-    return getPromotionApps().toObservable()
+  public Observable<PromotionsModel> getPromotionsModel(String promotionsId) {
+    return getPromotionApps(promotionsId).toObservable()
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
@@ -161,8 +159,7 @@ public class PromotionsManager {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                            : ADS_HIDE));
+                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
               } else {
                 setupDownloadEvents(download, packageName, appId,
                     WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
@@ -182,7 +179,7 @@ public class PromotionsManager {
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
-      String captcha) {
+      String captcha, String promotionId) {
     return promotionsService.claimPromotion(walletAddress, packageName, captcha, promotionId);
   }
 

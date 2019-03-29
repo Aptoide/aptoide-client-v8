@@ -17,7 +17,16 @@ public class MoreBundleManager {
   }
 
   public Single<HomeBundlesModel> loadBundle(String title, String url) {
-    return bundlesRepository.loadBundles(title, url);
+    return bundlesRepository.loadBundles(title, url)
+        .flatMap(homeBundlesModel -> handleEmptyBundles(title, url, homeBundlesModel));
+  }
+
+  private Single<HomeBundlesModel> handleEmptyBundles(String title, String url,
+      HomeBundlesModel homeBundlesModel) {
+    if (isOnlyEmptyBundles(homeBundlesModel)) {
+      return loadNextBundles(title, url);
+    }
+    return Single.just(homeBundlesModel);
   }
 
   public Single<HomeBundlesModel> loadFreshBundles(String title, String url) {
@@ -26,12 +35,7 @@ public class MoreBundleManager {
 
   public Single<HomeBundlesModel> loadNextBundles(String title, String url) {
     return bundlesRepository.loadNextBundles(title, url)
-        .flatMap(homeBundlesModel -> {
-          if (isOnlyEmptyBundles(homeBundlesModel)) {
-            return loadNextBundles(title, url);
-          }
-          return Single.just(homeBundlesModel);
-        });
+        .flatMap(homeBundlesModel -> handleEmptyBundles(title, url, homeBundlesModel));
   }
 
   public boolean hasMore(String title) {

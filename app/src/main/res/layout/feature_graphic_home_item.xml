@@ -5,7 +5,7 @@
     android:id="@+id/brick_app_item"
     android:layout_width="328dp"
     android:layout_height="180dp"
-    app:cardCornerRadius="3dp"
+    app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true"
     >
 

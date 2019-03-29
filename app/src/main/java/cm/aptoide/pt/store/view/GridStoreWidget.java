@@ -36,7 +36,7 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
     storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
   }
 
-  @Override public void bindView(GridStoreDisplayable gridStoreDisplayable) {
+  @Override public void bindView(GridStoreDisplayable gridStoreDisplayable, int position) {
 
     final Store store = gridStoreDisplayable.getPojo();
 

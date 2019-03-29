@@ -109,17 +109,11 @@ public class MainActivity extends BottomNavigationActivity
         (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
     BottomNavigationItemView appsItemView =
         (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
-    BottomNavigationItemView editorialItemView =
-        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.CURATION_POSITION);
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
-    View newBadge = LayoutInflater.from(this)
-        .inflate(R.layout.new_badge, appsView, false);
-
     updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
     appsItemView.addView(updatesBadge);
-    editorialItemView.addView(newBadge);
     appsItemView.setVisibility(View.VISIBLE);
   }
 

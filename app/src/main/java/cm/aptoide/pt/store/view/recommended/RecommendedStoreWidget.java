@@ -50,7 +50,7 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
     followButton = (AppCompatButton) itemView.findViewById(R.id.recommended_store_action);
   }
 
-  @Override public void bindView(RecommendedStoreDisplayable displayable) {
+  @Override public void bindView(RecommendedStoreDisplayable displayable, int position) {
     Store store = displayable.getPojo();
     storeName.setText(store.getName());
     followingUsers.setText(String.valueOf(store.getStats()

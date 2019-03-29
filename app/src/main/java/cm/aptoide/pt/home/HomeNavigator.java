@@ -64,8 +64,9 @@ public class HomeNavigator {
   }
 
   public void navigateWithAction(HomeEvent click) {
+
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
-        .getEvent(), click.getBundle()
+        .getEvent(), click.getType(), click.getBundle()
         .getTitle(), "default", click.getBundle()
         .getTag(), StoreContext.home), true);
   }

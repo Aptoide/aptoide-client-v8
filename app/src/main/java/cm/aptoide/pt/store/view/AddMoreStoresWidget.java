@@ -26,7 +26,7 @@ public class AddMoreStoresWidget extends Widget<AddMoreStoresDisplayable> {
     addMoreStores = (Button) itemView.findViewById(R.id.add_more_stores);
   }
 
-  @Override public void bindView(AddMoreStoresDisplayable displayable) {
+  @Override public void bindView(AddMoreStoresDisplayable displayable, int position) {
     addMoreStores.setOnClickListener(v -> {
       if (itemView.getContext() instanceof FragmentActivity) {
         new AddStoreDialog().show(
