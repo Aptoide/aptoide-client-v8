@@ -622,4 +622,14 @@ public class AppViewManager {
   public SimilarAppsViewModel getCachedAppcSimilarAppsViewModel() {
     return cachedAppcSimilarAppsViewModel;
   }
+
+  public Observable<DownloadAppViewModel> downloadStarted() {
+    return loadAppViewViewModel().toObservable()
+        .filter(app -> !app.isLoading())
+        .flatMap(app -> loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
+            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
+                .getId(), app.hasAdvertising() || app.hasBilling()))
+        .filter(download -> download.getDownloadModel()
+            .isDownloading());
+  }
 }

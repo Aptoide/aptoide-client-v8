@@ -138,13 +138,28 @@ public class AppViewPresenter implements Presenter {
     pausePromotionDownload();
     loadInterstitialAd();
     showInterstitial();
+
+    //handleSimilarAppcAppBundle();
   }
+/*
+  private void handleSimilarAppcAppBundle() {
+
+    return appViewManager.loadAppViewViewModel()
+
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(___ >);
+  }*/
 
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.isAppViewReadyToDownload())
-        .flatMap(__ -> Observable.zip(downloadStarted(), view.interstitialAdLoaded(),
+        .flatMap(__ -> appViewManager.loadAppViewViewModel()
+            .toObservable())
+        .filter(appViewViewModel -> !appViewViewModel.isAppCoinApp())
+        // TODO: 3/29/19 loadApp and filter if appc app
+        .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
         .observeOn(viewScheduler)
@@ -154,6 +169,14 @@ public class AppViewPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private Observable<DownloadModel> downloadInRange(int min, int max) {
+    return appViewManager.downloadStarted().first()
+        .map(downloadAppViewModel -> downloadAppViewModel.getDownloadModel())
+        .filter(downloadModel -> downloadModel.getProgress() >= min
+            && downloadModel.getProgress() < max)
+        .first();
   }
 
   private Observable<DownloadAppViewModel> downloadStarted() {
