@@ -571,21 +571,26 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void setReactions(String userReaction, List<TopReaction> reactions,
       int numberOfReactions) {
+    setUserReaction(userReaction);
     ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
-    if (userReaction != null) {
-      setUserReaction(userReaction);
-    }
-    for (int i = 0; i < reactions.size(); i++) {
-      if (i < imageViews.length) {
+    int validReactions = 0;
+    for (int i = 0; i < imageViews.length; i++) {
+      if (i < reactions.size() && isReactionValid(reactions.get(i)
+          .getType())) {
         ImageLoader.with(getContext())
             .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
                 .getType()), imageViews[i]);
         imageViews[i].setVisibility(View.VISIBLE);
+        validReactions++;
+      } else {
+        imageViews[i].setVisibility(View.GONE);
       }
     }
-    if (numberOfReactions != 0) {
+    if (numberOfReactions > 0 && validReactions > 0) {
       this.numberOfReactions.setText(String.valueOf(numberOfReactions));
       this.numberOfReactions.setVisibility(View.VISIBLE);
+    } else {
+      this.numberOfReactions.setVisibility(View.GONE);
     }
   }
 
@@ -605,7 +610,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void setUserReaction(String reaction) {
-    if (!reaction.equals("")) {
+    if (!reaction.equals("") && isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     }
   }
@@ -622,6 +627,10 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  private boolean isReactionValid(String reaction) {
+    return mapReaction(reaction) != -1;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

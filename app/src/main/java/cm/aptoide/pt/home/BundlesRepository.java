@@ -114,4 +114,8 @@ public class BundlesRepository {
       return Completable.complete();
     });
   }
+
+  public void updateCache(List<HomeBundle> homeBundles) {
+    cachedBundles.put(HOME_BUNDLE_KEY, homeBundles);
+  }
 }

@@ -56,4 +56,11 @@ public class EditorialListRepository {
               editorialListViewModel.getTotal());
     }
   }
+
+  public void updateCache(EditorialListViewModel editorialListViewModel,
+      List<CurationCard> curationCards) {
+    cachedEditorialListViewModel =
+        new EditorialListViewModel(curationCards, editorialListViewModel.getOffset(),
+            editorialListViewModel.getTotal());
+  }
 }

@@ -140,8 +140,29 @@ public class Home {
     return nativeAdExperiment.shouldLoadNative();
   }
 
-  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
-    return reactionsManager.loadReactionModel(cardId, groupId);
+  public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId)
+        .flatMap(loadReactionModel -> bundlesRepository.loadHomeBundles()
+            .flatMap(
+                homeBundlesModel -> getUpdatedCards(homeBundlesModel, loadReactionModel, cardId)));
+  }
+
+  private Single<List<HomeBundle>> getUpdatedCards(HomeBundlesModel homeBundlesModel,
+      LoadReactionModel loadReactionModel, String cardId) {
+    List<HomeBundle> homeBundles = homeBundlesModel.getList();
+    for (HomeBundle homeBundle : homeBundles) {
+      if (homeBundle instanceof ActionBundle) {
+        ActionItem actionBundle = ((ActionBundle) homeBundle).getActionItem();
+        if (actionBundle.getCardId()
+            .equals(cardId)) {
+          actionBundle.setReactions(loadReactionModel.getTopReactionList());
+          actionBundle.setNumberOfReactions(loadReactionModel.getTotal());
+          actionBundle.setUserReaction(loadReactionModel.getMyReaction());
+        }
+      }
+    }
+    bundlesRepository.updateCache(homeBundles);
+    return Single.just(homeBundles);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {

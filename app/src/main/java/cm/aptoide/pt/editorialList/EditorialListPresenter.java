@@ -7,7 +7,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -55,23 +55,23 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.cardCreated())
         .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getGroupId(), editorialHomeEvent.getBundlePosition()))
+            editorialHomeEvent.getGroupId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId, int position) {
+  private Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
     return editorialListManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
-        .doOnSuccess(reactionModel -> view.updateReactions(reactionModel, position));
+        .doOnSuccess(curationCards -> view.update(curationCards));
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> loadEditorialListViewModel(false))
+        .flatMapSingle(created -> loadEditorialListViewModel(false, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
@@ -116,7 +116,7 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
-            .flatMapSingle(refreshed -> loadFreshEditorialListViewModel())
+            .flatMapSingle(refreshed -> loadEditorialListViewModel(false, true))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -129,7 +129,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadFreshEditorialListViewModel()))
+            .flatMapSingle(__ -> loadEditorialListViewModel(false, true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -154,14 +154,15 @@ public class EditorialListPresenter implements Presenter {
             .filter(__ -> editorialListManager.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> loadEditorialListViewModel(true))
+            .flatMapSingle(bottomReached -> loadEditorialListViewModel(true, false))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
+  private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
+      boolean refresh) {
     return editorialListManager.loadEditorialListViewModel(loadMore, false)
         .observeOn(viewScheduler)
         .doOnSuccess(editorialListViewModel -> {
@@ -175,29 +176,11 @@ public class EditorialListPresenter implements Presenter {
               view.showGenericError();
             }
           } else {
-            view.populateView(editorialListViewModel);
-          }
-          view.hideLoadMore();
-        })
-        .map(editorialViewModel -> editorialViewModel);
-  }
-
-  private Single<EditorialListViewModel> loadFreshEditorialListViewModel() {
-    return editorialListManager.loadEditorialListViewModel(false, true)
-        .observeOn(viewScheduler)
-        .doOnSuccess(editorialListViewModel -> {
-          view.hideRefresh();
-          if (!editorialListViewModel.isLoading()) {
-            view.hideLoading();
-          }
-          if (editorialListViewModel.hasError()) {
-            if (editorialListViewModel.getError() == EditorialListViewModel.Error.NETWORK) {
-              view.showNetworkError();
+            if (refresh) {
+              view.update(editorialListViewModel.getCurationCards());
             } else {
-              view.showGenericError();
+              view.populateView(editorialListViewModel.getCurationCards());
             }
-          } else {
-            view.update(editorialListViewModel.getCurationCards());
           }
           view.hideLoadMore();
         })
@@ -227,19 +210,16 @@ public class EditorialListPresenter implements Presenter {
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
                 .observeOn(viewScheduler)
-                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                    reactionsHomeEvent.getBundlePosition(), reactionsHomeEvent.getReaction()))
+                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
                 .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
-                    reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getBundlePosition())))
+                    reactionsHomeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, int bundlePosition,
-      String reaction) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
     if (reactionsResponse.wasSuccess()) {
-      view.setUserReaction(bundlePosition, reaction);
       editorialListAnalytics.sendReactedEvent();
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
