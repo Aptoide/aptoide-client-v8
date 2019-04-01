@@ -1260,6 +1260,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
+  @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
+    manageSimilarAppsVisibility(hasSimilarApps, true);
+  }
+
   private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {
     setupWalletPromotionText(viewModel, R.string.wallet_promotion__wallet_installed_message);
     walletPromotionInstallDisableButton.setText(
@@ -1693,7 +1697,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
-      manageSimilarAppsVisibility(similarAppsViewModel.hasSimilarApps(), true);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
       if (!action.equals(DownloadModel.Action.MIGRATE)) {

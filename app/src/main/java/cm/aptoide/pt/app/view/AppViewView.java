@@ -186,4 +186,6 @@ public interface AppViewView extends InstallAppView {
   Observable<WalletPromotionViewModel> resumePromotionDownload();
 
   Observable<WalletPromotionViewModel> claimAppClick();
+
+  void showDownloadingSimilarApps(boolean hasSimilarApps);
 }

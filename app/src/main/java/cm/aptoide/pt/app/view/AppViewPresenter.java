@@ -139,17 +139,23 @@ public class AppViewPresenter implements Presenter {
     loadInterstitialAd();
     showInterstitial();
 
-    //handleSimilarAppcAppBundle();
+    handleDownloadingSimilarApp();
   }
-/*
-  private void handleSimilarAppcAppBundle() {
 
-    return appViewManager.loadAppViewViewModel()
-
+  private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(___ >);
-  }*/
+        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> downloadInRange(0, 100))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showDownloadingSimilarApps(
+            appViewManager.getCachedAppcSimilarAppsViewModel()
+                .hasSimilarApps() || appViewManager.getCachedSimilarAppsViewModel()
+                .hasSimilarApps()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+  }
 
   private void showInterstitial() {
     view.getLifecycleEvent()
@@ -158,7 +164,6 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> appViewManager.loadAppViewViewModel()
             .toObservable())
         .filter(appViewViewModel -> !appViewViewModel.isAppCoinApp())
-        // TODO: 3/29/19 loadApp and filter if appc app
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
@@ -172,8 +177,9 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Observable<DownloadModel> downloadInRange(int min, int max) {
-    return appViewManager.downloadStarted().first()
+    return appViewManager.downloadStarted()
         .map(downloadAppViewModel -> downloadAppViewModel.getDownloadModel())
+        .filter(downloadModel -> downloadModel.isDownloading())
         .filter(downloadModel -> downloadModel.getProgress() >= min
             && downloadModel.getProgress() < max)
         .first();
