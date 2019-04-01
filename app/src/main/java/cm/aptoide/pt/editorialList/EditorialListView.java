@@ -3,7 +3,6 @@ package cm.aptoide.pt.editorialList;
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import java.util.List;
 import rx.Observable;
 
@@ -36,7 +35,7 @@ public interface EditorialListView extends View {
 
   Observable<Object> reachesBottom();
 
-  void populateView(EditorialListViewModel editorialListViewModel);
+  void populateView(List<CurationCard> curationCards);
 
   Observable<EditorialListEvent> visibleCards();
 
@@ -52,13 +51,9 @@ public interface EditorialListView extends View {
 
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 
-  void setUserReaction(int bundlePosition, String reaction);
-
   void showLogInDialog();
 
   Observable<Void> snackLogInClick();
 
   void showErrorToast();
-
-  void updateReactions(LoadReactionModel reactionModel, int bundlePosition);
 }

@@ -72,7 +72,6 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
-import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
@@ -510,9 +509,5 @@ import rx.subscriptions.CompositeSubscription;
       HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
-  }
-
-  @FragmentScope @Provides FakeReactionsManager providesReactionsManager() {
-    return new FakeReactionsManager();
   }
 }

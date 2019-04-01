@@ -23,7 +23,6 @@ import cm.aptoide.pt.home.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -203,9 +202,9 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(Object.class);
   }
 
-  @Override public void populateView(EditorialListViewModel editorialListViewModel) {
+  @Override public void populateView(List<CurationCard> curationCards) {
     editorialList.setVisibility(View.VISIBLE);
-    adapter.add(editorialListViewModel.getCurationCards());
+    adapter.add(curationCards);
   }
 
   @Override public Observable<EditorialListEvent> visibleCards() {
@@ -257,14 +256,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     }
   }
 
-  @Override public void setUserReaction(int bundlePosition, String reaction) {
-    EditorialBundleViewHolder editorialBundleViewHolder =
-        getViewHolderForAdapterPosition(bundlePosition);
-    if (editorialBundleViewHolder != null) {
-      editorialBundleViewHolder.setUserReaction(reaction);
-    }
-  }
-
   @Override public void showLogInDialog() {
     ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
         snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
@@ -277,15 +268,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
-  }
-
-  @Override public void updateReactions(LoadReactionModel reactionModel, int bundlePosition) {
-    EditorialBundleViewHolder editorialBundleViewHolder =
-        getViewHolderForAdapterPosition(bundlePosition);
-    if (editorialBundleViewHolder != null) {
-      editorialBundleViewHolder.setReactions(reactionModel.getTopReactionList(),
-          reactionModel.getTotal(), reactionModel.getMyReaction());
-    }
   }
 
   private boolean isEndReached() {

@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorialList;
 import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import java.util.List;
 import rx.Single;
 
 public class EditorialListManager {
@@ -33,8 +34,27 @@ public class EditorialListManager {
     return editorialListRepository.loadMoreCurationCards();
   }
 
-  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
-    return reactionsManager.loadReactionModel(cardId, groupId);
+  public Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId)
+        .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListViewModel(false)
+            .flatMap(
+                editorialListViewModel -> getUpdatedCards(editorialListViewModel, loadReactionModel,
+                    cardId)));
+  }
+
+  private Single<List<CurationCard>> getUpdatedCards(EditorialListViewModel editorialViewModel,
+      LoadReactionModel loadReactionModel, String cardId) {
+    List<CurationCard> curationCards = editorialViewModel.getCurationCards();
+    for (CurationCard curationCard : curationCards) {
+      if (curationCard.getId()
+          .equals(cardId)) {
+        curationCard.setReactions(loadReactionModel.getTopReactionList());
+        curationCard.setNumberOfReactions(loadReactionModel.getTotal());
+        curationCard.setUserReaction(loadReactionModel.getMyReaction());
+      }
+    }
+    editorialListRepository.updateCache(editorialViewModel, curationCards);
+    return Single.just(curationCards);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {

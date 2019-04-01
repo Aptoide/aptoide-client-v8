@@ -16,6 +16,7 @@ import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
 import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
+import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
 
 /**
  * Created by franciscocalado on 29/08/2018.
@@ -29,11 +30,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final ImageView backgroundImage;
   private final TextView editorialViews;
   private final ImageButton reactButton;
-  private final ImageView firstReaction;
-  private final ImageView secondReaction;
-  private final ImageView thirdReaction;
   private final TextView numberOfReactions;
-  private boolean firstCreation;
+  private ImageView[] imageViews;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
@@ -44,11 +42,11 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.editorialViews = view.findViewById(R.id.editorial_views);
     this.backgroundImage = (ImageView) view.findViewById(R.id.background_image);
     this.reactButton = view.findViewById(R.id.add_reactions);
-    this.firstReaction = view.findViewById(R.id.reaction_1);
-    this.secondReaction = view.findViewById(R.id.reaction_2);
-    this.thirdReaction = view.findViewById(R.id.reaction_3);
+    ImageView firstReaction = view.findViewById(R.id.reaction_1);
+    ImageView secondReaction = view.findViewById(R.id.reaction_2);
+    ImageView thirdReaction = view.findViewById(R.id.reaction_3);
+    imageViews = new ImageView[] { firstReaction, secondReaction, thirdReaction };
     this.numberOfReactions = view.findViewById(R.id.number_of_reactions);
-    firstCreation = true;
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -57,11 +55,15 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
         actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(), position,
-        homeBundle);
+        homeBundle, actionItem.getReactionList(), actionItem.getTotal(),
+        actionItem.getUserReaction());
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      String numberOfViews, String type, int position, HomeBundle homeBundle) {
+      String numberOfViews, String type, int position, HomeBundle homeBundle,
+      List<TopReaction> reactions, int numberOfReactions, String userReaction) {
+    clearReactions();
+    setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
@@ -74,8 +76,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
             HomeEvent.Type.REACTION_BUTTON)));
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
-    if (firstCreation) {
-      firstCreation = false;
+    if (numberOfReactions == -1) {
       uiEventsListener.onNext(new EditorialHomeEvent(cardId, type, homeBundle, position,
           HomeEvent.Type.EDITORIAL_CREATED));
     }
@@ -83,28 +84,33 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
   public void setReactions(List<TopReaction> reactions, int numberOfReactions,
       String userReaction) {
-    if (userReaction != null) {
-      setUserReaction(userReaction);
-    }
-    ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
-    for (int i = 0; i < reactions.size(); i++) {
-      if (i < imageViews.length) {
+    setUserReaction(userReaction);
+    int validReactions = 0;
+    for (int i = 0; i < imageViews.length; i++) {
+      if (i < reactions.size() && isReactionValid(reactions.get(i)
+          .getType())) {
         ImageLoader.with(itemView.getContext())
             .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
                 .getType()), imageViews[i]);
         imageViews[i].setVisibility(View.VISIBLE);
+        validReactions++;
+      } else {
+        imageViews[i].setVisibility(View.GONE);
       }
     }
-    if (numberOfReactions > 0) {
+    if (numberOfReactions > 0 && validReactions > 0) {
       this.numberOfReactions.setText(String.valueOf(numberOfReactions));
       this.numberOfReactions.setVisibility(View.VISIBLE);
+    } else {
+      this.numberOfReactions.setVisibility(View.GONE);
     }
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
-        curationCard.getType(), position, null);
+        curationCard.getType(), position, null, curationCard.getReactions(),
+        curationCard.getNumberOfReactions(), curationCard.getUserReaction());
   }
 
   public void showReactions(String cardId, String groupId, int position) {
@@ -113,16 +119,29 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     reactionsPopup.setOnReactionsItemClickListener(item -> {
       uiEventsListener.onNext(
           new ReactionsHomeEvent(cardId, groupId, null, position, HomeEvent.Type.REACTION,
-              item.toString()
-                  .toLowerCase()));
+              mapUserReaction(item)));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
   }
 
-  public void setUserReaction(String reaction) {
-    if (!reaction.equals("")) {
+  private void setUserReaction(String reaction) {
+    if (!reaction.equals("") && isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
+    } else {
+      reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
     }
+  }
+
+  private boolean isReactionValid(String reaction) {
+    return mapReaction(reaction) != -1;
+  }
+
+  private void clearReactions() {
+    reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+    for (ImageView imageView : imageViews) {
+      imageView.setVisibility(View.GONE);
+    }
+    this.numberOfReactions.setVisibility(View.GONE);
   }
 }
