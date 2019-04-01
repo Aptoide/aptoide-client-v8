@@ -16,7 +16,6 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.CampaignAnalytics;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -183,23 +182,6 @@ public class AppViewPresenter implements Presenter {
         .filter(downloadModel -> downloadModel.getProgress() >= min
             && downloadModel.getProgress() < max)
         .first();
-  }
-
-  private Observable<DownloadAppViewModel> downloadStarted() {
-    return appViewManager.loadAppViewViewModel()
-        .toObservable()
-        .filter(app -> !app.isLoading())
-        .filter(app -> !app.isAppCoinApp())
-        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
-                .getId(), app.hasAdvertising() || app.hasBilling())
-            .filter(model -> model.getDownloadModel()
-                .isDownloading()
-                && model.getDownloadModel()
-                .getProgress() >= 5
-                && model.getDownloadModel()
-                .getProgress() < 100)
-            .first());
   }
 
   private void loadInterstitialAd() {
