@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Response;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
@@ -41,6 +42,14 @@ public class ReactionsRemoteService implements ReactionsService {
         .subscribeOn(ioScheduler);
   }
 
+  @Override public Single<ReactionsResponse> setSecondReaction(String uid, String reaction) {
+    Body body = new Body(reaction);
+    return service.setSecondUserReaction(uid, body)
+        .map(this::mapResponse)
+        .toSingle()
+        .subscribeOn(ioScheduler);
+  }
+
   private ReactionsResponse mapResponse(Response response) {
     return new ReactionsResponse(mapReactionResponse(response));
   }
@@ -71,6 +80,10 @@ public class ReactionsRemoteService implements ReactionsService {
 
     @POST("echo/8.22112018/reactions/") //@POST("echo/20181116/reactions
     Observable<Response<EmptyResponse>> setFirstUserReaction(@retrofit2.http.Body Body body);
+
+    @PATCH("echo/8.22112018/reactions/{uid}")
+    Observable<Response<EmptyResponse>> setSecondUserReaction(@Path("uid") String uid,
+        @retrofit2.http.Body Body body);
   }
 
   public static class Body extends BaseBody {
@@ -80,9 +93,12 @@ public class ReactionsRemoteService implements ReactionsService {
     private String type;
 
     public Body(String cardId, String groupId, String reaction) {
-
       this.objectUid = cardId;
       this.groupUid = groupId;
+      this.type = reaction;
+    }
+
+    public Body(String reaction) {
       this.type = reaction;
     }
 
