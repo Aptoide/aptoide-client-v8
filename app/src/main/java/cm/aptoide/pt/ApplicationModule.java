@@ -1965,6 +1965,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ReactionsManager providesReactionsManager(
       ReactionsService reactionsService) {
-    return new ReactionsManager(reactionsService);
+    return new ReactionsManager(reactionsService, new HashMap<>());
   }
 }
