@@ -173,9 +173,4 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   public HomeBundle getBundle(int visibleItem) {
     return bundles.get(visibleItem);
   }
-
-  public void update(List<HomeBundle> homeBundles, int position) {
-    this.bundles.set(position, homeBundles.get(position));
-    notifyItemChanged(position);
-  }
 }
