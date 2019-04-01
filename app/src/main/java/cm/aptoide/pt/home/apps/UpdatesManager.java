@@ -1,10 +1,8 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.install.Install;
-import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -17,12 +15,9 @@ import rx.Observable;
 
 public class UpdatesManager {
   private UpdateRepository updateRepository;
-  private AppcUpgradeRepository upgradeRepository;
 
-  public UpdatesManager(UpdateRepository updateRepository,
-      AppcUpgradeRepository upgradeRepository) {
+  public UpdatesManager(UpdateRepository updateRepository) {
     this.updateRepository = updateRepository;
-    this.upgradeRepository = upgradeRepository;
   }
 
   /**
@@ -43,56 +38,60 @@ public class UpdatesManager {
         });
   }
 
-  public Observable<List<Update>> getUpdatesList(boolean isExcluded) {
-    return updateRepository.getAll(isExcluded)
-        .sample(750, TimeUnit.MILLISECONDS);
-  }
-
-  public Observable<List<AppcUpgrade>> getAppcUpgradesList(boolean isExcluded) {
-    return upgradeRepository.getAll(isExcluded)
-        .sample(750, TimeUnit.MILLISECONDS);
-  }
-
-  public Observable<Update> getUpdate(String packageName) {
-    return updateRepository.get(packageName);
-  }
-
-  public Observable<AppcUpgrade> getAppcUpgrade(String packageName) {
-    return upgradeRepository.get(packageName);
-  }
-
-  public Observable<Install> filterNonAppcApp(Install install) {
-    return upgradeRepository.contains(install.getPackageName(), false)
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Observable.empty();
-          }
-          return Observable.just(install);
-        });
-  }
-
-  public Observable<Update> filterNonAppcApp(Update update) {
-    return upgradeRepository.contains(update.getPackageName(), false)
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Observable.empty();
-          }
-          return Observable.just(update);
-        });
-  }
-
-  public Observable<Install> filterAppcUpgrade(Install install) {
-    return upgradeRepository.contains(install.getPackageName(), false)
-        .flatMap(isUpgrade -> {
-          if (isUpgrade) {
-            return Observable.just(install);
+  public Observable<Install> filterAppcUpgrade(Install item) {
+    return updateRepository.contains(item.getPackageName(), false, false)
+        .flatMap(isUpdate -> {
+          if (isUpdate) {
+            return Observable.just(item);
           }
           return Observable.empty();
         });
   }
 
+  public Observable<Install> filterNonAppcUpgrade(Install item) {
+    return updateRepository.contains(item.getPackageName(), false, true)
+        .flatMap(isUpdate -> {
+          if (isUpdate) {
+            return Observable.just(item);
+          }
+          return Observable.empty();
+        });
+  }
+
+  public Observable<List<Update>> getUpdatesList(boolean isExcluded, boolean excludeAppcUpgrades) {
+    return updateRepository.getAll(isExcluded)
+        .flatMap(updates -> Observable.just(updates)
+            .flatMapIterable(list -> list)
+            .filter(update -> !excludeAppcUpgrades || !update.isAppcUpgrade())
+            .toList())
+        .sample(750, TimeUnit.MILLISECONDS);
+  }
+
+  public Observable<List<Update>> getAppcUpgradesList(boolean isExcluded) {
+    return updateRepository.getAll(isExcluded)
+        .flatMap(updates -> Observable.just(updates)
+            .flatMapIterable(list -> list)
+            .filter(update -> update.isAppcUpgrade())
+            .toList())
+        .sample(750, TimeUnit.MILLISECONDS);
+  }
+
+  public Observable<Update> getUpdate(String packageName) {
+    return updateRepository.get(packageName)
+        .filter(update -> !update.isAppcUpgrade());
+  }
+
+  public Observable<Update> getAppcUpgrade(String packageName) {
+    return updateRepository.get(packageName)
+        .filter(Update::isAppcUpgrade);
+  }
+
   public Observable<List<Update>> getAllUpdates() {
-    return updateRepository.getAll(false);
+    return updateRepository.getAll(false)
+        .flatMap(updates -> Observable.just(updates)
+            .flatMapIterable(list -> list)
+            .filter(update -> !update.isAppcUpgrade())
+            .toList());
   }
 
   public Observable<Void> excludeUpdate(String packageName) {
@@ -100,11 +99,10 @@ public class UpdatesManager {
   }
 
   public Completable refreshUpdates() {
-    return updateRepository.sync(true, false)
-        .andThen(upgradeRepository.syncAppcUpgrades(true, false));
+    return updateRepository.sync(true, false);
   }
 
   public Observable<Integer> getUpdatesNumber() {
-    return getUpdatesList(false).map(list -> list.size());
+    return getUpdatesList(false, false).map(list -> list.size());
   }
 }

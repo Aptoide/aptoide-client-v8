@@ -109,7 +109,6 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.AppcUpgradeAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -230,7 +229,6 @@ import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -979,10 +977,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UpdateAccessor(database);
   }
 
-  @Singleton @Provides AppcUpgradeAccessor providesAppcUpgradeAccessor(Database database) {
-    return new AppcUpgradeAccessor(database);
-  }
-
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
       @Named("default") SharedPreferences sharedPreferences) {
     return new SecureCoderDecoder.Builder(application, sharedPreferences).create();
@@ -1583,9 +1577,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new BundlesResponseMapper(installManager, walletAdsOfferCardManager);
   }
 
-  @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository,
-      AppcUpgradeRepository appcUpgradeRepository) {
-    return new UpdatesManager(updateRepository, appcUpgradeRepository);
+  @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
+    return new UpdatesManager(updateRepository);
   }
 
   @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
@@ -1596,16 +1589,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UpdateRepository(updateAccessor, storeAccessor, idsRepository, bodyInterceptorPoolV7,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         application.getPackageManager());
-  }
-
-  @Singleton @Provides AppcUpgradeRepository providesAppcUpgradeRepository(
-      AppcUpgradeAccessor appcUpgradeAccessor, IdsRepository idsRepository, @Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
-    return new AppcUpgradeRepository(appcUpgradeAccessor, idsRepository, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, application.getPackageManager(),
-        bodyInterceptorPoolV7);
   }
 
   @Singleton @Provides NotLoggedInShareAnalytics providesNotLoggedInShareAnalytics(

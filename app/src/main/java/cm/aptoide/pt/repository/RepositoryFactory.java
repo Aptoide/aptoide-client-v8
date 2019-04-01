@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.AppcUpgrade;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
@@ -20,7 +19,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.updates.AppcUpgradeRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
@@ -37,15 +35,6 @@ public final class RepositoryFactory {
             .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
         getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
         getTokenInvalidator(context), sharedPreferences, context.getPackageManager());
-  }
-
-  public static AppcUpgradeRepository getUpgradeAppcRepository(Context context,
-      SharedPreferences sharedPreferences) {
-    return new AppcUpgradeRepository(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()
-            .getApplicationContext()).getDatabase(), AppcUpgrade.class), getIdsRepository(context),
-        getHttpClient(context), WebService.getDefaultConverter(), getTokenInvalidator(context),
-        sharedPreferences, context.getPackageManager(), getBaseBodyInterceptorV7(context));
   }
 
   private static IdsRepository getIdsRepository(Context context) {

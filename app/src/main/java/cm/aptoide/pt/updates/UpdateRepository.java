@@ -66,6 +66,13 @@ public class UpdateRepository {
             .map(store -> store.getStoreId())
             .toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache, bypassServerCache))
+        .flatMap(updates -> Observable.just(updates)
+            .zipWith(getNetworkAppcUpgrades(bypassCache, bypassServerCache), (upds, upgrades) -> {
+              for (App upgrade : upgrades) {
+                insertNonRepeatedApp(upgrade, upds);
+              }
+              return upds;
+            }))
         .toSingle()
         .flatMapCompletable(updates -> {
           // remove local non-excluded updates
@@ -73,6 +80,41 @@ public class UpdateRepository {
           // return all the local (non-excluded) updates
           // this is a non-closing Observable, so new db modifications will trigger this observable
           return removeAllNonExcluded().andThen(saveNewUpdates(updates));
+        })
+        .andThen(saveAppcUpgrades(bypassCache, bypassServerCache));
+  }
+
+  private Completable saveAppcUpgrades(boolean bypassCache, boolean bypassServerCache) {
+    return getNetworkAppcUpgrades(bypassCache, bypassServerCache).toSingle()
+        .flatMapCompletable(upgrades -> {
+          return saveNewUpgrades(upgrades);
+        });
+  }
+
+  private void insertNonRepeatedApp(App appToInsert, List<App> list) {
+    boolean shouldAdd = true;
+    for (int i = 0; i < list.size(); i++) {
+      App app = list.get(i);
+      if (app.getPackageName()
+          .equals(appToInsert.getPackageName())) {
+        list.set(i, appToInsert);
+        shouldAdd = false;
+        break;
+      }
+    }
+    if (shouldAdd) list.add(appToInsert);
+  }
+
+  private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
+      boolean bypassServerCache) {
+    return ListAppcAppsUpgradesRequest.of(idsRepository.getUniqueIdentifier(), bodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
+        .observe(bypassCache, bypassServerCache)
+        .map(result -> {
+          if (result != null && result.isOk()) {
+            return result.getList();
+          }
+          return Collections.emptyList();
         });
   }
 
@@ -100,7 +142,7 @@ public class UpdateRepository {
 
   private Completable saveNewUpdates(List<App> updates) {
     return Completable.fromSingle(Observable.from(updates)
-        .map(app -> mapAppUpdate(app))
+        .map(app -> mapAppUpdate(app, false))
         .toList()
         .toSingle()
         .flatMap(updateList -> {
@@ -111,7 +153,20 @@ public class UpdateRepository {
         }));
   }
 
-  private Update mapAppUpdate(App app) {
+  private Completable saveNewUpgrades(List<App> upgrades) {
+    return Completable.fromSingle(Observable.from(upgrades)
+        .map(app -> mapAppUpdate(app, true))
+        .toList()
+        .toSingle()
+        .flatMap(updateList -> {
+          Logger.getInstance()
+              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
+                  updateList.size()));
+          return saveNonExcludedUpdates(updateList);
+        }));
+  }
+
+  private Update mapAppUpdate(App app, boolean isAppcUpgrade) {
 
     final Obb obb = app.getObb();
 
@@ -148,7 +203,7 @@ public class UpdateRepository {
         .getMalware()
         .getRank()
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5);
+        patchObbMd5, isAppcUpgrade);
   }
 
   public Completable removeAll(List<Update> updates) {
@@ -227,5 +282,10 @@ public class UpdateRepository {
 
   public Observable<Boolean> contains(String packageName, boolean isExcluded) {
     return updateAccessor.contains(packageName, isExcluded);
+  }
+
+  public Observable<Boolean> contains(String packageName, boolean isExcluded,
+      boolean isAppcUpgrade) {
+    return updateAccessor.contains(packageName, isExcluded, isAppcUpgrade);
   }
 }

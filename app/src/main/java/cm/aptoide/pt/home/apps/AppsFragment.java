@@ -87,7 +87,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appcAppsRecyclerView.setNestedScrollingEnabled(false);
     appcSeeMoreButton = view.findViewById(R.id.appc_see_more_btn);
 
-    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks);
+    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, 2);
 
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -288,15 +288,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
-      showAppcUpgrades = true;
-    } else {
-      showAppcUpgrades = false;
     }
-    if (shouldShowAppcAppsList()) {
-      setShowAppcUpgrades();
-    } else {
-      hideAppcUpgrades();
-    }
+    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
+    triggerAppcUpgradesVisibility();
   }
 
   @Override public Observable<Void> updateAll() {
@@ -380,6 +374,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeAppcCanceledAppDownload(App app) {
     appcAppsAdapter.removeCanceledAppDownload(app);
+    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
+    triggerAppcUpgradesVisibility();
+    if (appcAppsAdapter.getItemCount() > 2) {
+      appcSeeMoreButton.setVisibility(View.VISIBLE);
+    } else {
+      appcSeeMoreButton.setVisibility(View.GONE);
+    }
   }
 
   @Override public void setStandbyState(App app) {
@@ -409,28 +410,26 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showAppcUpgradesList(List<App> list) {
     if (list != null && !list.isEmpty()) {
+      appcAppsAdapter.setAvailableUpgradesList(list);
       if (list.size() > 2) {
-        appcAppsAdapter.setAvailableUpgradesList(list.subList(0, 2));
         appcSeeMoreButton.setVisibility(View.VISIBLE);
       } else {
-        appcAppsAdapter.setAvailableUpgradesList(list);
         appcSeeMoreButton.setVisibility(View.GONE);
       }
-      showAppcUpgrades = true;
-    } else {
-      showAppcUpgrades = false;
     }
-    if (shouldShowAppcAppsList()) {
-      setShowAppcUpgrades();
-    } else {
-      hideAppcUpgrades();
-    }
+    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
+    triggerAppcUpgradesVisibility();
   }
 
   @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
     appcAppsAdapter.removeAppcUpgradesList(excludedUpdatesList);
     if (appcAppsAdapter.getItemCount() == 0) {
       appcAppsLayout.setVisibility(View.GONE);
+    }
+    if (appcAppsAdapter.getItemCount() > 2) {
+      appcSeeMoreButton.setVisibility(View.VISIBLE);
+    } else {
+      appcSeeMoreButton.setVisibility(View.GONE);
     }
   }
 
@@ -444,6 +443,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appcAppsRecyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
     appcAppsLayout.setVisibility(View.VISIBLE);
+  }
+
+  private void triggerAppcUpgradesVisibility() {
+    if (shouldShowAppcAppsList()) {
+      setShowAppcUpgrades();
+    } else {
+      hideAppcUpgrades();
+    }
   }
 
   private void hideAppcUpgrades() {

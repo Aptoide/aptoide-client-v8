@@ -56,7 +56,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     appcAppsRecyclerView = view.findViewById(R.id.appc_apps_recycler_view);
     appcAppsRecyclerView.setNestedScrollingEnabled(false);
 
-    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks);
+    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, -1);
     appcAppsRecyclerView.setAdapter(appcAppsAdapter);
     appcAppsRecyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));

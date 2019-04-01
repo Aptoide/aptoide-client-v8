@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.realm.AppcUpgrade;
+import cm.aptoide.pt.database.realm.Update;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,9 +23,12 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   private final PublishSubject<AppClick> appItemClicks;
   private List<App> listOfApps;
 
-  public AppcAppsAdapter(List<App> listOfApps, PublishSubject<AppClick> appItemClicks) {
+  private int limit;
+
+  public AppcAppsAdapter(List<App> listOfApps, PublishSubject<AppClick> appItemClicks, int limit) {
     this.listOfApps = listOfApps;
     this.appItemClicks = appItemClicks;
+    this.limit = limit;
   }
 
   @Override public AppsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,7 +61,9 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   @Override public void onBindViewHolder(AppsViewHolder holder, int position) {
-    holder.setApp(listOfApps.get(position));
+    if (limit < 0 || position < limit) {
+      holder.setApp(listOfApps.get(position));
+    }
   }
 
   @Override public int getItemViewType(int position) {
@@ -81,7 +86,7 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   }
 
   @Override public int getItemCount() {
-    return listOfApps.size();
+    return limit > 0 && listOfApps.size() > limit ? limit : listOfApps.size();
   }
 
   private int getUpdateType(StateApp.Status updateStatus) {
@@ -173,8 +178,8 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   public void removeAppcUpgradesList(List<App> updatesToRemove) {
     for (App app : updatesToRemove) {
       if (app instanceof UpdateApp) {
-        if (listOfApps.contains(((AppcUpgrade) app))) {
-          int indexOfExcludedApp = listOfApps.indexOf(((AppcUpgrade) app));
+        if (listOfApps.contains(app)) {
+          int indexOfExcludedApp = listOfApps.indexOf(app);
           listOfApps.remove(indexOfExcludedApp);
           notifyItemRemoved(indexOfExcludedApp);
         }
