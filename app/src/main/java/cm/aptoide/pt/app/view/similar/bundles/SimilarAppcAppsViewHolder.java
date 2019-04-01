@@ -52,7 +52,7 @@ public class SimilarAppcAppsViewHolder extends SimilarBundleViewHolder {
   private RecyclerView.Adapter getSimilarAdapter() {
     this.adapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
-            "similar_apps");
+            "appc_similar_apps");
     return adapter;
   }
 
