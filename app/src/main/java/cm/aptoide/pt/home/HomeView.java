@@ -2,7 +2,6 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.apps.BundleView;
-import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import rx.Observable;
 
 /**
@@ -41,13 +40,9 @@ public interface HomeView extends BundleView {
 
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 
-  void setUserReaction(int bundlePosition, String reaction);
-
   void showLogInDialog();
 
   Observable<Void> snackLogInClick();
 
   void showErrorToast();
-
-  void updateReactions(LoadReactionModel reactionModel, int bundlePosition);
 }

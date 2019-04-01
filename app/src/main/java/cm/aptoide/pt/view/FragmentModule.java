@@ -72,7 +72,6 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
-import cm.aptoide.pt.editorial.FakeReactionsManager;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
