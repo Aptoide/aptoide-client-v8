@@ -163,7 +163,7 @@ public class EditorialListPresenter implements Presenter {
 
   private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
       boolean refresh) {
-    return editorialListManager.loadEditorialListViewModel(loadMore, false)
+    return editorialListManager.loadEditorialListViewModel(loadMore, refresh)
         .observeOn(viewScheduler)
         .doOnSuccess(editorialListViewModel -> {
           if (!editorialListViewModel.isLoading()) {
@@ -177,6 +177,7 @@ public class EditorialListPresenter implements Presenter {
             }
           } else {
             if (refresh) {
+              view.hideRefresh();
               view.update(editorialListViewModel.getCurationCards());
             } else {
               view.populateView(editorialListViewModel.getCurationCards());
