@@ -632,17 +632,20 @@ public class AppViewPresenter implements Presenter {
             if (appViewSimilarApp.getAd()
                 .getNetwork() == ApplicationAd.Network.SERVER) {
               appViewNavigator.navigateToAd((AptoideNativeAd) appViewSimilarApp.getAd(),
-                  similarAppClickEvent.getType());
+                  similarAppClickEvent.getType()
+                      .getDescription());
             }
           } else {
             packageName = appViewSimilarApp.getApp()
                 .getPackageName();
             appViewNavigator.navigateToAppView(appViewSimilarApp.getApp()
-                .getAppId(), packageName, similarAppClickEvent.getType());
+                .getAppId(), packageName, similarAppClickEvent.getType()
+                .getDescription());
           }
-          appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-          appViewAnalytics.similarAppClick(network, packageName, similarAppClickEvent.getPosition(),
-              isAd);
+          appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType()
+              .getDescription());
+          appViewAnalytics.similarAppClick(similarAppClickEvent.getType(), network, packageName,
+              similarAppClickEvent.getPosition(), isAd);
           return Observable.just(isAd);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

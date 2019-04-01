@@ -61,7 +61,7 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
   private void setSimilarAdapter(boolean mopubAdapter) {
     this.adapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
-            "similar_apps");
+            AppViewSimilarAppsAdapter.SimilarAppType.SIMILAR_APPS);
     if (mopubAdapter) {
       moPubSimilarAppsRecyclerAdapter =
           new MoPubRecyclerAdapter((Activity) similarApps.getContext(), adapter);

@@ -44,7 +44,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
     adLabel = itemView.findViewById(R.id.ad_label);
   }
 
-  public void setSimilarApp(AppViewSimilarApp app, String type) {
+  public void setSimilarApp(AppViewSimilarApp app, AppViewSimilarAppsAdapter.SimilarAppType type) {
     if (app.isAd()) {
       adLabel.setVisibility(View.VISIBLE);
       nameTextView.setText(app.getAd()

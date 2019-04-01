@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app.view.similar;
 
 import cm.aptoide.pt.app.AppViewSimilarApp;
+import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
 
 /**
  * Created by franciscocalado on 14/05/18.
@@ -9,10 +10,11 @@ import cm.aptoide.pt.app.AppViewSimilarApp;
 public class SimilarAppClickEvent {
 
   private AppViewSimilarApp similar;
-  private String type;
+  private AppViewSimilarAppsAdapter.SimilarAppType type;
   private int position;
 
-  public SimilarAppClickEvent(AppViewSimilarApp similar, String type, int position) {
+  public SimilarAppClickEvent(AppViewSimilarApp similar,
+      AppViewSimilarAppsAdapter.SimilarAppType type, int position) {
     this.similar = similar;
     this.type = type;
     this.position = position;
@@ -22,7 +24,7 @@ public class SimilarAppClickEvent {
     return similar;
   }
 
-  public String getType() {
+  public AppViewSimilarAppsAdapter.SimilarAppType getType() {
     return type;
   }
 
