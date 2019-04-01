@@ -238,7 +238,7 @@ public class InstallService extends BaseService implements DownloadsNotification
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
             getResources().getString(cm.aptoide.pt.downloadmanager.R.string.aptoide_downloading),
-            marketName))
+            getString(R.string.app_name)))
         .setContentText(new StringBuilder().append(appName)
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
