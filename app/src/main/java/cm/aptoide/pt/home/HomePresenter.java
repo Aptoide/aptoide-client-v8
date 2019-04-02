@@ -94,28 +94,45 @@ public class HomePresenter implements Presenter {
 
     handleReactionClick();
 
-    onCardCreatedLoadReactionModel();
-
     handleUserReaction();
 
     handleLogInClick();
-  }
-
-  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.cardCreated())
-        .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getGroupId()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
   }
 
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
         .doOnSuccess(view::showBundles);
+  }
+
+  private Observable<List<HomeBundle>> loadHomeAndReactions() {
+    return loadHome().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
+  private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
+    return loadFreshBundles().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
+  private Observable<List<HomeBundle>> loadNextBundlesAndReactions() {
+    return loadNextBundles().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
   }
 
   @VisibleForTesting public void handleActionBundlesImpression() {
@@ -244,7 +261,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(__ -> loadHome())
+        .flatMap(__ -> loadHomeAndReactions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
@@ -444,7 +461,7 @@ public class HomePresenter implements Presenter {
             .filter(__ -> home.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> loadNextBundles())
+            .flatMap(bottomReached -> loadNextBundlesAndReactions())
             .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -475,7 +492,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
-            .flatMapSingle(refreshed -> loadFreshBundles())
+            .flatMap(refreshed -> loadFreshBundlesAndReactions())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -505,7 +522,7 @@ public class HomePresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(click -> view.showLoading())
-            .flatMapSingle(click -> loadNextBundles())
+            .flatMap(click -> loadNextBundlesAndReactions())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {

@@ -45,8 +45,6 @@ public interface EditorialListView extends View {
 
   void update(List<CurationCard> curationCards);
 
-  Observable<EditorialHomeEvent> cardCreated();
-
   Observable<ReactionsHomeEvent> reactionClicked();
 
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);

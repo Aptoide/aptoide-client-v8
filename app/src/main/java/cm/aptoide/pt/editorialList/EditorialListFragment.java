@@ -236,12 +236,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     }
   }
 
-  @Override public Observable<EditorialHomeEvent> cardCreated() {
-    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.EDITORIAL_CREATED))
-        .cast(EditorialHomeEvent.class);
-  }
-
   @Override public Observable<ReactionsHomeEvent> reactionClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.REACTION))

@@ -76,10 +76,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
             HomeEvent.Type.REACTION_BUTTON)));
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
-    if (numberOfReactions == -1) {
-      uiEventsListener.onNext(new EditorialHomeEvent(cardId, type, homeBundle, position,
-          HomeEvent.Type.EDITORIAL_CREATED));
-    }
   }
 
   public void setReactions(List<TopReaction> reactions, int numberOfReactions,
