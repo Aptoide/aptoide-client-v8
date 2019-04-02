@@ -30,8 +30,6 @@ public interface HomeView extends BundleView {
 
   void setAdsTest(boolean showNatives);
 
-  Observable<EditorialHomeEvent> cardCreated();
-
   Observable<ReactionsHomeEvent> reactionClicked();
 
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);
