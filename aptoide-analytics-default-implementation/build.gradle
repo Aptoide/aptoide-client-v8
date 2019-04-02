@@ -66,8 +66,8 @@ dependencies {
     transitive = true
   }
 
-  // Facebook
-  implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
+  // Facebook Core (Analytics)
+  implementation 'com.facebook.android:facebook-core:4.41.0'
 
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:6.4.2"
