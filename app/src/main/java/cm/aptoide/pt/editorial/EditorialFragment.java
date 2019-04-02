@@ -61,6 +61,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
+import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
 import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
@@ -598,8 +599,7 @@ public class EditorialFragment extends NavigationTrackFragment
     ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
-      reactionEventListener.onNext(new ReactionEvent(cardId, item.toString()
-          .toLowerCase(), groupId));
+      reactionEventListener.onNext(new ReactionEvent(cardId, mapUserReaction(item), groupId));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
