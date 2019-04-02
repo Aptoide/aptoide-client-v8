@@ -16,7 +16,6 @@ import cm.aptoide.pt.app.AppViewManager;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.CampaignAnalytics;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
@@ -138,13 +137,33 @@ public class AppViewPresenter implements Presenter {
     pausePromotionDownload();
     loadInterstitialAd();
     showInterstitial();
+
+    handleDownloadingSimilarApp();
+  }
+
+  private void handleDownloadingSimilarApp() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> downloadInRange(0, 100))
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showDownloadingSimilarApps(
+            appViewManager.getCachedAppcSimilarAppsViewModel()
+                .hasSimilarApps() || appViewManager.getCachedSimilarAppsViewModel()
+                .hasSimilarApps()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.isAppViewReadyToDownload())
-        .flatMap(__ -> Observable.zip(downloadStarted(), view.interstitialAdLoaded(),
+        .flatMap(__ -> appViewManager.loadAppViewViewModel()
+            .toObservable())
+        .filter(appViewViewModel -> !appViewViewModel.isAppCoinApp())
+        .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
         .observeOn(viewScheduler)
@@ -156,21 +175,13 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private Observable<DownloadAppViewModel> downloadStarted() {
-    return appViewManager.loadAppViewViewModel()
-        .toObservable()
-        .filter(app -> !app.isLoading())
-        .filter(app -> !app.isAppCoinApp())
-        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
-                .getId(), app.hasAdvertising() || app.hasBilling())
-            .filter(model -> model.getDownloadModel()
-                .isDownloading()
-                && model.getDownloadModel()
-                .getProgress() >= 5
-                && model.getDownloadModel()
-                .getProgress() < 100)
-            .first());
+  private Observable<DownloadModel> downloadInRange(int min, int max) {
+    return appViewManager.downloadStarted()
+        .map(downloadAppViewModel -> downloadAppViewModel.getDownloadModel())
+        .filter(downloadModel -> downloadModel.isDownloading())
+        .filter(downloadModel -> downloadModel.getProgress() >= min
+            && downloadModel.getProgress() < max)
+        .first();
   }
 
   private void loadInterstitialAd() {
@@ -217,20 +228,29 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.similarAppsVisibility())
         .observeOn(Schedulers.io())
         .doOnNext(similarAppsVisible -> {
-          SimilarAppsViewModel similarAppsViewModel =
-              appViewManager.getCachedSimilarAppsViewModel();
-          if (similarAppsViewModel != null
-              && similarAppsViewModel.hasAd()
-              && !similarAppsViewModel.hasRecordedAdImpression()) {
-            similarAppsViewModel.setHasRecordedAdImpression(true);
-            appViewAnalytics.
-                similarAppBundleImpression(similarAppsViewModel.getAd()
-                    .getNetwork(), true);
-          }
+          sendSimilarAppsAdImpressionEvent(appViewManager.getCachedSimilarAppsViewModel());
+          sendSimilarAppcAppsImpressionEvent(appViewManager.getCachedAppcSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
+  }
+
+  private void sendSimilarAppcAppsImpressionEvent(SimilarAppsViewModel appcSimilarAppsViewModel) {
+    if (appcSimilarAppsViewModel != null) {
+      appViewAnalytics.similarAppcAppBundleImpression();
+    }
+  }
+
+  private void sendSimilarAppsAdImpressionEvent(SimilarAppsViewModel similarAppsViewModel) {
+    if (similarAppsViewModel != null
+        && similarAppsViewModel.hasAd()
+        && !similarAppsViewModel.hasRecordedAdImpression()) {
+      similarAppsViewModel.setHasRecordedAdImpression(true);
+      appViewAnalytics.
+          similarAppBundleImpression(similarAppsViewModel.getAd()
+              .getNetwork(), true);
+    }
   }
 
   @VisibleForTesting public void handleFirstLoad() {
@@ -289,20 +309,17 @@ public class AppViewPresenter implements Presenter {
         .takeUntil(__ -> view.isSimilarAppsVisible())
         .observeOn(Schedulers.io())
         .doOnNext(__ -> {
-          SimilarAppsViewModel similarAppsViewModel =
-              appViewManager.getCachedSimilarAppsViewModel();
-          if (similarAppsViewModel != null
-              && similarAppsViewModel.getAd() != null
-              && !similarAppsViewModel.hasRecordedAdImpression()) {
-            similarAppsViewModel.setHasRecordedAdImpression(true);
-            appViewAnalytics.similarAppBundleImpression(similarAppsViewModel.getAd()
-                .getNetwork(), true);
-          }
-          appViewAnalytics.similarAppBundleImpression(null, false);
+          sendSimilarAppInteractEvent(appViewManager.getCachedSimilarAppsViewModel());
+          sendSimilarAppcAppsImpressionEvent(appViewManager.getCachedAppcSimilarAppsViewModel());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
+  }
+
+  private void sendSimilarAppInteractEvent(SimilarAppsViewModel similarAppsViewModel) {
+    sendSimilarAppsAdImpressionEvent(similarAppsViewModel);
+    appViewAnalytics.similarAppBundleImpression(null, false);
   }
 
   private void handleAdsLogic(SearchAdResult searchAdResult) {
@@ -597,17 +614,20 @@ public class AppViewPresenter implements Presenter {
             if (appViewSimilarApp.getAd()
                 .getNetwork() == ApplicationAd.Network.SERVER) {
               appViewNavigator.navigateToAd((AptoideNativeAd) appViewSimilarApp.getAd(),
-                  similarAppClickEvent.getType());
+                  similarAppClickEvent.getType()
+                      .getDescription());
             }
           } else {
             packageName = appViewSimilarApp.getApp()
                 .getPackageName();
             appViewNavigator.navigateToAppView(appViewSimilarApp.getApp()
-                .getAppId(), packageName, similarAppClickEvent.getType());
+                .getAppId(), packageName, similarAppClickEvent.getType()
+                .getDescription());
           }
-          appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType());
-          appViewAnalytics.similarAppClick(network, packageName, similarAppClickEvent.getPosition(),
-              isAd);
+          appViewAnalytics.sendSimilarAppsInteractEvent(similarAppClickEvent.getType()
+              .getDescription());
+          appViewAnalytics.similarAppClick(similarAppClickEvent.getType(), network, packageName,
+              similarAppClickEvent.getPosition(), isAd);
           return Observable.just(isAd);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

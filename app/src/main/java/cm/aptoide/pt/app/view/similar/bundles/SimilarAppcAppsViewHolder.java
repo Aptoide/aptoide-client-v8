@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import rx.subjects.PublishSubject;
 
+import static cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter.SimilarAppType.APPC_SIMILAR_APPS;
+
 public class SimilarAppcAppsViewHolder extends SimilarBundleViewHolder {
   private final RecyclerView similarAppcApps;
 
@@ -52,7 +54,7 @@ public class SimilarAppcAppsViewHolder extends SimilarBundleViewHolder {
   private RecyclerView.Adapter getSimilarAdapter() {
     this.adapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
-            "similar_apps");
+            APPC_SIMILAR_APPS);
     return adapter;
   }
 
