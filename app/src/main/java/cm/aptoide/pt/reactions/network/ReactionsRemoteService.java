@@ -81,7 +81,7 @@ public class ReactionsRemoteService implements ReactionsService {
     @POST("echo/8.22112018/reactions/") //@POST("echo/20181116/reactions
     Observable<Response<EmptyResponse>> setFirstUserReaction(@retrofit2.http.Body Body body);
 
-    @PATCH("echo/8.22112018/reactions/{uid}")
+    @PATCH("echo/8.22112018/reactions/{uid}/")
     Observable<Response<EmptyResponse>> setSecondUserReaction(@Path("uid") String uid,
         @retrofit2.http.Body Body body);
   }
