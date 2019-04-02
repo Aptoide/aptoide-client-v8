@@ -563,12 +563,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
-      IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage) {
+      IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage,
+      AuthenticationPersistence authenticationPersistence) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
         Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
-            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE);
+            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE,
+        authenticationPersistence);
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
