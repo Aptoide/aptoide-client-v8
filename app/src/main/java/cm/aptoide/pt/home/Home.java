@@ -2,13 +2,13 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
-import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Completable;
 import rx.Single;

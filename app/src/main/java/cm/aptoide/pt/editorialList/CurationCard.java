@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.reactions.TopReaction;
+import cm.aptoide.pt.reactions.data.TopReaction;
 import java.util.Collections;
 import java.util.List;
 
