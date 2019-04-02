@@ -24,7 +24,7 @@ public class ReactionsManager {
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reactionType) {
-    if (getUID(cardId + groupId).equals("")) {
+    if (hasNotReacted(cardId, groupId)) {
       return reactionsService.setReaction(cardId, groupId, reactionType);
     } else {
       return reactionsService.setSecondReaction(getUID(cardId + groupId), reactionType);
@@ -33,5 +33,9 @@ public class ReactionsManager {
 
   private String getUID(String identifier) {
     return userReactions.get(identifier);
+  }
+
+  private boolean hasNotReacted(String cardId, String groupId) {
+    return getUID(cardId + groupId) == null || getUID(cardId + groupId).equals("");
   }
 }
