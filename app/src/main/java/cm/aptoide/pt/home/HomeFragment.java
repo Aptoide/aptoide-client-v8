@@ -112,6 +112,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     }
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
     bundlesList = view.findViewById(R.id.bundles_list);
+    bundlesList.getItemAnimator()
+        .setChangeDuration(0);
     genericErrorView = view.findViewById(R.id.generic_error);
     noNetworkErrorView = view.findViewById(R.id.no_network_connection);
     retryButton = genericErrorView.findViewById(R.id.retry);
@@ -278,6 +280,15 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .filter(position -> position != RecyclerView.NO_POSITION)
         .distinctUntilChanged()
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
+  }
+
+  @Override public void updateEditorialCards(List<HomeBundle> homeBundles) {
+    adapter.updateEditorials(homeBundles);
+    if (listState != null) {
+      bundlesList.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
   }
 
   @Override public Observable<AppHomeEvent> recommendedAppClicked() {

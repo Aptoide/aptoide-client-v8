@@ -290,6 +290,15 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
+  @Override public void updateEditorialCards(List<HomeBundle> homeBundles) {
+    adapter.updateEditorials(homeBundles);
+    if (listState != null) {
+      bundlesList.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
+  }
+
   @Override public void setToolbarInfo(String title) {
     toolbar.setTitle(Translator.translate(title, getContext(), ""));
     toolbar.setLogo(R.drawable.logo_toolbar);
