@@ -37,7 +37,6 @@ public class EditorialListPresenter implements Presenter {
 
   @Override public void present() {
     onCreateLoadViewModel();
-    onCardCreatedLoadReactionModel();
     handleImpressions();
     handleEditorialCardClick();
     handlePullToRefresh();
@@ -50,17 +49,6 @@ public class EditorialListPresenter implements Presenter {
     loadUserImage();
   }
 
-  @VisibleForTesting public void onCardCreatedLoadReactionModel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.cardCreated())
-        .flatMapSingle(editorialHomeEvent -> loadReactionModel(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getGroupId()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
-  }
-
   private Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
     return editorialListManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
@@ -71,10 +59,18 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> loadEditorialListViewModel(false, false))
+        .flatMap(__ -> loadEditorialAndReactions(false, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
+  }
+
+  private Observable<List<CurationCard>> loadEditorialAndReactions(boolean loadMore,
+      boolean refresh) {
+    return loadEditorialListViewModel(loadMore, refresh).toObservable()
+        .flatMapIterable(EditorialListViewModel::getCurationCards)
+        .flatMapSingle(
+            curationCard -> loadReactionModel(curationCard.getId(), curationCard.getType()));
   }
 
   @VisibleForTesting public void loadUserImage() {
@@ -116,7 +112,7 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
-            .flatMapSingle(refreshed -> loadEditorialListViewModel(false, true))
+            .flatMap(__ -> loadEditorialAndReactions(false, true))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -129,7 +125,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialListViewModel(false, true)))
+            .flatMap(__ -> loadEditorialAndReactions(false, true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -154,7 +150,7 @@ public class EditorialListPresenter implements Presenter {
             .filter(__ -> editorialListManager.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> loadEditorialListViewModel(true, false))
+            .flatMap(bottomReach -> loadEditorialAndReactions(true, false))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
