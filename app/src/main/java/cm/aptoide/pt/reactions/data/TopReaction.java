@@ -1,4 +1,4 @@
-package cm.aptoide.pt.reactions;
+package cm.aptoide.pt.reactions.data;
 
 public class TopReaction {
 

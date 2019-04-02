@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.editorial.ReactionsHomeEvent;
 import cm.aptoide.pt.home.apps.BundleView;
+import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import rx.Observable;
 
 /**

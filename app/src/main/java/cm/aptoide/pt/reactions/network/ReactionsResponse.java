@@ -1,10 +1,10 @@
-package cm.aptoide.pt.editorial;
+package cm.aptoide.pt.reactions.network;
 
 import retrofit2.Response;
 
-import static cm.aptoide.pt.editorial.ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR;
-import static cm.aptoide.pt.editorial.ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED;
-import static cm.aptoide.pt.editorial.ReactionsResponse.ReactionResponseMessage.SUCCESS;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.SUCCESS;
 
 public class ReactionsResponse {
 

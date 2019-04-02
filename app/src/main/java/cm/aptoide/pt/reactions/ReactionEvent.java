@@ -1,6 +1,6 @@
-package cm.aptoide.pt.editorial;
+package cm.aptoide.pt.reactions;
 
-class ReactionEvent {
+public class ReactionEvent {
 
   private final String cardId;
   private final String reactionType;

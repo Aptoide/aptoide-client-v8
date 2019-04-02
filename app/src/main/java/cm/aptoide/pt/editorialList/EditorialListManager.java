@@ -1,8 +1,8 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Single;
 

@@ -1,8 +1,7 @@
 package cm.aptoide.pt.reactions.network;
 
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.editorial.ReactionsResponse;
-import cm.aptoide.pt.reactions.TopReaction;
+import cm.aptoide.pt.reactions.data.TopReaction;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Response;
@@ -14,7 +13,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 
-import static cm.aptoide.pt.editorial.ReactionsResponse.ReactionResponseMapper.mapReactionResponse;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMapper.mapReactionResponse;
 
 public class ReactionsRemoteService implements ReactionsService {
 

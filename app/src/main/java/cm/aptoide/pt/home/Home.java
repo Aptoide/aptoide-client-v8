@@ -11,6 +11,7 @@ import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
