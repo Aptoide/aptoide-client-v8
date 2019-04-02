@@ -650,7 +650,7 @@
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
   <string name="promo_update2appc_appcard_short">Update to AppCoins</string>
   <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
-  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credtis</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credits</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins Version</string>
 
 </resources>
