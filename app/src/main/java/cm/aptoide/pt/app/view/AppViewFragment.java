@@ -1890,7 +1890,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
                     .getPrice()));
         break;
       case MIGRATE:
-        install.setText(getResources().getString(R.string.appview_button_update_to_appc));
+        install.setText(getResources().getString(R.string.promo_update2appc_appview_update_button));
     }
   }
 
