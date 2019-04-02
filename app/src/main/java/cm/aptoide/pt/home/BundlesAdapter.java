@@ -173,4 +173,13 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   public HomeBundle getBundle(int visibleItem) {
     return bundles.get(visibleItem);
   }
+
+  public synchronized void updateEditorials(List<HomeBundle> homeBundles) {
+    this.bundles = homeBundles;
+    for (int i = 0; i < bundles.size(); i++) {
+      if (bundles.get(i) instanceof ActionBundle) {
+        notifyItemChanged(i);
+      }
+    }
+  }
 }
