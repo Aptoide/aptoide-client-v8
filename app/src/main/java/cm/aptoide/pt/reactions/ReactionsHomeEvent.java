@@ -1,4 +1,4 @@
-package cm.aptoide.pt.editorial;
+package cm.aptoide.pt.reactions;
 
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeBundle;

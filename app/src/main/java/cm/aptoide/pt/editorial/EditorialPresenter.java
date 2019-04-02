@@ -8,6 +8,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.reactions;
 
-import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import java.util.HashMap;
 import rx.Single;

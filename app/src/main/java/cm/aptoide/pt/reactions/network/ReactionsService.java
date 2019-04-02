@@ -1,6 +1,5 @@
 package cm.aptoide.pt.reactions.network;
 
-import cm.aptoide.pt.editorial.ReactionsResponse;
 import rx.Single;
 
 public interface ReactionsService {

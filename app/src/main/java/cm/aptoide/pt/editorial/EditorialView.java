@@ -2,7 +2,8 @@ package cm.aptoide.pt.editorial;
 
 import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.TopReaction;
+import cm.aptoide.pt.reactions.ReactionEvent;
+import cm.aptoide.pt.reactions.data.TopReaction;
 import java.util.List;
 import rx.Observable;
 
