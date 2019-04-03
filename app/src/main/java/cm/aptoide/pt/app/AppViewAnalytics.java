@@ -5,6 +5,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -32,6 +33,7 @@ public class AppViewAnalytics {
   public static final String DONATIONS_IMPRESSION = "Donations_Impression";
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   public static final String ADS_BLOCK_BY_OFFER = "Ads_Block_By_Offer";
+  public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -360,9 +362,22 @@ public class AppViewAnalytics {
     similarAppInteract(network, IMPRESSION, null, -1, isAd);
   }
 
-  public void similarAppClick(ApplicationAd.Network network, String packageName, int position,
-      boolean isAd) {
-    similarAppInteract(network, TAP_ON_APP, packageName, position, isAd);
+  public void similarAppClick(AppViewSimilarAppsAdapter.SimilarAppType type,
+      ApplicationAd.Network network, String packageName, int position, boolean isAd) {
+    if (type.equals(AppViewSimilarAppsAdapter.SimilarAppType.APPC_SIMILAR_APPS)) {
+      similarAppcAppClick(position, packageName);
+    } else if (type.equals(AppViewSimilarAppsAdapter.SimilarAppType.SIMILAR_APPS)) {
+      similarAppInteract(network, TAP_ON_APP, packageName, position, isAd);
+    }
+  }
+
+  private void similarAppcAppClick(int position, String packageName) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, TAP_ON_APP);
+    data.put(PACKAGE_NAME, packageName);
+    data.put(POSITION, position);
+    analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 
   private void similarAppInteract(ApplicationAd.Network network, String action, String packageName,
@@ -402,6 +417,13 @@ public class AppViewAnalytics {
 
   public void sendAdsBlockByOfferEvent() {
     analyticsManager.logEvent(null, ADS_BLOCK_BY_OFFER, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void similarAppcAppBundleImpression() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(IS_AD, false);
+    analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 }

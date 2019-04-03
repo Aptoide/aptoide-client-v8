@@ -529,7 +529,11 @@ dependencies {
   implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
 
 
-  implementation "com.facebook.android:facebook-android-sdk:${FACEBOOK_ANDROID_SDK_VERSION}"
+  // Facebook Core (Analytics)
+  implementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
+
+  // Facebook Login
+  implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
 
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"

@@ -173,8 +173,9 @@ public class PullingContentService extends BaseService {
         && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
         && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
       CharSequence tickerText =
-          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(), marketName);
-      CharSequence contentTitle = marketName;
+          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(),
+              getString(R.string.app_name));
+      CharSequence contentTitle = getString(R.string.app_name);
       CharSequence contentText =
           AptoideUtils.StringU.getFormattedString(R.string.new_updates, getResources(),
               numberUpdates);
