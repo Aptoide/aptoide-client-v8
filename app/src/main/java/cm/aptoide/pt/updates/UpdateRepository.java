@@ -66,13 +66,6 @@ public class UpdateRepository {
             .map(store -> store.getStoreId())
             .toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache, bypassServerCache))
-        .flatMap(updates -> Observable.just(updates)
-            .zipWith(getNetworkAppcUpgrades(bypassCache, bypassServerCache), (upds, upgrades) -> {
-              for (App upgrade : upgrades) {
-                insertNonRepeatedApp(upgrade, upds);
-              }
-              return upds;
-            }))
         .toSingle()
         .flatMapCompletable(updates -> {
           // remove local non-excluded updates
@@ -86,9 +79,7 @@ public class UpdateRepository {
 
   private Completable saveAppcUpgrades(boolean bypassCache, boolean bypassServerCache) {
     return getNetworkAppcUpgrades(bypassCache, bypassServerCache).toSingle()
-        .flatMapCompletable(upgrades -> {
-          return saveNewUpgrades(upgrades);
-        });
+        .flatMapCompletable(upgrades -> saveNewUpgrades(upgrades));
   }
 
   private void insertNonRepeatedApp(App appToInsert, List<App> list) {
