@@ -18,6 +18,7 @@ public class AppcMigrationManager {
     return repository.getInstalled(packageName)
         .map(installed -> installed != null
             && signature != null
+            && installed.getSignature() != null
             && !signature.equals(installed.getSignature())
             && installed.getVersionCode() <= versionCode
             && storeId == BDS_STORE_ID
