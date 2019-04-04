@@ -477,6 +477,11 @@ dependencies {
   implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
 
+  //Inmobi
+  implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
+  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+
+
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'

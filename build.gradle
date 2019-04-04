@@ -128,6 +128,10 @@ ext {
   UNITY_ADS_SDK_VERSION = '3.0.1'
   MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.1.0'
   APPNEXT_SDK_VERSION = '2.4.4.472'
+  INMOBI_SDK_VERSION = '7.1.1'
+
+  PICASSO_VERSION = '2.5.2'
+
 
   // https://github.com/googlei18n/libphonenumber
   LIB_PHONE_NUMBER_VERSION = '8.3.0'
