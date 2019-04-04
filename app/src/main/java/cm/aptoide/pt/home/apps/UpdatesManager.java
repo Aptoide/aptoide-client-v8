@@ -39,17 +39,16 @@ public class UpdatesManager {
   }
 
   public Observable<Install> filterAppcUpgrade(Install item) {
-    return updateRepository.contains(item.getPackageName(), false, false)
-        .flatMap(isUpdate -> {
-          if (isUpdate) {
-            return Observable.just(item);
-          }
-          return Observable.empty();
-        });
+    return allowAppcUpgrades(item, false);
+
   }
 
   public Observable<Install> filterNonAppcUpgrade(Install item) {
-    return updateRepository.contains(item.getPackageName(), false, true)
+    return allowAppcUpgrades(item, true);
+  }
+
+  private Observable<Install> allowAppcUpgrades(Install item, boolean allowUpgrades) {
+    return updateRepository.contains(item.getPackageName(), false, allowUpgrades)
         .flatMap(isUpdate -> {
           if (isUpdate) {
             return Observable.just(item);
