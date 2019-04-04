@@ -180,7 +180,6 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-
   private void handleUpdateCardLongClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -221,7 +220,6 @@ public class AppsPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> crashReport.log(error));
   }
-
 
   private void handleResumeUpdateClick() {
     view.getLifecycleEvent()

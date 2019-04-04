@@ -24,6 +24,7 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   public AppcAppsAdapter(List<App> listOfApps, PublishSubject<AppClick> appItemClicks) {
     this(listOfApps, appItemClicks, -1);
   }
+
   public AppcAppsAdapter(List<App> listOfApps, PublishSubject<AppClick> appItemClicks, int limit) {
     this.listOfApps = listOfApps;
     this.appItemClicks = appItemClicks;

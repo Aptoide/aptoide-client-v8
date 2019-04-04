@@ -40,7 +40,6 @@ public class UpdatesManager {
 
   public Observable<Install> filterAppcUpgrade(Install item) {
     return allowAppcUpgrades(item, false);
-
   }
 
   public Observable<Install> filterNonAppcUpgrade(Install item) {
