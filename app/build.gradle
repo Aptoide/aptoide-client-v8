@@ -280,8 +280,6 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "MOPUB_STARTAPP_APPLICATION_ID",
-        "\"" + project.MOPUB_STARTAPP_APPLICATION_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
@@ -471,9 +469,6 @@ dependencies {
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
-
-  //StartApp
-  implementation "com.startapp:inapp-sdk:${STARTAPP_SDK_VERSION}"
 
   //AppNext
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
