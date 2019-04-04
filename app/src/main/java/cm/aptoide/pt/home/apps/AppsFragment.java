@@ -40,6 +40,8 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
+  private static final int APPC_UPDATES_LIMIT = 2;
+
   @Inject AppsPresenter appsPresenter;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
@@ -86,7 +88,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appcAppsRecyclerView.setNestedScrollingEnabled(false);
     appcSeeMoreButton = view.findViewById(R.id.appc_see_more_btn);
 
-    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, 2);
+    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, APPC_UPDATES_LIMIT);
 
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -409,14 +411,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
     appcAppsAdapter.removeAppcUpgradesList(excludedUpdatesList);
-    if (appcAppsAdapter.getItemCount() == 0) {
-      appcAppsLayout.setVisibility(View.GONE);
-    }
-    if (appcAppsAdapter.getItemCount() > 2) {
-      appcSeeMoreButton.setVisibility(View.VISIBLE);
-    } else {
-      appcSeeMoreButton.setVisibility(View.GONE);
-    }
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
   }
 
   private void showAppsList() {
@@ -430,7 +425,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       appcAppsRecyclerView.scrollToPosition(0);
       hideLoadingProgressBar();
       appcAppsLayout.setVisibility(View.VISIBLE);
-      if (itemCount > 2) {
+      if (itemCount > APPC_UPDATES_LIMIT) {
         appcSeeMoreButton.setVisibility(View.VISIBLE);
       } else {
         appcSeeMoreButton.setVisibility(View.GONE);
