@@ -56,7 +56,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private SwipeRefreshLayout swipeRefreshLayout;
   private boolean showDownloads;
   private boolean showUpdates;
-  private boolean showAppcUpgrades;
   private boolean showInstalled;
   private List<App> blackListDownloads;
 
@@ -289,8 +288,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
     }
-    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
-    triggerAppcUpgradesVisibility();
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
   }
 
   @Override public Observable<Void> updateAll() {
@@ -374,13 +372,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeAppcCanceledAppDownload(App app) {
     appcAppsAdapter.removeCanceledAppDownload(app);
-    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
-    triggerAppcUpgradesVisibility();
-    if (appcAppsAdapter.getItemCount() > 2) {
-      appcSeeMoreButton.setVisibility(View.VISIBLE);
-    } else {
-      appcSeeMoreButton.setVisibility(View.GONE);
-    }
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
   }
 
   @Override public void setStandbyState(App app) {
@@ -404,21 +396,15 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppOnPausing(app);
   }
 
-  @Override public void setAppcPausingDownloadState(App app) {
+  @Override public void setAppcPausingDownloadState(UpdateApp app) {
     appcAppsAdapter.setAppOnPausing(app);
   }
 
   @Override public void showAppcUpgradesList(List<App> list) {
     if (list != null && !list.isEmpty()) {
       appcAppsAdapter.setAvailableUpgradesList(list);
-      if (list.size() > 2) {
-        appcSeeMoreButton.setVisibility(View.VISIBLE);
-      } else {
-        appcSeeMoreButton.setVisibility(View.GONE);
-      }
     }
-    showAppcUpgrades = appcAppsAdapter.getItemCount() > 0;
-    triggerAppcUpgradesVisibility();
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
   }
 
   @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
@@ -439,33 +425,27 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.setVisibility(View.VISIBLE);
   }
 
-  private void setShowAppcUpgrades() {
-    appcAppsRecyclerView.scrollToPosition(0);
-    hideLoadingProgressBar();
-    appcAppsLayout.setVisibility(View.VISIBLE);
-  }
-
-  private void triggerAppcUpgradesVisibility() {
-    if (shouldShowAppcAppsList()) {
-      setShowAppcUpgrades();
+  private void triggerAppcUpgradesVisibility(int itemCount) {
+    if (itemCount > 0) {
+      appcAppsRecyclerView.scrollToPosition(0);
+      hideLoadingProgressBar();
+      appcAppsLayout.setVisibility(View.VISIBLE);
+      if (itemCount > 2) {
+        appcSeeMoreButton.setVisibility(View.VISIBLE);
+      } else {
+        appcSeeMoreButton.setVisibility(View.GONE);
+      }
     } else {
-      hideAppcUpgrades();
+      appcAppsLayout.setVisibility(View.GONE);
     }
   }
 
-  private void hideAppcUpgrades() {
-    appcAppsLayout.setVisibility(View.GONE);
-  }
 
   private boolean shouldShowAppsList() {
     return showDownloads
         && showUpdates
         && showInstalled
         && recyclerView.getVisibility() != View.VISIBLE;
-  }
-
-  private boolean shouldShowAppcAppsList() {
-    return showAppcUpgrades;
   }
 
   private void hideLoadingProgressBar() {

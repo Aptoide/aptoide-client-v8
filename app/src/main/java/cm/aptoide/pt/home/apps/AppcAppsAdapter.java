@@ -1,17 +1,13 @@
 package cm.aptoide.pt.home.apps;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.realm.Update;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import rx.subjects.PublishSubject;
-
-import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLED;
 
 public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
@@ -47,7 +43,7 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
             .inflate(R.layout.apps_standby_update_app_item, parent, false), appItemClicks, true);
         break;
       case ERROR_UPDATE:
-        appViewHolder = new ErrorUpgradeAppViewHolder(LayoutInflater.from(parent.getContext())
+        appViewHolder = new ErrorUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_error_update_app_item, parent, false), appItemClicks, true);
         break;
       case PAUSING_UPDATE:
@@ -68,49 +64,25 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   @Override public int getItemViewType(int position) {
     App item = listOfApps.get(position);
-    int type;
-    switch (item.getType()) {
-      case UPDATE:
-        type = getUpdateType(((UpdateApp) item).getStatus());
-        break;
-      case INSTALLED:
-        type = INSTALLED;
-        break;
-      case INSTALLING:
-        type = INSTALLED;
-        break;
+    StateApp.Status status = ((UpdateApp) item).getStatus();
+    switch (status) {
+      case APPC_UPGRADE:
+        return UPDATE;
+      case APPC_UPGRADING:
+        return UPDATING;
+      case STANDBY:
+        return STANDBY_UPDATE;
+      case ERROR:
+        return ERROR_UPDATE;
+      case PAUSING:
+        return PAUSING_UPDATE;
       default:
-        throw new IllegalArgumentException("Invalid type of App");
+        throw new IllegalArgumentException("Wrong download status : " + status.name());
     }
-    return type;
   }
 
   @Override public int getItemCount() {
     return limit > 0 && listOfApps.size() > limit ? limit : listOfApps.size();
-  }
-
-  private int getUpdateType(StateApp.Status updateStatus) {
-    int type;
-    switch (updateStatus) {
-      case APPC_UPGRADE:
-        type = UPDATE;
-        break;
-      case APPC_UPGRADING:
-        type = UPDATING;
-        break;
-      case STANDBY:
-        type = STANDBY_UPDATE;
-        break;
-      case ERROR:
-        type = ERROR_UPDATE;
-        break;
-      case PAUSING:
-        type = PAUSING_UPDATE;
-        break;
-      default:
-        throw new IllegalArgumentException("Wrong download status : " + updateStatus.name());
-    }
-    return type;
   }
 
   public void setAvailableUpgradesList(List<App> list) {
@@ -129,40 +101,31 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   public void addApps(List<App> list) {
     for (int i = 0; i < list.size(); i++) {
-      if (isValid(list.get(i))) {
-        if (listOfApps.contains(list.get(i))) {
-          //update
-          int itemIndex = listOfApps.indexOf(list.get(i));
-          App actualApp = listOfApps.get(itemIndex);
-          App newApp = list.get(i);
+      if (listOfApps.contains(list.get(i))) {
+        //update
+        int itemIndex = listOfApps.indexOf(list.get(i));
+        App actualApp = listOfApps.get(itemIndex);
+        App newApp = list.get(i);
 
-          if (actualApp instanceof StateApp && newApp instanceof StateApp) {
-            if (shouldUpdateStateApp(((StateApp) actualApp), ((StateApp) newApp))) {
-
-              if (((StateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
-                if (shouldUpdatePausingApp(((StateApp) newApp))) {
-                  updateApp(list, i, itemIndex);
-                }
-              } else {
+        if (actualApp instanceof StateApp && newApp instanceof StateApp) {
+          if (shouldUpdateStateApp(((StateApp) actualApp), ((StateApp) newApp))) {
+            if (((StateApp) actualApp).getStatus() == StateApp.Status.PAUSING) {
+              if (shouldUpdatePausingApp(((StateApp) newApp))) {
                 updateApp(list, i, itemIndex);
               }
-            }
-          } else {
-            if (list.get(i) != listOfApps.get(itemIndex)) {
+            } else {
               updateApp(list, i, itemIndex);
             }
           }
         } else {
-          //add new element
-          listOfApps.add(list.get(i));
-          notifyItemInserted(i);
+          if (list.get(i) != listOfApps.get(itemIndex)) {
+            updateApp(list, i, itemIndex);
+          }
         }
       } else {
-        if (listOfApps.contains(list.get(i))) {
-          int itemIndex = listOfApps.indexOf(list.get(i));
-          listOfApps.remove(itemIndex);
-          notifyItemRemoved(itemIndex);
-        }
+        //add new element
+        listOfApps.add(list.get(i));
+        notifyItemInserted(i);
       }
     }
   }
@@ -177,12 +140,10 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   public void removeAppcUpgradesList(List<App> updatesToRemove) {
     for (App app : updatesToRemove) {
-      if (app instanceof UpdateApp) {
-        if (listOfApps.contains(app)) {
-          int indexOfExcludedApp = listOfApps.indexOf(app);
-          listOfApps.remove(indexOfExcludedApp);
-          notifyItemRemoved(indexOfExcludedApp);
-        }
+      if (listOfApps.contains(app)) {
+        int indexOfExcludedApp = listOfApps.indexOf(app);
+        listOfApps.remove(indexOfExcludedApp);
+        notifyItemRemoved(indexOfExcludedApp);
       }
     }
   }
@@ -222,10 +183,8 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   public void setAppStandby(App app) {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
-      App application = listOfApps.get(indexOfApp);
-      if (application instanceof StateApp) {
-        setIndeterminate(indexOfApp, (StateApp) application);
-      }
+      UpdateApp application = (UpdateApp) listOfApps.get(indexOfApp);
+      setIndeterminate(indexOfApp, application);
     }
   }
 
@@ -238,10 +197,8 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   public void setAppOnPausing(App app) {
     int indexOfApp = listOfApps.indexOf(app);
     if (indexOfApp != -1) {
-      App application = listOfApps.get(indexOfApp);
-      if (application instanceof StateApp) {
-        setAppPausing(indexOfApp, ((StateApp) application));
-      }
+      UpdateApp application = (UpdateApp) listOfApps.get(indexOfApp);
+      setAppPausing(indexOfApp, application);
     }
   }
 
@@ -249,30 +206,5 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     application.setStatus(StateApp.Status.PAUSING);
     application.setIndeterminate(true);
     notifyItemChanged(indexOfApp);
-  }
-
-  private boolean isValid(App app) {
-    boolean isValid;
-    switch (app.getType()) {
-      case HEADER_DOWNLOADS:
-      case HEADER_INSTALLED:
-      case HEADER_UPDATES:
-        isValid = true;
-        break;
-      case DOWNLOAD:
-        isValid = !TextUtils.isEmpty(((DownloadApp) app).getAppName());
-        break;
-      case UPDATE:
-        isValid = !TextUtils.isEmpty(((UpdateApp) app).getName());
-        break;
-      case INSTALLED:
-      case INSTALLING:
-        isValid = !TextUtils.isEmpty(((InstalledApp) app).getAppName());
-        break;
-      default:
-        isValid = false;
-        break;
-    }
-    return isValid;
   }
 }

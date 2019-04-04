@@ -278,7 +278,7 @@ public class AppsPresenter implements Presenter {
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .doOnNext(__ -> view.setStandbyState(app))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(__3 -> appsManager.updateApp(app)))
+                .flatMapCompletable(__3 -> appsManager.updateApp(app, false)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -294,7 +294,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> Observable.merge(view.resumeAppcUpgrade(), view.retryAppcUpgrade()))
         .doOnNext(app -> view.setAppcStandbyState(app))
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.resumeAppcUpgrade(app))
+        .flatMapCompletable(app -> appsManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -307,7 +307,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.cancelAppcUpgrade())
         .doOnNext(app -> view.removeAppcCanceledAppDownload(app))
         .observeOn(ioScheduler)
-        .doOnNext(app -> appsManager.cancelAppcUpgrade(app))
+        .doOnNext(app -> appsManager.cancelUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -318,9 +318,9 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseAppcUpgrade())
-        .doOnNext(app -> view.setAppcPausingDownloadState(app))
+        .doOnNext(app -> view.setAppcPausingDownloadState((UpdateApp) app))
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.pauseAppcUpgrade(app))
+        .flatMapCompletable(app -> appsManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -342,7 +342,7 @@ public class AppsPresenter implements Presenter {
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .doOnNext(__ -> view.setAppcStandbyState(app))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(__3 -> appsManager.upgradeAppcApp(app)))
+                .flatMapCompletable(__3 -> appsManager.updateApp(app, true)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

@@ -76,13 +76,7 @@ public class UpdatesManager {
   }
 
   public Observable<Update> getUpdate(String packageName) {
-    return updateRepository.get(packageName)
-        .filter(update -> !update.isAppcUpgrade());
-  }
-
-  public Observable<Update> getAppcUpgrade(String packageName) {
-    return updateRepository.get(packageName)
-        .filter(Update::isAppcUpgrade);
+    return updateRepository.get(packageName);
   }
 
   public Observable<List<Update>> getAllUpdates() {

@@ -71,7 +71,7 @@ public class AppsManager {
   public Observable<List<App>> getAppcUpgradesList(boolean isExcluded) {
     return updatesManager.getAppcUpgradesList(isExcluded)
         .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpgradeAppcToUpdateAppList(updates));
+        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
   public Observable<List<App>> getUpdateDownloadsList() {
@@ -87,7 +87,7 @@ public class AppsManager {
               .filter(install -> install.getType() == UPDATE)
               .flatMap(install -> updatesManager.filterAppcUpgrade(install))
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+              .map(updatesList -> appMapper.getUpdatesList(updatesList, false));
         });
   }
 
@@ -103,7 +103,7 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
               .toList()
-              .map(updatesList -> appMapper.getAppcUpgradesList(updatesList));
+              .map(updatesList -> appMapper.getUpdatesList(updatesList, true));
         });
   }
 
@@ -224,16 +224,16 @@ public class AppsManager {
         () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
   }
 
-  public Completable updateApp(App app) {
+  public Completable updateApp(App app, boolean isAppcUpdate) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
         .flatMap(update -> {
-          Download value = downloadFactory.create(update, false);
+          Download value = downloadFactory.create(update, isAppcUpdate);
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
             .flatMap(hasAds -> {
-              if (hasAds) {
+              if (hasAds && !isAppcUpdate) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
                         showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
@@ -243,39 +243,8 @@ public class AppsManager {
               }
             })
             .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download))
-        .toCompletable();
-  }
-
-  public Completable resumeAppcUpgrade(App app) {
-    return installManager.getDownload(((UpdateApp) app).getMd5())
-        .flatMapCompletable(download -> installManager.install(download));
-  }
-
-  public void cancelAppcUpgrade(App app) {
-    installManager.removeInstallationFile(((UpdateApp) app).getMd5(),
-        ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
-  }
-
-  public Completable pauseAppcUpgrade(App app) {
-    return Completable.fromAction(
-        () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
-  }
-
-  public Completable upgradeAppcApp(App app) {
-    String packageName = ((UpdateApp) app).getPackageName();
-    return updatesManager.getAppcUpgrade(packageName)
-        .flatMap(update -> {
-          Download value = downloadFactory.create(update, true);
-          return Observable.just(value);
-        })
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(__ -> {
-              setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
-              return Single.just(false);
-            })
-            .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download, true, true))
+        .flatMapCompletable(
+            download -> installManager.install(download, isAppcUpdate, isAppcUpdate))
         .toCompletable();
   }
 

@@ -97,7 +97,7 @@ public interface AppsFragmentView extends View {
 
   void setPausingDownloadState(App app);
 
-  void setAppcPausingDownloadState(App app);
+  void setAppcPausingDownloadState(UpdateApp app);
 
   void showAppcUpgradesList(List<App> list);
 
