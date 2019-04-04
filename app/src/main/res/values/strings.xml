@@ -645,7 +645,6 @@
   <string name="editorial_card_views_short">%s views</string>
 
   <!--Update Apps Promotion-->
-  <string name="update2appc_data_title">Update to AppCoins</string>
   <string name="promo_update2appc_title">Get APPC Credits Now!</string>
   <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>

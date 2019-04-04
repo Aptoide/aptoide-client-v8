@@ -67,7 +67,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
 
     toolbar = view.findViewById(R.id.toolbar);
-    toolbar.setTitle(getString(R.string.update2appc_data_title));
+    toolbar.setTitle(getString(R.string.promo_update2appc_appcard_short));
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
     appCompatActivity.setSupportActionBar(toolbar);
     ActionBar actionBar = appCompatActivity.getSupportActionBar();

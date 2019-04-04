@@ -15,7 +15,7 @@
       android:layout_marginLeft="9dp"
       android:layout_marginStart="9dp"
       android:paddingTop="19dp"
-      android:text="@string/update2appc_data_title"
+      android:text="@string/promo_update2appc_appcard_short"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintHorizontal_bias="0"
       app:layout_constraintLeft_toLeftOf="parent"

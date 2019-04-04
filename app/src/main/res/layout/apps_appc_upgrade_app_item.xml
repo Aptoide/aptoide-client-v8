@@ -77,7 +77,7 @@
             android:layout_gravity="center_vertical"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@string/update2appc_data_title"
+            android:text="@string/promo_update2appc_appcard_short"
             android:textColor="#fd6363"
             tools:text="1239123ojd"
             style="@style/Aptoide.TextView.Medium.XS.Grey"
