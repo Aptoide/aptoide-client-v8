@@ -109,7 +109,7 @@ public class DownloadFactory {
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
       ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
           isAppcUpgrade ? Download.ACTION_DOWNGRADE : Download.ACTION_UPDATE, update.getApkPath(),
-              update.getAlternativeApkPath());
+          update.getAlternativeApkPath());
 
       Download download = new Download();
       download.setMd5(update.getMd5());
@@ -130,7 +130,6 @@ public class DownloadFactory {
       throw new IllegalArgumentException(validationResult.getMessage());
     }
   }
-
 
   public Download create(String md5, int versionCode, String packageName, String uri) {
     ApkPaths downloadPaths =
