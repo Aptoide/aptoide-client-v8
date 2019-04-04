@@ -4,10 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.view.app.AppViewHolder;
-import cm.aptoide.pt.view.app.Application;
 import rx.subjects.PublishSubject;
 
 public class AppcAppViewHolder extends AppsViewHolder {
