@@ -52,6 +52,7 @@ public class EditorialPresenter implements Presenter {
     handlePaletteColor();
     handleReactionClick();
     handleUserReaction();
+    handleDeleteReaction();
     handleLogInClick();
     onCreateLoadReactionModel();
 
@@ -66,6 +67,21 @@ public class EditorialPresenter implements Presenter {
     handleMediaListDescriptionVisibility();
     handleClickActionButtonCard();
     handleMovingCollapse();
+  }
+
+  private void handleDeleteReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionDeleted())
+        .flatMapSingle(reactionEvent -> editorialManager.deleteReaction(reactionEvent.getCardId(),
+            reactionEvent.getGroupId())
+            .observeOn(viewScheduler)
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+            .flatMap(
+                __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
@@ -387,8 +403,7 @@ public class EditorialPresenter implements Presenter {
         .flatMapSingle(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
             reactionEvent.getGroupId(), reactionEvent.getReactionType())
             .observeOn(viewScheduler)
-            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse,
-                reactionEvent.getReactionType()))
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
             .flatMap(
                 __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -396,10 +411,13 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, String reaction) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      view.setUserReaction(reaction);
-      editorialAnalytics.sendReactedEvent();
+      if (isDelete) {
+        editorialAnalytics.sendDeletedEvent();
+      } else {
+        editorialAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {

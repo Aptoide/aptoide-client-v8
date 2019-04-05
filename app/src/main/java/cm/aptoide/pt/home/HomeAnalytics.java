@@ -284,4 +284,12 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
+
+  public void sendDeleteEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "delete_reaction");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
 }

@@ -357,6 +357,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(ReactionsHomeEvent.class);
   }
 
+  @Override public Observable<ReactionsHomeEvent> reactionDeleted() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.DELETE_REACTION))
+        .cast(ReactionsHomeEvent.class);
+  }
+
   @Override public void showReactionsPopup(String cardId, String groupId, int bundlePosition) {
     EditorialBundleViewHolder editorialBundleViewHolder =
         getViewHolderForAdapterPosition(bundlePosition);

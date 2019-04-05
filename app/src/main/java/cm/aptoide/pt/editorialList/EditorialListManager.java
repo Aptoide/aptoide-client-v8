@@ -60,4 +60,8 @@ public class EditorialListManager {
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
     return reactionsManager.setReaction(cardId, groupId, reaction);
   }
+
+  public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
+    return reactionsManager.deleteReaction(cardId, groupId);
+  }
 }

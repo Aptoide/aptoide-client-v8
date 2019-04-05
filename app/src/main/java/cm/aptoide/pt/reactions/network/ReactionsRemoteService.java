@@ -5,6 +5,7 @@ import cm.aptoide.pt.reactions.data.TopReaction;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Response;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -49,6 +50,13 @@ public class ReactionsRemoteService implements ReactionsService {
         .subscribeOn(ioScheduler);
   }
 
+  @Override public Single<ReactionsResponse> deleteReaction(String uid) {
+    return service.deleteReaction(uid)
+        .map(this::mapResponse)
+        .toSingle()
+        .subscribeOn(ioScheduler);
+  }
+
   private ReactionsResponse mapResponse(Response response) {
     return new ReactionsResponse(mapReactionResponse(response));
   }
@@ -79,6 +87,9 @@ public class ReactionsRemoteService implements ReactionsService {
 
     @POST("echo/8.22112018/reactions/") //@POST("echo/20181116/reactions
     Observable<Response<EmptyResponse>> setFirstUserReaction(@retrofit2.http.Body Body body);
+
+    @DELETE("echo/8.22112018/reactions/{uid}/") Observable<Response<EmptyResponse>> deleteReaction(
+        @Path("uid") String uid);
 
     @PATCH("echo/8.22112018/reactions/{uid}/")
     Observable<Response<EmptyResponse>> setSecondUserReaction(@Path("uid") String uid,
