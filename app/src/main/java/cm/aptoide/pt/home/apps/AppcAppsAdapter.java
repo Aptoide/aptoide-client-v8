@@ -89,6 +89,10 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     return limit > 0 && listOfApps.size() > limit ? limit : listOfApps.size();
   }
 
+  public int getTotalItemCount() {
+    return listOfApps.size();
+  }
+
   public void setAvailableUpgradesList(List<App> list) {
     listOfApps.removeAll(getUpdatesToRemove(list));
     notifyDataSetChanged();

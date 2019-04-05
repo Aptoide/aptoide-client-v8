@@ -42,10 +42,6 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     this.pauseUpdate = pauseUpdate;
 
     this.isAppcUpgrade = isAppcUpgrade;
-    if (isAppcUpgrade) {
-      progressBar.setProgressDrawable(
-          ContextCompat.getDrawable(itemView.getContext(), R.drawable.appc_progress));
-    }
   }
 
   @Override public void setApp(App app) {

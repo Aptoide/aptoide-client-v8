@@ -52,6 +52,8 @@ public class AppsPresenter implements Presenter {
 
     getDownloads();
 
+    handleAppcUpgradesSeeMoreClick();
+
     handlePauseDownloadClick();
 
     handleResumeDownloadClick();
@@ -476,12 +478,22 @@ public class AppsPresenter implements Presenter {
         .flatMap(__ -> appsManager.getAppcUpgradesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesList(list))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
+  }
+
+  private void handleAppcUpgradesSeeMoreClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(list -> view.moreAppcClick()
             .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
+        });
   }
 
   private void loadUserImage() {

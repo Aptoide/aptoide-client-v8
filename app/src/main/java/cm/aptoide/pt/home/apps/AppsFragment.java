@@ -290,7 +290,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
     }
-    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
   @Override public Observable<Void> updateAll() {
@@ -374,7 +374,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeAppcCanceledAppDownload(App app) {
     appcAppsAdapter.removeCanceledAppDownload(app);
-    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
   @Override public void setStandbyState(App app) {
@@ -406,12 +406,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (list != null && !list.isEmpty()) {
       appcAppsAdapter.setAvailableUpgradesList(list);
     }
-    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
   @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
     appcAppsAdapter.removeAppcUpgradesList(excludedUpdatesList);
-    triggerAppcUpgradesVisibility(appcAppsAdapter.getItemCount());
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
   private void showAppsList() {
