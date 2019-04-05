@@ -913,6 +913,10 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(walletPromotionViewModel -> {
           if (walletPromotionViewModel.shouldShowOffer()) {
             view.showAppcWalletPromotionView(walletPromotionViewModel);
+            appViewAnalytics.sendWalletPromotionImpression();
+          }
+          if (walletPromotionViewModel.isAppViewAppInstalled()) {
+            appViewAnalytics.sendInstallAppcWalletPromotionApp();
           }
         });
   }
@@ -1253,7 +1257,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.dismissWalletPromotionClick())
-        .doOnNext(__ -> view.dismissWalletPromotionView())
+        .doOnNext(__ -> {
+          appViewAnalytics.sendClickOnNoThanksAppcWalletPromotion();
+          view.dismissWalletPromotionView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1266,7 +1273,8 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installWalletButtonClick()
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
-            .retry())
+            .retry()
+            .doOnNext(__2 -> appViewAnalytics.sendInstallAppcWalletPromotionWallet()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1323,8 +1331,11 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
-            .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
-                promotionViewApp.getPackageName(), promotionId))
+            .doOnNext(promotionViewApp -> {
+              appViewAnalytics.sendClickOnClaimAppcWalletPromotion();
+              promotionsNavigator.navigateToClaimDialog(promotionViewApp.getPackageName(),
+                  promotionId);
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
