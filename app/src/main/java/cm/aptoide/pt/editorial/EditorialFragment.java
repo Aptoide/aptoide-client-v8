@@ -600,14 +600,21 @@ public class EditorialFragment extends NavigationTrackFragment
     ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
-      reactionEventListener.onNext(new ReactionEvent(cardId, mapUserReaction(item), groupId));
+      reactionEventListener.onNext(
+          new ReactionEvent(cardId, mapUserReaction(item), groupId, ReactionEvent.Type.REACT));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
   }
 
   @Override public Observable<ReactionEvent> reactionClicked() {
-    return reactionEventListener;
+    return reactionEventListener.filter(
+        reactionEvent -> reactionEvent.getType() == ReactionEvent.Type.REACT);
+  }
+
+  @Override public Observable<ReactionEvent> reactionDeleted() {
+    return reactionEventListener.filter(
+        reactionEvent -> reactionEvent.getType() == ReactionEvent.Type.DELETE);
   }
 
   @Override public void setUserReaction(String reaction) {

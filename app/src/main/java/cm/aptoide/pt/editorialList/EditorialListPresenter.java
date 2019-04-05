@@ -44,9 +44,25 @@ public class EditorialListPresenter implements Presenter {
     handleBottomReached();
     handleUserImageClick();
     handleReactionClick();
+    handleDeleteReaction();
     handleUserReaction();
     handleLogInClick();
     loadUserImage();
+  }
+
+  private void handleDeleteReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionDeleted())
+        .flatMapSingle(reactionsHomeEvent -> editorialListManager.deleteReaction(
+            reactionsHomeEvent.getCardId(), reactionsHomeEvent.getGroupId())
+            .observeOn(viewScheduler)
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+            .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
+                reactionsHomeEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   private Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
@@ -207,7 +223,7 @@ public class EditorialListPresenter implements Presenter {
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
                 .observeOn(viewScheduler)
-                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
+                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
                 .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
                     reactionsHomeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -215,9 +231,13 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      editorialListAnalytics.sendReactedEvent();
+      if (isDelete) {
+        editorialListAnalytics.sendDeleteEvent();
+      } else {
+        editorialListAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {

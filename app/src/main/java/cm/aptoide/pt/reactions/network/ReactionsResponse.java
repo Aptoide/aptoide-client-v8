@@ -33,11 +33,7 @@ public class ReactionsResponse {
       ReactionResponseMessage reactionResponseMessage = GENERAL_ERROR;
       switch (httpResponse.code()) {
         case 200:
-          reactionResponseMessage = SUCCESS;
-          break;
         case 201:
-          reactionResponseMessage = SUCCESS;
-          break;
         case 204:
           reactionResponseMessage = SUCCESS;
           break;

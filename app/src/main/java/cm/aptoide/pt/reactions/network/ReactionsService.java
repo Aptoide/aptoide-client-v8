@@ -8,4 +8,6 @@ public interface ReactionsService {
   Single<LoadReactionModel> loadReactionModel(String cardId, String groupId);
 
   Single<ReactionsResponse> setSecondReaction(String uid, String reaction);
+
+  Single<ReactionsResponse> deleteReaction(String uid);
 }

@@ -77,6 +77,8 @@ public interface EditorialView extends View {
 
   Observable<ReactionEvent> reactionClicked();
 
+  Observable<ReactionEvent> reactionDeleted();
+
   void setUserReaction(String reaction);
 
   void showLogInDialog();

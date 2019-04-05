@@ -31,6 +31,10 @@ public class ReactionsManager {
     }
   }
 
+  public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
+    return reactionsService.deleteReaction(getUID(cardId + groupId));
+  }
+
   private String getUID(String identifier) {
     return userReactions.get(identifier);
   }

@@ -38,6 +38,8 @@ public interface HomeView extends BundleView {
 
   Observable<ReactionsHomeEvent> reactionClicked();
 
+  Observable<ReactionsHomeEvent> reactionDeleted();
+
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 
   void showLogInDialog();

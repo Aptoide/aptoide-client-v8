@@ -94,9 +94,25 @@ public class HomePresenter implements Presenter {
 
     handleReactionClick();
 
+    handleDeleteReaction();
+
     handleUserReaction();
 
     handleLogInClick();
+  }
+
+  private void handleDeleteReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionDeleted())
+        .flatMapSingle(
+            homeEvent -> home.deleteReaction(homeEvent.getCardId(), homeEvent.getGroupId())
+                .observeOn(viewScheduler)
+                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
@@ -209,16 +225,20 @@ public class HomePresenter implements Presenter {
         .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
             homeEvent.getReaction())
             .observeOn(viewScheduler)
-            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
             .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      homeAnalytics.sendReactedEvent();
+      if (isDelete) {
+        homeAnalytics.sendDeleteEvent();
+      } else {
+        homeAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {
