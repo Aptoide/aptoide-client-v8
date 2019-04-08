@@ -97,6 +97,7 @@ import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.home.apps.AppsPresenter;
 import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
+import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
 import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
@@ -542,11 +543,17 @@ import rx.subscriptions.CompositeSubscription;
         appsNavigator);
   }
 
+  @FragmentScope @Provides SeeMoreAppcManager providesSeeMoreManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, DownloadFactory downloadFactory) {
+    return new SeeMoreAppcManager(updatesManager, installManager, appMapper, downloadFactory,
+        downloadAnalytics, installAnalytics);
+  }
+
   @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(
-      AppsManager appsManager, AptoideAccountManager aptoideAccountManager,
-      AppsNavigator appsNavigator) {
+      SeeMoreAppcManager seeMoreAppcManager) {
     return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) fragment.getContext()), appsManager);
+        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
   }
 }

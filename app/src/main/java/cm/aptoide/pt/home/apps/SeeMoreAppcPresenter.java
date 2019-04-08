@@ -14,19 +14,18 @@ public class SeeMoreAppcPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final Scheduler ioScheduler;
   private final CrashReport crashReport;
-  private final AppsManager appsManager;
+  private final SeeMoreAppcManager seeMoreAppcManager;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
 
-
   public SeeMoreAppcPresenter(SeeMoreAppcView view, Scheduler viewScheduler, Scheduler ioScheduler,
       CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService, AppsManager appsManager) {
+      PermissionService permissionService, SeeMoreAppcManager seeMoreAppcManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.ioScheduler = ioScheduler;
     this.crashReport = crashReport;
-    this.appsManager = appsManager;
+    this.seeMoreAppcManager = seeMoreAppcManager;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
   }
@@ -52,7 +51,7 @@ public class SeeMoreAppcPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.refreshApps()
             .observeOn(ioScheduler)
-            .flatMapCompletable(__ -> appsManager.refreshAllUpdates()
+            .flatMapCompletable(__ -> seeMoreAppcManager.refreshAllUpdates()
                 .observeOn(viewScheduler)
                 .doOnCompleted(() -> view.hidePullToRefresh())
                 .doOnError(throwable -> {
@@ -73,7 +72,7 @@ public class SeeMoreAppcPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradesList(false))
+        .flatMap(__ -> seeMoreAppcManager.getAppcUpgradesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -85,7 +84,7 @@ public class SeeMoreAppcPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
+        .flatMap(__ -> seeMoreAppcManager.getAppcUpgradeDownloadsList())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesDownloadList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -100,16 +99,16 @@ public class SeeMoreAppcPresenter implements Presenter {
         .flatMap(created -> view.upgradeAppcApp()
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
                 .flatMap(success -> {
-                  if (appsManager.showWarning()) {
+                  if (seeMoreAppcManager.showWarning()) {
                     return view.showRootWarning()
-                        .doOnNext(answer -> appsManager.storeRootAnswer(answer));
+                        .doOnNext(answer -> seeMoreAppcManager.storeRootAnswer(answer));
                   }
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .doOnNext(__ -> view.setAppcStandbyState(app))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(__3 -> appsManager.updateApp(app, true)))
+                .flatMapCompletable(__3 -> seeMoreAppcManager.updateApp(app)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -125,7 +124,7 @@ public class SeeMoreAppcPresenter implements Presenter {
         .flatMap(created -> Observable.merge(view.resumeAppcUpgrade(), view.retryAppcUpgrade()))
         .doOnNext(app -> view.setAppcStandbyState(app))
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.resumeUpdate(app))
+        .flatMapCompletable(app -> seeMoreAppcManager.resumeUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -138,7 +137,7 @@ public class SeeMoreAppcPresenter implements Presenter {
         .flatMap(created -> view.cancelAppcUpgrade())
         .doOnNext(app -> view.removeAppcCanceledAppDownload(app))
         .observeOn(ioScheduler)
-        .doOnNext(app -> appsManager.cancelUpdate(app))
+        .doOnNext(app -> seeMoreAppcManager.cancelUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -151,7 +150,7 @@ public class SeeMoreAppcPresenter implements Presenter {
         .flatMap(created -> view.pauseAppcUpgrade())
         .doOnNext(app -> view.setAppcPausingDownloadState(app))
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.pauseUpdate(app))
+        .flatMapCompletable(app -> seeMoreAppcManager.pauseUpdate(app))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
