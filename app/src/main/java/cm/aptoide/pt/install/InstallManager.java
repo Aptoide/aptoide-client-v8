@@ -184,7 +184,6 @@ public class InstallManager {
         .toCompletable();
   }
 
-
   public Observable<Install> getInstall(String md5, String packageName, int versioncode) {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
