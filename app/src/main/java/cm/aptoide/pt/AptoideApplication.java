@@ -22,6 +22,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MoPubAdsService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -104,6 +105,8 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
@@ -344,6 +347,18 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+
+    Futures.addCallback(getAsyncApplicationComponent().moPubAdsService(),
+        new FutureCallback<MoPubAdsService>() {
+          @Override public void onSuccess(@javax.annotation.Nullable MoPubAdsService service) {
+            if (service != null) {
+              service.observeWalletInstalation();
+            }
+          }
+
+          @Override public void onFailure(Throwable t) {
+          }
+        });
   }
 
   private void initializeMoPub(Context context, String adUnitPlacementId) {
@@ -379,6 +394,13 @@ public abstract class AptoideApplication extends Application {
           .build();
     }
     return applicationComponent;
+  }
+
+  public AsyncApplicationComponent getAsyncApplicationComponent() {
+    return DaggerAsyncApplicationComponent.builder()
+        .applicationComponent(applicationComponent)
+        .asyncApplicationModule(new AsyncApplicationModule())
+        .build();
   }
 
   /**

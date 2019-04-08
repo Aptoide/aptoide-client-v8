@@ -22,6 +22,20 @@ public class MoPubAdsManager {
     this.walletAdsOfferManager = walletAdsOfferManager;
   }
 
+  public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
+    return moPubInterstitialAdExperiment.shouldLoadInterstitial()
+        .flatMap(experimentShouldLoadAds -> walletAdsOfferManager.shouldRequestMoPubAd()
+            .flatMap(shouldRequestAds -> {
+              if (experimentShouldLoadAds) {
+                return shouldRequestAds ? Single.just(
+                    WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW)
+                    : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE);
+              } else {
+                return Single.just(WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+              }
+            }));
+  }
+
   public Single<Boolean> shouldHaveInterstitialAds() {
     return moPubInterstitialAdExperiment.shouldLoadInterstitial();
   }
