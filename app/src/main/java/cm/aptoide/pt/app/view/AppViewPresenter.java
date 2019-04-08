@@ -913,10 +913,10 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(walletPromotionViewModel -> {
           if (walletPromotionViewModel.shouldShowOffer()) {
             view.showAppcWalletPromotionView(walletPromotionViewModel);
-            appViewAnalytics.sendWalletPromotionImpression();
-          }
-          if (walletPromotionViewModel.isAppViewAppInstalled()) {
-            appViewAnalytics.sendInstallAppcWalletPromotionApp();
+            if (!appViewManager.isAppcPromotionImpressionSent()) {
+              appViewAnalytics.sendWalletPromotionImpression();
+              appViewManager.setAppcPromotionImpressionSent();
+            }
           }
         });
   }
@@ -992,6 +992,10 @@ public class AppViewPresenter implements Presenter {
                                 appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                                     appViewModel.getDeveloper()
                                         .getName(), action.toString());
+                                if (appViewManager.getPromotionStatus()
+                                    .equals(AppViewManager.PromotionStatus.NOT_CLAIMED)) {
+                                  appViewAnalytics.sendInstallAppcWalletPromotionApp();
+                                }
                               })
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
                                   appViewModel.getPackageName()))
@@ -1272,9 +1276,9 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installWalletButtonClick()
+            .doOnNext(__2 -> appViewAnalytics.sendInstallAppcWalletPromotionWallet())
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
-            .retry()
-            .doOnNext(__2 -> appViewAnalytics.sendInstallAppcWalletPromotionWallet()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
