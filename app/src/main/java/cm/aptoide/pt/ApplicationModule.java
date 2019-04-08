@@ -333,10 +333,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT, appInstallerStatusReceiver).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils(), packageInstallerManager);
+            getInstallingStateTimeout(), appInstallerStatusReceiver).create(application),
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils(),
+        packageInstallerManager);
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -464,8 +464,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics, BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT,
-        appInstallerStatusReceiver);
+        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver);
+  }
+
+  private int getInstallingStateTimeout() {
+    return Build.VERSION.SDK_INT >= 21
+        ? BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS
+        : BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(

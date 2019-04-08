@@ -240,8 +240,10 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT",
-        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
+        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
+        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_BELOW_21_OS
     variant.buildConfigField "int", "ROOT_TIMEOUT",
         project.ROOT_TIMEOUT_IN_MILLIS
 
