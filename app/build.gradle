@@ -280,6 +280,8 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
+    variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
+        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
