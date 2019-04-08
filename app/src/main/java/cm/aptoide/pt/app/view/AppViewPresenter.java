@@ -913,6 +913,10 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(walletPromotionViewModel -> {
           if (walletPromotionViewModel.shouldShowOffer()) {
             view.showAppcWalletPromotionView(walletPromotionViewModel);
+            if (!appViewManager.isAppcPromotionImpressionSent()) {
+              appViewAnalytics.sendWalletPromotionImpression();
+              appViewManager.setAppcPromotionImpressionSent();
+            }
           }
         });
   }
@@ -988,6 +992,10 @@ public class AppViewPresenter implements Presenter {
                                 appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                                     appViewModel.getDeveloper()
                                         .getName(), action.toString());
+                                if (appViewManager.getPromotionStatus()
+                                    .equals(AppViewManager.PromotionStatus.NOT_CLAIMED)) {
+                                  appViewAnalytics.sendInstallAppcWalletPromotionApp();
+                                }
                               })
                               .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
                                   appViewModel.getPackageName()))
@@ -1253,7 +1261,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.dismissWalletPromotionClick())
-        .doOnNext(__ -> view.dismissWalletPromotionView())
+        .doOnNext(__ -> {
+          appViewAnalytics.sendClickOnNoThanksAppcWalletPromotion();
+          view.dismissWalletPromotionView();
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1265,6 +1276,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installWalletButtonClick()
+            .doOnNext(__2 -> appViewAnalytics.sendInstallAppcWalletPromotionWallet())
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -1323,8 +1335,11 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
-            .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
-                promotionViewApp.getPackageName(), promotionId))
+            .doOnNext(promotionViewApp -> {
+              appViewAnalytics.sendClickOnClaimAppcWalletPromotion();
+              promotionsNavigator.navigateToClaimDialog(promotionViewApp.getPackageName(),
+                  promotionId);
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

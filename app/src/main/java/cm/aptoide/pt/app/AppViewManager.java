@@ -77,6 +77,8 @@ public class AppViewManager {
   private SimilarAppsViewModel cachedSimilarAppsViewModel;
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private String promotionId;
+  private PromotionStatus promotionStatus;
+  private boolean appcPromotionImpressionSent;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -114,6 +116,8 @@ public class AppViewManager {
     this.installedRepository = installedRepository;
     this.appcMigrationManager = appcMigrationManager;
     this.isFirstLoad = true;
+    this.promotionStatus = PromotionStatus.NO_PROMOTION;
+    this.appcPromotionImpressionSent = false;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -600,8 +604,10 @@ public class AppViewManager {
       if (app.getPackageName()
           .equals("com.appcoins.wallet")) {
         if (app.isClaimed()) {
+          promotionStatus = PromotionStatus.CLAIMED;
           return new WalletPromotionViewModel(false);
         } else {
+          promotionStatus = PromotionStatus.NOT_CLAIMED;
           return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
               app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
               app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
@@ -631,5 +637,21 @@ public class AppViewManager {
                 .getId(), app.hasAdvertising() || app.hasBilling()))
         .filter(download -> download.getDownloadModel()
             .isDownloading());
+  }
+
+  public boolean isAppcPromotionImpressionSent() {
+    return appcPromotionImpressionSent;
+  }
+
+  public void setAppcPromotionImpressionSent() {
+    this.appcPromotionImpressionSent = true;
+  }
+
+  public PromotionStatus getPromotionStatus() {
+    return promotionStatus;
+  }
+
+  public enum PromotionStatus {
+    NO_PROMOTION, NOT_CLAIMED, CLAIMED
   }
 }
