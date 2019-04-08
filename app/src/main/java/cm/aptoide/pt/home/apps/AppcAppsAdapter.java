@@ -70,9 +70,9 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
     App item = listOfApps.get(position);
     StateApp.Status status = ((UpdateApp) item).getStatus();
     switch (status) {
-      case APPC_UPGRADE:
+      case UPDATE:
         return UPDATE;
-      case APPC_UPGRADING:
+      case UPDATING:
         return UPDATING;
       case STANDBY:
         return STANDBY_UPDATE;
