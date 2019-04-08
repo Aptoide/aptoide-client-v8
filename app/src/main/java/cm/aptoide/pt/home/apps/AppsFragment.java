@@ -210,64 +210,43 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
-  @Override public Observable<App> retryUpdate() {
+  @Override public Observable<AppClickEventWrapper> retryUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY, appClick.getApp()));
   }
 
-  @Override public Observable<App> updateApp() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP)
-        .map(appClick -> appClick.getApp());
+  @Override public Observable<AppClickEventWrapper> updateApp() {
+    return appItemClicks.filter(appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP
+        || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP, appClick.getApp()));
   }
 
-  @Override public Observable<App> upgradeAppcApp() {
+  @Override public Observable<AppClickEventWrapper> pauseUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE, appClick.getApp()));
   }
 
-  @Override public Observable<App> pauseUpdate() {
+  @Override public Observable<AppClickEventWrapper> cancelUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL, appClick.getApp()));
   }
 
-  @Override public Observable<App> cancelUpdate() {
+  @Override public Observable<AppClickEventWrapper> resumeUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE)
-        .map(appClick -> appClick.getApp());
-  }
-
-  @Override public Observable<App> resumeUpdate() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE)
-        .map(appClick -> appClick.getApp());
-  }
-
-  @Override public Observable<App> resumeAppcUpgrade() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
-        .map(appClick -> appClick.getApp());
-  }
-
-  @Override public Observable<App> retryAppcUpgrade() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
-        .map(appClick -> appClick.getApp());
-  }
-
-  @Override public Observable<App> cancelAppcUpgrade() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
-        .map(appClick -> appClick.getApp());
-  }
-
-  @Override public Observable<App> pauseAppcUpgrade() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME, appClick.getApp()));
   }
 
   @Override public Observable<Boolean> showRootWarning() {
@@ -398,7 +377,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppOnPausing(app);
   }
 
-  @Override public void setAppcPausingDownloadState(UpdateApp app) {
+  @Override public void setAppcPausingDownloadState(App app) {
     appcAppsAdapter.setAppOnPausing(app);
   }
 
@@ -434,7 +413,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       appcAppsLayout.setVisibility(View.GONE);
     }
   }
-
 
   private boolean shouldShowAppsList() {
     return showDownloads

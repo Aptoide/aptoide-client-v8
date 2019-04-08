@@ -179,7 +179,7 @@ public class InstallManager {
         })
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall, isDowngrade))
+        .flatMap(install -> installInBackground(install, forceDefaultInstall))
         .first()
         .toCompletable();
   }
@@ -383,8 +383,7 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
-      boolean isDowngrade) {
+  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall) {
     return getInstall(install.getMd5(), install.getPackageName(),
         install.getVersionCode()).mergeWith(
         startBackgroundInstallationAndWait(install, forceDefaultInstall));
