@@ -159,14 +159,14 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false, false);
+    return install(download, false);
   }
 
   public Completable defaultInstall(Download download) {
-    return install(download, true, false);
+    return install(download, true);
   }
 
-  public Completable install(Download download, boolean forceDefaultInstall, boolean isDowngrade) {
+  public Completable install(Download download, boolean forceDefaultInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))

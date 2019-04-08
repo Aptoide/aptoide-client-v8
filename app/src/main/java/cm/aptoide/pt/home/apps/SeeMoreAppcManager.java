@@ -100,7 +100,7 @@ public class SeeMoreAppcManager {
         .doOnNext(download -> {
           setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
         })
-        .flatMapCompletable(download -> installManager.install(download, true, true))
+        .flatMapCompletable(download -> installManager.install(download, true))
         .toCompletable();
   }
 
