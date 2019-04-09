@@ -82,20 +82,6 @@ public class UpdateRepository {
         .flatMapCompletable(upgrades -> saveNewUpgrades(upgrades));
   }
 
-  private void insertNonRepeatedApp(App appToInsert, List<App> list) {
-    boolean shouldAdd = true;
-    for (int i = 0; i < list.size(); i++) {
-      App app = list.get(i);
-      if (app.getPackageName()
-          .equals(appToInsert.getPackageName())) {
-        list.set(i, appToInsert);
-        shouldAdd = false;
-        break;
-      }
-    }
-    if (shouldAdd) list.add(appToInsert);
-  }
-
   private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
       boolean bypassServerCache) {
     return ListAppcAppsUpgradesRequest.of(idsRepository.getUniqueIdentifier(), bodyInterceptor,
