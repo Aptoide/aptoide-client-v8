@@ -4,19 +4,15 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import cm.aptoide.pt.BuildConfig;
+import com.inmobi.sdk.InMobiSdk;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.startapp.android.publish.adsCommon.StartAppAd;
-import com.startapp.android.publish.adsCommon.StartAppSDK;
 import java.util.Map;
 
-public class StartAppBaseConfiguration extends BaseAdapterConfiguration {
-
-  private final String NETWORK_SDK_VERSION = "3.10.1";
+public class InMobiBaseAdapterConfiguration extends BaseAdapterConfiguration {
 
   @NonNull @Override public String getAdapterVersion() {
-    return NETWORK_SDK_VERSION + ".0";
+    return "7.2.6.0";
   }
 
   @Nullable @Override public String getBiddingToken(@NonNull Context context) {
@@ -24,19 +20,16 @@ public class StartAppBaseConfiguration extends BaseAdapterConfiguration {
   }
 
   @NonNull @Override public String getMoPubNetworkName() {
-    return "startapp";
+    return "InMobi";
   }
 
   @NonNull @Override public String getNetworkSdkVersion() {
-    return NETWORK_SDK_VERSION;
+    return "7.2.6";
   }
 
   @Override public void initializeNetwork(@NonNull Context context,
       @Nullable Map<String, String> configuration,
       @NonNull OnNetworkInitializationFinishedListener listener) {
-    StartAppSDK.init(context, BuildConfig.MOPUB_STARTAPP_APPLICATION_ID, false);
-    StartAppAd.disableSplash();
-    listener.onNetworkInitializationFinished(this.getClass(),
-        MoPubErrorCode.ADAPTER_INITIALIZATION_SUCCESS);
+    InMobiSdk.init(context, BuildConfig.MOPUB_INMOBI_ACCOUNT_ID);
   }
 }

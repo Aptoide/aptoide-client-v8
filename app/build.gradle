@@ -280,8 +280,8 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "MOPUB_STARTAPP_APPLICATION_ID",
-        "\"" + project.MOPUB_STARTAPP_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
+        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
@@ -472,15 +472,17 @@ dependencies {
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  //StartApp
-  implementation "com.startapp:inapp-sdk:${STARTAPP_SDK_VERSION}"
-
   //AppNext
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
+
+  //Inmobi
+  implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
+  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {

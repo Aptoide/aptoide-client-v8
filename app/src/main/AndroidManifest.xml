@@ -160,26 +160,6 @@
         android:name="com.applovin.adview.AppLovinConfirmationActivity"
         android:configChanges="orientation|screenSize"/>
 
-    <activity
-        android:name="com.startapp.android.publish.ads.list3d.List3DActivity"
-        android:theme="@android:style/Theme"/>
-
-    <activity
-        android:name="com.startapp.android.publish.adsCommon.activities.OverlayActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:theme="@android:style/Theme.Translucent"/>
-
-    <activity
-        android:name="com.startapp.android.publish.adsCommon.activities.FullScreenActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:theme="@android:style/Theme"/>
-
-    <service android:name="com.startapp.android.publish.common.metaData.PeriodicMetaDataService"/>
-    <service android:name="com.startapp.android.publish.common.metaData.InfoEventService"/>
-    <service
-        android:name="com.startapp.android.publish.common.metaData.PeriodicJobService"
-        android:permission="android.permission.BIND_JOB_SERVICE"/>
-
     <meta-data
         android:name="io.fabric.ApiKey"
         android:value="${fabricApiKey}"/>
@@ -187,6 +167,18 @@
     <meta-data
         android:name="applovin.sdk.key"
         android:value="${appLovinApiKey}"/>
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version"/>
+
+    <activity
+        android:name="com.inmobi.rendering.InMobiAdActivity"
+        android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout"
+        android:hardwareAccelerated="true"
+        android:resizeableActivity="false"
+        android:theme="@android:style/Theme.NoTitleBar"
+        tools:ignore="UnusedAttribute"/>
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
