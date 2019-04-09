@@ -129,4 +129,8 @@ public class EditorialManager {
   public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
     return reactionsManager.deleteReaction(cardId, groupId);
   }
+
+  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
+    return reactionsManager.isFirstReaction(cardId, groupId);
+  }
 }

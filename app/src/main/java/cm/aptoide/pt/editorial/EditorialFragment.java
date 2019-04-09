@@ -129,6 +129,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private PublishSubject<Palette.Swatch> paletteSwatchSubject;
   private PublishSubject<Boolean> movingCollapseSubject;
   private boolean shouldAnimate;
+  private ReactionsPopup reactionsPopup;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -188,6 +189,7 @@ public class EditorialFragment extends NavigationTrackFragment
     secondReaction = view.findViewById(R.id.reaction_2);
     thirdReaction = view.findViewById(R.id.reaction_3);
     numberOfReactions = view.findViewById(R.id.number_of_reactions);
+    reactionsPopup = new ReactionsPopup(getContext(), reactButton);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
@@ -571,6 +573,10 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(reactButton);
   }
 
+  @Override public Observable<Void> reactionsButtonLongPressed() {
+    return RxView.longClicks(reactButton);
+  }
+
   @Override public void setReactions(String userReaction, List<TopReaction> reactions,
       int numberOfReactions) {
     setUserReaction(userReaction);
@@ -597,29 +603,23 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void showReactionsPopup(String cardId, String groupId) {
-    ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
-      reactionEventListener.onNext(
-          new ReactionEvent(cardId, mapUserReaction(item), groupId, ReactionEvent.Type.REACT));
+      reactionEventListener.onNext(new ReactionEvent(cardId, mapUserReaction(item), groupId));
       reactionsPopup.dismiss();
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
   }
 
   @Override public Observable<ReactionEvent> reactionClicked() {
-    return reactionEventListener.filter(
-        reactionEvent -> reactionEvent.getType() == ReactionEvent.Type.REACT);
-  }
-
-  @Override public Observable<ReactionEvent> reactionDeleted() {
-    return reactionEventListener.filter(
-        reactionEvent -> reactionEvent.getType() == ReactionEvent.Type.DELETE);
+    return reactionEventListener;
   }
 
   @Override public void setUserReaction(String reaction) {
     if (!reaction.equals("") && isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
+    } else {
+      reactButton.setImageResource(R.drawable.ic_reaction_emoticon_grey_fog);
     }
   }
 

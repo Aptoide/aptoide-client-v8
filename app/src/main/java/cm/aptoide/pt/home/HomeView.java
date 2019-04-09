@@ -38,7 +38,7 @@ public interface HomeView extends BundleView {
 
   Observable<ReactionsHomeEvent> reactionClicked();
 
-  Observable<ReactionsHomeEvent> reactionDeleted();
+  Observable<EditorialHomeEvent> reactionButtonLongPress();
 
   void showReactionsPopup(String cardId, String groupId, int bundlePosition);
 

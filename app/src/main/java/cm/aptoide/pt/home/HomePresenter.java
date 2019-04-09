@@ -9,6 +9,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.view.app.Application;
+import java.util.Collections;
 import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
@@ -94,22 +95,22 @@ public class HomePresenter implements Presenter {
 
     handleReactionClick();
 
-    handleDeleteReaction();
+    handleLongPressedReactionButton();
 
     handleUserReaction();
 
     handleLogInClick();
   }
 
-  private void handleDeleteReaction() {
+  private void handleLongPressedReactionButton() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionDeleted())
-        .flatMapSingle(
-            homeEvent -> home.deleteReaction(homeEvent.getCardId(), homeEvent.getGroupId())
-                .observeOn(viewScheduler)
-                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
-                .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
+        .flatMap(created -> view.reactionButtonLongPress())
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendReactionButtonClickEvent();
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
+              homeEvent.getBundlePosition());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -208,11 +209,10 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .doOnNext(homeEvent -> {
-          homeAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
-              homeEvent.getBundlePosition());
-        })
+        .flatMap(editorialHomeEvent -> home.isFirstReaction(editorialHomeEvent.getCardId(),
+            editorialHomeEvent.getGroupId())
+            .flatMapSingle(isFirstReaction -> singlePressReactionButtonAction(editorialHomeEvent,
+                isFirstReaction)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
@@ -225,20 +225,16 @@ public class HomePresenter implements Presenter {
         .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
             homeEvent.getReaction())
             .observeOn(viewScheduler)
-            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
             .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
     if (reactionsResponse.wasSuccess()) {
-      if (isDelete) {
-        homeAnalytics.sendDeleteEvent();
-      } else {
-        homeAnalytics.sendReactedEvent();
-      }
+      homeAnalytics.sendReactedEvent();
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
     } else {
@@ -546,5 +542,20 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private Single<List<HomeBundle>> singlePressReactionButtonAction(
+      EditorialHomeEvent editorialHomeEvent, boolean isFirstReaction) {
+    if (isFirstReaction) {
+      homeAnalytics.sendReactionButtonClickEvent();
+      view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
+          editorialHomeEvent.getBundlePosition());
+      return Single.just(Collections.emptyList());
+    } else {
+      homeAnalytics.sendDeleteEvent();
+      return home.deleteReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
+          .flatMap(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+              editorialHomeEvent.getGroupId()));
+    }
   }
 }
