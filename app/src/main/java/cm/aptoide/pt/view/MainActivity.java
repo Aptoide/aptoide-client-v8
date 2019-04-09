@@ -23,7 +23,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.UnityAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
@@ -34,7 +33,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.unity3d.ads.UnityAds;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -82,8 +80,6 @@ public class MainActivity extends BottomNavigationActivity
 
   private void initializeAdsMediation() {
     IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
-
-    UnityAds.initialize(this, BuildConfig.MOPUB_UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {

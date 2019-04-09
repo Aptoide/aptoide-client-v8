@@ -34,6 +34,7 @@ public class AppViewAnalytics {
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   public static final String ADS_BLOCK_BY_OFFER = "Ads_Block_By_Offer";
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
+  public static final String BONUS_GAME_WALLET_OFFER_19 = "Bonus_Game_Wallet_Offer_19_App_View";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -424,6 +425,46 @@ public class AppViewAnalytics {
     Map<String, Object> data = new HashMap<>();
     data.put(IS_AD, false);
     analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendWalletPromotionImpression() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, IMPRESSION);
+
+    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendInstallAppcWalletPromotionApp() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "install appc app");
+
+    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendInstallAppcWalletPromotionWallet() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "install wallet");
+
+    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendClickOnNoThanksAppcWalletPromotion() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "no thanks");
+
+    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendClickOnClaimAppcWalletPromotion() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "claim");
+
+    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 }
