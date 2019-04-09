@@ -1,21 +1,23 @@
 package cm.aptoide.pt.reactions.ui;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.reactions.data.ReactionType;
-import cm.aptoide.pt.reactions.util.DisplayUtil;
 import java.util.Arrays;
 import java.util.List;
 
 public class ReactionsView extends LinearLayout {
 
-  public static final int WIDTH_REACTIONS = DisplayUtil.dpToPx(56);
-  public static final int HEIGHT_REACTIONS = DisplayUtil.dpToPx(56);
-  public static final int REACTIONS_PADDING = 8;
+  public static int WIDTH_REACTIONS = 0;
+  public static int HEIGHT_REACTIONS = 0;
+  public static int REACTIONS_PADDING = 0;
   private List<Reaction> reactions;
 
   public ReactionsView(Context context) {
@@ -34,6 +36,15 @@ public class ReactionsView extends LinearLayout {
   }
 
   private void init() {
+
+    WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+    Display display = wm.getDefaultDisplay();
+    Point size = new Point();
+    display.getSize(size);
+    WIDTH_REACTIONS = Math.round((size.x) / 5);
+    HEIGHT_REACTIONS = Math.round((size.x) / 5);
+    REACTIONS_PADDING = Math.round(7 * (WIDTH_REACTIONS / 100));
+
     reactions = Arrays.asList(new Reaction(ReactionType.LIKE, REACTIONS_PADDING, this.getContext()),
         new Reaction(ReactionType.LAUGH, REACTIONS_PADDING, this.getContext()),
         new Reaction(ReactionType.LOVE, REACTIONS_PADDING, this.getContext()),
