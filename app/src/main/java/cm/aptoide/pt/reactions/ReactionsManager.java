@@ -4,6 +4,7 @@ import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import java.util.HashMap;
+import rx.Observable;
 import rx.Single;
 
 public class ReactionsManager {
@@ -32,7 +33,12 @@ public class ReactionsManager {
   }
 
   public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
-    return reactionsService.deleteReaction(getUID(cardId + groupId));
+    return reactionsService.deleteReaction(getUID(cardId + groupId))
+        .doOnSuccess(reactionsResponse -> {
+          if (reactionsResponse.wasSuccess()) {
+            userReactions.remove(cardId + groupId);
+          }
+        });
   }
 
   private String getUID(String identifier) {
@@ -41,5 +47,9 @@ public class ReactionsManager {
 
   private boolean hasNotReacted(String cardId, String groupId) {
     return getUID(cardId + groupId) == null || getUID(cardId + groupId).equals("");
+  }
+
+  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
+    return Observable.just(hasNotReacted(cardId, groupId));
   }
 }

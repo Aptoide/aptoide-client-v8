@@ -311,7 +311,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.REACTION_BUTTON))
+        .equals(HomeEvent.Type.REACT_SINGLE_PRESS))
         .cast(EditorialHomeEvent.class);
   }
 
@@ -357,10 +357,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .cast(ReactionsHomeEvent.class);
   }
 
-  @Override public Observable<ReactionsHomeEvent> reactionDeleted() {
+  @Override public Observable<EditorialHomeEvent> reactionButtonLongPress() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.DELETE_REACTION))
-        .cast(ReactionsHomeEvent.class);
+        .equals(HomeEvent.Type.REACT_LONG_PRESS))
+        .cast(EditorialHomeEvent.class);
   }
 
   @Override public void showReactionsPopup(String cardId, String groupId, int bundlePosition) {
