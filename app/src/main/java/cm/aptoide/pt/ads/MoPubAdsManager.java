@@ -24,16 +24,16 @@ public class MoPubAdsManager {
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
     return moPubInterstitialAdExperiment.shouldLoadInterstitial()
-        .flatMap(experimentShouldLoadAds -> walletAdsOfferManager.shouldRequestMoPubAd()
-            .flatMap(shouldRequestAds -> {
-              if (experimentShouldLoadAds) {
-                return shouldRequestAds ? Single.just(
+        .flatMap(experimentShouldLoadAds -> {
+          if (experimentShouldLoadAds) {
+            return walletAdsOfferManager.shouldRequestMoPubAd()
+                .flatMap(shouldRequestAds -> shouldRequestAds ? Single.just(
                     WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW)
-                    : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE);
-              } else {
-                return Single.just(WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
-              }
-            }));
+                    : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
+          } else {
+            return Single.just(WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+          }
+        });
   }
 
   public Single<Boolean> shouldHaveInterstitialAds() {

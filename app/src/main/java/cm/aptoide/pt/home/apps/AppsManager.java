@@ -21,10 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
@@ -235,16 +232,7 @@ public class AppsManager {
     return updatesManager.getAllUpdates()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
-        .flatMap(updates -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .map(showAds -> showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                        : ADS_HIDE);
-              } else {
-                return Single.just(NO_ADS);
-              }
-            })
+        .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
