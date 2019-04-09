@@ -130,17 +130,8 @@ public class AppsManager {
 
   public Completable resumeDownload(App app) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupDownloadEvents(download, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }
@@ -204,17 +195,8 @@ public class AppsManager {
           Download value = downloadFactory.create(update);
           return Observable.just(value);
         })
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
