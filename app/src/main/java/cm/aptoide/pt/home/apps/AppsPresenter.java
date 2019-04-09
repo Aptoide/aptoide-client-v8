@@ -220,14 +220,7 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
-        .doOnNext(appClickEventWrapper -> {
-          App app = appClickEventWrapper.getApp();
-          if (appClickEventWrapper.isAppcUpgrade()) {
-            view.setAppcStandbyState(app);
-          } else {
-            view.setStandbyState(app);
-          }
-        })
+        .doOnNext(this::setStandbyState)
         .observeOn(ioScheduler)
         .flatMapCompletable(
             appClickEventWrapper -> appsManager.resumeUpdate(appClickEventWrapper.getApp()))
@@ -236,24 +229,35 @@ public class AppsPresenter implements Presenter {
         }, error -> crashReport.log(error));
   }
 
+  private void setStandbyState(AppClickEventWrapper appClickEventWrapper) {
+    App app = appClickEventWrapper.getApp();
+    if (appClickEventWrapper.isAppcUpgrade()) {
+      view.setAppcStandbyState(app);
+    } else {
+      view.setStandbyState(app);
+    }
+  }
+
   private void handleCancelUpdateClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelUpdate())
-        .doOnNext(appClickEventWrapper -> {
-          App app = appClickEventWrapper.getApp();
-          if (appClickEventWrapper.isAppcUpgrade()) {
-            view.removeAppcCanceledAppDownload(app);
-          } else {
-            view.removeCanceledAppDownload(app);
-          }
-        })
+        .doOnNext(this::removeCanceledAppDownload)
         .observeOn(ioScheduler)
         .doOnNext(appClickEventWrapper -> appsManager.cancelUpdate(appClickEventWrapper.getApp()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
+  }
+
+  private void removeCanceledAppDownload(AppClickEventWrapper appClickEventWrapper) {
+    App app = appClickEventWrapper.getApp();
+    if (appClickEventWrapper.isAppcUpgrade()) {
+      view.removeAppcCanceledAppDownload(app);
+    } else {
+      view.removeCanceledAppDownload(app);
+    }
   }
 
   private void handlePauseUpdateClick() {
@@ -292,14 +296,7 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
-                .doOnNext(__ -> {
-                  App app = appClickEventWrapper.getApp();
-                  if (appClickEventWrapper.isAppcUpgrade()) {
-                    view.setAppcStandbyState(app);
-                  } else {
-                    view.setStandbyState(app);
-                  }
-                })
+                .doOnNext(__ -> setStandbyState(appClickEventWrapper))
                 .observeOn(ioScheduler)
                 .flatMapCompletable(__3 -> appsManager.updateApp(appClickEventWrapper.getApp(),
                     appClickEventWrapper.isAppcUpgrade())))
