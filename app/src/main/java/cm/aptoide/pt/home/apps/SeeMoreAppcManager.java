@@ -107,10 +107,10 @@ public class SeeMoreAppcManager {
   private void setupUpdateEvents(Download download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+        DownloadAnalytics.AppContext.APPS_MIGRATOR_SEE_MORE);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_MIGRATOR_SEE_MORE, origin);
   }
 }
