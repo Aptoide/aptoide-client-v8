@@ -59,7 +59,6 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
     this.connectivityManager = connectivityManager;
     this.resources = resources;
     this.versionCodeProvider = versionCodeProvider;
-    this.groupPackageName = null;
   }
 
   public static String getForcedCountry() {
@@ -320,11 +319,11 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
     this.resources = resources;
   }
 
-  public String getGroupPackageName() {
+  private String getGroupPackageName() {
     return groupPackageName;
   }
 
-  public void setGroupPackageName(String groupPackageName) {
+  private void setGroupPackageName(String groupPackageName) {
     this.groupPackageName = groupPackageName;
   }
 
