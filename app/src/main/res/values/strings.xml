@@ -628,9 +628,8 @@
 
   <!--AppCoins Wallet Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
-  <string name="wallet_promotion__wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
-  <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
   <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
@@ -645,12 +644,14 @@
 
   <!--Update Apps Promotion-->
   <string name="promo_update2appc_title">Get APPC Credits Now!</string>
-  <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_message">Update these apps to the AppCoins version and get <b>%s APPC Credits for each one</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
-  <string name="promo_update2appc_appcard_short">Update to AppCoins</string>
+  <string name="promo_update2appc_appcard_short">Update to AppCoins version</string>
   <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
-  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Update this app to the AppCoins version and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
-
+  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_appview_claim_button">Claim your %s APPC Credits</string>
 </resources>
 
