@@ -633,7 +633,6 @@
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
   <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
-  <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
