@@ -305,6 +305,12 @@ public class EditorialFragment extends NavigationTrackFragment
     adapter = null;
     backArrow = null;
 
+    reactButton = null;
+    firstReaction = null;
+    secondReaction = null;
+    thirdReaction = null;
+    numberOfReactions = null;
+
     cardInfoLayout = null;
     downloadControlsLayout = null;
     downloadInfoLayout = null;
