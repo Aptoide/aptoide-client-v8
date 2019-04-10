@@ -11,7 +11,6 @@ import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 
 /**
@@ -177,7 +176,7 @@ public class Home {
     return reactionsManager.deleteReaction(cardId, groupId);
   }
 
-  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
+  public Boolean isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

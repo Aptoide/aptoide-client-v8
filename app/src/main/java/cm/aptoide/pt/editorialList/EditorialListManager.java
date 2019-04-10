@@ -4,7 +4,6 @@ import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
-import rx.Observable;
 import rx.Single;
 
 public class EditorialListManager {
@@ -66,7 +65,7 @@ public class EditorialListManager {
     return reactionsManager.deleteReaction(cardId, groupId);
   }
 
-  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
+  public Boolean isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

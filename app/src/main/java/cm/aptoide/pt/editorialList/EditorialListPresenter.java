@@ -206,10 +206,7 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMap(editorialHomeEvent -> editorialListManager.isFirstReaction(
-            editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
-            .flatMapSingle(isFirstReaction -> singlePressReactionButtonAction(editorialHomeEvent,
-                isFirstReaction)))
+        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -272,7 +269,9 @@ public class EditorialListPresenter implements Presenter {
   }
 
   private Single<List<CurationCard>> singlePressReactionButtonAction(
-      EditorialHomeEvent editorialHomeEvent, boolean isFirstReaction) {
+      EditorialHomeEvent editorialHomeEvent) {
+    boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
+        editorialHomeEvent.getGroupId());
     if (isFirstReaction) {
       editorialListAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),

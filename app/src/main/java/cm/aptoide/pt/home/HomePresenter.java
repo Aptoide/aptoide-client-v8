@@ -209,10 +209,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMap(editorialHomeEvent -> home.isFirstReaction(editorialHomeEvent.getCardId(),
-            editorialHomeEvent.getGroupId())
-            .flatMapSingle(isFirstReaction -> singlePressReactionButtonAction(editorialHomeEvent,
-                isFirstReaction)))
+        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
@@ -545,7 +542,9 @@ public class HomePresenter implements Presenter {
   }
 
   private Single<List<HomeBundle>> singlePressReactionButtonAction(
-      EditorialHomeEvent editorialHomeEvent, boolean isFirstReaction) {
+      EditorialHomeEvent editorialHomeEvent) {
+    boolean isFirstReaction =
+        home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId());
     if (isFirstReaction) {
       homeAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),

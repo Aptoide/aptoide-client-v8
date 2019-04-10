@@ -130,7 +130,7 @@ public class EditorialManager {
     return reactionsManager.deleteReaction(cardId, groupId);
   }
 
-  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
+  public Boolean isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

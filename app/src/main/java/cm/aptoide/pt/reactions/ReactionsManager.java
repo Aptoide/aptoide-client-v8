@@ -4,7 +4,6 @@ import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import java.util.HashMap;
-import rx.Observable;
 import rx.Single;
 
 public class ReactionsManager {
@@ -49,7 +48,7 @@ public class ReactionsManager {
     return getUID(cardId + groupId) == null || getUID(cardId + groupId).equals("");
   }
 
-  public Observable<Boolean> isFirstReaction(String cardId, String groupId) {
-    return Observable.just(hasNotReacted(cardId, groupId));
+  public Boolean isFirstReaction(String cardId, String groupId) {
+    return hasNotReacted(cardId, groupId);
   }
 }
