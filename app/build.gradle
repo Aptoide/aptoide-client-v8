@@ -454,7 +454,7 @@ dependencies {
   }
   implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
   // Flurry Android sdk
-  implementation "com.flurry.android:analytics:${FLURRY_VERSION}@aar"
+  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
