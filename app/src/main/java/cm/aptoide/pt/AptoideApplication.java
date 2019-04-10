@@ -103,7 +103,6 @@ import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
-import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
@@ -308,8 +307,6 @@ public abstract class AptoideApplication extends Application {
             .log(throwable));
 
     initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
-
-    initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
 
@@ -603,11 +600,6 @@ public abstract class AptoideApplication extends Application {
       }, aptoideDownloadManager, httpClientCache);
     }
     return fileManager;
-  }
-
-  private void initializeFlurry(Context context, String flurryKey) {
-    new FlurryAgent.Builder().withLogEnabled(false)
-        .build(context, flurryKey);
   }
 
   private Completable sendAppStartToAnalytics() {
