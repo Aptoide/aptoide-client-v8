@@ -86,7 +86,7 @@ public class EditorialManager {
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false);
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

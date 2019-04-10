@@ -6,6 +6,7 @@ import android.telephony.TelephonyManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.Origin;
@@ -28,6 +29,7 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
+  private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
   private static final String APP = "app";
   private static final String CAMPAIGN_ID = "campaign_id";
@@ -35,6 +37,7 @@ public class InstallAnalytics {
   private static final String FAIL = "FAIL";
   private static final String MAIN = "MAIN";
   private static final String MESSAGE = "message";
+  private static final String MIGRATOR = "migrator";
   private static final String NETWORK = "network";
   private static final String NO_PREVIOUS_SCREEN_ERROR = "No_Previous_Screen";
   private static final String OBB = "obb";
@@ -76,6 +79,7 @@ public class InstallAnalytics {
     sendEvent(getKey(packageName, installingVersion, NOTIFICATION_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, EDITORS_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, APPLICATION_INSTALL));
+    sendEvent(getKey(packageName, installingVersion, AppViewAnalytics.BONUS_MIGRATION_APPVIEW));
     sendInstallEvents(packageName, installingVersion, isRoot, aptoideSettings);
   }
 
@@ -133,18 +137,18 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin) {
+      AppContext context, Origin origin, boolean isMigration) {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
-        Collections.emptyList());
+        Collections.emptyList(), isMigration);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
   }
 
   private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
       Origin origin, String packageName, int installingVersion, int campaignId,
-      String abTestingGroup, List<String> fragmentNameList) {
+      String abTestingGroup, List<String> fragmentNameList, boolean isMigration) {
     Map<String, Object> data =
         getInstallEventsBaseBundle(origin, packageName, campaignId, abTestingGroup);
-
+    data.put(MIGRATOR, isMigration);
     String applicationInstallEventName = "";
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
@@ -167,10 +171,22 @@ public class InstallAnalytics {
         new InstallEvent(data, applicationInstallEventName, context.name(), action));
   }
 
+  private void createMigrationInstallEvent(AnalyticsManager.Action action, AppContext context,
+      String packageName, int installingVersion) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "install appc app");
+
+    cache.put(getKey(packageName, installingVersion, AppViewAnalytics.BONUS_MIGRATION_APPVIEW),
+        new InstallEvent(data, AppViewAnalytics.BONUS_MIGRATION_APPVIEW, context.name(), action));
+  }
+
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, int campaignId, String abTestingGroup) {
+      AppContext context, Origin origin, int campaignId, String abTestingGroup,
+      boolean isMigration) {
+    if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
+
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup, Collections.emptyList());
+        abTestingGroup, Collections.emptyList(), isMigration);
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
   }

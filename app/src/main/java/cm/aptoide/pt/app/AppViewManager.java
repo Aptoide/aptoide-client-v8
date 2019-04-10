@@ -79,6 +79,7 @@ public class AppViewManager {
   private String promotionId;
   private PromotionStatus promotionStatus;
   private boolean appcPromotionImpressionSent;
+  private boolean migrationImpressionSent;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -118,6 +119,7 @@ public class AppViewManager {
     this.isFirstLoad = true;
     this.promotionStatus = PromotionStatus.NO_PROMOTION;
     this.appcPromotionImpressionSent = false;
+    this.migrationImpressionSent = false;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -405,7 +407,8 @@ public class AppViewManager {
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
+        downloadAction.equals(DownloadModel.Action.MIGRATE));
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
@@ -645,6 +648,14 @@ public class AppViewManager {
 
   public void setAppcPromotionImpressionSent() {
     this.appcPromotionImpressionSent = true;
+  }
+
+  public boolean isMigrationImpressionSent() {
+    return migrationImpressionSent;
+  }
+
+  public void setMigrationImpressionSent() {
+    this.migrationImpressionSent = true;
   }
 
   public PromotionStatus getPromotionStatus() {

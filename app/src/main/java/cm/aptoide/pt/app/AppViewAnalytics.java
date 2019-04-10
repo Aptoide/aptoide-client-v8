@@ -312,7 +312,11 @@ public class AppViewAnalytics {
         DownloadAnalytics.AppContext.APPVIEW, action);
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
+          editorsChoice, InstallType.INSTALL, action, offerResponseStatus, false);
+    }
+    if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
+          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus, true);
     }
   }
 
