@@ -31,10 +31,12 @@ android {
   buildTypes {
     debug {
       minifyEnabled false
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
     release {
       minifyEnabled false
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
