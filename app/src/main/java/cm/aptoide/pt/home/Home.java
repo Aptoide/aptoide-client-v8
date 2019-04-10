@@ -1,10 +1,7 @@
 package cm.aptoide.pt.home;
 
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
-import cm.aptoide.pt.editorial.ReactionsResponse;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -34,21 +31,18 @@ public class Home {
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      PromotionsManager promotionsManager, MoPubBannerAdExperiment bannerAdExperiment,
-      MoPubNativeAdExperiment nativeAdExperiment, BannerRepository bannerRepository,
-      PromotionsPreferencesManager promotionsPreferencesManager, ReactionsManager reactionsManager,
       PromotionsManager promotionsManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
-      BlacklistManager blacklistManager, String promotionId) {
+      BlacklistManager blacklistManager, String promotionId, ReactionsManager reactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
-    this.reactionsManager = reactionsManager;
     this.promotionId = promotionId;
     this.blacklistManager = blacklistManager;
+    this.reactionsManager = reactionsManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {

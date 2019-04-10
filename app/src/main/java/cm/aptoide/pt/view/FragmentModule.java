@@ -281,7 +281,8 @@ import rx.subscriptions.CompositeSubscription;
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
       @Named("homePromotionsId") String promotionsId, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId, reactionsManager);
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId,
+        reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -521,10 +522,6 @@ import rx.subscriptions.CompositeSubscription;
       HomeAnalytics homeAnalytics, Home home) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
-  }
-
-  @FragmentScope @Provides FakeReactionsManager providesReactionsManager() {
-    return new FakeReactionsManager();
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
