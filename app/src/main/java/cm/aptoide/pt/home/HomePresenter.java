@@ -73,6 +73,14 @@ public class HomePresenter implements Presenter {
 
     handleEditorialCardClick();
     handleInstallWalletOfferClick();
+
+    handleReactionClick();
+
+    handleLongPressedReactionButton();
+
+    handleUserReaction();
+
+    handleLogInClick();
   }
 
   private void handleInstallWalletOfferClick() {
@@ -92,14 +100,6 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
-
-    handleReactionClick();
-
-    handleLongPressedReactionButton();
-
-    handleUserReaction();
-
-    handleLogInClick();
   }
 
   private void handleLongPressedReactionButton() {
