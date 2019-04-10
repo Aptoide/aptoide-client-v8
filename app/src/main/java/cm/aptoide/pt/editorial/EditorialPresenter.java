@@ -72,15 +72,13 @@ public class EditorialPresenter implements Presenter {
   private void handleLongPressReactionButton() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.reactionsButtonLongPressed()
-            .flatMap(click -> editorialManager.loadEditorialViewModel()
-                .toObservable())
-            .doOnNext(__ -> {
-              editorialAnalytics.sendReactionButtonClickEvent();
-              view.showReactionsPopup(editorialViewModel.getCardId(),
-                  editorialViewModel.getGroupId());
-            }))
+        .flatMap(created -> view.reactionsButtonLongPressed())
+        .flatMap(click -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .doOnNext(editorialViewModel -> {
+          editorialAnalytics.sendReactionButtonClickEvent();
+          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -367,13 +365,15 @@ public class EditorialPresenter implements Presenter {
   @VisibleForTesting public void handleReactionClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.reactionsButtonClicked()
-            .observeOn(viewScheduler)
-            .flatMap(__ -> editorialManager.isFirstReaction(editorialViewModel.getCardId(),
-                editorialViewModel.getGroupId()))
-            .flatMapSingle(isFirstReaction -> singlePressReactionButtonAction(editorialViewModel,
-                isFirstReaction)))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
+        .observeOn(viewScheduler)
+        .flatMap(
+            editorialViewModel -> editorialManager.isFirstReaction(editorialViewModel.getCardId(),
+                editorialViewModel.getGroupId())
+                .flatMapSingle(
+                    isFirstReaction -> singlePressReactionButtonAction(editorialViewModel,
+                        isFirstReaction)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
@@ -384,7 +384,7 @@ public class EditorialPresenter implements Presenter {
     if (isFirstReaction) {
       editorialAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
-      return null;
+      return Single.just(new LoadReactionModel());
     } else {
       editorialAnalytics.sendDeletedEvent();
       return editorialManager.deleteReaction(editorialViewModel.getCardId(),
