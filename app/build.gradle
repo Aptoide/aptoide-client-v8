@@ -453,6 +453,8 @@ dependencies {
     exclude module: "support-v4"
   }
   implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
+  // Flurry Android sdk
+  implementation "com.flurry.android:analytics:${FLURRY_VERSION}@aar"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
@@ -486,9 +488,6 @@ dependencies {
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
   }
-
-  // Flurry Android sdk
-  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'

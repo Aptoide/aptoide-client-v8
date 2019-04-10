@@ -44,7 +44,7 @@
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video,
       com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk,
       com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub, com.appnext.appnextsdkmopubbanners,
-      com.appnext.appnextsdk.API.mediation.MoPub"/>
+      com.appnext.appnextsdk.API.mediation.MoPub, com.mopub.mobileads.flurry"/>
 
   <application
       android:allowBackup="false"
