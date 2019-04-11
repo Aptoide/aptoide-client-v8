@@ -433,6 +433,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = null;
     adapter = null;
     userAvatar = null;
+    appcAppsLayout = null;
+    appcAppsRecyclerView = null;
+    appcAppsAdapter = null;
   }
 
   @Override public void onDetach() {
