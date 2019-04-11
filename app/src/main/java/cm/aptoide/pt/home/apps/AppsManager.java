@@ -243,7 +243,7 @@ public class AppsManager {
               }
             })
             .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download, isAppcUpdate))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
