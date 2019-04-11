@@ -80,6 +80,9 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
     editorialList.setAdapter(adapter);
+    editorialList.getItemAnimator()
+        .setChangeDuration(0);
+
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
@@ -268,6 +271,10 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void updateEditorialCard(CurationCard curationCard, String cardId) {
+    adapter.updateEditorialCard(curationCard, cardId);
   }
 
   private boolean isEndReached() {

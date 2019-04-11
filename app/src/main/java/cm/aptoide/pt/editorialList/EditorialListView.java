@@ -56,4 +56,6 @@ public interface EditorialListView extends View {
   Observable<Void> snackLogInClick();
 
   void showErrorToast();
+
+  void updateEditorialCard(CurationCard curationCard, String cardId);
 }

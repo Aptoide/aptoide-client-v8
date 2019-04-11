@@ -34,7 +34,7 @@ public class EditorialListManager {
     return editorialListRepository.loadMoreCurationCards();
   }
 
-  public Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
+  public Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
         .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListViewModel(false)
             .flatMap(
@@ -42,19 +42,22 @@ public class EditorialListManager {
                     cardId)));
   }
 
-  private Single<List<CurationCard>> getUpdatedCards(EditorialListViewModel editorialViewModel,
+  private Single<CurationCard> getUpdatedCards(EditorialListViewModel editorialViewModel,
       LoadReactionModel loadReactionModel, String cardId) {
     List<CurationCard> curationCards = editorialViewModel.getCurationCards();
+    CurationCard changedCurationCard = null;
     for (CurationCard curationCard : curationCards) {
       if (curationCard.getId()
           .equals(cardId)) {
         curationCard.setReactions(loadReactionModel.getTopReactionList());
         curationCard.setNumberOfReactions(loadReactionModel.getTotal());
         curationCard.setUserReaction(loadReactionModel.getMyReaction());
+        changedCurationCard = curationCard;
+        break;
       }
     }
     editorialListRepository.updateCache(editorialViewModel, curationCards);
-    return Single.just(curationCards);
+    return Single.just(changedCurationCard);
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
