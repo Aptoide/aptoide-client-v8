@@ -243,7 +243,6 @@ public class FirstLaunchAnalytics {
 
   /**
    * Responsible for setting facebook analytics user properties
-   * These were known as custom dimensions in localytics
    */
   private void setUserProperties(String key, String value) {
     Bundle parameters = new Bundle();
