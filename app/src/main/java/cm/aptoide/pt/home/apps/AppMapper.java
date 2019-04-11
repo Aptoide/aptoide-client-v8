@@ -71,7 +71,7 @@ public class AppMapper {
     return updatesList;
   }
 
-  public List<App> getUpdatesList(List<Install> installs, boolean isAppcUpgrade) {
+  public List<App> getUpdatesList(List<Install> installs) {
     List<App> updatesList = new ArrayList<>();
     for (Install install : installs) {
       updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
