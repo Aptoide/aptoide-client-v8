@@ -64,7 +64,7 @@ public class FirstLaunchAnalytics {
     this.packageName = packageName;
   }
 
-  public void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
+  private void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
       String utmContent, String entryPoint) {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
