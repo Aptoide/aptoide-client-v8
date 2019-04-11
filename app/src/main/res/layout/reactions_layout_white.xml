@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@color/white"
     >
 
   <ImageButton
@@ -46,7 +47,7 @@
       android:visibility="invisible"
       tools:text="100"
       tools:visibility="visible"
-      style="@style/Aptoide.TextView.Regular.XS.White"
+      style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
       />
 
 </RelativeLayout>

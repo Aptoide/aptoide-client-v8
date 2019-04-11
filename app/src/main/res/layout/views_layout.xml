@@ -28,6 +28,6 @@
       android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
       tools:text="1000 views"
-      style="@style/Aptoide.TextView.Regular.XS.White"
+      style="@style/Aptoide.TextView.Regular.XS.Grey"
       />
 </LinearLayout>

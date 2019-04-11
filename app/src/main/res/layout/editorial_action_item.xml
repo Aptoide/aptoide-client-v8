@@ -71,16 +71,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="40dp"
         android:layout_alignBottom="@id/background_image"
-        android:layout_marginBottom="9dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginStart="13dp"
-
+        android:background="@color/white"
+        android:paddingBottom="2dp"
+        android:paddingTop="7dp"
         >
 
       <include
           layout="@layout/reactions_layout_white"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="13dp"
+          android:layout_marginStart="13dp"
           />
 
       <include
@@ -89,4 +92,5 @@
           />
     </RelativeLayout>
   </RelativeLayout>
+
 </android.support.v7.widget.CardView>
