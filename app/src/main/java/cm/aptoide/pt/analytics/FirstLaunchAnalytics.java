@@ -11,8 +11,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.BiUtmAnalyticsRequestBody;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -196,10 +194,10 @@ public class FirstLaunchAnalytics {
       return null;
     })
         .doOnNext(__ -> sendPlayProtectEvent())
+        .doOnNext(__ -> setupDimensions(application))
         .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
-        .doOnNext(dimensions -> setupDimensions(application))
-        .doOnNext(facebookFirstLaunch -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign,
-            utmContent, entryPoint))
+        .doOnNext(
+            __ -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign, utmContent, entryPoint))
         .toCompletable()
         .subscribeOn(Schedulers.io());
   }
