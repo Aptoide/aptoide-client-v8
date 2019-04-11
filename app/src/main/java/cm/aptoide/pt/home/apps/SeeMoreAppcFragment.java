@@ -90,6 +90,13 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     return inflater.inflate(R.layout.fragment_apps_see_more_appc, container, false);
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    swipeRefreshLayout = null;
+    appcAppsRecyclerView = null;
+    appcAppsAdapter = null;
+  }
+
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
     inflater.inflate(R.menu.menu_empty, menu);
