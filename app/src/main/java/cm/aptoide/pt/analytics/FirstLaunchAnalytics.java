@@ -5,12 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.analytics.implementation.tracking.Tracking;
-import cm.aptoide.analytics.implementation.tracking.UTM;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -23,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -41,12 +34,6 @@ public class FirstLaunchAnalytics {
   private static final String GMS = "GMS";
   private static final String HAS_HGMS = "Has GMS";
   private static final String NO_GMS = "No GMS";
-  private static final String URL = "app_url";
-  private static final String PACKAGE = "app_package";
-  private static final String COUNTRY = "country";
-  private static final String BROWSER = "browser";
-  private static final String SITE_VERSION = "site_version";
-  private static final String USER_AGENT = "user_agent";
   private static final String UNKNOWN = "unknown";
   private static final String CONTEXT = "APPLICATION";
   private static final String UTM_SOURCE = "UTM Source";
@@ -181,9 +168,7 @@ public class FirstLaunchAnalytics {
   }
 
   public Completable sendAppStart(android.app.Application application,
-      SharedPreferences sharedPreferences, Converter.Factory converterFactory,
-      OkHttpClient okHttpClient, BodyInterceptor<BaseBody> bodyInterceptor,
-      TokenInvalidator tokenInvalidator) {
+      SharedPreferences sharedPreferences) {
 
     FacebookSdk.sdkInitialize(application);
     AppEventsLogger.activateApp(application);
@@ -200,10 +185,6 @@ public class FirstLaunchAnalytics {
             __ -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign, utmContent, entryPoint))
         .toCompletable()
         .subscribeOn(Schedulers.io());
-  }
-
-  private UTM getUTM() {
-    return new UTM(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
   }
 
   private void setupDimensions(android.app.Application application) {
@@ -254,40 +235,6 @@ public class FirstLaunchAnalytics {
       logger.logDebug(TAG, "No utm file.");
     }
     return true;
-  }
-
-  private Tracking getTracking(android.app.Application application) {
-    Tracking tracking = null;
-    try {
-      tracking = createTrackingObject(getTrackingFile(application));
-    } catch (Exception e) {
-      logger.logDebug(TAG, "Failed to parse utm/tracking files");
-      return new Tracking(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
-    }
-    return tracking;
-  }
-
-  private ZipFile getTrackingFile(android.app.Application application) throws Exception {
-    final String sourceDir = application.getApplicationContext()
-        .getPackageManager()
-        .getPackageInfo(application.getApplicationContext()
-            .getPackageName(), 0).applicationInfo.sourceDir;
-    return new ZipFile(sourceDir);
-  }
-
-  private Tracking createTrackingObject(ZipFile zipFile) throws IOException {
-    InputStream inputStream = zipFile.getInputStream(zipFile.getEntry("META-INF/tracking"));
-    UTMTrackingFileParser utmTrackingFileParser = new UTMTrackingFileParser(inputStream);
-    zipFile.close();
-
-    String url = utmTrackingFileParser.valueExtracter(URL);
-    String packageName = utmTrackingFileParser.valueExtracter(PACKAGE);
-    String country = utmTrackingFileParser.valueExtracter(COUNTRY);
-    String browser = utmTrackingFileParser.valueExtracter(BROWSER);
-    String siteVersion = utmTrackingFileParser.valueExtracter(SITE_VERSION);
-    String userAgent = utmTrackingFileParser.valueExtracter(USER_AGENT);
-
-    return new Tracking(url, packageName, country, browser, siteVersion, userAgent);
   }
 
   public void setGmsPresent(boolean isPlayServicesAvailable) {
