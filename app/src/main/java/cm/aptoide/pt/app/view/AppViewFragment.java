@@ -81,12 +81,10 @@ import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
@@ -1046,8 +1044,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     TimelineAnalytics analytics = application.getTimelineAnalytics();
     if (application.isCreateStoreUserPrivacyEnabled()) {
-      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(getActivity(),
-          application.getDefaultSharedPreferences());
       LayoutInflater inflater = LayoutInflater.from(getActivity());
       AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
       View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
@@ -1055,7 +1051,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
       alertDialogView.findViewById(R.id.recommend_button)
           .setOnClickListener(view -> {
-            socialRepository.share(packageName, storeId, "app");
             Snackbar.make(getView(), R.string.social_timeline_share_dialog_title,
                 Snackbar.LENGTH_SHORT)
                 .show();
