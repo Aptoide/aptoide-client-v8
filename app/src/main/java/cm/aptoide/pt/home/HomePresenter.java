@@ -126,9 +126,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
     return loadHome().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -137,9 +137,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
     return loadFreshBundles().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -148,9 +148,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadNextBundlesAndReactions() {
     return loadNextBundles().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
