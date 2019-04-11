@@ -233,7 +233,7 @@ public class AppsManager {
         })
         .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
             .flatMap(hasAds -> {
-              if (hasAds && !isAppcUpdate) {
+              if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
                     .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
                         showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
