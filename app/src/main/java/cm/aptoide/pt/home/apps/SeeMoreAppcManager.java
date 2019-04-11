@@ -54,7 +54,7 @@ public class SeeMoreAppcManager {
               .flatMapIterable(installs -> installs)
               .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList, true));
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
   }
 

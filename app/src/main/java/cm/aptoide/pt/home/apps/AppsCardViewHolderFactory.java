@@ -80,7 +80,7 @@ public class AppsCardViewHolderFactory {
         break;
       case ERROR_UPDATE:
         appViewHolder = new ErrorUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.apps_error_update_app_item, parent, false), appItemClicks, false);
+            .inflate(R.layout.apps_error_update_app_item, parent, false), appItemClicks);
         break;
       case INSTALLED:
         appViewHolder = new InstalledAppViewHolder(LayoutInflater.from(parent.getContext())

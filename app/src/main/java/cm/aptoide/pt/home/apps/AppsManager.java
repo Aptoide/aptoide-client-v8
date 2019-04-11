@@ -87,7 +87,7 @@ public class AppsManager {
               .filter(install -> install.getType() == UPDATE)
               .flatMap(install -> updatesManager.filterAppcUpgrade(install))
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList, false));
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
   }
 
@@ -103,7 +103,7 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList, true));
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
   }
 

@@ -21,6 +21,10 @@ class ErrorUpdateAppViewHolder extends AppsViewHolder {
 
   private boolean isAppcUpgrade;
 
+  public ErrorUpdateAppViewHolder(View itemView, PublishSubject<AppClick> retryUpdate) {
+    this(itemView, retryUpdate, false);
+  }
+
   public ErrorUpdateAppViewHolder(View itemView, PublishSubject<AppClick> retryUpdate,
       boolean isAppcUpgrade) {
     super(itemView);
