@@ -371,9 +371,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body BiUtmAnalyticsRequestBody body);
 
-    @POST("user/shareTimeline/access_token={accessToken}") Observable<ShareCardResponse> shareCard(
-        @Body ShareCardRequest.Body body, @Path(value = "accessToken") String accessToken);
-
     @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")
     Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
         @Path(value = "packageName") String packageName,
