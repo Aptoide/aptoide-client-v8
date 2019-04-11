@@ -29,6 +29,7 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
+  private static final int MIGRATION_UNINSTALL_KEY = 8726;
   private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
   private static final String APP = "app";
@@ -81,6 +82,11 @@ public class InstallAnalytics {
     sendEvent(getKey(packageName, installingVersion, APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, AppViewAnalytics.BONUS_MIGRATION_APPVIEW));
     sendInstallEvents(packageName, installingVersion, isRoot, aptoideSettings);
+  }
+
+  public void uninstallCompleted(String packageName) {
+    sendEvent(
+        getKey(packageName, MIGRATION_UNINSTALL_KEY, AppViewAnalytics.BONUS_MIGRATION_APPVIEW));
   }
 
   private void sendInstallEvents(String packageName, int installingVersion, boolean isPhoneRoot,
@@ -189,6 +195,17 @@ public class InstallAnalytics {
         abTestingGroup, Collections.emptyList(), isMigration);
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup);
+  }
+
+  public void uninstallStarted(String packageName, AnalyticsManager.Action action,
+      AppContext context) {
+    Map<String, Object> data = new HashMap<>();
+
+    data.put(ACTION, "uninstall");
+
+    cache.put(
+        getKey(packageName, MIGRATION_UNINSTALL_KEY, AppViewAnalytics.BONUS_MIGRATION_APPVIEW),
+        new InstallEvent(data, AppViewAnalytics.BONUS_MIGRATION_APPVIEW, context.name(), action));
   }
 
   private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,

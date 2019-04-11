@@ -348,12 +348,20 @@ public class AppViewManager {
             .flatMap(hasAds -> {
               if (hasAds) {
                 return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
-                        trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
+                    .doOnSuccess(showAds -> {
+                      setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                          editorsChoicePosition,
+                          showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE);
+                      if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+                        setupMigratorUninstallEvent(download.getPackageName());
+                      }
+                    });
               } else {
                 setupDownloadEvents(download, downloadAction, appId, trustedValue,
                     editorsChoicePosition, NO_ADS);
+                if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+                  setupMigratorUninstallEvent(download.getPackageName());
+                }
                 return Single.just(false);
               }
             })
@@ -409,6 +417,11 @@ public class AppViewManager {
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction.equals(DownloadModel.Action.MIGRATE));
+  }
+
+  public void setupMigratorUninstallEvent(String packageName) {
+    installAnalytics.uninstallStarted(packageName, AnalyticsManager.Action.INSTALL,
+        AppContext.APPVIEW);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
