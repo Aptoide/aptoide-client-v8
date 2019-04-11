@@ -17,6 +17,7 @@ import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
 import static cm.aptoide.pt.home.HomeBundle.BundleType.APPCOINS_ADS;
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORIAL;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
 
 /**
@@ -127,6 +128,7 @@ public class HomePresenter implements Presenter {
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -137,6 +139,7 @@ public class HomePresenter implements Presenter {
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -147,6 +150,7 @@ public class HomePresenter implements Presenter {
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
