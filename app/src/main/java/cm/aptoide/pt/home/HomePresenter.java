@@ -480,7 +480,6 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
             .flatMap(bottomReached -> loadNextBundlesAndReactions())
-            .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -493,6 +492,7 @@ public class HomePresenter implements Presenter {
     return home.loadNextHomeBundles()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
+          homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());
           } else {

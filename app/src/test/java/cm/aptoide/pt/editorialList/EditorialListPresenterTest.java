@@ -89,7 +89,7 @@ public class EditorialListPresenterTest {
     //After a success viewModel it should hide the loading
     verify(view).hideLoading();
     //And populate the view with the cards from the viewModel
-    verify(view).populateView(successEditorialViewModel);
+    verify(view).populateView(successEditorialViewModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -123,7 +123,7 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showNetworkError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(networkErrorEditorialViewModel);
+    verify(view, never()).populateView(networkErrorEditorialViewModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -142,7 +142,7 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showGenericError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(genericErrorEditorialViewModel);
+    verify(view, never()).populateView(genericErrorEditorialViewModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -210,7 +210,7 @@ public class EditorialListPresenterTest {
     verify(view).hideLoadMore();
     verify(view).hideLoading();
     //Then it should show the view again with old cards and added cards, retaining list position
-    verify(view).populateView(successEditorialViewModel);
+    verify(view).populateView(successEditorialViewModel.getCurationCards());
   }
 
   @Test public void loadLoggedInUserImageUserTest() {
