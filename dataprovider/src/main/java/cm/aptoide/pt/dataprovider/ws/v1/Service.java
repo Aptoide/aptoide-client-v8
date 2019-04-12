@@ -13,7 +13,7 @@ import rx.Observable;
 public interface Service {
 
   @GET("notifications/{id}/campaigns")
-  Observable<List<GetPullNotificationsResponse>> getPullCompaignNotifications(@Path("id") String id,
+  Observable<List<GetPullNotificationsResponse>> getPullCampaignNotifications(@Path("id") String id,
       @QueryMap Map<String, String> options,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 }
