@@ -4,6 +4,7 @@ import retrofit2.Response;
 
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR;
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.SAME_REACTION;
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.SUCCESS;
 
 public class ReactionsResponse {
@@ -23,8 +24,12 @@ public class ReactionsResponse {
     return reactionResponseMessage == REACTIONS_EXCEEDED;
   }
 
+  public boolean sameReaction() {
+    return reactionResponseMessage == SAME_REACTION;
+  }
+
   public enum ReactionResponseMessage {
-    SUCCESS, GENERAL_ERROR, REACTIONS_EXCEEDED
+    SUCCESS, GENERAL_ERROR, REACTIONS_EXCEEDED, SAME_REACTION
   }
 
   public static class ReactionResponseMapper {
