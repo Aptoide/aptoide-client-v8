@@ -575,6 +575,7 @@
 
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_reactions_login_short">Log in to keep reacting to our posts!</string>
 
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Carnival Frenzy</string>
