@@ -28,7 +28,6 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
-import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
@@ -84,8 +83,6 @@ public interface FragmentComponent {
   void inject(MyStoresFragment myStoresFragment);
 
   void inject(InboxFragment inboxFragment);
-
-  void inject(NotLoggedInShareFragment notLoggedInShareFragment);
 
   void inject(ProfileStepOneFragment profileStepOneFragment);
 

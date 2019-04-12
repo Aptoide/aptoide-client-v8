@@ -315,32 +315,12 @@ public class AppViewAnalytics {
     }
   }
 
-  public void sendTimelineLoggedInInstallRecommendEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
-  }
-
-  public void sendTimelineLoggedInInstallRecommendSkipEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
-  }
-
-  public void sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
-  }
-
   public void sendSuccessShareEvent() {
     notLoggedInShareAnalytics.sendShareSuccess();
   }
 
   public void sendFailedShareEvent() {
     notLoggedInShareAnalytics.sendShareFail();
-  }
-
-  public void sendLoggedInRecommendAppDialogShowEvent(String packageName) {
-    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
-  }
-
-  public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
-    notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
   }
 
   public void sendDownloadPauseEvent(String packageName) {

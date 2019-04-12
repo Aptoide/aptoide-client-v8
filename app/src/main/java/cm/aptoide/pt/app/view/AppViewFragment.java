@@ -165,9 +165,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
-  private PublishSubject<Void> shareRecommendsDialogClick;
-  private PublishSubject<Void> skipRecommendsDialogClick;
-  private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
@@ -302,9 +299,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
-    shareRecommendsDialogClick = PublishSubject.create();
-    skipRecommendsDialogClick = PublishSubject.create();
-    dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
     interstitialClick = PublishSubject.create();
@@ -1738,48 +1732,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     ready.onNext(null);
   }
 
-  @Override public void showRecommendsDialog() {
-    LayoutInflater inflater = LayoutInflater.from(getActivity());
-    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    View dialogView = inflater.inflate(R.layout.logged_in_share, null);
-    alertDialog.setView(dialogView);
-
-    dialogView.findViewById(R.id.recommend_button)
-        .setOnClickListener(__ -> {
-          shareRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-
-    dialogView.findViewById(R.id.skip_button)
-        .setOnClickListener(__ -> {
-          skipRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-
-    dialogView.findViewById(R.id.dont_show_button)
-        .setOnClickListener(__ -> {
-          dontShowAgainRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-    alertDialog.show();
-  }
-
-  @Override public Observable<Void> shareLoggedInRecommendsDialogClick() {
-    return shareRecommendsDialogClick;
-  }
-
-  @Override public void showRecommendsThanksMessage() {
-    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override public Observable<Void> skipLoggedInRecommendsDialogClick() {
-    return skipRecommendsDialogClick;
-  }
-
-  @Override public Observable<Void> dontShowAgainLoggedInRecommendsDialogClick() {
-    return dontShowAgainRecommendsDialogClick;
-  }
 
   @Override public Observable<AppBoughClickEvent> appBought() {
     return appBought;
