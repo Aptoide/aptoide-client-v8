@@ -629,7 +629,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void showLogInDialog() {
-    ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+    ShowMessage.asSnack(getActivity(), R.string.editorial_reactions_login_short, R.string.login,
         snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
   }
 
