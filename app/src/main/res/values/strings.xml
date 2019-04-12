@@ -656,6 +656,11 @@
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_update_body">Get a bonus with every purchase using AppCoins!</string>
+  <string name="promo_update2appc_update_dismiss_button"></string>
+  <string name="promo_update2appc_update_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credtis Now!</string>
+  <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
   
 </resources>
 
