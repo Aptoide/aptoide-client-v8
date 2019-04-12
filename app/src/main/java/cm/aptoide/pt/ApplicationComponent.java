@@ -32,12 +32,4 @@ public interface ApplicationComponent {
 
   void inject(PullingContentService pullingContentService);
 
-  MoPubAdsManager getMopubAdsManager();
-
-  InstalledRepository getIdsRepository();
-
-  MoPubAnalytics getMoPubAnalytics();
-
-  CrashReport getCrashReport();
-
 }

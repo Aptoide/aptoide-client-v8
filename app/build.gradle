@@ -547,7 +547,6 @@ dependencies {
   implementation "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
-  implementation "com.google.dagger:dagger-producers:${DAGGER_VERSION}"
 
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 

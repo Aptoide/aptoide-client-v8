@@ -105,8 +105,6 @@ import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
@@ -184,6 +182,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
+  @Inject MoPubAdsService moPubAdsService;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -348,17 +347,7 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
 
-    Futures.addCallback(getAsyncApplicationComponent().moPubAdsService(),
-        new FutureCallback<MoPubAdsService>() {
-          @Override public void onSuccess(@javax.annotation.Nullable MoPubAdsService service) {
-            if (service != null) {
-              service.observeWalletInstalation();
-            }
-          }
-
-          @Override public void onFailure(Throwable t) {
-          }
-        });
+    moPubAdsService.observeWalletInstalation();
   }
 
   private void initializeMoPub(Context context, String adUnitPlacementId) {
@@ -394,13 +383,6 @@ public abstract class AptoideApplication extends Application {
           .build();
     }
     return applicationComponent;
-  }
-
-  public AsyncApplicationComponent getAsyncApplicationComponent() {
-    return DaggerAsyncApplicationComponent.builder()
-        .applicationComponent(applicationComponent)
-        .asyncApplicationModule(new AsyncApplicationModule())
-        .build();
   }
 
   /**
