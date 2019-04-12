@@ -35,7 +35,7 @@ public class ReactionsPopup {
     this.anchorView = anchor;
 
     popup = new PopupWindow();
-    popup.setWindowLayoutMode(WindowManager.LayoutParams.MATCH_PARENT,
+    popup.setWindowLayoutMode(WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT);
     reactionsView = new ReactionsView(context);
     reactionsView.setVisibility(View.VISIBLE);
