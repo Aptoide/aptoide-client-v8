@@ -58,7 +58,7 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS__TEST_HOST",
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_TEST_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_TEST_HOST + "\""
       matchingFallbacks = ['internal', 'prod']
     }
