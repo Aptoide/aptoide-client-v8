@@ -32,7 +32,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final ImageButton reactButton;
   private final TextView numberOfReactions;
   private ImageView[] imageViews;
-  private ReactionsPopup reactionsPopup;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
@@ -48,7 +47,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ImageView thirdReaction = view.findViewById(R.id.reaction_3);
     imageViews = new ImageView[] { firstReaction, secondReaction, thirdReaction };
     this.numberOfReactions = view.findViewById(R.id.number_of_reactions);
-    reactionsPopup = new ReactionsPopup(itemView.getContext(), reactButton);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -117,6 +115,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   public void showReactions(String cardId, String groupId, int position) {
+    ReactionsPopup reactionsPopup = new ReactionsPopup(itemView.getContext(), reactButton);
     reactionsPopup.show();
     reactionsPopup.setOnReactionsItemClickListener(item -> {
       uiEventsListener.onNext(

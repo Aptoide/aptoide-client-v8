@@ -154,15 +154,14 @@ public class Home {
       LoadReactionModel loadReactionModel, String cardId) {
     List<HomeBundle> homeBundles = homeBundlesModel.getList();
     for (HomeBundle homeBundle : homeBundles) {
-      if (homeBundle instanceof ActionBundle) {
-        if (homeBundle.getType() == HomeBundle.BundleType.EDITORIAL) {
-          ActionItem actionBundle = ((ActionBundle) homeBundle).getActionItem();
-          if (actionBundle.getCardId()
-              .equals(cardId)) {
-            actionBundle.setReactions(loadReactionModel.getTopReactionList());
-            actionBundle.setNumberOfReactions(loadReactionModel.getTotal());
-            actionBundle.setUserReaction(loadReactionModel.getMyReaction());
-          }
+      if (homeBundle.getType() == HomeBundle.BundleType.EDITORIAL
+          && homeBundle instanceof ActionBundle) {
+        ActionItem actionBundle = ((ActionBundle) homeBundle).getActionItem();
+        if (actionBundle.getCardId()
+            .equals(cardId)) {
+          actionBundle.setReactions(loadReactionModel.getTopReactionList());
+          actionBundle.setNumberOfReactions(loadReactionModel.getTotal());
+          actionBundle.setUserReaction(loadReactionModel.getMyReaction());
         }
       }
     }
