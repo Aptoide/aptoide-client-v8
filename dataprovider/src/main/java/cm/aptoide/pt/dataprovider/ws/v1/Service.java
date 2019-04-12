@@ -7,7 +7,6 @@ import java.util.Map;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -17,9 +16,4 @@ public interface Service {
   Observable<List<GetPullNotificationsResponse>> getPullCompaignNotifications(@Path("id") String id,
       @QueryMap Map<String, String> options,
       @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-  @GET("notifications/{id}/direct")
-  Observable<List<GetPullNotificationsResponse>> getPullSocialNotifications(
-      @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path("id") String id,
-      @Query("select") List<Integer> types, @QueryMap Map<String, String> options);
 }

@@ -213,8 +213,6 @@ android {
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
-    variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
