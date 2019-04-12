@@ -416,9 +416,10 @@ public class EditorialPresenter implements Presenter {
         .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
             reactionEvent.getGroupId(), reactionEvent.getReactionType())
             .toObservable()
-            .filter(reactionsResponse -> !reactionsResponse.sameReaction())
+            .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse))
+            .doOnNext(this::handleReactionsResponse)
+            .filter(ReactionsResponse::wasSuccess)
             .flatMapSingle(
                 __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

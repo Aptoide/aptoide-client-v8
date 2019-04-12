@@ -226,9 +226,10 @@ public class HomePresenter implements Presenter {
         .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
             homeEvent.getReaction())
             .toObservable()
-            .filter(reactionsResponse -> !reactionsResponse.sameReaction())
+            .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse))
+            .doOnNext(this::handleReactionsResponse)
+            .filter(ReactionsResponse::wasSuccess)
             .flatMapSingle(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {

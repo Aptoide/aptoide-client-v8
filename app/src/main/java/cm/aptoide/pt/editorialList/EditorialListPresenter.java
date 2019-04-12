@@ -217,9 +217,10 @@ public class EditorialListPresenter implements Presenter {
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
                 .toObservable()
-                .filter(reactionsResponse -> !reactionsResponse.sameReaction())
+                .filter(ReactionsResponse::differentReaction)
                 .observeOn(viewScheduler)
                 .doOnNext(this::handleReactionsResponse)
+                .filter(ReactionsResponse::wasSuccess)
                 .flatMapSingle(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
                     reactionsHomeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -232,7 +233,7 @@ public class EditorialListPresenter implements Presenter {
       editorialListAnalytics.sendReactedEvent();
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
-    } else {
+    } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
   }

@@ -24,8 +24,12 @@ public class ReactionsResponse {
     return reactionResponseMessage == REACTIONS_EXCEEDED;
   }
 
-  public boolean sameReaction() {
-    return reactionResponseMessage == SAME_REACTION;
+  public boolean differentReaction() {
+    return reactionResponseMessage != SAME_REACTION;
+  }
+
+  public boolean wasGeneralError() {
+    return reactionResponseMessage == GENERAL_ERROR;
   }
 
   public enum ReactionResponseMessage {
