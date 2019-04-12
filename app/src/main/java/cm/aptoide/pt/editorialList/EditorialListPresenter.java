@@ -213,12 +213,14 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMapSingle(
+        .flatMap(
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
+                .toObservable()
+                .filter(reactionsResponse -> !reactionsResponse.sameReaction())
                 .observeOn(viewScheduler)
-                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
-                .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
+                .doOnNext(this::handleReactionsResponse)
+                .flatMapSingle(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
                     reactionsHomeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
