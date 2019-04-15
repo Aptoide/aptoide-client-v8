@@ -3,7 +3,6 @@ package cm.aptoide.pt.ads;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
 import rx.Scheduler;
-import rx.subscriptions.CompositeSubscription;
 
 public class AdsUserPropertyManager {
 
@@ -16,8 +15,8 @@ public class AdsUserPropertyManager {
   private final Scheduler ioScheduler;
 
   public AdsUserPropertyManager(MoPubAdsManager moPubAdsManager,
-      InstalledRepository installedRepository,
-      MoPubAnalytics moPubAnalytics, CrashReport crashReport, Scheduler ioScheduler) {
+      InstalledRepository installedRepository, MoPubAnalytics moPubAnalytics,
+      CrashReport crashReport, Scheduler ioScheduler) {
     this.moPubAdsManager = moPubAdsManager;
     this.installedRepository = installedRepository;
     this.crashReport = crashReport;

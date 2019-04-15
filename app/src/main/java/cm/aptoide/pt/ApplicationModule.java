@@ -73,9 +73,9 @@ import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.ads.MoPubAdsService;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
@@ -1176,11 +1176,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         moPubNativeAdExperiment, walletAdsOfferManager);
   }
 
-  @Singleton @Provides MoPubAdsService providesMoPubAdsService(MoPubAdsManager moPubAdsManager,
-      InstalledRepository installedRepository, MoPubAnalytics moPubAnalytics,
-      CrashReport crashReport) {
-    return new MoPubAdsService(moPubAdsManager, installedRepository, moPubAnalytics, crashReport,
-        Schedulers.io());
+  @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
+      MoPubAdsManager moPubAdsManager, InstalledRepository installedRepository,
+      MoPubAnalytics moPubAnalytics, CrashReport crashReport) {
+    return new AdsUserPropertyManager(moPubAdsManager, installedRepository, moPubAnalytics,
+        crashReport, Schedulers.io());
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
