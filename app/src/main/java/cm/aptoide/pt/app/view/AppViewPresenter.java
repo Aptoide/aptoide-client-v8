@@ -201,6 +201,19 @@ public class AppViewPresenter implements Presenter {
 
   private Completable showBannerAd() {
     return appViewManager.shouldLoadBannerAd()
+        .flatMap(shouldLoadBanner -> {
+          if (shouldLoadBanner) {
+            return appViewManager.shouldShowConsentDialog()
+                .observeOn(viewScheduler)
+                .map(shouldShowConsent -> {
+                  if (shouldShowConsent) {
+                    view.showConsentDialog();
+                  }
+                  return true;
+                });
+          }
+          return Single.just(false);
+        })
         .observeOn(viewScheduler)
         .flatMapCompletable(shouldLoadBanner -> {
           if (shouldLoadBanner) {

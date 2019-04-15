@@ -76,6 +76,9 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import cm.aptoide.pt.ads.MoPubConsentDialogManager;
+import cm.aptoide.pt.ads.MoPubConsentDialogView;
+import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -262,6 +265,7 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import com.mopub.common.MoPub;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -1169,10 +1173,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment,
-      WalletAdsOfferManager walletAdsOfferManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
+      MoPubConsentManager moPubConsentDialogManager) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, walletAdsOfferManager);
+        moPubNativeAdExperiment, walletAdsOfferManager, moPubConsentDialogManager);
+  }
+
+  @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {
+    return new MoPubConsentManager(MoPub.getPersonalInformationManager());
+  }
+
+  @Singleton @Provides @Named("mopub-consent-dialog-view")
+  MoPubConsentDialogView providesMoPubConsentDialogView(MoPubConsentManager moPubConsentManager) {
+    return moPubConsentManager;
+  }
+
+  @Singleton @Provides @Named("mopub-consent-dialog-manager")
+  MoPubConsentDialogManager providesMoPubConsentDialogManager(
+      MoPubConsentManager moPubConsentManager) {
+    return moPubConsentManager;
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
