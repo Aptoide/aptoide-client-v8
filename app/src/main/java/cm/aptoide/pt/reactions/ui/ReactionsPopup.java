@@ -1,8 +1,6 @@
 package cm.aptoide.pt.reactions.ui;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.reactions.data.ReactionType;
 
 public class ReactionsPopup {
@@ -42,7 +41,11 @@ public class ReactionsPopup {
     popup.setContentView(reactionsView);
     popup.setFocusable(true);
     popup.setClippingEnabled(true);
-    popup.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    popup.setBackgroundDrawable(context.getResources()
+        .getDrawable(R.drawable.rounded_corners_white));
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      popup.setElevation(10);
+    }
 
     reactionsView.setCallback(reactionType -> {
       if (reactionClickListener != null) {

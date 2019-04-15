@@ -9,7 +9,6 @@ import android.view.Display;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.reactions.data.ReactionType;
 import java.util.Arrays;
 import java.util.List;
@@ -47,9 +46,6 @@ public class ReactionsView extends LinearLayout {
         new Reaction(ReactionType.DOWN, REACTIONS_PADDING, this.getContext()));
 
     this.setOrientation(HORIZONTAL);
-    this.setBackground(this.getContext()
-        .getResources()
-        .getDrawable(R.drawable.rounded_corners_white));
 
     ViewGroup.LayoutParams reactionParams =
         new ViewGroup.LayoutParams(WIDTH_REACTIONS, HEIGHT_REACTIONS);
