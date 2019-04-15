@@ -37,9 +37,6 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
-
 /**
  * Created by D01 on 04/05/18.
  */
@@ -342,19 +339,10 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
-                        trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                    editorsChoicePosition, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(
+                status -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                    editorsChoicePosition, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -367,20 +355,10 @@ public class AppViewManager {
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
         promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        promotionViewApp.getDownloadModel()
-                            .getAction(), promotionViewApp.getId(),
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, promotionViewApp.getDownloadModel()
-                    .getAction(), promotionViewApp.getId(), NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
+                promotionViewApp.getDownloadModel()
+                    .getAction(), promotionViewApp.getId(), offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -425,18 +403,9 @@ public class AppViewManager {
 
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, appId,
-                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(
+                offerResponseStatus -> setupDownloadEvents(download, appId, offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

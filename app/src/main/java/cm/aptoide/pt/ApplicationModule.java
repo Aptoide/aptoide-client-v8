@@ -73,6 +73,7 @@ import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
@@ -1175,6 +1176,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         moPubNativeAdExperiment, walletAdsOfferManager);
   }
 
+  @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
+      MoPubAdsManager moPubAdsManager, InstalledRepository installedRepository,
+      MoPubAnalytics moPubAnalytics, CrashReport crashReport) {
+    return new AdsUserPropertyManager(moPubAdsManager, installedRepository, moPubAnalytics,
+        crashReport, Schedulers.io());
+  }
+
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
       @Named("ws-prod-suggestions-base-url") String baseUrl,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
@@ -1646,7 +1654,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository.getUniqueIdentifier());
+    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(

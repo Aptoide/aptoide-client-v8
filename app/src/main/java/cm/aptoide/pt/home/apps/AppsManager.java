@@ -21,10 +21,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
-import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
 import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
@@ -133,17 +130,8 @@ public class AppsManager {
 
   public Completable resumeDownload(App app) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupDownloadEvents(download, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }
@@ -207,17 +195,8 @@ public class AppsManager {
           Download value = downloadFactory.create(update);
           return Observable.just(value);
         })
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupUpdateEvents(download, Origin.UPDATE,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -235,16 +214,7 @@ public class AppsManager {
     return updatesManager.getAllUpdates()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
-        .flatMap(updates -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .map(showAds -> showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                        : ADS_HIDE);
-              } else {
-                return Single.just(NO_ADS);
-              }
-            })
+        .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)

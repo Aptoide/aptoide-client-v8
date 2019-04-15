@@ -599,6 +599,8 @@ public class AppViewManagerTest {
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
     when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
+        Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     appViewManager.loadAppViewViewModel()
         .subscribe();
@@ -681,6 +683,8 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
     when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
+    when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
+        Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     //Then the appViewManager should return a Complete when the request is done
     appViewManager.resumeDownload("md5", 1)

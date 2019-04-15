@@ -19,9 +19,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
-
 public class PromotionsManager {
 
   private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
@@ -108,21 +105,10 @@ public class PromotionsManager {
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(
-                        showAds -> setupDownloadEvents(download, promotionViewApp.getPackageName(),
-                            promotionViewApp.getAppId(),
-                            showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                                : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, promotionViewApp.getPackageName(),
-                    promotionViewApp.getAppId(), NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
+                promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
+                offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -154,18 +140,9 @@ public class PromotionsManager {
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, packageName, appId,
-                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
+                offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

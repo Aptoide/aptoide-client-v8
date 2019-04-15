@@ -22,6 +22,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -181,6 +182,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
+  @Inject AdsUserPropertyManager adsUserPropertyManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -344,6 +346,8 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+
+    adsUserPropertyManager.start();
   }
 
   private void initializeMoPub(Context context, String adUnitPlacementId) {
