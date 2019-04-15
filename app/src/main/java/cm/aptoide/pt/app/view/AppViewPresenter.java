@@ -27,7 +27,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.share.ShareDialogs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -104,8 +103,6 @@ public class AppViewPresenter implements Presenter {
     handleClickOnAppcInfo();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
-    handleDefaultShare();
-    handleRecommendsShare();
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
@@ -115,7 +112,6 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
-    handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
@@ -644,7 +640,8 @@ public class AppViewPresenter implements Presenter {
                   switch (menuItem.getItemId()) {
 
                     case R.id.menu_item_share:
-                      view.showShareDialog();
+                      view.defaultShare(appViewViewModel.getAppName(),
+                          appViewViewModel.getWebUrls());
                       break;
 
                     case R.id.menu_remote_install:
@@ -654,43 +651,6 @@ public class AppViewPresenter implements Presenter {
                   }
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private void handleDefaultShare() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.shareDialogResponse())
-        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
-        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .observeOn(viewScheduler)
-        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getWebUrls()))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private void handleRecommendsShare() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.shareDialogResponse())
-        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_TIMELINE)
-        .flatMap(__ -> accountManager.accountStatus())
-        .first()
-        .observeOn(viewScheduler)
-        .flatMap(account -> {
-          if (!account.isLoggedIn()) {
-            view.displayNotLoggedInSnack();
-            return Observable.just(false);
-          } else {
-            return Observable.just(true);
-          }
-        })
-        .filter(shouldContinue -> shouldContinue)
-        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .observeOn(viewScheduler)
-        .doOnNext(appModel -> view.recommendsShare(appModel.getPackageName(), appModel.getStore()
-            .getId()))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -1084,28 +1044,6 @@ public class AppViewPresenter implements Presenter {
                 .getId(), app.hasAdvertising() || app.hasBilling())
             .observeOn(viewScheduler)
             .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void handleNotLoggedinShareResults() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> appViewNavigator.notLoggedInViewResults()
-            .filter(success -> success)
-            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .flatMapCompletable(app -> appViewManager.shareOnTimelineAsync(app.getPackageName(),
-                app.getStore()
-                    .getId())
-                .doOnCompleted(() -> appViewAnalytics.sendSuccessShareEvent()))
-            .doOnError(error -> {
-              appViewAnalytics.sendFailedShareEvent();
-              crashReport.log(error);
-            })
-            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

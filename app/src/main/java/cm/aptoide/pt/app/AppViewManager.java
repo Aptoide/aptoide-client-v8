@@ -9,7 +9,6 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
@@ -62,7 +61,6 @@ public class AppViewManager {
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final Scheduler ioScheduler;
-  private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
@@ -84,11 +82,11 @@ public class AppViewManager {
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
-      AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
+      MoPubAdsManager moPubAdsManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, int limit, Scheduler ioScheduler,
+      SocialRepository socialRepository, String marketName, AppCoinsManager appCoinsManager,
+      PromotionsManager promotionsManager, String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -101,7 +99,6 @@ public class AppViewManager {
     this.aptoideAccountManager = aptoideAccountManager;
     this.appViewConfiguration = appViewConfiguration;
     this.moPubAdsManager = moPubAdsManager;
-    this.preferencesManager = preferencesManager;
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
@@ -322,10 +319,6 @@ public class AppViewManager {
     }
   }
 
-  private void increaseInstallClick() {
-    preferencesManager.increaseNotLoggedInInstallClicks();
-  }
-
   public boolean shouldShowRootInstallWarningPopup() {
     return installManager.showWarning();
   }
@@ -336,7 +329,6 @@ public class AppViewManager {
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
       String trustedValue, String editorsChoicePosition) {
-    increaseInstallClick();
     return Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
@@ -458,26 +450,13 @@ public class AppViewManager {
     adsManager.handleAdsLogic(searchAdResult);
   }
 
-  public boolean shouldShowRecommendsPreviewDialog() {
-    return preferencesManager.shouldShowInstallRecommendsPreviewDialog() && !isAppcApp();
-  }
-
   private boolean isAppcApp() {
     return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
         || cachedAppCoinsViewModel.hasBilling());
   }
 
-  public boolean canShowNotLoggedInDialog() {
-    return preferencesManager.canShowNotLoggedInDialog() && !isAppcApp();
-  }
-
   public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
     return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
-  }
-
-  public Completable dontShowLoggedInInstallRecommendsPreviewDialog() {
-    return Completable.fromAction(
-        () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
   }
 
   public Completable shareOnTimelineAsync(String packageName, long storeId) {

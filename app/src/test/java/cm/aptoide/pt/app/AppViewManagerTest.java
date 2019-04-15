@@ -6,7 +6,6 @@ import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -623,8 +622,6 @@ public class AppViewManagerTest {
         .test()
         .assertCompleted();
 
-    //And it should set the install clicks if not logged in the preferences to show pop-up in the 2nd and 4th time
-    verify(preferencesManager).increaseNotLoggedInInstallClicks();
     //And it should ask the installManager to start the download
     verify(installManager).install(download);
     //And it should set the necessary analytics
@@ -723,20 +720,6 @@ public class AppViewManagerTest {
     verify(adsManager).handleAdsLogic(searchAdResult);
   }
 
-  @Test public void shouldShowInstallRecommendsPreviewDialog() {
-    //When the presenter asks if it should show the recommends preview dialog
-    appViewManager.shouldShowRecommendsPreviewDialog();
-    //Then the AppViewManager should ask the preferencesManager
-    verify(preferencesManager).shouldShowInstallRecommendsPreviewDialog();
-  }
-
-  @Test public void canShowNotLoggedInDialogTest() {
-    //When the presenter asks if it should show the not logged in dialog
-    appViewManager.canShowNotLoggedInDialog();
-    //Then the AppViewManager should ask the preferencesManager
-    verify(preferencesManager).canShowNotLoggedInDialog();
-  }
-
   @Test public void shareOnTimelineTest() {
     //When the presenter asks the AppViewManager to share on timeline, then it should inform when it's completed
     appViewManager.shareOnTimeline("packageName", (long) 1, "shareType")
@@ -753,14 +736,5 @@ public class AppViewManagerTest {
         .assertCompleted();
     //And should delegate the action to the social repository
     verify(socialRepository).asyncShare("packageName", (long) 1, "app");
-  }
-
-  @Test public void dontShowLoggedInInstallRecommendsPreviewDialogTest() {
-    //When the presenter asks to not show the recommends preview dialog, then it should inform when it's completed
-    appViewManager.dontShowLoggedInInstallRecommendsPreviewDialog()
-        .test()
-        .assertCompleted();
-    //And should delegate the action to the preferencesManager
-    verify(preferencesManager).setShouldShowInstallRecommendsPreviewDialog(false);
   }
 }

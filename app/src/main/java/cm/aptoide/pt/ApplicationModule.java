@@ -97,7 +97,6 @@ import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -1611,11 +1610,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PreferencesPersister(sharedPreferences);
   }
 
-  @Singleton @Provides PreferencesManager providesPreferencesManager(
-      PreferencesPersister preferencesPersister) {
-    return new PreferencesManager(preferencesPersister);
-  }
-
   @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
     return new ReviewsManager(reviewsRepository);
   }
@@ -1694,12 +1688,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager) {
+      PromotionsService promotionsService, InstalledRepository installedRepository,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
-        preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
+        application.getApplicationContext()
+            .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

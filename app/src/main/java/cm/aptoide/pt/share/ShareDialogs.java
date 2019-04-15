@@ -16,30 +16,6 @@ import rx.subscriptions.Subscriptions;
  */
 public class ShareDialogs {
 
-  public static Observable<ShareResponse> createAppviewShareDialog(Context context, String title) {
-    return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
-      final AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title)
-          .setItems(R.array.share_options_array, (dialogInterface, i) -> {
-            if (!subscriber.isUnsubscribed()) {
-              switch (i) {
-                case 0:
-                  subscriber.onNext(ShareResponse.SHARE_EXTERNAL);
-                  subscriber.onCompleted();
-                  break;
-                case 1:
-                  subscriber.onNext(ShareResponse.SHARE_TIMELINE);
-                  subscriber.onCompleted();
-                  break;
-              }
-            }
-          })
-          .create();
-      // cleaning up
-      subscriber.add(Subscriptions.create(() -> alertDialog.dismiss()));
-      alertDialog.show();
-    });
-  }
-
   public static Observable<ShareResponse> createStoreShareDialog(Context context, String title,
       String storeIcon) {
     return Observable.create((Subscriber<? super ShareResponse> subscriber) -> {
