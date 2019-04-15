@@ -3,6 +3,7 @@ package cm.aptoide.pt.reactions.network;
 import retrofit2.Response;
 
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR;
+import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.NETWORK_ERROR;
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED;
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.SAME_REACTION;
 import static cm.aptoide.pt.reactions.network.ReactionsResponse.ReactionResponseMessage.SUCCESS;
@@ -32,8 +33,12 @@ public class ReactionsResponse {
     return reactionResponseMessage == GENERAL_ERROR;
   }
 
+  public boolean wasNetworkError() {
+    return reactionResponseMessage == NETWORK_ERROR;
+  }
+
   public enum ReactionResponseMessage {
-    SUCCESS, GENERAL_ERROR, REACTIONS_EXCEEDED, SAME_REACTION
+    SUCCESS, GENERAL_ERROR, REACTIONS_EXCEEDED, SAME_REACTION, NETWORK_ERROR
   }
 
   public static class ReactionResponseMapper {

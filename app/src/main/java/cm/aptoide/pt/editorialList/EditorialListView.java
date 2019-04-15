@@ -58,4 +58,6 @@ public interface EditorialListView extends View {
   void showErrorToast();
 
   void updateEditorialCard(CurationCard curationCard, String cardId);
+
+  void showNetworkErrorToast();
 }

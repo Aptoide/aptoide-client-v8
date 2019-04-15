@@ -45,4 +45,6 @@ public interface HomeView extends BundleView {
   Observable<Void> snackLogInClick();
 
   void showErrorToast();
+
+  void showNetworkErrorToast();
 }

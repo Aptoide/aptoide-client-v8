@@ -368,25 +368,27 @@ public class EditorialPresenter implements Presenter {
         .flatMap(created -> view.reactionsButtonClicked())
         .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
         .observeOn(viewScheduler)
-        .flatMapSingle(editorialViewModel -> singlePressReactionButtonAction(editorialViewModel))
+        .flatMap(editorialViewModel -> singlePressReactionButtonAction(editorialViewModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  private Single<LoadReactionModel> singlePressReactionButtonAction(
+  private Observable<LoadReactionModel> singlePressReactionButtonAction(
       EditorialViewModel editorialViewModel) {
     boolean isFirstReaction = editorialManager.isFirstReaction(editorialViewModel.getCardId(),
         editorialViewModel.getGroupId());
     if (isFirstReaction) {
       editorialAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
-      return Single.just(new LoadReactionModel());
+      return Observable.just(new LoadReactionModel());
     } else {
-      editorialAnalytics.sendDeletedEvent();
       return editorialManager.deleteReaction(editorialViewModel.getCardId(),
           editorialViewModel.getGroupId())
-          .flatMap(__ -> loadReactionModel(editorialViewModel.getCardId(),
+          .toObservable()
+          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+          .filter(ReactionsResponse::wasSuccess)
+          .flatMapSingle(__ -> loadReactionModel(editorialViewModel.getCardId(),
               editorialViewModel.getGroupId()));
     }
   }
@@ -418,7 +420,7 @@ public class EditorialPresenter implements Presenter {
             .toObservable()
             .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
-            .doOnNext(this::handleReactionsResponse)
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
             .filter(ReactionsResponse::wasSuccess)
             .flatMapSingle(
                 __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
@@ -427,12 +429,18 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      editorialAnalytics.sendReactedEvent();
+      if (isDelete) {
+        editorialAnalytics.sendDeletedEvent();
+      } else {
+        editorialAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
-    } else {
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
   }

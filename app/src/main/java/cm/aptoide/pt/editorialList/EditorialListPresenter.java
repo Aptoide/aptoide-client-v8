@@ -203,7 +203,7 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
+        .flatMap(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -219,7 +219,7 @@ public class EditorialListPresenter implements Presenter {
                 .toObservable()
                 .filter(ReactionsResponse::differentReaction)
                 .observeOn(viewScheduler)
-                .doOnNext(this::handleReactionsResponse)
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
                 .filter(ReactionsResponse::wasSuccess)
                 .flatMapSingle(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
                     reactionsHomeEvent.getGroupId())))
@@ -228,11 +228,17 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      editorialListAnalytics.sendReactedEvent();
+      if (isDelete) {
+        editorialListAnalytics.sendDeleteEvent();
+      } else {
+        editorialListAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
     } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
@@ -268,7 +274,7 @@ public class EditorialListPresenter implements Presenter {
     return Observable.just(userAvatarUrl);
   }
 
-  private Single<CurationCard> singlePressReactionButtonAction(
+  private Observable<CurationCard> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
         editorialHomeEvent.getGroupId());
@@ -276,12 +282,14 @@ public class EditorialListPresenter implements Presenter {
       editorialListAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
           editorialHomeEvent.getBundlePosition());
-      return Single.just(new CurationCard());
+      return Observable.just(new CurationCard());
     } else {
-      editorialListAnalytics.sendDeleteEvent();
       return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
           editorialHomeEvent.getGroupId())
-          .flatMap(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+          .toObservable()
+          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+          .filter(ReactionsResponse::wasSuccess)
+          .flatMapSingle(reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
               editorialHomeEvent.getGroupId()));
     }
   }

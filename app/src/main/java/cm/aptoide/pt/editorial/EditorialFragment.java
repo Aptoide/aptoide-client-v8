@@ -642,6 +642,11 @@ public class EditorialFragment extends NavigationTrackFragment
         .show();
   }
 
+  @Override public void showNetworkErrorToast() {
+    Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   private boolean isReactionValid(String reaction) {
     return mapReaction(reaction) != -1;
   }

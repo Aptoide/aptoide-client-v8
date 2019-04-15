@@ -213,7 +213,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
+        .flatMap(this::singlePressReactionButtonAction)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
@@ -228,7 +228,7 @@ public class HomePresenter implements Presenter {
             .toObservable()
             .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
-            .doOnNext(this::handleReactionsResponse)
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
             .filter(ReactionsResponse::wasSuccess)
             .flatMapSingle(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -236,12 +236,18 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      homeAnalytics.sendReactedEvent();
+      if (isDelete) {
+        homeAnalytics.sendDeleteEvent();
+      } else {
+        homeAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
-    } else {
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
   }
@@ -548,7 +554,7 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<List<HomeBundle>> singlePressReactionButtonAction(
+  private Observable<List<HomeBundle>> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction =
         home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId());
@@ -556,11 +562,13 @@ public class HomePresenter implements Presenter {
       homeAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
           editorialHomeEvent.getBundlePosition());
-      return Single.just(Collections.emptyList());
+      return Observable.just(Collections.emptyList());
     } else {
-      homeAnalytics.sendDeleteEvent();
       return home.deleteReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
-          .flatMap(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+          .toObservable()
+          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+          .filter(ReactionsResponse::wasSuccess)
+          .flatMapSingle(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
               editorialHomeEvent.getGroupId()));
     }
   }

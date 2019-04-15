@@ -277,6 +277,11 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     adapter.updateEditorialCard(curationCard, cardId);
   }
 
+  @Override public void showNetworkErrorToast() {
+    Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;
