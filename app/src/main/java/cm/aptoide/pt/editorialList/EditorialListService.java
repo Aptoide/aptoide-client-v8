@@ -73,7 +73,7 @@ public class EditorialListService {
       CurationCard curationCard =
           new CurationCard(actionItemData.getId(), actionItemData.getCaption(),
               actionItemData.getIcon(), actionItemData.getTitle(), actionItemData.getViews(),
-              actionItemData.getType());
+              actionItemData.getType(), actionItemData.getDate());
       curationCards.add(curationCard);
     }
     return curationCards;

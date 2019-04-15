@@ -11,7 +11,10 @@ import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.view.Translator;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
@@ -56,20 +59,21 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(), position,
+        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(), actionItem.getDate(), position,
         homeBundle, actionItem.getReactionList(), actionItem.getTotal(),
         actionItem.getUserReaction());
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
-      String numberOfViews, String type, int position, HomeBundle homeBundle,
+      String numberOfViews, String type, String date, int position, HomeBundle homeBundle,
       List<TopReaction> reactions, int numberOfReactions, String userReaction) {
     clearReactions();
     setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
-    editorialSubtitle.setText(Translator.translate(subTitle, itemView.getContext(), ""));
+    String[] newDate = date.split(" ");
+    editorialSubtitle.setText(Translator.translate(newDate[0], itemView.getContext(), ""));
     editorialViews.setText(String.format(itemView.getContext()
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
@@ -112,7 +116,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   public void setEditorialCard(CurationCard curationCard, int position) {
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
-        curationCard.getType(), position, null, curationCard.getReactions(),
+        curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),
         curationCard.getNumberOfReactions(), curationCard.getUserReaction());
   }
 

@@ -12,12 +12,13 @@ public class ActionItem {
   private final String icon;
   private final String url;
   private final String numberOfViews;
+  private final String date;
   private List<TopReaction> reactionList;
   private int total;
   private String userReaction;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
-      String url, String numberOfViews) {
+      String url, String numberOfViews, String date) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
@@ -25,6 +26,7 @@ public class ActionItem {
     this.icon = icon;
     this.url = url;
     this.numberOfViews = numberOfViews;
+    this.date = date;
     this.reactionList = Collections.emptyList();
     this.total = -1;
     this.userReaction = "";
@@ -57,6 +59,8 @@ public class ActionItem {
   public String getNumberOfViews() {
     return numberOfViews;
   }
+
+  public String getDate() { return date; }
 
   public void setReactions(List<TopReaction> topReactionList) {
     this.reactionList = topReactionList;

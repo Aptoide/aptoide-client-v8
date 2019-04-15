@@ -11,18 +11,20 @@ public class CurationCard {
   private final String title;
   private final String views;
   private final String type;
+  private final String date;
   private List<TopReaction> reactions;
   private String userReaction;
   private int numberOfReactions;
 
   public CurationCard(String id, String subTitle, String icon, String title, String views,
-      String type) {
+      String type, String date) {
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
     this.title = title;
     this.views = views;
     this.type = type;
+    this.date = date;
     reactions = Collections.emptyList();
     userReaction = "";
     numberOfReactions = -1;
@@ -51,6 +53,8 @@ public class CurationCard {
   public String getType() {
     return type;
   }
+
+  public String getDate() { return date; }
 
   public List<TopReaction> getReactions() {
     return reactions;
