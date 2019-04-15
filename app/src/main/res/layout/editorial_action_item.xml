@@ -38,7 +38,7 @@
         android:id="@+id/editorial_title"
         android:layout_width="240dp"
         android:layout_height="168dp"
-        android:layout_above="@id/editorial_subtitle"
+        android:layout_above="@id/editorial_date"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
@@ -53,7 +53,7 @@
         />
 
     <TextView
-        android:id="@+id/editorial_subtitle"
+        android:id="@+id/editorial_date"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_alignBottom="@id/background_image"
@@ -66,7 +66,7 @@
         android:maxLines="1"
         android:textColor="@color/white"
         tools:text="TESTING SOME STUFF"
-        style="@style/Aptoide.TextView.Regular.M"
+        style="@style/Aptoide.TextView.Regular.S"
         />
 
     <RelativeLayout

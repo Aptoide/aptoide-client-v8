@@ -42,7 +42,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
     this.editorialTitle = (TextView) view.findViewById(R.id.editorial_title);
-    this.editorialSubtitle = (TextView) view.findViewById(R.id.editorial_subtitle);
+    this.editorialSubtitle = (TextView) view.findViewById(R.id.editorial_date);
     this.editorialViews = view.findViewById(R.id.editorial_views);
     this.backgroundImage = (ImageView) view.findViewById(R.id.background_image);
     this.reactButton = view.findViewById(R.id.add_reactions);
