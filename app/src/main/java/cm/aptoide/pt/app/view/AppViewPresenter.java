@@ -139,6 +139,21 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
+
+    handleMoPubConsentDialog();
+  }
+
+  private void handleMoPubConsentDialog() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .observeOn(viewScheduler)
+        .flatMapSingle(__ -> handleConsentDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleDownloadingSimilarApp() {
@@ -199,21 +214,19 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  private Single<Boolean> handleConsentDialog() {
+    return appViewManager.shouldShowConsentDialog()
+        .observeOn(viewScheduler)
+        .map(shouldShowConsent -> {
+          if (shouldShowConsent) {
+            view.showConsentDialog();
+          }
+          return true;
+        });
+  }
+
   private Completable showBannerAd() {
     return appViewManager.shouldLoadBannerAd()
-        .flatMap(shouldLoadBanner -> {
-          if (shouldLoadBanner) {
-            return appViewManager.shouldShowConsentDialog()
-                .observeOn(viewScheduler)
-                .map(shouldShowConsent -> {
-                  if (shouldShowConsent) {
-                    view.showConsentDialog();
-                  }
-                  return true;
-                });
-          }
-          return Single.just(false);
-        })
         .observeOn(viewScheduler)
         .flatMapCompletable(shouldLoadBanner -> {
           if (shouldLoadBanner) {
