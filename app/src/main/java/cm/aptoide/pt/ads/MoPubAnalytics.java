@@ -30,7 +30,7 @@ public class MoPubAnalytics {
       case ADS_SHOW:
         return AdsVisibility.HAS_ADS;
       default:
-        return AdsVisibility.CONTROL;
+        throw new IllegalStateException("Invalid OfferResponseStatus");
     }
   }
 
