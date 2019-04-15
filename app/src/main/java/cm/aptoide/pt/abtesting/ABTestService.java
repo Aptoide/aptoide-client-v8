@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created by franciscocalado on 19/06/18.
@@ -22,36 +23,38 @@ public class ABTestService {
 
   private ServiceV7 service;
   private IdsRepository idsRepository;
+  private Scheduler scheduler;
 
-  public ABTestService(ServiceV7 service, IdsRepository idsRepository) {
+  public ABTestService(ServiceV7 service, IdsRepository idsRepository, Scheduler scheduler) {
     this.service = service;
     this.idsRepository = idsRepository;
+    this.scheduler = scheduler;
   }
 
   public Observable<ExperimentModel> getExperiment(String identifier) {
-    return getAptoideId().flatMap(aptoideId -> service.getExperiment(identifier, aptoideId)
+    return getAptoideId().flatMap(aptoideId -> service.getExperiment(identifier, aptoideId))
         .map((ABTestImpressionResponse response) -> mapToExperimentModel(response, false))
-        .onErrorReturn(response -> new ExperimentModel(new Experiment(), true)));
+        .onErrorReturn(response -> new ExperimentModel(new Experiment(), true));
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
     return getAptoideId().flatMap(aptoideId -> service.recordImpression(identifier, aptoideId,
-        new ABTestRequestBody(IMPRESSION))
+        new ABTestRequestBody(IMPRESSION)))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
         .doOnError(throwable -> throwable.printStackTrace())
-        .map(__ -> true));
+        .map(__ -> true);
   }
 
   public Observable<Boolean> recordAction(String identifier, String assignment) {
     return getAptoideId().flatMap(
-        aptoideId -> service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment))
-            .doOnNext(voidResponse -> Logger.getInstance()
-                .d(this.getClass()
-                    .getName(), "response : " + voidResponse.isSuccessful()))
-            .doOnError(throwable -> throwable.printStackTrace())
-            .map(__ -> true));
+        aptoideId -> service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment)))
+        .doOnNext(voidResponse -> Logger.getInstance()
+            .d(this.getClass()
+                .getName(), "response : " + voidResponse.isSuccessful()))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .map(__ -> true);
   }
 
   private ExperimentModel mapToExperimentModel(ABTestImpressionResponse response,
@@ -70,7 +73,8 @@ public class ABTestService {
   }
 
   private Observable<String> getAptoideId() {
-    return Observable.fromCallable(() -> idsRepository.getUniqueIdentifier());
+    return Observable.fromCallable(() -> idsRepository.getUniqueIdentifier())
+        .subscribeOn(scheduler);
   }
 
   public interface ServiceV7 {

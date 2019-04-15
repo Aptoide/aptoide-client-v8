@@ -1654,7 +1654,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository);
+    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
