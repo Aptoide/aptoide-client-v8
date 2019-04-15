@@ -63,7 +63,6 @@ public class AppViewManagerTest {
   @Mock private StoreUtilsProxy storeUtilsProxy;
   @Mock private AptoideAccountManager aptoideAccountManager;
   @Mock private InstallAnalytics installAnalytics;
-  @Mock private PreferencesManager preferencesManager;
   @Mock private AppViewAnalytics appViewAnalytics;
   @Mock private NotificationAnalytics notificationAnalytics;
   @Mock private Store store;
@@ -91,7 +90,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -113,7 +112,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -164,7 +163,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -216,7 +215,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -266,7 +265,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -310,7 +309,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -338,7 +337,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -366,7 +365,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -479,7 +478,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "marketName", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
@@ -587,7 +586,7 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, preferencesManager, downloadStateParser, appViewAnalytics,
+            moPubAdsManager, downloadStateParser, appViewAnalytics,
             notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
             socialRepository, "anyString", appCoinsManager, promotionsManager, "",
             installedRepository, migrationManager);
