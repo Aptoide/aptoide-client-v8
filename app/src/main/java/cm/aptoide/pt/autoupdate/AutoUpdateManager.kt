@@ -46,7 +46,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
     return autoUpdateRepository.loadFreshAutoUpdateModel()
         .flatMap {
           var autoUpdateModel = it
-          if (it.hasError()) Single.error<Throwable>(Throwable(it.error.toString()))
+          if (!it.wasSuccess()) Single.error<Throwable>(Throwable(it.status.toString()))
           if (it.versionCode > localVersionCode && localVersionSdk >= Integer.parseInt(it.minSdk))
             autoUpdateModel = it.copy(shouldUpdate = true)
           Single.just(autoUpdateModel)

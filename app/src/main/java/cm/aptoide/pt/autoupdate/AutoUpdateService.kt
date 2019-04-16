@@ -29,8 +29,8 @@ class AutoUpdateService(private val service: Service, private val packageName: S
 
   private fun createErrorAutoUpdateModel(throwable: Throwable?): AutoUpdateModel? {
     return when (throwable) {
-      is NoNetworkConnectionException -> AutoUpdateModel(error = Error.NETWORK)
-      else -> AutoUpdateModel(error = Error.GENERIC)
+      is NoNetworkConnectionException -> AutoUpdateModel(status = Status.ERROR_NETWORK)
+      else -> AutoUpdateModel(status = Status.ERROR_GENERIC)
     }
   }
 }
