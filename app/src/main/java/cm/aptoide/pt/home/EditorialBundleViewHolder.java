@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -11,10 +12,7 @@ import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.view.Translator;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
@@ -29,11 +27,13 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final View editorialCard;
   private final TextView editorialTitle;
-  private final TextView editorialSubtitle;
+  private final TextView editorialDate;
   private final ImageView backgroundImage;
   private final TextView editorialViews;
   private final ImageButton reactButton;
   private final TextView numberOfReactions;
+  private final CardView curationTypeBubble;
+  private final TextView curationTypeBubbleText;
   private ImageView[] imageViews;
   private ReactionsPopup reactionsPopup;
 
@@ -42,10 +42,12 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
     this.editorialTitle = (TextView) view.findViewById(R.id.editorial_title);
-    this.editorialSubtitle = (TextView) view.findViewById(R.id.editorial_date);
+    this.editorialDate = (TextView) view.findViewById(R.id.editorial_date);
     this.editorialViews = view.findViewById(R.id.editorial_views);
     this.backgroundImage = (ImageView) view.findViewById(R.id.background_image);
     this.reactButton = view.findViewById(R.id.add_reactions);
+    this.curationTypeBubble = view.findViewById(R.id.curation_type_bubble);
+    this.curationTypeBubbleText = view.findViewById(R.id.curation_type_bubble_text);
     ImageView firstReaction = view.findViewById(R.id.reaction_1);
     ImageView secondReaction = view.findViewById(R.id.reaction_2);
     ImageView thirdReaction = view.findViewById(R.id.reaction_3);
@@ -59,9 +61,9 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(), actionItem.getDate(), position,
-        homeBundle, actionItem.getReactionList(), actionItem.getTotal(),
-        actionItem.getUserReaction());
+        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
+        actionItem.getDate(), position, homeBundle, actionItem.getReactionList(),
+        actionItem.getTotal(), actionItem.getUserReaction());
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
@@ -73,7 +75,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
         .load(icon, backgroundImage);
     editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
     String[] newDate = date.split(" ");
-    editorialSubtitle.setText(Translator.translate(newDate[0], itemView.getContext(), ""));
+    setCurationCardBubble(subTitle);
+    editorialDate.setText(Translator.translate(newDate[0], itemView.getContext(), ""));
     editorialViews.setText(String.format(itemView.getContext()
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
@@ -149,5 +152,34 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
       imageView.setVisibility(View.GONE);
     }
     this.numberOfReactions.setVisibility(View.GONE);
+  }
+
+  private void setCurationCardBubble(String caption) {
+    curationTypeBubbleText.setText(Translator.translate(caption, itemView.getContext(), ""));
+    switch (caption) {
+      case "Game of the Week":
+        curationTypeBubble.setCardBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.curation_grey));
+        break;
+
+      case "App of the Week":
+        curationTypeBubble.setCardBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.curation_blue));
+        break;
+
+      case "Collections":
+        curationTypeBubble.setCardBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.curation_green));
+        break;
+
+      default:
+        curationTypeBubble.setCardBackgroundColor(itemView.getContext()
+            .getResources()
+            .getColor(R.color.curation_default));
+        break;
+    }
   }
 }

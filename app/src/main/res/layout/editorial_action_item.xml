@@ -103,7 +103,7 @@
       app:layout_collapseMode="pin"
       >
     <android.support.v7.widget.CardView
-        android:id="@+id/action_item_card"
+        android:id="@+id/curation_type_bubble"
         android:layout_width="wrap_content"
         android:layout_height="22dp"
         android:layout_marginLeft="10dp"
@@ -113,7 +113,7 @@
         app:cardCornerRadius="12dp"
         >
       <TextView
-          android:id="@+id/action_item_name"
+          android:id="@+id/curation_type_bubble_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
