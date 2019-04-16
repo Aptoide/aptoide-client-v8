@@ -62,7 +62,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
     return getAutoUpdateModel().flatMap {
       installManager.getInstall(it.md5,
           it.packageName, it.versionCode)
-          .first { it.hasDownloadStarted() }
+          .first { install -> install.hasDownloadStarted() }
     }
   }
 
