@@ -9,32 +9,34 @@ import rx.Single
 class AutoUpdateService(private val service: Service, private val packageName: String,
                         private val autoUpdateStoreName: String) {
 
-    private var loading = false
+  private var loading = false
 
-    fun loadAutoUpdateModel(): Single<AutoUpdateModel> {
-        if (loading) {
-            return Single.just(AutoUpdateModel(loading = true))
-        }
-        return service.getJsonResponse(autoUpdateStoreName)
-                .doOnSubscribe { loading = true }
-                .doOnUnsubscribe { loading = false }
-                .doOnTerminate { loading = false }
-                .flatMap { Observable.just(AutoUpdateModel(it.versioncode, it.uri, it.md5, it.minSdk, packageName)) }
-                .onErrorReturn { createErrorAutoUpdateModel(it) }
-                .toSingle()
-
+  fun loadAutoUpdateModel(): Single<AutoUpdateModel> {
+    if (loading) {
+      return Single.just(AutoUpdateModel(loading = true))
     }
-
-    private fun createErrorAutoUpdateModel(throwable: Throwable?): AutoUpdateModel? {
-        return when (throwable) {
-            is NoNetworkConnectionException -> AutoUpdateModel(error = Error.NETWORK)
-            else -> AutoUpdateModel(error = Error.GENERIC)
+    return service.getJsonResponse(autoUpdateStoreName)
+        .doOnSubscribe { loading = true }
+        .doOnUnsubscribe { loading = false }
+        .doOnTerminate { loading = false }
+        .flatMap {
+          Observable.just(AutoUpdateModel(it.versioncode, it.uri, it.md5, it.minSdk, packageName))
         }
+        .onErrorReturn { createErrorAutoUpdateModel(it) }
+        .toSingle()
+
+  }
+
+  private fun createErrorAutoUpdateModel(throwable: Throwable?): AutoUpdateModel? {
+    return when (throwable) {
+      is NoNetworkConnectionException -> AutoUpdateModel(error = Error.NETWORK)
+      else -> AutoUpdateModel(error = Error.GENERIC)
     }
+  }
 }
 
 interface Service {
-    @GET("latest_version_{storeName}.json")
-    fun getJsonResponse(
-            @Path(value = "storeName") storeName: String): Observable<AutoUpdateJsonResponse>
+  @GET("latest_version_{storeName}.json")
+  fun getJsonResponse(
+      @Path(value = "storeName") storeName: String): Observable<AutoUpdateJsonResponse>
 }
