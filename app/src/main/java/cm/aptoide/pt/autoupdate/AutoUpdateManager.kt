@@ -47,7 +47,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
         .flatMap {
           var autoUpdateModel = it
           if (!it.wasSuccess()) Single.error<Throwable>(Throwable(it.status.toString()))
-          if (it.versionCode > localVersionCode && localVersionSdk >= Integer.parseInt(it.minSdk))
+          if (shouldUpdate(it))
             autoUpdateModel = it.copy(shouldUpdate = true)
           Single.just(autoUpdateModel)
         }
@@ -64,6 +64,11 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
           it.packageName, it.versionCode)
           .first { install -> install.hasDownloadStarted() }
     }
+  }
+
+  private fun shouldUpdate(autoUpdateModel: AutoUpdateModel): Boolean {
+    return autoUpdateModel.versionCode > localVersionCode && localVersionSdk >= Integer.parseInt(
+        autoUpdateModel.minSdk)
   }
 
 }
