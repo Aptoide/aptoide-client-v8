@@ -2,7 +2,6 @@
   <!-- Timeline Fragment -->
   <string name="customtabs_open_native_app">Open in app</string>
   <string name="social_timeline_you_will_share">Do you want to recommend this app to your followers?</string>
-  <string name="social_timeline_share_dialog_title">Thank you for sharing</string>
   <string name="social_timeline_share_bar_following">Follow more stores and connect with your friends.</string>
   <string name="social_timeline_share_bar_followers">Improve your store to have more followers.</string>
   <string name="social_timeline_followers_fragment_title">%d follower(s)</string>
