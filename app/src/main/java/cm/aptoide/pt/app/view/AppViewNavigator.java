@@ -22,7 +22,6 @@ import rx.Observable;
 
 public class AppViewNavigator {
 
-  private final int NOT_LOGGED_IN_SHARE_REQUEST_CODE = 13;
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
   private final AppNavigator appNavigator;
@@ -84,11 +83,6 @@ public class AppViewNavigator {
 
   public void navigateToAppCoinsInfo() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
-  }
-
-  public Observable<Boolean> notLoggedInViewResults() {
-    return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
-        .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {
