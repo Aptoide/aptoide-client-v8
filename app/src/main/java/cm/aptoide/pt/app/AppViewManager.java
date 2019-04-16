@@ -455,14 +455,6 @@ public class AppViewManager {
         || cachedAppCoinsViewModel.hasBilling());
   }
 
-  public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
-    return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
-  }
-
-  public Completable shareOnTimelineAsync(String packageName, long storeId) {
-    return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
-  }
-
   public Completable appBought(String path) {
     return Completable.fromAction(() -> {
       cachedApp.getPay()

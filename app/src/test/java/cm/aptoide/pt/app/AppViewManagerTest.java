@@ -719,21 +719,4 @@ public class AppViewManagerTest {
     verify(adsManager).handleAdsLogic(searchAdResult);
   }
 
-  @Test public void shareOnTimelineTest() {
-    //When the presenter asks the AppViewManager to share on timeline, then it should inform when it's completed
-    appViewManager.shareOnTimeline("packageName", (long) 1, "shareType")
-        .test()
-        .assertCompleted();
-    //And should delegate the action to the social repository
-    verify(socialRepository).share("packageName", (long) 1, "shareType");
-  }
-
-  @Test public void shareOnTimelineAsyncTest() {
-    //When the presenter asks the AppViewManager to share on timeline, then it should inform when it's completed
-    appViewManager.shareOnTimelineAsync("packageName", (long) 1)
-        .test()
-        .assertCompleted();
-    //And should delegate the action to the social repository
-    verify(socialRepository).asyncShare("packageName", (long) 1, "app");
-  }
 }
