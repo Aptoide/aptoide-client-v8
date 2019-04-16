@@ -47,13 +47,6 @@ public class ShareDialogs {
   }
 
   public enum ShareResponse {
-
-    SHARE_APP,
-
-    SHARE_EXTERNAL,
-
-    SHARE_TIMELINE,
-
     USING
   }
 }
