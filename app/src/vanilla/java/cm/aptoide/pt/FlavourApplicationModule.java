@@ -7,6 +7,9 @@ import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import cm.aptoide.pt.ads.MoPubConsentDialogManager;
+import cm.aptoide.pt.ads.MoPubConsentDialogView;
+import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
@@ -16,6 +19,7 @@ import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
+import com.mopub.common.MoPub;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -75,5 +79,20 @@ import javax.inject.Singleton;
   @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager(
       BlacklistManager blacklistManager, PackageRepository packageRepository) {
     return new WalletAdsOfferCardManager(blacklistManager, packageRepository);
+  }
+
+  @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {
+    return new MoPubConsentManager(MoPub.getPersonalInformationManager());
+  }
+
+  @Singleton @Provides @Named("mopub-consent-dialog-view")
+  MoPubConsentDialogView providesMoPubConsentDialogView(MoPubConsentManager moPubConsentManager) {
+    return moPubConsentManager;
+  }
+
+  @Singleton @Provides @Named("mopub-consent-dialog-manager")
+  MoPubConsentDialogManager providesMoPubConsentDialogManager(
+      MoPubConsentManager moPubConsentManager) {
+    return moPubConsentManager;
   }
 }
