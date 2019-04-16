@@ -53,6 +53,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.util.SettingsConstants;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -90,6 +91,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String DELETE_ACCOUNT = "deleteAccount";
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   @Inject SupportEmailProvider supportEmailProvider;
   private Context context;
@@ -185,8 +187,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     setAdultContentViews();
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
-    termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
-    privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
+    setGDPR();
     deleteAccount = findPreference(DELETE_ACCOUNT);
     socialCampaignNotifications =
         (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
@@ -208,6 +209,23 @@ public class SettingsFragment extends PreferenceFragmentCompat
     deleteAccount = null;
     context = null;
     super.onDestroyView();
+  }
+
+  private void setGDPR() {
+    if (settingsManager.showGDPR()) {
+      termsAndConditions = findPreference(TERMS_AND_CONDITIONS_PREFERENCE_KEY);
+      privacyPolicy = findPreference(PRIVACY_POLICY_PREFERENCE_KEY);
+    } else {
+      PreferenceCategory preferenceCategory = (PreferenceCategory) findPreference("about");
+      Preference termsAndConditionsPreference = findPreference("termsConditions");
+      Preference privacyPolicyPreference = findPreference("privacyPolicy");
+      if (termsAndConditionsPreference != null) {
+        preferenceCategory.removePreference(termsAndConditionsPreference);
+      }
+      if (privacyPolicyPreference != null) {
+        preferenceCategory.removePreference(privacyPolicyPreference);
+      }
+    }
   }
 
   private void setAdultContentContent() {
@@ -278,11 +296,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void setupClickHandlers() {
     handleDeleteAccountVisibility();
     Preference autoUpdatePreference = findPreference(SettingsConstants.CHECK_AUTO_UPDATE);
-    autoUpdatePreference.setTitle(
-        AptoideUtils.StringU.getFormattedString(R.string.setting_category_autoupdate_title,
-            getContext().getResources(), marketName));
-    autoUpdatePreference.setSummary(getContext().getResources()
-        .getString(R.string.setting_category_autoupdate_message));
+    autoUpdatePreference.setTitle(marketResourceFormatter.formatString(getContext(),
+        R.string.setting_category_autoupdate_title));
+    autoUpdatePreference.setSummary(marketResourceFormatter.formatString(getContext(),
+        R.string.setting_category_autoupdate_message));
 
     subscriptions.add(RxPreference.clicks(deleteAccount)
         .flatMapSingle(__ -> authenticationPersistence.getAuthentication())
@@ -303,15 +320,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
         .subscribe(
             clicked -> fragmentNavigator.navigateTo(SendFeedbackFragment.newInstance(), true)));
 
-    subscriptions.add(RxPreference.clicks(termsAndConditions)
-        .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
-                theme)));
+    if (settingsManager.showGDPR()) {
+      subscriptions.add(RxPreference.clicks(termsAndConditions)
+          .subscribe(clicked -> CustomTabsHelper.getInstance()
+              .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
+                  theme)));
 
-    subscriptions.add(RxPreference.clicks(privacyPolicy)
-        .subscribe(clicked -> CustomTabsHelper.getInstance()
-            .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
-                theme)));
+      subscriptions.add(RxPreference.clicks(privacyPolicy)
+          .subscribe(clicked -> CustomTabsHelper.getInstance()
+              .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
+                  theme)));
+    }
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
       final SwitchPreferenceCompat cb = (SwitchPreferenceCompat) preference;

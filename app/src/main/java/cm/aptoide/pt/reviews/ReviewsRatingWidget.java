@@ -22,7 +22,7 @@ public class ReviewsRatingWidget extends Widget<ReviewsRatingDisplayable> {
     ratingBarsLayout = new RatingBarsLayout(itemView);
   }
 
-  @Override public void bindView(ReviewsRatingDisplayable displayable) {
+  @Override public void bindView(ReviewsRatingDisplayable displayable, int position) {
     setupRating(displayable.getAppMeta());
   }
 

@@ -10,8 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.view.BackButton;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.BackButtonFragment;
+import javax.inject.Inject;
 
 /**
  * Created by jdandrade on 18-07-2016.
@@ -19,24 +20,16 @@ import cm.aptoide.pt.view.BackButtonFragment;
  */
 public class WizardPageTwoFragment extends BackButtonFragment {
 
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private ClickHandler clickHandler;
 
   public static Fragment newInstance() {
     return new WizardPageTwoFragment();
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
-    setText(view);
-    return view;
-  }
-
-  private void setText(View view) {
-    ((TextView) view.findViewById(R.id.title)).setText(R.string.wizard_title_viewpager_two);
-    ((TextView) view.findViewById(R.id.description)).setText(
-        R.string.wizard_sub_title_viewpager_two);
-    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -52,6 +45,21 @@ public class WizardPageTwoFragment extends BackButtonFragment {
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    final View view = inflater.inflate(R.layout.fragment_wizard_model_page, container, false);
+    setText(view);
+    return view;
+  }
+
+  private void setText(View view) {
+    ((TextView) view.findViewById(R.id.title)).setText(R.string.wizard_title_viewpager_two);
+    ((TextView) view.findViewById(R.id.description)).setText(
+        marketResourceFormatter.formatString(getContext(),
+            R.string.wizard_sub_title_viewpager_two));
+    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
   }
 
   @Override public void onDestroyView() {

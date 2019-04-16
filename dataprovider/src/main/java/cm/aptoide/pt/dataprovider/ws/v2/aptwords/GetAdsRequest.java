@@ -43,6 +43,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
   private boolean mature;
   private ConnectivityManager connectivityManager;
   private Resources resources;
+  private String groupPackageName;
 
   private GetAdsRequest(String clientUniqueId, boolean googlePlayServicesAvailable, String oemid,
       boolean mature, Converter.Factory converterFactory, OkHttpClient httpClient, String q,
@@ -127,6 +128,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
             resources, versionCodeProvider);
 
     getAdsRequest.setRepo(storeName);
+    getAdsRequest.setGroupPackageName(packageName);
 
     return getAdsRequest;
   }
@@ -164,6 +166,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
 
     getAdsRequest.setExcludedPackage(excludedPackage);
     getAdsRequest.setKeyword(AptoideUtils.StringU.join(keywords, ",") + "," + "__null__");
+    getAdsRequest.setGroupPackageName(excludedPackage);
 
     return getAdsRequest;
   }
@@ -316,6 +319,14 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
     this.resources = resources;
   }
 
+  private String getGroupPackageName() {
+    return groupPackageName;
+  }
+
+  private void setGroupPackageName(String groupPackageName) {
+    this.groupPackageName = groupPackageName;
+  }
+
   public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
     return versionCodeProvider;
   }
@@ -334,6 +345,7 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
     parameters.put("keywords", keyword);
     parameters.put("oem_id", oemid);
     parameters.put("country", forcedCountry);
+    parameters.put("group_package_name", groupPackageName);
 
     String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
     if (!TextUtils.isEmpty(forceCountry)) {

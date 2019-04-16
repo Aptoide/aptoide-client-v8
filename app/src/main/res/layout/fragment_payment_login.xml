@@ -299,14 +299,19 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:orientation="horizontal"
+        android:padding="10dp"
         android:weightSum="2"
         >
 
       <Button
           android:id="@+id/fragment_payment_login_join_button"
           android:layout_width="0dp"
+          android:layout_gravity="center_horizontal"
           android:layout_weight="1"
-          tools:text="Join Aptoide"
+          android:ellipsize="end"
+          android:padding="10dp"
+          android:singleLine="true"
+          android:text="@string/onboarding_button_join_us"
           style="@style/Aptoide.Button.Ghost"
           />
       <Button
@@ -330,6 +335,7 @@
           android:layout_marginTop="8dp"
           android:paddingBottom="8dp"
           android:paddingTop="14dp"
+          android:visibility="gone"
           />
       <TextView
           android:id="@+id/terms_and_conditions"

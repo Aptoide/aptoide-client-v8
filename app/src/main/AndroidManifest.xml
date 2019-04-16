@@ -38,7 +38,13 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
   <uses-sdk
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments, com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy, com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner, com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video, com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk, com.flurry.android.analytics.sdk"/>
+      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments,
+      com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy,
+      com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
+      com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial, com.mopub.mobileads.native_video,
+      com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk,
+      com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub, com.appnext.appnextsdkmopubbanners,
+      com.appnext.appnextsdk.API.mediation.MoPub"/>
 
   <application
       android:allowBackup="false"
@@ -101,16 +107,6 @@
         android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
 
     <activity
-        android:name="com.adcolony.sdk.AdColonyInterstitialActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:hardwareAccelerated="true"/>
-
-    <activity
-        android:name="com.adcolony.sdk.AdColonyAdViewActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:hardwareAccelerated="true"/>
-
-    <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="true"
@@ -130,23 +126,6 @@
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
-
-    <activity
-        android:name="com.tapjoy.TJAdUnitActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
-    <activity
-        android:name="com.tapjoy.mraid.view.ActionHandler"
-        android:configChanges="orientation|keyboardHidden|screenSize"/>
-    <activity
-        android:name="com.tapjoy.mraid.view.Browser"
-        android:configChanges="orientation|keyboardHidden|screenSize"/>
-    <activity
-        android:name="com.tapjoy.TJContentActivity"
-        android:configChanges="orientation|keyboardHidden|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
     <activity
         android:name=".view.OpenGLES20Activity"
@@ -188,6 +167,18 @@
     <meta-data
         android:name="applovin.sdk.key"
         android:value="${appLovinApiKey}"/>
+
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version"/>
+
+    <activity
+        android:name="com.inmobi.rendering.InMobiAdActivity"
+        android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout"
+        android:hardwareAccelerated="true"
+        android:resizeableActivity="false"
+        android:theme="@android:style/Theme.NoTitleBar"
+        tools:ignore="UnusedAttribute"/>
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"

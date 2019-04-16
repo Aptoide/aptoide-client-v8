@@ -30,6 +30,8 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -46,8 +48,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationItem;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -60,6 +60,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -90,6 +91,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AppNavigator appNavigator;
   @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -221,7 +223,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     converterFactory = WebService.getDefaultConverter();
     sharedPreferences = application.getDefaultSharedPreferences();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
-    shareStoreHelper = new ShareStoreHelper(getActivity(), marketName);
+    shareStoreHelper = new ShareStoreHelper(getActivity(), marketResourceFormatter);
 
     if (hasSearchFromStoreFragment()) {
       searchAnalytics = new SearchAnalytics(analyticsManager, navigationTracker);

@@ -22,6 +22,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -108,6 +109,10 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
+import com.mopub.common.logging.MoPubLog;
+import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
+import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -177,6 +182,7 @@ public abstract class AptoideApplication extends Application {
   @Inject SettingsManager settingsManager;
   @Inject InstallManager installManager;
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
+  @Inject AdsUserPropertyManager adsUserPropertyManager;
   private LeakTool leakTool;
   private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
@@ -340,11 +346,32 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+
+    adsUserPropertyManager.start();
   }
 
-  private void initializeMoPub(Context context, String moPubKey) {
-    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(moPubKey).build();
+  private void initializeMoPub(Context context, String adUnitPlacementId) {
+    SdkConfiguration sdkConfiguration =
+        new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
+            AppLovinBaseAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+            .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
+                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            .withLogLevel(MoPubLog.LogLevel.DEBUG)
+            .build();
+
     MoPub.initializeSdk(context, sdkConfiguration, null);
+  }
+
+  @NonNull
+  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
+    Map<String, String> mediationNetworkConfiguration = new HashMap<>();
+    mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
+    return mediationNetworkConfiguration;
   }
 
   public ApplicationComponent getApplicationComponent() {

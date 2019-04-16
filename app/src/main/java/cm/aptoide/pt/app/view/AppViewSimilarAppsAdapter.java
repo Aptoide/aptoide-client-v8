@@ -19,11 +19,11 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
   private List<AppViewSimilarApp> similarApps;
   private DecimalFormat oneDecimalFormater;
   private PublishSubject<SimilarAppClickEvent> appClicked;
-  private String type;
+  private SimilarAppType type;
 
   public AppViewSimilarAppsAdapter(List<AppViewSimilarApp> similarApps,
       DecimalFormat oneDecimalFormater, PublishSubject<SimilarAppClickEvent> appClicked,
-      String type) {
+      SimilarAppType type) {
     this.similarApps = similarApps;
     this.oneDecimalFormater = oneDecimalFormater;
     this.appClicked = appClicked;
@@ -55,5 +55,20 @@ public class AppViewSimilarAppsAdapter extends RecyclerView.Adapter<AppViewSimil
   public void update(List<AppViewSimilarApp> apps) {
     similarApps = apps;
     notifyDataSetChanged();
+  }
+
+  public enum SimilarAppType {
+
+    APPC_SIMILAR_APPS("appc_similar_apps"), SIMILAR_APPS("similar_apps");
+
+    private final String description;
+
+    SimilarAppType(String description) {
+      this.description = description;
+    }
+
+    public String getDescription() {
+      return description;
+    }
   }
 }

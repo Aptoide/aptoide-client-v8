@@ -21,7 +21,7 @@ public class ProgressBarWidget extends Widget<ProgressBarDisplayable> {
 
   }
 
-  @Override public void bindView(ProgressBarDisplayable displayable) {
+  @Override public void bindView(ProgressBarDisplayable displayable, int position) {
 
   }
 }

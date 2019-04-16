@@ -36,14 +36,4 @@ public class MoPubBannerAdExperiment {
           }
         });
   }
-
-  public Single<Boolean> recordAdImpression() {
-    return abTestManager.recordImpression(EXPERIMENT_ID)
-        .toSingle();
-  }
-
-  public Single<Boolean> recordAdClick() {
-    return abTestManager.recordAction(EXPERIMENT_ID)
-        .toSingle();
-  }
 }

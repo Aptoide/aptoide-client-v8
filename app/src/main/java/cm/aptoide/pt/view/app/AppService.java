@@ -35,6 +35,7 @@ import rx.Single;
  */
 
 public class AppService {
+  private static final int MATURE_APP_RATING = 18;
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
@@ -230,7 +231,10 @@ public class AppService {
                   .isPaid(), paidApp.getPath()
                   .getStringPath(), paidApp.getPayment()
                   .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-                  app.hasBilling(), app.hasAdvertising(), app.getBdsFlags()));
+                  app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
+                  .getRating() == MATURE_APP_RATING, app.getFile()
+                  .getSignature()
+                  .getSha1()));
         });
       }
 
@@ -242,7 +246,10 @@ public class AppService {
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
               appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
               .getW(), app.isPaid(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-              app.hasBilling(), app.hasAdvertising(), app.getBdsFlags());
+              app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
+              .getRating() == MATURE_APP_RATING, app.getFile()
+              .getSignature()
+              .getSha1());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

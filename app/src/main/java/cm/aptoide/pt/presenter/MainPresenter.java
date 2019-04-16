@@ -8,9 +8,9 @@ package cm.aptoide.pt.presenter;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BottomNavigationNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -21,6 +21,8 @@ import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.splashscreen.SplashScreenManager;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -50,6 +52,8 @@ public class MainPresenter implements Presenter {
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
   private final AutoUpdateManager autoUpdateManager;
+  private final SplashScreenManager splashScreenManager;
+  private final SplashScreenNavigator splashScreenNavigator;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -59,7 +63,8 @@ public class MainPresenter implements Presenter {
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
-      AutoUpdateManager autoUpdateManager) {
+      AutoUpdateManager autoUpdateManager, SplashScreenManager splashScreenManager,
+      SplashScreenNavigator splashScreenNavigator) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -79,6 +84,8 @@ public class MainPresenter implements Presenter {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
     this.autoUpdateManager = autoUpdateManager;
+    this.splashScreenManager = splashScreenManager;
+    this.splashScreenNavigator = splashScreenNavigator;
   }
 
   @Override public void present() {
@@ -192,6 +199,10 @@ public class MainPresenter implements Presenter {
       if (SecurePreferences.isWizardAvailable(securePreferences)) {
         showWizard();
         SecurePreferences.setWizardAvailable(false, securePreferences);
+      } else {
+        if (splashScreenManager.shouldShowSplashScreen()) {
+          splashScreenNavigator.navigateToSplashScreen();
+        }
       }
     }
   }

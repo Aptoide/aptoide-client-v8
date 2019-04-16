@@ -24,7 +24,7 @@ public class FooterRowWidget extends Widget<FooterRowDisplayable> {
     title = (TextView) itemView.findViewById(R.id.title);
   }
 
-  @Override public void bindView(FooterRowDisplayable displayable) {
+  @Override public void bindView(FooterRowDisplayable displayable, int position) {
     String pojo = displayable.getPojo();
     title.setText(pojo);
     title.setVisibility(View.VISIBLE);

@@ -30,7 +30,8 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   public static OAuth2AuthenticationRequest of(String username, String password, String mode,
       @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId,
+      String authMode) {
 
     final BaseBody body = new BaseBody();
 
@@ -45,18 +46,18 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
           body.put("password", password);
           break;
         case "GOOGLE":
-          body.put("authMode", "google");
+          body.put("authMode", authMode);
           body.put("oauthUserName", nameForGoogle);
           body.put("oauthToken", password);
           break;
         case "FACEBOOK":
-          body.put("authMode", "facebook");
+          body.put("authMode", authMode);
           body.put("oauthToken", password);
           break;
         case "ABAN":
           body.put("oauthUserName", username);
           body.put("oauthToken", password);
-          body.put("authMode", "aban");
+          body.put("authMode", authMode);
           body.put("oauthUser", nameForGoogle);
           break;
       }

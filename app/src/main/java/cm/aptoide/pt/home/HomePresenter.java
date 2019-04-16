@@ -2,7 +2,6 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -49,8 +48,6 @@ public class HomePresenter implements Presenter {
   @Override public void present() {
     onCreateLoadBundles();
 
-    loadUserImage();
-
     handleAppClick();
 
     handleRecommendedAppClick();
@@ -67,8 +64,6 @@ public class HomePresenter implements Presenter {
 
     handleRetryClick();
 
-    handleUserImageClick();
-
     handleBundleScrolledRight();
 
     handleKnowMoreClick();
@@ -77,39 +72,24 @@ public class HomePresenter implements Presenter {
 
     handleActionBundlesImpression();
 
-    handleLoggedInAcceptTermsAndConditions();
-
-    handleTermsAndConditionsContinueClicked();
-
-    handleTermsAndConditionsLogOutClicked();
-
-    handleClickOnTermsAndConditions();
-
-    handleClickOnPrivacyPolicy();
-
     handleEditorialCardClick();
-
-    handlePromotionsClick();
-
-    checkForPromotionApps();
-
-    handleClickOnPromotionsDialogContinue();
-
-    handleClickOnPromotionsDialogCancel();
+    handleInstallWalletOfferClick();
   }
 
-  private void handlePromotionsClick() {
+  private void handleInstallWalletOfferClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.promotionsClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> {
-              homeAnalytics.sendPromotionsIconClickEvent();
-              homeNavigator.navigateToPromotions();
-            })
-            .retry())
+        .flatMap(created -> view.walletOfferCardInstallWalletClick())
+        .observeOn(viewScheduler)
+        .doOnNext(event -> homeAnalytics.sendActionItemTapOnCardInteractEvent(event.getBundle()
+            .getTag(), event.getBundlePosition()))
+        .map(HomeEvent::getBundle)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .doOnNext(bundle -> view.sendDeeplinkToWalletAppView(bundle.getActionItem()
+            .getUrl()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
+        .subscribe(lifecycleEvent -> {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
@@ -123,8 +103,10 @@ public class HomePresenter implements Presenter {
         .doOnNext(homeEvent -> {
           if (homeEvent.getBundle()
               .getType()
-              .equals(HomeBundle.BundleType.INFO_BUNDLE)) {
-            homeAnalytics.sendAppcImpressionEvent(homeEvent.getBundle()
+              .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
+              .getType()
+              .equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
+            homeAnalytics.sendActionItemImpressionEvent(homeEvent.getBundle()
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
@@ -135,7 +117,9 @@ public class HomePresenter implements Presenter {
         })
         .filter(homeEvent -> homeEvent.getBundle()
             .getType()
-            .equals(HomeBundle.BundleType.INFO_BUNDLE))
+            .equals(HomeBundle.BundleType.INFO_BUNDLE) || homeEvent.getBundle()
+            .getType()
+            .equals(HomeBundle.BundleType.WALLET_ADS_OFFER))
         .map(HomeEvent::getBundle)
         .cast(ActionBundle.class)
         .flatMapCompletable(home::actionBundleImpression)
@@ -152,7 +136,7 @@ public class HomePresenter implements Presenter {
         .flatMap(created -> view.infoBundleKnowMoreClicked())
         .observeOn(viewScheduler)
         .doOnNext(homeEvent -> {
-          homeAnalytics.sendAppcKnowMoreInteractEvent(homeEvent.getBundle()
+          homeAnalytics.sendActionItemTapOnCardInteractEvent(homeEvent.getBundle()
               .getTag(), homeEvent.getBundlePosition());
           homeNavigator.navigateToAppCoinsInformationView();
         })
@@ -168,8 +152,9 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.dismissBundleClicked())
         .filter(homeEvent -> homeEvent.getBundle() instanceof ActionBundle)
-        .doOnNext(homeEvent -> homeAnalytics.sendAppcDismissInteractEvent(homeEvent.getBundle()
-            .getTag(), homeEvent.getBundlePosition()))
+        .doOnNext(homeEvent -> homeAnalytics.sendActionItemDismissInteractEvent(
+            homeEvent.getBundle()
+                .getTag(), homeEvent.getBundlePosition()))
         .flatMap(homeEvent -> home.remove((ActionBundle) homeEvent.getBundle())
             .andThen(Observable.just(homeEvent)))
         .observeOn(viewScheduler)
@@ -456,180 +441,5 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void loadUserImage() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> accountManager.accountStatus())
-        .flatMap(account -> getUserAvatar(account))
-        .observeOn(viewScheduler)
-        .doOnNext(userAvatarUrl -> {
-          if (userAvatarUrl != null) {
-            view.setUserImage(userAvatarUrl);
-          } else {
-            view.setDefaultUserImage();
-          }
-          view.showAvatar();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleUserImageClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.imageClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> homeNavigator.navigateToMyAccount())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleLoggedInAcceptTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> accountManager.accountStatus()
-            .first())
-        .filter(Account::isLoggedIn)
-        .filter(
-            account -> !(account.acceptedPrivacyPolicy() && account.acceptedTermsAndConditions()))
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showTermsAndConditionsDialog())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleTermsAndConditionsContinueClicked() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("continue"))
-        .flatMapCompletable(__ -> accountManager.updateTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleTermsAndConditionsLogOutClicked() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("logout"))
-        .flatMapCompletable(__ -> accountManager.logout())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleClickOnTermsAndConditions() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("terms"))
-        .doOnNext(__ -> homeNavigator.navigateToTermsAndConditions())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
-        });
-  }
-
-  private void handleClickOnPrivacyPolicy() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.gdprDialogClicked())
-        .filter(action -> action.equals("privacy"))
-        .doOnNext(__ -> homeNavigator.navigateToPrivacyPolicy())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
-        });
-  }
-
-  private void checkForPromotionApps() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMapSingle(__ -> home.hasPromotionApps())
-        .filter(HomePromotionsWrapper::hasPromotions)
-        .observeOn(viewScheduler)
-        .doOnNext(apps -> {
-          view.showPromotionsHomeIcon(apps);
-          homeAnalytics.sendPromotionsImpressionEvent();
-          if (apps.getPromotions() > 0 && apps.getTotalUnclaimedAppcValue() > 0) {
-            if (apps.getPromotions() < 10) {
-              view.setPromotionsTickerWithValue(apps.getPromotions());
-            } else {
-              view.setEllipsizedPromotionsTicker();
-            }
-          }
-        })
-        .filter(HomePromotionsWrapper::shouldShowDialog)
-        .doOnNext(apps -> {
-          homeAnalytics.sendPromotionsDialogImpressionEvent();
-          home.setPromotionsDialogShown();
-          view.showPromotionsHomeDialog(apps);
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          view.hidePromotionsIcon();
-        });
-  }
-
-  private void handleClickOnPromotionsDialogContinue() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsHomeDialogClicked())
-        .filter(action -> action.equals("navigate"))
-        .doOnNext(__ -> {
-          homeAnalytics.sendPromotionsDialogNavigateEvent();
-          view.dismissPromotionsDialog();
-          homeNavigator.navigateToPromotions();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private void handleClickOnPromotionsDialogCancel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.promotionsHomeDialogClicked())
-        .filter(action -> action.equals("cancel"))
-        .doOnNext(__ -> {
-          homeAnalytics.sendPromotionsDialogDismissEvent();
-          view.dismissPromotionsDialog();
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  private Observable<String> getUserAvatar(Account account) {
-    String userAvatarUrl = null;
-    if (account != null && account.isLoggedIn()) {
-      userAvatarUrl = account.getAvatar();
-    }
-    return Observable.just(userAvatarUrl);
   }
 }

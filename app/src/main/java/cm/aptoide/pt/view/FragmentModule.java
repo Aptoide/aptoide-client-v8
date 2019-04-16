@@ -4,13 +4,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -32,11 +31,13 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
@@ -52,14 +53,17 @@ import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
 import cm.aptoide.pt.appview.PreferencesManager;
-import cm.aptoide.pt.billing.view.login.PaymentLoginPresenter;
+import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
+import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -68,28 +72,49 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorialList.EditorialListAnalytics;
+import cm.aptoide.pt.editorialList.EditorialListManager;
+import cm.aptoide.pt.editorialList.EditorialListNavigator;
+import cm.aptoide.pt.editorialList.EditorialListPresenter;
+import cm.aptoide.pt.editorialList.EditorialListRepository;
+import cm.aptoide.pt.editorialList.EditorialListService;
+import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BottomNavigationMapper;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.HomeContainerNavigator;
+import cm.aptoide.pt.home.HomeContainerPresenter;
+import cm.aptoide.pt.home.HomeContainerView;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.home.HomeView;
+import cm.aptoide.pt.home.apps.AppMapper;
+import cm.aptoide.pt.home.apps.AppsFragmentView;
+import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
+import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.navigator.FragmentResultNavigator;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
-import cm.aptoide.pt.presenter.LoginSignUpCredentialsPresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
+import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogPresenter;
+import cm.aptoide.pt.promotions.ClaimPromotionDialogView;
+import cm.aptoide.pt.promotions.ClaimPromotionsManager;
+import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -104,23 +129,30 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.timeline.SocialRepository;
+import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
+import cm.aptoide.pt.view.splashscreen.SplashScreenView;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
+import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 @Module public class FragmentModule {
 
@@ -139,15 +171,22 @@ import rx.schedulers.Schedulers;
     this.packageName = packageName;
   }
 
-  @FragmentScope @Provides LoginSignUpCredentialsPresenter provideLoginSignUpPresenter(
+  @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
-    return new LoginSignUpCredentialsPresenter((LoginSignUpCredentialsView) fragment,
+    return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
         accountManager, CrashReport.getInstance(),
         arguments.getBoolean("dismiss_to_navigate_to_main_view"),
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides @Named("home-fragment-navigator")
+  FragmentNavigator provideHomeFragmentNavigator(Map<Integer, Result> fragmentResultMap,
+      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
+    return new FragmentResultNavigator(fragmentManager, R.id.main_content, android.R.anim.fade_in,
+        android.R.anim.fade_out, fragmentResultMap, fragmentResultRelay);
   }
 
   @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
@@ -209,6 +248,11 @@ import rx.schedulers.Schedulers;
         bottomNavigationMapper, Schedulers.io());
   }
 
+  @FragmentScope @Provides SplashScreenPresenter providesSplashScreenPresenter(
+      SplashScreenNavigator splashScreenNavigator) {
+    return new SplashScreenPresenter((SplashScreenView) fragment, splashScreenNavigator);
+  }
+
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
       HomeAnalytics homeAnalytics) {
@@ -216,21 +260,26 @@ import rx.schedulers.Schedulers;
         CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
   }
 
-  @FragmentScope @Provides HomeNavigator providesHomeNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides HomeNavigator providesHomeNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
       @Named("aptoide-theme") String theme) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
   }
 
+  @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
+      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new HomeContainerNavigator(fragmentNavigator);
+  }
+
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, AdsManager adsManager,
-      PromotionsManager promotionsManager,
-      PromotionsPreferencesManager promotionsPreferencesManager,
-      MoPubBannerAdExperiment bannerAdExperiment, BannerRepository bannerRepository,
-      MoPubNativeAdExperiment nativeAdExperiment) {
-    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerAdExperiment,
-        nativeAdExperiment, bannerRepository, promotionsPreferencesManager);
+      ImpressionManager impressionManager, PromotionsManager promotionsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
+      MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
+      @Named("homePromotionsId") String promotionsId) {
+    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
+        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -240,7 +289,8 @@ import rx.schedulers.Schedulers;
   }
 
   @FragmentScope @Provides MyStoresNavigator providesMyStoreNavigator(
-      FragmentNavigator fragmentNavigator, BottomNavigationMapper bottomNavigationMapper) {
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MyStoresNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper);
   }
@@ -250,7 +300,8 @@ import rx.schedulers.Schedulers;
     return new HomeAnalytics(navigationTracker, analyticsManager);
   }
 
-  @FragmentScope @Provides AppsNavigator providesAppsNavigator(FragmentNavigator fragmentNavigator,
+  @FragmentScope @Provides AppsNavigator providesAppsNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator) {
     return new AppsNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
         bottomNavigationMapper, appNavigator);
@@ -275,6 +326,11 @@ import rx.schedulers.Schedulers;
         okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
+  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository) {
+    return new AppcMigrationManager(repository);
+  }
+
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -284,27 +340,28 @@ import rx.schedulers.Schedulers;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       Resources resources, WindowManager windowManager, SocialRepository socialRepository,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment) {
+      MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
+      @Named("wallet-offer-promotion-id") String promotionId,
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, preferencesManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), socialRepository,
-        marketName, appCoinsManager, moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment);
+        appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
+        appViewAnalytics, notificationAnalytics, installAnalytics,
+        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
+        socialRepository, marketName, appCoinsManager, promotionsManager, promotionId,
+        installedRepository, appcMigrationManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
-      AppViewManager appViewManager, AptoideAccountManager accountManager,
-      CrashReport crashReport) {
+      AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
+      PromotionsNavigator promotionsNavigator,
+      @Named("wallet-offer-promotion-id") String promotionId) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), promotionsNavigator, promotionId);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -347,11 +404,11 @@ import rx.schedulers.Schedulers;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides PaymentLoginPresenter providesPaymentLoginPresenter(
+  @FragmentScope @Provides PaymentLoginFlavorPresenter providesPaymentLoginPresenter(
       AccountNavigator accountNavigator, AptoideAccountManager accountManager,
       CrashReport crashReport, AccountErrorMapper accountErrorMapper,
       ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
-    return new PaymentLoginPresenter((PaymentLoginView) fragment,
+    return new PaymentLoginFlavorPresenter((PaymentLoginView) fragment,
         arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
         Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
         accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
@@ -366,11 +423,6 @@ import rx.schedulers.Schedulers;
         AndroidSchedulers.mainThread());
   }
 
-  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
-      EditorialService editorialService) {
-    return new EditorialRepository(editorialService);
-  }
-
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
       PreferencesManager preferencesManager, DownloadFactory downloadFactory,
@@ -379,6 +431,11 @@ import rx.schedulers.Schedulers;
     return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
         installManager, preferencesManager, downloadFactory, downloadStateParser,
         notificationAnalytics, installAnalytics, editorialAnalytics);
+  }
+
+  @FragmentScope @Provides EditorialRepository providesEditorialRepository(
+      EditorialService editorialService) {
+    return new EditorialRepository(editorialService);
   }
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
@@ -391,14 +448,95 @@ import rx.schedulers.Schedulers;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsId) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsId);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
       DownloadStateParser downloadStateParser) {
     return new PromotionViewAppMapper(downloadStateParser);
+  }
+
+  @FragmentScope @Provides ClaimPromotionDialogPresenter providesClaimPromotionDialogPresenter(
+      ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
+      ClaimPromotionsNavigator navigator) {
+    return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
+        new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
+        promotionsAnalytics, navigator, arguments.getString("promotion_id", "default"));
+  }
+
+  @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
+      EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
+      EditorialListNavigator editorialListNavigator,
+      EditorialListAnalytics editorialListAnalytics) {
+    return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
+        aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
+        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides EditorialListManager providesEditorialListManager(
+      EditorialListRepository editorialListRepository) {
+    return new EditorialListManager(editorialListRepository);
+  }
+
+  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
+      EditorialListService editorialListService) {
+    return new EditorialListRepository(editorialListService);
+  }
+
+  @FragmentScope @Provides EditorialListService providesEditorialService(
+      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+        WebService.getDefaultConverter(), sharedPreferences, 10);
+  }
+
+  @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new EditorialListNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
+      NavigationTracker navigationTracker, AnalyticsManager analyticsManager) {
+    return new EditorialListAnalytics(navigationTracker, analyticsManager);
+  }
+
+  @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
+      DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
+      NavigationTracker navigationTracker) {
+    return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
+        arguments.getBoolean("fromHome"));
+  }
+
+  @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
+      CrashReport crashReport, AptoideAccountManager accountManager,
+      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
+      HomeAnalytics homeAnalytics, Home home) {
+    return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
+        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+  }
+
+  @FragmentScope @Provides AppMapper providesAppMapper() {
+    return new AppMapper();
+  }
+
+  @FragmentScope @Provides AppsManager providesAppsManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+    return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
+        installAnalytics, updatesAnalytics, fragment.getContext()
+        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager);
+  }
+
+  @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
+      AptoideAccountManager aptoideAccountManager, AppsNavigator appsNavigator) {
+    return new AppsPresenter(((AppsFragmentView) fragment), appsManager,
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), aptoideAccountManager,
+        appsNavigator);
   }
 }

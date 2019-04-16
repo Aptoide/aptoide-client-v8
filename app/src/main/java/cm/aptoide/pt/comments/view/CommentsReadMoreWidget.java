@@ -35,7 +35,7 @@ public class CommentsReadMoreWidget extends Widget<CommentsReadMoreDisplayable> 
     readMoreButton = (TextView) itemView.findViewById(R.id.read_more_button);
   }
 
-  @Override public void bindView(CommentsReadMoreDisplayable displayable) {
+  @Override public void bindView(CommentsReadMoreDisplayable displayable, int position) {
     final BodyInterceptor<BaseBody> baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     final OkHttpClient httpClient =

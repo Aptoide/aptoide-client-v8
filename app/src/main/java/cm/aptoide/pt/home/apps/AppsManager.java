@@ -3,6 +3,8 @@ package cm.aptoide.pt.home.apps;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
@@ -39,11 +41,12 @@ public class AppsManager {
   private final PackageManager packageManager;
   private final Context context;
   private final DownloadFactory downloadFactory;
+  private final MoPubAdsManager moPubAdsManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
-      DownloadFactory downloadFactory) {
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -53,6 +56,7 @@ public class AppsManager {
     this.packageManager = packageManager;
     this.context = context;
     this.downloadFactory = downloadFactory;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
@@ -126,24 +130,28 @@ public class AppsManager {
 
   public Completable resumeDownload(App app) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(subscription -> setupDownloadEvents(download)));
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupDownloadEvents(download, status))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
-  private void setupDownloadEvents(Download download) {
+  private void setupDownloadEvents(Download download,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()));
   }
 
-  private void setupUpdateEvents(Download download, Origin origin) {
+  private void setupUpdateEvents(Download download, Origin origin,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin);
   }
@@ -187,8 +195,10 @@ public class AppsManager {
           Download value = downloadFactory.create(update);
           return Observable.just(value);
         })
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupUpdateEvents(download, Origin.UPDATE)))
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
@@ -204,14 +214,15 @@ public class AppsManager {
     return updatesManager.getAllUpdates()
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
-        .flatMapIterable(updatesList -> updatesList)
-        .flatMap(update -> {
-          Download download = downloadFactory.create(update);
-          setupUpdateEvents(download, Origin.UPDATE_ALL);
-          return Observable.just(download);
-        })
-        .toList()
-        .flatMap(downloads -> installManager.startInstalls(downloads))
+        .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
+            .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
+                .map(showAds1 -> updates)
+                .flatMapIterable(updatesList -> updatesList)
+                .flatMap(update -> Observable.just(downloadFactory.create(update))
+                    .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
+                        offerResponseStatus))
+                    .toList()
+                    .flatMap(installManager::startInstalls))))
         .toCompletable();
   }
 

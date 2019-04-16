@@ -41,7 +41,7 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
     following = (TextView) itemView.findViewById(R.id.following);
   }
 
-  @Override public void bindView(CreateStoreDisplayable displayable) {
+  @Override public void bindView(CreateStoreDisplayable displayable, int position) {
     SpannableFactory spannableFactory = new SpannableFactory();
     String followersText = String.format(getContext().getString(R.string.storetab_short_followers),
         String.valueOf(displayable.getFollowers()));

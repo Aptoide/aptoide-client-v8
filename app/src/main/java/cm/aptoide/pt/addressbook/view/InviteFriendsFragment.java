@@ -15,6 +15,7 @@ import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.presenter.InviteFriendsPresenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.UIComponentFragment;
 import com.jakewharton.rxbinding.view.RxView;
@@ -31,6 +32,7 @@ public class InviteFriendsFragment extends UIComponentFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject @Named("aptoide-theme") String theme;
   private InviteFriendsContract.UserActionsListener mActionsListener;
   private OpenMode openMode;
@@ -60,8 +62,9 @@ public class InviteFriendsFragment extends UIComponentFragment
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            getString(R.string.addressbook_data_about, marketName), theme), openMode,
-        new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
+            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            theme), openMode, new AddressBookAnalytics(analyticsManager, navigationTracker),
+        marketName);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -86,7 +89,8 @@ public class InviteFriendsFragment extends UIComponentFragment
         message.setText(getString(R.string.addressbook_insuccess_connection));
         break;
       case NO_FRIENDS:
-        message.setText(getString(R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
+        message.setText(marketResourceFormatter.formatString(getContext(),
+            R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
         break;
       case CONTACTS_PERMISSION_DENIAL:
         message.setText(R.string.addressbook_we_werent_able_to_connect_you);

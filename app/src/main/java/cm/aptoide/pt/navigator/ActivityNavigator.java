@@ -16,6 +16,9 @@ public interface ActivityNavigator {
 
   Observable<Result> navigateForResult(String action, Uri uri, int requestCode);
 
+  void navigateForResult(String action, Uri uri, int requestCode, String extraId,
+      String extraValue);
+
   Observable<Result> navigateForResultWithOutput(String action, Uri outputUri, int requestCode);
 
   void navigateTo(Class<? extends Activity> activityClass);

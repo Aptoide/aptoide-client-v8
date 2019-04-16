@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.view.MainActivity;
@@ -44,6 +45,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected StoreRepository storeRepository;
 
   protected Event.Type type;
+  protected HomeEvent.Type homeEventType;
   protected Event.Name name;
   protected Layout layout;
   protected String action;
@@ -60,7 +62,12 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
       StoreContext storeContext) {
-    Bundle args = buildBundle(event, title, storeTheme, tag, storeContext);
+    return newInstance(event, HomeEvent.Type.NO_OP, title, storeTheme, tag, storeContext);
+  }
+
+  public static Fragment newInstance(Event event, HomeEvent.Type type, String title,
+      String storeTheme, String tag, StoreContext storeContext) {
+    Bundle args = buildBundle(event, type, title, storeTheme, tag, storeContext);
     Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
@@ -71,9 +78,13 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @NonNull
-  protected static Bundle buildBundle(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext) {
+  protected static Bundle buildBundle(Event event, HomeEvent.Type homeEventType, String title,
+      String storeTheme, String tag, StoreContext storeContext) {
     Bundle args = new Bundle();
+
+    if (homeEventType != null) {
+      args.putString(BundleCons.HOME_EVENT_TYPE, homeEventType.toString());
+    }
 
     if (event.getType() != null) {
       args.putString(BundleCons.TYPE, event.getType()
@@ -121,6 +132,9 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void loadExtras(Bundle args) {
+    if (args.containsKey(BundleCons.HOME_EVENT_TYPE)) {
+      homeEventType = HomeEvent.Type.valueOf(args.getString(BundleCons.HOME_EVENT_TYPE));
+    }
     if (args.containsKey(BundleCons.TYPE)) {
       type = Event.Type.valueOf(args.getString(BundleCons.TYPE));
     }
@@ -221,6 +235,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   public static class BundleCons {
 
     public static final String TYPE = "type";
+    public static final String HOME_EVENT_TYPE = "HomeEventType";
     public static final String NAME = "name";
     public static final String TITLE = "title";
     public static final String ACTION = "action";
@@ -228,6 +243,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     public static final String LAYOUT = "layout";
     public static final String TAG = "tag";
     public static final String STORE_NAME = "store_name";
+    public static final String TOOLBAR = "toolbar";
     public static String STORE_CONTEXT = "Store_context";
   }
 }

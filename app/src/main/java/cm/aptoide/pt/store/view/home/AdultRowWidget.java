@@ -56,7 +56,7 @@ public class AdultRowWidget extends Widget<AdultRowDisplayable> {
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
   }
 
-  @Override public void bindView(final AdultRowDisplayable displayable) {
+  @Override public void bindView(final AdultRowDisplayable displayable, int position) {
     compositeSubscription.add(accountManager.pinRequired()
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(pinRequired -> {

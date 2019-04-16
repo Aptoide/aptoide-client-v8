@@ -13,10 +13,6 @@ public interface HomeView extends BundleView {
 
   Observable<EditorialHomeEvent> editorialCardClicked();
 
-  Observable<String> gdprDialogClicked();
-
-  Observable<String> promotionsHomeDialogClicked();
-
   Observable<HomeEvent> infoBundleKnowMoreClicked();
 
   void scrollToTop();
@@ -29,25 +25,9 @@ public interface HomeView extends BundleView {
 
   void hideBundle(int bundlePosition);
 
-  void showAvatar();
-
-  void setDefaultUserImage();
-
-  void showTermsAndConditionsDialog();
-
-  Observable<Void> promotionsClick();
-
-  void showPromotionsHomeDialog(HomePromotionsWrapper wrapper);
-
-  void showPromotionsHomeIcon(HomePromotionsWrapper apps);
-
-  void dismissPromotionsDialog();
-
-  void setPromotionsTickerWithValue(int value);
-
-  void setEllipsizedPromotionsTicker();
-
-  void hidePromotionsIcon();
-
   void setAdsTest(boolean showNatives);
+
+  Observable<HomeEvent> walletOfferCardInstallWalletClick();
+
+  void sendDeeplinkToWalletAppView(String url);
 }

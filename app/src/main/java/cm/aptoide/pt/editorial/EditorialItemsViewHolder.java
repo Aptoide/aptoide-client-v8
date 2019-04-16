@@ -64,6 +64,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private RelativeLayout cardInfoLayout;
   private int currentMediaPosition;
   private boolean mediaDescriptionVisible;
+  private DownloadModel.Action action;
 
   public EditorialItemsViewHolder(View view, DecimalFormat oneDecimalFormat,
       PublishSubject<EditorialEvent> uiEventListener,
@@ -286,14 +287,15 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   }
 
   public void setPlaceHolderDefaultStateInfo(DownloadModel downloadModel, String update,
-      String install, String open) {
+      String install, String open, String downgrade) {
     downloadInfoLayout.setVisibility(View.GONE);
     cardInfoLayout.setVisibility(View.VISIBLE);
-    setButtonText(downloadModel, update, install, open);
+    setButtonText(downloadModel, update, install, open, downgrade);
   }
 
-  private void setButtonText(DownloadModel model, String update, String install, String open) {
-    DownloadModel.Action action = model.getAction();
+  private void setButtonText(DownloadModel model, String update, String install, String open,
+      String downgrade) {
+    action = model.getAction();
     switch (action) {
       case UPDATE:
         appCardButton.setText(update);
@@ -303,6 +305,9 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
         break;
       case OPEN:
         appCardButton.setText(open);
+        break;
+      case DOWNGRADE:
+        appCardButton.setText(downgrade);
         break;
     }
   }
@@ -365,7 +370,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             verName, verCode, path, pathAlt, obb)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb)));
+            verName, verCode, path, pathAlt, obb, action)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

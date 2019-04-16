@@ -1,34 +1,42 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
+import android.content.Intent;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Scheduler;
 import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
-
+  private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
+  private final String promotionId;
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
   private ClaimPromotionDialogView view;
   private PromotionsAnalytics promotionsAnalytics;
   private ClaimPromotionsNavigator navigator;
+  private boolean shouldSendIntent;
 
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator) {
+      ClaimPromotionsNavigator navigator, String promotionId) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
     this.navigator = navigator;
+    this.promotionId = promotionId;
+    this.shouldSendIntent = true;
   }
 
   @Override public void present() {
+    handleOnResumeEvent();
+    handleOnActivityResult();
     handleFindAddressClick();
     handleContinueClick();
     handleRefreshCaptcha();
@@ -44,16 +52,64 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.clear();
   }
 
-  private void handleFindAddressClick() {
-    subscriptions.add(view.getWalletClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendClickOnWalletDialogFindWallet(packageName);
-          view.sendWalletIntent();
+  private void handleOnResumeEvent() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.RESUME)
+        .doOnNext(__ -> {
+          if (!shouldSendIntent) {
+            view.fetchWalletAddressByClipboard();
+          }
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
-          view.showGenericError();
-        }));
+        });
+  }
+
+  private void handleOnActivityResult() {
+    view.getActivityResults()
+        .doOnNext(result -> {
+          if (result.getRequestCode() != 123) return;
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent resultIntent = result.getData();
+            if (resultIntent != null && resultIntent.getExtras() != null) {
+              view.updateWalletText(resultIntent.getExtras()
+                  .getString(WALLET_ADDRESS));
+            } else {
+              shouldSendIntent = false;
+              view.sendWalletIntent();
+            }
+          } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
+            shouldSendIntent = false;
+            view.sendWalletIntent();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          shouldSendIntent = false;
+          view.sendWalletIntent();
+        });
+  }
+
+  private void handleFindAddressClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.getWalletClick()
+            .doOnNext(packageName -> {
+              promotionsAnalytics.sendClickOnWalletDialogFindWallet(packageName);
+              view.fetchWalletAddressByIntent();
+            })
+            .doOnError(___ -> {
+              shouldSendIntent = false;
+              view.sendWalletIntent();
+            })
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+        });
   }
 
   private void handleContinueClick() {
@@ -97,7 +153,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           view.showLoading();
         })
         .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
-            wrapper.getCaptcha()))
+            wrapper.getCaptcha(), promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()

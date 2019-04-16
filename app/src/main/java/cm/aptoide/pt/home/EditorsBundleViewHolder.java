@@ -48,6 +48,7 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     });
     graphicsList.setLayoutManager(layoutManager);
     graphicsList.setAdapter(graphicAppsAdapter);
+    graphicsList.setNestedScrollingEnabled(false);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

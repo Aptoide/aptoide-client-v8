@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:visibility="gone"
         tools:background="@color/grey_fog_normal"
         tools:visibility="visible"
@@ -33,7 +33,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:adjustViewBounds="true"
-          android:scaleType="fitXY"
+          android:scaleType="centerCrop"
           android:src="@color/black_87_alpha"
           android:tint="@color/semi_transparent_black"
           />
@@ -43,7 +43,7 @@
           android:layout_height="50dp"
           android:layout_gravity="center"
           android:adjustViewBounds="true"
-          android:scaleType="fitXY"
+          android:scaleType="centerCrop"
           android:src="@drawable/btn_movie_play_normal"
           />
     </FrameLayout>

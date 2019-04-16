@@ -23,23 +23,17 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.TapJoyConnectListener;
-import cm.aptoide.pt.ads.UnityAdsListener;
-import cm.aptoide.pt.home.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.adcolony.sdk.AdColony;
-import com.applovin.sdk.AppLovinSdk;
 import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.tapjoy.Tapjoy;
-import com.unity3d.ads.UnityAds;
-import java.util.Hashtable;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -48,7 +42,7 @@ public class MainActivity extends BottomNavigationActivity
 
   @Inject Presenter presenter;
   @Inject Resources resources;
-  @Inject @Named("marketName") String marketName;
+  @Inject MarketResourceFormatter marketResourceFormatter;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -85,19 +79,11 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.IRONSOURCE_APPLICATION_ID);
-    AppLovinSdk.initializeSdk(this);
-    AdColony.configure(this, BuildConfig.ADCOLONY_APPLICATION_ID, BuildConfig.ADCOLONY_ZONE_ID_T7);
-
-    Tapjoy.connect(getApplicationContext(), BuildConfig.TAPJOY_SDK_KEY,
-        new Hashtable<String, Object>(), new TapJoyConnectListener());
-
-    UnityAds.initialize(this, BuildConfig.UNITYADS_GAME_ID, new UnityAdsListener());
+    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
   }
 
   @Override protected void onStart() {
     super.onStart();
-    Tapjoy.onActivityStart(this);
   }
 
   @Override protected void onResume() {
@@ -112,19 +98,19 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStop() {
     super.onStop();
-    Tapjoy.onActivityStop(this);
   }
 
   private void setupUpdatesNotification() {
     BottomNavigationMenuView appsView =
         (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-    BottomNavigationItemView itemView = (BottomNavigationItemView) appsView.getChildAt(3);
+    BottomNavigationItemView appsItemView =
+        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
-
     updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
-    itemView.addView(updatesBadge);
+    appsItemView.addView(updatesBadge);
+    appsItemView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {
@@ -190,7 +176,7 @@ public class MainActivity extends BottomNavigationActivity
     updateSelfDialog.setTitle(getText(R.string.update_self_title));
     updateSelfDialog.setIcon(R.mipmap.ic_launcher);
     updateSelfDialog.setMessage(
-        AptoideUtils.StringU.getFormattedString(R.string.update_self_msg, resources, marketName));
+        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
         (arg0, arg1) -> {

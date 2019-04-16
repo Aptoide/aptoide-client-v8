@@ -21,10 +21,10 @@ class UpdateAppViewHolder extends AppsViewHolder {
 
   public UpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateApp) {
     super(itemView);
-    appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
-    appIcon = (ImageView) itemView.findViewById(R.id.apps_updates_app_icon);
-    updateAppButton = (ImageView) itemView.findViewById(R.id.apps_updates_update_button);
-    appVersion = (TextView) itemView.findViewById(R.id.apps_updates_app_version);
+    appName = itemView.findViewById(R.id.apps_updates_app_name);
+    appIcon = itemView.findViewById(R.id.apps_updates_app_icon);
+    updateAppButton = itemView.findViewById(R.id.apps_updates_update_button);
+    appVersion = itemView.findViewById(R.id.apps_updates_app_version);
     this.updateApp = updateApp;
   }
 

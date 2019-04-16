@@ -16,12 +16,13 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.BottomNavigationActivity;
-import cm.aptoide.pt.home.BottomNavigationItem;
+import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
@@ -52,7 +53,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   public static MyStoresFragment newInstance(Event event, String storeTheme, String tag,
       StoreContext storeContext) {
     // TODO: 28-12-2016 neuro ia saltando um preguito com este null lolz
-    Bundle args = buildBundle(event, null, storeTheme, tag, storeContext);
+    Bundle args = buildBundle(event, HomeEvent.Type.NO_OP, null, storeTheme, tag, storeContext);
     MyStoresFragment fragment = new MyStoresFragment();
     fragment.setArguments(args);
     return fragment;

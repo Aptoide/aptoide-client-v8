@@ -16,16 +16,16 @@ import rx.Single;
 public class DonationsService {
 
   private ServiceV8 service;
-  private Scheduler viewScheduler;
+  private Scheduler ioScheduler;
 
-  public DonationsService(ServiceV8 service, Scheduler viewScheduler) {
+  public DonationsService(ServiceV8 service, Scheduler ioScheduler) {
     this.service = service;
-    this.viewScheduler = viewScheduler;
+    this.ioScheduler = ioScheduler;
   }
 
   public Single<List<Donation>> getDonations(String packageName) {
     return service.getDonations(packageName, 5)
-        .observeOn(viewScheduler)
+        .subscribeOn(ioScheduler)
         .map(this::mapToDonationsList)
         .toSingle();
   }

@@ -11,6 +11,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:id="@+id/flag_this_app_section"
     style="@style/AppViewWidget"
     >
 
@@ -25,7 +26,8 @@
       android:textSize="18sp"
       />
 
-  <include layout="@layout/displayable_app_view_flag_trusted"/>
+  <include
+      layout="@layout/displayable_app_view_flag_trusted"/>
 
   <LinearLayout
       android:id="@+id/rating_flags_layout"

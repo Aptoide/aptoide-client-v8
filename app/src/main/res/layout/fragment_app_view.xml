@@ -6,6 +6,7 @@
     android:id="@+id/coordinator_layout_appview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     >
@@ -254,6 +255,22 @@
                 tools:visibility="visible"
                 />
           </FrameLayout>
+          <include
+              layout="@layout/appview_migration_warning"
+              android:id="@+id/migration_warning"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:layout_marginTop="12dp"
+              android:visibility="gone"
+              />
+
+          <include
+              layout="@layout/appview_wallet_promotion_install_layout"
+              android:id="@+id/wallet_install_promotion"
+              android:visibility="gone"
+              tools:visibility="visible"
+              />
 
           <View
               android:id="@+id/similar_download_placeholder"
@@ -273,6 +290,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             />
+
         <include
             layout="@layout/appview_app_versions_layout"
             android:id="@+id/versions_layout"

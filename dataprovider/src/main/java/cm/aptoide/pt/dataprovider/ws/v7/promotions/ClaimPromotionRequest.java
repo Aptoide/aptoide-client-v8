@@ -31,12 +31,12 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
   }
 
   public static ClaimPromotionRequest of(String walletAddress, String packageName, String captcha,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      String promotionId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    return new ClaimPromotionRequest(new Body(walletAddress, packageName, captcha), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+    return new ClaimPromotionRequest(new Body(walletAddress, packageName, captcha, promotionId),
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<BaseV7Response> loadDataFromNetwork(V7.Interfaces interfaces,
@@ -49,12 +49,14 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
     private final String walletAddress;
     private final String packageName;
     private final String captcha;
+    private final String promotionId;
 
-    public Body(String walletAddress, String packageName, String captcha) {
+    public Body(String walletAddress, String packageName, String captcha, String promotionId) {
 
       this.walletAddress = walletAddress;
       this.packageName = packageName;
       this.captcha = captcha;
+      this.promotionId = promotionId;
     }
 
     public String getWalletAddress() {
@@ -67,6 +69,10 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
 
     public String getCaptcha() {
       return captcha;
+    }
+
+    public String getPromotionId() {
+      return promotionId;
     }
   }
 }

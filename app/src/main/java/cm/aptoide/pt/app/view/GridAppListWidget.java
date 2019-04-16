@@ -41,7 +41,7 @@ public class GridAppListWidget extends Widget<GridAppListDisplayable> {
     tvStoreName = (TextView) itemView.findViewById(R.id.storeName);
   }
 
-  @Override public void bindView(GridAppListDisplayable displayable) {
+  @Override public void bindView(GridAppListDisplayable displayable, int position) {
     App app = displayable.getPojo();
     name.setText(app.getName());
 

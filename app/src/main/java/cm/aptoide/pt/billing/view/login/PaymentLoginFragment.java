@@ -23,8 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.GooglePlayServicesFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -49,12 +47,13 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       "cm.aptoide.pt.billing.view.login.extra.FACEBOOK_DIALOG_VISIBLE";
   private static final String EXTRA_PROGRESS_VISIBLE =
       "cm.aptoide.pt.billing.view.login.extra.PROGRESS_VISIBLE";
-  @Inject PaymentLoginPresenter paymentLoginPresenter;
+  @Inject PaymentLoginFlavorPresenter presenter;
   @Inject @Named("marketName") String marketName;
   private ClickHandler handler;
   private PublishRelay<Void> backButtonRelay;
   private PublishRelay<Void> upNavigationRelay;
   private PublishRelay<Void> passwordKeyboardGoRelay;
+  private PublishSubject<Void> hidePasswordContainerSubject;
   private Button facebookButton;
   private Button googleButton;
   private ProgressDialog progressDialog;
@@ -95,6 +94,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     passwordKeyboardGoRelay = PublishRelay.create();
     privacyPolicySubject = PublishSubject.create();
     termsAndConditionsSubject = PublishSubject.create();
+    hidePasswordContainerSubject = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -147,13 +147,6 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     aptoideLoginContainer = view.findViewById(R.id.fragment_payment_login_container);
 
     aptoideJoinToggle = (Button) view.findViewById(R.id.fragment_payment_login_join_button);
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    if ("vanilla".equalsIgnoreCase(BuildConfig.FLAVOR_product)) {
-      aptoideJoinToggle.setText(getString(R.string.onboarding_button_join_us));
-    } else {
-      aptoideJoinToggle.setText(getString(R.string.join_company, marketName));
-    }
     aptoideLoginToggle = (Button) view.findViewById(R.id.fragment_payment_login_small_button);
     recoverPasswordButton = view.findViewById(R.id.fragment_payment_login_recover_password_button);
     aptoideLoginButton = (Button) view.findViewById(R.id.fragment_payment_login_large_login_button);
@@ -172,42 +165,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     progressDialog.setMessage(getString(cm.aptoide.pt.utils.R.string.please_wait));
     progressDialog.setCancelable(false);
     termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
-
-    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (termsAndConditionsSubject != null) {
-          termsAndConditionsSubject.onNext(null);
-        }
-      }
-    };
-
-    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (privacyPolicySubject != null) {
-          privacyPolicySubject.onNext(null);
-        }
-      }
-    };
-
-    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
-    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
-    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
-    String privacyAndTerms =
-        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
-
-    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
-    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
-        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
-        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
-            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
-        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
-        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
-    termsAndConditions.setText(privacyAndTermsSpan);
-    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
         R.string.facebook_email_permission_regected_message)
@@ -215,19 +173,8 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
         .setNegativeButton(android.R.string.cancel)
         .build();
 
-    RxView.clicks(aptoideJoinToggle)
-        .doOnNext(__ -> {
-          if (termsConditionCheckBox.isChecked()) {
-            showUsernamePasswordContainer(false);
-          } else {
-            showTermsConditionError();
-          }
-        })
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe();
-
     RxView.clicks(aptoideLoginToggle)
-        .doOnNext(__ -> showUsernamePasswordContainer(true))
+        .doOnNext(__ -> showUsernamePasswordContainer(true, true))
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe();
 
@@ -259,14 +206,14 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       }
 
       if (savedInstanceState.getBoolean(EXTRA_USERNAME_PASSWORD_CONTAINER_VISIBLE)) {
-        showUsernamePasswordContainer(savedInstanceState.getBoolean(EXTRA_LOGIN_VISIBLE));
+        showUsernamePasswordContainer(savedInstanceState.getBoolean(EXTRA_LOGIN_VISIBLE), true);
       } else {
-        hideUsernamePasswordContainer();
+        hidePasswordContainerSubject.onNext(null);
       }
       togglePasswordVisibility(savedInstanceState.getBoolean(EXTRA_PASSWORD_VISIBLE));
     }
 
-    attachPresenter(paymentLoginPresenter);
+    attachPresenter(presenter);
   }
 
   @Override public void onDestroyView() {
@@ -314,7 +261,7 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   @Override public Observable<Void> backButtonEvent() {
     return backButtonRelay.filter(__ -> {
       if (usernamePasswordContainer.getVisibility() == View.VISIBLE) {
-        hideUsernamePasswordContainer();
+        hidePasswordContainerSubject.onNext(null);
         return false;
       }
       return true;
@@ -354,6 +301,11 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
             .toString(), termsConditionCheckBox.isChecked()));
   }
 
+  @Override public Observable<Boolean> showAptoideSignUpAreaClick() {
+    return RxView.clicks(aptoideJoinToggle)
+        .map(event -> termsConditionCheckBox.isChecked());
+  }
+
   @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
     return Observable.merge(RxView.clicks(aptoideSignUpButton),
         passwordKeyboardGoRelay.filter(__ -> !loginVisible))
@@ -366,6 +318,10 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
   @Override public Observable<Void> grantFacebookRequiredPermissionsEvent() {
     return facebookEmailRequiredDialog.positiveClicks()
         .map(dialogInterface -> null);
+  }
+
+  @Override public Observable<Void> hidePasswordContainerEvent() {
+    return hidePasswordContainerSubject;
   }
 
   @Override public void showLoading() {
@@ -396,7 +352,58 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
     }
   }
 
-  private void showUsernamePasswordContainer(boolean showLogin) {
+  @Override public void setCobrandText() {
+    aptoideJoinToggle.setText(String.format(getString(R.string.join_company), marketName));
+  }
+
+  @Override public void hideTCandPP() {
+    termsConditionCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
+  }
+
+  @Override public void showTCandPP() {
+    termsConditionCheckBox.setVisibility(View.VISIBLE);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
+      }
+    };
+
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
+      }
+    };
+
+    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
+    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
+    String privacyAndTerms =
+        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
+            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    termsAndConditions.setText(privacyAndTermsSpan);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+    termsAndConditions.setVisibility(View.VISIBLE);
+  }
+
+  @Override
+  public void showUsernamePasswordContainer(boolean showLogin, boolean shouldShowTCandPP) {
     usernamePasswordContainer.setVisibility(View.VISIBLE);
     usernamePasswordContainerVisible = true;
 
@@ -410,22 +417,28 @@ public class PaymentLoginFragment extends GooglePlayServicesFragment implements 
       loginVisible = false;
       aptoideLoginContainer.setVisibility(View.GONE);
       aptoideSignUpContainer.setVisibility(View.VISIBLE);
-      termsConditionCheckBox.setVisibility(View.VISIBLE);
-      termsAndConditions.setVisibility(View.VISIBLE);
+      termsConditionCheckBox.setVisibility(View.GONE);
+      termsAndConditions.setVisibility(View.GONE);
+      if (shouldShowTCandPP) {
+        termsConditionCheckBox.setVisibility(View.VISIBLE);
+        termsAndConditions.setVisibility(View.VISIBLE);
+      }
     }
 
     aptoideLoginSignUpSeparator.setVisibility(View.GONE);
     aptoideLoginSignUpButtonContainer.setVisibility(View.GONE);
   }
 
-  private void hideUsernamePasswordContainer() {
+  @Override public void hideUsernamePasswordContainer(boolean shouldShowGDPR) {
     aptoideLoginSignUpSeparator.setVisibility(View.VISIBLE);
     aptoideLoginSignUpButtonContainer.setVisibility(View.VISIBLE);
-    termsConditionCheckBox.setVisibility(View.VISIBLE);
-    termsAndConditions.setVisibility(View.VISIBLE);
     usernamePasswordContainer.setVisibility(View.GONE);
     aptoideLoginContainer.setVisibility(View.GONE);
     aptoideSignUpContainer.setVisibility(View.GONE);
+    if (shouldShowGDPR) {
+      termsConditionCheckBox.setVisibility(View.VISIBLE);
+      termsAndConditions.setVisibility(View.VISIBLE);
+    }
     usernamePasswordContainerVisible = false;
   }
 

@@ -10,12 +10,14 @@ import org.parceler.Parcel;
 
   private SearchAppResult searchAppResult;
   private int position;
+  private String query;
 
   public SearchAppResultWrapper() {
   }
 
-  public SearchAppResultWrapper(SearchAppResult result, int position) {
-    searchAppResult = result;
+  public SearchAppResultWrapper(String query, SearchAppResult result, int position) {
+    this.query = query;
+    this.searchAppResult = result;
     this.position = position;
   }
 
@@ -25,5 +27,13 @@ import org.parceler.Parcel;
 
   public int getPosition() {
     return position;
+  }
+
+  public String getQuery() {
+    return query;
+  }
+
+  public void setQuery(String query) {
+    this.query = query;
   }
 }
