@@ -10,6 +10,7 @@ import rx.Single;
 public class MoPubConsentManager implements MoPubConsentDialogManager, MoPubConsentDialogView {
 
   private final PersonalInfoManager personalInfoManager;
+  private boolean wasMoPubConsentDialogShown;
 
   public MoPubConsentManager(PersonalInfoManager personalInfoManager) {
     this.personalInfoManager = personalInfoManager;
@@ -18,7 +19,10 @@ public class MoPubConsentManager implements MoPubConsentDialogManager, MoPubCons
   @Override public void showConsentDialog() {
     personalInfoManager.loadConsentDialog(new ConsentDialogListener() {
       @Override public void onConsentDialogLoaded() {
-        if (personalInfoManager != null && personalInfoManager.isConsentDialogReady()) {
+        if (personalInfoManager != null
+            && personalInfoManager.isConsentDialogReady()
+            && !wasMoPubConsentDialogShown) {
+          wasMoPubConsentDialogShown = true;
           personalInfoManager.showConsentDialog();
         }
       }
