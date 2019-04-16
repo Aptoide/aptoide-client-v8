@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -44,6 +45,7 @@ import rx.subjects.PublishSubject;
 public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
+  private static final String MOPUB_CONSENT_DIALOG_KEY = "MoPub Consent Dialog";
 
   /**
    * The minimum number of items to have below your current scroll position before loading more.
@@ -52,6 +54,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomePresenter presenter;
   @Inject @Named("marketName") String marketName;
+  @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -153,6 +156,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
     }
+    consentDialogView = null;
     super.onDestroyView();
   }
 
@@ -337,6 +341,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     Intent intent = new Intent(this.getContext(), DeepLinkIntentReceiver.class);
     intent.setData(Uri.parse(url));
     startActivity(intent);
+  }
+
+  @Override public void showConsentDialog() {
+    consentDialogView.showConsentDialog();
   }
 
   private boolean isEndReached() {
