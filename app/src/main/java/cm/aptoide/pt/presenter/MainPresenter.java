@@ -7,7 +7,7 @@ package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.autoupdate.kotlin.AutoUpdateManager;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BottomNavigationNavigator;

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.autoupdate.kotlin
+package cm.aptoide.pt.autoupdate
 
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
@@ -11,9 +11,9 @@ import rx.Observable
 import rx.Single
 
 open class AutoUpdateManager(private val downloadFactory: DownloadFactory, private val permissionManager: PermissionManager,
-                        private val installManager: InstallManager, private val downloadAnalytics: DownloadAnalytics,
-                        private val localVersionCode: Int, private val autoUpdateRepository: AutoUpdateRepository,
-                        private val localVersionSdk: Int) {
+                             private val installManager: InstallManager, private val downloadAnalytics: DownloadAnalytics,
+                             private val localVersionCode: Int, private val autoUpdateRepository: AutoUpdateRepository,
+                             private val localVersionSdk: Int) {
 
     fun shouldUpdate(): Observable<Boolean> {
         return loadAutoUpdateModel().toObservable().map { it.shouldUpdate }

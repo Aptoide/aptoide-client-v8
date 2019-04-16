@@ -1,6 +1,5 @@
-package cm.aptoide.pt.autoupdate.kotlin
+package cm.aptoide.pt.autoupdate
 
-import cm.aptoide.pt.autoupdate.AutoUpdateJsonResponse
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import retrofit2.http.GET
 import retrofit2.http.Path

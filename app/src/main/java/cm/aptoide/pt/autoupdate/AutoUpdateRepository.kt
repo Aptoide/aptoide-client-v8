@@ -1,4 +1,4 @@
-package cm.aptoide.pt.autoupdate.kotlin
+package cm.aptoide.pt.autoupdate
 
 import rx.Single
 
