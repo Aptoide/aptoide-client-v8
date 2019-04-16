@@ -13,7 +13,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,17 +49,15 @@ public class AppViewAnalytics {
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
-  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private BillingAnalytics billingAnalytics;
   private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, NotLoggedInShareAnalytics notLoggedInShareAnalytics,
-      BillingAnalytics billingAnalytics, StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
+      StoreAnalytics storeAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-    this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
     this.billingAnalytics = billingAnalytics;
     this.storeAnalytics = storeAnalytics;
   }
@@ -309,14 +306,6 @@ public class AppViewAnalytics {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
-  }
-
-  public void sendSuccessShareEvent() {
-    notLoggedInShareAnalytics.sendShareSuccess();
-  }
-
-  public void sendFailedShareEvent() {
-    notLoggedInShareAnalytics.sendShareFail();
   }
 
   public void sendDownloadPauseEvent(String packageName) {
