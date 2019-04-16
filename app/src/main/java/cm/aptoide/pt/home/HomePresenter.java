@@ -126,9 +126,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
     return loadHome().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -137,9 +137,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
     return loadFreshBundles().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -148,9 +148,9 @@ public class HomePresenter implements Presenter {
   private Observable<List<HomeBundle>> loadNextBundlesAndReactions() {
     return loadNextBundles().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
             .getCardId(), actionBundle.getActionItem()
             .getType()));
@@ -213,7 +213,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
+        .flatMap(this::singlePressReactionButtonAction)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
@@ -223,22 +223,31 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMapSingle(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
+        .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
             homeEvent.getReaction())
+            .toObservable()
+            .filter(ReactionsResponse::differentReaction)
             .observeOn(viewScheduler)
-            .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
-            .flatMap(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+            .filter(ReactionsResponse::wasSuccess)
+            .flatMapSingle(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      homeAnalytics.sendReactedEvent();
+      if (isDelete) {
+        homeAnalytics.sendDeleteEvent();
+      } else {
+        homeAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
-    } else {
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
   }
@@ -478,7 +487,6 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
             .flatMap(bottomReached -> loadNextBundlesAndReactions())
-            .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -491,6 +499,7 @@ public class HomePresenter implements Presenter {
     return home.loadNextHomeBundles()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
+          homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());
           } else {
@@ -545,7 +554,7 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<List<HomeBundle>> singlePressReactionButtonAction(
+  private Observable<List<HomeBundle>> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction =
         home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId());
@@ -553,11 +562,13 @@ public class HomePresenter implements Presenter {
       homeAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
           editorialHomeEvent.getBundlePosition());
-      return Single.just(Collections.emptyList());
+      return Observable.just(Collections.emptyList());
     } else {
-      homeAnalytics.sendDeleteEvent();
       return home.deleteReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
-          .flatMap(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+          .toObservable()
+          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+          .filter(ReactionsResponse::wasSuccess)
+          .flatMapSingle(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
               editorialHomeEvent.getGroupId()));
     }
   }

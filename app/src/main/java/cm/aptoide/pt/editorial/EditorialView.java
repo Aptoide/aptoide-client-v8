@@ -86,4 +86,6 @@ public interface EditorialView extends View {
   Observable<Void> snackLogInClick();
 
   void showErrorToast();
+
+  void showNetworkErrorToast();
 }

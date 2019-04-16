@@ -9,26 +9,38 @@ import rx.Single;
 public class ReactionsManager {
 
   private final ReactionsService reactionsService;
-  private HashMap<String, String> userReactions;
+  private HashMap<String, UserReaction> userReactions;
 
   public ReactionsManager(ReactionsService reactionsService,
-      HashMap<String, String> userReactions) {
+      HashMap<String, UserReaction> userReactions) {
     this.reactionsService = reactionsService;
     this.userReactions = userReactions;
   }
 
   public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
     return reactionsService.loadReactionModel(cardId, groupId)
-        .doOnSuccess(loadReactionModel -> userReactions.put(cardId + groupId,
-            loadReactionModel.getUserId()));
+        .doOnSuccess(loadReactionModel -> {
+          userReactions.put(cardId + groupId,
+              new UserReaction(loadReactionModel.getUserId(), loadReactionModel.getMyReaction()));
+        });
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reactionType) {
     if (hasNotReacted(cardId, groupId)) {
       return reactionsService.setReaction(cardId, groupId, reactionType);
     } else {
-      return reactionsService.setSecondReaction(getUID(cardId + groupId), reactionType);
+      if (!isSameReaction(cardId, groupId, reactionType)) {
+        return reactionsService.setSecondReaction(getUID(cardId + groupId), reactionType);
+      }
+      return Single.just(
+          new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION));
     }
+  }
+
+  private boolean isSameReaction(String cardId, String groupId, String reactionType) {
+    UserReaction userReaction = userReactions.get(cardId + groupId);
+    return (userReaction != null && userReaction.getReaction()
+        .equals(reactionType));
   }
 
   public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
@@ -41,7 +53,12 @@ public class ReactionsManager {
   }
 
   private String getUID(String identifier) {
-    return userReactions.get(identifier);
+    UserReaction userReaction = userReactions.get(identifier);
+    String uid = "";
+    if (userReaction != null) {
+      uid = userReaction.getUserId();
+    }
+    return uid;
   }
 
   private boolean hasNotReacted(String cardId, String groupId) {

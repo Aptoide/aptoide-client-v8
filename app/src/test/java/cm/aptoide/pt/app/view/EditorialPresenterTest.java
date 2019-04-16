@@ -177,6 +177,9 @@ public class EditorialPresenterTest {
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 
+    //When the view is ready
+    when(view.isViewReady()).thenReturn(Observable.just(null));
+
     //When the user clicks on an appCard
     when(view.appCardClicked(editorialViewModel)).thenReturn(
         Observable.just(new EditorialEvent(EditorialEvent.Type.APPCARD, 1, "packageName")));

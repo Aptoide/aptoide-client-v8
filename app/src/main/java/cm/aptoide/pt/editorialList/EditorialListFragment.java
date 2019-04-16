@@ -80,6 +80,9 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
     editorialList.setAdapter(adapter);
+    editorialList.getItemAnimator()
+        .setChangeDuration(0);
+
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
@@ -257,7 +260,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public void showLogInDialog() {
-    ShowMessage.asSnack(getActivity(), R.string.you_need_to_be_logged_in, R.string.login,
+    ShowMessage.asSnack(getActivity(), R.string.editorial_reactions_login_short, R.string.login,
         snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
   }
 
@@ -267,6 +270,15 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
   @Override public void showErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void updateEditorialCard(CurationCard curationCard, String cardId) {
+    adapter.updateEditorialCard(curationCard, cardId);
+  }
+
+  @Override public void showNetworkErrorToast() {
+    Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
   }
 

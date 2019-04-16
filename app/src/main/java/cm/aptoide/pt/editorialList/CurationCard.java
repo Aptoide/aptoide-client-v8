@@ -30,6 +30,15 @@ public class CurationCard {
     numberOfReactions = -1;
   }
 
+  public CurationCard() {
+    id = "";
+    subTitle = "";
+    icon = "";
+    title = "";
+    views = "";
+    type = "";
+  }
+
   public String getId() {
     return id;
   }

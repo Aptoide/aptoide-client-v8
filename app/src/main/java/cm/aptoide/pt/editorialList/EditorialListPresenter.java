@@ -8,8 +8,6 @@ import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
-import java.util.Collections;
-import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -66,10 +64,10 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<List<CurationCard>> loadReactionModel(String cardId, String groupId) {
+  private Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return editorialListManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
-        .doOnSuccess(curationCards -> view.update(curationCards));
+        .doOnSuccess(curationCard -> view.updateEditorialCard(curationCard, cardId));
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -82,8 +80,7 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Observable<List<CurationCard>> loadEditorialAndReactions(boolean loadMore,
-      boolean refresh) {
+  private Observable<CurationCard> loadEditorialAndReactions(boolean loadMore, boolean refresh) {
     return loadEditorialListViewModel(loadMore, refresh).toObservable()
         .flatMapIterable(EditorialListViewModel::getCurationCards)
         .flatMapSingle(
@@ -206,7 +203,7 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMapSingle(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
+        .flatMap(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -216,24 +213,33 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
-        .flatMapSingle(
+        .flatMap(
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
+                .toObservable()
+                .filter(ReactionsResponse::differentReaction)
                 .observeOn(viewScheduler)
-                .doOnSuccess(reactionsResponse -> handleReactionsResponse(reactionsResponse))
-                .flatMap(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
                     reactionsHomeEvent.getGroupId())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse) {
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
     if (reactionsResponse.wasSuccess()) {
-      editorialListAnalytics.sendReactedEvent();
+      if (isDelete) {
+        editorialListAnalytics.sendDeleteEvent();
+      } else {
+        editorialListAnalytics.sendReactedEvent();
+      }
     } else if (reactionsResponse.reactionsExceeded()) {
       view.showLogInDialog();
-    } else {
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
       view.showErrorToast();
     }
   }
@@ -268,7 +274,7 @@ public class EditorialListPresenter implements Presenter {
     return Observable.just(userAvatarUrl);
   }
 
-  private Single<List<CurationCard>> singlePressReactionButtonAction(
+  private Observable<CurationCard> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
         editorialHomeEvent.getGroupId());
@@ -276,12 +282,14 @@ public class EditorialListPresenter implements Presenter {
       editorialListAnalytics.sendReactionButtonClickEvent();
       view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
           editorialHomeEvent.getBundlePosition());
-      return Single.just(Collections.emptyList());
+      return Observable.just(new CurationCard());
     } else {
-      editorialListAnalytics.sendDeleteEvent();
       return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
           editorialHomeEvent.getGroupId())
-          .flatMap(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+          .toObservable()
+          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+          .filter(ReactionsResponse::wasSuccess)
+          .flatMapSingle(reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
               editorialHomeEvent.getGroupId()));
     }
   }

@@ -1254,7 +1254,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {
-    setupWalletPromotionText(viewModel, R.string.wallet_promotion__wallet_installed_message);
+    setupWalletPromotionText(viewModel, R.string.wallet_promotion_wallet_installed_message);
     walletPromotionInstallDisableButton.setText(
         String.format(getString(R.string.wallet_promotion_button_install_disabled),
             String.valueOf(viewModel.getAppcValue())));

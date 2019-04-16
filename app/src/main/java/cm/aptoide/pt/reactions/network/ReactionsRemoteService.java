@@ -1,7 +1,9 @@
 package cm.aptoide.pt.reactions.network;
 
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.reactions.data.TopReaction;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Response;
@@ -32,7 +34,8 @@ public class ReactionsRemoteService implements ReactionsService {
     return service.setFirstUserReaction(body)
         .map(this::mapResponse)
         .toSingle()
-        .subscribeOn(ioScheduler);
+        .subscribeOn(ioScheduler)
+        .onErrorReturn(this::mapErrorResponse);
   }
 
   @Override public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
@@ -47,14 +50,25 @@ public class ReactionsRemoteService implements ReactionsService {
     return service.setSecondUserReaction(uid, body)
         .map(this::mapResponse)
         .toSingle()
-        .subscribeOn(ioScheduler);
+        .subscribeOn(ioScheduler)
+        .onErrorReturn(this::mapErrorResponse);
   }
 
   @Override public Single<ReactionsResponse> deleteReaction(String uid) {
     return service.deleteReaction(uid)
         .map(this::mapResponse)
         .toSingle()
-        .subscribeOn(ioScheduler);
+        .subscribeOn(ioScheduler)
+        .onErrorReturn(this::mapErrorResponse);
+  }
+
+  private ReactionsResponse mapErrorResponse(Throwable throwable) {
+    if (throwable instanceof NoNetworkConnectionException
+        || throwable instanceof ConnectException) {
+      return new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.NETWORK_ERROR);
+    } else {
+      return new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR);
+    }
   }
 
   private ReactionsResponse mapResponse(Response response) {
