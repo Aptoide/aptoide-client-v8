@@ -52,6 +52,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
+import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -149,6 +150,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject @Named("marketName") String marketName;
   @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
+  @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1251,6 +1253,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
     manageSimilarAppsVisibility(hasSimilarApps, true);
+  }
+
+  @Override public void showConsentDialog() {
+    consentDialogView.showConsentDialog();
   }
 
   private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {

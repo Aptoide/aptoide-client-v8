@@ -651,6 +651,10 @@ public class AppViewManager {
     return promotionStatus;
   }
 
+  public Single<Boolean> shouldShowConsentDialog() {
+    return moPubAdsManager.shouldShowConsentDialog();
+  }
+
   public enum PromotionStatus {
     NO_PROMOTION, NOT_CLAIMED, CLAIMED
   }

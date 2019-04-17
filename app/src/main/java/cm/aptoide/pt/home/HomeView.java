@@ -30,4 +30,6 @@ public interface HomeView extends BundleView {
   Observable<HomeEvent> walletOfferCardInstallWalletClick();
 
   void sendDeeplinkToWalletAppView(String url);
+
+  void showConsentDialog();
 }

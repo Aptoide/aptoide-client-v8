@@ -138,4 +138,8 @@ public class Home {
   public Single<Boolean> shouldLoadNativeAd() {
     return moPubAdsManager.shouldLoadNativeAds();
   }
+
+  public Single<Boolean> shouldShowConsentDialog() {
+    return moPubAdsManager.shouldShowConsentDialog();
+  }
 }
