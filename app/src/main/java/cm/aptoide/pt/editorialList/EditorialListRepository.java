@@ -16,12 +16,12 @@ public class EditorialListRepository {
     if (cachedEditorialListViewModel != null && !invalidateCache) {
       return Single.just(cachedEditorialListViewModel);
     }
-    return loadNewEditorialListViewModel(0, false);
+    return loadNewEditorialListViewModel(0, false, invalidateCache);
   }
 
-  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset,
-      boolean loadMore) {
-    return editorialListService.loadEditorialListViewModel(offset)
+  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset, boolean loadMore,
+      boolean invalidateCache) {
+    return editorialListService.loadEditorialListViewModel(offset, invalidateCache)
         .map(editorialListViewModel -> {
           if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
             updateCache(editorialListViewModel, loadMore);
@@ -42,7 +42,7 @@ public class EditorialListRepository {
     if (cachedEditorialListViewModel != null) {
       offset = cachedEditorialListViewModel.getOffset();
     }
-    return loadNewEditorialListViewModel(offset, true);
+    return loadNewEditorialListViewModel(offset, true, false);
   }
 
   private void updateCache(EditorialListViewModel editorialListViewModel, boolean loadMore) {
