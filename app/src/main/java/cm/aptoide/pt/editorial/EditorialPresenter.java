@@ -49,7 +49,6 @@ public class EditorialPresenter implements Presenter {
     handleRetryClick();
     handleClickOnMedia();
     handleClickOnAppCard();
-    handlePaletteColor();
     handleReactionClick();
     handleUserReaction();
     handleLongPressReactionButton();
@@ -309,20 +308,6 @@ public class EditorialPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReporter.log(throwable));
-  }
-
-  @VisibleForTesting public void handlePaletteColor() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.paletteSwatchExtracted())
-        .observeOn(viewScheduler)
-        .doOnNext(paletteSwatch -> view.applyPaletteSwatch(paletteSwatch))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          view.applyPaletteSwatch(null);
-          crashReporter.log(error);
-        });
   }
 
   @VisibleForTesting public void handleMediaListDescriptionVisibility() {

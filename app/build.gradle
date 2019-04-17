@@ -400,8 +400,6 @@ dependencies {
   //noinspection GradleDependency
   implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
-  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
   implementation "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
   //noinspection GradleDependency
   implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"

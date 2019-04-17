@@ -37,6 +37,7 @@ public class CurationCard {
     title = "";
     views = "";
     type = "";
+    date = "";
   }
 
   public String getId() {

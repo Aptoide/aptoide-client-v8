@@ -1,6 +1,5 @@
 package cm.aptoide.pt.editorial;
 
-import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
@@ -52,10 +51,6 @@ public interface EditorialView extends View {
   Observable<EditorialEvent> mediaContentClicked();
 
   void managePlaceHolderVisibity();
-
-  Observable<Palette.Swatch> paletteSwatchExtracted();
-
-  void applyPaletteSwatch(Palette.Swatch swatch);
 
   Observable<EditorialEvent> mediaListDescriptionChanged();
 

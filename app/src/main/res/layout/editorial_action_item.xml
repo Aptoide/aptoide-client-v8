@@ -96,7 +96,7 @@
     </RelativeLayout>
   </RelativeLayout>
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:paddingBottom="16dp"
@@ -105,12 +105,13 @@
     <android.support.v7.widget.CardView
         android:id="@+id/curation_type_bubble"
         android:layout_width="wrap_content"
-        android:layout_height="22dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         app:cardBackgroundColor="#3c3c3c"
         app:cardCornerRadius="12dp"
+        app:cardUseCompatPadding="true"
         >
       <TextView
           android:id="@+id/curation_type_bubble_text"
@@ -121,13 +122,15 @@
           android:paddingLeft="10dp"
           android:paddingRight="10dp"
           android:paddingStart="10dp"
-          android:text="Game of the Week"
+          android:paddingBottom="5dp"
+          android:paddingTop="5dp"
+          tools:text="Game of the Week"
           android:textAllCaps="true"
           android:textColor="@color/white"
           android:textStyle="bold"
           style="@style/Aptoide.TextView.Regular.XXS"
           />
     </android.support.v7.widget.CardView>
-  </RelativeLayout>
+  </LinearLayout>
 
 </android.support.v7.widget.CardView>

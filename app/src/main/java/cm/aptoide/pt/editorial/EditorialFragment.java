@@ -10,11 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +46,7 @@ import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
+import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -63,7 +63,6 @@ import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
 import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
-import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -94,7 +93,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private TextView appCardTitle;
   private Button appCardButton;
   private View editorialItemsCard;
-  private View actionItemCard;
+  private CardView actionItemCard;
   private LinearLayout downloadInfoLayout;
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
@@ -126,7 +125,6 @@ public class EditorialFragment extends NavigationTrackFragment
   private PublishSubject<EditorialDownloadEvent> downloadEventListener;
   private PublishSubject<ReactionEvent> reactionEventListener;
   private PublishSubject<Void> snackListener;
-  private PublishSubject<Palette.Swatch> paletteSwatchSubject;
   private PublishSubject<Boolean> movingCollapseSubject;
   private boolean shouldAnimate;
 
@@ -135,7 +133,6 @@ public class EditorialFragment extends NavigationTrackFragment
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
-    paletteSwatchSubject = PublishSubject.create();
     uiEventsListener = PublishSubject.create();
     downloadEventListener = PublishSubject.create();
     movingCollapseSubject = PublishSubject.create();
@@ -258,7 +255,6 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
-    paletteSwatchSubject = null;
     oneDecimalFormatter = null;
     movingCollapseSubject = null;
   }
@@ -514,22 +510,6 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
-    return paletteSwatchSubject;
-  }
-
-  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
-    if (swatch != null) {
-      int color = swatch.getRgb();
-      if (ColorUtils.calculateLuminance(color) > 0.5) {
-        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
-      } else {
-        actionItemCard.setBackgroundColor(color);
-      }
-    }
-    actionItemCard.setVisibility(View.VISIBLE);
-  }
-
   @Override public Observable<EditorialEvent> mediaListDescriptionChanged() {
     return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
         .equals(EditorialEvent.Type.MEDIA_LIST))
@@ -656,17 +636,39 @@ public class EditorialFragment extends NavigationTrackFragment
     shouldAnimate = editorialViewModel.shouldHaveAnimation();
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
+          .load(editorialViewModel.getBackgroundImage(), appImage);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
     String caption = editorialViewModel.getCaption();
     toolbar.setTitle(caption);
-    toolbarTitle.setText(caption);
+    toolbarTitle.setText(editorialViewModel.getTitle());
     appImage.setVisibility(View.VISIBLE);
-    itemName.setText(editorialViewModel.getTitle());
+    itemName.setText(Translator.translate(caption, getContext(), ""));
+    setCurationCardBubble(caption);
     itemName.setVisibility(View.VISIBLE);
+    actionItemCard.setVisibility(View.VISIBLE);
     setBottomAppCardInfo(editorialViewModel);
+  }
+
+  public void setCurationCardBubble(String caption) {
+    switch (caption) {
+      case "Game of the Week":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_grey));
+        break;
+
+      case "App of the Week":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_blue));
+        break;
+
+      case "Collections":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_green));
+        break;
+
+      default:
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_default));
+        break;
+    }
   }
 
   private void setBottomAppCardInfo(EditorialViewModel editorialViewModel) {
