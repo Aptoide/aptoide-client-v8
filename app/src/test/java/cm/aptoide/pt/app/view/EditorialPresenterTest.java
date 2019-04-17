@@ -252,21 +252,6 @@ public class EditorialPresenterTest {
     verify(view).addBottomCardAnimation();
   }
 
-  @Test public void handlePaletterColorPickTest() {
-    Palette.Swatch swatch = new Palette.Swatch(Color.RED, 256);
-    //Given an initialized presenter
-    editorialPresenter.handlePaletteColor();
-
-    //when the palette swatch is extracted
-    when(view.paletteSwatchExtracted()).thenReturn(
-        Observable.just(new Palette.Swatch(Color.RED, 256)));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should deliver that swatch to the view
-    verify(view).applyPaletteSwatch(swatch);
-  }
-
   @Test public void handleMediaListDescriptionVisibilityOnlyOneMediaVisibleTest() {
     //Given an initialized presenter
     editorialPresenter.handleMediaListDescriptionVisibility();

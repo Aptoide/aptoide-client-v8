@@ -58,7 +58,7 @@ public class EditorialListPresenterTest {
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
         editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
-    CurationCard curationCard = new CurationCard("1", "sub", "icon", "title", "1000", "CURATION_1");
+    CurationCard curationCard = new CurationCard("1", "sub", "icon", "title", "1000", "CURATION_1", "2018-11-29 17:14:56");
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);
     successEditorialViewModel = new EditorialListViewModel(curationCardList, 0, 0);
     loadingEditorialViewModel = new EditorialListViewModel(true);
