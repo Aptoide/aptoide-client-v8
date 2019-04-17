@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v1.GetPullNotificationsResponse;
 import cm.aptoide.pt.dataprovider.ws.v1.notification.PullCampaignNotificationsRequest;
-import cm.aptoide.pt.dataprovider.ws.v1.notification.PullSocialNotificationRequest;
 import cm.aptoide.pt.networking.IdsRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,19 +38,6 @@ public class NotificationService {
     this.accountManager = accountManager;
   }
 
-  public Single<List<AptoideNotification>> getSocialNotifications() {
-    return accountManager.accountStatus()
-        .first()
-        .flatMap(account -> PullSocialNotificationRequest.of(idsRepository.getUniqueIdentifier(),
-            versionName, applicationId, httpClient, converterFactory, extraId, sharedPreferences,
-            resources, account.isLoggedIn())
-            .observe())
-        .flatMap(response -> accountManager.accountStatus()
-            .first()
-            .map(account -> convertSocialNotifications(response, account.getId())))
-        .toSingle();
-  }
-
   public Single<List<AptoideNotification>> getCampaignNotifications() {
     return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
         applicationId, httpClient, converterFactory, extraId, sharedPreferences, resources)
@@ -61,29 +47,6 @@ public class NotificationService {
             .map(account -> convertCampaignNotifications(response, account.getId())))
         .first()
         .toSingle();
-  }
-
-  private List<AptoideNotification> convertSocialNotifications(
-      List<GetPullNotificationsResponse> response, String id) {
-    List<AptoideNotification> aptoideNotifications = new LinkedList<>();
-    for (final GetPullNotificationsResponse notification : response) {
-      String appName = null;
-      String graphic = null;
-      if (notification.getAttr() != null) {
-        appName = notification.getAttr()
-            .getAppName();
-        graphic = notification.getAttr()
-            .getAppGraphic();
-      }
-
-      aptoideNotifications.add(
-          new AptoideNotification(notification.getBody(), notification.getImg(),
-              notification.getTitle(), notification.getUrl(), notification.getType(),
-              System.currentTimeMillis(), appName, graphic, AptoideNotification.NOT_DISMISSED, id,
-              notification.getUrlTrack(), notification.getUrlTrackNc(), false,
-              notification.getExpire() * 1000));
-    }
-    return aptoideNotifications;
   }
 
   private List<AptoideNotification> convertCampaignNotifications(
