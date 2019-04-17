@@ -234,7 +234,7 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
         .observeOn(viewScheduler)
-        .flatMap(permissionService -> autoUpdateManager.requestPermissions(permissionService))
+        .flatMap(autoUpdateManager::requestPermissions)
         .observeOn(ioScheduler)
         .flatMap(success -> autoUpdateManager.startUpdate())
         .observeOn(viewScheduler)
