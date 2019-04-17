@@ -10,7 +10,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
-import cm.aptoide.pt.view.Translator;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -66,8 +65,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
-    editorialTitle.setText(Translator.translate(title, itemView.getContext(), ""));
-    editorialSubtitle.setText(Translator.translate(subTitle, itemView.getContext(), ""));
+    editorialTitle.setText(title);
+    editorialSubtitle.setText(subTitle);
     editorialViews.setText(String.format(itemView.getContext()
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
