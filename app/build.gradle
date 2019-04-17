@@ -503,10 +503,6 @@ dependencies {
   //lib phone number
   implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
 
-  implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
-  }
-
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
   implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 

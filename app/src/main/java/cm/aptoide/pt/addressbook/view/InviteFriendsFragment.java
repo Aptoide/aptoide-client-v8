@@ -62,7 +62,7 @@ public class InviteFriendsFragment extends UIComponentFragment
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            marketResourceFormatter.formatString(getContext(), -1),
             theme), openMode, new AddressBookAnalytics(analyticsManager, navigationTracker),
         marketName);
   }

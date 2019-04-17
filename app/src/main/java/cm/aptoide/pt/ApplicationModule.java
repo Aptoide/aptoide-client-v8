@@ -71,7 +71,6 @@ import cm.aptoide.pt.account.OAuthModeProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -263,9 +262,6 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import dagger.Module;
 import dagger.Provides;
 import io.fabric.sdk.android.Fabric;
@@ -493,20 +489,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return fabric.getKit(Crashlytics.class);
   }
 
-  @Singleton @Provides TwitterCore provideTwitter(Fabric fabric) {
-    return fabric.getKit(TwitterCore.class);
-  }
-
-  @Singleton @Provides TwitterAuthClient provideTwitterAuthClient() {
-    return new TwitterAuthClient();
-  }
-
   @Singleton @Provides Fabric provideFabric() {
     return Fabric.with(application, new Answers(), new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.CRASH_REPORTS_DISABLED)
             .build())
-        .build(), new TwitterCore(
-        new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
+        .build());
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
@@ -1825,11 +1812,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
         InstallAnalytics.EDITORS_APPLICATION_INSTALL,
-        AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK,
-        AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
-        AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,

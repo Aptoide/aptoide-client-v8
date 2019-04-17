@@ -51,7 +51,7 @@ public class ThankYouConnectingFragment extends UIComponentFragment
     AddressBookNavigationManager addressBookNavigationManager =
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            marketResourceFormatter.formatString(getContext(), -1),
             theme);
     RxView.clicks(done)
         .subscribe(clicks -> addressBookNavigationManager.leaveAddressBook(),

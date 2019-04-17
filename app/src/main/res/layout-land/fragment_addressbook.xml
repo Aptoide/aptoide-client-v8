@@ -269,7 +269,6 @@
       android:layout_height="wrap_content"
       android:clickable="false"
       android:gravity="center"
-      android:text="@string/addressbook_2nd_msg"
       android:textAlignment="center"
       android:textColor="?android:attr/textColorSecondary"
       app:layout_constraintBottom_toTopOf="@+id/addressbook_about"

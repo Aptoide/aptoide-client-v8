@@ -56,25 +56,24 @@ public class AddressBookPresenter implements AddressBookContract.UserActionsList
 
   @Override public void syncTwitter(TwitterModel twitterModel) {
     analytics.sendSyncTwitterEvent();
-    contactsRepository.getTwitterContacts(twitterModel,
-        (contacts, success) -> Observable.just(contacts)
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .subscribe(ignore -> {
-              if (!success) {
-                navigationManager.navigateToInviteFriendsView(
-                    InviteFriendsContract.View.OpenMode.ERROR);
-                view.setGenericPleaseWaitDialog(false);
-              } else {
-                view.changeTwitterState(true);
-                ManagerPreferences.setTwitterAsSynced(sharedPreferences);
-                if (!contacts.isEmpty()) {
-                  navigationManager.showSuccessFragment(contacts);
-                } else {
-                  navigationManager.navigateToInviteFriendsView(
-                      InviteFriendsContract.View.OpenMode.NO_FRIENDS);
-                }
-              }
-            }));
+    contactsRepository.getTwitterContacts((contacts, success) -> Observable.just(contacts)
+        .subscribeOn(AndroidSchedulers.mainThread())
+        .subscribe(ignore -> {
+          if (!success) {
+            navigationManager.navigateToInviteFriendsView(
+                InviteFriendsContract.View.OpenMode.ERROR);
+            view.setGenericPleaseWaitDialog(false);
+          } else {
+            view.changeTwitterState(true);
+            ManagerPreferences.setTwitterAsSynced(sharedPreferences);
+            if (!contacts.isEmpty()) {
+              navigationManager.showSuccessFragment(contacts);
+            } else {
+              navigationManager.navigateToInviteFriendsView(
+                  InviteFriendsContract.View.OpenMode.NO_FRIENDS);
+            }
+          }
+        }));
   }
 
   @Override public void syncFacebook(FacebookModel facebookModel) {

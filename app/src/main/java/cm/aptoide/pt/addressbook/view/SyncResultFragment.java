@@ -87,7 +87,7 @@ public class SyncResultFragment extends UIComponentFragment
         new SyncResultPresenter(this, new AddressBookAnalytics(analyticsManager, navigationTracker),
             new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
                 getString(R.string.addressbook_about),
-                marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+                marketResourceFormatter.formatString(getContext(), 1),
                 theme));
     mListAdapter = new SyncResultAdapter((ArrayList<Contact>) contacts, getContext());
   }

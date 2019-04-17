@@ -90,7 +90,7 @@ public class PhoneInputFragment extends UIComponentFragment
         new AddressBookAnalytics(analyticsManager, navigationTracker),
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            marketResourceFormatter.formatString(getContext(), R.string.addressbook_data_about),
+            marketResourceFormatter.formatString(getContext(), -1),
             theme));
     mGenericPleaseWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
     contactUtils = new ContactUtils(

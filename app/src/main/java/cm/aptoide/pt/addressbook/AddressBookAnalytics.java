@@ -14,7 +14,6 @@ public class AddressBookAnalytics {
   public static final String HAS_NEW_CONNECTIONS_SCREEN = "Has New Connections";
   public static final String FOLLOW_FRIENDS_CHOOSE_NETWORK = "Follow_Friends_Choose_Network";
   public static final String FOLLOW_FRIENDS_HOW_TO = "Follow_Friends_How_To";
-  public static final String FOLLOW_FRIENDS_APTOIDE_ACCESS = "Follow_Friends_Aptoide_Access";
   public static final String FOLLOW_FRIENDS_NEW_CONNECTIONS = "Follow_Friends_New_Connections";
   public static final String FOLLOW_FRIENDS_SET_MY_PHONENUMBER =
       "Follow_Friends_Set_My_Phonenumber";
@@ -39,24 +38,9 @@ public class AddressBookAnalytics {
         FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
   }
 
-  public void sendSyncAddressBookEvent() {
-    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Sync Address Book"),
-        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
   public void sendHowAptoideUsesYourDataEvent() {
     analyticsManager.logEvent(null, FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
         getViewName(true));
-  }
-
-  public void sendAllowAptoideAccessToContactsEvent() {
-    analyticsManager.logEvent(createMapData(ACTION, "Allow"), FOLLOW_FRIENDS_APTOIDE_ACCESS,
-        AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendDenyAptoideAccessToContactsEvent() {
-    analyticsManager.logEvent(createMapData(ACTION, "Deny"), FOLLOW_FRIENDS_APTOIDE_ACCESS,
-        AnalyticsManager.Action.OPEN, getViewName(true));
   }
 
   public void sendNewConnectionsAllowFriendsToFindYouEvent(String screen) {
