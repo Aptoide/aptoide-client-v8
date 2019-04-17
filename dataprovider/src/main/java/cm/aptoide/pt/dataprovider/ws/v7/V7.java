@@ -55,6 +55,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.GetSocialRecommendsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
@@ -274,6 +275,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body ListAppsUpdatesRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
+    @POST("listAppcAppsUpgrades") Observable<ListAppsUpdates> listAppcAppssUpgrades(
+        @Body ListAppcAppsUpgradesRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
     @POST("home/get") Observable<GetHome> getHome(@Body GetHomeBody body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
@@ -370,14 +375,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
         @Path(value = "action") String action, @Path(value = "context") String context,
         @Body BiUtmAnalyticsRequestBody body);
-
-    @POST("user/shareTimeline/access_token={accessToken}") Observable<ShareCardResponse> shareCard(
-        @Body ShareCardRequest.Body body, @Path(value = "accessToken") String accessToken);
-
-    @POST("user/shareTimeline/package_id={packageName}/access_token={accessToken}/type={type}")
-    Observable<BaseV7Response> shareInstallCard(@Body ShareInstallCardRequest.Body body,
-        @Path(value = "packageName") String packageName,
-        @Path(value = "accessToken") String access_token, @Path(value = "type") String type);
 
     @POST("review/set/access_token={accessToken}/card_uid={cardUid}/rating={rating}")
     Observable<BaseV7Response> setReview(@Body BaseBody body,

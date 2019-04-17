@@ -1,12 +1,14 @@
 package cm.aptoide.pt.abtesting;
 
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.networking.IdsRepository;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import rx.Observable;
+import rx.Scheduler;
 
 /**
  * Created by franciscocalado on 19/06/18.
@@ -20,21 +22,24 @@ public class ABTestService {
   private static final String EXPERIMENT_DRAFT = "EXPERIMENT_IN_DRAFT_STATE";
 
   private ServiceV7 service;
-  private String aptoideId;
+  private IdsRepository idsRepository;
+  private Scheduler scheduler;
 
-  public ABTestService(ServiceV7 service, String aptoideId) {
+  public ABTestService(ServiceV7 service, IdsRepository idsRepository, Scheduler scheduler) {
     this.service = service;
-    this.aptoideId = aptoideId;
+    this.idsRepository = idsRepository;
+    this.scheduler = scheduler;
   }
 
   public Observable<ExperimentModel> getExperiment(String identifier) {
-    return service.getExperiment(identifier, aptoideId)
+    return getAptoideId().flatMap(aptoideId -> service.getExperiment(identifier, aptoideId))
         .map((ABTestImpressionResponse response) -> mapToExperimentModel(response, false))
         .onErrorReturn(response -> new ExperimentModel(new Experiment(), true));
   }
 
   public Observable<Boolean> recordImpression(String identifier) {
-    return service.recordImpression(identifier, aptoideId, new ABTestRequestBody(IMPRESSION))
+    return getAptoideId().flatMap(aptoideId -> service.recordImpression(identifier, aptoideId,
+        new ABTestRequestBody(IMPRESSION)))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -43,7 +48,8 @@ public class ABTestService {
   }
 
   public Observable<Boolean> recordAction(String identifier, String assignment) {
-    return service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment))
+    return getAptoideId().flatMap(
+        aptoideId -> service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment)))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -64,6 +70,11 @@ public class ABTestService {
         .equals(EXPERIMENT_PAUSED) || response.getStatus()
         .equals(EXPERIMENT_NOT_FOUND) || response.getStatus()
         .equals(EXPERIMENT_DRAFT);
+  }
+
+  private Observable<String> getAptoideId() {
+    return Observable.fromCallable(() -> idsRepository.getUniqueIdentifier())
+        .subscribeOn(scheduler);
   }
 
   public interface ServiceV7 {

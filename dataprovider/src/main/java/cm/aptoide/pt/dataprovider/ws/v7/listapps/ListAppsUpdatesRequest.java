@@ -56,7 +56,7 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
     return packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
   }
 
-  private static List<ApksData> getInstalledApks(PackageManager packageManager) {
+  static List<ApksData> getInstalledApks(PackageManager packageManager) {
     // TODO: 01-08-2016 neuro benchmark this, looks heavy
     List<PackageInfo> allInstalledApps = getAllInstalledApps(packageManager);
     LinkedList<ApksData> apksDatas = new LinkedList<>();

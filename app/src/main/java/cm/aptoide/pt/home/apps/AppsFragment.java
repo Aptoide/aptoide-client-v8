@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -39,9 +40,15 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
+  private static final int APPC_UPDATES_LIMIT = 2;
+
   @Inject AppsPresenter appsPresenter;
   private RecyclerView recyclerView;
   private AppsAdapter adapter;
+  private View appcAppsLayout;
+  private RecyclerView appcAppsRecyclerView;
+  private AppcAppsAdapter appcAppsAdapter;
+  private Button appcSeeMoreButton;
   private PublishSubject<AppClick> appItemClicks;
   private PublishSubject<Void> updateAll;
   private RxAlertDialog ignoreUpdateDialog;
@@ -72,8 +79,17 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
+    recyclerView.setNestedScrollingEnabled(false);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
+
+    appcAppsLayout = view.findViewById(R.id.appc_apps_layout);
+    appcAppsRecyclerView = view.findViewById(R.id.appc_apps_recycler_view);
+    appcAppsRecyclerView.setNestedScrollingEnabled(false);
+    appcSeeMoreButton = view.findViewById(R.id.appc_see_more_btn);
+
+    appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, APPC_UPDATES_LIMIT);
+
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
@@ -118,6 +134,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView.setLayoutManager(
         new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     recyclerView.setItemAnimator(null);
+
+    appcAppsRecyclerView.setAdapter(appcAppsAdapter);
+    appcAppsRecyclerView.setLayoutManager(
+        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    appcAppsRecyclerView.setItemAnimator(null);
   }
 
   @Nullable @Override
@@ -189,34 +210,43 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
-  @Override public Observable<App> retryUpdate() {
+  @Override public Observable<AppClickEventWrapper> retryUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY, appClick.getApp()));
   }
 
-  @Override public Observable<App> updateApp() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP)
-        .map(appClick -> appClick.getApp());
+  @Override public Observable<AppClickEventWrapper> updateApp() {
+    return appItemClicks.filter(appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP
+        || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP, appClick.getApp()));
   }
 
-  @Override public Observable<App> pauseUpdate() {
+  @Override public Observable<AppClickEventWrapper> pauseUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE, appClick.getApp()));
   }
 
-  @Override public Observable<App> cancelUpdate() {
+  @Override public Observable<AppClickEventWrapper> cancelUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL, appClick.getApp()));
   }
 
-  @Override public Observable<App> resumeUpdate() {
+  @Override public Observable<AppClickEventWrapper> resumeUpdate() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE)
-        .map(appClick -> appClick.getApp());
+        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE
+            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
+        .map(appClick -> new AppClickEventWrapper(
+            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME, appClick.getApp()));
   }
 
   @Override public Observable<Boolean> showRootWarning() {
@@ -233,6 +263,13 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (shouldShowAppsList()) {
       showAppsList();
     }
+  }
+
+  @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
+    if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
+      appcAppsAdapter.addApps(updatesDownloadList);
+    }
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
   @Override public Observable<Void> updateAll() {
@@ -261,6 +298,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void removeExcludedUpdates(List<App> excludedUpdatesList) {
     adapter.removeUpdatesList(excludedUpdatesList);
+  }
+
+  @Override public Observable<Void> moreAppcClick() {
+    return RxView.clicks(appcSeeMoreButton);
   }
 
   @Override public Observable<App> updateClick() {
@@ -310,8 +351,17 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.removeCanceledAppDownload(app);
   }
 
+  @Override public void removeAppcCanceledAppDownload(App app) {
+    appcAppsAdapter.removeCanceledAppDownload(app);
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
+  }
+
   @Override public void setStandbyState(App app) {
     adapter.setAppStandby(app);
+  }
+
+  @Override public void setAppcStandbyState(App app) {
+    appcAppsAdapter.setAppStandby(app);
   }
 
   @Override public void showIndeterminateAllUpdates() {
@@ -327,10 +377,41 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     adapter.setAppOnPausing(app);
   }
 
+  @Override public void setAppcPausingDownloadState(App app) {
+    appcAppsAdapter.setAppOnPausing(app);
+  }
+
+  @Override public void showAppcUpgradesList(List<App> list) {
+    if (list != null && !list.isEmpty()) {
+      appcAppsAdapter.setAvailableUpgradesList(list);
+    }
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
+  }
+
+  @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
+    appcAppsAdapter.removeAppcUpgradesList(excludedUpdatesList);
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
     recyclerView.setVisibility(View.VISIBLE);
+  }
+
+  private void triggerAppcUpgradesVisibility(int itemCount) {
+    if (itemCount > 0) {
+      appcAppsRecyclerView.scrollToPosition(0);
+      hideLoadingProgressBar();
+      appcAppsLayout.setVisibility(View.VISIBLE);
+      if (itemCount > APPC_UPDATES_LIMIT) {
+        appcSeeMoreButton.setVisibility(View.VISIBLE);
+      } else {
+        appcSeeMoreButton.setVisibility(View.GONE);
+      }
+    } else {
+      appcAppsLayout.setVisibility(View.GONE);
+    }
   }
 
   private boolean shouldShowAppsList() {
@@ -352,6 +433,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     recyclerView = null;
     adapter = null;
     userAvatar = null;
+    appcAppsLayout = null;
+    appcAppsRecyclerView = null;
+    appcAppsAdapter = null;
   }
 
   @Override public void onDetach() {
