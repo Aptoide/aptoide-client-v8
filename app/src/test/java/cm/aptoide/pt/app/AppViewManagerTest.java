@@ -302,9 +302,9 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            "anyString", appCoinsManager, promotionsManager, "",
+            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
+            promotionsManager, "",
             installedRepository, migrationManager);
 
     //When the presenter ask for an App
@@ -330,9 +330,9 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            "anyString", appCoinsManager, promotionsManager, "",
+            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
+            promotionsManager, "",
             installedRepository, migrationManager);
 
     //When the presenter ask for an App
@@ -358,9 +358,9 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            "anyString", appCoinsManager, promotionsManager, "",
+            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
+            promotionsManager, "",
             installedRepository, migrationManager);
 
     //When the presenter ask for an App
@@ -471,9 +471,9 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            "marketName", appCoinsManager, promotionsManager, "",
+            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, Schedulers.immediate(), "marketName", appCoinsManager,
+            promotionsManager, "",
             installedRepository, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
@@ -579,9 +579,9 @@ public class AppViewManagerTest {
     appViewManager =
         new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics,
-            notificationAnalytics, installAnalytics, limit, Schedulers.immediate(),
-            "anyString", appCoinsManager, promotionsManager, "",
+            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
+            promotionsManager, "",
             installedRepository, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
