@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
+import java.util.ArrayList;
 import java.util.List;
 import rx.Single;
 
@@ -14,7 +15,7 @@ public class EditorialListRepository {
 
   public Single<EditorialListViewModel> loadEditorialListViewModel(boolean invalidateCache) {
     if (cachedEditorialListViewModel != null && !invalidateCache) {
-      return Single.just(cachedEditorialListViewModel);
+      return Single.just(cloneList(cachedEditorialListViewModel));
     }
     return loadNewEditorialListViewModel(0, false, invalidateCache);
   }
@@ -26,7 +27,7 @@ public class EditorialListRepository {
           if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
             updateCache(editorialListViewModel, loadMore);
           }
-          return editorialListViewModel;
+          return cloneList(editorialListViewModel);
         });
   }
 
@@ -55,5 +56,13 @@ public class EditorialListRepository {
           new EditorialListViewModel(curationCards, editorialListViewModel.getOffset(),
               editorialListViewModel.getTotal());
     }
+  }
+
+  private EditorialListViewModel cloneList(EditorialListViewModel editorialListViewModel) {
+    if (editorialListViewModel.hasError() || editorialListViewModel.isLoading()) {
+      return editorialListViewModel;
+    }
+    return new EditorialListViewModel(new ArrayList<>(editorialListViewModel.getCurationCards()),
+        editorialListViewModel.getOffset(), editorialListViewModel.getTotal());
   }
 }

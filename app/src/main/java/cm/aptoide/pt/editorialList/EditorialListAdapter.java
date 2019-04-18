@@ -84,8 +84,7 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
   }
 
   public void update(List<CurationCard> curationCards) {
-    editorialListItems.clear();
-    editorialListItems.addAll(curationCards);
+    this.editorialListItems = curationCards;
     notifyDataSetChanged();
   }
 
