@@ -129,20 +129,6 @@ public class ContactUtils {
     return "+" + phoneNumber;
   }
 
-  public String getCountryCodeForRegion() {
-    String country = getUserCountry();
-
-    if (country == null) {
-      return "";
-    } else {
-      country = country.toUpperCase();
-    }
-
-    final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-
-    return String.valueOf(phoneNumberUtil.getCountryCodeForRegion(country));
-  }
-
   public boolean isValidNumberInE164Format(String number) {
     final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
 

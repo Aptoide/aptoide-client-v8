@@ -1,6 +1,5 @@
 package cm.aptoide.pt.addressbook.view;
 
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.AddressBookNavigation;
 
@@ -30,10 +29,5 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
 
   @Override public void leaveAddressBook() {
     this.navigator.cleanBackStackUntil(exitNavigationFragmentTag);
-  }
-
-  @Override public void navigateToThankYouConnectingFragment() {
-    navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newThankYouConnectingFragment(exitNavigationFragmentTag), true);
   }
 }

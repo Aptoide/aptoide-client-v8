@@ -7,6 +7,4 @@ package cm.aptoide.pt.presenter;
 public interface AddressBookNavigation {
 
   void leaveAddressBook();
-
-  void navigateToThankYouConnectingFragment();
 }

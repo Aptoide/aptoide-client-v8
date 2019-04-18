@@ -3,7 +3,6 @@ package cm.aptoide.pt.view.configuration.implementation;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -163,10 +162,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
       StoreContext storeName) {
     return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
-  }
-
-  @Override public Fragment newPhoneInputFragment(String tag) {
-    return PhoneInputFragment.newInstance(tag);
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {
