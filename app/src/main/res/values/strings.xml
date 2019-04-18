@@ -523,7 +523,6 @@
   <string name="shortcut_button_pick_app">Surprise me</string>
 
   <string name="all_button_ok">OK</string>
-  <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
   <string name="all_button_got_it">GOT IT</string>
   <string name="all_button_know_more">KNOW MORE</string>
