@@ -79,8 +79,6 @@ public interface FragmentProvider {
   @Deprecated Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
       String title, StoreContext storeName);
 
-  @Deprecated Fragment newAddressBookFragment();
-
   @Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
 
   @Deprecated Fragment newPhoneInputFragment(String tag);

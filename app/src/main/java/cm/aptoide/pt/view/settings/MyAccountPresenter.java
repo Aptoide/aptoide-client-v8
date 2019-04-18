@@ -46,7 +46,6 @@ public class MyAccountPresenter implements Presenter {
     handleLoginClick();
     handleLogOutClick();
     handleCreateStoreClick();
-    handleFindFriendsClick();
     handleStoreEditClick();
     handleStoreEditResult();
     handleStoreDisplayableClick();
@@ -146,19 +145,6 @@ public class MyAccountPresenter implements Presenter {
             .first())
         .observeOn(scheduler)
         .doOnNext(account -> view.showAccount(account))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(notification -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  @VisibleForTesting public void handleFindFriendsClick() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.findFriendsClick())
-        .doOnNext(__ -> {
-          accountAnalytics.sendFollowFriendsClickEvent();
-          myAccountNavigator.navigateToFindFriends();
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable));

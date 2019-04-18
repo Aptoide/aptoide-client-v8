@@ -6,7 +6,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
@@ -51,8 +50,6 @@ import dagger.Subcomponent;
 
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
 public interface FragmentComponent {
-
-  void inject(AddressBookFragment addressBookFragment);
 
   void inject(LoginSignUpCredentialsFragment loginSignUpCredentialsFragment);
 

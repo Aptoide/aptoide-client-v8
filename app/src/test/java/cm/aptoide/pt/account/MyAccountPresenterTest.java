@@ -143,19 +143,6 @@ public class MyAccountPresenterTest {
     verify(navigator).navigateToCreateStore();
   }
 
-  @Test public void handleFindFriendsClickTest() {
-    //Given an initialized MyAccountPresenter
-    //When a user clicks the find friends button
-    when(view.findFriendsClick()).thenReturn(Observable.just(null));
-
-    myAccountPresenter.handleFindFriendsClick();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(analytics).sendFollowFriendsClickEvent();
-    //Then the user should navigate to the find friends view
-    verify(navigator).navigateToFindFriends();
-  }
-
   @Test public void handleStoreEditClickTest() {
     //Given an initialized MyAccountPresenter
     //And a user Account with a store created

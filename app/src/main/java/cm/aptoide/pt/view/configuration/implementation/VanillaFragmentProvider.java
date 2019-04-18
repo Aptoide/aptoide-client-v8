@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
@@ -169,10 +168,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
   public Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme, String title,
       StoreContext storeName) {
     return TimeLineFollowingFragment.newInstanceUsingStoreId(id, storeTheme, title, storeName);
-  }
-
-  @Override public Fragment newAddressBookFragment() {
-    return AddressBookFragment.newInstance();
   }
 
   @Override public Fragment newSyncSuccessFragment(List<Contact> contacts, String tag) {

@@ -6,7 +6,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -82,10 +81,6 @@ public class MyAccountNavigator {
   public void navigateToCreateStore() {
     fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), false),
         true);
-  }
-
-  public void navigateToFindFriends() {
-    fragmentNavigator.navigateTo(AddressBookFragment.newInstance(), true);
   }
 
   public void navigateToSettings() {
