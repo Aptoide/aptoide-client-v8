@@ -660,7 +660,7 @@
   <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
   <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credtis Now!</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
   
 </resources>
