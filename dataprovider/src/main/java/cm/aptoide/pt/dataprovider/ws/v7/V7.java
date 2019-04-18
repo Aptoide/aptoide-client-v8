@@ -426,12 +426,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Part MultipartBody.Part user_avatar,
         @PartMap HashMapNotNull<String, okhttp3.RequestBody> body);
 
-    @POST("user/connections/add") Observable<GetFollowers> setConnections(
-        @Body SyncAddressBookRequest.Body body);
-
-    @POST("user/connections/set") Observable<BaseV7Response> setConnection(
-        @Body SetConnectionRequest.Body body);
-
     @POST("store/subscription/set")
     Observable<ChangeStoreSubscriptionResponse> changeStoreSubscription(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,

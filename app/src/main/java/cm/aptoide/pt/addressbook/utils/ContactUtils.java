@@ -121,29 +121,4 @@ public class ContactUtils {
     }
     return null;
   }
-
-  public String normalizePhoneNumber(String phoneNumber) {
-    if (phoneNumber.startsWith("+")) {
-      return phoneNumber;
-    }
-    return "+" + phoneNumber;
-  }
-
-  public boolean isValidNumberInE164Format(String number) {
-    final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-
-    Phonenumber.PhoneNumber phoneNumber = null;
-
-    int country;
-    try {
-      phoneNumber = phoneNumberUtil.parse(number, "");
-      country = phoneNumber.getCountryCode();
-    } catch (NumberParseException e) {
-      e.printStackTrace();
-      return false;
-    }
-
-    return phoneNumberUtil.isValidNumberForRegion(phoneNumber,
-        phoneNumberUtil.getRegionCodeForCountryCode(country));
-  }
 }
