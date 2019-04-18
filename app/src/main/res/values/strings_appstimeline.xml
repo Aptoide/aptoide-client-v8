@@ -15,12 +15,9 @@
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
 
-  <!-- Address book -->
   <string name="google">Google</string>
   <string name="connect_google">Connect with Google</string>
   <string name="done">Done</string>
-  <string name="addressbook_phone_number">Phone number</string>
-  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
 
   <plurals
       name="timeline_short_comment">
