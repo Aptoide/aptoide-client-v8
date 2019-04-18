@@ -123,10 +123,6 @@ public class MyAccountPresenterTest {
     myAccountPresenter.handleLogOutClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    //Then address book related shared preferences should be set to false (reset)
-    verify(sharedPreferences).edit();
-    verify(editor, times(3)).putBoolean(anyString(), eq(false));
-    verify(editor).apply();
     //Then show the login displayables
     verify(view).showLoginAccountDisplayable();
   }
