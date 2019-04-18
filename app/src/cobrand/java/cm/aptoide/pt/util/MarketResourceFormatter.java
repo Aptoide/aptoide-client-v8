@@ -22,7 +22,6 @@ public class MarketResourceFormatter {
       case R.string.addressbook_2nd_msg:
       case R.string.addressbook_share_phone:
       case R.string.addressbook_data_about:
-      case R.string.we_didn_t_find_any_contacts_that_are_using_aptoide:
       case R.string.setting_category_autoupdate_message:
       case R.string.setting_category_autoupdate_title:
         return context.getString(id, marketName);

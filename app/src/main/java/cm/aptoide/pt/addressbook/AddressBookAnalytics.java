@@ -39,13 +39,6 @@ public class AddressBookAnalytics {
         getViewName(true));
   }
 
-  public void sendNewConnectionsShareEvent(String screen) {
-    Map<String, Object> data = createMapData(ACTION, "Share");
-    data.put("screen", screen);
-    analyticsManager.logEvent(data, FOLLOW_FRIENDS_NEW_CONNECTIONS, AnalyticsManager.Action.CLICK,
-        getViewName(true));
-  }
-
   public void sendShareYourPhoneSuccessEvent() {
     analyticsManager.logEvent(null, FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         AnalyticsManager.Action.CLICK, getViewName(true));

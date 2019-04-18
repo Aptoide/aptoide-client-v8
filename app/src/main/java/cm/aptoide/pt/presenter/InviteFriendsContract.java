@@ -1,7 +1,5 @@
 package cm.aptoide.pt.presenter;
 
-import android.content.Context;
-
 /**
  * Created by jdandrade on 23/02/2017.
  */
@@ -10,16 +8,11 @@ public interface InviteFriendsContract {
   interface View {
 
     enum OpenMode {
-      CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
+      CONTACTS_PERMISSION_DENIAL
     }
   }
 
   interface UserActionsListener {
 
-    void allowFindClicked();
-
-    void doneClicked();
-
-    void shareClicked(Context context);
   }
 }

@@ -310,7 +310,6 @@
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
   <string name="follow_store">Follow store</string>
-  <string name="store_url" translatable="false">http://en.aptoide.com/store/%1$s</string>
 
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have apps yet.</string>
@@ -661,6 +660,6 @@
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credtis Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
-  
+
 </resources>
 

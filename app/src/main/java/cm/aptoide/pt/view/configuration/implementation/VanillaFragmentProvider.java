@@ -4,14 +4,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import cm.aptoide.pt.addressbook.data.Contact;
-import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
 import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -176,11 +174,6 @@ public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override public Fragment newPhoneInputFragment(String tag) {
     return PhoneInputFragment.newInstance(tag);
-  }
-
-  @Override public Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
-      String tag) {
-    return InviteFriendsFragment.newInstance(openMode, tag);
   }
 
   @Override public Fragment newThankYouConnectingFragment(String tag) {

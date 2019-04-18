@@ -2,6 +2,5 @@
 <resources>
   <string name="addressbook_share_phone">Share your phone number so your friends can easily find you on Aptoide</string>
   <string name="addressbook_success_connected_friends">We successfully connected you with %1$s friends that use Aptoide</string>
-  <string name="we_didn_t_find_any_contacts_that_are_using_aptoide">We didn\'t find any contacts that use Aptoide</string>
 
 </resources>

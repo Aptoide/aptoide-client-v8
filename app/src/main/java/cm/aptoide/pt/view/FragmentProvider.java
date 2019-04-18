@@ -5,7 +5,6 @@ import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.presenter.InviteFriendsContract;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreFragment;
 import java.util.List;
@@ -82,9 +81,6 @@ public interface FragmentProvider {
   @Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
 
   @Deprecated Fragment newPhoneInputFragment(String tag);
-
-  @Deprecated Fragment newInviteFriendsFragment(InviteFriendsContract.View.OpenMode openMode,
-      String tag);
 
   @Deprecated Fragment newThankYouConnectingFragment(String tag);
 
