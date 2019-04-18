@@ -12,12 +12,9 @@ import java.util.Map;
 public class AddressBookAnalytics {
 
   public static final String HAS_NEW_CONNECTIONS_SCREEN = "Has New Connections";
-  public static final String FOLLOW_FRIENDS_CHOOSE_NETWORK = "Follow_Friends_Choose_Network";
-  public static final String FOLLOW_FRIENDS_HOW_TO = "Follow_Friends_How_To";
   public static final String FOLLOW_FRIENDS_NEW_CONNECTIONS = "Follow_Friends_New_Connections";
   public static final String FOLLOW_FRIENDS_SET_MY_PHONENUMBER =
       "Follow_Friends_Set_My_Phonenumber";
-  private static final String CHOOSE_NETWORK_ACTION = "choose_network_action";
   private static final String ACTION = "action";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -26,21 +23,6 @@ public class AddressBookAnalytics {
       NavigationTracker navigationTracker) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-  }
-
-  public void sendSyncFacebookEvent() {
-    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Facebook"),
-        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendSyncTwitterEvent() {
-    analyticsManager.logEvent(createMapData(CHOOSE_NETWORK_ACTION, "Twitter"),
-        FOLLOW_FRIENDS_CHOOSE_NETWORK, AnalyticsManager.Action.CLICK, getViewName(true));
-  }
-
-  public void sendHowAptoideUsesYourDataEvent() {
-    analyticsManager.logEvent(null, FOLLOW_FRIENDS_HOW_TO, AnalyticsManager.Action.CLICK,
-        getViewName(true));
   }
 
   public void sendNewConnectionsAllowFriendsToFindYouEvent(String screen) {

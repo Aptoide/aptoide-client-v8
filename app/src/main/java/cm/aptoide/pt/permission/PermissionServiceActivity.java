@@ -37,15 +37,12 @@ import rx.functions.Action0;
   private static final int ACCESS_TO_EXTERNAL_FS_REQUEST_ID = 61;
   private static final int ACCESS_TO_ACCOUNTS_REQUEST_ID = 62;
 
-  private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
   private static final int PERMISSIONS_REQUEST_ACCESS_CAMERA = 101;
 
   @Nullable private Action0 toRunWhenAccessToFileSystemIsGranted;
   @Nullable private Action0 toRunWhenAccessToFileSystemIsDenied;
   @Nullable private Action0 toRunWhenAccessToAccountsIsGranted;
   @Nullable private Action0 toRunWhenAccessToAccountsIsDenied;
-  @Nullable private Action0 toRunWhenAccessToContactsIsGranted;
-  @Nullable private Action0 toRunWhenAccessToContactsIsDenied;
 
   private SharedPreferences sharedPreferences;
   private ConnectivityManager connectivityManager;
@@ -101,51 +98,6 @@ import rx.functions.Action0;
 
       ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.GET_ACCOUNTS },
           ACCESS_TO_ACCOUNTS_REQUEST_ID);
-      Logger.getInstance()
-          .v(TAG, "requesting permission to access accounts");
-      return;
-    }
-    Logger.getInstance()
-        .v(TAG, "already has permission to access accounts");
-    if (toRunWhenAccessIsGranted != null) {
-      toRunWhenAccessIsGranted.call();
-    }
-  }
-
-  @TargetApi(Build.VERSION_CODES.M) @Override
-  public void requestAccessToContacts(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied) {
-    int hasPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
-    if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-      this.toRunWhenAccessToContactsIsGranted = toRunWhenAccessIsGranted;
-      this.toRunWhenAccessToContactsIsDenied = toRunWhenAccessIsDenied;
-
-      if (forceShowRationale) {
-        Logger.getInstance()
-            .v(TAG, "showing rationale and requesting permission to access accounts");
-
-        showMessageOKCancel(R.string.access_to_get_accounts_rationale,
-            new SimpleSubscriber<GenericDialogs.EResponse>() {
-
-              @Override public void onNext(GenericDialogs.EResponse eResponse) {
-                super.onNext(eResponse);
-                if (eResponse != GenericDialogs.EResponse.YES) {
-                  if (toRunWhenAccessToContactsIsDenied != null) {
-                    toRunWhenAccessToContactsIsDenied.call();
-                  }
-                  return;
-                }
-
-                ActivityCompat.requestPermissions(PermissionServiceActivity.this, new String[] {
-                    Manifest.permission.READ_CONTACTS
-                }, PERMISSIONS_REQUEST_READ_CONTACTS);
-              }
-            });
-        return;
-      }
-
-      ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
-          PERMISSIONS_REQUEST_READ_CONTACTS);
       Logger.getInstance()
           .v(TAG, "requesting permission to access accounts");
       return;
@@ -317,34 +269,6 @@ import rx.functions.Action0;
     }
 
     switch (requestCode) {
-      case PERMISSIONS_REQUEST_ACCESS_CAMERA:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          Logger.getInstance()
-              .v(TAG, "access to camera was granted");
-          if (toRunWhenAccessToContactsIsGranted != null) {
-            toRunWhenAccessToContactsIsGranted.call();
-          }
-        } else {
-          if (toRunWhenAccessToContactsIsDenied != null) {
-            toRunWhenAccessToContactsIsDenied.call();
-          }
-        }
-        break;
-
-      case PERMISSIONS_REQUEST_READ_CONTACTS:
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-          Logger.getInstance()
-              .v(TAG, "access to read and write to external storage was granted");
-          if (toRunWhenAccessToContactsIsGranted != null) {
-            toRunWhenAccessToContactsIsGranted.call();
-          }
-        } else {
-          if (toRunWhenAccessToContactsIsDenied != null) {
-            toRunWhenAccessToContactsIsDenied.call();
-          }
-        }
-        break;
-
       case ACCESS_TO_EXTERNAL_FS_REQUEST_ID:
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           Logger.getInstance()

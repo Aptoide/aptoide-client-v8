@@ -61,8 +61,6 @@ public class InviteFriendsPresenter implements InviteFriendsContract.UserActions
         return "Not Able to Connect";
       case NO_FRIENDS:
         return "No New Connections";
-      case ERROR:
-        return "Error Getting Connections";
       default:
         throw new IllegalStateException("Mode not supported");
     }

@@ -45,11 +45,6 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
   @Override
   public void navigateToInviteFriendsView(@NonNull InviteFriendsContract.View.OpenMode openMode) {
     switch (openMode) {
-      case ERROR:
-        this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
-            .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.ERROR,
-                exitNavigationFragmentTag), true);
-        break;
       case NO_FRIENDS:
         this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newInviteFriendsFragment(InviteFriendsContract.View.OpenMode.NO_FRIENDS,

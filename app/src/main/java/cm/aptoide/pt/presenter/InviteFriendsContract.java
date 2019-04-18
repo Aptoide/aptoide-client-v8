@@ -10,7 +10,7 @@ public interface InviteFriendsContract {
   interface View {
 
     enum OpenMode {
-      ERROR, CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
+      CONTACTS_PERMISSION_DENIAL, NO_FRIENDS
     }
   }
 

@@ -62,9 +62,8 @@ public class InviteFriendsFragment extends UIComponentFragment
     mActionsListener = new InviteFriendsPresenter(this,
         new AddressBookNavigationManager(getFragmentNavigator(), entranceTag,
             getString(R.string.addressbook_about),
-            marketResourceFormatter.formatString(getContext(), -1),
-            theme), openMode, new AddressBookAnalytics(analyticsManager, navigationTracker),
-        marketName);
+            marketResourceFormatter.formatString(getContext(), -1), theme), openMode,
+        new AddressBookAnalytics(analyticsManager, navigationTracker), marketName);
   }
 
   @Override public void loadExtras(Bundle args) {
@@ -85,9 +84,6 @@ public class InviteFriendsFragment extends UIComponentFragment
 
   public void setupMessage(@NonNull OpenMode openMode) {
     switch (openMode) {
-      case ERROR:
-        message.setText(getString(R.string.addressbook_insuccess_connection));
-        break;
       case NO_FRIENDS:
         message.setText(marketResourceFormatter.formatString(getContext(),
             R.string.we_didn_t_find_any_contacts_that_are_using_aptoide));
