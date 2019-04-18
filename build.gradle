@@ -132,9 +132,6 @@ ext {
 
   PICASSO_VERSION = '2.5.2'
 
-
-  // https://github.com/googlei18n/libphonenumber
-  LIB_PHONE_NUMBER_VERSION = '8.3.0'
   OKHTTP_VERSION = '3.6.0'
 
   CONSTRAINT_LAYOUT_VERSION = '1.1.3'

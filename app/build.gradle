@@ -296,7 +296,6 @@ android {
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
 
-
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -500,9 +499,6 @@ dependencies {
     transitive = true
   }
 
-  //lib phone number
-  implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
-
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
   implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
@@ -525,7 +521,6 @@ dependencies {
 
   // Facebook Login
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 

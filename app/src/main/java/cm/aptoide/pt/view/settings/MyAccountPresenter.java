@@ -6,7 +6,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -212,10 +211,7 @@ public class MyAccountPresenter implements Presenter {
     return view.signOutClick()
         .flatMap(click -> accountManager.logout()
             .observeOn(scheduler)
-            .doOnCompleted(() -> {
-              resetAddressBookValues();
-              view.showLoginAccountDisplayable();
-            })
+            .doOnCompleted(() -> view.showLoginAccountDisplayable())
             .doOnError(throwable -> crashReport.log(throwable)).<Void>toObservable())
         .retry();
   }
@@ -258,14 +254,6 @@ public class MyAccountPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
-  }
-
-  private void resetAddressBookValues() {
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false)
-        .putBoolean(ManagedKeys.TWITTER_SYNC, false)
-        .putBoolean(ManagedKeys.FACEBOOK_SYNC, false)
-        .apply();
   }
 
   private boolean storeExistsInAccount(Account account) {
