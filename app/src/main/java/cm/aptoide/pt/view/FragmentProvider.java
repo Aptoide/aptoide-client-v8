@@ -1,13 +1,11 @@
 package cm.aptoide.pt.view;
 
 import android.support.v4.app.Fragment;
-import cm.aptoide.pt.addressbook.data.Contact;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreFragment;
-import java.util.List;
 
 /**
  * Interface from which all fragments should be requested.
@@ -77,8 +75,6 @@ public interface FragmentProvider {
 
   @Deprecated Fragment newTimeLineFollowingFragmentUsingStoreId(Long id, String storeTheme,
       String title, StoreContext storeName);
-
-  @Deprecated Fragment newSyncSuccessFragment(List<Contact> contacts, String tag);
 
   @Deprecated Fragment newPhoneInputFragment(String tag);
 

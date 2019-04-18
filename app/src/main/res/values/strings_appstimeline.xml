@@ -16,9 +16,7 @@
   <string name="private_following_message">you are following %d private users/stores</string>
 
   <!-- Address book -->
-  <string name="not_now">Not now</string>+
-  <string name="addressbook_success">Success!</string>
-  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
+  <string name="not_now">Not now</string>
   <string name="google">Google</string>
   <string name="connect_google">Connect with Google</string>
   <string name="done">Done</string>

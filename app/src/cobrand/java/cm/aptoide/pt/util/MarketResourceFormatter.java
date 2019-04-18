@@ -25,8 +25,6 @@ public class MarketResourceFormatter {
       case R.string.setting_category_autoupdate_message:
       case R.string.setting_category_autoupdate_title:
         return context.getString(id, marketName);
-      case R.string.addressbook_success_connected_friends:
-        return context.getString(id, optParamaters, marketName);
     }
     return context.getString(id);
   }

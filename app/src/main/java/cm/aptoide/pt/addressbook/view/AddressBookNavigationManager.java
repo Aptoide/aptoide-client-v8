@@ -32,11 +32,6 @@ public class AddressBookNavigationManager implements AddressBookNavigation {
     this.navigator.cleanBackStackUntil(exitNavigationFragmentTag);
   }
 
-  @Override public void navigateToPhoneInputView() {
-    this.navigator.navigateTo(AptoideApplication.getFragmentProvider()
-        .newPhoneInputFragment(exitNavigationFragmentTag), true);
-  }
-
   @Override public void navigateToThankYouConnectingFragment() {
     navigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newThankYouConnectingFragment(exitNavigationFragmentTag), true);

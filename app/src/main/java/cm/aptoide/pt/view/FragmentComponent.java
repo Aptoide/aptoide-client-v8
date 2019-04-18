@@ -7,7 +7,6 @@ import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
-import cm.aptoide.pt.addressbook.view.SyncResultFragment;
 import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
@@ -59,8 +58,6 @@ public interface FragmentComponent {
   void inject(SearchResultFragment searchResultFragment);
 
   void inject(StoreFragment storeFragment);
-
-  void inject(SyncResultFragment syncResultFragment);
 
   void inject(PhoneInputFragment phoneInputFragment);
 

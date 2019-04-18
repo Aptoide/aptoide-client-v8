@@ -8,7 +8,5 @@ public interface AddressBookNavigation {
 
   void leaveAddressBook();
 
-  void navigateToPhoneInputView();
-
   void navigateToThankYouConnectingFragment();
 }
