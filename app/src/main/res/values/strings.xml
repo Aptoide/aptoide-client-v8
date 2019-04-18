@@ -521,7 +521,6 @@
   <string name="shortcut_button_pick_app">Surprise me</string>
 
   <string name="all_button_ok">OK</string>
-  <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
   <string name="all_button_got_it">GOT IT</string>
   <string name="all_button_know_more">KNOW MORE</string>
@@ -654,10 +653,11 @@
   <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
-  <string name="promo_update2appc_notification_body">Get a bonus with every purchase in AppCoins!</string>
+  <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
   <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_claim_button">Claim</string>
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
-  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credtis Now!</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
   
 </resources>

@@ -53,11 +53,6 @@ public class HomeNavigator {
         editorsPosition);
   }
 
-  public void navigateToRecommendsAppView(long appId, String packageName, String tag,
-      HomeEvent.Type type) {
-    appNavigator.navigateWithAppId(appId, packageName, parseAction(type), tag);
-  }
-
   public void navigateWithDownloadUrlAndReward(long appId, String packageName, String tag,
       String downloadUrl, float reward) {
     appNavigator.navigateWithDownloadUrlAndReward(appId, packageName, tag, downloadUrl, reward);
@@ -83,15 +78,6 @@ public class HomeNavigator {
 
   public void navigateToMyAccount() {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
-  }
-
-  private AppViewFragment.OpenType parseAction(HomeEvent.Type type) {
-    if (type.equals(HomeEvent.Type.SOCIAL_CLICK)) {
-      return AppViewFragment.OpenType.OPEN_ONLY;
-    } else if (type.equals(HomeEvent.Type.SOCIAL_INSTALL)) {
-      return AppViewFragment.OpenType.OPEN_AND_INSTALL;
-    }
-    throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
   }
 
   public void navigateToAppCoinsInformationView() {

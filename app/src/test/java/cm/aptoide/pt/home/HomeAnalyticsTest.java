@@ -71,23 +71,6 @@ public class HomeAnalyticsTest {
         eq(AnalyticsManager.Action.PULL_REFRESH), eq("home"));
   }
 
-  @Test public void sendRecommendedAppInteractEvent() throws Exception {
-    //Given an initialized HomeAnalytics
-    //When user clicks on a recommended App
-    homeAnalytics.sendRecommendedAppInteractEvent(4.7, "cm.aptoide.pt", 0, "timeline-card",
-        "aptoide recommends", HomeEvent.Type.SOCIAL_CLICK);
-    //Then an Home_Interact event with 'tap on app' action,  app_rating, package_name, bundle_tag, bundle_position is logged to the analytics manager
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("action", TAP_ON_APP);
-    data.put("app_rating", 4.7);
-    data.put("package_name", "cm.aptoide.pt");
-    data.put("bundle_tag", "timeline-card");
-    data.put("bundle_position", 0);
-    data.put("card_type", "aptoide recommends");
-    verify(analyticsManager).logEvent(eq(data), eq("Home_Interact"),
-        eq(AnalyticsManager.Action.OPEN), eq("home"));
-  }
-
   @Test public void sendTapOnMoreInteractEvent() throws Exception {
     //Given an initialized HomeAnalytics
     //When user clicks on a more (in any bundle)

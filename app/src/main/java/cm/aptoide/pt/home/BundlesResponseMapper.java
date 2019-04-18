@@ -156,8 +156,6 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.APPCOINS_ADS;
       case ADS:
         return HomeBundle.BundleType.ADS;
-      case TIMELINE_CARD:
-        return HomeBundle.BundleType.SOCIAL;
       case APPS_TOP_GROUP:
         return HomeBundle.BundleType.TOP;
       default:
