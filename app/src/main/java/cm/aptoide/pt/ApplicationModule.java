@@ -98,7 +98,6 @@ import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.billing.BillingAnalytics;
@@ -229,7 +228,6 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -240,7 +238,6 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
-import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -1425,13 +1422,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
     return Arrays.asList(FirstLaunchAnalytics.FIRST_LAUNCH_BI,
         FirstLaunchAnalytics.PLAY_PROTECT_EVENT, AppViewAnalytics.OPEN_APP_VIEW,
-        NotificationAnalytics.NOTIFICATION_EVENT_NAME, TimelineAnalytics.OPEN_APP,
-        TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE, TimelineAnalytics.OPEN_ARTICLE,
-        TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG, TimelineAnalytics.OPEN_VIDEO,
-        TimelineAnalytics.OPEN_CHANNEL, TimelineAnalytics.OPEN_STORE_PROFILE,
-        TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND,
-        TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
-        TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
+        NotificationAnalytics.NOTIFICATION_EVENT_NAME, AccountAnalytics.APTOIDE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME,
         PromotionsAnalytics.VALENTINE_MIGRATOR);
   }
@@ -1481,11 +1472,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ReadPostsPersistence providesReadPostsPersistence() {
     return new ReadPostsPersistence(new ArrayList<>());
-  }
-
-  @Singleton @Provides TimelineAnalytics providesTimelineAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new TimelineAnalytics(navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides StoreAnalytics providesStoreAnalytics(AnalyticsManager analyticsManager,
@@ -1599,29 +1585,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         application.getPackageManager());
   }
 
-  @Singleton @Provides NotLoggedInShareAnalytics providesNotLoggedInShareAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      AccountAnalytics accountAnalytics) {
-    return new NotLoggedInShareAnalytics(analyticsManager, navigationTracker, accountAnalytics);
-  }
-
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
-      NotLoggedInShareAnalytics notLoggedInShareAnalytics, BillingAnalytics billingAnalytics,
+      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
       StoreAnalytics storeAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
+        billingAnalytics, storeAnalytics);
   }
 
   @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new PreferencesPersister(sharedPreferences);
-  }
-
-  @Singleton @Provides PreferencesManager providesPreferencesManager(
-      PreferencesPersister preferencesPersister) {
-    return new PreferencesManager(preferencesPersister);
   }
 
   @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
@@ -1702,12 +1676,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager) {
+      PromotionsService promotionsService, InstalledRepository installedRepository,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
-        preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
+        application.getApplicationContext()
+            .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1839,34 +1813,28 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
-        TimelineAnalytics.TIMELINE_OPENED, StoreAnalytics.STORES_TAB_INTERACT,
-        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
-        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
-        AccountAnalytics.FOLLOW_FRIENDS, UpdatesAnalytics.UPDATE_EVENT,
-        PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
-        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
-        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
-        NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
-        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
-        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
+        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
+        AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
+        UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
+        FirstLaunchAnalytics.FIRST_LAUNCH, FirstLaunchAnalytics.PLAY_PROTECT_EVENT,
+        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
+        AppViewAnalytics.SIMILAR_APP_INTERACT, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
+        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
+        AccountAnalytics.ENTRY, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP,
+        AppShortcutsAnalytics.APPS_SHORTCUTS, AccountAnalytics.CREATE_YOUR_STORE,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
         BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
-        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
-        AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
-        HomeAnalytics.HOME_CHIP_CLICK, TimelineAnalytics.MESSAGE_IMPRESSION,
-        TimelineAnalytics.MESSAGE_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        HomeAnalytics.HOME_CHIP_CLICK, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
-        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
-        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
-        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
-        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL,
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
+        DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
         PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
         AppViewAnalytics.ADS_BLOCK_BY_OFFER, AppViewAnalytics.APPC_SIMILAR_APP_INTERACT,

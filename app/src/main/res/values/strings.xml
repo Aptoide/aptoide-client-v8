@@ -477,8 +477,6 @@
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
 
-  <!-- Not Logged in Fragment -->
-  <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
   <string name="fragment_payment_login_description">To complete your purchase please log in</string>
   <string name="fragment_payment_login_separator_description">Or using your email</string>
 
