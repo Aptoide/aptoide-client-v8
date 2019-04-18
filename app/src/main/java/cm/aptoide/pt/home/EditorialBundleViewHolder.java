@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,6 +12,10 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -71,12 +76,11 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(title);
-    String[] newDate = date.split(" ");
-    setCurationCardBubble(subTitle);
-    editorialDate.setText(newDate[0]);
     editorialViews.setText(String.format(itemView.getContext()
             .getString(R.string.editorial_card_short_number_views),
         formatNumberOfViews(numberOfViews)));
+    setCurationCardBubble(subTitle);
+    setupCalendarDateString(date);
     reactButton.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position,
             HomeEvent.Type.REACT_SINGLE_PRESS)));
@@ -89,7 +93,27 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
   }
 
-  public void setReactions(List<TopReaction> reactions, int numberOfReactions,
+  private void setupCalendarDateString(String date) {
+    String[] dateSplitted = date.split(" ");
+    String newFormatDate = dateSplitted[0].replace("-", "/");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    Date newDate = null;
+    String formattedDate;
+    try {
+      newDate = dateFormat.parse(newFormatDate);
+    } catch (ParseException parseException) {
+      Snackbar.make(editorialCard, itemView.getContext()
+          .getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
+          .show();
+    }
+    if (newDate != null) {
+      formattedDate = DateFormat.getDateInstance(DateFormat.SHORT)
+          .format(newDate);
+      editorialDate.setText(formattedDate);
+    }
+  }
+
+  private void setReactions(List<TopReaction> reactions, int numberOfReactions,
       String userReaction) {
     setUserReaction(userReaction);
     int validReactions = 0;
