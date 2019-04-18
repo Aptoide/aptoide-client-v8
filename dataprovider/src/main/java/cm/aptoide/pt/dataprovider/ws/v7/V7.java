@@ -464,9 +464,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body RelatedAppRequest.Body request);
 
-    @POST("user/timeline/markAsRead") Observable<BaseV7Response> setPostRead(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body);
-
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);

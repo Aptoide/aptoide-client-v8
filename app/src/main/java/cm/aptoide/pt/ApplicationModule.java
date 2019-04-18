@@ -217,7 +217,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -1475,10 +1474,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new AppShortcutsAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides ReadPostsPersistence providesReadPostsPersistence() {
-    return new ReadPostsPersistence(new ArrayList<>());
   }
 
   @Singleton @Provides TimelineAnalytics providesTimelineAnalytics(
