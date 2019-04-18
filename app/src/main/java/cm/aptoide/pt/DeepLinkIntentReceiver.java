@@ -176,19 +176,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromPickApp();
     } else if ("promotions".equals(u.getQueryParameter("name"))) {
       return startFromPromotions();
-    } else if ("CURATION_1".equals(u.getQueryParameter("name"))) {
+    } else if ("CURATION_1".equals(u.getQueryParameter("name"))
+        && u.getQueryParameter("id") != null) {
       return startFromEditorialCard(u.getQueryParameter("id"));
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
     return null;
-  }
-
-  private Intent startFromEditorialCard(String cardId) {
-    Intent intent = new Intent(this, startClass);
-    intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
-    intent.putExtra(DeepLinksKeys.CARD_ID, cardId);
-    return intent;
   }
 
   private Intent dealWithAptword(String uri) {
@@ -603,6 +597,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Intent startFromPromotions() {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK, true);
+    return intent;
+  }
+
+  private Intent startFromEditorialCard(String cardId) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.CARD_ID, cardId);
     return intent;
   }
 
