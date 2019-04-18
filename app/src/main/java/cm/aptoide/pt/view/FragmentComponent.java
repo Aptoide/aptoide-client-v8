@@ -6,7 +6,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
-import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
@@ -115,8 +114,6 @@ public interface FragmentComponent {
   void inject(GridRecyclerSwipeWithToolbarFragment gridRecyclerSwipeWithToolbarFragment);
 
   void inject(SettingsFragment settingsFragment);
-
-  void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 
   void inject(WizardFragmentProvider wizardFragmentProvider);
 

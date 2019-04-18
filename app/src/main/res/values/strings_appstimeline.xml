@@ -21,8 +21,6 @@
   <string name="done">Done</string>
   <string name="addressbook_phone_number">Phone number</string>
   <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
-  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_about">About address book</string>
 
   <plurals
       name="timeline_short_comment">
