@@ -9,8 +9,6 @@ import rx.Observable;
 
 public interface HomeView extends BundleView {
 
-  Observable<AppHomeEvent> recommendedAppClicked();
-
   Observable<EditorialHomeEvent> editorialCardClicked();
 
   Observable<HomeEvent> infoBundleKnowMoreClicked();

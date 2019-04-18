@@ -274,13 +274,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
-  @Override public Observable<AppHomeEvent> recommendedAppClicked() {
-    return uiEventsListener.filter(homeClick -> homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_CLICK) || homeClick.getType()
-        .equals(HomeEvent.Type.SOCIAL_INSTALL))
-        .cast(AppHomeEvent.class);
-  }
-
   @Override public Observable<EditorialHomeEvent> editorialCardClicked() {
     return uiEventsListener.filter(homeClick -> homeClick.getType()
         .equals(HomeEvent.Type.EDITORIAL))
