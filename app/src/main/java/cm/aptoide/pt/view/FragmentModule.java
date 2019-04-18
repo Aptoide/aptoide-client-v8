@@ -65,6 +65,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorial.EditorialManager;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.editorial.EditorialPresenter;
@@ -420,9 +421,9 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics) {
-    return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        installManager, downloadFactory, downloadStateParser, notificationAnalytics,
-        installAnalytics, editorialAnalytics);
+    return new EditorialManager(editorialRepository,
+        arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(

@@ -86,8 +86,8 @@ public class HomeNavigator {
 
   public void navigateToEditorial(String cardId) {
     Bundle bundle = new Bundle();
-    bundle.putString("cardId", cardId);
-    bundle.putBoolean("fromHome", true);
+    bundle.putString(EditorialFragment.CARD_ID, cardId);
+    bundle.putBoolean(EditorialFragment.FROM_HOME, true);
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);
