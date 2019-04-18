@@ -96,6 +96,9 @@ import cm.aptoide.pt.home.apps.AppsFragmentView;
 import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
+import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
+import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -136,7 +139,6 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
@@ -321,14 +323,6 @@ import rx.subscriptions.CompositeSubscription;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides SocialRepository providesSocialRepository(
-      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new SocialRepository(bodyInterceptorPoolV7, WebService.getDefaultConverter(),
-        okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
   @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
       InstalledRepository repository) {
     return new AppcMigrationManager(repository);
@@ -341,18 +335,17 @@ import rx.subscriptions.CompositeSubscription;
       AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
-      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
-      MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
-      @Named("wallet-offer-promotion-id") String promotionId,
+      Resources resources, WindowManager windowManager, @Named("marketName") String marketName,
+      AppCoinsManager appCoinsManager, MoPubAdsManager moPubAdsManager,
+      PromotionsManager promotionsManager, @Named("wallet-offer-promotion-id") String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        socialRepository, marketName, appCoinsManager, promotionsManager, promotionId,
-        installedRepository, appcMigrationManager);
+        marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
+        appcMigrationManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -543,5 +536,19 @@ import rx.subscriptions.CompositeSubscription;
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) fragment.getContext()), aptoideAccountManager,
         appsNavigator);
+  }
+
+  @FragmentScope @Provides SeeMoreAppcManager providesSeeMoreManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, DownloadFactory downloadFactory) {
+    return new SeeMoreAppcManager(updatesManager, installManager, appMapper, downloadFactory,
+        downloadAnalytics, installAnalytics);
+  }
+
+  @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(
+      SeeMoreAppcManager seeMoreAppcManager) {
+    return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
   }
 }

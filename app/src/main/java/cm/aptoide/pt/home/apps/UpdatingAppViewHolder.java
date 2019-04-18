@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,7 +23,14 @@ class UpdatingAppViewHolder extends AppsViewHolder {
   private ImageView pauseButton;
   private PublishSubject<AppClick> pauseUpdate;
 
+  private boolean isAppcUpgrade;
+
   public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate) {
+    this(itemView, pauseUpdate, false);
+  }
+
+  public UpdatingAppViewHolder(View itemView, PublishSubject<AppClick> pauseUpdate,
+      boolean isAppcUpgrade) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -32,6 +40,8 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     updateProgress = (TextView) itemView.findViewById(R.id.apps_updates_progress_number);
     pauseButton = (ImageView) itemView.findViewById(R.id.apps_updates_pause_button);
     this.pauseUpdate = pauseUpdate;
+
+    this.isAppcUpgrade = isAppcUpgrade;
   }
 
   @Override public void setApp(App app) {
@@ -43,7 +53,7 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     progressBar.setProgress(((UpdateApp) app).getProgress());
     updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
 
-    pauseButton.setOnClickListener(
-        pause -> pauseUpdate.onNext(new AppClick(app, AppClick.ClickType.PAUSE_UPDATE)));
+    pauseButton.setOnClickListener(pause -> pauseUpdate.onNext(new AppClick(app,
+        isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_PAUSE : AppClick.ClickType.PAUSE_UPDATE)));
   }
 }

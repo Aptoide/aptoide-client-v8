@@ -106,7 +106,6 @@ public class HomePresenterTest {
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.appClicked()).thenReturn(appClickEvent);
-    when(view.recommendedAppClicked()).thenReturn(appClickEvent);
     when(view.adClicked()).thenReturn(adClickEvent);
     when(view.moreClicked()).thenReturn(moreClickEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
@@ -186,18 +185,6 @@ public class HomePresenterTest {
     verify(homeAnalytics).sendAdClickEvent(anyInt(), anyString(), anyInt(), anyString(),
         eq(HomeEvent.Type.AD), eq(ApplicationAd.Network.SERVER));
     verify(homeNavigator).navigateToAppView(any());
-  }
-
-  @Test public void recommendsClicked_NavigateToAppView() {
-    //Given an initialised HomePresenter
-    presenter.handleRecommendedAppClick();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //When an app is clicked
-    appClickEvent.onNext(
-        new AppHomeEvent(aptoide, 3, localTopAppsBundle, 0, HomeEvent.Type.SOCIAL_CLICK));
-    //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToRecommendsAppView(aptoide.getAppId(), aptoide.getPackageName(),
-        aptoide.getTag(), HomeEvent.Type.SOCIAL_CLICK);
   }
 
   @Test public void moreClicked_NavigateToActionView() {

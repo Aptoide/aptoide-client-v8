@@ -60,7 +60,13 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
-    return updatesManager.getUpdatesList(isExcluded)
+    return updatesManager.getUpdatesList(isExcluded, true)
+        .distinctUntilChanged()
+        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
+  }
+
+  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded) {
+    return updatesManager.getAppcUpgradesList(isExcluded)
         .distinctUntilChanged()
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
@@ -76,6 +82,23 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
+              .flatMap(install -> updatesManager.filterAppcUpgrade(install))
+              .toList()
+              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+        });
+  }
+
+  public Observable<List<App>> getAppcUpgradeDownloadsList() {
+    return installManager.getInstallations()
+        .distinctUntilChanged()
+        .throttleLast(200, TimeUnit.MILLISECONDS)
+        .flatMap(installations -> {
+          if (installations == null || installations.isEmpty()) {
+            return Observable.empty();
+          }
+          return Observable.just(installations)
+              .flatMapIterable(installs -> installs)
+              .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
               .toList()
               .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
@@ -102,6 +125,7 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(item -> installManager.filterInstalled(item))
+              .flatMap(item -> updatesManager.filterAppcUpgrade(item))
               .toList()
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
@@ -188,11 +212,11 @@ public class AppsManager {
         () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
   }
 
-  public Completable updateApp(App app) {
+  public Completable updateApp(App app, boolean isAppcUpdate) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
         .flatMap(update -> {
-          Download value = downloadFactory.create(update);
+          Download value = downloadFactory.create(update, isAppcUpdate);
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
@@ -218,7 +242,7 @@ public class AppsManager {
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
-                .flatMap(update -> Observable.just(downloadFactory.create(update))
+                .flatMap(update -> Observable.just(downloadFactory.create(update, false))
                     .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
                         offerResponseStatus))
                     .toList()

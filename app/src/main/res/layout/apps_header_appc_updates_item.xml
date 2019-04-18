@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <TextView
+      android:id="@+id/appc_apps_updates_header_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="10dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:text="@string/promo_update2appc_title"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+      />
+
+  <TextView
+      android:id="@+id/appc_apps_updates_header_description"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="19dp"
+      android:layout_marginLeft="19dp"
+      android:layout_marginRight="19dp"
+      android:layout_marginStart="19dp"
+      android:layout_marginTop="2dp"
+      android:ellipsize="end"
+      android:maxLines="2"
+      android:text="@string/promo_update2appc_message"
+      android:textAlignment="center"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/appc_apps_updates_header_title"
+      style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+      />
+
+  <TextView
+      android:id="@+id/appc_apps_updates_header_warning"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
+      android:layout_marginBottom="10dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="9dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:text="@string/promo_update2appc_data_disclaimer"
+      android:textColor="#fd6363"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/appc_apps_updates_header_description"
+      style="@style/Aptoide.TextView.Medium.XS.Theme"
+      />
+
+</android.support.constraint.ConstraintLayout>

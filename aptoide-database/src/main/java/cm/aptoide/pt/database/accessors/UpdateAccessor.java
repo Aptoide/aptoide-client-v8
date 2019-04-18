@@ -70,6 +70,22 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
         .observeOn(Schedulers.io());
   }
 
+  public Observable<Boolean> contains(String packageName, boolean isExcluded,
+      boolean isAppcUpgrade) {
+    return Observable.fromCallable(() -> database.get())
+        .flatMap(realm -> Observable.defer(() -> {
+          Update update = realm.where(Update.class)
+              .equalTo(Update.EXCLUDED, isExcluded)
+              .equalTo(Update.APPC_UPGRADE, isAppcUpgrade)
+              .contains(Update.PACKAGE_NAME, packageName)
+              .findFirst();
+          return Observable.just(update != null);
+        }))
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
+
   public void remove(String packageName) {
     database.delete(Update.class, Update.PACKAGE_NAME, packageName);
   }

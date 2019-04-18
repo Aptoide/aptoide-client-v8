@@ -100,7 +100,7 @@ import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
-import cm.aptoide.pt.autoupdate.AutoUpdateService;
+import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
@@ -1321,9 +1321,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
-  @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
+  @Singleton @Provides Service providesAutoUpdateService(
       @Named("retrofit-auto-update") Retrofit retrofit) {
-    return retrofit.create(AutoUpdateService.Service.class);
+    return retrofit.create(Service.class);
   }
 
   @Singleton @Provides SearchAbTestService.Service providesSearchAbTestRetrofit(

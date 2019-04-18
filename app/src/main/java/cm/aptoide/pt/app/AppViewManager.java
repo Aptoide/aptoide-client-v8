@@ -23,7 +23,6 @@ import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
@@ -65,7 +64,6 @@ public class AppViewManager {
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
   private SearchAdResult searchAdResult;
-  private SocialRepository socialRepository;
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
@@ -84,8 +82,8 @@ public class AppViewManager {
       MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
-      AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
+      Scheduler ioScheduler, String marketName, AppCoinsManager appCoinsManager,
+      PromotionsManager promotionsManager, String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -104,7 +102,6 @@ public class AppViewManager {
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
     this.ioScheduler = ioScheduler;
-    this.socialRepository = socialRepository;
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
@@ -441,7 +438,8 @@ public class AppViewManager {
   }
 
   public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
-    return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
+    // TODO: 11/04/2019 remove in ASV-1473
+    return Completable.complete();
   }
 
   public Completable dontShowLoggedInInstallRecommendsPreviewDialog() {
@@ -450,7 +448,8 @@ public class AppViewManager {
   }
 
   public Completable shareOnTimelineAsync(String packageName, long storeId) {
-    return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
+    // TODO: 11/04/2019 remove in ASV-1473
+    return Completable.complete();
   }
 
   public Completable appBought(String path) {

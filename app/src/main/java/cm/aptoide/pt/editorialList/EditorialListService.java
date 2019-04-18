@@ -38,22 +38,23 @@ public class EditorialListService {
     this.limit = limit;
   }
 
-  public Single<EditorialListViewModel> loadEditorialListViewModel(int offset) {
+  public Single<EditorialListViewModel> loadEditorialListViewModel(int offset,
+      boolean invalidateCache) {
     if (loading) {
       return Single.just(new EditorialListViewModel(true));
     }
     return EditorialListRequest.of(bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences, limit, offset)
-        .observe()
+        .observe(invalidateCache, false)
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
         .doOnTerminate(() -> loading = false)
-        .map(actionItemResponse -> mapEditorialList(actionItemResponse))
+        .map(this::mapEditorialList)
         .toSingle()
-        .onErrorReturn(throwable -> mapeEditorialListError(throwable));
+        .onErrorReturn(this::mapEditorialListError);
   }
 
-  private EditorialListViewModel mapeEditorialListError(Throwable throwable) {
+  private EditorialListViewModel mapEditorialListError(Throwable throwable) {
     if (throwable instanceof NoNetworkConnectionException
         || throwable instanceof ConnectException) {
       return new EditorialListViewModel(EditorialListViewModel.Error.NETWORK);
