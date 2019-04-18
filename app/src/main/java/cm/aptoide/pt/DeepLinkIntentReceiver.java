@@ -176,10 +176,19 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromPickApp();
     } else if ("promotions".equals(u.getQueryParameter("name"))) {
       return startFromPromotions();
+    } else if ("CURATION_1".equals(u.getQueryParameter("name"))) {
+      return startFromEditorialCard(u.getQueryParameter("id"));
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
     return null;
+  }
+
+  private Intent startFromEditorialCard(String cardId) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.CARD_ID, cardId);
+    return intent;
   }
 
   private Intent dealWithAptword(String uri) {
@@ -674,6 +683,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String MY_STORE_DEEPLINK = "my_store";
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
     public static final String PROMOTIONS_DEEPLINK = "promotions";
+    public static final String EDITORIAL_DEEPLINK = "editorial";
   }
 
   public static class DeepLinksKeys {
