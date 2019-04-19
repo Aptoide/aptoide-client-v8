@@ -2,7 +2,6 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
-import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
@@ -17,7 +16,6 @@ import rx.Single;
 public class Home {
 
   private final BundlesRepository bundlesRepository;
-  private final ImpressionManager impressionManager;
   private final PromotionsManager promotionsManager;
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
@@ -25,12 +23,11 @@ public class Home {
   private final String promotionId;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
-  public Home(BundlesRepository bundlesRepository, ImpressionManager impressionManager,
-      PromotionsManager promotionsManager, BannerRepository bannerRepository,
-      MoPubAdsManager moPubAdsManager, PromotionsPreferencesManager promotionsPreferencesManager,
-      BlacklistManager blacklistManager, String promotionId) {
+  public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
+      BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,
+      PromotionsPreferencesManager promotionsPreferencesManager, BlacklistManager blacklistManager,
+      String promotionId) {
     this.bundlesRepository = bundlesRepository;
-    this.impressionManager = impressionManager;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;

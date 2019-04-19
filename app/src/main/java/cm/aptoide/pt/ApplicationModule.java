@@ -164,8 +164,6 @@ import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.impressions.ImpressionManager;
-import cm.aptoide.pt.impressions.ImpressionService;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -218,7 +216,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -1470,10 +1467,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppShortcutsAnalytics(analyticsManager, navigationTracker);
   }
 
-  @Singleton @Provides ReadPostsPersistence providesReadPostsPersistence() {
-    return new ReadPostsPersistence(new ArrayList<>());
-  }
-
   @Singleton @Provides StoreAnalytics providesStoreAnalytics(AnalyticsManager analyticsManager,
       NavigationTracker navigationTracker) {
     return new StoreAnalytics(analyticsManager, navigationTracker);
@@ -1689,21 +1682,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PromotionViewAppMapper(downloadStateParser);
   }
 
-  @Singleton @Provides ImpressionManager providesImpressionManager(
-      ImpressionService impressionService) {
-    return new ImpressionManager(impressionService);
-  }
-
   @Singleton @Provides DownloadStateParser providesDownloadStateParser() {
     return new DownloadStateParser();
-  }
-
-  @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
-    return new ImpressionService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        sharedPreferences, converterFactory);
   }
 
   @Singleton @Provides EditorialService providesEditorialService(@Named("pool-v7")

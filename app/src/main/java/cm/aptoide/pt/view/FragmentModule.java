@@ -100,7 +100,6 @@ import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
 import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
 import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -276,12 +275,12 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, PromotionsManager promotionsManager,
+      PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
       @Named("homePromotionsId") String promotionsId) {
-    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId);
+    return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
+        promotionsPreferencesManager, blacklistManager, promotionsId);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
