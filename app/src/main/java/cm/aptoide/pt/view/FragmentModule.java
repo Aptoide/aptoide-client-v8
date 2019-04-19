@@ -52,7 +52,6 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -66,6 +65,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorial.EditorialManager;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.editorial.EditorialPresenter;
@@ -328,17 +328,17 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, @Named("marketName") String marketName,
-      AppCoinsManager appCoinsManager, MoPubAdsManager moPubAdsManager,
-      PromotionsManager promotionsManager, @Named("wallet-offer-promotion-id") String promotionId,
+      AppViewConfiguration appViewConfiguration, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
+      @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
+      MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
+      @Named("wallet-offer-promotion-id") String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics, installAnalytics,
+        appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
         marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
         appcMigrationManager);
@@ -417,12 +417,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
-      PreferencesManager preferencesManager, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
-    return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        installManager, preferencesManager, downloadFactory, downloadStateParser,
-        notificationAnalytics, installAnalytics, editorialAnalytics);
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      EditorialAnalytics editorialAnalytics) {
+    return new EditorialManager(editorialRepository,
+        arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(

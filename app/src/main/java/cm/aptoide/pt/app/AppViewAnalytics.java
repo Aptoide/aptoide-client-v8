@@ -13,8 +13,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
-import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,20 +49,15 @@ public class AppViewAnalytics {
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
-  private TimelineAnalytics timelineAnalytics;
-  private NotLoggedInShareAnalytics notLoggedInShareAnalytics;
   private BillingAnalytics billingAnalytics;
   private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
-      NotLoggedInShareAnalytics notLoggedInShareAnalytics, BillingAnalytics billingAnalytics,
+      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
       StoreAnalytics storeAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-    this.timelineAnalytics = timelineAnalytics;
-    this.notLoggedInShareAnalytics = notLoggedInShareAnalytics;
     this.billingAnalytics = billingAnalytics;
     this.storeAnalytics = storeAnalytics;
   }
@@ -313,34 +306,6 @@ public class AppViewAnalytics {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
-  }
-
-  public void sendTimelineLoggedInInstallRecommendEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
-  }
-
-  public void sendTimelineLoggedInInstallRecommendSkipEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Skip");
-  }
-
-  public void sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(String packageName) {
-    timelineAnalytics.sendRecommendedAppInteractEvent(packageName, "Don't show again");
-  }
-
-  public void sendSuccessShareEvent() {
-    notLoggedInShareAnalytics.sendShareSuccess();
-  }
-
-  public void sendFailedShareEvent() {
-    notLoggedInShareAnalytics.sendShareFail();
-  }
-
-  public void sendLoggedInRecommendAppDialogShowEvent(String packageName) {
-    timelineAnalytics.sendRecommendedAppImpressionEvent(packageName);
-  }
-
-  public void sendNotLoggedInRecommendAppDialogShowEvent(String packageName) {
-    notLoggedInShareAnalytics.sendNotLoggedInRecommendAppImpressionEvent(packageName);
   }
 
   public void sendDownloadPauseEvent(String packageName) {

@@ -86,7 +86,6 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -200,7 +199,6 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
-  private TimelineAnalytics timelineAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -907,13 +905,6 @@ public abstract class AptoideApplication extends Application {
 
   public SearchSuggestionManager getSearchSuggestionManager() {
     return searchSuggestionManager;
-  }
-
-  public TimelineAnalytics getTimelineAnalytics() {
-    if (timelineAnalytics == null) {
-      timelineAnalytics = new TimelineAnalytics(getNavigationTracker(), analyticsManager);
-    }
-    return timelineAnalytics;
   }
 
   public AnalyticsManager getAnalyticsManager() {
