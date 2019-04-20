@@ -30,6 +30,7 @@ import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.autoupdate.AutoUpdateRepository;
 import cm.aptoide.pt.autoupdate.AutoUpdateService;
+import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
@@ -120,8 +121,8 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(
-      AutoUpdateService.Service service, @Named("package-name") String packageName,
+  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(Service service,
+      @Named("package-name") String packageName,
       @Named("auto-update-store-name") String storeName) {
     return new AutoUpdateService(service, packageName, storeName);
   }

@@ -2,7 +2,6 @@ package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.DownloadStateParser;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
@@ -23,7 +22,6 @@ public class EditorialManager {
   private final EditorialRepository editorialRepository;
   private final String cardId;
   private final InstallManager installManager;
-  private final PreferencesManager preferencesManager;
   private final DownloadFactory downloadFactory;
   private final NotificationAnalytics notificationAnalytics;
   private final InstallAnalytics installAnalytics;
@@ -31,15 +29,13 @@ public class EditorialManager {
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
-      InstallManager installManager, PreferencesManager preferencesManager,
-      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics) {
+      InstallManager installManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
     this.installManager = installManager;
-    this.preferencesManager = preferencesManager;
     this.downloadFactory = downloadFactory;
     this.downloadStateParser = downloadStateParser;
     this.notificationAnalytics = notificationAnalytics;
@@ -60,7 +56,6 @@ public class EditorialManager {
   }
 
   public Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
-    increaseInstallClick();
     return Observable.just(downloadFactory.create(
         downloadStateParser.parseDownloadAction(editorialDownloadEvent.getAction()),
         editorialDownloadEvent.getAppName(), editorialDownloadEvent.getPackageName(),
@@ -73,10 +68,6 @@ public class EditorialManager {
                 __ -> setupDownloadEvents(download, editorialDownloadEvent.getPackageName(),
                     editorialDownloadEvent.getAppId())))
         .toCompletable();
-  }
-
-  private void increaseInstallClick() {
-    preferencesManager.increaseNotLoggedInInstallClicks();
   }
 
   private void setupDownloadEvents(Download download, String packageName, long appId) {

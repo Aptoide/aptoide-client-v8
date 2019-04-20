@@ -49,7 +49,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.PostReadRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -82,13 +81,11 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.sync.rx.RxSyncScheduler;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -122,7 +119,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
@@ -200,10 +196,8 @@ public abstract class AptoideApplication extends Application {
   private Adyen adyen;
   private PurchaseFactory purchaseFactory;
   private ApplicationComponent applicationComponent;
-  private ReadPostsPersistence readPostsPersistence;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
-  private TimelineAnalytics timelineAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -335,10 +329,6 @@ public abstract class AptoideApplication extends Application {
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
         .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
-
-    dispatchPostReadEventInterval().subscribe(() -> {
-    }, throwable -> CrashReport.getInstance()
-        .log(throwable));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.getInstance()
@@ -885,13 +875,6 @@ public abstract class AptoideApplication extends Application {
     return purchaseFactory;
   }
 
-  public ReadPostsPersistence getReadPostsPersistence() {
-    if (readPostsPersistence == null) {
-      readPostsPersistence = new ReadPostsPersistence(new ArrayList<>());
-    }
-    return readPostsPersistence;
-  }
-
   public String getVersionCode() {
     String version = "NaN";
     try {
@@ -901,22 +884,6 @@ public abstract class AptoideApplication extends Application {
 
     }
     return version;
-  }
-
-  private Completable dispatchPostReadEventInterval() {
-    return Observable.interval(10, TimeUnit.SECONDS)
-        .switchMap(__ -> getReadPostsPersistence().getPosts(10)
-            .toObservable()
-            .filter(postReads -> !postReads.isEmpty())
-            .flatMap(
-                postsRead -> PostReadRequest.of(postsRead, bodyInterceptorPoolV7, defaultClient,
-                    WebService.getDefaultConverter(), tokenInvalidator,
-                    getDefaultSharedPreferences())
-                    .observe()
-                    .flatMapCompletable(___ -> getReadPostsPersistence().removePosts(postsRead)))
-            .repeatWhen(completed -> completed.takeWhile(
-                ____ -> !getReadPostsPersistence().isPostsEmpty())))
-        .toCompletable();
   }
 
   public SyncScheduler getAlarmSyncScheduler() {
@@ -937,13 +904,6 @@ public abstract class AptoideApplication extends Application {
 
   public SearchSuggestionManager getSearchSuggestionManager() {
     return searchSuggestionManager;
-  }
-
-  public TimelineAnalytics getTimelineAnalytics() {
-    if (timelineAnalytics == null) {
-      timelineAnalytics = new TimelineAnalytics(getNavigationTracker(), analyticsManager);
-    }
-    return timelineAnalytics;
   }
 
   public AnalyticsManager getAnalyticsManager() {

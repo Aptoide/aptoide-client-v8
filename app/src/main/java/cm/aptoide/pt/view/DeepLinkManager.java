@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -146,6 +148,8 @@ public class DeepLinkManager {
       pickAppDeeplink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK)) {
       promotionsDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.EDITORIAL_DEEPLINK)) {
+      editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -161,6 +165,15 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
+  }
+
+  private void editorialDeepLink(String cardId) {
+    Bundle bundle = new Bundle();
+    bundle.putString(EditorialFragment.CARD_ID, cardId);
+
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
   }
 
   private void openUserProfile(long userId) {
