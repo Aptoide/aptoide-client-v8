@@ -92,15 +92,15 @@ public class Home {
 
   public Completable remove(ActionBundle bundle) {
     return Completable.fromAction(() -> blacklistManager.blacklist(bundle.getType()
-        .toString() + "_" + bundle.getActionItem()
+        .toString(), bundle.getActionItem()
         .getCardId()))
         .andThen(bundlesRepository.remove(bundle));
   }
 
   public Completable actionBundleImpression(ActionBundle bundle) {
-    return Completable.fromAction(() -> blacklistManager.addImpression(
-        bundle.getType() + "_" + bundle.getActionItem()
-            .getCardId()));
+    return Completable.fromAction(() -> blacklistManager.addImpression(bundle.getType()
+        .toString(), bundle.getActionItem()
+        .getCardId()));
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
