@@ -23,13 +23,13 @@ public class BlacklistManager {
     blacklister.blacklist(blacklistUnitMapper.mapActionCardToBlacklistUnit(actionCardType, id));
   }
 
-  public enum BlacklistTypes {
+  public enum BlacklistType {
     WALLET_ADS_OFFER("Wallet_Ads_Offer", 10), APPC_CARD_INFO("Appc_Card_Info", 10);
 
     private String type;
     private int maxPossibleImpressions;
 
-    BlacklistTypes(String type, int maxPossibleImpressions) {
+    BlacklistType(String type, int maxPossibleImpressions) {
       this.type = type;
       this.maxPossibleImpressions = maxPossibleImpressions;
     }
