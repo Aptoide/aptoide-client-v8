@@ -1791,7 +1791,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
-        HomeAnalytics.HOME_CHIP_CLICK, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        HomeAnalytics.HOME_CHIP_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
