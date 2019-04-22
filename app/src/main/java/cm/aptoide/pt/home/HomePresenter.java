@@ -72,6 +72,30 @@ public class HomePresenter implements Presenter {
 
     handleEditorialCardClick();
     handleInstallWalletOfferClick();
+
+    handleMoPubConsentDialog();
+  }
+
+  private void handleMoPubConsentDialog() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMapSingle(model -> home.shouldLoadNativeAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .flatMapSingle(__ -> handleConsentDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private Single<Boolean> handleConsentDialog() {
+    return home.shouldShowConsentDialog()
+        .observeOn(viewScheduler)
+        .map(shouldShowConsent -> {
+          if (shouldShowConsent) {
+            view.showConsentDialog();
+          }
+          return true;
+        });
   }
 
   private void handleInstallWalletOfferClick() {
