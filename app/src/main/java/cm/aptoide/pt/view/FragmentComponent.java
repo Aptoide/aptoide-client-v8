@@ -6,11 +6,6 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
-import cm.aptoide.pt.addressbook.view.AddressBookFragment;
-import cm.aptoide.pt.addressbook.view.InviteFriendsFragment;
-import cm.aptoide.pt.addressbook.view.PhoneInputFragment;
-import cm.aptoide.pt.addressbook.view.SyncResultFragment;
-import cm.aptoide.pt.addressbook.view.ThankYouConnectingFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
@@ -51,8 +46,6 @@ import dagger.Subcomponent;
 @FragmentScope @Subcomponent(modules = { FragmentModule.class, FlavourFragmentModule.class })
 public interface FragmentComponent {
 
-  void inject(AddressBookFragment addressBookFragment);
-
   void inject(LoginSignUpCredentialsFragment loginSignUpCredentialsFragment);
 
   void inject(ManageUserFragment manageUserFragment);
@@ -62,12 +55,6 @@ public interface FragmentComponent {
   void inject(SearchResultFragment searchResultFragment);
 
   void inject(StoreFragment storeFragment);
-
-  void inject(SyncResultFragment syncResultFragment);
-
-  void inject(InviteFriendsFragment inviteFriendsFragment);
-
-  void inject(PhoneInputFragment phoneInputFragment);
 
   void inject(CommentListFragment commentListFragment);
 
@@ -124,8 +111,6 @@ public interface FragmentComponent {
   void inject(GridRecyclerSwipeWithToolbarFragment gridRecyclerSwipeWithToolbarFragment);
 
   void inject(SettingsFragment settingsFragment);
-
-  void inject(ThankYouConnectingFragment thankYouConnectingFragment);
 
   void inject(WizardFragmentProvider wizardFragmentProvider);
 

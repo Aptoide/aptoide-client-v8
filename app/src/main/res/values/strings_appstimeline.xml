@@ -14,25 +14,9 @@
   <string name="private_followers_message">%d followers are private</string>
   <string name="private_following_message">you are following %d private users/stores</string>
 
-  <!-- Address book -->
-  <string name="addressbook_increase_network_message">Increase your network.</string>
-  <string name="addressbook_connect_with_friends_message">Connect with friends.</string>
-  <string name="addressbook_sync">Sync address book</string>
-  <string name="not_now">Not now</string>+
-  <string name="addressbook_success">Success!</string>
-  <string name="addressbook_allow_friends_find">Allow friends to find you</string>
   <string name="google">Google</string>
   <string name="connect_google">Connect with Google</string>
   <string name="done">Done</string>
-  <string name="addressbook_phone_number">Phone number</string>
-  <string name="addressbook_insuccess_connection">We weren\'t able to connect with your address book!</string>
-  <string name="addressbook_invite_friends">Invite friends to join you!</string>
-  <string name="addressbook_thanks_for_connecting">Thank you for connecting</string>
-  <string name="addressbook_3rd_msg">LEARN MORE</string>
-  <string name="address_book_twitter_error">Twitter authorization error</string>
-  <string name="follow_my_store">Hello, follow my %1$s store here %2$s</string>
-  <string name="addressbook_about">About address book</string>
-  <string name="addressbook_we_werent_able_to_connect_you">We weren\'t able to make a connection</string>
 
   <plurals
       name="timeline_short_comment">

@@ -135,14 +135,6 @@ public class ManagerPreferences {
         .apply();
   }
 
-  public static boolean getUserPrivacyConfirmation(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.PRIVACY_CONFIRMATION, true);
-  }
-
-  public static boolean isShowPreviewDialog(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.DONT_SHOW_ME_AGAIN, true);
-  }
-
   public static void setShowPreviewDialog(boolean showPreviewDialog,
       SharedPreferences sharedPreferences) {
     sharedPreferences.edit()
@@ -159,40 +151,6 @@ public class ManagerPreferences {
       SharedPreferences sharedPreferences) {
     sharedPreferences.edit()
         .putString(ManagedKeys.DONT_SHOW_CLEANED_VERSION, previewDialogPrefCleaned)
-        .apply();
-  }
-
-  public static boolean isFirstRunV7(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.FIRST_RUN_V7, true);
-  }
-
-  public static boolean getAddressBookSyncState(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, false);
-  }
-
-  public static void setAddressBookAsSynced(SharedPreferences sharedPreferences) {
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.ADDRESS_BOOK_SYNC, true)
-        .apply();
-  }
-
-  public static boolean getTwitterSyncState(SharedPreferences defaultSharedPreferences) {
-    return defaultSharedPreferences.getBoolean(ManagedKeys.TWITTER_SYNC, false);
-  }
-
-  public static void setTwitterAsSynced(SharedPreferences sharedPreferences) {
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.TWITTER_SYNC, true)
-        .apply();
-  }
-
-  public static boolean getFacebookSyncState(SharedPreferences sharedPreferences) {
-    return sharedPreferences.getBoolean(ManagedKeys.FACEBOOK_SYNC, false);
-  }
-
-  public static void setFacebookAsSynced(SharedPreferences sharedPreferences) {
-    sharedPreferences.edit()
-        .putBoolean(ManagedKeys.FACEBOOK_SYNC, true)
         .apply();
   }
 

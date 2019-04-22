@@ -57,7 +57,7 @@
           android:maxLines="1"
           app:defaultQueryHint="@string/store_name"
           app:iconifiedByDefault="false"
-          app:queryBackground="@color/tw__transparent"
+          app:queryBackground="@color/transparent"
           app:searchIcon="@null"
           >
       </android.support.v7.widget.SearchView>

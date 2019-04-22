@@ -51,7 +51,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
@@ -424,12 +423,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @Multipart @POST("user/set") Observable<BaseV7Response> editUser(
         @Part MultipartBody.Part user_avatar,
         @PartMap HashMapNotNull<String, okhttp3.RequestBody> body);
-
-    @POST("user/connections/add") Observable<GetFollowers> setConnections(
-        @Body SyncAddressBookRequest.Body body);
-
-    @POST("user/connections/set") Observable<BaseV7Response> setConnection(
-        @Body SetConnectionRequest.Body body);
 
     @POST("store/subscription/set")
     Observable<ChangeStoreSubscriptionResponse> changeStoreSubscription(

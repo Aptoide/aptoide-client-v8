@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -18,7 +17,6 @@ import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
 
 public class AppViewNavigator {
 
