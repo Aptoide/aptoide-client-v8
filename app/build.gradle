@@ -240,7 +240,10 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-
+    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
+        "\"" + APPLOVIN_SDK_VERSION + "\""
+    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
+        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
@@ -297,7 +300,6 @@ android {
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -390,7 +392,6 @@ dependencies {
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
 
   implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
@@ -534,7 +535,6 @@ dependencies {
 
   // Facebook Login
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 
