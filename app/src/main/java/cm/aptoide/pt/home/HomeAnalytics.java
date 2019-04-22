@@ -15,7 +15,7 @@ import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
-  public static final String HOME_CHIP_CLICK = "Home_Chip_Click";
+  public static final String HOME_CHIP_INTERACT = "Home_Chip_Interact";
   public static final String CURATION_CARD_IMPRESSION = "Curation_Card_Impression";
   public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
   static final String SCROLL_RIGHT = "scroll right";
@@ -228,14 +228,14 @@ public class HomeAnalytics {
   public void sendAppsChipInteractEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, APPS);
-    analyticsManager.logEvent(data, HOME_CHIP_CLICK, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
   public void sendGamesChipInteractEvent() {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, GAMES);
-    analyticsManager.logEvent(data, HOME_CHIP_CLICK, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
