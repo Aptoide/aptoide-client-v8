@@ -172,6 +172,9 @@ public class HomePresenter implements Presenter {
             homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
                 homeEvent.getBundlePosition(), actionBundle.getActionItem()
                     .getCardId());
+            homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
+                homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                    .getCardId());
           }
         })
         .filter(homeEvent -> homeEvent.getBundle()
@@ -374,6 +377,8 @@ public class HomePresenter implements Presenter {
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               homeAnalytics.sendEditorialInteractEvent(click.getBundle()
+                  .getTag(), click.getBundlePosition(), click.getCardId());
+              homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
               homeNavigator.navigateToEditorial(click.getCardId());
             })

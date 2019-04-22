@@ -126,6 +126,17 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
 
+  public void sendActionItemEditorialTapOnCardInteractEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+  }
+
   public void sendActionItemDismissInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_CARD_DISMISS);
@@ -164,6 +175,18 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, CURATION_CARD_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendActionItemEditorialImpressionEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, VIEW_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 
