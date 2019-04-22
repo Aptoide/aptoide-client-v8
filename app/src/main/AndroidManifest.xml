@@ -45,7 +45,7 @@
       com.mopub.mobileads.native_static, com.mopub.mobileads.base, com.flurry.android.ads.sdk,
       com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub, com.appnext.appnextsdkmopubbanners,
       com.appnext.appnextsdk.API.mediation.MoPub, com.applovin.sdk, com.mopub.mobileads.applovin,
-      com.mopub.mobileads.ironsource, com.mopub.mobileads.vungle"/>
+      com.mopub.mobileads.ironsource, com.mopub.mobileads.vungle, com.mopub.mobileads.flurry"/>
 
   <application
       android:allowBackup="false"
