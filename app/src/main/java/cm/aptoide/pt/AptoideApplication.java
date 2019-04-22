@@ -104,12 +104,6 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
-import com.mopub.common.logging.MoPubLog;
-import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
-import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
-import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -303,8 +297,6 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-    initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
-
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
@@ -338,30 +330,6 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
 
     adsUserPropertyManager.start();
-  }
-
-  private void initializeMoPub(Context context, String adUnitPlacementId) {
-    SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
-            AppLovinBaseAdapterConfiguration.class.toString())
-            .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
-            .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withLogLevel(MoPubLog.LogLevel.DEBUG)
-            .build();
-
-    MoPub.initializeSdk(context, sdkConfiguration, null);
-  }
-
-  @NonNull
-  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
-    Map<String, String> mediationNetworkConfiguration = new HashMap<>();
-    mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
-    return mediationNetworkConfiguration;
   }
 
   public ApplicationComponent getApplicationComponent() {

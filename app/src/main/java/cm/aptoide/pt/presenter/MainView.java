@@ -36,4 +36,6 @@ public interface MainView extends View {
   void showUnknownErrorMessage();
 
   void dismissAutoUpdateDialog();
+
+  void initializeMoPub();
 }

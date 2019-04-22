@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
@@ -33,6 +34,14 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.common.logging.MoPubLog;
+import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
+import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -61,6 +70,7 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
 
+    //initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
     initializeAdsMediation();
     setupUpdatesNotification();
 
@@ -203,6 +213,30 @@ public class MainActivity extends BottomNavigationActivity
     if (autoUpdateDialog != null && autoUpdateDialog.isShowing()) {
       autoUpdateDialog.dismiss();
     }
+  }
+
+  @Override public void initializeMoPub() {
+    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(
+        BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
+        AppLovinBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withLogLevel(MoPubLog.LogLevel.DEBUG)
+        .build();
+
+    MoPub.initializeSdk(this, sdkConfiguration, null);
+  }
+
+  @NonNull
+  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
+    Map<String, String> mediationNetworkConfiguration = new HashMap<>();
+    mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
+    return mediationNetworkConfiguration;
   }
 
   @Override public void showStoreAlreadyAdded() {
