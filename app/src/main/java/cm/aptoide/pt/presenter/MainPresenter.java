@@ -116,20 +116,6 @@ public class MainPresenter implements Presenter {
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
-
-    initializeMoPub();
-  }
-
-  private void initializeMoPub() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.initializeMoPub())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
   }
 
   private void setupUpdatesNumber() {

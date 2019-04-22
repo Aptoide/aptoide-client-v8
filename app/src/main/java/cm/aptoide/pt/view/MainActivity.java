@@ -70,7 +70,7 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
 
-    //initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
+    initializeMoPub();
     initializeAdsMediation();
     setupUpdatesNotification();
 
@@ -215,7 +215,7 @@ public class MainActivity extends BottomNavigationActivity
     }
   }
 
-  @Override public void initializeMoPub() {
+  public void initializeMoPub() {
     SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(
         BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
         AppLovinBaseAdapterConfiguration.class.toString())
