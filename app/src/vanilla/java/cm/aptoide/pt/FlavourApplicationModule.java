@@ -19,7 +19,6 @@ import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
-import com.mopub.common.MoPub;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -82,7 +81,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {
-    return new MoPubConsentManager(MoPub.getPersonalInformationManager());
+    return new MoPubConsentManager();
   }
 
   @Singleton @Provides @Named("mopub-consent-dialog-view")
