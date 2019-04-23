@@ -57,6 +57,7 @@ public class MainActivity extends BottomNavigationActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    MoPub.onCreate(this);
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
@@ -77,6 +78,7 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = null;
     snackbar = null;
     super.onDestroy();
+    MoPub.onDestroy(this);
   }
 
   private void initializeAdsMediation() {
