@@ -6,6 +6,7 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.MoPubConsentDialogManager;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
@@ -19,6 +20,7 @@ import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.mopub.common.MoPub;
 import dagger.Module;
 import dagger.Provides;
@@ -49,6 +51,10 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("support-email") String providesSupportEmail() {
     return application.getString(R.string.aptoide_email);
+  }
+
+  @Singleton @Provides LoginPreferences provideLoginPreferences() {
+    return new LoginPreferences(application, GoogleApiAvailability.getInstance());
   }
 
   @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment(

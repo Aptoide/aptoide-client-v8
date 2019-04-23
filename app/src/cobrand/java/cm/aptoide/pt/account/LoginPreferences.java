@@ -5,18 +5,7 @@
 
 package cm.aptoide.pt.account;
 
-import android.content.Context;
-import com.google.android.gms.common.GoogleApiAvailability;
-
 public class LoginPreferences {
-
-  private final Context context;
-  private final GoogleApiAvailability googleApiAvailability;
-
-  public LoginPreferences(Context context, GoogleApiAvailability googleApiAvailability) {
-    this.context = context;
-    this.googleApiAvailability = googleApiAvailability;
-  }
 
   public boolean isGoogleLoginEnabled() {
     return false;

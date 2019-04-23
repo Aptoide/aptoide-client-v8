@@ -247,7 +247,6 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -1689,10 +1688,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides WalletService providesWalletService(WalletService.ServiceV7 service) {
     return new WalletService(service, Schedulers.io());
-  }
-
-  @Singleton @Provides LoginPreferences provideLoginPreferences() {
-    return new LoginPreferences(application, GoogleApiAvailability.getInstance());
   }
 
   @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
