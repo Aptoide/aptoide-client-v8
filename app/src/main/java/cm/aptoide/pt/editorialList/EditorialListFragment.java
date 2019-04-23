@@ -268,13 +268,13 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     return snackListener;
   }
 
-  @Override public void showErrorToast() {
+  @Override public void showGenericErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
   }
 
-  @Override public void updateEditorialCard(CurationCard curationCard, String cardId) {
-    adapter.updateEditorialCard(curationCard, cardId);
+  @Override public void updateEditorialCard(CurationCard curationCard) {
+    adapter.updateEditorialCard(curationCard);
   }
 
   @Override public void showNetworkErrorToast() {

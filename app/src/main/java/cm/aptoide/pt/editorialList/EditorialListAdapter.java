@@ -92,11 +92,11 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
     return editorialListItems.get(visibleItem);
   }
 
-  public void updateEditorialCard(CurationCard curationCard, String cardId) {
+  public void updateEditorialCard(CurationCard curationCard) {
     for (int i = 0; i < editorialListItems.size(); i++) {
       if (curationCard != null && editorialListItems.get(i)
           .getId()
-          .equals(cardId)) {
+          .equals(curationCard.getId())) {
         editorialListItems.set(i, curationCard);
         notifyItemChanged(i);
       }

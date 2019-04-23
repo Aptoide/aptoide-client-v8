@@ -71,15 +71,16 @@ public class HomePresenter implements Presenter {
     handleActionBundlesImpression();
 
     handleEditorialCardClick();
+
     handleInstallWalletOfferClick();
 
-    handleReactionClick();
+    handleReactionButtonClick();
 
     handleLongPressedReactionButton();
 
     handleUserReaction();
 
-    handleLogInClick();
+    handleSnackLogInClick();
   }
 
   private void handleInstallWalletOfferClick() {
@@ -101,7 +102,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  private void handleLongPressedReactionButton() {
+  @VisibleForTesting public void handleLongPressedReactionButton() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionButtonLongPress())
@@ -209,7 +210,7 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @VisibleForTesting public void handleReactionClick() {
+  @VisibleForTesting public void handleReactionButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
@@ -249,11 +250,11 @@ public class HomePresenter implements Presenter {
     } else if (reactionsResponse.wasNetworkError()) {
       view.showNetworkErrorToast();
     } else if (reactionsResponse.wasGeneralError()) {
-      view.showErrorToast();
+      view.showGenericErrorToast();
     }
   }
 
-  @VisibleForTesting public void handleLogInClick() {
+  @VisibleForTesting public void handleSnackLogInClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.snackLogInClick())

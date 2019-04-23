@@ -43,31 +43,17 @@ public class EditorialListPresenter implements Presenter {
     handleRetryClick();
     handleBottomReached();
     handleUserImageClick();
-    handleReactionClick();
+    loadUserImage();
+    handleReactionButtonClick();
     handleLongPressReactionButton();
     handleUserReaction();
-    handleLogInClick();
-    loadUserImage();
-  }
-
-  private void handleLongPressReactionButton() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionButtonLongPress())
-        .doOnNext(homeEvent -> {
-          editorialListAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
-              homeEvent.getBundlePosition());
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
+    handleSnackLogInClick();
   }
 
   private Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return editorialListManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
-        .doOnSuccess(curationCard -> view.updateEditorialCard(curationCard, cardId));
+        .doOnSuccess(view::updateEditorialCard);
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
@@ -198,12 +184,42 @@ public class EditorialListPresenter implements Presenter {
         .map(editorialViewModel -> editorialViewModel);
   }
 
-  @VisibleForTesting public void handleReactionClick() {
+  @VisibleForTesting public void handleUserImageClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.imageClick()
+            .observeOn(viewScheduler)
+            .doOnNext(account -> editorialListNavigator.navigateToMyAccount())
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private Observable<String> getUserAvatar(Account account) {
+    String userAvatarUrl = null;
+    if (account != null && account.isLoggedIn()) {
+      userAvatarUrl = account.getAvatar();
+    }
+    return Observable.just(userAvatarUrl);
+  }
+
+  @VisibleForTesting public void handleReactionButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMap(editorialHomeEvent -> singlePressReactionButtonAction(editorialHomeEvent))
+        .flatMap(this::singlePressReactionButtonAction)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting void handleLongPressReactionButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionButtonLongPress())
+        .doOnNext(this::showReactions)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -240,11 +256,11 @@ public class EditorialListPresenter implements Presenter {
     } else if (reactionsResponse.wasNetworkError()) {
       view.showNetworkErrorToast();
     } else if (reactionsResponse.wasGeneralError()) {
-      view.showErrorToast();
+      view.showGenericErrorToast();
     }
   }
 
-  @VisibleForTesting public void handleLogInClick() {
+  @VisibleForTesting public void handleSnackLogInClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.snackLogInClick())
@@ -254,34 +270,12 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  @VisibleForTesting public void handleUserImageClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.imageClick()
-            .observeOn(viewScheduler)
-            .doOnNext(account -> editorialListNavigator.navigateToMyAccount())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
-  private Observable<String> getUserAvatar(Account account) {
-    String userAvatarUrl = null;
-    if (account != null && account.isLoggedIn()) {
-      userAvatarUrl = account.getAvatar();
-    }
-    return Observable.just(userAvatarUrl);
-  }
-
   private Observable<CurationCard> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
         editorialHomeEvent.getGroupId());
     if (isFirstReaction) {
-      editorialListAnalytics.sendReactionButtonClickEvent();
-      view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
-          editorialHomeEvent.getBundlePosition());
+      showReactions(editorialHomeEvent);
       return Observable.just(new CurationCard());
     } else {
       return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
@@ -292,5 +286,11 @@ public class EditorialListPresenter implements Presenter {
           .flatMapSingle(reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
               editorialHomeEvent.getGroupId()));
     }
+  }
+
+  private void showReactions(EditorialHomeEvent editorialHomeEvent) {
+    editorialListAnalytics.sendReactionButtonClickEvent();
+    view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
+        editorialHomeEvent.getBundlePosition());
   }
 }
