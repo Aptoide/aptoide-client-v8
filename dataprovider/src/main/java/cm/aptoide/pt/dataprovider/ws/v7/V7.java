@@ -51,7 +51,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.home.SocialResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
@@ -425,12 +424,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Part MultipartBody.Part user_avatar,
         @PartMap HashMapNotNull<String, okhttp3.RequestBody> body);
 
-    @POST("user/connections/add") Observable<GetFollowers> setConnections(
-        @Body SyncAddressBookRequest.Body body);
-
-    @POST("user/connections/set") Observable<BaseV7Response> setConnection(
-        @Body SetConnectionRequest.Body body);
-
     @POST("store/subscription/set")
     Observable<ChangeStoreSubscriptionResponse> changeStoreSubscription(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
@@ -462,9 +455,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/timeline/card/apps/get") Observable<RelatedAppResponse> getRelatedApps(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body RelatedAppRequest.Body request);
-
-    @POST("user/timeline/markAsRead") Observable<BaseV7Response> setPostRead(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Body PostReadRequest.Body body);
 
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
@@ -538,10 +528,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("user/action/item/card/markAsRead/") Observable<BaseV7Response> setRead(
-        @Body MarkAsReadRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @GET("bds/apks/package/getOwnerWallet") Observable<GetWalletAddressResponse> getWallet(

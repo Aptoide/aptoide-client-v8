@@ -79,7 +79,6 @@ public class MyAccountFragment extends BackButtonFragment
   private TextView myStoreName;
   private Button loginButton;
   private Button logoutButton;
-  private Button findFriendsButton;
   private Button createStoreButton;
   private Button editStoreButton;
   private Button editProfileButton;
@@ -174,7 +173,6 @@ public class MyAccountFragment extends BackButtonFragment
     myStoreName = null;
     loginButton = null;
     logoutButton = null;
-    findFriendsButton = null;
     createStoreButton = null;
     editStoreButton = null;
     editProfileButton = null;
@@ -216,10 +214,6 @@ public class MyAccountFragment extends BackButtonFragment
 
   @Override public Observable<Void> signOutClick() {
     return RxView.clicks(logoutButton);
-  }
-
-  @Override public Observable<Void> findFriendsClick() {
-    return RxView.clicks(findFriendsButton);
   }
 
   @Override public Observable<Void> storeClick() {
@@ -360,7 +354,6 @@ public class MyAccountFragment extends BackButtonFragment
     loginButton = (Button) view.findViewById(R.id.login_button);
     logoutButton = (Button) view.findViewById(R.id.logout_button);
     createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
-    findFriendsButton = (Button) view.findViewById(R.id.find_friends_button);
     createStoreButton = (Button) view.findViewById(R.id.create_store_button);
     editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
     editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);

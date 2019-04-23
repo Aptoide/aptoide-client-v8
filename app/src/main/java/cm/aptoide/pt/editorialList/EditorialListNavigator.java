@@ -7,6 +7,9 @@ import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 
+import static cm.aptoide.pt.editorial.EditorialFragment.CARD_ID;
+import static cm.aptoide.pt.editorial.EditorialFragment.FROM_HOME;
+
 public class EditorialListNavigator {
 
   private final FragmentNavigator fragmentNavigator;
@@ -21,8 +24,8 @@ public class EditorialListNavigator {
 
   public void navigateToEditorial(String cardId) {
     Bundle bundle = new Bundle();
-    bundle.putString("cardId", cardId);
-    bundle.putBoolean("fromHome", false);
+    bundle.putString(CARD_ID, cardId);
+    bundle.putBoolean(FROM_HOME, false);
     EditorialFragment fragment = new EditorialFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

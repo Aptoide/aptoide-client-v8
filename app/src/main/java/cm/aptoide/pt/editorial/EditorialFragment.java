@@ -72,8 +72,9 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class EditorialFragment extends NavigationTrackFragment
     implements EditorialView, NotBottomNavigationView {
 
+  public static final String CARD_ID = "cardId";
+  public static final String FROM_HOME = "fromHome";
   private static final String TAG = EditorialFragment.class.getName();
-
   @Inject EditorialPresenter presenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
@@ -197,9 +198,9 @@ public class EditorialFragment extends NavigationTrackFragment
     toolbarTitle = ((TextView) view.findViewById(R.id.toolbar_title));
     collapsingToolbarLayout =
         ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
-    collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.tw__transparent));
+    collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
     collapsingToolbarLayout.setCollapsedTitleTextColor(
-        getResources().getColor(R.color.tw__transparent));
+        getResources().getColor(R.color.transparent));
 
     appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
@@ -226,11 +227,11 @@ public class EditorialFragment extends NavigationTrackFragment
             movingCollapseSubject.onNext(isItemShown());
             configureAppBarLayout(
                 resources.getDrawable(R.drawable.editorial_up_bottom_black_gradient),
-                resources.getColor(R.color.tw__solid_white), false);
+                resources.getColor(R.color.white), false);
             break;
           case COLLAPSED:
             movingCollapseSubject.onNext(isItemShown());
-            configureAppBarLayout(resources.getDrawable(R.drawable.tw__transparent),
+            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
                 resources.getColor(R.color.black), true);
             break;
         }

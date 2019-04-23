@@ -8,17 +8,16 @@ public class Blacklister {
     this.blacklistPersistence = blacklistPersistence;
   }
 
-  public boolean isBlacklisted(BlacklistManager.BlacklistUnit blacklistUnit) {
+  public boolean isBlacklisted(BlacklistUnit blacklistUnit) {
     return blacklistPersistence.isBlacklisted(blacklistUnit.getId(),
-        blacklistUnit.getMaxPossibleImpressions());
+        blacklistUnit.getMaxImpressions());
   }
 
-  public void addImpression(BlacklistManager.BlacklistUnit blacklistUnit) {
-    blacklistPersistence.addImpression(blacklistUnit.getId(),
-        blacklistUnit.getMaxPossibleImpressions());
+  public void addImpression(BlacklistUnit blacklistUnit) {
+    blacklistPersistence.addImpression(blacklistUnit.getId(), blacklistUnit.getMaxImpressions());
   }
 
-  public void blacklist(BlacklistManager.BlacklistUnit blacklistUnit) {
+  public void blacklist(BlacklistUnit blacklistUnit) {
     blacklistPersistence.blacklist(blacklistUnit.getId());
   }
 }

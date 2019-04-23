@@ -126,9 +126,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     appBarLayout = view.findViewById(R.id.app_bar_layout);
 
     collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar_layout);
-    collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.tw__transparent));
+    collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
     collapsingToolbarLayout.setCollapsedTitleTextColor(
-        getResources().getColor(R.color.tw__transparent));
+        getResources().getColor(R.color.transparent));
 
     appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
 
@@ -156,12 +156,12 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             toolbarTitle.setVisibility(View.GONE);
             configureAppBarLayout(
                 resources.getDrawable(R.drawable.editorial_up_bottom_black_gradient),
-                resources.getColor(R.color.tw__solid_white), false);
+                resources.getColor(R.color.white), false);
             break;
           case COLLAPSED:
             toolbarTitle.setVisibility(View.VISIBLE);
 
-            configureAppBarLayout(resources.getDrawable(R.drawable.tw__transparent),
+            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
                 resources.getColor(R.color.black), true);
             break;
         }

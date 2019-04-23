@@ -263,15 +263,10 @@ android {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     } else {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
 
     variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
@@ -297,7 +292,6 @@ android {
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -390,7 +384,6 @@ dependencies {
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
 
   implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
@@ -503,13 +496,6 @@ dependencies {
     transitive = true
   }
 
-  //lib phone number
-  implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
-
-  implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
-  }
-
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
   implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
@@ -532,7 +518,6 @@ dependencies {
 
   // Facebook Login
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 

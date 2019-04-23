@@ -47,4 +47,7 @@
   <color name="wizard_color_2_green_faded_secondary">#1269B131</color>
   <color name="wizard_color_3_orange">#FE6F49</color>
 
+  <!-- transparent -->
+  <color name="transparent">#00000000</color>
+
 </resources>

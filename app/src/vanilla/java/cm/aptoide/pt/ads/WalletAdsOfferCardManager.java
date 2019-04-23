@@ -14,8 +14,8 @@ public class WalletAdsOfferCardManager {
     this.packageRepository = packageRepository;
   }
 
-  public boolean shouldShowWalletOfferCard(String blacklistId) {
-    return !blacklistManager.isBlacklisted(blacklistId) && !packageRepository.isAppInstalled(
+  public boolean shouldShowWalletOfferCard(String type, String id) {
+    return !blacklistManager.isBlacklisted(type, id) && !packageRepository.isAppInstalled(
         "com.appcoins.wallet");
   }
 }

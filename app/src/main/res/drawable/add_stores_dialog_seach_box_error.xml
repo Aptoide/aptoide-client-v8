@@ -9,5 +9,5 @@
       android:right="2dp"
       android:top="2dp"/>
   <corners android:radius="5dp"/>
-  <solid android:color="@color/tw__transparent"/>
+  <solid android:color="@color/transparent"/>
 </shape>

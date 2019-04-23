@@ -32,6 +32,8 @@ public interface HomeView extends BundleView {
 
   void sendDeeplinkToWalletAppView(String url);
 
+  void showConsentDialog();
+
   Observable<ReactionsHomeEvent> reactionClicked();
 
   Observable<EditorialHomeEvent> reactionButtonLongPress();
