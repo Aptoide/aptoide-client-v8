@@ -6,6 +6,8 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.ReactionsHomeEvent;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
@@ -17,10 +19,12 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class EditorialListPresenterTest {
+  private static String GROUP_ID = "CURATION_1";
   @Mock EditorialListFragment view;
   @Mock EditorialListManager editorialListManager;
   @Mock AptoideAccountManager accountManager;
@@ -28,7 +32,6 @@ public class EditorialListPresenterTest {
   @Mock EditorialListAnalytics editorialListAnalytics;
   @Mock CrashReport crashReporter;
   @Mock Account account;
-
   private EditorialListPresenter presenter;
   private EditorialListViewModel successEditorialViewModel;
   private EditorialListViewModel loadingEditorialViewModel;
@@ -43,6 +46,10 @@ public class EditorialListPresenterTest {
   private PublishSubject<EditorialListEvent> impressionEvent;
   private EditorialListViewModel networkErrorEditorialViewModel;
   private PublishSubject<Void> refreshEvent;
+  private PublishSubject<EditorialHomeEvent> reactionButtonClickEvent;
+  private PublishSubject<EditorialHomeEvent> reactionButtonLongPressEvent;
+  private PublishSubject<ReactionsHomeEvent> reactionClickEvent;
+  private PublishSubject<Void> snackLoginEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -55,10 +62,15 @@ public class EditorialListPresenterTest {
     cardClickEvent = PublishSubject.create();
     impressionEvent = PublishSubject.create();
     refreshEvent = PublishSubject.create();
+    reactionButtonClickEvent = PublishSubject.create();
+    reactionButtonLongPressEvent = PublishSubject.create();
+    reactionClickEvent = PublishSubject.create();
+    snackLoginEvent = PublishSubject.create();
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
         editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
-    CurationCard curationCard = new CurationCard("1", "sub", "icon", "title", "1000", "CURATION_1", "2018-11-29 17:14:56");
+    CurationCard curationCard =
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);
     successEditorialViewModel = new EditorialListViewModel(curationCardList, 0, 0);
     loadingEditorialViewModel = new EditorialListViewModel(true);
@@ -75,6 +87,10 @@ public class EditorialListPresenterTest {
     when(view.imageClick()).thenReturn(imageClickEvent);
     when(view.refreshes()).thenReturn(refreshEvent);
     when(view.visibleCards()).thenReturn(impressionEvent);
+    when(view.reactionsButtonClicked()).thenReturn(reactionButtonClickEvent);
+    when(view.reactionButtonLongPress()).thenReturn(reactionButtonLongPressEvent);
+    when(view.reactionClicked()).thenReturn(reactionClickEvent);
+    when(view.snackLogInClick()).thenReturn(snackLoginEvent);
   }
 
   @Test public void onCreateLoadSuccessViewModelTest() {
@@ -257,5 +273,142 @@ public class EditorialListPresenterTest {
     impressionEvent.onNext(new EditorialListEvent("1", 1));
     //Then it should navigate to the Settings Fragment
     verify(editorialListAnalytics).sendEditorialImpressionEvent("1", 1);
+  }
+
+  @Test public void handleReactionButtonClickFirstReactionTest() {
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And it's the first time the user is reacting to that card
+    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(true);
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(editorialListAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID, 1);
+  }
+
+  @Test public void handleReactionButtonClickSecondReactionTest() {
+    CurationCard curationCard =
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And the user has a reaction already submitted on that card
+    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(false);
+    when(editorialListManager.deleteReaction("1", GROUP_ID)).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(curationCard));
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
+    //It should request the deletion of the reaction
+    verify(editorialListManager).deleteReaction("1", GROUP_ID);
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialListAnalytics).sendDeleteEvent();
+    verify(editorialListManager).loadReactionModel("1", GROUP_ID);
+    verify(view).updateEditorialCard(curationCard);
+  }
+
+  @Test public void handleReactionButtonLongPressTest() {
+    //Given an initialised presenter
+    presenter.handleLongPressReactionButton();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user long presses the reaction button
+    reactionButtonLongPressEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS));
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(editorialListAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID, 1);
+  }
+
+  @Test public void handleUserReactionTest() {
+    CurationCard curationCard =
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialListManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(curationCard));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialListAnalytics).sendReactedEvent();
+    verify(editorialListManager).loadReactionModel("1", GROUP_ID);
+    verify(view).updateEditorialCard(curationCard);
+  }
+
+  @Test public void handleUserReactionWithSameReactionTest() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    //It should request to set said reaction
+    when(editorialListManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION)));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialListAnalytics, times(0)).sendReactedEvent();
+    when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56")));
+    verify(editorialListManager, times(0)).loadReactionModel("1", GROUP_ID);
+    verify(view, times(0)).updateEditorialCard(
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56"));
+  }
+
+  @Test public void handleSnackLogInTest() {
+    //Given an initialised presenter
+    presenter.handleSnackLogInClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user clicks on the log in button
+    snackLoginEvent.onNext(null);
+    //Then it should navigate to the log in view
+    verify(editorialListNavigator).navigateToLogIn();
+  }
+
+  @Test public void handleReactionsExceeded() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialListManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showLogInDialog();
+  }
+
+  @Test public void handleNetworkError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialListManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.NETWORK_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showNetworkErrorToast();
+  }
+
+  @Test public void handleGeneralError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialListManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showGenericErrorToast();
   }
 }
