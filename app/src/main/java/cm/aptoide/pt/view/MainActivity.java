@@ -94,20 +94,29 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStart() {
     super.onStart();
+    MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
+    MoPub.onResume(this);
     IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
+    MoPub.onPause(this);
     IronSource.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
+    MoPub.onStop(this);
+  }
+
+  @Override protected void onRestart() {
+    super.onRestart();
+    MoPub.onRestart(this);
   }
 
   private void setupUpdatesNotification() {
