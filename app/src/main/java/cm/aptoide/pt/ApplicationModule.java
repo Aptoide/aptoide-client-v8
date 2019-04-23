@@ -204,6 +204,7 @@ import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.StoreRepository;
