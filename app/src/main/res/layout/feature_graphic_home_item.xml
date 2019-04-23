@@ -23,7 +23,7 @@
       android:layout_height="100dp"
       android:layout_alignParentBottom="true"
       android:layout_gravity="bottom"
-      android:background="@color/tw__transparent"
+      android:background="@color/transparent"
       >
     <RelativeLayout
         android:layout_width="match_parent"

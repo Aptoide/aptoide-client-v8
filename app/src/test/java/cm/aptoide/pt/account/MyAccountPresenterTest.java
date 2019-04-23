@@ -123,10 +123,6 @@ public class MyAccountPresenterTest {
     myAccountPresenter.handleLogOutClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    //Then address book related shared preferences should be set to false (reset)
-    verify(sharedPreferences).edit();
-    verify(editor, times(3)).putBoolean(anyString(), eq(false));
-    verify(editor).apply();
     //Then show the login displayables
     verify(view).showLoginAccountDisplayable();
   }
@@ -141,19 +137,6 @@ public class MyAccountPresenterTest {
 
     //Then the user should navigate to the create store view
     verify(navigator).navigateToCreateStore();
-  }
-
-  @Test public void handleFindFriendsClickTest() {
-    //Given an initialized MyAccountPresenter
-    //When a user clicks the find friends button
-    when(view.findFriendsClick()).thenReturn(Observable.just(null));
-
-    myAccountPresenter.handleFindFriendsClick();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(analytics).sendFollowFriendsClickEvent();
-    //Then the user should navigate to the find friends view
-    verify(navigator).navigateToFindFriends();
   }
 
   @Test public void handleStoreEditClickTest() {

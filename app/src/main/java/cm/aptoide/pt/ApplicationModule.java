@@ -71,12 +71,12 @@ import cm.aptoide.pt.account.OAuthModeProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -257,9 +257,6 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import dagger.Module;
 import dagger.Provides;
 import io.fabric.sdk.android.Fabric;
@@ -487,20 +484,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return fabric.getKit(Crashlytics.class);
   }
 
-  @Singleton @Provides TwitterCore provideTwitter(Fabric fabric) {
-    return fabric.getKit(TwitterCore.class);
-  }
-
-  @Singleton @Provides TwitterAuthClient provideTwitterAuthClient() {
-    return new TwitterAuthClient();
-  }
-
   @Singleton @Provides Fabric provideFabric() {
     return Fabric.with(application, new Answers(), new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.CRASH_REPORTS_DISABLED)
             .build())
-        .build(), new TwitterCore(
-        new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
+        .build());
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
@@ -1164,10 +1152,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment,
-      WalletAdsOfferManager walletAdsOfferManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
+      MoPubConsentManager moPubConsentDialogManager) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, walletAdsOfferManager);
+        moPubNativeAdExperiment, walletAdsOfferManager, moPubConsentDialogManager);
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
@@ -1779,11 +1767,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
         InstallAnalytics.EDITORS_APPLICATION_INSTALL,
-        AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK,
-        AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
-        AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
@@ -1795,19 +1778,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
         StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
         StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
-        AccountAnalytics.LOGIN_EVENT_NAME, AccountAnalytics.FOLLOW_FRIENDS,
-        UpdatesAnalytics.UPDATE_EVENT, PageViewsAnalytics.PAGE_VIEW_EVENT,
-        FirstLaunchAnalytics.FIRST_LAUNCH, FirstLaunchAnalytics.PLAY_PROTECT_EVENT,
-        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        AppViewAnalytics.SIMILAR_APP_INTERACT, AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN,
-        AccountAnalytics.CREATE_USER_PROFILE, AccountAnalytics.PROFILE_SETTINGS,
-        AccountAnalytics.ENTRY, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP,
-        AppShortcutsAnalytics.APPS_SHORTCUTS, AccountAnalytics.CREATE_YOUR_STORE,
+        AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT,
+        PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
+        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
+        AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
+        AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
         BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
-        BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
+        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
+        AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
+        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
+        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
         HomeAnalytics.HOME_CHIP_CLICK, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,

@@ -304,8 +304,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, "",
-            installedRepository, migrationManager);
+            promotionsManager, "", installedRepository, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -332,8 +331,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, "",
-            installedRepository, migrationManager);
+            promotionsManager, "", installedRepository, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -360,8 +358,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, "",
-            installedRepository, migrationManager);
+            promotionsManager, "", installedRepository, migrationManager);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -473,8 +470,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "marketName", appCoinsManager,
-            promotionsManager, "",
-            installedRepository, migrationManager);
+            promotionsManager, "", installedRepository, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -581,8 +577,7 @@ public class AppViewManagerTest {
             storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, "",
-            installedRepository, migrationManager);
+            promotionsManager, "", installedRepository, migrationManager);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -715,5 +710,4 @@ public class AppViewManagerTest {
     //It should delegate that to the adsManager
     verify(adsManager).handleAdsLogic(searchAdResult);
   }
-
 }

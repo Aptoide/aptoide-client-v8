@@ -12,8 +12,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 /**
  * Created by neuro on 06-05-2016.
  */
-public enum Type {
-  _EMPTY(1, true), // FIXME for tests only
+public enum Type {_EMPTY(1, true), // FIXME for tests only
 
   // Server
   APPS_GROUP(3, false), STORES_GROUP(3, false), FOLLOW_STORE(3, false), DISPLAYS(2, true), ADS(3,
@@ -46,5 +45,4 @@ public enum Type {
 
   public boolean isFixedPerLineCount() {
     return this.fixedPerLineCount;
-  }
-}
+  }}
