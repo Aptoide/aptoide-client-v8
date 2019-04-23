@@ -240,7 +240,10 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-
+    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
+        "\"" + APPLOVIN_SDK_VERSION + "\""
+    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
+        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
