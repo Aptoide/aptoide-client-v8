@@ -49,11 +49,6 @@ public class EditorialPresenter implements Presenter {
     handleRetryClick();
     handleClickOnMedia();
     handleClickOnAppCard();
-    handleReactionClick();
-    handleUserReaction();
-    handleLongPressReactionButton();
-    handleLogInClick();
-    onCreateLoadReactionModel();
 
     handleInstallClick();
     pauseDownload();
@@ -66,21 +61,12 @@ public class EditorialPresenter implements Presenter {
     handleMediaListDescriptionVisibility();
     handleClickActionButtonCard();
     handleMovingCollapse();
-  }
 
-  private void handleLongPressReactionButton() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionsButtonLongPressed())
-        .flatMap(click -> editorialManager.loadEditorialViewModel()
-            .toObservable())
-        .doOnNext(editorialViewModel -> {
-          editorialAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
+    handleReactionButtonClick();
+    handleUserReaction();
+    handleLongPressReactionButton();
+    handleSnackLogInClick();
+    onCreateLoadReactionModel();
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
@@ -347,18 +333,6 @@ public class EditorialPresenter implements Presenter {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  @VisibleForTesting public void handleReactionClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionsButtonClicked())
-        .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
-        .observeOn(viewScheduler)
-        .flatMap(editorialViewModel -> singlePressReactionButtonAction(editorialViewModel))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
   private Observable<LoadReactionModel> singlePressReactionButtonAction(
       EditorialViewModel editorialViewModel) {
     boolean isFirstReaction = editorialManager.isFirstReaction(editorialViewModel.getCardId(),
@@ -378,22 +352,56 @@ public class EditorialPresenter implements Presenter {
     }
   }
 
-  @VisibleForTesting public void onCreateLoadReactionModel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId(),
-            editorialViewModel.getGroupId()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
-  }
-
   private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
     return editorialManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
         .doOnSuccess(reactionModel -> view.setReactions(reactionModel.getMyReaction(),
             reactionModel.getTopReactionList(), reactionModel.getTotal()));
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
+    if (reactionsResponse.wasSuccess()) {
+      if (isDelete) {
+        editorialAnalytics.sendDeletedEvent();
+      } else {
+        editorialAnalytics.sendReactedEvent();
+      }
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
+      view.showGenericErrorToast();
+    }
+  }
+
+  private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
+    return firstVisiblePosition == lastVisiblePosition;
+  }
+
+  private Completable downgradeApp(EditorialDownloadEvent downloadEvent) {
+    return view.showDowngradeMessage()
+        .filter(downgrade -> downgrade)
+        .flatMapCompletable(__ -> downloadApp(downloadEvent))
+        .toCompletable();
+  }
+
+  private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
+    return view.isViewReady()
+        .flatMap(__ -> editorialManager.loadEditorialViewModel()
+            .toObservable());
+  }
+
+  @VisibleForTesting public void handleReactionButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
+        .observeOn(viewScheduler)
+        .flatMap(editorialViewModel -> singlePressReactionButtonAction(editorialViewModel))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleUserReaction() {
@@ -414,23 +422,22 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
-    if (reactionsResponse.wasSuccess()) {
-      if (isDelete) {
-        editorialAnalytics.sendDeletedEvent();
-      } else {
-        editorialAnalytics.sendReactedEvent();
-      }
-    } else if (reactionsResponse.reactionsExceeded()) {
-      view.showLogInDialog();
-    } else if (reactionsResponse.wasNetworkError()) {
-      view.showNetworkErrorToast();
-    } else if (reactionsResponse.wasGeneralError()) {
-      view.showErrorToast();
-    }
+  @VisibleForTesting public void handleLongPressReactionButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonLongPressed())
+        .flatMap(click -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .doOnNext(editorialViewModel -> {
+          editorialAnalytics.sendReactionButtonClickEvent();
+          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
-  @VisibleForTesting public void handleLogInClick() {
+  @VisibleForTesting public void handleSnackLogInClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.snackLogInClick())
@@ -440,20 +447,14 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
-    return firstVisiblePosition == lastVisiblePosition;
-  }
-
-  private Completable downgradeApp(EditorialDownloadEvent downloadEvent) {
-    return view.showDowngradeMessage()
-        .filter(downgrade -> downgrade)
-        .flatMapCompletable(__ -> downloadApp(downloadEvent))
-        .toCompletable();
-  }
-
-  private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
-    return view.isViewReady()
-        .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable());
+  @VisibleForTesting public void onCreateLoadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId(),
+            editorialViewModel.getGroupId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 }
