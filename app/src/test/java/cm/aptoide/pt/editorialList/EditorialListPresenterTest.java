@@ -345,6 +345,8 @@ public class EditorialListPresenterTest {
   }
 
   @Test public void handleUserReactionWithSameReactionTest() {
+    CurationCard curationCard =
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
     //Given an initialised presenter
     presenter.handleUserReaction();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -356,11 +358,10 @@ public class EditorialListPresenterTest {
         new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION)));
     //It should send the corresponding analytic and load the reactions and update the corresponding card
     verify(editorialListAnalytics, times(0)).sendReactedEvent();
-    when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56")));
+    when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(curationCard));
     verify(editorialListManager, times(0)).loadReactionModel("1", GROUP_ID);
-    verify(view, times(0)).updateEditorialCard(
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56"));
+    verify(view, times(0)).updateEditorialCard(curationCard);
   }
 
   @Test public void handleSnackLogInTest() {

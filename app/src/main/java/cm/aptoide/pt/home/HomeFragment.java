@@ -387,7 +387,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     return snackListener;
   }
 
-  @Override public void showErrorToast() {
+  @Override public void showGenericErrorToast() {
     Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
         .show();
   }
