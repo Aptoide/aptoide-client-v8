@@ -94,18 +94,17 @@ public class ReactionsRemoteService implements ReactionsService {
   }
 
   public interface ServiceV8 {
-    @GET("echo/8.22112018/groups/{group_id}/objects/{id}/reactions/summary") //test
-      //@GET("echo/8.20181116/groups/{group_id}/objects/{id}/reactions/summary") //prod
+    @GET("echo/8.20181122/groups/{group_id}/objects/{id}/reactions/summary")
     Observable<TopReactionsResponse> getTopReactionsResponse(@Path("group_id") String groupId,
         @Path("id") String id);
 
-    @POST("echo/8.22112018/reactions/") //@POST("echo/20181116/reactions
-    Observable<Response<EmptyResponse>> setFirstUserReaction(@retrofit2.http.Body Body body);
+    @POST("echo/8.20181122/reactions/") Observable<Response<EmptyResponse>> setFirstUserReaction(
+        @retrofit2.http.Body Body body);
 
-    @DELETE("echo/8.22112018/reactions/{uid}/") Observable<Response<EmptyResponse>> deleteReaction(
+    @DELETE("echo/8.20181122/reactions/{uid}/") Observable<Response<EmptyResponse>> deleteReaction(
         @Path("uid") String uid);
 
-    @PATCH("echo/8.22112018/reactions/{uid}/")
+    @PATCH("echo/8.20181122/reactions/{uid}/")
     Observable<Response<EmptyResponse>> setSecondUserReaction(@Path("uid") String uid,
         @retrofit2.http.Body Body body);
   }

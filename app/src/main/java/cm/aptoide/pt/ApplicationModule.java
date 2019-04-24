@@ -1181,16 +1181,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
-  @Singleton @Provides @Named("reactions-host") String providesReactionsHost(
-      @Named("default") SharedPreferences sharedPreferences) {
-    if (true) {
-      //TODO REMOVE THIS CONDITION
-      return "http://"
-          + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_REACTIONS_TEST_HOST
-          + "/";
-    }
-    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+  @Singleton @Provides @Named("reactions-host") String providesReactionsHost() {
+    return cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_REACTIONS_HOST
         + "/";
