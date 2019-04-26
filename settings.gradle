@@ -4,13 +4,12 @@
  */
 
 include 'app',
-    ':dataprovider',
-    ':aptoidepreferences',
-    ':crashreports',
-    ':utils',
-    ':aptoide-account-manager',
-    ':aptoide-database',
-    ':downloadmanager',
-    ':aptoide-analytics-core',
-    ':aptoide-analytics-default-implementation'
-
+  ':aptoide-account-manager',
+  ':aptoide-analytics-core',
+  ':aptoide-analytics-default-implementation',
+  ':aptoide-database',
+  ':aptoide-preferences',
+  ':crashreports',
+  ':dataprovider',
+  ':downloadmanager',
+  ':utils'

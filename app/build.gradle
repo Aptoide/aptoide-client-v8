@@ -331,7 +331,7 @@ dependencies {
   implementation project(path: ':crashreports')
   implementation project(path: ':downloadmanager')
   implementation project(path: ':aptoide-database')
-  implementation project(path: ':aptoidepreferences')
+  implementation project(path: ':aptoide-preferences')
   implementation project(path: ':aptoide-account-manager')
   implementation project(path: ':aptoide-analytics-core')
   implementation project(path: ':aptoide-analytics-default-implementation')
