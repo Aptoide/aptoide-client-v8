@@ -391,6 +391,8 @@ dependencies {
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
+  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+
 
 /** Ads, Analytics, & Monetisation **/
   // Flurry Android SDK
@@ -462,7 +464,6 @@ dependencies {
 
   // Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
-  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
   // PayPal
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK_VERSION}", {
