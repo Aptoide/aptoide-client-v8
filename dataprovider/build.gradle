@@ -8,17 +8,55 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
-  lintOptions {
-    abortOnError false
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
+  flavorDimensions "mode"
+  productFlavors {
+    internal {
+      dimension "mode"
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
+        "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_NO_SSL_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      matchingFallbacks = ['internal', 'prod']
     }
-    release {
-      minifyEnabled false
-      shrinkResources false
+    prod {
+      dimension "mode"
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
+        "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_NO_SSL_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
+        "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      matchingFallbacks = ['prod', 'internal']
     }
   }
 
@@ -32,56 +70,8 @@ android {
     }
   }
 
-  flavorDimensions "mode"
-  productFlavors {
-    internal {
-      dimension "mode"
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_DEVELOPMENT + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_NO_SSL_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
-      matchingFallbacks = ['internal', 'prod']
-    }
-    prod {
-      dimension "mode"
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SCHEME",
-          "\"" + project.APTOIDE_WEB_SERVICES_SCHEME_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_WRITE_V7_HOST_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_NOTIFICATION_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_NOTIFICATION_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_READ_V7_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_READ_V7_HOST_PRODUCTION + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_NO_SSL_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
-      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
-          "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
-      matchingFallbacks = ['prod', 'internal']
-    }
+  lintOptions {
+    abortOnError false
   }
 
   compileOptions {
@@ -90,47 +80,43 @@ android {
   }
 
   packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/*'
   }
 }
 
 dependencies {
+//Local libraries
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':aptoide-preferences')
   implementation project(path: ':crashreports')
   compileOnly project(path: ':utils')
 
-  testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  testImplementation "com.android.support.test:testing-support-lib:0.1"
-
-  //noinspection GradleDependency
+//Support libraries
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
+
+// Google Play Services
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_VERSION}"
 
+//RxJava
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  // And ProGuard rules for RxJava!
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+
+//Network
   implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_LOGGING_INTERCEPTOR_VERSION}"
 
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-
-  // Parceler - https://github.com/johncarl81/parceler
+//Parceler
   compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"
   annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+
+//Test
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "com.android.support.test:testing-support-lib:${TESTING_SUPPORT_LIB_VERSION}"
+  testImplementation "com.squareup.okhttp3:mockwebserver:${OKHTTP_MOCKWEBSERVER_VERSION}"
 }

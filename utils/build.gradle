@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 
-
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -13,53 +12,34 @@ android {
     abortOnError false
   }
 
-  buildTypes {
-    debug {
-      minifyEnabled false
-    }
-    release {
-      minifyEnabled false
-      shrinkResources false
-    }
-  }
-
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
   packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
-  }
-
-  lintOptions {
-    abortOnError false
+    exclude 'META-INF/*'
   }
 }
 
 dependencies {
+//Local libraries
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':aptoide-analytics-default-implementation')
 
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-
-  //noinspection GradleDependency
+//Support libraries
   implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
+//RxJava
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  // And ProGuard rules for RxJava!
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
 
-  implementation("org.nanohttpd:nanohttpd:2.3.0")
+//Network
+  implementation "org.nanohttpd:nanohttpd:${NANOHTTPD_VERSION}"
+
+//Test
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 }

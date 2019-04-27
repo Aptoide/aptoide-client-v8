@@ -6,12 +6,9 @@ android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
-
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    versionCode 1
-    versionName "1.0"
 
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
@@ -20,21 +17,16 @@ android {
     abortOnError false
   }
 
-  buildTypes {
-    debug {
-      minifyEnabled false
-    }
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
   }
 }
 
 dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  testImplementation "org.mockito:mockito-core:1.10.19"
-  testImplementation 'junit:junit:4.12'
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  testImplementation "junit:junit:${JUNIT_VERSION}"
 }
 
 sourceCompatibility = 1.8

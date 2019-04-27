@@ -8,10 +8,6 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
   }
 
-  lintOptions {
-    abortOnError false
-  }
-
   buildTypes {
     debug {
       minifyEnabled false
@@ -50,15 +46,7 @@ android {
   }
 
   packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/*'
   }
 
   lintOptions {
@@ -67,21 +55,27 @@ android {
 }
 
 dependencies {
+//Local libraries
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  api project(path: ':dataprovider')
-  implementation project(path: ':crashreports')
   implementation project(path: ':aptoide-analytics-default-implementation')
+  implementation project(path: ':crashreports')
+  api project(path: ':dataprovider')
   implementation project(path: ':utils')
 
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+//Support libraries
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
+//RxJava
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY_VERSION}"
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-  // Parceler - https://github.com/johncarl81/parceler
+
+//Parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
   annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+
+//Test
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 }

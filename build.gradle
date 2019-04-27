@@ -1,5 +1,6 @@
 buildscript {
-  ext.kotlin_version = "1.3.21"
+  //https://github.com/JetBrains/kotlin/blob/master/ChangeLog.md
+  ext.kotlin_version = "1.3.31"
   repositories {
     mavenLocal()
     google()
@@ -7,11 +8,15 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    //https://developer.android.com/studio/releases
+    classpath 'com.android.tools.build:gradle:3.2.1' //3.4.0
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
-    classpath 'io.realm:realm-gradle-plugin:3.5.0'
-    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    //https://github.com/KeepSafe/dexcount-gradle-plugin/blob/master/CHANGELOG.md
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4' //0.8.6
+    //https://github.com/realm/realm-java/blob/master/CHANGELOG.md
+    classpath 'io.realm:realm-gradle-plugin:3.5.0' //5.10.0
+    //https://bintray.com/jfrog/jfrog-jars/gradle-bintray-plugin#release
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
   }
@@ -19,17 +24,16 @@ buildscript {
 
 allprojects {
   repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url "https://maven.fabric.io/public" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
-    maven { url "http://dl.appnext.com/" }
+    maven { url "https://dl.appnext.com" }
 
     google()
     jcenter()
-    maven { url 'https://maven.google.com' }
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     flatDir {
       dirs 'libs'
@@ -45,111 +49,167 @@ task clean(type: Delete) {
 // from controlling version.
 // This will override gradle-wrapper.properties
 task wrapper(type: Wrapper) {
-  gradleVersion = '4.6'
+  gradleVersion = '4.6' //5.4
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
 ext {
 
-  //
-  // gradle build script vars
-  //
+  /**
+   * gradle build script vars
+   */
+  //https://android-developers.googleblog.com/2017/03/future-of-java-8-language-feature.html
   USE_JACK = false // http://tools.android.com/tech-docs/jackandjill
   BUILD_TOOLS_VERSION = '28.0.3'
 
-  //
-  // gradle build script dependencies versions
-  //
+  /**
+   * gradle build script dependencies versions
+   */
 
   // Google Android Support
-  SUPPORT_LIB_VERSION = '26.1.0'
+  //https://developer.android.com/topic/libraries/support-library/revisions
+  SUPPORT_LIB_VERSION = '26.1.0' //28.0.0
 
-  // Google Play Services
-  PLAY_SERVICES_VERSION = '15.0.1'
-
-  JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
-
-  MULTIDEX_VERSION = '1.0.1'
-
-  // Rx
-  RXJAVA_VERSION = '1.2.7'
-  RXANDROID_VERSION = '1.2.1'
-  JW_RX_BINDING_VERSION = '1.0.0'
-  RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0'
-  TRELLO_RX_LIFECYCLE_VERSION = '1.0'
-  RX_RELAY = '1.2.0'
-  Rx_lint_version = '1.2'
-
-  // Retrofit
-  RETROFIT_VERSION = '2.1.0'
-
-  // Test
-  MOCK_WEB_SERVER_VERSION = '3.4.1'
-  JUNIT_VERSION = '4.12'
-  MOCKITO_CORE_VERSION = '1.10.19'
-  MOCKITO_CORE_ANDROID_VERSION = '2.7.15'
-  ESPRESSO_VERSION = '3.0.1'
-  RUNNER_VERSION = '1.0.1'
-  RULES_VERSION = '1.0.1'
-
-  JACKSON_VERSION = '2.8.5'
-
-  // Material tab strip
-  MATERIAL_TAB_STRIP_VERSION = '1.1.0'
-
-  // Glide
-  GLIDE_VERSION = '4.7.1'
-
-  // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '4.41.0'
-
-  // File Downloader lib
-  FILE_DOWNLOADER_VERSION = '1.4.1'
-  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.0.0'
-
-  PAYPAL_SDK = '2.15.0'
-
-  SUPER_USER_LIB_VERSION = '1.0.0.+'
-
-  // Flurry Android SDK
-  FLURRY_VERSION = '11.6.0'
-
-  CRASHLYTICS_VERSION = '2.6.5'
-
-
-  //MOPUB ADS
-  MOPUB_SDK_VERSION = '5.6.0'
-  APPLOVIN_SDK_VERSION = '8.1.4'
-  MOPUB_MEDIATION_APPLOVIN_VERSION = '8.1.4.3'
-  MOPUB_MEDIATION_ADMOB_VERSION = '17.0.0.2'
-  FLURRY_ADS_VERSION = '11.6.0'
-  MOPUB_MEDIATION_FLURRY_VERSION = '11.6.0.0'
-  IRONSOURCE_MEDIATION_SDK_VERSION = '6.8.3'
-  MOPUB_MEDIATION_IRONSOURCE_VERSION = '6.8.3.0'
-  VUNGLE_SDK_VERSION = '6.3.24'
-  MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.2'
-  UNITY_ADS_SDK_VERSION = '3.0.1'
-  MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.1.0'
-  APPNEXT_SDK_VERSION = '2.4.4.472'
-  INMOBI_SDK_VERSION = '7.2.7'
-
-  PICASSO_VERSION = '2.5.2'
-
-  OKHTTP_VERSION = '3.6.0'
-
+  //1.0.2 https://developer.android.com/topic/libraries/support-library/rev-archive#25-4-0
+  MULTIDEX_VERSION = '1.0.1' //1.0.3
   CONSTRAINT_LAYOUT_VERSION = '1.1.3'
 
-  LEAK_CANARY_VERSION = '1.5'
-  PARCELER_VERSION = '1.1.6'
+  // Google Play Services
+  //https://developers.google.com/android/guides/releases
+  PLAY_SERVICES_VERSION = '15.0.1' //16.x.x
 
-  ADYEN_VERSION = '1.10.0'
-  CARD_FORM_VERSION = '3.0.6'
+  //https://mvnrepository.com/artifact/org.glassfish/javax.annotation
+  JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
-  DAGGER_VERSION = '2.12'
 
-  FABRIC_VERSION = '1.25.4'
+/** RxJava: Java VM implementation of Reactive Extensions **/
+  //https://github.com/ReactiveX/RxJava/blob/1.x/CHANGES.md
+  //https://github.com/ReactiveX/RxJava/blob/2.x/CHANGES.md
+  RXJAVA_VERSION = '1.2.7' //2.2.8
 
+  //https://github.com/ReactiveX/RxAndroid/blob/2.x/CHANGES.md
+  RXANDROID_VERSION = '1.2.1' //2.1.1
+
+  //https://github.com/JakeWharton/RxBinding/blob/master/CHANGELOG.md
+  JW_RX_BINDING_VERSION = '1.0.0' //2.2.0, 3.0.0-alpha2
+
+  //https://github.com/artem-zinnatullin/RxJavaProGuardRules/blob/master/CHANGELOG.md
+  RXJAVA_PROGUARD_RULES_VERSION = '1.2.7.0' //1.3.3.0
+
+  //https://github.com/trello/RxLifecycle/blob/master/CHANGELOG.md
+  TRELLO_RX_LIFECYCLE_VERSION = '1.0' //3.0.0
+
+  //https://github.com/JakeWharton/RxRelay/blob/master/CHANGELOG.md
+  RX_RELAY_VERSION = '1.2.0' //2.1.0
+
+  //https://www.littlerobots.nl/blog/
+  RX_LINT_VERSION = '1.2' //1.7.3
+
+
+/** Ads, Analytics, & Monetisation **/
+  //https://docs.fabric.io/android/changelog.html#fabric-gradle-plugin
+  FABRIC_VERSION = '1.25.4' //1.28.1
+  //https://docs.fabric.io/android/changelog.html#crashlytics
+  CRASHLYTICS_VERSION = '2.6.5' //2.9.9
+
+  // Facebook Android SDK
+  //https://developers.facebook.com/docs/android/change-log-4x/
+  FACEBOOK_ANDROID_SDK_VERSION = '4.41.0'
+
+  //Mopub Ads
+  //https://github.com/mopub/mopub-android-sdk/blob/master/CHANGELOG.md
+  MOPUB_SDK_VERSION = '5.6.0'
+  APPLOVIN_SDK_VERSION = '8.1.4' //9.5.4
+  //https://developers.appnext.com/docs/change-log
+  APPNEXT_SDK_VERSION = '2.4.4.472' //2.4.5.472
+  //https://developer.yahoo.com/flurry/docs/releasenotes/android/
+  FLURRY_SDK_VERSION = '11.6.0'
+  INMOBI_SDK_VERSION = '7.2.7'
+  IRONSOURCE_MEDIATION_SDK_VERSION = '6.8.3'
+  UNITY_ADS_SDK_VERSION = '3.0.1'
+  VUNGLE_SDK_VERSION = '6.3.24'
+  MOPUB_MEDIATION_ADMOB_VERSION = '17.0.0.2' //17.2.0.1
+  MOPUB_MEDIATION_APPLOVIN_VERSION = '8.1.4.3' //9.4.2.0
+  MOPUB_MEDIATION_FLURRY_VERSION = '11.6.0.0'
+  MOPUB_MEDIATION_IRONSOURCE_VERSION = '6.8.3.0'
+  MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.1.0' //3.0.1.2
+  MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.2'
+
+  //TODO: DEPRECATED (https://github.com/paypal/PayPal-Android-SDK/blob/master/README.md)
+  //https://github.com/paypal/PayPal-Android-SDK/blob/master/CHANGELOG.md
+  PAYPAL_SDK_VERSION = '2.15.3' //2.16.0
+
+  //https://github.com/AppStoreFoundation/asf-sdk
   APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
+
+  //https://github.com/Adyen/adyen-android/releases
+  ADYEN_VERSION = '1.10.0' //2.4.3
+
+
+/** Miscellaneous **/
+  //https://github.com/jpardogo/PagerSlidingTabStrip/blob/master/CHANGELOG.md
+  MATERIAL_TAB_STRIP_VERSION = '1.1.1'
+
+  //https://github.com/bumptech/glide/releases
+  GLIDE_VERSION = '4.7.1' //4.9.0
+
+  //https://github.com/lingochamp/FileDownloader/blob/master/CHANGELOG.md
+  //https://github.com/lingochamp/okdownload (FileDownloader2)
+  FILE_DOWNLOADER_VERSION = '1.4.1' //1.7.6
+  //https://github.com/Jacksgong/filedownloader-okhttp3-connection
+  FILE_DOWNLOADER_OKHTTP_IMP_VERSION = '1.0.0' //1.1.0
+
+  //https://github.com/Chainfire/libsuperuser
+  SUPERUSER_LIB_VERSION = '1.1.0.201903290044'
+
+  //https://github.com/square/retrofit/blob/master/CHANGELOG.md
+  RETROFIT_VERSION = '2.1.0' //2.5.0
+
+  //https://github.com/FasterXML/jackson/wiki/Jackson-Releases
+  JACKSON_VERSION = '2.8.5' //2.9.9
+
+  //https://github.com/square/picasso/blob/master/CHANGELOG.md
+  PICASSO_VERSION = '2.5.2' //2.71828
+
+  //https://github.com/square/okhttp/blob/master/CHANGELOG.md
+  OKHTTP_VERSION = '3.6.0' //3.14.1
+  OKHTTP_LOGGING_INTERCEPTOR_VERSION = '3.4.1' //3.14.1
+  OKHTTP_MOCKWEBSERVER_VERSION = '3.4.1' //3.14.1
+
+  //https://github.com/NanoHttpd/nanohttpd/releases
+  NANOHTTPD_VERSION = '2.3.0' //2.3.1
+
+  //https://github.com/square/leakcanary/blob/master/CHANGELOG.md
+  LEAK_CANARY_VERSION = '1.5' //1.6.3, 2.0-alpha-1
+
+  //https://github.com/johncarl81/parceler/blob/master/CHANGELOG.adoc
+  PARCELER_VERSION = '1.1.6' //1.1.12
+
+  //https://github.com/braintree/android-card-form/releases
+  CARD_FORM_VERSION = '3.0.6' //4.1.0
+
+  //https://github.com/google/dagger/releases
+  DAGGER_VERSION = '2.12' //2.22.1
+
+  //https://www.slf4j.org/news.html
+  SLF4J_VERSION = '1.7.21' //1.7.26, 1.8.0-beta4
+
+  //https://github.com/jmdns/jmdns/releases
+  JMDNS_VERSION = '3.5.1' //3.5.5
+
+
+/** Test **/
+  //https://github.com/junit-team/junit4/wiki/4.13-Release-Notes
+  JUNIT_VERSION = '4.12' //4.13-beta-2
+  //https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2
+  //https://github.com/mockito/mockito/blob/release/2.x/doc/release-notes/official.md
+  MOCKITO_CORE_VERSION = '1.10.19' //2.27.0
+  MOCKITO_CORE_ANDROID_VERSION = '2.7.15' //2.27.0
+  //https://developer.android.com/jetpack/androidx/releases/archive/test
+  ESPRESSO_VERSION = '3.0.2'
+  RUNNER_VERSION = '1.0.2'
+  RULES_VERSION = '1.0.2'
+  TESTING_SUPPORT_LIB_VERSION = '0.1'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

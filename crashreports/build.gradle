@@ -1,54 +1,44 @@
 apply plugin: 'com.android.library'
 
-
-
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
+
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
-  buildTypes {
-    debug {
-      minifyEnabled false
-      shrinkResources false
-    }
-    release {
-      minifyEnabled false
-    }
-  }
-
   packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
+    exclude 'META-INF/*'
   }
 
   lintOptions {
     abortOnError false
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
+//Local libraries
   implementation fileTree(include: ['*.jar'], dir: 'libs')
-  implementation project(path: ':utils')
   api project(path: ':aptoide-analytics-default-implementation')
-  androidTestImplementation("com.android.support.test.espresso:espresso-core:2.2.2", {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  })
-  testImplementation "junit:junit:4.12"
+  implementation project(path: ':utils')
+
+//RxJava
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
-  implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
-  // And ProGuard rules for RxJava!
+  implementation "nl.littlerobots.rxlint:rxlint:${RX_LINT_VERSION}"
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+
+//Test
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  androidTestImplementation("com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}", {
+    exclude group: 'com.android.support', module: 'support-annotations'
+  })
 }

@@ -8,23 +8,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 buildscript {
-
   repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven {
-      url "https://maven.google.com"
-    }
+    maven { url "https://maven.fabric.io/public" }
   }
-
   dependencies {
     classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
 }
 
 android {
-
   configurations.all {
-    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9' //3.0.2
   }
   // Websockets
   useLibrary 'org.apache.http.legacy'
@@ -43,11 +37,6 @@ android {
     testProguardFile 'proguard-rules-test.pro'
     testInstrumentationRunner "cm.aptoide.pt.MultidexAndroidJunitRunner"
     // vectorDrawables.useSupportLibrary = true
-  }
-
-  lintOptions {
-    disable 'UseSparseArrays'
-    abortOnError false
   }
 
   signingConfigs {
@@ -69,6 +58,9 @@ android {
       }
     }
   }
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 
   flavorDimensions "product", "mode"
   productFlavors {
@@ -87,6 +79,7 @@ android {
 
     internal {
       dimension "mode"
+      //noinspection GradlePath
       applicationIdSuffix "internal"
       versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_INTERNAL.toInteger()
@@ -95,6 +88,7 @@ android {
 
     dev {
       dimension "mode"
+      //noinspection GradlePath
       applicationIdSuffix "dev"
       versionName defaultConfig.getVersionName() + "." + getDate()
       versionCode project.VERSION_CODE_VANILLA_DEV.toInteger()
@@ -143,36 +137,13 @@ android {
     }
   }
 
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-
   variantFilter { variant ->
     def names = variant.flavors*.name
 
     if (names.contains('cobrand') && (names.contains('internal') || names.contains('leak') ||
-        names.contains('monetisation'))) {
+      names.contains('monetisation'))) {
       setIgnore(true)
     }
-  }
-
-  packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
-    exclude 'META-INF/rxjava.properties'
-    exclude 'version.properties'
-  }
-
-  testOptions {
-    unitTests.returnDefaultValues = true
   }
 
   applicationVariants.all { variant ->
@@ -183,9 +154,9 @@ android {
     String applicationId = applicationIdBase
 
     def searchSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.SearchSuggestionProvider"
+      "${applicationIdBase}.provider.SearchSuggestionProvider"
     def storeSuggestionProviderAuthority =
-        "${applicationIdBase}.provider.StoreSearchSuggestionProvider"
+      "${applicationIdBase}.provider.StoreSearchSuggestionProvider"
     def toolboxProviderAuthority = "${applicationIdBase}.StubProvider"
 
     if (applicationIdSuffix != null) {
@@ -196,54 +167,54 @@ android {
     }
 
     variant.mergedFlavor.manifestPlaceholders =
-        [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
-         suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
-         storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
-         appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         fabricApiKey                    : "${project.FABRIC_API_KEY}"]
+      [toolboxProviderAuthority        : "${toolboxProviderAuthority}",
+       suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
+       storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
+       appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
+       fabricApiKey                    : "${project.FABRIC_API_KEY}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
-        searchSuggestionProviderAuthority
+      searchSuggestionProviderAuthority
     variant.resValue "string", "store_suggestion_provider_authority",
-        storeSuggestionProviderAuthority
+      storeSuggestionProviderAuthority
 
     variant.buildConfigField "String", "CONTENT_AUTHORITY", "\"" + toolboxProviderAuthority + "\""
     variant.buildConfigField "String", "SIGNATURE_BACKUP", "\"" + project.SIGNATURE_BACKUP + "\""
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
-        "\"" + project.SIGNATURE_UPLOADER + "\""
+      "\"" + project.SIGNATURE_UPLOADER + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
-        "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
+      "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
+      project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
+      project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
+      project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "REALM_SCHEMA_VERSION",
-        project.REALM_SCHEMA_VERSION
+      project.REALM_SCHEMA_VERSION
     variant.buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
     variant.buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
-        project.IN_BILLING_SUPPORTED_API_VERSION
+      project.IN_BILLING_SUPPORTED_API_VERSION
     variant.buildConfigField "int", "ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS",
-        project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
+      project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
     variant.buildConfigField "int", "ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS",
-        project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
+      project.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS
     variant.buildConfigField "long", "ANALYTICS_SESSION_INTERVAL_IN_MILLIS",
-        project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
+      project.ANALYTICS_SESSION_INTERVAL_IN_MILLIS
     variant.buildConfigField "String", "APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST",
-        "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
+      "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
     variant.buildConfigField "String", "HOME_PROMOTION_ID",
-        "\"" + project.HOME_PROMOTION_ID + "\""
+      "\"" + project.HOME_PROMOTION_ID + "\""
     variant.buildConfigField "String", "APP_VIEW_WALLET_PROMOTION_ID",
-        "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
+      "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
-        "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+      "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
     variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
-        "\"" + APPLOVIN_SDK_VERSION + "\""
+      "\"" + APPLOVIN_SDK_VERSION + "\""
     variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
-        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
+      "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
@@ -251,7 +222,7 @@ android {
       variant.buildConfigField "String", "COBRAND_OEMID", "\"" + project.COBRAND_OEMID + "\""
       if (flavors[1].name.contains("dev")) {
         variant.resValue "string", "COBRAND_LOGO_TITLE",
-            "\"" + project.COBRAND_MARKET_NAME + "\"" + " Dev"
+          "\"" + project.COBRAND_MARKET_NAME + "\"" + " Dev"
       } else {
         variant.resValue "string", "COBRAND_LOGO_TITLE", "\"" + project.COBRAND_MARKET_NAME + "\""
       }
@@ -264,37 +235,37 @@ android {
 
     if (flavors[1].name.contains('internal')) {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
+        "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
     } else {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
+        "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     }
 
     variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
-        "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
+      "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
-        "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
+      "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
-        "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
+      "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
     variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
-        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
+      "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_SEARCH_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
+      "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -305,17 +276,32 @@ android {
       def versionCode = variant.versionCode
 
       def newApkName = dimension + SEP +
-          flavor +
-          SEP +
-          buildType +
-          SEP +
-          versionName +
-          SEP +
-          versionCode +
-          ".apk"
+        flavor +
+        SEP +
+        buildType +
+        SEP +
+        versionName +
+        SEP +
+        versionCode +
+        ".apk"
 
       outputFileName = newApkName
     }
+  }
+
+  lintOptions {
+    disable 'UseSparseArrays'
+    abortOnError false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  packagingOptions {
+    exclude 'META-INF/*'
+    exclude 'version.properties'
   }
 
   dexOptions {
@@ -327,225 +313,201 @@ android {
 }
 
 dependencies {
-
-  implementation project(path: ':crashreports')
-  implementation project(path: ':downloadmanager')
-  implementation project(path: ':aptoide-database')
-  implementation project(path: ':aptoide-preferences')
+/** Local libraries **/
   implementation project(path: ':aptoide-account-manager')
   implementation project(path: ':aptoide-analytics-core')
   implementation project(path: ':aptoide-analytics-default-implementation')
+  implementation project(path: ':aptoide-database')
+  implementation project(path: ':aptoide-preferences')
+  implementation project(path: ':crashreports')
   implementation project(path: ':dataprovider')
+  implementation project(path: ':downloadmanager')
   implementation project(path: ':utils')
 
-  // Testing-only dependencies
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+/** Kotlin **/
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-  // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-
-  androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
-
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-
-  implementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-  //dependencies needed for UITests
-  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-  androidTestImplementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-  androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
-  androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
-  androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
-
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-
-  implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-
-  implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
-  //noinspection GradleDependency
+/** Support libraries **/
+  implementation "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
+  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
   // Cannot update or settings will crash :/
   implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
   implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
   implementation "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  implementation("com.android.support:multidex:${MULTIDEX_VERSION}", {
+    exclude group: "com.android.support", module: "support-annotations"
+  })
 
+
+/** Google Play Services **/
+  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
+
+
+/** Other **/
   implementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 
+  implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
+
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
   implementation "com.trello:rxlifecycle:${TRELLO_RX_LIFECYCLE_VERSION}"
   // If you want pre-written Activities and Fragments you can subclass as providers
   implementation "com.trello:rxlifecycle-components:${TRELLO_RX_LIFECYCLE_VERSION}"
-  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
-
-  implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
-
+  implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
+  // Remote install
+  implementation "org.slf4j:slf4j-simple:${SLF4J_VERSION}"
+  implementation "org.slf4j:slf4j-api:${SLF4J_VERSION}"
+  implementation "org.jmdns:jmdns:${JMDNS_VERSION}"
+
+  implementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_LOGGING_INTERCEPTOR_VERSION}"
+
+  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
+  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+
+  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}", {
+    exclude group: "com.android.support"
+  })
+  annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+
+  implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
+
+  implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+
+
+/** Ads, Analytics, & Monetisation **/
+  // Flurry Android SDK
+  implementation "com.flurry.android:analytics:${FLURRY_SDK_VERSION}"
+
+  // Fabric
+  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar", {
+    transitive = true
+  })
+
+  // Facebook Core (Analytics)
+  implementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
+  implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
 
   // Mopub
-  implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar") {
+  implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar", {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
-  }
+  })
 
   // AppLovin
   implementation "com.applovin:applovin-sdk:${APPLOVIN_SDK_VERSION}"
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}") {
+  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}", {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
-  }
+  })
 
   // Yahoo! Flurry
-  implementation("com.flurry.android:ads:${FLURRY_ADS_VERSION}@aar") {
+  implementation("com.flurry.android:ads:${FLURRY_SDK_VERSION}@aar", {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
-  }
+  })
   implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
 
-  // ironSource
+  // IronSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
   implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
 
   // Vungle
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
+  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}", {
     transitive = true
     exclude group: "com.android.support"
     exclude module: "support-annotations"
     exclude module: "support-v4"
-  }
+  })
   implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
-  // UnityAds, Chartboost & One by AOL
+  // UnityAds, Chartboost, & One by AOL
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  //AppNext
+  // AppNext
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
 
-  //Inmobi
+  // Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
-
-  // paypal SDK
-  implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
+  // PayPal
+  implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK_VERSION}", {
     exclude group: 'io.card'
-  }
-
-  // Flurry Android sdk
-  implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
-
-  // Remote install
-  implementation 'org.slf4j:slf4j-simple:1.7.21'
-  implementation 'org.slf4j:slf4j-api:1.7.21'
-  implementation 'org.jmdns:jmdns:3.5.1'
-
-  // Fabric
-  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true
-  }
-
-  implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
-
-  // Parceler - https://github.com/johncarl81/parceler
-  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
-
-  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
-
-
-  // Facebook Core (Analytics)
-  implementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
-
-  // Facebook Login
-  implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-
-  leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-
-  //Color Palette
-  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
-
-  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}") {
-    exclude group: "com.android.support"
-  }
-
-  annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+  })
 
   implementation "com.adyen.checkout:core:${ADYEN_VERSION}"
   implementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
   implementation "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
-  implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
-
-  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
-
-  implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
+  implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}", {
     exclude group: 'org.web3j'
-  }
+  })
+
+
+/** Flavor dependencies **/
+  leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
+
+/** Test **/
+  testImplementation "junit:junit:${JUNIT_VERSION}"
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+  androidTestImplementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
+  // Force usage of support annotations in the test app, since it is internally used by the runner module.
+  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
+  androidTestImplementation "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+  androidTestImplementation "junit:junit:${JUNIT_VERSION}"
+  androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  androidTestImplementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY_VERSION}"
+  androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
+  androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+
+  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}", {
+    exclude group: "com.android.support", module: "support-annotations"
+  })
+  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}", {
+    exclude group: "com.android.support", module: "support-annotations"
+  })
+  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}", {
+    exclude group: "com.android.support", module: "support-annotations"
+  })
 }
 
 String getDate() {

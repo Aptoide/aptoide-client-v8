@@ -1,15 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'io.fabric'
-
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
 buildscript {
-
   repositories {
-    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://maven.fabric.io/public" }
   }
-
   dependencies {
     classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
@@ -19,7 +16,6 @@ android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
-
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
   }
@@ -28,16 +24,6 @@ android {
     abortOnError false
   }
 
-  buildTypes {
-    debug {
-      minifyEnabled false
-    }
-
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-  }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -45,32 +31,29 @@ android {
 }
 
 dependencies {
+//Local libraries
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   api project(path: ':aptoide-analytics-core')
 
-  implementation 'com.android.support:appcompat-v7:25.4.0'
+//Support libraries
+  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
 
-  testImplementation 'junit:junit:4.12'
+// Network
+  implementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  implementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+  api "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+  implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+
+// Analytics
+  implementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
+  implementation "com.flurry.android:analytics:${FLURRY_SDK_VERSION}"
+  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar", {
+    transitive = true
+  })
+
+//Test
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-
-  // Network
-  implementation "com.squareup.okhttp3:okhttp:3.6.0"
-  implementation "com.squareup.retrofit2:retrofit:2.1.0"
-  api "com.squareup.retrofit2:adapter-rxjava:2.1.0"
-
-  implementation "io.reactivex:rxjava:1.2.7"
-
-  // Fabric
-  implementation("com.crashlytics.sdk.android:crashlytics:2.6.5@aar") {
-    transitive = true
-  }
-
-  // Facebook Core (Analytics)
-  implementation 'com.facebook.android:facebook-core:4.41.0'
-
-  // Flurry Android sdk
-  implementation "com.flurry.android:analytics:6.4.2"
 }
 
 version = "1.0.3"
