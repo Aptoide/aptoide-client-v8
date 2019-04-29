@@ -898,6 +898,8 @@ public class SearchResultFragment extends BackButtonFragment
 
   @NonNull private ViewBinder getMoPubViewBinder() {
     return new ViewBinder.Builder(R.layout.search_ad).titleId(R.id.app_name)
+        .mainImageId(R.id.native_main_image)
+        .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
         .iconImageId(R.id.app_icon)
         .build();
   }
