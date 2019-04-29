@@ -28,7 +28,6 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.share.ShareDialogs;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -105,8 +104,6 @@ public class AppViewPresenter implements Presenter {
     handleClickOnAppcInfo();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
-    handleDefaultShare();
-    handleRecommendsShare();
     handleClickOnRetry();
     handleOnScroll();
     handleOnSimilarAppsVisible();
@@ -116,10 +113,6 @@ public class AppViewPresenter implements Presenter {
     resumeDownload();
     cancelDownload();
     loadDownloadApp();
-    shareLoggedInRecommendsDialogClick();
-    skipLoggedInRecommendsDialogClick();
-    dontShowAgainLoggedInRecommendsDialogClick();
-    handleNotLoggedinShareResults();
     handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
@@ -141,6 +134,21 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
+
+    handleMoPubConsentDialog();
+  }
+
+  private void handleMoPubConsentDialog() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .observeOn(viewScheduler)
+        .flatMapSingle(__ -> handleConsentDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleDownloadingSimilarApp() {
@@ -198,6 +206,17 @@ public class AppViewPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private Single<Boolean> handleConsentDialog() {
+    return appViewManager.shouldShowConsentDialog()
+        .observeOn(viewScheduler)
+        .map(shouldShowConsent -> {
+          if (shouldShowConsent) {
+            view.showConsentDialog();
+          }
+          return true;
         });
   }
 
@@ -649,7 +668,8 @@ public class AppViewPresenter implements Presenter {
                   switch (menuItem.getItemId()) {
 
                     case R.id.menu_item_share:
-                      view.showShareDialog();
+                      view.defaultShare(appViewViewModel.getAppName(),
+                          appViewViewModel.getWebUrls());
                       break;
 
                     case R.id.menu_remote_install:
@@ -659,43 +679,6 @@ public class AppViewPresenter implements Presenter {
                   }
                 })))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private void handleDefaultShare() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.shareDialogResponse())
-        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_EXTERNAL)
-        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .observeOn(viewScheduler)
-        .doOnNext(app -> view.defaultShare(app.getAppName(), app.getWebUrls()))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private void handleRecommendsShare() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.shareDialogResponse())
-        .filter(response -> response == ShareDialogs.ShareResponse.SHARE_TIMELINE)
-        .flatMap(__ -> accountManager.accountStatus())
-        .first()
-        .observeOn(viewScheduler)
-        .flatMap(account -> {
-          if (!account.isLoggedIn()) {
-            view.displayNotLoggedInSnack();
-            return Observable.just(false);
-          } else {
-            return Observable.just(true);
-          }
-        })
-        .filter(shouldContinue -> shouldContinue)
-        .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-        .observeOn(viewScheduler)
-        .doOnNext(appModel -> view.recommendsShare(appModel.getPackageName(), appModel.getStore()
-            .getId()))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -781,8 +764,6 @@ public class AppViewPresenter implements Presenter {
                     () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                         appViewModel.getDeveloper()
                             .getName(), DownloadModel.Action.INSTALL.toString()))
-                    .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                        appViewModel.getPackageName()))
                     .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
@@ -796,8 +777,6 @@ public class AppViewPresenter implements Presenter {
                         () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
                             appViewModel.getDeveloper()
                                 .getName(), action.toString()))
-                        .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                            appViewModel.getPackageName()))
                         .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
@@ -812,8 +791,6 @@ public class AppViewPresenter implements Presenter {
                             .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
                                 appViewModel.getPackageName(), appViewModel.getDeveloper()
                                     .getName(), action.toString()))
-                            .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                                appViewModel.getPackageName()))
                             .observeOn(viewScheduler)))
                 .map(__ -> appViewModel);
           }
@@ -1012,8 +989,6 @@ public class AppViewPresenter implements Presenter {
                                   appViewAnalytics.sendInstallAppcWalletPromotionApp();
                                 }
                               })
-                              .doOnCompleted(() -> showRecommendsDialog(account.isLoggedIn(),
-                                  appViewModel.getPackageName()))
                               .toSingleDefault(true)
                               .toCompletable());
                   break;
@@ -1052,16 +1027,6 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
-  }
-
-  private void showRecommendsDialog(boolean isLoggedIn, String packageName) {
-    if (isLoggedIn && appViewManager.shouldShowRecommendsPreviewDialog()) {
-      view.showRecommendsDialog();
-      appViewAnalytics.sendLoggedInRecommendAppDialogShowEvent(packageName);
-    } else if (!isLoggedIn && appViewManager.canShowNotLoggedInDialog()) {
-      appViewNavigator.navigateToNotLoggedInShareFragmentForResult(packageName);
-      appViewAnalytics.sendNotLoggedInRecommendAppDialogShowEvent(packageName);
-    }
   }
 
   private Completable payApp(long appId) {
@@ -1120,82 +1085,6 @@ public class AppViewPresenter implements Presenter {
                 .getId(), app.hasAdvertising() || app.hasBilling())
             .observeOn(viewScheduler)
             .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void shareLoggedInRecommendsDialogClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.shareLoggedInRecommendsDialogClick()
-            .observeOn(Schedulers.io())
-            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .observeOn(viewScheduler)
-            .flatMapCompletable(app -> appViewManager.shareOnTimeline(app.getPackageName(),
-                app.getStore()
-                    .getId(), "install")
-                .doOnCompleted(() -> appViewAnalytics.sendTimelineLoggedInInstallRecommendEvents(
-                    app.getPackageName()))
-                .doOnCompleted(() -> view.showRecommendsThanksMessage()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void skipLoggedInRecommendsDialogClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.skipLoggedInRecommendsDialogClick()
-            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .doOnNext(app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendSkipEvents(
-                app.getPackageName()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void dontShowAgainLoggedInRecommendsDialogClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.dontShowAgainLoggedInRecommendsDialogClick()
-            .flatMapCompletable(
-                __ -> appViewManager.dontShowLoggedInInstallRecommendsPreviewDialog())
-            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .doOnNext(
-                app -> appViewAnalytics.sendTimelineLoggedInInstallRecommendDontShowMeAgainEvents(
-                    app.getPackageName()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void handleNotLoggedinShareResults() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> appViewNavigator.notLoggedInViewResults()
-            .filter(success -> success)
-            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-            .flatMapCompletable(app -> appViewManager.shareOnTimelineAsync(app.getPackageName(),
-                app.getStore()
-                    .getId())
-                .doOnCompleted(() -> appViewAnalytics.sendSuccessShareEvent()))
-            .doOnError(error -> {
-              appViewAnalytics.sendFailedShareEvent();
-              crashReport.log(error);
-            })
-            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

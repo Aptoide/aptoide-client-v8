@@ -31,7 +31,7 @@ android:fitsSystemWindows="true"
           android:id="@+id/appbar"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@color/tw__transparent"
+          android:background="@color/transparent"
           app:elevation="0dp"
           app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
           >

@@ -28,6 +28,7 @@ public class Update extends RealmObject {
   public static final String ALTERNATIVE_URL = "alternativeApkPath";
   public static final String UPDATE_VERSION_CODE = "updateVersionCode";
   public static final String EXCLUDED = "excluded";
+  public static final String APPC_UPGRADE = "appcUpgrade";
 
   @PrimaryKey private String packageName;
   private long appId;
@@ -45,6 +46,8 @@ public class Update extends RealmObject {
   private String trustedBadge;
   private String alternativeApkPath;
 
+  private boolean appcUpgrade;
+
   // Obb
   private String mainObbName;
   private String mainObbPath;
@@ -59,7 +62,7 @@ public class Update extends RealmObject {
   public Update(long id, String name, String icon, String packageName, String md5sum, String path,
       double fileSize, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
-      String patchObbPath, String patchObbMd5) {
+      String patchObbPath, String patchObbMd5, boolean appcUpgrade) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -77,6 +80,7 @@ public class Update extends RealmObject {
     this.patchObbName = patchObbFileName;
     this.patchObbPath = patchObbPath;
     this.patchObbMd5 = patchObbMd5;
+    this.appcUpgrade = appcUpgrade;
   }
 
   public long getAppId() {
@@ -233,5 +237,13 @@ public class Update extends RealmObject {
 
   public String getTrustedBadge() {
     return trustedBadge;
+  }
+
+  public boolean isAppcUpgrade() {
+    return appcUpgrade;
+  }
+
+  public void setAppcUpgrade(boolean appcUpgrade) {
+    this.appcUpgrade = appcUpgrade;
   }
 }

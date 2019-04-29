@@ -9,7 +9,6 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
@@ -25,7 +24,6 @@ import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
@@ -38,9 +36,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
 
 /**
  * Created by D01 on 04/05/18.
@@ -64,13 +59,11 @@ public class AppViewManager {
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final Scheduler ioScheduler;
-  private PreferencesManager preferencesManager;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
   private DetailedApp cachedApp;
   private SearchAdResult searchAdResult;
-  private SocialRepository socialRepository;
   private String marketName;
   private boolean isFirstLoad;
   private AppCoinsManager appCoinsManager;
@@ -87,10 +80,9 @@ public class AppViewManager {
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
       StoreManager storeManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
       AptoideAccountManager aptoideAccountManager, AppViewConfiguration appViewConfiguration,
-      MoPubAdsManager moPubAdsManager, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
+      MoPubAdsManager moPubAdsManager, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, int limit, Scheduler ioScheduler, String marketName,
       AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager) {
@@ -105,13 +97,11 @@ public class AppViewManager {
     this.aptoideAccountManager = aptoideAccountManager;
     this.appViewConfiguration = appViewConfiguration;
     this.moPubAdsManager = moPubAdsManager;
-    this.preferencesManager = preferencesManager;
     this.downloadStateParser = downloadStateParser;
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
     this.ioScheduler = ioScheduler;
-    this.socialRepository = socialRepository;
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
@@ -327,10 +317,6 @@ public class AppViewManager {
     }
   }
 
-  private void increaseInstallClick() {
-    preferencesManager.increaseNotLoggedInInstallClicks();
-  }
-
   public boolean shouldShowRootInstallWarningPopup() {
     return installManager.showWarning();
   }
@@ -341,25 +327,15 @@ public class AppViewManager {
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
       String trustedValue, String editorsChoicePosition) {
-    increaseInstallClick();
     return Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, downloadAction, appId,
-                        trustedValue, editorsChoicePosition,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                    editorsChoicePosition, NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(
+                status -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                    editorsChoicePosition, status))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -372,20 +348,10 @@ public class AppViewManager {
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
         promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download,
-                        promotionViewApp.getDownloadModel()
-                            .getAction(), promotionViewApp.getId(),
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, promotionViewApp.getDownloadModel()
-                    .getAction(), promotionViewApp.getId(), NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
+                promotionViewApp.getDownloadModel()
+                    .getAction(), promotionViewApp.getId(), offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -430,18 +396,9 @@ public class AppViewManager {
 
   public Completable resumeDownload(String md5, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, appId,
-                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(
+                offerResponseStatus -> setupDownloadEvents(download, appId, offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }
@@ -463,30 +420,9 @@ public class AppViewManager {
     adsManager.handleAdsLogic(searchAdResult);
   }
 
-  public boolean shouldShowRecommendsPreviewDialog() {
-    return preferencesManager.shouldShowInstallRecommendsPreviewDialog() && !isAppcApp();
-  }
-
   private boolean isAppcApp() {
     return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
         || cachedAppCoinsViewModel.hasBilling());
-  }
-
-  public boolean canShowNotLoggedInDialog() {
-    return preferencesManager.canShowNotLoggedInDialog() && !isAppcApp();
-  }
-
-  public Completable shareOnTimeline(String packageName, long storeId, String shareType) {
-    return Completable.fromAction(() -> socialRepository.share(packageName, storeId, shareType));
-  }
-
-  public Completable dontShowLoggedInInstallRecommendsPreviewDialog() {
-    return Completable.fromAction(
-        () -> preferencesManager.setShouldShowInstallRecommendsPreviewDialog(false));
-  }
-
-  public Completable shareOnTimelineAsync(String packageName, long storeId) {
-    return Completable.fromAction(() -> socialRepository.asyncShare(packageName, storeId, "app"));
   }
 
   public Completable appBought(String path) {
@@ -663,6 +599,10 @@ public class AppViewManager {
 
   public void unscheduleNotificationSync() {
     localNotificationSyncManager.unschedule(LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+  }
+
+  public Single<Boolean> shouldShowConsentDialog() {
+    return moPubAdsManager.shouldShowConsentDialog();
   }
 
   public enum PromotionStatus {

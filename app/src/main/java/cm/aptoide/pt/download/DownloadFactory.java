@@ -101,21 +101,21 @@ public class DownloadFactory {
     return downloads;
   }
 
-  public Download create(Update update) {
+  public Download create(Update update, boolean isAppcUpgrade) {
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
             update.getApkPath(), update.getAlternativeApkPath());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
-      ApkPaths downloadPaths =
-          downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, update.getApkPath(),
-              update.getAlternativeApkPath());
+      ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
+          isAppcUpgrade ? Download.ACTION_DOWNGRADE : Download.ACTION_UPDATE, update.getApkPath(),
+          update.getAlternativeApkPath());
 
       Download download = new Download();
       download.setMd5(update.getMd5());
       download.setIcon(update.getIcon());
       download.setAppName(update.getLabel());
-      download.setAction(Download.ACTION_UPDATE);
+      download.setAction(isAppcUpgrade ? Download.ACTION_DOWNGRADE : Download.ACTION_UPDATE);
       download.setPackageName(update.getPackageName());
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());

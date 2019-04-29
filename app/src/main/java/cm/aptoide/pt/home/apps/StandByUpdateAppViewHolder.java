@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +27,14 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
   private LinearLayout downloadInteractButtonsLayout;
   private LinearLayout downloadAppInfoLayout;
 
+  private boolean isAppcUpgrade;
+
   public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction) {
+    this(itemView, updateAction, false);
+  }
+
+  public StandByUpdateAppViewHolder(View itemView, PublishSubject<AppClick> updateAction,
+      boolean isAppcUpgrade) {
     super(itemView);
 
     appName = (TextView) itemView.findViewById(R.id.apps_updates_app_name);
@@ -39,6 +47,12 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
     downloadInteractButtonsLayout = itemView.findViewById(R.id.apps_updates_standby_buttons_layout);
     downloadAppInfoLayout = itemView.findViewById(R.id.apps_updates_standby_app_info_layout);
     this.updateAction = updateAction;
+
+    this.isAppcUpgrade = isAppcUpgrade;
+    if (isAppcUpgrade) {
+      progressBar.setProgressDrawable(
+          ContextCompat.getDrawable(itemView.getContext(), R.drawable.appc_progress));
+    }
   }
 
   @Override public void setApp(App app) {
@@ -74,10 +88,12 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
       updateState.setText(itemView.getResources()
           .getString(R.string.apps_short_update_paused));
     }
-    cancelButton.setOnClickListener(
-        cancel -> updateAction.onNext(new AppClick(app, AppClick.ClickType.CANCEL_UPDATE)));
-    resumeButton.setOnClickListener(
-        resume -> updateAction.onNext(new AppClick(app, AppClick.ClickType.RESUME_UPDATE)));
+    cancelButton.setOnClickListener(cancel -> updateAction.onNext(new AppClick(app,
+        isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_CANCEL
+            : AppClick.ClickType.CANCEL_UPDATE)));
+    resumeButton.setOnClickListener(resume -> updateAction.onNext(new AppClick(app,
+        isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_RESUME
+            : AppClick.ClickType.RESUME_UPDATE)));
   }
 
   private void adjustStandByDownloadAppInfoWeightAndMargin(int weight, int margin) {

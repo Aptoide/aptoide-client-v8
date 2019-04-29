@@ -18,8 +18,6 @@ public interface MyAccountView extends View {
 
   Observable<Void> signOutClick();
 
-  Observable<Void> findFriendsClick();
-
   Observable<Void> storeClick();
 
   Observable<Void> userClick();

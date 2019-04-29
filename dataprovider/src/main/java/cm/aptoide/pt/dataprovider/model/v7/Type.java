@@ -12,8 +12,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 /**
  * Created by neuro on 06-05-2016.
  */
-public enum Type {
-  _EMPTY(1, true), // FIXME for tests only
+public enum Type {_EMPTY(1, true), // FIXME for tests only
 
   // Server
   APPS_GROUP(3, false), STORES_GROUP(3, false), FOLLOW_STORE(3, false), DISPLAYS(2, true), ADS(3,
@@ -23,7 +22,7 @@ public enum Type {
   //Reviews Screen
   REVIEWS_GROUP(1, false), //widget to create the user's store
   STORE_META(1, true), MY_STORE_META(1, true), MY_STORES_SUBSCRIBED(3, false), STORES_RECOMMENDED(3,
-      false), MY_STORE(1, true), APP_META(1, true), TIMELINE_CARD(1, true), ACTION_ITEM(1, true);
+      false), MY_STORE(1, true), APP_META(1, true), ACTION_ITEM(1, true);
 
   private int defaultPerLineCount;
   private boolean fixedPerLineCount;
@@ -46,5 +45,4 @@ public enum Type {
 
   public boolean isFixedPerLineCount() {
     return this.fixedPerLineCount;
-  }
-}
+  }}

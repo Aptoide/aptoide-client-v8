@@ -34,15 +34,5 @@ public interface InstallAppView extends View {
 
   void readyToDownload();
 
-  void showRecommendsDialog();
-
-  Observable<Void> shareLoggedInRecommendsDialogClick();
-
-  void showRecommendsThanksMessage();
-
-  Observable<Void> skipLoggedInRecommendsDialogClick();
-
-  Observable<Void> dontShowAgainLoggedInRecommendsDialogClick();
-
   Observable<AppBoughClickEvent> appBought();
 }

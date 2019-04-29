@@ -418,16 +418,10 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
-
     if (oldVersion == 8096) {
-      schema.create("RealmLocalNotificationSync")
-          .addField("notificationId", String.class, FieldAttribute.PRIMARY_KEY)
-          .addField("title", String.class)
-          .addField("body", String.class)
-          .addField("image", String.class)
-          .addField("navigationUrl", String.class)
-          .addField("trigger", long.class)
-          .addField("id", String.class);
+      schema.get("Update")
+          .addField("appcUpgrade", boolean.class)
+          .transform(upgrade -> upgrade.set("appcUpgrade", false));
 
       oldVersion++;
     }

@@ -52,6 +52,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
+import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
@@ -81,13 +82,9 @@ import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.store.StoreTheme;
-import cm.aptoide.pt.timeline.SocialRepository;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -149,6 +146,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject @Named("marketName") String marketName;
   @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
+  @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -160,14 +158,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<ReadMoreClickEvent> readMoreClick;
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
-  private PublishSubject<ShareDialogs.ShareResponse> shareDialogClick;
   private PublishSubject<Integer> reviewsAutoScroll;
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
   private PublishSubject<Void> ready;
-  private PublishSubject<Void> shareRecommendsDialogClick;
-  private PublishSubject<Void> skipRecommendsDialogClick;
-  private PublishSubject<Void> dontShowAgainRecommendsDialogClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
@@ -295,16 +289,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
-    shareDialogClick = PublishSubject.create();
     ready = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
-    shareRecommendsDialogClick = PublishSubject.create();
-    skipRecommendsDialogClick = PublishSubject.create();
-    dontShowAgainRecommendsDialogClick = PublishSubject.create();
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
     interstitialClick = PublishSubject.create();
@@ -521,7 +511,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = null;
     loginSnackClick = null;
     similarAppClick = null;
-    shareDialogClick = null;
     ready = null;
     reviewsAutoScroll = null;
     noNetworkRetryClick = null;
@@ -882,10 +871,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return RxView.clicks(listDonateButton);
   }
 
-  @Override public Observable<ShareDialogs.ShareResponse> shareDialogResponse() {
-    return shareDialogClick;
-  }
-
   @Override public Observable<String> apkfyDialogPositiveClick() {
     return apkfyDialogConfirmSubject;
   }
@@ -1005,13 +990,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .show();
   }
 
-  @Override public void showShareDialog() {
-    String title = getActivity().getString(R.string.share);
-
-    ShareDialogs.createAppviewShareDialog(getActivity(), title)
-        .subscribe(response -> shareDialogClick.onNext(response));
-  }
-
   @Override public void showShareOnTvDialog(long appId) {
     if (AptoideUtils.SystemU.getConnectionType(
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE))
@@ -1038,45 +1016,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       sharingIntent.putExtra(Intent.EXTRA_TEXT, wUrl);
       getActivity().startActivity(
           Intent.createChooser(sharingIntent, getActivity().getString(R.string.share)));
-    }
-  }
-
-  @Override public void recommendsShare(String packageName, Long storeId) {
-
-    AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
-    TimelineAnalytics analytics = application.getTimelineAnalytics();
-    if (application.isCreateStoreUserPrivacyEnabled()) {
-      SocialRepository socialRepository = RepositoryFactory.getSocialRepository(getActivity(),
-          application.getDefaultSharedPreferences());
-      LayoutInflater inflater = LayoutInflater.from(getActivity());
-      AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-      View alertDialogView = inflater.inflate(R.layout.logged_in_share, null);
-      alertDialog.setView(alertDialogView);
-
-      alertDialogView.findViewById(R.id.recommend_button)
-          .setOnClickListener(view -> {
-            socialRepository.share(packageName, storeId, "app");
-            Snackbar.make(getView(), R.string.social_timeline_share_dialog_title,
-                Snackbar.LENGTH_SHORT)
-                .show();
-            analytics.sendRecommendedAppInteractEvent(packageName, "Recommend");
-            analytics.sendSocialCardPreviewActionEvent(
-                TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CONTINUE);
-            alertDialog.dismiss();
-          });
-
-      alertDialogView.findViewById(R.id.skip_button)
-          .setOnClickListener(view -> {
-            analytics.sendRecommendedAppInteractEvent(packageName, "Skip");
-            analytics.sendSocialCardPreviewActionEvent(
-                TimelineAnalytics.SOCIAL_CARD_ACTION_SHARE_CANCEL);
-            alertDialog.dismiss();
-          });
-
-      alertDialogView.findViewById(R.id.dont_show_button)
-          .setVisibility(View.GONE);
-
-      alertDialog.show();
     }
   }
 
@@ -1251,6 +1190,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
     manageSimilarAppsVisibility(hasSimilarApps, true);
+  }
+
+  @Override public void showConsentDialog() {
+    consentDialogView.showConsentDialog();
   }
 
   private void setupInstallDependencyApp(WalletPromotionViewModel viewModel) {
@@ -1736,49 +1679,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void readyToDownload() {
     ready.onNext(null);
-  }
-
-  @Override public void showRecommendsDialog() {
-    LayoutInflater inflater = LayoutInflater.from(getActivity());
-    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    View dialogView = inflater.inflate(R.layout.logged_in_share, null);
-    alertDialog.setView(dialogView);
-
-    dialogView.findViewById(R.id.recommend_button)
-        .setOnClickListener(__ -> {
-          shareRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-
-    dialogView.findViewById(R.id.skip_button)
-        .setOnClickListener(__ -> {
-          skipRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-
-    dialogView.findViewById(R.id.dont_show_button)
-        .setOnClickListener(__ -> {
-          dontShowAgainRecommendsDialogClick.onNext(null);
-          alertDialog.dismiss();
-        });
-    alertDialog.show();
-  }
-
-  @Override public Observable<Void> shareLoggedInRecommendsDialogClick() {
-    return shareRecommendsDialogClick;
-  }
-
-  @Override public void showRecommendsThanksMessage() {
-    Snackbar.make(getView(), R.string.social_timeline_share_dialog_title, Snackbar.LENGTH_SHORT)
-        .show();
-  }
-
-  @Override public Observable<Void> skipLoggedInRecommendsDialogClick() {
-    return skipRecommendsDialogClick;
-  }
-
-  @Override public Observable<Void> dontShowAgainLoggedInRecommendsDialogClick() {
-    return dontShowAgainRecommendsDialogClick;
   }
 
   @Override public Observable<AppBoughClickEvent> appBought() {

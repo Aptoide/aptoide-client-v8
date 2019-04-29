@@ -12,7 +12,6 @@ import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.appview.InstallAppView;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.share.ShareDialogs;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
@@ -98,8 +97,6 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickTopDonorsDonateButton();
 
-  Observable<ShareDialogs.ShareResponse> shareDialogResponse();
-
   Observable<String> apkfyDialogPositiveClick();
 
   Observable<Integer> scrollReviewsResponse();
@@ -129,13 +126,9 @@ public interface AppViewView extends InstallAppView {
 
   void showFlagVoteSubmittedMessage();
 
-  void showShareDialog();
-
   void showShareOnTvDialog(long appId);
 
   void defaultShare(String appName, String wUrl);
-
-  void recommendsShare(String packageName, Long storeId);
 
   void scrollReviews(Integer position);
 
@@ -185,4 +178,6 @@ public interface AppViewView extends InstallAppView {
   Observable<WalletPromotionViewModel> claimAppClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
+
+  void showConsentDialog();
 }

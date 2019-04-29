@@ -50,8 +50,6 @@ public class HomePresenter implements Presenter {
 
     handleAppClick();
 
-    handleRecommendedAppClick();
-
     handleAdClick();
 
     handleMoreClick();
@@ -74,6 +72,30 @@ public class HomePresenter implements Presenter {
 
     handleEditorialCardClick();
     handleInstallWalletOfferClick();
+
+    handleMoPubConsentDialog();
+  }
+
+  private void handleMoPubConsentDialog() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMapSingle(model -> home.shouldLoadNativeAd())
+        .filter(loadInterstitial -> loadInterstitial)
+        .flatMapSingle(__ -> handleConsentDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private Single<Boolean> handleConsentDialog() {
+    return home.shouldShowConsentDialog()
+        .observeOn(viewScheduler)
+        .map(shouldShowConsent -> {
+          if (shouldShowConsent) {
+            view.showConsentDialog();
+          }
+          return true;
+        });
   }
 
   private void handleInstallWalletOfferClick() {
@@ -246,27 +268,6 @@ public class HomePresenter implements Presenter {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
             })
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handleRecommendedAppClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.recommendedAppClicked()
-            .observeOn(viewScheduler)
-            .doOnNext(click -> homeNavigator.navigateToRecommendsAppView(click.getApp()
-                .getAppId(), click.getApp()
-                .getPackageName(), click.getApp()
-                .getTag(), click.getType()))
-            .doOnNext(click -> homeAnalytics.sendRecommendedAppInteractEvent(click.getApp()
-                .getRating(), click.getApp()
-                .getPackageName(), click.getBundlePosition(), click.getBundle()
-                .getTag(), ((SocialBundle) click.getBundle()).getCardType(), click.getType()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

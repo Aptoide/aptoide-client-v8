@@ -52,7 +52,6 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -66,6 +65,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
+import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorial.EditorialManager;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.editorial.EditorialPresenter;
@@ -96,8 +96,10 @@ import cm.aptoide.pt.home.apps.AppsFragmentView;
 import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.home.apps.AppsPresenter;
+import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
+import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
+import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.impressions.ImpressionManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -136,7 +138,6 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.splashscreen.SplashScreenPresenter;
@@ -275,12 +276,12 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
-      ImpressionManager impressionManager, PromotionsManager promotionsManager,
+      PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
       @Named("homePromotionsId") String promotionsId) {
-    return new Home(bundlesRepository, impressionManager, promotionsManager, bannerRepository,
-        moPubAdsManager, promotionsPreferencesManager, blacklistManager, promotionsId);
+    return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
+        promotionsPreferencesManager, blacklistManager, promotionsId);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -319,14 +320,6 @@ import rx.subscriptions.CompositeSubscription;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides SocialRepository providesSocialRepository(
-      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new SocialRepository(bodyInterceptorPoolV7, WebService.getDefaultConverter(),
-        okHttpClient, tokenInvalidator, sharedPreferences);
-  }
-
   @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
       InstalledRepository repository) {
     return new AppcMigrationManager(repository);
@@ -336,10 +329,9 @@ import rx.subscriptions.CompositeSubscription;
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
       StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      AppViewConfiguration appViewConfiguration, PreferencesManager preferencesManager,
-      DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      Resources resources, WindowManager windowManager, SocialRepository socialRepository,
+      AppViewConfiguration appViewConfiguration, DownloadStateParser downloadStateParser,
+      AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       @Named("wallet-offer-promotion-id") String promotionId,
@@ -347,11 +339,11 @@ import rx.subscriptions.CompositeSubscription;
       LocalNotificationSyncManager localNotificationSyncManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
-        appViewAnalytics, notificationAnalytics, installAnalytics,
+        appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
+        notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        socialRepository, marketName, appCoinsManager, promotionsManager, promotionId,
-        installedRepository, appcMigrationManager, localNotificationSyncManager);
+        marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
+        appcMigrationManager, localNotificationSyncManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -427,12 +419,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
       EditorialRepository editorialRepository, InstallManager installManager,
-      PreferencesManager preferencesManager, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
-    return new EditorialManager(editorialRepository, arguments.getString("cardId", ""),
-        installManager, preferencesManager, downloadFactory, downloadStateParser,
-        notificationAnalytics, installAnalytics, editorialAnalytics);
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      EditorialAnalytics editorialAnalytics) {
+    return new EditorialManager(editorialRepository,
+        arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -540,5 +532,19 @@ import rx.subscriptions.CompositeSubscription;
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) fragment.getContext()), aptoideAccountManager,
         appsNavigator);
+  }
+
+  @FragmentScope @Provides SeeMoreAppcManager providesSeeMoreManager(UpdatesManager updatesManager,
+      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, DownloadFactory downloadFactory) {
+    return new SeeMoreAppcManager(updatesManager, installManager, appMapper, downloadFactory,
+        downloadAnalytics, installAnalytics);
+  }
+
+  @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(
+      SeeMoreAppcManager seeMoreAppcManager) {
+    return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
+        AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
+        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
   }
 }

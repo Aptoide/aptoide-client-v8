@@ -4,6 +4,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
 
@@ -213,8 +215,6 @@ android {
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
-    variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
@@ -240,7 +240,10 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-
+    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
+        "\"" + APPLOVIN_SDK_VERSION + "\""
+    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
+        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
@@ -263,15 +266,10 @@ android {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     } else {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
 
     variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
@@ -297,7 +295,6 @@ android {
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -388,6 +385,8 @@ dependencies {
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
   androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
+
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
@@ -502,13 +501,6 @@ dependencies {
     transitive = true
   }
 
-  //lib phone number
-  implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
-
-  implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
-  }
-
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
   implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
@@ -532,7 +524,6 @@ dependencies {
   // Facebook Login
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
 
-
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 
   //Color Palette
@@ -549,6 +540,7 @@ dependencies {
   implementation "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {

@@ -25,17 +25,10 @@ public class ManagedKeys {
   public static final String ALLOW_ROOT_INSTALATION = "allowRoot";
   public static final String DEBUG = "debugmode";
   public static final String NOTIFICATION_TYPE = "notificationtype";
-  public static final String PRIVACY_CONFIRMATION = "privacyconfirmation";
   public static final String DONT_SHOW_ME_AGAIN = "dontshowpreviewdialogagain";
   public static final String DONT_SHOW_CLEANED_VERSION = "dontshowpreviewdialogcleanpref";
-  public static final String FIRST_RUN_V7 = "firstrun";
-  public static final String ADDRESS_BOOK_SYNC = "address_book_sync";
-  public static final String TWITTER_SYNC = "twitter_sync";
-  public static final String FACEBOOK_SYNC = "facebook_sync";
   public static final String AUTO_UPDATE_ENABLE = "auto_update";
   public static final String CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY =
       "notification_campaign_and_social";
-  public static final String NOT_LOGGED_IN_NUMBER_OF_INSTALL_CLICKS =
-      "not_logged_in_install_clicks";
   public static final String SHOW_PROMOTIONS_DIALOG = "show_promotions_dialog";
 }
