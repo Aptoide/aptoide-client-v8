@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.FlavourActivityModule;
 import cm.aptoide.pt.FlavourFragmentModule;
+import cm.aptoide.pt.InstallPreviewActivity;
 import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.app.view.donations.view.DonateDialogFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -19,6 +20,8 @@ public interface ActivityComponent {
   void inject(ActivityResultNavigator activityResultNavigator);
 
   void inject(AnalyticsActivity analyticsActivity);
+
+  void inject(InstallPreviewActivity installPreviewActivity);
 
   void inject(BottomNavigationActivity bottomNavigationActivity);
 
