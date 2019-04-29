@@ -19,6 +19,8 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.sync.LocalNotificationSync;
+import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -78,6 +80,7 @@ public class AppViewManager {
   private SimilarAppsViewModel cachedAppcSimilarAppsViewModel;
   private String promotionId;
   private PromotionStatus promotionStatus;
+  private LocalNotificationSyncManager localNotificationSyncManager;
   private boolean appcPromotionImpressionSent;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
@@ -89,7 +92,8 @@ public class AppViewManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
       Scheduler ioScheduler, SocialRepository socialRepository, String marketName,
       AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
-      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
+      LocalNotificationSyncManager localNotificationSyncManager) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -115,6 +119,7 @@ public class AppViewManager {
     this.promotionId = promotionId;
     this.installedRepository = installedRepository;
     this.appcMigrationManager = appcMigrationManager;
+    this.localNotificationSyncManager = localNotificationSyncManager;
     this.isFirstLoad = true;
     this.promotionStatus = PromotionStatus.NO_PROMOTION;
     this.appcPromotionImpressionSent = false;
@@ -649,6 +654,15 @@ public class AppViewManager {
 
   public PromotionStatus getPromotionStatus() {
     return promotionStatus;
+  }
+
+  public void scheduleNotification(String title, String body, String image, String url) {
+    localNotificationSyncManager.schedule(title, body, image, url,
+        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+  }
+
+  public void unscheduleNotificationSync() {
+    localNotificationSyncManager.unschedule(LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
   }
 
   public enum PromotionStatus {

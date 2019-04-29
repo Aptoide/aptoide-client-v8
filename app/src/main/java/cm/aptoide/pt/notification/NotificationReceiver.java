@@ -1,11 +1,14 @@
 package cm.aptoide.pt.notification;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import cm.aptoide.pt.AptoideApplication;
 import com.jakewharton.rxrelay.PublishRelay;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -23,6 +26,10 @@ public class NotificationReceiver extends BroadcastReceiver {
         ((AptoideApplication) context.getApplicationContext()).getNotificationsPublishRelay();
     Bundle intentExtras = intent.getExtras();
     NotificationInfo notificationInfo;
+    NotificationManager manager =
+        (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+    Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+
     switch (intent.getAction()) {
       case Intent.ACTION_BOOT_COMPLETED:
         notificationInfo = new NotificationInfo(Intent.ACTION_BOOT_COMPLETED);
@@ -33,6 +40,8 @@ public class NotificationReceiver extends BroadcastReceiver {
             intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
             intentExtras.getString(NOTIFICATION_TRACK_URL),
             intentExtras.getString(NOTIFICATION_TARGET_URL));
+        manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
+        context.sendBroadcast(closeIntent);
         notificationPublishRelay.call(notificationInfo);
         break;
       case NOTIFICATION_DISMISSED_ACTION:
@@ -40,6 +49,8 @@ public class NotificationReceiver extends BroadcastReceiver {
             intentExtras.getInt(NOTIFICATION_NOTIFICATION_ID),
             intentExtras.getString(NOTIFICATION_TRACK_URL),
             intentExtras.getString(NOTIFICATION_TARGET_URL));
+        manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
+        context.sendBroadcast(closeIntent);
         notificationPublishRelay.call(notificationInfo);
         break;
     }

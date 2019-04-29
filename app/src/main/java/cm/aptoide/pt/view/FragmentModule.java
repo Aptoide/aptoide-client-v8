@@ -107,6 +107,7 @@ import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -342,14 +343,15 @@ import rx.subscriptions.CompositeSubscription;
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       @Named("wallet-offer-promotion-id") String promotionId,
-      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
+      LocalNotificationSyncManager localNotificationSyncManager) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, preferencesManager, downloadStateParser,
         appViewAnalytics, notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
         socialRepository, marketName, appCoinsManager, promotionsManager, promotionId,
-        installedRepository, appcMigrationManager);
+        installedRepository, appcMigrationManager, localNotificationSyncManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

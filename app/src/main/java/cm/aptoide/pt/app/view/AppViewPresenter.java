@@ -25,6 +25,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.share.ShareDialogs;
@@ -132,6 +133,7 @@ public class AppViewPresenter implements Presenter {
     handleInstallWalletPromotion();
 
     claimApp();
+    handlePromotionClaimResult();
     resumePromotionDownload();
     cancelPromotionDownload();
     pausePromotionDownload();
@@ -917,6 +919,19 @@ public class AppViewPresenter implements Presenter {
               appViewAnalytics.sendWalletPromotionImpression();
               appViewManager.setAppcPromotionImpressionSent();
             }
+
+            if (walletPromotionViewModel.isWalletInstalled()
+                && walletPromotionViewModel.isAppViewAppInstalled()) {
+              appViewManager.scheduleNotification("Get "
+                      + String.valueOf(walletPromotionViewModel.getAppcValue())
+                      + " APPC Credits now!", "Don't forget to claim your reward.",
+                  appViewViewModel.getIcon(), "aptoideinstall://package="
+                      + appViewViewModel.getPackageName()
+                      + "&store="
+                      + appViewViewModel.getStore()
+                      .getName()
+                      + "&show_install_popup=false");
+            }
           }
         });
   }
@@ -1345,6 +1360,19 @@ public class AppViewPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handlePromotionClaimResult() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> promotionsNavigator.claimDialogResults())
+        .filter(ClaimDialogResultWrapper::isOk)
+        .doOnNext(result -> appViewManager.unscheduleNotificationSync())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 
