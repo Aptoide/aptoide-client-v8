@@ -60,6 +60,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     ViewBinder moPubViewBinder =
         new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
             .iconImageId(R.id.icon)
+            .mainImageId(R.id.native_main_image)
+            .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
             .build();
     MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);

@@ -124,6 +124,17 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/native_main_image"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        />
+    <RelativeLayout
+        android:id="@+id/primary_ad_view_layout"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        />
+
   </RelativeLayout>
 
 </android.support.v7.widget.CardView>
