@@ -60,7 +60,6 @@ public class InstallService extends BaseService implements DownloadsNotification
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject CacheHelper cacheManager;
-  @Inject @Named("marketName") String marketName;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
