@@ -312,11 +312,11 @@ public class AppViewAnalytics {
         DownloadAnalytics.AppContext.APPVIEW, action);
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action, offerResponseStatus, false);
+          editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
     if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
-      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus, true);
+      downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
+          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus);
     }
   }
 
@@ -436,7 +436,7 @@ public class AppViewAnalytics {
   public void sendAppcMigrationAppOpen() {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "open");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.IMPRESSION,
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.OPEN,
         navigationTracker.getViewName(true));
   }
 
@@ -457,14 +457,14 @@ public class AppViewAnalytics {
   public void sendAppMigrationWalletInstallClick() {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "install wallet");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.IMPRESSION,
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
   public void sendAppMigrationClaimClick() {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "claim");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.IMPRESSION,
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 

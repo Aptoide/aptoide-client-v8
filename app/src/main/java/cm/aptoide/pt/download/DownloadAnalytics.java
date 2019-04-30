@@ -255,6 +255,20 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void installClicked(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setUpInstallEvent(md5, packageName, trustedValue, editorsBrickPosition, installType, action,
+        offerResponseStatus, false);
+  }
+
+  public void migrationClicked(String md5, String packageName, String trustedValue,
+      String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setUpInstallEvent(md5, packageName, trustedValue, editorsBrickPosition, installType, action,
+        offerResponseStatus, true);
+  }
+
+  private void setUpInstallEvent(String md5, String packageName, String trustedValue,
+      String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration) {
     String previousContext = navigationTracker.getViewName(false);
     String currentContext = navigationTracker.getViewName(true);
