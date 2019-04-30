@@ -333,7 +333,7 @@ public class EditorialPresenter implements Presenter {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  private Observable<LoadReactionModel> singlePressReactionButtonAction(
+  private Observable<LoadReactionModel> handleSinglePressReactionButton(
       EditorialViewModel editorialViewModel) {
     boolean isFirstReaction = editorialManager.isFirstReaction(editorialViewModel.getCardId(),
         editorialViewModel.getGroupId());
@@ -398,7 +398,7 @@ public class EditorialPresenter implements Presenter {
         .flatMap(created -> view.reactionsButtonClicked())
         .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
         .observeOn(viewScheduler)
-        .flatMap(editorialViewModel -> singlePressReactionButtonAction(editorialViewModel))
+        .flatMap(editorialViewModel -> handleSinglePressReactionButton(editorialViewModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, throwable -> crashReporter.log(throwable));
