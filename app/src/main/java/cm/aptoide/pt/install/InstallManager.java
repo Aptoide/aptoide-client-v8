@@ -584,9 +584,6 @@ public class InstallManager {
   }
 
   public void moveCompletedDownloadFiles(Download download) {
-    Logger.getInstance()
-        .d("AptoideDownloadManager", "going to move download files - " + download.getFilesToDownload()
-            .size());
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       Logger.getInstance()
           .d("AptoideDownloadManager", "trying to move file : "
