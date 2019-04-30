@@ -899,9 +899,8 @@ public class AppViewPresenter implements Presenter {
 
             if (walletPromotionViewModel.isWalletInstalled()
                 && walletPromotionViewModel.isAppViewAppInstalled()) {
-              appViewManager.scheduleNotification("Get "
-                      + String.valueOf(walletPromotionViewModel.getAppcValue())
-                      + " APPC Credits now!", "Don't forget to claim your reward.",
+              appViewManager.scheduleNotification(
+                  String.valueOf(walletPromotionViewModel.getAppcValue()),
                   appViewViewModel.getIcon(), "aptoideinstall://package="
                       + appViewViewModel.getPackageName()
                       + "&store="

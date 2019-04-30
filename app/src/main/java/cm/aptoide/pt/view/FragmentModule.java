@@ -108,6 +108,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
@@ -336,14 +337,16 @@ import rx.subscriptions.CompositeSubscription;
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       @Named("wallet-offer-promotion-id") String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
-      LocalNotificationSyncManager localNotificationSyncManager) {
+      LocalNotificationSyncManager localNotificationSyncManager,
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
         marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
-        appcMigrationManager, localNotificationSyncManager);
+        appcMigrationManager, localNotificationSyncManager,
+        appcPromotionNotificationStringProvider);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -546,5 +549,10 @@ import rx.subscriptions.CompositeSubscription;
     return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
+  }
+
+  @FragmentScope @Provides
+  AppcPromotionNotificationStringProvider providesAppcPromotionNotificationStringProvider() {
+    return new AppcPromotionNotificationStringProvider(fragment.getContext());
   }
 }

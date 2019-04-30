@@ -17,6 +17,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSync;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
@@ -74,6 +75,7 @@ public class AppViewManager {
   private String promotionId;
   private PromotionStatus promotionStatus;
   private LocalNotificationSyncManager localNotificationSyncManager;
+  private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private boolean appcPromotionImpressionSent;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
@@ -85,7 +87,8 @@ public class AppViewManager {
       InstallAnalytics installAnalytics, int limit, Scheduler ioScheduler, String marketName,
       AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
-      LocalNotificationSyncManager localNotificationSyncManager) {
+      LocalNotificationSyncManager localNotificationSyncManager,
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -110,6 +113,7 @@ public class AppViewManager {
     this.installedRepository = installedRepository;
     this.appcMigrationManager = appcMigrationManager;
     this.localNotificationSyncManager = localNotificationSyncManager;
+    this.appcPromotionNotificationStringProvider = appcPromotionNotificationStringProvider;
     this.isFirstLoad = true;
     this.promotionStatus = PromotionStatus.NO_PROMOTION;
     this.appcPromotionImpressionSent = false;
@@ -592,8 +596,10 @@ public class AppViewManager {
     return promotionStatus;
   }
 
-  public void scheduleNotification(String title, String body, String image, String url) {
-    localNotificationSyncManager.schedule(title, body, image, url,
+  public void scheduleNotification(String appcValue, String image, String url) {
+    localNotificationSyncManager.schedule(
+        String.format(appcPromotionNotificationStringProvider.getNotificationTitle(), appcValue),
+        appcPromotionNotificationStringProvider.getNotificationBody(), image, url,
         LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
   }
 
