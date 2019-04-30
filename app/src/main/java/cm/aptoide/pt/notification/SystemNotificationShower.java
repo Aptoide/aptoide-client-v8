@@ -40,8 +40,6 @@ import rx.subscriptions.CompositeSubscription;
 
 public class SystemNotificationShower implements Presenter {
 
-  private static final String NOTIFICATION_CHANNEL_ID = "notifications_channel";
-
   private final NavigationTracker navigationTracker;
   private Context context;
   private NotificationManager notificationManager;
@@ -144,20 +142,6 @@ public class SystemNotificationShower implements Presenter {
   private Single<Notification> buildLocalNotification(Context context, String title, String body,
       String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
 
-    //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-    //  NotificationChannel notificationChannel =
-    //      new NotificationChannel(NOTIFICATION_CHANNEL_ID, "My Notifications",
-    //          NotificationManager.IMPORTANCE_DEFAULT);
-    //
-    //  // Configure the notification channel.
-    //  notificationChannel.setDescription("Channel description");
-    //  notificationChannel.enableLights(true);
-    //  notificationChannel.setLightColor(Color.WHITE);
-    //  notificationChannel.setVibrationPattern(new long[] {0, 250, 250, 250});
-    //  notificationChannel.enableVibration(true);
-    //  notificationManager.createNotificationChannel(notificationChannel);
-    //}
-
     Spannable titleBold = new SpannableString(title);
     titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(),
         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -169,8 +153,12 @@ public class SystemNotificationShower implements Presenter {
               .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
               .setContentTitle(titleBold)
               .setContentText(body)
-              .addAction(0, "Dismiss", onDismissAction)
-              .addAction(0, "Claim", pressIntentAction)
+              .addAction(0, context.getResources()
+                      .getString(R.string.promo_update2appc_notification_dismiss_button),
+                  onDismissAction)
+              .addAction(0, context.getResources()
+                      .getString(R.string.promo_update2appc_notification_claim_button),
+                  pressIntentAction)
               .setLargeIcon(Glide.with(context)
                   .asBitmap()
                   .load(iconUrl)

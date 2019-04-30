@@ -50,7 +50,6 @@ public class NotificationReceiver extends BroadcastReceiver {
             intentExtras.getString(NOTIFICATION_TRACK_URL),
             intentExtras.getString(NOTIFICATION_TARGET_URL));
         manager.cancel(intent.getIntExtra(NOTIFICATION_NOTIFICATION_ID, -1));
-        context.sendBroadcast(closeIntent);
         notificationPublishRelay.call(notificationInfo);
         break;
     }

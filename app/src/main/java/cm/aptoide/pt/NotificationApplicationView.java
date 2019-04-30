@@ -24,8 +24,6 @@ import rx.subscriptions.CompositeSubscription;
 public abstract class NotificationApplicationView extends AptoideApplication
     implements NotificationView {
 
-  private static final String NOTIFICATION_CHANNEL_ID = "notifications_channel";
-
   private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;
 
