@@ -16,6 +16,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
+import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -75,6 +76,7 @@ public class AppViewManagerTest {
   @Mock private InstalledRepository installedRepository;
   @Mock private AppcMigrationManager migrationManager;
   @Mock private LocalNotificationSyncManager localNotificationSyncManager;
+  @Mock private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -93,7 +95,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -115,7 +117,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -166,7 +168,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -218,7 +220,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -268,7 +270,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -312,7 +314,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -340,7 +342,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -368,7 +370,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -481,7 +483,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "marketName", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -589,7 +591,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, "", installedRepository, migrationManager,
-            localNotificationSyncManager);
+            localNotificationSyncManager, appcPromotionNotificationStringProvider);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
