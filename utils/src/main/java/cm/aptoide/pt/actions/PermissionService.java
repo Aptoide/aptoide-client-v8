@@ -14,9 +14,6 @@ public interface PermissionService {
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToAccounts(boolean forceShowRationale,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
 
-  @TargetApi(Build.VERSION_CODES.M) void requestAccessToContacts(boolean forceShowRationale,
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
-
   @TargetApi(Build.VERSION_CODES.M) void requestDownloadAccess(
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
 

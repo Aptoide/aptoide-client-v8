@@ -3,6 +3,7 @@ package com.mopub.nativeads;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import cm.aptoide.pt.BuildConfig;
 import com.applovin.sdk.AppLovinSdk;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
@@ -12,7 +13,7 @@ import java.util.Map;
 public class AppLovinBaseAdapterConfiguration extends BaseAdapterConfiguration {
 
   @NonNull @Override public String getAdapterVersion() {
-    return "8.1.4.3";
+    return BuildConfig.APPLOVIN_ADAPTER_VERSION;
   }
 
   @Nullable @Override public String getBiddingToken(@NonNull Context context) {
@@ -24,7 +25,7 @@ public class AppLovinBaseAdapterConfiguration extends BaseAdapterConfiguration {
   }
 
   @NonNull @Override public String getNetworkSdkVersion() {
-    return "8.1.4";
+    return BuildConfig.APPLOVIN_SDK_VERSION;
   }
 
   @Override public void initializeNetwork(@NonNull Context context,

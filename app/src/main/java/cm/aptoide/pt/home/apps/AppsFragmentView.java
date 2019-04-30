@@ -26,19 +26,21 @@ public interface AppsFragmentView extends View {
 
   Observable<App> pauseDownload();
 
-  Observable<App> retryUpdate();
+  Observable<AppClickEventWrapper> retryUpdate();
 
-  Observable<App> updateApp();
+  Observable<AppClickEventWrapper> updateApp();
 
-  Observable<App> pauseUpdate();
+  Observable<AppClickEventWrapper> pauseUpdate();
 
-  Observable<App> cancelUpdate();
+  Observable<AppClickEventWrapper> cancelUpdate();
 
-  Observable<App> resumeUpdate();
+  Observable<AppClickEventWrapper> resumeUpdate();
 
   Observable<Boolean> showRootWarning();
 
   void showUpdatesDownloadList(List<App> updatesDownloadList);
+
+  void showAppcUpgradesDownloadList(List<App> updatesDownloadList);
 
   Observable<Void> updateAll();
 
@@ -51,6 +53,8 @@ public interface AppsFragmentView extends View {
   void showUnknownErrorMessage();
 
   void removeExcludedUpdates(List<App> excludedUpdatesList);
+
+  Observable<Void> moreAppcClick();
 
   Observable<App> updateClick();
 
@@ -70,11 +74,21 @@ public interface AppsFragmentView extends View {
 
   void removeCanceledAppDownload(App app);
 
+  void removeAppcCanceledAppDownload(App app);
+
   void setStandbyState(App app);
+
+  void setAppcStandbyState(App app);
 
   void showIndeterminateAllUpdates();
 
   void setDefaultUserImage();
 
   void setPausingDownloadState(App app);
+
+  void setAppcPausingDownloadState(App app);
+
+  void showAppcUpgradesList(List<App> list);
+
+  void removeExcludedAppcUpgrades(List<App> excludedUpdatesList);
 }

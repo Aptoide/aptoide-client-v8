@@ -388,7 +388,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public enum AppContext {
-    TIMELINE, APPVIEW, UPDATE_TAB, APPS_FRAGMENT, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS
+    TIMELINE, APPVIEW, UPDATE_TAB, APPS_FRAGMENT, APPS_MIGRATOR_SEE_MORE, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS
   }
 
   public enum Origin {

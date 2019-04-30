@@ -6,7 +6,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -19,9 +18,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE;
-import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS;
-
 public class PromotionsManager {
 
   private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
@@ -32,7 +28,6 @@ public class PromotionsManager {
   private final PromotionsAnalytics promotionsAnalytics;
   private final NotificationAnalytics notificationAnalytics;
   private final InstallAnalytics installAnalytics;
-  private final PreferencesManager preferencesManager;
   private final PackageManager packageManager;
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
@@ -42,9 +37,8 @@ public class PromotionsManager {
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager, PackageManager packageManager,
-      PromotionsService promotionsService, InstalledRepository installedRepository,
-      MoPubAdsManager moPubAdsManager) {
+      PackageManager packageManager, PromotionsService promotionsService,
+      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -52,7 +46,6 @@ public class PromotionsManager {
     this.promotionsAnalytics = promotionsAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
-    this.preferencesManager = preferencesManager;
     this.packageManager = packageManager;
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
@@ -101,7 +94,6 @@ public class PromotionsManager {
   }
 
   public Completable downloadApp(PromotionViewApp promotionViewApp) {
-    increaseInstallClick();
     return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
         promotionViewApp.getDownloadModel()
             .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),
@@ -109,28 +101,13 @@ public class PromotionsManager {
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
         promotionViewApp.hasAppc()))
-        .flatMapSingle(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(
-                        showAds -> setupDownloadEvents(download, promotionViewApp.getPackageName(),
-                            promotionViewApp.getAppId(),
-                            showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW
-                                : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, promotionViewApp.getPackageName(),
-                    promotionViewApp.getAppId(), NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
+                promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
+                offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
-  }
-
-  private void increaseInstallClick() {
-    preferencesManager.increaseNotLoggedInInstallClicks();
   }
 
   private void setupDownloadEvents(Download download, String packageName, long appId,
@@ -155,18 +132,9 @@ public class PromotionsManager {
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
     return installManager.getDownload(md5)
-        .flatMap(download -> moPubAdsManager.shouldHaveInterstitialAds()
-            .flatMap(hasAds -> {
-              if (hasAds) {
-                return moPubAdsManager.shouldShowAds()
-                    .doOnSuccess(showAds -> setupDownloadEvents(download, packageName, appId,
-                        showAds ? WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW : ADS_HIDE));
-              } else {
-                setupDownloadEvents(download, packageName, appId,
-                    WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
-                return Single.just(false);
-              }
-            })
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
+                offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

@@ -22,7 +22,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.home.GetSocialRecommendsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreMetaRequest;
@@ -206,14 +205,6 @@ import rx.schedulers.Schedulers;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
-        case TIMELINE_CARD:
-          return GetSocialRecommendsRequest.ofAction(url, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences, packageNames)
-              .observe(bypassCache, bypassServerCache)
-              .observeOn(Schedulers.io())
-              .doOnNext(obj -> wsWidget.setViewObject(obj))
-              .onErrorResumeNext(throwable -> Observable.empty())
-              .map(recommends -> wsWidget);
         case ACTION_ITEM:
           return GetActionItemRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
               tokenInvalidator, sharedPreferences)

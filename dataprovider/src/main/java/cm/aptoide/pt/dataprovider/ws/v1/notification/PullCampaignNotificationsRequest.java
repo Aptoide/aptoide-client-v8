@@ -58,6 +58,6 @@ public class PullCampaignNotificationsRequest
   @Override
   protected Observable<List<GetPullNotificationsResponse>> loadDataFromNetwork(Service interfaces,
       boolean bypassCache) {
-    return interfaces.getPullCompaignNotifications(id, options, true);
+    return interfaces.getPullCampaignNotifications(id, options, true);
   }
 }

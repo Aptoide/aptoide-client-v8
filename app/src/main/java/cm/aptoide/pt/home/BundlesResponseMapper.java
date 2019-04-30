@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
+import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -29,11 +30,13 @@ public class BundlesResponseMapper {
 
   private final InstallManager installManager;
   private final WalletAdsOfferCardManager walletAdsOfferCardManager;
+  private final BlacklistManager blacklistManager;
 
   public BundlesResponseMapper(InstallManager installManager,
-      WalletAdsOfferCardManager walletAdsOfferCardManager) {
+      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager) {
     this.installManager = installManager;
     this.walletAdsOfferCardManager = walletAdsOfferCardManager;
+    this.blacklistManager = blacklistManager;
   }
 
   public List<HomeBundle> fromWidgetsToBundles(List<GetStoreWidgets.WSWidget> widgetBundles) {
@@ -76,14 +79,18 @@ public class BundlesResponseMapper {
           appBundles.add(new AdBundle(title,
               new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
-        } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE) || type.equals(
-            HomeBundle.BundleType.EDITORIAL)) {
+        } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
+          appBundles.add(new ActionBundle(title, type, event, widgetTag,
+              map((ActionItemResponse) viewObject)));
+        } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
+          if (!blacklistManager.isBlacklisted(type.toString(), actionItem.getCardId())) {
+            appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
+          }
         } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (walletAdsOfferCardManager.shouldShowWalletOfferCard(
-              type + "_" + actionItem.getCardId())) {
+          if (walletAdsOfferCardManager.shouldShowWalletOfferCard(type.toString(),
+              actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         }
@@ -156,8 +163,6 @@ public class BundlesResponseMapper {
         return HomeBundle.BundleType.APPCOINS_ADS;
       case ADS:
         return HomeBundle.BundleType.ADS;
-      case TIMELINE_CARD:
-        return HomeBundle.BundleType.SOCIAL;
       case APPS_TOP_GROUP:
         return HomeBundle.BundleType.TOP;
       default:

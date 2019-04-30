@@ -4,6 +4,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
 
@@ -213,8 +215,6 @@ android {
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
         "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
-    variant.buildConfigField "int", "DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS",
-        project.DEFAULT_SOCIAL_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
@@ -240,6 +240,10 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
+        "\"" + APPLOVIN_SDK_VERSION + "\""
+    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
+        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
@@ -269,15 +273,10 @@ android {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY_INTERNAL + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET",
-          "\"" + project.TWITTER_SECRET_INTERNAL + "\""
     } else {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_KEY", "\"" + project.TWITTER_KEY + "\""
-      variant.buildConfigField "String", "TWITTER_SECRET", "\"" + project.TWITTER_SECRET + "\""
     }
 
     variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
@@ -286,8 +285,8 @@ android {
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
-    variant.buildConfigField "String", "MOPUB_STARTAPP_APPLICATION_ID",
-        "\"" + project.MOPUB_STARTAPP_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
+        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
@@ -303,7 +302,6 @@ android {
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
-
 
     variant.outputs.all { output ->
       def SEP = "_"
@@ -396,6 +394,8 @@ dependencies {
   androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
   implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
@@ -479,15 +479,17 @@ dependencies {
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  //StartApp
-  implementation "com.startapp:inapp-sdk:${STARTAPP_SDK_VERSION}"
-
   //AppNext
   implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
   implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
+
+  //Inmobi
+  implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
+  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
+
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
@@ -505,13 +507,6 @@ dependencies {
   // Fabric
   implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
     transitive = true
-  }
-
-  //lib phone number
-  implementation "com.googlecode.libphonenumber:libphonenumber:${LIB_PHONE_NUMBER_VERSION}"
-
-  implementation('com.twitter.sdk.android:twitter-core:2.3.0@aar') {
-    transitive = true;
   }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
@@ -537,7 +532,6 @@ dependencies {
   // Facebook Login
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
 
-
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 
   //Color Palette
@@ -554,6 +548,7 @@ dependencies {
   implementation "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
+
   annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
