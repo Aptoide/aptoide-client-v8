@@ -76,9 +76,9 @@ public interface EditorialView extends View {
 
   void setUserReaction(String reaction);
 
-  void showLogInDialog();
+  void showLoginDialog();
 
-  Observable<Void> snackLogInClick();
+  Observable<Void> snackLoginClick();
 
   void showGenericErrorToast();
 

@@ -17,6 +17,7 @@ public class TopReactionsSetup {
   private ImageView secondReaction;
   private ImageView thirdReaction;
   private TextView numberOfReactions;
+  private ImageView[] imageView;
 
   public TopReactionsSetup() {
 
@@ -27,6 +28,7 @@ public class TopReactionsSetup {
     secondReaction = view.findViewById(R.id.reaction_2);
     thirdReaction = view.findViewById(R.id.reaction_3);
     numberOfReactions = view.findViewById(R.id.number_of_reactions);
+    imageView = new ImageView[] { firstReaction, secondReaction, thirdReaction };
   }
 
   public void setReactions(List<TopReaction> reactions, int numberOfReactions, Context context) {
@@ -54,6 +56,13 @@ public class TopReactionsSetup {
 
   public boolean isReactionValid(String reaction) {
     return mapReaction(reaction) != -1;
+  }
+
+  public void clearReactions() {
+    for (ImageView imageView : imageView) {
+      imageView.setVisibility(View.GONE);
+    }
+    this.numberOfReactions.setVisibility(View.GONE);
   }
 
   public void onDestroy() {

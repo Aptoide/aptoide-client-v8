@@ -84,7 +84,7 @@ public class EditorialPresenterTest {
     when(view.reactionsButtonClicked()).thenReturn(reactionButtonClickEvent);
     when(view.reactionsButtonLongPressed()).thenReturn(reactionButtonLongPressEvent);
     when(view.reactionClicked()).thenReturn(reactionClickEvent);
-    when(view.snackLogInClick()).thenReturn(snackLoginEvent);
+    when(view.snackLoginClick()).thenReturn(snackLoginEvent);
   }
 
   @Test public void onCreateLoadAppOfTheWeekWithCorrectViewModelTest() {
@@ -426,7 +426,7 @@ public class EditorialPresenterTest {
         new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED)));
     //The user chooses a reaction
     reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
-    verify(view).showLogInDialog();
+    verify(view).showLoginDialog();
   }
 
   @Test public void handleNetworkError() {

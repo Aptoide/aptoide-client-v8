@@ -10,6 +10,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
+import cm.aptoide.pt.reactions.TopReactionsSetup;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import java.text.DateFormat;
@@ -35,10 +36,9 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final ImageView backgroundImage;
   private final TextView editorialViews;
   private final ImageButton reactButton;
-  private final TextView numberOfReactions;
   private final CardView curationTypeBubble;
   private final TextView curationTypeBubbleText;
-  private ImageView[] imageViews;
+  private TopReactionsSetup topReactionsSetup;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
@@ -51,11 +51,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.reactButton = view.findViewById(R.id.add_reactions);
     this.curationTypeBubble = view.findViewById(R.id.curation_type_bubble);
     this.curationTypeBubbleText = view.findViewById(R.id.curation_type_bubble_text);
-    ImageView firstReaction = view.findViewById(R.id.reaction_1);
-    ImageView secondReaction = view.findViewById(R.id.reaction_2);
-    ImageView thirdReaction = view.findViewById(R.id.reaction_3);
-    imageViews = new ImageView[] { firstReaction, secondReaction, thirdReaction };
-    this.numberOfReactions = view.findViewById(R.id.number_of_reactions);
+    topReactionsSetup = new TopReactionsSetup();
+    topReactionsSetup.initialReactionsSetup(view);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -116,25 +113,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private void setReactions(List<TopReaction> reactions, int numberOfReactions,
       String userReaction) {
     setUserReaction(userReaction);
-    int validReactions = 0;
-    for (int i = 0; i < imageViews.length; i++) {
-      if (i < reactions.size() && isReactionValid(reactions.get(i)
-          .getType())) {
-        ImageLoader.with(itemView.getContext())
-            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
-                .getType()), imageViews[i]);
-        imageViews[i].setVisibility(View.VISIBLE);
-        validReactions++;
-      } else {
-        imageViews[i].setVisibility(View.GONE);
-      }
-    }
-    if (numberOfReactions > 0 && validReactions > 0) {
-      this.numberOfReactions.setText(String.valueOf(numberOfReactions));
-      this.numberOfReactions.setVisibility(View.VISIBLE);
-    } else {
-      this.numberOfReactions.setVisibility(View.GONE);
-    }
+    topReactionsSetup.setReactions(reactions, numberOfReactions, itemView.getContext());
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
@@ -157,23 +136,16 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   private void setUserReaction(String reaction) {
-    if (!reaction.equals("") && isReactionValid(reaction)) {
+    if (!reaction.equals("") && topReactionsSetup.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
       reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
     }
   }
 
-  private boolean isReactionValid(String reaction) {
-    return mapReaction(reaction) != -1;
-  }
-
   private void clearReactions() {
     reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
-    for (ImageView imageView : imageViews) {
-      imageView.setVisibility(View.GONE);
-    }
-    this.numberOfReactions.setVisibility(View.GONE);
+    topReactionsSetup.clearReactions();
   }
 
   private void setCurationCardBubble(String caption) {

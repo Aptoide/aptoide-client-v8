@@ -44,7 +44,6 @@ import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.Translator;
@@ -583,12 +582,13 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public void showLogInDialog() {
-    ShowMessage.asSnack(getActivity(), R.string.editorial_reactions_login_short, R.string.login,
-        snackView -> snackListener.onNext(null), Snackbar.LENGTH_SHORT);
+  @Override public void showLoginDialog() {
+    Snackbar.make(getView(), getString(R.string.editorial_reactions_login_short),
+        Snackbar.LENGTH_LONG)
+        .show();
   }
 
-  @Override public Observable<Void> snackLogInClick() {
+  @Override public Observable<Void> snackLoginClick() {
     return snackListener;
   }
 

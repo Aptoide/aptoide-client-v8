@@ -367,7 +367,7 @@ public class EditorialPresenter implements Presenter {
         editorialAnalytics.sendReactedEvent();
       }
     } else if (reactionsResponse.reactionsExceeded()) {
-      view.showLogInDialog();
+      view.showLoginDialog();
     } else if (reactionsResponse.wasNetworkError()) {
       view.showNetworkErrorToast();
     } else if (reactionsResponse.wasGeneralError()) {
@@ -440,7 +440,7 @@ public class EditorialPresenter implements Presenter {
   @VisibleForTesting public void handleSnackLogInClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.snackLogInClick())
+        .flatMap(created -> view.snackLoginClick())
         .doOnNext(homeEvent -> editorialNavigator.navigateToLogIn())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
