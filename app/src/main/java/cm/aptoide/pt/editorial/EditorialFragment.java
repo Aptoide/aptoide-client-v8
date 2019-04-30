@@ -38,6 +38,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionEvent;
+import cm.aptoide.pt.reactions.TopReactionsSetup;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
@@ -104,10 +105,6 @@ public class EditorialFragment extends NavigationTrackFragment
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
   private ImageButton reactButton;
-  private ImageView firstReaction;
-  private ImageView secondReaction;
-  private ImageView thirdReaction;
-  private TextView numberOfReactions;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -127,6 +124,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private PublishSubject<ReactionEvent> reactionEventListener;
   private PublishSubject<Void> snackListener;
   private PublishSubject<Boolean> movingCollapseSubject;
+  private TopReactionsSetup topReactionsSetup;
   private boolean shouldAnimate;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,6 +137,7 @@ public class EditorialFragment extends NavigationTrackFragment
     movingCollapseSubject = PublishSubject.create();
     reactionEventListener = PublishSubject.create();
     snackListener = PublishSubject.create();
+    topReactionsSetup = new TopReactionsSetup();
     setHasOptionsMenu(true);
   }
 
@@ -182,10 +181,7 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItems.setAdapter(adapter);
 
     reactButton = view.findViewById(R.id.add_reactions);
-    firstReaction = view.findViewById(R.id.reaction_1);
-    secondReaction = view.findViewById(R.id.reaction_2);
-    thirdReaction = view.findViewById(R.id.reaction_3);
-    numberOfReactions = view.findViewById(R.id.number_of_reactions);
+    topReactionsSetup.initialReactionsSetup(view);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
@@ -301,10 +297,6 @@ public class EditorialFragment extends NavigationTrackFragment
     backArrow = null;
 
     reactButton = null;
-    firstReaction = null;
-    secondReaction = null;
-    thirdReaction = null;
-    numberOfReactions = null;
 
     cardInfoLayout = null;
     downloadControlsLayout = null;
@@ -316,6 +308,7 @@ public class EditorialFragment extends NavigationTrackFragment
     pauseDownload = null;
     scrollView = null;
     appCardLayout = null;
+    topReactionsSetup.onDestroy();
     super.onDestroyView();
   }
 
@@ -565,26 +558,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void setReactions(String userReaction, List<TopReaction> reactions,
       int numberOfReactions) {
     setUserReaction(userReaction);
-    ImageView[] imageViews = { firstReaction, secondReaction, thirdReaction };
-    int validReactions = 0;
-    for (int i = 0; i < imageViews.length; i++) {
-      if (i < reactions.size() && isReactionValid(reactions.get(i)
-          .getType())) {
-        ImageLoader.with(getContext())
-            .loadWithShadowCircleTransform(mapReaction(reactions.get(i)
-                .getType()), imageViews[i]);
-        imageViews[i].setVisibility(View.VISIBLE);
-        validReactions++;
-      } else {
-        imageViews[i].setVisibility(View.GONE);
-      }
-    }
-    if (numberOfReactions > 0 && validReactions > 0) {
-      this.numberOfReactions.setText(String.valueOf(numberOfReactions));
-      this.numberOfReactions.setVisibility(View.VISIBLE);
-    } else {
-      this.numberOfReactions.setVisibility(View.GONE);
-    }
+    topReactionsSetup.setReactions(reactions, numberOfReactions, getContext());
   }
 
   @Override public void showReactionsPopup(String cardId, String groupId) {
@@ -602,7 +576,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void setUserReaction(String reaction) {
-    if (!reaction.equals("") && isReactionValid(reaction)) {
+    if (!reaction.equals("") && topReactionsSetup.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
       reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
@@ -626,10 +600,6 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
-  }
-
-  private boolean isReactionValid(String reaction) {
-    return mapReaction(reaction) != -1;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
