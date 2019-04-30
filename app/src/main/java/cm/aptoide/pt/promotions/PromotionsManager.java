@@ -99,7 +99,8 @@ public class PromotionsManager {
             .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
-        promotionViewApp.getAlternativePath(), promotionViewApp.getObb()))
+        promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
+        promotionViewApp.hasAppc()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),

@@ -29,7 +29,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
 
   fun startUpdate(): Observable<Install> {
     return getAutoUpdateModel().flatMap {
-      Observable.just(downloadFactory.create(it.md5, it.versionCode, it.packageName, it.uri))
+      Observable.just(downloadFactory.create(it.md5, it.versionCode, it.packageName, it.uri, false))
           .flatMapCompletable { download ->
             installManager.install(download)
                 .doOnSubscribe {

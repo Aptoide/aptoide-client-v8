@@ -326,7 +326,8 @@ public class AppViewManager {
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
-            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb()))
+            cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
+            cachedApp.hasAdvertising() || cachedApp.hasBilling()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(
                 status -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
@@ -342,7 +343,7 @@ public class AppViewManager {
             .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
-        promotionViewApp.getPathAlt(), promotionViewApp.getObb()))
+        promotionViewApp.getPathAlt(), promotionViewApp.getObb(), false))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getDownloadModel()
