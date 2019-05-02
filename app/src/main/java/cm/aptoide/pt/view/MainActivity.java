@@ -23,7 +23,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
-import cm.aptoide.pt.ads.UnityAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
@@ -34,7 +33,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.unity3d.ads.UnityAds;
+import com.mopub.common.MoPub;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -58,6 +57,7 @@ public class MainActivity extends BottomNavigationActivity
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    MoPub.onCreate(this);
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
@@ -78,30 +78,38 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = null;
     snackbar = null;
     super.onDestroy();
+    MoPub.onDestroy(this);
   }
 
   private void initializeAdsMediation() {
     IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
-
-    UnityAds.initialize(this, BuildConfig.MOPUB_UNITYADS_GAME_ID, new UnityAdsListener());
   }
 
   @Override protected void onStart() {
     super.onStart();
+    MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
+    MoPub.onResume(this);
     IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
+    MoPub.onPause(this);
     IronSource.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
+    MoPub.onStop(this);
+  }
+
+  @Override protected void onRestart() {
+    super.onRestart();
+    MoPub.onRestart(this);
   }
 
   private void setupUpdatesNotification() {

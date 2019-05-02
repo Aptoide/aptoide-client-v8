@@ -113,9 +113,8 @@ public class EditorialPresenter implements Presenter {
   @VisibleForTesting public void handleClickOnAppCard() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable())
-        .flatMap(model -> view.appCardClicked(model))
+        .flatMap(__ -> setUpViewModelOnViewReady())
+        .flatMap(view::appCardClicked)
         .doOnNext(editorialEvent -> {
           editorialNavigator.navigateToAppView(editorialEvent.getId(),
               editorialEvent.getPackageName());

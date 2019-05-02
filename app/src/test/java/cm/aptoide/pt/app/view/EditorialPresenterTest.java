@@ -174,6 +174,9 @@ public class EditorialPresenterTest {
     //Given an initialized presenter
     editorialPresenter.handleClickOnAppCard();
 
+    //When the view is ready
+    when(view.isViewReady()).thenReturn(Observable.just(null));
+
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 

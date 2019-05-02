@@ -10,11 +10,14 @@ import rx.Observable;
  */
 public interface Installer {
 
-  Completable install(Context context, String md5, boolean forceDefaultInstall);
+  Completable install(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller);
 
-  Completable update(Context context, String md5, boolean forceDefaultInstall);
+  Completable update(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller);
 
-  Completable downgrade(Context context, String md5, boolean forceDefaultInstall);
+  Completable downgrade(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller);
 
   Completable uninstall(Context context, String packageName, String versionName);
 

@@ -7,6 +7,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -41,5 +42,9 @@ public class AppsNavigator {
     return aptoideBottomNavigator.navigationEvent()
         .filter(menuPosition -> bottomNavigationMapper.mapItemClicked(menuPosition)
             .equals(BottomNavigationItem.APPS));
+  }
+
+  public void navigateToSeeMoreAppc() {
+    fragmentNavigator.navigateTo(SeeMoreAppcFragment.newInstance(), true);
   }
 }

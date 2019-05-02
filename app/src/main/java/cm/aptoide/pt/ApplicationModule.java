@@ -71,11 +71,12 @@ import cm.aptoide.pt.account.OAuthModeProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
-import cm.aptoide.pt.addressbook.AddressBookAnalytics;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.MoPubAnalytics;
+import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.PackageRepositoryVersionCodeProvider;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -97,9 +98,8 @@ import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
-import cm.aptoide.pt.appview.PreferencesManager;
 import cm.aptoide.pt.appview.PreferencesPersister;
-import cm.aptoide.pt.autoupdate.AutoUpdateService;
+import cm.aptoide.pt.autoupdate.Service;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
@@ -164,8 +164,7 @@ import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
-import cm.aptoide.pt.impressions.ImpressionManager;
-import cm.aptoide.pt.impressions.ImpressionService;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -173,6 +172,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -194,6 +194,7 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -218,7 +219,6 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
-import cm.aptoide.pt.social.data.ReadPostsPersistence;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -228,7 +228,6 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
-import cm.aptoide.pt.timeline.TimelineAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -239,7 +238,6 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
-import cm.aptoide.pt.view.share.NotLoggedInShareAnalytics;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -252,7 +250,6 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -262,9 +259,6 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import dagger.Module;
 import dagger.Provides;
 import io.fabric.sdk.android.Fabric;
@@ -324,12 +318,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+      @Named("obbPath") String obbPath, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      PackageInstallerManager packageInstallerManager) {
 
     return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
+            getInstallingStateTimeout(), appInstallerStatusReceiver).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils(),
+        packageInstallerManager);
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -452,11 +450,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
-      InstallerAnalytics installerAnalytics) {
-    return new DefaultInstaller(application.getPackageManager(), installationProvider,
+      InstallerAnalytics installerAnalytics, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
-        installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics);
+        installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
+        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver);
+  }
+
+  private int getInstallingStateTimeout() {
+    return Build.VERSION.SDK_INT >= 21
+        ? BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS
+        : BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
@@ -492,20 +497,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return fabric.getKit(Crashlytics.class);
   }
 
-  @Singleton @Provides TwitterCore provideTwitter(Fabric fabric) {
-    return fabric.getKit(TwitterCore.class);
-  }
-
-  @Singleton @Provides TwitterAuthClient provideTwitterAuthClient() {
-    return new TwitterAuthClient();
-  }
-
   @Singleton @Provides Fabric provideFabric() {
     return Fabric.with(application, new Answers(), new Crashlytics.Builder().core(
         new CrashlyticsCore.Builder().disabled(BuildConfig.CRASH_REPORTS_DISABLED)
             .build())
-        .build(), new TwitterCore(
-        new TwitterAuthConfig(BuildConfig.TWITTER_KEY, BuildConfig.TWITTER_SECRET)));
+        .build());
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
@@ -1169,10 +1165,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
       MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment,
-      WalletAdsOfferManager walletAdsOfferManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
+      MoPubConsentManager moPubConsentDialogManager) {
     return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, walletAdsOfferManager);
+        moPubNativeAdExperiment, walletAdsOfferManager, moPubConsentDialogManager);
+  }
+
+  @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
+      MoPubAdsManager moPubAdsManager, InstalledRepository installedRepository,
+      MoPubAnalytics moPubAnalytics, CrashReport crashReport) {
+    return new AdsUserPropertyManager(moPubAdsManager, installedRepository, moPubAnalytics,
+        crashReport, Schedulers.io());
   }
 
   @Singleton @Provides Retrofit providesSearchSuggestionsRetrofit(
@@ -1282,9 +1285,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
-  @Singleton @Provides AutoUpdateService.Service providesAutoUpdateService(
+  @Singleton @Provides Service providesAutoUpdateService(
       @Named("retrofit-auto-update") Retrofit retrofit) {
-    return retrofit.create(AutoUpdateService.Service.class);
+    return retrofit.create(Service.class);
   }
 
   @Singleton @Provides SearchAbTestService.Service providesSearchAbTestRetrofit(
@@ -1417,13 +1420,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("aptoideEvents") Collection<String> provideAptoideEvents() {
     return Arrays.asList(FirstLaunchAnalytics.FIRST_LAUNCH_BI,
         FirstLaunchAnalytics.PLAY_PROTECT_EVENT, AppViewAnalytics.OPEN_APP_VIEW,
-        NotificationAnalytics.NOTIFICATION_EVENT_NAME, TimelineAnalytics.OPEN_APP,
-        TimelineAnalytics.UPDATE_APP, TimelineAnalytics.OPEN_STORE, TimelineAnalytics.OPEN_ARTICLE,
-        TimelineAnalytics.LIKE, TimelineAnalytics.OPEN_BLOG, TimelineAnalytics.OPEN_VIDEO,
-        TimelineAnalytics.OPEN_CHANNEL, TimelineAnalytics.OPEN_STORE_PROFILE,
-        TimelineAnalytics.COMMENT, TimelineAnalytics.SHARE, TimelineAnalytics.SHARE_SEND,
-        TimelineAnalytics.COMMENT_SEND, TimelineAnalytics.FAB, TimelineAnalytics.SCROLLING_EVENT,
-        TimelineAnalytics.OPEN_TIMELINE_EVENT, AccountAnalytics.APTOIDE_EVENT_NAME,
+        NotificationAnalytics.NOTIFICATION_EVENT_NAME, AccountAnalytics.APTOIDE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_EVENT_NAME, InstallAnalytics.INSTALL_EVENT_NAME,
         PromotionsAnalytics.VALENTINE_MIGRATOR);
   }
@@ -1469,15 +1466,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppShortcutsAnalytics providesAppShortcutsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new AppShortcutsAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides ReadPostsPersistence providesReadPostsPersistence() {
-    return new ReadPostsPersistence(new ArrayList<>());
-  }
-
-  @Singleton @Provides TimelineAnalytics providesTimelineAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new TimelineAnalytics(navigationTracker, analyticsManager);
   }
 
   @Singleton @Provides StoreAnalytics providesStoreAnalytics(AnalyticsManager analyticsManager,
@@ -1573,8 +1561,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides BundlesResponseMapper providesBundlesMapper(
       @Named("marketName") String marketName, InstallManager installManager,
-      WalletAdsOfferCardManager walletAdsOfferCardManager) {
-    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager);
+      WalletAdsOfferCardManager walletAdsOfferCardManager, BlacklistManager blacklistManager) {
+    return new BundlesResponseMapper(installManager, walletAdsOfferCardManager, blacklistManager);
   }
 
   @Singleton @Provides UpdatesManager providesUpdatesManager(UpdateRepository updateRepository) {
@@ -1591,29 +1579,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         application.getPackageManager());
   }
 
-  @Singleton @Provides NotLoggedInShareAnalytics providesNotLoggedInShareAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      AccountAnalytics accountAnalytics) {
-    return new NotLoggedInShareAnalytics(analyticsManager, navigationTracker, accountAnalytics);
-  }
-
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, TimelineAnalytics timelineAnalytics,
-      NotLoggedInShareAnalytics notLoggedInShareAnalytics, BillingAnalytics billingAnalytics,
+      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
       StoreAnalytics storeAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        timelineAnalytics, notLoggedInShareAnalytics, billingAnalytics, storeAnalytics);
+        billingAnalytics, storeAnalytics);
   }
 
   @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
       @Named("default") SharedPreferences sharedPreferences) {
     return new PreferencesPersister(sharedPreferences);
-  }
-
-  @Singleton @Provides PreferencesManager providesPreferencesManager(
-      PreferencesPersister preferencesPersister) {
-    return new PreferencesManager(preferencesPersister);
   }
 
   @Singleton @Provides ReviewsManager providesReviewsManager(ReviewsRepository reviewsRepository) {
@@ -1646,7 +1622,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository.getUniqueIdentifier());
+    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
@@ -1694,12 +1670,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PromotionViewAppMapper promotionViewAppMapper, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      PreferencesManager preferencesManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager) {
+      PromotionsService promotionsService, InstalledRepository installedRepository,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
-        preferencesManager, application.getApplicationContext()
-        .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
+        application.getApplicationContext()
+            .getPackageManager(), promotionsService, installedRepository, moPubAdsManager);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1707,21 +1683,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PromotionViewAppMapper(downloadStateParser);
   }
 
-  @Singleton @Provides ImpressionManager providesImpressionManager(
-      ImpressionService impressionService) {
-    return new ImpressionManager(impressionService);
-  }
-
   @Singleton @Provides DownloadStateParser providesDownloadStateParser() {
     return new DownloadStateParser();
-  }
-
-  @Singleton @Provides ImpressionService providesImpressionService(@Named("pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
-    return new ImpressionService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        sharedPreferences, converterFactory);
   }
 
   @Singleton @Provides EditorialService providesEditorialService(@Named("pool-v7")
@@ -1739,10 +1702,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides WalletService providesWalletService(WalletService.ServiceV7 service) {
     return new WalletService(service, Schedulers.io());
-  }
-
-  @Singleton @Provides LoginPreferences provideLoginPreferences() {
-    return new LoginPreferences(application, GoogleApiAvailability.getInstance());
   }
 
   @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
@@ -1817,11 +1776,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         InstallAnalytics.NOTIFICATION_APPLICATION_INSTALL,
         InstallAnalytics.EDITORS_APPLICATION_INSTALL,
-        AddressBookAnalytics.FOLLOW_FRIENDS_CHOOSE_NETWORK,
-        AddressBookAnalytics.FOLLOW_FRIENDS_HOW_TO,
-        AddressBookAnalytics.FOLLOW_FRIENDS_APTOIDE_ACCESS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_NEW_CONNECTIONS,
-        AddressBookAnalytics.FOLLOW_FRIENDS_SET_MY_PHONENUMBER,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME,
         DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, SearchAnalytics.SEARCH,
@@ -1831,15 +1785,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APP_VIEW_INTERACT, AppViewAnalytics.DONATIONS_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_RECEIVED, NotificationAnalytics.NOTIFICATION_IMPRESSION,
         NotificationAnalytics.NOTIFICATION_PRESSED, NotificationAnalytics.NOTIFICATION_RECEIVED,
-        TimelineAnalytics.SOCIAL_CARD_PREVIEW, TimelineAnalytics.CARD_ACTION,
-        TimelineAnalytics.TIMELINE_OPENED, StoreAnalytics.STORES_TAB_INTERACT,
-        StoreAnalytics.STORES_OPEN, StoreAnalytics.STORES_INTERACT,
-        AccountAnalytics.SIGN_UP_EVENT_NAME, AccountAnalytics.LOGIN_EVENT_NAME,
-        AccountAnalytics.FOLLOW_FRIENDS, UpdatesAnalytics.UPDATE_EVENT,
+        StoreAnalytics.STORES_TAB_INTERACT, StoreAnalytics.STORES_OPEN,
+        StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
+        AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT,
         PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
         FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
         InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
-        NotLoggedInShareAnalytics.POP_UP_SHARE_TIMELINE,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
@@ -1849,16 +1800,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
-        HomeAnalytics.HOME_CHIP_CLICK, TimelineAnalytics.MESSAGE_IMPRESSION,
-        TimelineAnalytics.MESSAGE_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        HomeAnalytics.HOME_CHIP_CLICK, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
-        TimelineAnalytics.MESSAGE_IMPRESSION, TimelineAnalytics.MESSAGE_INTERACT,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
-        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT,
-        NotLoggedInShareAnalytics.MESSAGE_IMPRESSION, NotLoggedInShareAnalytics.MESSAGE_INTERACT,
-        DownloadAnalytics.DOWNLOAD_INTERACT, DonationsAnalytics.DONATIONS_INTERACT,
-        EditorialAnalytics.CURATION_CARD_INSTALL,
+        BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
+        DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
         PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
         AppViewAnalytics.ADS_BLOCK_BY_OFFER, AppViewAnalytics.APPC_SIMILAR_APP_INTERACT,
@@ -1922,5 +1869,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
+  }
+
+  @Singleton @Provides AppInstaller providesAppInstaller(
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new AppInstaller(application.getApplicationContext(),
+        installStatus -> appInstallerStatusReceiver.onStatusReceived(installStatus));
+  }
+
+  @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
+    return new AppInstallerStatusReceiver(PublishSubject.create());
+  }
+
+  @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
+    return new PackageInstallerManager();
   }
 }

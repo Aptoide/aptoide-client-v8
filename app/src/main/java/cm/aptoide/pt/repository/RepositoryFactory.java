@@ -18,7 +18,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
-import cm.aptoide.pt.timeline.SocialRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import okhttp3.OkHttpClient;
 
@@ -57,14 +56,6 @@ public final class RepositoryFactory {
 
   private static BodyInterceptor<BaseBody> getBaseBodyInterceptorV7(Context context) {
     return ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-  }
-
-  public static SocialRepository getSocialRepository(Context context,
-      SharedPreferences sharedPreferences) {
-    return new SocialRepository(
-        ((AptoideApplication) context.getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7(),
-        WebService.getDefaultConverter(), getHttpClient(context), getTokenInvalidator(context),
-        sharedPreferences);
   }
 
   private static TokenInvalidator getTokenInvalidator(Context context) {

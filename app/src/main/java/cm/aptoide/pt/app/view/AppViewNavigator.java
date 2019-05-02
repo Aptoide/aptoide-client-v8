@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -16,14 +15,11 @@ import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.share.NotLoggedInShareFragment;
 import java.util.ArrayList;
 import java.util.List;
-import rx.Observable;
 
 public class AppViewNavigator {
 
-  private final int NOT_LOGGED_IN_SHARE_REQUEST_CODE = 13;
   private final FragmentNavigator fragmentNavigator;
   private final ActivityNavigator activityNavigator;
   private final AppNavigator appNavigator;
@@ -83,18 +79,8 @@ public class AppViewNavigator {
         true);
   }
 
-  public void navigateToNotLoggedInShareFragmentForResult(String packageName) {
-    fragmentNavigator.navigateForResult(NotLoggedInShareFragment.newInstance(packageName),
-        NOT_LOGGED_IN_SHARE_REQUEST_CODE, false);
-  }
-
   public void navigateToAppCoinsInfo() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
-  }
-
-  public Observable<Boolean> notLoggedInViewResults() {
-    return fragmentNavigator.results(NOT_LOGGED_IN_SHARE_REQUEST_CODE)
-        .map(result -> result.getResultCode() == Activity.RESULT_OK);
   }
 
   public void navigateToDonationsDialog(String packageName, String tag) {

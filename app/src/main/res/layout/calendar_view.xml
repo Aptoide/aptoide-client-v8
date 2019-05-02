@@ -24,7 +24,7 @@
           android:layout_marginLeft="24dp"
           android:layout_marginStart="24dp"
           android:layout_marginTop="20dp"
-          android:textColor="@color/tw__solid_white"
+          android:textColor="@color/white"
           tools:text="2017"
           style="@style/Aptoide.TextView.Medium.M"
           />
@@ -35,7 +35,7 @@
           android:layout_below="@id/calendar_header_year"
           android:layout_marginLeft="24dp"
           android:layout_marginStart="24dp"
-          android:textColor="@color/tw__solid_white"
+          android:textColor="@color/white"
           android:textSize="34sp"
           tools:text="Thu, Apr 13"
           style="@style/Aptoide.TextView.Medium"

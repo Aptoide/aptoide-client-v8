@@ -110,14 +110,6 @@
           style="@style/Aptoide.Button"
           />
       <Button
-          android:id="@+id/find_friends_button"
-          android:layout_width="match_parent"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginTop="8dp"
-          android:text="@string/newaccount_find_friends"
-          style="@style/Aptoide.Button"
-          />
-      <Button
           android:id="@+id/logout_button"
           android:layout_width="match_parent"
           android:layout_gravity="center_horizontal"

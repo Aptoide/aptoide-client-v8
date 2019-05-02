@@ -8,7 +8,7 @@ android:fitsSystemWindows="true"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tw__transparent"
+    android:background="@color/transparent"
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
     >

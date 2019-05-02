@@ -17,7 +17,7 @@ public class DownloadStateParser {
   public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
     DownloadModel.DownloadState downloadState;
     switch (state) {
-      case INSTALLING:
+      case DOWNLOADING:
         downloadState = DownloadModel.DownloadState.ACTIVE;
         break;
       case PAUSED:
@@ -38,6 +38,9 @@ public class DownloadStateParser {
         break;
       case NOT_ENOUGH_SPACE_ERROR:
         downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+        break;
+      case INSTALLING:
+        downloadState = DownloadModel.DownloadState.INSTALLING;
         break;
       default:
         downloadState = DownloadModel.DownloadState.COMPLETE;

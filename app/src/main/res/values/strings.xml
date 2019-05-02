@@ -76,6 +76,7 @@
   <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_short_installing">Installing</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
@@ -310,7 +311,6 @@
   <string name="create_store_displayable_explore_message">Enter and explore all the possibilities</string>
   <string name="create_store_displayable_explore_button">Explore</string>
   <string name="follow_store">Follow store</string>
-  <string name="store_url" translatable="false">http://en.aptoide.com/store/%1$s</string>
 
   <!-- stores tab > my store with no apps -->
   <string name="install_app_outter_pt1">Your store doesn\'t have apps yet.</string>
@@ -477,8 +477,6 @@
 
   <string name="stores_message_private_user">This user is private or doesn\'t have a store.</string>
 
-  <!-- Not Logged in Fragment -->
-  <string name="not_logged_in_share_short_start_interacting">Start interacting:</string>
   <string name="fragment_payment_login_description">To complete your purchase please log in</string>
   <string name="fragment_payment_login_separator_description">Or using your email</string>
 
@@ -523,7 +521,6 @@
   <string name="shortcut_button_pick_app">Surprise me</string>
 
   <string name="all_button_ok">OK</string>
-  <string name="home_recommends">%s recommends</string>
   <string name="bundles_short_reward_app_appc" translatable="false">%s APPC</string>
   <string name="all_button_got_it">GOT IT</string>
   <string name="all_button_know_more">KNOW MORE</string>
@@ -573,6 +570,10 @@
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
   <string name="appc_title_bundle">AppCoins Apps</string>
 
+  <!--Editorial Content-->
+  <string name="editorial_card_views_short">%s views</string>
+  <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
+
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Carnival Frenzy</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
@@ -601,7 +602,7 @@
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
-  <string name="holidayspromotion_button_wallet_get">Get the AppCoins Wallet</string>
+  <string name="holidayspromotion_button_wallet_get">Get the Wallet Address</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
   <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
@@ -625,12 +626,13 @@
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
 
-
-  <!--AppCoins Wallet Promotion-->
+  <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
-  <string name="wallet_promotion__wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_wallet_installed_message">Install this app and get %s APPC Credits to spend in your favorite games.</string>
   <string name="wallet_promotion_wallet_notinstalled_message">Install this app and get %s APPC Credits. You need the AppCoins Wallet to receive them.</string>
   <string name="wallet_promotion_wallet_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
+  <string name="wallet_promotion_message">Install the AppCoins Wallet and get %s APPC Credits to spend in your favorite games.</string>
+  <string name="wallet_promotion_claim_message">You\'ve got %s APPC Credits to claim. Use them to buy items in your favorite apps.</string>
   <string name="wallet_promotion_install_button">Install Wallet</string>
   <string name="wallet_promotion_no_button">No, thanks</string>
   <string name="wallet_promotion_button_install_disabled">Install to get %s APPC Credits</string>
@@ -640,17 +642,22 @@
   <string name="wallet_promotion_card_title">Remove Ads Now!</string>
   <string name="wallet_promotion_card_body">Install the AppCoins Wallet to remove ads!</string>
 
-  <!--Editorial Content-->
-  <string name="editorial_card_views_short">%s views</string>
-
-  <!--Update Apps Promotion-->
+  <!--Play to APPC - Migrator - Promotion-->
   <string name="promo_update2appc_title">Get APPC Credits Now!</string>
-  <string name="promo_update2appc_message">Update these apps to the AppCoins version and <b>get %s APPC Credits for each one</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_message">Update these apps to the AppCoins version and get <b>%s APPC Credits for each one</b> to spend in your favorite games.</string>
   <string name="promo_update2appc_data_disclaimer">Check in the game settings if you can save your progress.</string>
-  <string name="promo_update2appc_appcard_short">Update to AppCoins</string>
+  <string name="promo_update2appc_appcard_short">Update to AppCoins version</string>
   <string name="promo_update2appc_appview_title">Get %s APPC Credits Now!</string>
-  <string name="promo_update2appc_appview_message">Update this app to the AppCoins version and <b>get %s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_installed_message">Update this app and get <b>%s APPC Credits</b> to spend in your favorite games.</string>
+  <string name="promo_update2appc_appview_wallet_notinstalled_message">Update this app and get <b>%s APPC Credits</b>. You need the AppCoins Wallet to receive them.</string>
   <string name="promo_update2appc_appview_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_appview_notupdated_button">Update to get %s APPC Credits</string>
+  <string name="promo_update2appc_notification_body">Update and get a bonus with every purchase in AppCoins!</string>
+  <string name="promo_update2appc_notification_dismiss_button">Dismiss</string>
+  <string name="promo_update2appc_notification_claim_button">Claim</string>
+  <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
+  <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
+  <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
 
 </resources>
 

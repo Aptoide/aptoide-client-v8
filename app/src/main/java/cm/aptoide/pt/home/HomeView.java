@@ -9,8 +9,6 @@ import rx.Observable;
 
 public interface HomeView extends BundleView {
 
-  Observable<AppHomeEvent> recommendedAppClicked();
-
   Observable<EditorialHomeEvent> editorialCardClicked();
 
   Observable<HomeEvent> infoBundleKnowMoreClicked();
@@ -30,4 +28,6 @@ public interface HomeView extends BundleView {
   Observable<HomeEvent> walletOfferCardInstallWalletClick();
 
   void sendDeeplinkToWalletAppView(String url);
+
+  void showConsentDialog();
 }

@@ -11,15 +11,31 @@ public class MoPubAdsManager {
   private final MoPubBannerAdExperiment moPubBannerAdExperiment;
   private final MoPubNativeAdExperiment moPubNativeAdExperiment;
   private final WalletAdsOfferManager walletAdsOfferManager;
+  private final MoPubConsentDialogManager moPubConsentDialogManager;
 
   public MoPubAdsManager(MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment,
-      WalletAdsOfferManager walletAdsOfferManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
+      MoPubConsentDialogManager moPubConsentDialogManager) {
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
     this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.walletAdsOfferManager = walletAdsOfferManager;
+    this.moPubConsentDialogManager = moPubConsentDialogManager;
+  }
+
+  public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
+    return moPubInterstitialAdExperiment.shouldLoadInterstitial()
+        .flatMap(experimentShouldLoadAds -> {
+          if (experimentShouldLoadAds) {
+            return walletAdsOfferManager.shouldRequestMoPubAd()
+                .flatMap(shouldRequestAds -> shouldRequestAds ? Single.just(
+                    WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW)
+                    : Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
+          } else {
+            return Single.just(WalletAdsOfferManager.OfferResponseStatus.NO_ADS);
+          }
+        });
   }
 
   public Single<Boolean> shouldHaveInterstitialAds() {
@@ -62,5 +78,9 @@ public class MoPubAdsManager {
 
   public Single<Boolean> shouldShowAds() {
     return walletAdsOfferManager.shouldRequestMoPubAd();
+  }
+
+  public Single<Boolean> shouldShowConsentDialog() {
+    return moPubConsentDialogManager.shouldShowConsentDialog();
   }
 }

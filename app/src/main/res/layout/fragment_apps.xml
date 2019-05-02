@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     >
 
@@ -18,13 +19,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-      <android.support.v7.widget.RecyclerView
-          android:id="@+id/fragment_apps_recycler_view"
+
+      <android.support.v4.widget.NestedScrollView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:scrollbars="vertical"
-          android:visibility="gone"
-          />
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+          >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+          <include
+              layout="@layout/appc_apps_section_item"
+              android:id="@+id/appc_apps_layout"
+              android:visibility="gone"
+              />
+
+          <android.support.v7.widget.RecyclerView
+              android:id="@+id/fragment_apps_recycler_view"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/appc_apps_layout"
+              android:visibility="gone"
+              />
+        </RelativeLayout>
+
+      </android.support.v4.widget.NestedScrollView>
+
+
     </android.support.v4.widget.SwipeRefreshLayout>
   </FrameLayout>
 </LinearLayout>

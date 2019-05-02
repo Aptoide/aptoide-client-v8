@@ -50,6 +50,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   public static final String EXTRA_INSTALLATION_MD5 = "INSTALLATION_MD5";
   public static final String EXTRA_INSTALLER_TYPE = "INSTALLER_TYPE";
   public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
+  public static final String EXTRA_SET_PACKAGE_INSTALLER = "EXTRA_SET_PACKAGE_INSTALLER";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
 
   private static final int NOTIFICATION_ID = 8;
@@ -59,7 +60,6 @@ public class InstallService extends BaseService implements DownloadsNotification
   @Inject InstalledRepository installedRepository;
   @Inject DownloadAnalytics downloadAnalytics;
   @Inject CacheHelper cacheManager;
-  @Inject @Named("marketName") String marketName;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
   private Notification notification;
@@ -88,7 +88,8 @@ public class InstallService extends BaseService implements DownloadsNotification
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
-            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false)).subscribe(
+            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false), intent.getExtras()
+            .getBoolean(EXTRA_SET_PACKAGE_INSTALLER, false)).subscribe(
             hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
@@ -101,9 +102,8 @@ public class InstallService extends BaseService implements DownloadsNotification
         stopAllDownloads();
       }
     } else {
-      subscriptions.add(
-          downloadAndInstallCurrentDownload(this, false).subscribe(hasNext -> treatNext(hasNext),
-              throwable -> removeNotificationAndStop()));
+      subscriptions.add(downloadAndInstallCurrentDownload(this, false, false).subscribe(
+          hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
     }
     return START_STICKY;
   }
@@ -144,15 +144,15 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
-      boolean forceDefaultInstall) {
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     return downloadManager.getCurrentInProgressDownload()
         .first()
         .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
-            forceDefaultInstall));
+            forceDefaultInstall, shouldSetPackageInstaller));
   }
 
   private Observable<Boolean> downloadAndInstall(Context context, String md5,
-      boolean forceDefaultInstall) {
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     return downloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
@@ -166,8 +166,8 @@ public class InstallService extends BaseService implements DownloadsNotification
         })
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> installManager.moveCompletedDownloadFiles(download))
-        .flatMap(download -> stopForegroundAndInstall(context, download, true,
-            forceDefaultInstall).andThen(sendBackgroundInstallFinishedBroadcast(download))
+        .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
+            shouldSetPackageInstaller).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));
   }
 
@@ -196,16 +196,19 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   private Completable stopForegroundAndInstall(Context context, Download download,
-      boolean removeNotification, boolean forceDefaultInstall) {
+      boolean removeNotification, boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     Installer installer = getInstaller();
     stopForeground(removeNotification);
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
-        return installer.install(context, download.getMd5(), forceDefaultInstall);
+        return installer.install(context, download.getMd5(), forceDefaultInstall,
+            shouldSetPackageInstaller);
       case Download.ACTION_UPDATE:
-        return installer.update(context, download.getMd5(), forceDefaultInstall);
+        return installer.update(context, download.getMd5(), forceDefaultInstall,
+            shouldSetPackageInstaller);
       case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, download.getMd5(), forceDefaultInstall);
+        return installer.downgrade(context, download.getMd5(), forceDefaultInstall,
+            shouldSetPackageInstaller);
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + download.getAction()));
