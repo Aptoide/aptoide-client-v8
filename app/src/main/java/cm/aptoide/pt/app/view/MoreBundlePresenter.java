@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AdMapper;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeNavigator;
@@ -29,10 +30,12 @@ public class MoreBundlePresenter implements Presenter {
   private final AdMapper adMapper;
   private final BundleEvent bundleEvent;
   private final HomeAnalytics homeAnalytics;
+  private final ChipManager chipManager;
 
   public MoreBundlePresenter(MoreBundleView view, MoreBundleManager moreBundleManager,
       Scheduler viewScheduler, CrashReport crashReporter, HomeNavigator homeNavigator,
-      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics,
+      ChipManager chipManager) {
     this.view = view;
     this.moreBundleManager = moreBundleManager;
     this.viewScheduler = viewScheduler;
@@ -41,6 +44,7 @@ public class MoreBundlePresenter implements Presenter {
     this.adMapper = adMapper;
     this.bundleEvent = bundleEvent;
     this.homeAnalytics = homeAnalytics;
+    this.chipManager = chipManager;
   }
 
   @Override public void present() {
@@ -111,13 +115,20 @@ public class MoreBundlePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
-            .doOnNext(click -> homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
-                    .getRating(), click.getApp()
-                    .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
-                click.getBundle()
-                    .getTag(), click.getBundle()
-                    .getContent()
-                    .size()))
+            .doOnNext(click -> {
+              homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
+                      .getRating(), click.getApp()
+                      .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
+                  click.getBundle()
+                      .getTag(), click.getBundle()
+                      .getContent()
+                      .size(), chipManager.getCurrentChip());
+              if (chipManager.getCurrentChip() != null) {
+                homeAnalytics.sendChipTapOnApp(click.getBundle()
+                    .getTag(), click.getApp()
+                    .getPackageName(), chipManager.getCurrentChip());
+              }
+            })
             .observeOn(viewScheduler)
             .doOnNext(click -> {
               Application app = click.getApp();
@@ -151,11 +162,17 @@ public class MoreBundlePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
-            .doOnNext(homeMoreClick -> homeAnalytics.sendTapOnMoreInteractEvent(
-                homeMoreClick.getBundlePosition(), homeMoreClick.getBundle()
-                    .getTag(), homeMoreClick.getBundle()
-                    .getContent()
-                    .size()))
+            .doOnNext(homeMoreClick -> {
+              homeAnalytics.sendTapOnMoreInteractEvent(homeMoreClick.getBundlePosition(),
+                  homeMoreClick.getBundle()
+                      .getTag(), homeMoreClick.getBundle()
+                      .getContent()
+                      .size(), chipManager.getCurrentChip());
+              if (chipManager.getCurrentChip() != null) {
+                homeAnalytics.sendChipTapOnMore(homeMoreClick.getBundle()
+                    .getTag(), chipManager.getCurrentChip());
+              }
+            })
             .observeOn(viewScheduler)
             .doOnNext(homeNavigator::navigateWithAction)
             .retry())

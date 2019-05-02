@@ -161,6 +161,7 @@ import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -317,7 +318,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
       @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
-
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
@@ -1860,5 +1860,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
+  }
+
+  @Singleton @Provides ChipManager providesChipManager() {
+    return new ChipManager();
   }
 }
