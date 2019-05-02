@@ -26,7 +26,7 @@ public class HomeAnalytics {
   static final String TAP_ON_MORE = "tap on more";
   static final String TAP_ON_CARD = "tap on card";
   static final String CHIP_CLICK = "chip";
-  static final String CHIP = "chip";
+  static final String CHIP_TAG = "chip_tag";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
@@ -56,7 +56,7 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
     if (chip != null) {
-      data.put(CHIP, chip.getName());
+      data.put(CHIP_TAG, chip.getName());
     }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
@@ -105,7 +105,7 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
     if (chip != null) {
-      data.put(CHIP, chip.getName());
+      data.put(CHIP_TAG, chip.getName());
     }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
@@ -261,7 +261,7 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_MORE);
     data.put(BUNDLE_TAG, bundleTag);
-    data.put(CHIP, chip.getName());
+    data.put(CHIP_TAG, chip.getName());
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
@@ -271,7 +271,7 @@ public class HomeAnalytics {
     data.put(ACTION, TAP_ON_APP);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("package_name", packageName);
-    data.put(CHIP, chip.getName());
+    data.put(CHIP_TAG, chip.getName());
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
