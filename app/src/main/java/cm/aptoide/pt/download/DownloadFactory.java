@@ -119,6 +119,7 @@ public class DownloadFactory {
       download.setPackageName(update.getPackageName());
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());
+      download.setHasAppc(update.hasAppc());
       download.setFilesToDownload(
           createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
@@ -131,7 +132,8 @@ public class DownloadFactory {
     }
   }
 
-  public Download create(String md5, int versionCode, String packageName, String uri) {
+  public Download create(String md5, int versionCode, String packageName, String uri,
+      boolean hasAppc) {
     ApkPaths downloadPaths =
         downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, null);
     String versionName =
@@ -143,6 +145,7 @@ public class DownloadFactory {
     download.setPackageName(packageName);
     download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
+    download.setHasAppc(hasAppc);
     download.setFilesToDownload(
         createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
             versionName));
@@ -150,8 +153,8 @@ public class DownloadFactory {
   }
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
-      String icon, String versionName, int versionCode, String appPath, String appPathAlt,
-      Obb obb) {
+      String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
+      boolean hasAppc) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
@@ -167,7 +170,7 @@ public class DownloadFactory {
       download.setAppName(appName);
       download.setAction(downloadAction);
       download.setPackageName(packageName);
-
+      download.setHasAppc(hasAppc);
       download.setVersionCode(versionCode);
       download.setVersionName(versionName);
 

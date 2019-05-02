@@ -44,6 +44,10 @@ public class DownloadModel {
         || downloadState.equals(DownloadState.INDETERMINATE);
   }
 
+  public boolean isDownloadingOrInstalling() {
+    return isDownloading() || downloadState.equals(DownloadState.INSTALLING);
+  }
+
   public GetAppMeta.Pay getPay() {
     return pay;
   }
@@ -69,6 +73,6 @@ public class DownloadModel {
   }
 
   public enum DownloadState {
-    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR
+    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR, INSTALLING
   }
 }

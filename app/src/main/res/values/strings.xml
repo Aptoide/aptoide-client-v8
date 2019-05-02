@@ -76,6 +76,7 @@
   <string name="appview_uploaded_by">App Uploaded by</string>
   <string name="appview_similar_apps">Similar Apps</string>
   <string name="appview_short_downloading">Downloading</string>
+  <string name="appview_short_installing">Installing</string>
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
@@ -624,7 +625,6 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
-
 
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>

@@ -12,4 +12,5 @@ include 'app',
   ':crashreports',
   ':dataprovider',
   ':downloadmanager',
+  ':packageinstaller',
   ':utils'

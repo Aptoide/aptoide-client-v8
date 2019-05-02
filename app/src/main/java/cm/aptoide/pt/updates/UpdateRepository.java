@@ -180,7 +180,7 @@ public class UpdateRepository {
         .getMalware()
         .getRank()
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, isAppcUpgrade);
+        patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling());
   }
 
   public Completable removeAll(List<Update> updates) {

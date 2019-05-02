@@ -215,6 +215,13 @@ android {
       "\"" + APPLOVIN_SDK_VERSION + "\""
     variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
       "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
+      project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
+      project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_BELOW_21_OS
+    variant.buildConfigField "int", "ROOT_TIMEOUT",
+      project.ROOT_TIMEOUT_IN_MILLIS
+
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
@@ -323,6 +330,7 @@ dependencies {
   implementation project(path: ':dataprovider')
   implementation project(path: ':downloadmanager')
   implementation project(path: ':utils')
+  implementation project(path: ':packageinstaller')
 
 /** Kotlin **/
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

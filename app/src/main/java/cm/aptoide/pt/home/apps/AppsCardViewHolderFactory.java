@@ -13,6 +13,7 @@ import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_DOWNLOADS;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_INSTALLED;
 import static cm.aptoide.pt.home.apps.AppsAdapter.HEADER_UPDATES;
 import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLED;
+import static cm.aptoide.pt.home.apps.AppsAdapter.INSTALLING;
 import static cm.aptoide.pt.home.apps.AppsAdapter.PAUSING_DOWNLOAD;
 import static cm.aptoide.pt.home.apps.AppsAdapter.PAUSING_UPDATE;
 import static cm.aptoide.pt.home.apps.AppsAdapter.STANDBY_DOWNLOAD;
@@ -93,6 +94,10 @@ public class AppsCardViewHolderFactory {
       case PAUSING_DOWNLOAD:
         appViewHolder = new StandByAppDownloadViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_standby_download_app_item, parent, false), appItemClicks);
+        break;
+      case INSTALLING:
+        appViewHolder = new InstallingAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_installing_app_item, parent, false));
         break;
       default:
         throw new IllegalStateException("Wrong cardType" + viewType);

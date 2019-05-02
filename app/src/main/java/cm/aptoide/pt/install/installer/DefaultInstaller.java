@@ -20,12 +20,15 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.packageinstaller.AppInstaller;
+import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootShell;
@@ -33,6 +36,7 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -49,24 +53,32 @@ public class DefaultInstaller implements Installer {
   private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
   private final SharedPreferences sharedPreferences;
+  private final AppInstaller appInstaller;
+  private final AppInstallerStatusReceiver appInstallerStatusReceiver;
   private FileUtils fileUtils;
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+  private int installingStateTimeout;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
-      FileUtils fileUtils, boolean debug, InstalledRepository installedRepository, int rootTimeout,
+      AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
+      InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
-      InstallerAnalytics installerAnalytics) {
+      InstallerAnalytics installerAnalytics, int installingStateTimeout,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
+    this.appInstaller = appInstaller;
     this.fileUtils = fileUtils;
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
+    this.appInstallerStatusReceiver = appInstallerStatusReceiver;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.sharedPreferences = sharedPreferences;
+    this.installingStateTimeout = installingStateTimeout;
   }
 
   public PackageManager getPackageManager() {
@@ -80,7 +92,8 @@ public class DefaultInstaller implements Installer {
         .onErrorReturn(throwable -> false);
   }
 
-  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall) {
+  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRoot -> installerAnalytics.installationType(
             ManagerPreferences.allowRootInstallation(sharedPreferences), isRoot))
@@ -100,9 +113,9 @@ public class DefaultInstaller implements Installer {
                 return Observable.just(null);
               } else {
                 if (forceDefaultInstall) {
-                  return startDefaultInstallation(context, installation);
+                  return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
                 } else {
-                  return startInstallation(context, installation);
+                  return startInstallation(context, installation, shouldSetPackageInstaller);
                 }
               }
             }))
@@ -111,17 +124,19 @@ public class DefaultInstaller implements Installer {
         .toCompletable();
   }
 
-  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall) {
-    return install(context, md5, forceDefaultInstall);
+  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
+    return install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
   }
 
-  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall) {
+  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return installationProvider.getInstallation(md5)
         .first()
         .flatMapCompletable(installation -> uninstall(context, installation.getPackageName(),
             installation.getVersionName()))
         .toCompletable()
-        .andThen(install(context, md5, forceDefaultInstall));
+        .andThen(install(context, md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
   @Override public Completable uninstall(Context context, String packageName, String versionName) {
@@ -151,15 +166,18 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
-      Installation installation) {
-    return defaultInstall(context, installation).doOnNext(installation1 -> installation1.save());
+      Installation installation, boolean shouldSetPackageInstaller) {
+    return defaultInstall(context, installation, shouldSetPackageInstaller).doOnNext(
+        installation1 -> installation1.save());
   }
 
   @NonNull
-  private Observable<Installation> startInstallation(Context context, Installation installation) {
+  private Observable<Installation> startInstallation(Context context, Installation installation,
+      boolean shouldSetPackageInstaller) {
     return systemInstall(context, installation).onErrorResumeNext(
         throwable -> rootInstall(installation))
-        .onErrorResumeNext(throwable -> defaultInstall(context, installation))
+        .onErrorResumeNext(
+            throwable -> defaultInstall(context, installation, shouldSetPackageInstaller))
         .doOnError(throwable -> sendErrorEvent(installation.getPackageName(),
             installation.getVersionCode(), new InstallationException(
                 "Installation with root failed for "
@@ -237,20 +255,51 @@ public class DefaultInstaller implements Installer {
     return installation;
   }
 
-  private Observable<Installation> defaultInstall(Context context, Installation installation) {
+  private Observable<Installation> defaultInstall(Context context, Installation installation,
+      boolean shouldSetPackageInstaller) {
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      startInstallIntent(context, installation.getFile());
+      if (shouldSetPackageInstaller) {
+        appInstaller.install(installation.getFile());
+      } else {
+        startInstallIntent(context, installation.getFile());
+      }
       return null;
     }).subscribeOn(Schedulers.computation())
-        .flatMap(installStarted -> waitPackageIntent(context, intentFilter,
-            installation.getPackageName()))
+        .flatMap(isInstallerInstallation -> Observable.merge(
+            waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
+                installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
+                  if (installation.getStatus() == Installed.STATUS_INSTALLING) {
+                    updateInstallation(installation,
+                        shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                            : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
+                  }
+                  return null;
+                })), appInstallerStatusReceiver.getInstallerInstallStatus()
+                .doOnNext(installStatus -> updateInstallation(installation,
+                    shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        : Installed.TYPE_DEFAULT, map(installStatus)))))
         .map(success -> installation)
-        .startWith(
-            updateInstallation(installation, Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+        .startWith(updateInstallation(installation,
+            shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  private int map(InstallStatus installStatus) {
+    switch (installStatus.getStatus()) {
+      case INSTALLING:
+        return Installed.STATUS_INSTALLING;
+      case SUCCESS:
+        return Installed.STATUS_COMPLETED;
+      case FAIL:
+      case CANCELED:
+      case UNKNOWN_ERROR:
+      default:
+        return Installed.STATUS_UNINSTALLED;
+    }
   }
 
   private void sendErrorEvent(String packageName, int versionCode, Exception e) {
