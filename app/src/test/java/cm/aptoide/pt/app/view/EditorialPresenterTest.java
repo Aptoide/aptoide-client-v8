@@ -355,7 +355,7 @@ public class EditorialPresenterTest {
     //It should send the corresponding analytic and load the reactions and update the corresponding card
     verify(editorialAnalytics).sendDeletedEvent();
     verify(editorialManager).loadReactionModel("1", GROUP_ID);
-    verify(view).setReactions("myReaction", Collections.emptyList(), 10);
+    verify(view).showTopReactions("myReaction", Collections.emptyList(), 10);
   }
 
   @Test public void handleReactionButtonLongPressTest() {
@@ -387,7 +387,7 @@ public class EditorialPresenterTest {
     //It should send the corresponding analytic and load the reactions and update the corresponding card
     verify(editorialAnalytics).sendReactedEvent();
     verify(editorialManager).loadReactionModel("1", GROUP_ID);
-    verify(view).setReactions("myReaction", Collections.emptyList(), 10);
+    verify(view).showTopReactions("myReaction", Collections.emptyList(), 10);
   }
 
   @Test public void handleUserReactionWithSameReactionTest() {
@@ -404,7 +404,7 @@ public class EditorialPresenterTest {
     when(editorialManager.loadReactionModel("1", GROUP_ID)).thenReturn(
         Single.just(new LoadReactionModel(10, "myReaction", "userId", Collections.emptyList())));
     verify(editorialManager, times(0)).loadReactionModel("1", GROUP_ID);
-    verify(view, times(0)).setReactions("myReaction", Collections.emptyList(), 10);
+    verify(view, times(0)).showTopReactions("myReaction", Collections.emptyList(), 10);
   }
 
   @Test public void handleSnackLogInTest() {

@@ -355,7 +355,7 @@ public class EditorialPresenter implements Presenter {
   private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
     return editorialManager.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
-        .doOnSuccess(reactionModel -> view.setReactions(reactionModel.getMyReaction(),
+        .doOnSuccess(reactionModel -> view.showTopReactions(reactionModel.getMyReaction(),
             reactionModel.getTopReactionList(), reactionModel.getTotal()));
   }
 

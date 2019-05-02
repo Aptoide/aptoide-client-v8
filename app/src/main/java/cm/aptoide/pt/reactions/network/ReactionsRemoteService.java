@@ -98,15 +98,14 @@ public class ReactionsRemoteService implements ReactionsService {
     Observable<TopReactionsResponse> getTopReactionsResponse(@Path("group_id") String groupId,
         @Path("id") String id);
 
-    @POST("echo/8.20181122/reactions/") Observable<Response<EmptyResponse>> setFirstUserReaction(
+    @POST("echo/8.20181122/reactions/") Observable<Response<Void>> setFirstUserReaction(
         @retrofit2.http.Body Body body);
 
-    @DELETE("echo/8.20181122/reactions/{uid}/") Observable<Response<EmptyResponse>> deleteReaction(
+    @DELETE("echo/8.20181122/reactions/{uid}/") Observable<Response<Void>> deleteReaction(
         @Path("uid") String uid);
 
-    @PATCH("echo/8.20181122/reactions/{uid}/")
-    Observable<Response<EmptyResponse>> setSecondUserReaction(@Path("uid") String uid,
-        @retrofit2.http.Body Body body);
+    @PATCH("echo/8.20181122/reactions/{uid}/") Observable<Response<Void>> setSecondUserReaction(
+        @Path("uid") String uid, @retrofit2.http.Body Body body);
   }
 
   public static class Body extends BaseBody {

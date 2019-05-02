@@ -554,7 +554,7 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.longClicks(reactButton);
   }
 
-  @Override public void setReactions(String userReaction, List<TopReaction> reactions,
+  @Override public void showTopReactions(String userReaction, List<TopReaction> reactions,
       int numberOfReactions) {
     setUserReaction(userReaction);
     topReactionsSetup.setReactions(reactions, numberOfReactions, getContext());
