@@ -72,6 +72,7 @@ public class AppViewManager {
   private String promotionId;
   private PromotionStatus promotionStatus;
   private boolean appcPromotionImpressionSent;
+  private boolean migrationImpressionSent;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
       AppCenter appCenter, ReviewsManager reviewsManager, AdsManager adsManager,
@@ -108,6 +109,7 @@ public class AppViewManager {
     this.isFirstLoad = true;
     this.promotionStatus = PromotionStatus.NO_PROMOTION;
     this.appcPromotionImpressionSent = false;
+    this.migrationImpressionSent = false;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -329,9 +331,13 @@ public class AppViewManager {
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
             cachedApp.hasAdvertising() || cachedApp.hasBilling()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(
-                status -> setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                    editorsChoicePosition, status))
+            .doOnSuccess(status -> {
+              setupDownloadEvents(download, downloadAction, appId, trustedValue,
+                  editorsChoicePosition, status);
+              if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+                setupMigratorUninstallEvent(download.getPackageName());
+              }
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -372,7 +378,13 @@ public class AppViewManager {
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
+        downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE));
+  }
+
+  public void setupMigratorUninstallEvent(String packageName) {
+    installAnalytics.uninstallStarted(packageName, AnalyticsManager.Action.INSTALL,
+        AppContext.APPVIEW);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
@@ -582,6 +594,14 @@ public class AppViewManager {
 
   public void setAppcPromotionImpressionSent() {
     this.appcPromotionImpressionSent = true;
+  }
+
+  public boolean isMigrationImpressionSent() {
+    return migrationImpressionSent;
+  }
+
+  public void setMigrationImpressionSent() {
+    this.migrationImpressionSent = true;
   }
 
   public PromotionStatus getPromotionStatus() {

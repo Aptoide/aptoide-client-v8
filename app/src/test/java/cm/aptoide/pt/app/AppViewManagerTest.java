@@ -618,7 +618,7 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, "aString", null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null);
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -683,7 +683,9 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, null, null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString");
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
+        false);
+
   }
 
   @Test public void cancelDownloadTest() {
