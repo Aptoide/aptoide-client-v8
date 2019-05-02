@@ -340,7 +340,7 @@ public class HomePresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And it's the first time the user is reacting to that card
-    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(true);
+    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(true));
     //The user clicks the reaction button
     reactionButtonClickEvent.onNext(
         new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
@@ -354,7 +354,7 @@ public class HomePresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And the user has a reaction already submitted on that card
-    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(false);
+    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(false));
     when(home.deleteReaction("1", GROUP_ID)).thenReturn(
         Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
     when(home.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(bundlesModel.getList()));

@@ -272,20 +272,24 @@ public class EditorialListPresenter implements Presenter {
 
   private Observable<CurationCard> handleSinglePressReactionButton(
       EditorialHomeEvent editorialHomeEvent) {
-    boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
-        editorialHomeEvent.getGroupId());
-    if (isFirstReaction) {
-      showReactions(editorialHomeEvent);
-      return Observable.just(new CurationCard());
-    } else {
-      return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
-          editorialHomeEvent.getGroupId())
-          .toObservable()
-          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
-          .filter(ReactionsResponse::wasSuccess)
-          .flatMapSingle(reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
-              editorialHomeEvent.getGroupId()));
-    }
+
+    return editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
+        editorialHomeEvent.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            showReactions(editorialHomeEvent);
+            return Observable.just(new CurationCard());
+          } else {
+            return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
+                editorialHomeEvent.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(
+                    reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
+                        editorialHomeEvent.getGroupId()));
+          }
+        });
   }
 
   private void showReactions(EditorialHomeEvent editorialHomeEvent) {

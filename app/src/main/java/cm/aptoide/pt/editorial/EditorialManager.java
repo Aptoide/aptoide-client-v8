@@ -122,7 +122,7 @@ public class EditorialManager {
     return reactionsManager.deleteReaction(cardId, groupId);
   }
 
-  public Boolean isFirstReaction(String cardId, String groupId) {
+  public Single<Boolean> isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

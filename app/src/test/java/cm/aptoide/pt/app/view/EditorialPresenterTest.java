@@ -326,7 +326,7 @@ public class EditorialPresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And it's the first time the user is reacting to that card
-    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(true);
+    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(true));
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
     //The user clicks the reaction button
@@ -341,7 +341,7 @@ public class EditorialPresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And the user has a reaction already submitted on that card
-    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(false);
+    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(false));
     when(editorialManager.deleteReaction("1", GROUP_ID)).thenReturn(
         Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
     when(editorialManager.loadReactionModel("1", GROUP_ID)).thenReturn(

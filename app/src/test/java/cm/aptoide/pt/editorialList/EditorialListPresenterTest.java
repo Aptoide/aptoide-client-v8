@@ -280,7 +280,7 @@ public class EditorialListPresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And it's the first time the user is reacting to that card
-    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(true);
+    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(true));
     //The user clicks the reaction button
     reactionButtonClickEvent.onNext(
         new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
@@ -296,7 +296,7 @@ public class EditorialListPresenterTest {
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And the user has a reaction already submitted on that card
-    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(false);
+    when(editorialListManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(false));
     when(editorialListManager.deleteReaction("1", GROUP_ID)).thenReturn(
         Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
     when(editorialListManager.loadReactionModel("1", GROUP_ID)).thenReturn(

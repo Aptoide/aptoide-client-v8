@@ -335,21 +335,24 @@ public class EditorialPresenter implements Presenter {
 
   private Observable<LoadReactionModel> handleSinglePressReactionButton(
       EditorialViewModel editorialViewModel) {
-    boolean isFirstReaction = editorialManager.isFirstReaction(editorialViewModel.getCardId(),
-        editorialViewModel.getGroupId());
-    if (isFirstReaction) {
-      editorialAnalytics.sendReactionButtonClickEvent();
-      view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
-      return Observable.just(new LoadReactionModel());
-    } else {
-      return editorialManager.deleteReaction(editorialViewModel.getCardId(),
-          editorialViewModel.getGroupId())
-          .toObservable()
-          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
-          .filter(ReactionsResponse::wasSuccess)
-          .flatMapSingle(__ -> loadReactionModel(editorialViewModel.getCardId(),
-              editorialViewModel.getGroupId()));
-    }
+    return editorialManager.isFirstReaction(editorialViewModel.getCardId(),
+        editorialViewModel.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            editorialAnalytics.sendReactionButtonClickEvent();
+            view.showReactionsPopup(editorialViewModel.getCardId(),
+                editorialViewModel.getGroupId());
+            return Observable.just(new LoadReactionModel());
+          } else {
+            return editorialManager.deleteReaction(editorialViewModel.getCardId(),
+                editorialViewModel.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(editorialViewModel.getCardId(),
+                    editorialViewModel.getGroupId()));
+          }
+        });
   }
 
   private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {

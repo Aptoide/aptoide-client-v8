@@ -563,20 +563,22 @@ public class HomePresenter implements Presenter {
 
   private Observable<List<HomeBundle>> singlePressReactionButtonAction(
       EditorialHomeEvent editorialHomeEvent) {
-    boolean isFirstReaction =
-        home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId());
-    if (isFirstReaction) {
-      homeAnalytics.sendReactionButtonClickEvent();
-      view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
-          editorialHomeEvent.getBundlePosition());
-      return Observable.just(Collections.emptyList());
-    } else {
-      return home.deleteReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
-          .toObservable()
-          .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
-          .filter(ReactionsResponse::wasSuccess)
-          .flatMapSingle(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
-              editorialHomeEvent.getGroupId()));
-    }
+    return home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            homeAnalytics.sendReactionButtonClickEvent();
+            view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
+                editorialHomeEvent.getBundlePosition());
+            return Observable.just(Collections.emptyList());
+          } else {
+            return home.deleteReaction(editorialHomeEvent.getCardId(),
+                editorialHomeEvent.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+                    editorialHomeEvent.getGroupId()));
+          }
+        });
   }
 }

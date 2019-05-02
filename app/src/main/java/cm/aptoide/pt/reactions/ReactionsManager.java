@@ -26,15 +26,17 @@ public class ReactionsManager {
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reactionType) {
-    if (hasNotReacted(cardId, groupId)) {
-      return reactionsService.setReaction(cardId, groupId, reactionType);
-    } else {
-      if (!isSameReaction(cardId, groupId, reactionType)) {
-        return reactionsService.setSecondReaction(getUID(cardId + groupId), reactionType);
+    return hasNotReacted(cardId, groupId).flatMap(reacted -> {
+      if (reacted) {
+        return reactionsService.setReaction(cardId, groupId, reactionType);
+      } else {
+        if (!isSameReaction(cardId, groupId, reactionType)) {
+          return reactionsService.setSecondReaction(getUID(cardId + groupId), reactionType);
+        }
+        return Single.just(
+            new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION));
       }
-      return Single.just(
-          new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION));
-    }
+    });
   }
 
   private boolean isSameReaction(String cardId, String groupId, String reactionType) {
@@ -61,11 +63,11 @@ public class ReactionsManager {
     return uid;
   }
 
-  private boolean hasNotReacted(String cardId, String groupId) {
-    return getUID(cardId + groupId) == null || getUID(cardId + groupId).equals("");
+  private Single<Boolean> hasNotReacted(String cardId, String groupId) {
+    return Single.just(getUID(cardId + groupId) == null || getUID(cardId + groupId).equals(""));
   }
 
-  public Boolean isFirstReaction(String cardId, String groupId) {
+  public Single<Boolean> isFirstReaction(String cardId, String groupId) {
     return hasNotReacted(cardId, groupId);
   }
 }
