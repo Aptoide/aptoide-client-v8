@@ -209,7 +209,7 @@ public class EditorialListPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionsButtonClicked())
         .observeOn(viewScheduler)
-        .flatMap(this::singlePressReactionButtonAction)
+        .flatMap(this::handleSinglePressReactionButton)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
@@ -270,7 +270,7 @@ public class EditorialListPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Observable<CurationCard> singlePressReactionButtonAction(
+  private Observable<CurationCard> handleSinglePressReactionButton(
       EditorialHomeEvent editorialHomeEvent) {
     boolean isFirstReaction = editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
         editorialHomeEvent.getGroupId());
