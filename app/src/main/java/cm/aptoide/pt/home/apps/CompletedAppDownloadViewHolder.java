@@ -30,7 +30,7 @@ class CompletedAppDownloadViewHolder extends AppsViewHolder {
   @Override public void setApp(App app) {
     ImageLoader.with(itemView.getContext())
         .load(((DownloadApp) app).getIcon(), appIcon);
-    appName.setText(((DownloadApp) app).getAppName());
+    appName.setText(((DownloadApp) app).getName());
     card.setOnClickListener(
         install -> installApp.onNext(new AppClick(app, AppClick.ClickType.INSTALL_APP)));
   }

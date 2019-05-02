@@ -111,6 +111,6 @@ public class SeeMoreAppcManager {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_MIGRATOR_SEE_MORE, origin);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_MIGRATOR_SEE_MORE, origin, true);
   }
 }

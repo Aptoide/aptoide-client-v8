@@ -126,6 +126,7 @@ public class InstalledIntentService extends IntentService {
   protected void onPackageRemoved(String packageName) {
     Logger.getInstance()
         .d(TAG, "Packaged removed: " + packageName);
+    sendUninstallEvent(packageName);
     databaseOnPackageRemoved(packageName);
   }
 
@@ -173,6 +174,10 @@ public class InstalledIntentService extends IntentService {
     }
     // information about the package is null so we don't broadcast an event
     reportPackageInfoNullEvent();
+  }
+
+  private void sendUninstallEvent(String packageName) {
+    installAnalytics.uninstallCompleted(packageName);
   }
 
   private void reportPackageInfoNullEvent() {

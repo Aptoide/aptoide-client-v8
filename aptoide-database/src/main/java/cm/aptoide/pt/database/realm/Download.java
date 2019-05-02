@@ -51,6 +51,7 @@ public class Download extends RealmObject {
   private int versionCode;
   private int action;
   private String versionName;
+  private boolean hasAppc;
   @Download.DownloadError private int downloadError;
 
   public Download() {
@@ -158,6 +159,14 @@ public class Download extends RealmObject {
 
   public void setVersionName(String versionName) {
     this.versionName = versionName;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
+  }
+
+  public void setHasAppc(boolean hasAppc) {
+    this.hasAppc = hasAppc;
   }
 
   @Override public int hashCode() {

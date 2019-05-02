@@ -419,9 +419,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       oldVersion++;
     }
     if (oldVersion == 8096) {
-      schema.get("Update")
-          .addField("appcUpgrade", boolean.class)
-          .transform(upgrade -> upgrade.set("appcUpgrade", false));
+      if (!schema.get("Update")
+          .hasField("appcUpgrade")) {
+        schema.get("Update")
+            .addField("appcUpgrade", boolean.class)
+            .transform(upgrade -> upgrade.set("appcUpgrade", false));
+      }
 
       oldVersion++;
     }
@@ -436,6 +439,13 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("trigger", long.class)
           .addField("id", String.class);
 
+      oldVersion++;
+    }
+    if (oldVersion == 8097) {
+      schema.get("Download")
+          .addField("hasAppc", boolean.class);
+      schema.get("Update")
+          .addField("hasAppc", boolean.class);
       oldVersion++;
     }
   }

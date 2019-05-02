@@ -32,6 +32,7 @@ public class AppViewAnalytics {
   public static final String SIMILAR_APP_INTERACT = "Similar_App_Interact";
   public static final String ADS_BLOCK_BY_OFFER = "Ads_Block_By_Offer";
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
+  public static final String BONUS_MIGRATION_APPVIEW = "Bonus_Migration_19_App_View";
   public static final String BONUS_GAME_WALLET_OFFER_19 = "Bonus_Game_Wallet_Offer_19_App_View";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
@@ -306,6 +307,10 @@ public class AppViewAnalytics {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
+    if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+      downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
+          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus);
+    }
   }
 
   public void sendDownloadPauseEvent(String packageName) {
@@ -390,6 +395,41 @@ public class AppViewAnalytics {
     Map<String, Object> data = new HashMap<>();
     data.put(IS_AD, false);
     analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendAppcMigrationAppOpen() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "open");
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.OPEN,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendAppcMigrationPromotionImpression() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "promotion impression");
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendAppcMigrationUpdateClick() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "update to appc");
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendAppMigrationWalletInstallClick() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "install wallet");
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendAppMigrationClaimClick() {
+    Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "claim");
+    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
