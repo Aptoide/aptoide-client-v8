@@ -26,8 +26,8 @@ public class ReactionsManager {
   }
 
   public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reactionType) {
-    return hasNotReacted(cardId, groupId).flatMap(reacted -> {
-      if (reacted) {
+    return hasNotReacted(cardId, groupId).flatMap(notReacted -> {
+      if (notReacted) {
         return reactionsService.setReaction(cardId, groupId, reactionType);
       } else {
         if (!isSameReaction(cardId, groupId, reactionType)) {
