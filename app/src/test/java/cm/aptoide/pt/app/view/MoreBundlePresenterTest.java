@@ -152,6 +152,39 @@ public class MoreBundlePresenterTest {
     //then it should navigate to the App's detail View
     verify(homeNavigator).navigateToAppView(aptoide.getAppId(), aptoide.getPackageName(),
         aptoide.getTag());
+    verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
+        1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
+            .size(), null);
+  }
+
+  @Test public void appClicked_GamesChipAnalytics() {
+    when(chipManager.getCurrentChip()).thenReturn(ChipManager.Chip.GAMES);
+    //Given an initialised MoreBundlePresenter
+    presenter.handleAppClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an app is clicked
+    appClickEvent.onNext(new AppHomeEvent(aptoide, 1, localTopAppsBundle, 3, HomeEvent.Type.APP));
+
+    verify(homeAnalytics).sendChipTapOnApp(localTopAppsBundle.getTag(), aptoide.getPackageName(),
+        ChipManager.Chip.GAMES);
+    verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
+        1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
+            .size(), ChipManager.Chip.GAMES);
+  }
+
+  @Test public void appClicked_AppsChipAnalytics() {
+    when(chipManager.getCurrentChip()).thenReturn(ChipManager.Chip.APPS);
+    //Given an initialised MoreBundlePresenter
+    presenter.handleAppClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //When an app is clicked
+    appClickEvent.onNext(new AppHomeEvent(aptoide, 1, localTopAppsBundle, 3, HomeEvent.Type.APP));
+
+    verify(homeAnalytics).sendChipTapOnApp(localTopAppsBundle.getTag(), aptoide.getPackageName(),
+        ChipManager.Chip.APPS);
+    verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
+        1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
+            .size(), ChipManager.Chip.APPS);
   }
 
   @Test public void adClicked_NavigateToAppView() {
@@ -178,6 +211,28 @@ public class MoreBundlePresenterTest {
             .size(), null);
     //Then it should navigate with the specific action behaviour
     verify(homeNavigator).navigateWithAction(click);
+  }
+
+  @Test public void moreClicked_GamesChipAnalytics() {
+    HomeEvent click = new HomeEvent(localTopAppsBundle, 0, HomeEvent.Type.MORE);
+    when(chipManager.getCurrentChip()).thenReturn(ChipManager.Chip.GAMES);
+
+    presenter.handleMoreClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    moreClickEvent.onNext(click);
+
+    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(), ChipManager.Chip.GAMES);
+  }
+
+  @Test public void moreClicked_AppsChipAnalytics() {
+    HomeEvent click = new HomeEvent(localTopAppsBundle, 0, HomeEvent.Type.MORE);
+    when(chipManager.getCurrentChip()).thenReturn(ChipManager.Chip.APPS);
+
+    presenter.handleMoreClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    moreClickEvent.onNext(click);
+
+    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(), ChipManager.Chip.APPS);
   }
 
   @Test public void bottomReached_ShowNextBundles() {

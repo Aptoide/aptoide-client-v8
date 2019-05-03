@@ -200,6 +200,9 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    verify(homeAnalytics).sendGamesChipInteractEvent();
+    verify(homeAnalytics).sendGamesChipHomeInteractEvent();
+
     verify(homeContainerNavigator).loadMainHomeContent();
   }
 
@@ -207,6 +210,9 @@ public class HomeContainerPresenterTest {
     when(view.gamesChipClicked()).thenReturn(Observable.just(true));
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeAnalytics).sendGamesChipInteractEvent();
+    verify(homeAnalytics).sendGamesChipHomeInteractEvent();
 
     verify(homeContainerNavigator).loadGamesHomeContent();
   }
@@ -216,6 +222,9 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    verify(homeAnalytics).sendAppsChipHomeInteractEvent();
+    verify(homeAnalytics).sendAppsChipInteractEvent();
+
     verify(homeContainerNavigator).loadMainHomeContent();
   }
 
@@ -223,6 +232,9 @@ public class HomeContainerPresenterTest {
     when(view.appsChipClicked()).thenReturn(Observable.just(true));
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeAnalytics).sendAppsChipHomeInteractEvent();
+    verify(homeAnalytics).sendAppsChipInteractEvent();
 
     verify(homeContainerNavigator).loadAppsHomeContent();
   }
