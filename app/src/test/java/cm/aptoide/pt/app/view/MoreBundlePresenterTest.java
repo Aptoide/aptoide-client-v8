@@ -9,6 +9,7 @@ import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AdsTagWrapper;
 import cm.aptoide.pt.home.AppHomeEvent;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeBundle;
@@ -43,6 +44,7 @@ public class MoreBundlePresenterTest {
   @Mock private HomeNavigator homeNavigator;
   @Mock private MoreBundleManager moreBundleManager;
   @Mock private HomeAnalytics homeAnalytics;
+  @Mock private ChipManager chipManager;
 
   private MoreBundlePresenter presenter;
   private HomeBundlesModel bundlesModel;
@@ -73,7 +75,7 @@ public class MoreBundlePresenterTest {
 
     presenter =
         new MoreBundlePresenter(view, moreBundleManager, Schedulers.immediate(), crashReporter,
-            homeNavigator, new AdMapper(), bundleEvent, homeAnalytics);
+            homeNavigator, new AdMapper(), bundleEvent, homeAnalytics, chipManager);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
@@ -173,7 +175,7 @@ public class MoreBundlePresenterTest {
     //Then it should send a more clicked analytics event
     verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
-            .size());
+            .size(), null);
     //Then it should navigate with the specific action behaviour
     verify(homeNavigator).navigateWithAction(click);
   }
