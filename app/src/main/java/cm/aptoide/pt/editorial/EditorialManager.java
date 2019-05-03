@@ -68,7 +68,7 @@ public class EditorialManager {
         editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
-        editorialDownloadEvent.getObb()))
+        editorialDownloadEvent.getObb(), false))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> setupDownloadEvents(download, editorialDownloadEvent.getPackageName(),
@@ -83,7 +83,7 @@ public class EditorialManager {
         AnalyticsManager.Action.CLICK);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false);
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

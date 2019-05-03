@@ -99,7 +99,8 @@ public class PromotionsManager {
             .getAction()), promotionViewApp.getName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
-        promotionViewApp.getAlternativePath(), promotionViewApp.getObb()))
+        promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
+        promotionViewApp.hasAppc()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
@@ -117,7 +118,7 @@ public class PromotionsManager {
         AnalyticsManager.Action.CLICK, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false);
   }
 
   public Completable pauseDownload(String md5) {

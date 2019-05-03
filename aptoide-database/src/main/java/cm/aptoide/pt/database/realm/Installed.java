@@ -27,6 +27,7 @@ public class Installed extends RealmObject {
   public static final int TYPE_DEFAULT = 0;
   public static final int TYPE_ROOT = 1;
   public static final int TYPE_SYSTEM = 2;
+  public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
   public static final int TYPE_UNKNOWN = -1;
 
   //	@PrimaryKey private int id = -1;

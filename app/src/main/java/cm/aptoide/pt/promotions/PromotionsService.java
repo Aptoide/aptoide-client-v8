@@ -138,7 +138,9 @@ public class PromotionsService {
             .getObb(), app.getAppc(), app.getApp()
             .getFile()
             .getSignature()
-            .getSha1()));
+            .getSha1(), app.getApp()
+            .hasAdvertising() || app.getApp()
+            .hasBilling()));
       }
     }
 

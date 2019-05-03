@@ -598,7 +598,7 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
         detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
         detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
-        detailedApp.getObb())).thenReturn(download);
+        detailedApp.getObb(), false)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
@@ -618,12 +618,12 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, "aString", null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null);
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
     Install install =
-        new Install(2, Install.InstallationStatus.INSTALLING, Install.InstallationType.INSTALL,
+        new Install(2, Install.InstallationStatus.DOWNLOADING, Install.InstallationType.INSTALL,
             false, 1, "md5", "packageName", 1, "", "", "");
 
     //When the presenter asks for the downloadModel
@@ -683,7 +683,9 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, null, null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString");
+        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
+        false);
+
   }
 
   @Test public void cancelDownloadTest() {
