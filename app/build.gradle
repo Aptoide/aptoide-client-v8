@@ -240,6 +240,16 @@ android {
         "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
+    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
+        "\"" + APPLOVIN_SDK_VERSION + "\""
+    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
+        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
+        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
+    variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
+        project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_BELOW_21_OS
+    variant.buildConfigField "int", "ROOT_TIMEOUT",
+        project.ROOT_TIMEOUT_IN_MILLIS
 
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
@@ -334,6 +344,7 @@ dependencies {
   implementation project(path: ':aptoide-analytics-default-implementation')
   implementation project(path: ':dataprovider')
   implementation project(path: ':utils')
+  implementation project(path: ':packageinstaller')
 
   // Testing-only dependencies
   testImplementation "junit:junit:${JUNIT_VERSION}"

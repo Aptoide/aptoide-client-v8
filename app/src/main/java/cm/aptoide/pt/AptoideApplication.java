@@ -246,6 +246,8 @@ public abstract class AptoideApplication extends Application {
     //
     super.onCreate();
 
+    initializeMoPub();
+
     //
     // execute custom Application onCreate code with time metric
     //
@@ -303,8 +305,6 @@ public abstract class AptoideApplication extends Application {
         }, throwable -> CrashReport.getInstance()
             .log(throwable));
 
-    initializeMoPub(this, BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
-
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
@@ -340,21 +340,21 @@ public abstract class AptoideApplication extends Application {
     adsUserPropertyManager.start();
   }
 
-  private void initializeMoPub(Context context, String adUnitPlacementId) {
-    SdkConfiguration sdkConfiguration =
-        new SdkConfiguration.Builder(adUnitPlacementId).withAdditionalNetwork(
-            AppLovinBaseAdapterConfiguration.class.toString())
-            .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
-            .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
-                getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-            .withLogLevel(MoPubLog.LogLevel.DEBUG)
-            .build();
+  public void initializeMoPub() {
+    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(
+        BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
+        AppLovinBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withLogLevel(MoPubLog.LogLevel.DEBUG)
+        .build();
 
-    MoPub.initializeSdk(context, sdkConfiguration, null);
+    MoPub.initializeSdk(this, sdkConfiguration, null);
   }
 
   @NonNull

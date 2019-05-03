@@ -719,8 +719,16 @@ public class AppViewPresenter implements Presenter {
                     .getId(), appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())
                 .first()
                 .observeOn(viewScheduler)
-                .doOnNext(downloadAppViewModel -> view.showDownloadAppModel(downloadAppViewModel,
-                    appViewViewModel.hasDonations()))
+                .doOnNext(downloadAppViewModel -> {
+                  if (downloadAppViewModel.getDownloadModel()
+                      .getAction()
+                      .equals(DownloadModel.Action.MIGRATE)
+                      && !appViewManager.isMigrationImpressionSent()) {
+                    appViewManager.setMigrationImpressionSent();
+                    appViewAnalytics.sendAppcMigrationAppOpen();
+                  }
+                  view.showDownloadAppModel(downloadAppViewModel, appViewViewModel.hasDonations());
+                })
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .doOnNext(model -> {
                   if (model.getAppCoinsViewModel()
@@ -997,7 +1005,13 @@ public class AppViewPresenter implements Presenter {
                 case MIGRATE:
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> migrateApp(action, appViewViewModel));
+                      .flatMapCompletable(appViewViewModel -> {
+                        appViewAnalytics.sendAppcMigrationUpdateClick();
+                        appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
+                            appViewViewModel.getDeveloper()
+                                .getName(), "UPDATE TO APPC");
+                        return migrateApp(action, appViewViewModel);
+                      });
                   break;
                 default:
                   completable =

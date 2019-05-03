@@ -5,29 +5,31 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 
 public class PromotionViewApp {
 
+  private final String name;
+  private final String packageName;
+  private final long appId;
+  private final String downloadPath;
+  private final String alternativePath;
+  private final String appIcon;
+  private final String description;
+  private final long size;
+  private final float rating;
+  private final int numberOfDownloads;
+  private final String md5;
+  private final int versionCode;
+  private final String versionName;
+  private final Obb obb;
+  private final float appcValue;
+  private final String signature;
+  private final boolean hasAppc;
   private DownloadModel downloadModel;
-  private String name;
-  private String packageName;
-  private long appId;
-  private String downloadPath;
-  private String alternativePath;
-  private String appIcon;
   private boolean isClaimed;
-  private String description;
-  private long size;
-  private float rating;
-  private int numberOfDownloads;
-  private String md5;
-  private int versionCode;
-  private String versionName;
-  private Obb obb;
-  private float appcValue;
-  private String signature;
 
   public PromotionViewApp(DownloadModel downloadModel, String name, String packageName, long appId,
       String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
       String description, long size, float rating, int numberOfDownloads, String md5,
-      int versionCode, String versionName, Obb obb, float appcValue, String signature) {
+      int versionCode, String versionName, Obb obb, float appcValue, String signature,
+      boolean hasAppc) {
     this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
@@ -46,6 +48,7 @@ public class PromotionViewApp {
     this.obb = obb;
     this.appcValue = appcValue;
     this.signature = signature;
+    this.hasAppc = hasAppc;
   }
 
   public String getName() {
@@ -154,5 +157,9 @@ public class PromotionViewApp {
 
   public String getSignature() {
     return signature;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
   }
 }

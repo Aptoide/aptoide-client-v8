@@ -35,7 +35,7 @@ class ActiveAppDownloadViewHolder extends AppsViewHolder {
   @Override public void setApp(App app) {
     ImageLoader.with(itemView.getContext())
         .load(((DownloadApp) app).getIcon(), appIcon);
-    appName.setText(((DownloadApp) app).getAppName());
+    appName.setText(((DownloadApp) app).getName());
 
     progressBar.setProgress(((DownloadApp) app).getProgress());
     downloadProgress.setText(String.format("%d%%", ((DownloadApp) app).getProgress()));

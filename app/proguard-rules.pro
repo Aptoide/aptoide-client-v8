@@ -92,6 +92,8 @@
 }
 -keep class com.ironsource.adapters.** { *;
 }
+-dontwarn com.ironsource.mediationsdk.**
+-dontwarn com.ironsource.adapters.**
 -dontwarn com.moat.**
 -keep class com.moat.** { public protected private *; }
 

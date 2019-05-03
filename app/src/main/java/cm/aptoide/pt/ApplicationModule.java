@@ -165,6 +165,7 @@ import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallFabricEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -172,6 +173,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.InstallerFactory;
+import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
@@ -193,6 +195,7 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -248,7 +251,6 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -317,11 +319,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+      @Named("obbPath") String obbPath, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      PackageInstallerManager packageInstallerManager) {
     return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics).create(application),
+        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
+            getInstallingStateTimeout(), appInstallerStatusReceiver).create(application),
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils());
+        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils(),
+        packageInstallerManager);
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -444,11 +450,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstallationProvider installationProvider,
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
-      InstallerAnalytics installerAnalytics) {
-    return new DefaultInstaller(application.getPackageManager(), installationProvider,
+      InstallerAnalytics installerAnalytics, AppInstaller appInstaller,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
-        installedRepository, 180000, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics);
+        installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
+        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver);
+  }
+
+  private int getInstallingStateTimeout() {
+    return Build.VERSION.SDK_INT >= 21
+        ? BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS
+        : BuildConfig.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
@@ -1691,10 +1704,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new WalletService(service, Schedulers.io());
   }
 
-  @Singleton @Provides LoginPreferences provideLoginPreferences() {
-    return new LoginPreferences(application, GoogleApiAvailability.getInstance());
-  }
-
   @Singleton @Provides @Named("defaultStoreName") String provideStoreName() {
     return "apps";
   }
@@ -1800,7 +1809,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
         PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
         AppViewAnalytics.ADS_BLOCK_BY_OFFER, AppViewAnalytics.APPC_SIMILAR_APP_INTERACT,
-        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
+        AppViewAnalytics.BONUS_MIGRATION_APPVIEW, AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1860,6 +1869,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SearchExperiment providesSearchExperiment(
       @Named("search-ab-test") ABTestManager abTestManager) {
     return new SearchExperiment(abTestManager);
+  }
+
+  @Singleton @Provides AppInstaller providesAppInstaller(
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new AppInstaller(application.getApplicationContext(),
+        installStatus -> appInstallerStatusReceiver.onStatusReceived(installStatus));
+  }
+
+  @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
+    return new AppInstallerStatusReceiver(PublishSubject.create());
+  }
+
+  @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
+    return new PackageInstallerManager();
   }
 
   @Singleton @Provides ChipManager providesChipManager() {

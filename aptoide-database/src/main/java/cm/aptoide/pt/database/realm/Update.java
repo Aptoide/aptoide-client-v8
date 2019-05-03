@@ -56,13 +56,16 @@ public class Update extends RealmObject {
   private String patchObbPath;
   private String patchObbMd5;
 
+  //appc
+  private boolean hasAppc;
+
   public Update() {
   }
 
   public Update(long id, String name, String icon, String packageName, String md5sum, String path,
       double fileSize, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
-      String patchObbPath, String patchObbMd5, boolean appcUpgrade) {
+      String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -80,6 +83,7 @@ public class Update extends RealmObject {
     this.patchObbName = patchObbFileName;
     this.patchObbPath = patchObbPath;
     this.patchObbMd5 = patchObbMd5;
+    this.hasAppc = hasAppc;
     this.appcUpgrade = appcUpgrade;
   }
 
@@ -245,5 +249,13 @@ public class Update extends RealmObject {
 
   public void setAppcUpgrade(boolean appcUpgrade) {
     this.appcUpgrade = appcUpgrade;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
+  }
+
+  public void setHasAppc(boolean hasAppc) {
+    this.hasAppc = hasAppc;
   }
 }

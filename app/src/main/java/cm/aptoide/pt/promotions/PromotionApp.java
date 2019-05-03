@@ -4,28 +4,29 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 
 public class PromotionApp {
 
-  private String name;
-  private String packageName;
-  private long appId;
-  private String downloadPath;
-  private String alternativePath;
-  private String appIcon;
-  private String description;
-  private long size;
-  private float rating;
-  private int numberOfDownloads;
-  private String md5;
-  private int versionCode;
-  private boolean isClaimed;
-  private String versionName;
-  private Obb obb;
-  private float appcValue;
-  private String signature;
+  private final String name;
+  private final String packageName;
+  private final long appId;
+  private final String downloadPath;
+  private final String alternativePath;
+  private final String appIcon;
+  private final String description;
+  private final long size;
+  private final float rating;
+  private final int numberOfDownloads;
+  private final String md5;
+  private final int versionCode;
+  private final boolean isClaimed;
+  private final String versionName;
+  private final Obb obb;
+  private final float appcValue;
+  private final String signature;
+  private final boolean hasAppc;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, String description, long size, float rating,
       int numberOfDownloads, String md5, int versionCode, boolean isClaimed, String versionName,
-      Obb obb, float appcValue, String signature) {
+      Obb obb, float appcValue, String signature, boolean hasAppc) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -43,6 +44,7 @@ public class PromotionApp {
     this.obb = obb;
     this.appcValue = appcValue;
     this.signature = signature;
+    this.hasAppc = hasAppc;
   }
 
   public String getName() {
@@ -111,5 +113,9 @@ public class PromotionApp {
 
   public String getSignature() {
     return signature;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
   }
 }
