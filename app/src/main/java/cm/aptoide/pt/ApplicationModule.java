@@ -550,9 +550,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
       AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository,
       @Named("partnerID") String partnerId) {
-    return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
-        new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
-        AptoideUtils.Core.getDefaultVername(application));
+    return new UserAgentInterceptor(idsRepository, partnerId, new DisplayMetrics(),
+        AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(application));
   }
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
