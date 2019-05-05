@@ -74,6 +74,18 @@ public class HomePresenter implements Presenter {
     handleInstallWalletOfferClick();
 
     handleMoPubConsentDialog();
+
+    handleAppPreview();
+  }
+
+  private void handleAppPreview() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(model -> view.handlePreviewAppClick())
+        .doOnNext(app -> view.showAppPreview(app))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleMoPubConsentDialog() {

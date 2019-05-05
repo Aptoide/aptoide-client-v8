@@ -29,6 +29,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/holder_test"
         android:layout_width="107dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon"

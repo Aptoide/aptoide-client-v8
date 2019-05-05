@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.home.apps.BundleView;
+import cm.aptoide.pt.view.app.Application;
 import rx.Observable;
 
 /**
@@ -30,4 +31,8 @@ public interface HomeView extends BundleView {
   void sendDeeplinkToWalletAppView(String url);
 
   void showConsentDialog();
+
+  Observable<Application> handlePreviewAppClick();
+
+  void showAppPreview(Application app);
 }

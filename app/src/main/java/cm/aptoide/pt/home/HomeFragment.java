@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
+import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -338,6 +340,50 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   @Override public void showConsentDialog() {
     consentDialogView.showConsentDialog();
+  }
+
+  @Override public Observable<Application> handlePreviewAppClick() {
+    return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.PREVIEW))
+        .cast(AppHomeEvent.class)
+        .map(AppHomeEvent::getApp);
+  }
+
+  @Override public void showAppPreview(Application app) {
+
+    AppPreviewDialog appPreviewDialog = AppPreviewDialog.newInstance(app.getName(), app.getIcon());
+
+    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction()
+        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+            android.R.anim.fade_in, android.R.anim.fade_out)
+        .addToBackStack("DASD");
+/*
+    fragmentTransaction = fragmentTransaction.add(R.id.main_content, appPreviewDialog, "DASD");
+    fragmentTransaction.commit();*/
+
+    appPreviewDialog.show(fragmentTransaction, "DASD");
+
+
+/*
+    ImageView appPreviewImage = preview.findViewById(R.id.app_preview_icon);
+    TextView appPreviewName = preview.findViewById(R.id.app_preview_name);
+
+    ImageLoader.with(itemView.getContext())
+        .loadWithRoundCorners(app.getIcon(), 8, appPreviewImage, R.drawable.placeholder_square);
+    appPreviewName.setText("REI BRUNO");
+
+    AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
+
+    Dialog dialog = builder.create();
+
+    //Dialog dialog = new Dialog(iconView.getContext());
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.getWindow()
+        .requestFeature(Window.FEATURE_NO_TITLE);
+    dialog.getWindow()
+        .setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    dialog.setContentView(preview);
+    dialog.show();*/
   }
 
   private boolean isEndReached() {
