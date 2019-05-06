@@ -27,7 +27,6 @@ import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.util.Collections;
 import java.util.List;
-import javax.inject.Inject;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -48,15 +47,17 @@ public class InstallManager {
   private final String obbPath;
   private final FileUtils fileUtils;
   private final Context context;
-  @Inject DownloadsRepository downloadRepository;
-  @Inject InstalledRepository installedRepository;
-  private RootAvailabilityManager rootAvailabilityManager;
+  private final PackageInstallerManager packageInstallerManager;
+  private final DownloadsRepository downloadRepository;
+  private final InstalledRepository installedRepository;
+  private final RootAvailabilityManager rootAvailabilityManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      String cachePath, String apkPath, String obbPath, FileUtils fileUtils) {
+      String cachePath, String apkPath, String obbPath, FileUtils fileUtils,
+      PackageInstallerManager packageInstallerManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -69,6 +70,7 @@ public class InstallManager {
     this.apkPath = apkPath;
     this.obbPath = obbPath;
     this.fileUtils = fileUtils;
+    this.packageInstallerManager = packageInstallerManager;
   }
 
   public void stopAllInstallations() {
@@ -131,10 +133,10 @@ public class InstallManager {
   private List<Install> sortList(List<Install> installs) {
     Collections.sort(installs, (install, t1) -> {
       int toReturn;
-      if (install.getState() == Install.InstallationStatus.INSTALLING
+      if (install.getState() == Install.InstallationStatus.DOWNLOADING
           && !install.isIndeterminate()) {
         toReturn = 1;
-      } else if (t1.getState() == Install.InstallationStatus.INSTALLING && !t1.isIndeterminate()) {
+      } else if (t1.getState() == Install.InstallationStatus.DOWNLOADING && !t1.isIndeterminate()) {
         toReturn = -1;
       } else {
         int diff = install.getState()
@@ -155,7 +157,7 @@ public class InstallManager {
 
   public Observable<Install> getCurrentInstallation() {
     return getInstallations().flatMap(installs -> Observable.from(installs)
-        .filter(install -> install.getState() == Install.InstallationStatus.INSTALLING));
+        .filter(install -> install.getState() == Install.InstallationStatus.DOWNLOADING));
   }
 
   public Completable install(Download download) {
@@ -179,7 +181,8 @@ public class InstallManager {
         })
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall))
+        .flatMap(install -> installInBackground(install, forceDefaultInstall,
+            packageInstallerManager.shouldSetInstallerPackageName(download)))
         .first()
         .toCompletable();
   }
@@ -252,7 +255,7 @@ public class InstallManager {
     if (installationState.getStatus() == Installed.STATUS_WAITING
         && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
-      return Install.InstallationStatus.INSTALLING;
+      return Install.InstallationStatus.DOWNLOADING;
     }
 
     if (installationState.getStatus() == Installed.STATUS_ROOT_TIMEOUT) {
@@ -331,7 +334,7 @@ public class InstallManager {
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
         case Download.PENDING:
-          status = Install.InstallationStatus.INSTALLING;
+          status = Install.InstallationStatus.DOWNLOADING;
           break;
         case Download.IN_QUEUE:
           status = Install.InstallationStatus.IN_QUEUE;
@@ -382,16 +385,19 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall) {
+  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     return getInstall(install.getMd5(), install.getPackageName(),
         install.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(install, forceDefaultInstall));
+        startBackgroundInstallationAndWait(install, forceDefaultInstall,
+            shouldSetPackageInstaller));
   }
 
   @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
-      boolean forceDefaultInstall) {
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall))
+        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall,
+            shouldSetPackageInstaller))
         .map(aVoid -> install);
   }
 
@@ -404,11 +410,13 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall) {
+  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
+    intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
     if (installer instanceof DefaultInstaller) {
       intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
     }

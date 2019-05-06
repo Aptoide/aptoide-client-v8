@@ -260,6 +260,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubView bannerAd;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
+  private TextView installStateText;
 
   //wallet promotion
   private View promotionView;
@@ -413,6 +414,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+    installStateText = view.findViewById(R.id.appview_download_download_state);
 
     promotionView = view.findViewById(R.id.wallet_install_promotion);
     walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
@@ -1623,7 +1625,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
-    if (downloadModel.isDownloading()) {
+    if (downloadModel.isDownloadingOrInstalling()) {
       appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
@@ -1726,6 +1728,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
@@ -1733,6 +1736,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
@@ -1742,6 +1746,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseHidden);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
@@ -1749,6 +1754,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
+        break;
+      case INSTALLING:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadProgressValue.setVisibility(View.INVISIBLE);
+        downloadControlsLayout.setVisibility(View.INVISIBLE);
+        installStateText.setText(getString(R.string.appview_short_installing));
         break;
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));

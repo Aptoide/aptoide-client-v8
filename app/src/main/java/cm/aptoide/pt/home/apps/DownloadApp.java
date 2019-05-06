@@ -27,7 +27,7 @@ public class DownloadApp implements StateApp {
     this.downloadStatus = downloadStatus;
   }
 
-  public String getAppName() {
+  public String getName() {
     return appName;
   }
 

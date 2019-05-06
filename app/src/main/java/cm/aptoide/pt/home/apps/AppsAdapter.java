@@ -27,6 +27,7 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   static final int ERROR_UPDATE = 11;
   static final int PAUSING_UPDATE = 12;
   static final int PAUSING_DOWNLOAD = 13;
+  static final int INSTALLING = 14;
 
   private List<App> listOfApps;
   private AppsCardViewHolderFactory appsCardViewHolderFactory;
@@ -66,9 +67,6 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case INSTALLED:
         type = INSTALLED;
         break;
-      case INSTALLING:
-        type = INSTALLED;
-        break;
       default:
         throw new IllegalArgumentException("Invalid type of App");
     }
@@ -97,6 +95,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case PAUSING:
         type = PAUSING_UPDATE;
         break;
+      case INSTALLING:
+        type = INSTALLING;
+        break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + updateStatus.name());
     }
@@ -121,6 +122,9 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         break;
       case PAUSING:
         type = PAUSING_DOWNLOAD;
+        break;
+      case INSTALLING:
+        type = INSTALLING;
         break;
       default:
         throw new IllegalArgumentException("Wrong download status : " + downloadStatus.name());
@@ -317,13 +321,12 @@ public class AppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         isValid = true;
         break;
       case DOWNLOAD:
-        isValid = !TextUtils.isEmpty(((DownloadApp) app).getAppName());
+        isValid = !TextUtils.isEmpty(((DownloadApp) app).getName());
         break;
       case UPDATE:
         isValid = !TextUtils.isEmpty(((UpdateApp) app).getName());
         break;
       case INSTALLED:
-      case INSTALLING:
         isValid = !TextUtils.isEmpty(((InstalledApp) app).getAppName());
         break;
       default:

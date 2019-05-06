@@ -45,7 +45,6 @@ import rx.subjects.PublishSubject;
 public class HomeFragment extends NavigationTrackFragment implements HomeView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
-  private static final String MOPUB_CONSENT_DIALOG_KEY = "MoPub Consent Dialog";
 
   /**
    * The minimum number of items to have below your current scroll position before loading more.
