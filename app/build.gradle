@@ -454,15 +454,6 @@ dependencies {
     exclude module: "support-v4"
   }
 
-  // Yahoo! Flurry
-  implementation("com.flurry.android:ads:${FLURRY_ADS_VERSION}@aar") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-  implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
-
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
   implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
