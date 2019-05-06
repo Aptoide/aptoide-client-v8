@@ -110,6 +110,7 @@ import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
+import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -351,16 +352,25 @@ public abstract class AptoideApplication extends Application {
             getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
             getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withMediatedNetworkConfiguration(InneractiveAdapterConfiguration.class.toString(),
+            getMediationNetworkConfiguration(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
+                BuildConfig.MOPUB_FYBER_APPLICATION_ID))
         .withLogLevel(MoPubLog.LogLevel.DEBUG)
         .build();
 
     MoPub.initializeSdk(this, sdkConfiguration, null);
   }
 
+  @NonNull private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
+    return getMediationNetworkConfiguration(mediatedNetworkPlacementId, null);
+  }
+
   @NonNull
-  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId) {
+  private Map<String, String> getMediationNetworkConfiguration(String mediatedNetworkPlacementId,
+      String appId) {
     Map<String, String> mediationNetworkConfiguration = new HashMap<>();
     mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
+    if (appId != null) mediationNetworkConfiguration.put("appID", appId);
     return mediationNetworkConfiguration;
   }
 
