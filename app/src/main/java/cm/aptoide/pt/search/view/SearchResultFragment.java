@@ -58,6 +58,7 @@ import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.mobileads.MoPubView;
+import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.RequestParameters;
@@ -885,7 +886,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void attachAllStoresResultListDependencies() {
     moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), allStoresResultAdapter);
-    moPubRecyclerAdapter.registerAdRenderer(getMoPubStaticNativeAdRenderer());
+    configureAdRenderers();
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     if (Build.VERSION.SDK_INT >= 21) {
       allStoresResultList.setAdapter(moPubRecyclerAdapter);
@@ -896,8 +897,10 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }
 
-  @NonNull private MoPubStaticNativeAdRenderer getMoPubStaticNativeAdRenderer() {
-    return new MoPubStaticNativeAdRenderer(getMoPubViewBinder());
+  public void configureAdRenderers() {
+    ViewBinder viewBinder = getMoPubViewBinder();
+    moPubRecyclerAdapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(viewBinder));
+    moPubRecyclerAdapter.registerAdRenderer(new InMobiNativeAdRenderer(viewBinder));
   }
 
   @NonNull private ViewBinder getMoPubViewBinder() {

@@ -12,6 +12,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
+import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
@@ -65,6 +66,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
             .build();
     MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
     moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+    InMobiNativeAdRenderer inMobiNativeAdRenderer = new InMobiNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(inMobiNativeAdRenderer);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);

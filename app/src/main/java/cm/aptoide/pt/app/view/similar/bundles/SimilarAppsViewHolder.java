@@ -17,6 +17,7 @@ import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.app.view.similar.SimilarBundleViewHolder;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.utils.AptoideUtils;
+import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
@@ -65,8 +66,7 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
     if (mopubAdapter) {
       moPubSimilarAppsRecyclerAdapter =
           new MoPubRecyclerAdapter((Activity) similarApps.getContext(), adapter);
-      moPubSimilarAppsRecyclerAdapter.registerAdRenderer(
-          new MoPubStaticNativeAdRenderer(getMoPubAdViewBinder()));
+      configureAdRenderers();
       moPubSimilarAppsRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
 
       if (Build.VERSION.SDK_INT >= 21) {
@@ -86,6 +86,12 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
         .mainImageId(R.id.native_main_image)
         .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
         .build();
+  }
+
+  private void configureAdRenderers() {
+    ViewBinder viewBinder = getMoPubAdViewBinder();
+    moPubSimilarAppsRecyclerAdapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(viewBinder));
+    moPubSimilarAppsRecyclerAdapter.registerAdRenderer(new InMobiNativeAdRenderer(viewBinder));
   }
 
   @Override public void setBundle(SimilarAppsBundle bundle, int position) {
