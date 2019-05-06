@@ -64,8 +64,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
             .mainImageId(R.id.native_main_image)
             .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
             .build();
-    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
-    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+
+    moPubRecyclerAdapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(moPubViewBinder));
     InMobiNativeAdRenderer inMobiNativeAdRenderer = new InMobiNativeAdRenderer(moPubViewBinder);
     moPubRecyclerAdapter.registerAdRenderer(inMobiNativeAdRenderer);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
