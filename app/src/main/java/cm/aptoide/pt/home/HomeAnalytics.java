@@ -48,15 +48,16 @@ public class HomeAnalytics {
     sendTapOnMoreInteractEvent(bundlePosition, bundleTag, itemsInBundle, null);
   }
 
+
   public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle,
-      ChipManager.Chip chip) {
+      String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_MORE);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
-    if (chip != null) {
-      data.put(CHIP_TAG, chip.getName());
+    if (chipTag != null) {
+      data.put(CHIP_TAG, chipTag);
     }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,

@@ -164,15 +164,15 @@ public class MoreBundlePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.moreClicked()
             .doOnNext(homeMoreClick -> {
+              ChipManager.Chip chip = chipManager.getCurrentChip();
               homeAnalytics.sendTapOnMoreInteractEvent(homeMoreClick.getBundlePosition(),
                   homeMoreClick.getBundle()
                       .getTag(), homeMoreClick.getBundle()
                       .getContent()
-                      .size(), chipManager.getCurrentChip());
+                      .size(), chip != null ? chip.getName() : null);
               if (chipManager.getCurrentChip() != null) {
                 homeAnalytics.sendChipTapOnMore(homeMoreClick.getBundle()
-                    .getTag(), chipManager.getCurrentChip()
-                    .getName());
+                    .getTag(), chip != null ? chip.getName() : null);
               }
             })
             .observeOn(viewScheduler)
