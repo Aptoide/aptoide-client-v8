@@ -116,13 +116,14 @@ public class MoreBundlePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.appClicked()
             .doOnNext(click -> {
+              ChipManager.Chip chip = chipManager.getCurrentChip();
               homeAnalytics.sendTapOnAppInteractEvent(click.getApp()
                       .getRating(), click.getApp()
                       .getPackageName(), click.getAppPosition(), click.getBundlePosition(),
                   click.getBundle()
                       .getTag(), click.getBundle()
                       .getContent()
-                      .size(), chipManager.getCurrentChip());
+                      .size(), chip != null ? chip.getName() : null);
               if (chipManager.getCurrentChip() != null) {
                 homeAnalytics.sendChipTapOnApp(click.getBundle()
                     .getTag(), click.getApp()

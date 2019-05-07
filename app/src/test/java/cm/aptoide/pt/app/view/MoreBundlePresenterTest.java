@@ -169,7 +169,7 @@ public class MoreBundlePresenterTest {
         ChipManager.Chip.GAMES.getName());
     verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
         1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
-            .size(), ChipManager.Chip.GAMES);
+            .size(), ChipManager.Chip.GAMES.getName());
   }
 
   @Test public void appClicked_AppsChipAnalytics() {
@@ -184,7 +184,7 @@ public class MoreBundlePresenterTest {
         ChipManager.Chip.APPS.getName());
     verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
         1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
-            .size(), ChipManager.Chip.APPS);
+            .size(), ChipManager.Chip.APPS.getName());
   }
 
   @Test public void adClicked_NavigateToAppView() {

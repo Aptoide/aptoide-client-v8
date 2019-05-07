@@ -96,7 +96,7 @@ public class HomeAnalytics {
   }
 
   public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
-      int bundlePosition, String bundleTag, int itemsInBundle, ChipManager.Chip chip) {
+      int bundlePosition, String bundleTag, int itemsInBundle, String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_APP);
     data.put("app_rating", appRating);
@@ -105,8 +105,8 @@ public class HomeAnalytics {
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
-    if (chip != null) {
-      data.put(CHIP_TAG, chip.getName());
+    if (chipTag != null) {
+      data.put(CHIP_TAG, chipTag);
     }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
