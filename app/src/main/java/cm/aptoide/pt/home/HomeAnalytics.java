@@ -266,12 +266,12 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendChipTapOnApp(String bundleTag, String packageName, ChipManager.Chip chip) {
+  public void sendChipTapOnApp(String bundleTag, String packageName, String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_APP);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("package_name", packageName);
-    data.put(CHIP_TAG, chip.getName());
+    data.put(CHIP_TAG, chipTag);
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }

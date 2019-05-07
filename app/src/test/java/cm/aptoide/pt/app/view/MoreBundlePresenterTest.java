@@ -166,7 +166,7 @@ public class MoreBundlePresenterTest {
     appClickEvent.onNext(new AppHomeEvent(aptoide, 1, localTopAppsBundle, 3, HomeEvent.Type.APP));
 
     verify(homeAnalytics).sendChipTapOnApp(localTopAppsBundle.getTag(), aptoide.getPackageName(),
-        ChipManager.Chip.GAMES);
+        ChipManager.Chip.GAMES.getName());
     verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
         1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
             .size(), ChipManager.Chip.GAMES);
@@ -181,7 +181,7 @@ public class MoreBundlePresenterTest {
     appClickEvent.onNext(new AppHomeEvent(aptoide, 1, localTopAppsBundle, 3, HomeEvent.Type.APP));
 
     verify(homeAnalytics).sendChipTapOnApp(localTopAppsBundle.getTag(), aptoide.getPackageName(),
-        ChipManager.Chip.APPS);
+        ChipManager.Chip.APPS.getName());
     verify(homeAnalytics).sendTapOnAppInteractEvent(aptoide.getRating(), aptoide.getPackageName(),
         1, 3, localTopAppsBundle.getTag(), localTopAppsBundle.getContent()
             .size(), ChipManager.Chip.APPS);
