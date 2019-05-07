@@ -278,12 +278,14 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         currentContext);
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
 
-      downloadCompleteEvent(navigationTracker.getPreviousScreen(), navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
           previousContext,
           offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE),
           isMigration);
     } else {
-      downloadCompleteEvent(navigationTracker.getPreviousScreen(), navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
+      downloadCompleteEvent(navigationTracker.getPreviousScreen(),
+          navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
           previousContext, isMigration);
     }
   }
