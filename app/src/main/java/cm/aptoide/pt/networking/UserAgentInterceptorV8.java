@@ -15,6 +15,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
   private final String aptoidePackage;
   private final String aptoideMd5;
   private final int aptoideVersionCode;
+  private final AuthenticationPersistence authenticationPersistence;
   private final String androidVersion;
   private final int apiLevel;
   private final String model;
@@ -23,7 +24,8 @@ public class UserAgentInterceptorV8 implements Interceptor {
 
   public UserAgentInterceptorV8(IdsRepository idsRepository, String androidVersion, int apiLevel,
       String model, String productCode, String architecture, DisplayMetrics displayMetrics,
-      String versionName, String aptoidePackage, String aptoideMd5, int aptoideVersionCode) {
+      String versionName, String aptoidePackage, String aptoideMd5, int aptoideVersionCode,
+      AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
     this.androidVersion = androidVersion;
     this.apiLevel = apiLevel;
@@ -35,6 +37,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
     this.aptoidePackage = aptoidePackage;
     this.aptoideMd5 = aptoideMd5;
     this.aptoideVersionCode = aptoideVersionCode;
+    this.authenticationPersistence = authenticationPersistence;
   }
 
   @Override public Response intercept(Chain chain) throws IOException {
@@ -50,10 +53,19 @@ public class UserAgentInterceptorV8 implements Interceptor {
 
     Response response;
     try {
-      if (!TextUtils.isEmpty(userAgent)) {
-        Request requestWithUserAgent = originalRequest.newBuilder()
-            .header("User-Agent", userAgent)
-            .build();
+      Authentication authentication = authenticationPersistence.getAuthentication()
+          .toBlocking()
+          .value();
+      Request.Builder requestBuilder = originalRequest.newBuilder();
+      if (authentication.isAuthenticated() || !TextUtils.isEmpty(userAgent)) {
+        if (authentication.isAuthenticated()) {
+          String accessToken = authentication.getAccessToken();
+          requestBuilder.header("AUTHORIZATION", accessToken);
+        }
+        if (!TextUtils.isEmpty(userAgent)) {
+          requestBuilder.header("User-Agent", userAgent);
+        }
+        Request requestWithUserAgent = requestBuilder.build();
         response = chain.proceed(requestWithUserAgent);
       } else {
         response = chain.proceed(originalRequest);

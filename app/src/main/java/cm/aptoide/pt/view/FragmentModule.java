@@ -125,6 +125,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -259,15 +260,16 @@ import rx.subscriptions.CompositeSubscription;
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
       HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
+        accountNavigator);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
@@ -279,9 +281,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsId) {
+      @Named("homePromotionsId") String promotionsId, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsId);
+        promotionsPreferencesManager, blacklistManager, promotionsId, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -421,10 +423,11 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics) {
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager) {
     return new EditorialManager(editorialRepository,
         arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
-        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics,
+        reactionsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -471,8 +474,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository) {
-    return new EditorialListManager(editorialListRepository);
+      EditorialListRepository editorialListRepository, ReactionsManager reactionsManager) {
+    return new EditorialListManager(editorialListRepository, reactionsManager);
   }
 
   @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
@@ -489,8 +492,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new EditorialListNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AccountNavigator accountNavigator) {
+    return new EditorialListNavigator(fragmentNavigator, accountNavigator);
   }
 
   @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(

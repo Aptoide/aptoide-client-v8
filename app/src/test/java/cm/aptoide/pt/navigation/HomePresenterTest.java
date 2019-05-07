@@ -15,6 +15,7 @@ import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AdsTagWrapper;
 import cm.aptoide.pt.home.AppHomeEvent;
+import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -25,6 +26,8 @@ import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.ReactionsHomeEvent;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.view.app.Application;
 import java.util.Collections;
 import java.util.Date;
@@ -42,6 +45,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +55,7 @@ import static org.mockito.Mockito.when;
 
 public class HomePresenterTest {
 
+  private static String GROUP_ID = "CURATION_1";
   @Mock private HomeFragment view;
   @Mock private CrashReport crashReporter;
   @Mock private HomeNavigator homeNavigator;
@@ -76,6 +81,10 @@ public class HomePresenterTest {
   private PublishSubject<HomeEvent> knowMoreEvent;
   private PublishSubject<HomeEvent> dismissEvent;
   private PublishSubject<HomeEvent> visibleBundleEvent;
+  private PublishSubject<EditorialHomeEvent> reactionButtonClickEvent;
+  private PublishSubject<EditorialHomeEvent> reactionButtonLongPressEvent;
+  private PublishSubject<ReactionsHomeEvent> reactionClickEvent;
+  private PublishSubject<Void> snackLoginEvent;
 
   @Before public void setupHomePresenter() {
     MockitoAnnotations.initMocks(this);
@@ -93,9 +102,13 @@ public class HomePresenterTest {
     knowMoreEvent = PublishSubject.create();
     dismissEvent = PublishSubject.create();
     visibleBundleEvent = PublishSubject.create();
+    reactionButtonClickEvent = PublishSubject.create();
+    reactionButtonLongPressEvent = PublishSubject.create();
+    reactionClickEvent = PublishSubject.create();
+    snackLoginEvent = PublishSubject.create();
 
     presenter = new HomePresenter(view, home, Schedulers.immediate(), crashReporter, homeNavigator,
-        new AdMapper(), aptoideAccountManager, homeAnalytics);
+        new AdMapper(), homeAnalytics);
     aptoide =
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
@@ -117,6 +130,10 @@ public class HomePresenterTest {
     when(view.infoBundleKnowMoreClicked()).thenReturn(knowMoreEvent);
     when(view.dismissBundleClicked()).thenReturn(dismissEvent);
     when(view.visibleBundles()).thenReturn(visibleBundleEvent);
+    when(view.reactionsButtonClicked()).thenReturn(reactionButtonClickEvent);
+    when(view.reactionButtonLongPress()).thenReturn(reactionButtonLongPressEvent);
+    when(view.reactionClicked()).thenReturn(reactionClickEvent);
+    when(view.snackLogInClick()).thenReturn(snackLoginEvent);
   }
 
   @Test public void loadAllBundlesFromRepositoryAndLoadIntoView() {
@@ -318,9 +335,139 @@ public class HomePresenterTest {
     verify(home).actionBundleImpression(bundle);
   }
 
+  @Test public void handleReactionButtonClickFirstReactionTest() {
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And it's the first time the user is reacting to that card
+    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(true));
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(homeAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID, 1);
+  }
+
+  @Test public void handleReactionButtonClickSecondReactionTest() {
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And the user has a reaction already submitted on that card
+    when(home.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(false));
+    when(home.deleteReaction("1", GROUP_ID)).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(home.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(bundlesModel.getList()));
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_SINGLE_PRESS));
+    //It should request the deletion of the reaction
+    verify(home).deleteReaction("1", GROUP_ID);
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(homeAnalytics).sendDeleteEvent();
+    verify(home).loadReactionModel("1", GROUP_ID);
+    verify(view).updateEditorialCards(bundlesModel.getList());
+  }
+
+  @Test public void handleReactionButtonLongPressTest() {
+    //Given an initialised presenter
+    presenter.handleLongPressedReactionButton();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user long presses the reaction button
+    reactionButtonLongPressEvent.onNext(
+        new EditorialHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS));
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(homeAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID, 1);
+  }
+
+  @Test public void handleUserReactionTest() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(home.setReaction("1", GROUP_ID, "laugh")).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(home.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(bundlesModel.getList()));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(homeAnalytics).sendReactedEvent();
+    verify(home).loadReactionModel("1", GROUP_ID);
+    verify(view).updateEditorialCards(bundlesModel.getList());
+  }
+
+  @Test public void handleUserReactionWithSameReactionTest() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    //It should request to set said reaction
+    when(home.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION)));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(homeAnalytics, times(0)).sendReactedEvent();
+    when(home.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(bundlesModel.getList()));
+    verify(home, times(0)).loadReactionModel("1", GROUP_ID);
+    verify(view, times(0)).updateEditorialCards(bundlesModel.getList());
+  }
+
+  @Test public void handleSnackLogInTest() {
+    //Given an initialised presenter
+    presenter.handleSnackLogInClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user clicks on the log in button
+    snackLoginEvent.onNext(null);
+    //Then it should navigate to the log in view
+    verify(homeNavigator).navigateToLogIn();
+  }
+
+  @Test public void handleReactionsExceeded() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(home.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showLogInDialog();
+  }
+
+  @Test public void handleNetworkError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(home.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.NETWORK_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showNetworkErrorToast();
+  }
+
+  @Test public void handleGeneralError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(home.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(
+        new ReactionsHomeEvent("1", GROUP_ID, null, 1, HomeEvent.Type.REACT_LONG_PRESS, "laugh"));
+    verify(view).showGenericErrorToast();
+  }
+
   @NonNull private ActionBundle getFakeActionBundle() {
     return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
-        new ActionItem("1", "type", "title", "message", "icon", "url", "1000"));
+        new ActionItem("1", "type", "title", "message", "icon", "url", "1000",
+            "2018-11-29 17:14:56"));
   }
 
   private AdHomeEvent createAdHomeEvent() {

@@ -4,12 +4,13 @@ import android.support.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 
 public class EditorialListPresenter implements Presenter {
 
@@ -43,16 +44,33 @@ public class EditorialListPresenter implements Presenter {
     handleBottomReached();
     handleUserImageClick();
     loadUserImage();
+    handleReactionButtonClick();
+    handleLongPressReactionButton();
+    handleUserReaction();
+    handleSnackLogInClick();
+  }
+
+  private Single<CurationCard> loadReactionModel(String cardId, String groupId) {
+    return editorialListManager.loadReactionModel(cardId, groupId)
+        .observeOn(viewScheduler)
+        .doOnSuccess(view::updateEditorialCard);
   }
 
   @VisibleForTesting public void onCreateLoadViewModel() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> loadEditorialListViewModel(false))
+        .flatMap(__ -> loadEditorialAndReactions(false, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
+  }
+
+  private Observable<CurationCard> loadEditorialAndReactions(boolean loadMore, boolean refresh) {
+    return loadEditorialListViewModel(loadMore, refresh).toObservable()
+        .flatMapIterable(EditorialListViewModel::getCurationCards)
+        .flatMapSingle(
+            curationCard -> loadReactionModel(curationCard.getId(), curationCard.getType()));
   }
 
   @VisibleForTesting public void loadUserImage() {
@@ -71,9 +89,7 @@ public class EditorialListPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleEditorialCardClick() {
@@ -89,22 +105,18 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
-            .flatMapSingle(refreshed -> loadFreshEditorialListViewModel())
+            .flatMap(__ -> loadEditorialAndReactions(false, true))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleRetryClick() {
@@ -113,7 +125,7 @@ public class EditorialListPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadFreshEditorialListViewModel()))
+            .flatMap(__ -> loadEditorialAndReactions(false, true)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -138,17 +150,16 @@ public class EditorialListPresenter implements Presenter {
             .filter(__ -> editorialListManager.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> loadEditorialListViewModel(true))
+            .flatMap(bottomReach -> loadEditorialAndReactions(true, false))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
-  private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore) {
-    return editorialListManager.loadEditorialListViewModel(loadMore, false)
+  private Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
+      boolean refresh) {
+    return editorialListManager.loadEditorialListViewModel(loadMore, refresh)
         .observeOn(viewScheduler)
         .doOnSuccess(editorialListViewModel -> {
           if (!editorialListViewModel.isLoading()) {
@@ -161,29 +172,12 @@ public class EditorialListPresenter implements Presenter {
               view.showGenericError();
             }
           } else {
-            view.populateView(editorialListViewModel);
-          }
-          view.hideLoadMore();
-        })
-        .map(editorialViewModel -> editorialViewModel);
-  }
-
-  private Single<EditorialListViewModel> loadFreshEditorialListViewModel() {
-    return editorialListManager.loadEditorialListViewModel(false, true)
-        .observeOn(viewScheduler)
-        .doOnSuccess(editorialListViewModel -> {
-          view.hideRefresh();
-          if (!editorialListViewModel.isLoading()) {
-            view.hideLoading();
-          }
-          if (editorialListViewModel.hasError()) {
-            if (editorialListViewModel.getError() == EditorialListViewModel.Error.NETWORK) {
-              view.showNetworkError();
+            if (refresh) {
+              view.hideRefresh();
+              view.update(editorialListViewModel.getCurationCards());
             } else {
-              view.showGenericError();
+              view.populateView(editorialListViewModel.getCurationCards());
             }
-          } else {
-            view.update(editorialListViewModel.getCurationCards());
           }
           view.hideLoadMore();
         })
@@ -199,9 +193,7 @@ public class EditorialListPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private Observable<String> getUserAvatar(Account account) {
@@ -210,5 +202,99 @@ public class EditorialListPresenter implements Presenter {
       userAvatarUrl = account.getAvatar();
     }
     return Observable.just(userAvatarUrl);
+  }
+
+  @VisibleForTesting public void handleReactionButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .flatMap(this::handleSinglePressReactionButton)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting void handleLongPressReactionButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionButtonLongPress())
+        .doOnNext(this::showReactions)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(
+            reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
+                reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())
+                .toObservable()
+                .filter(ReactionsResponse::differentReaction)
+                .observeOn(viewScheduler)
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(reactionsHomeEvent.getCardId(),
+                    reactionsHomeEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
+    if (reactionsResponse.wasSuccess()) {
+      if (isDelete) {
+        editorialListAnalytics.sendDeleteEvent();
+      } else {
+        editorialListAnalytics.sendReactedEvent();
+      }
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
+      view.showGenericErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleSnackLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> editorialListNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private Observable<CurationCard> handleSinglePressReactionButton(
+      EditorialHomeEvent editorialHomeEvent) {
+
+    return editorialListManager.isFirstReaction(editorialHomeEvent.getCardId(),
+        editorialHomeEvent.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            showReactions(editorialHomeEvent);
+            return Observable.just(new CurationCard());
+          } else {
+            return editorialListManager.deleteReaction(editorialHomeEvent.getCardId(),
+                editorialHomeEvent.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(
+                    reactionsResponse -> loadReactionModel(editorialHomeEvent.getCardId(),
+                        editorialHomeEvent.getGroupId()));
+          }
+        });
+  }
+
+  private void showReactions(EditorialHomeEvent editorialHomeEvent) {
+    editorialListAnalytics.sendReactionButtonClickEvent();
+    view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
+        editorialHomeEvent.getBundlePosition());
   }
 }

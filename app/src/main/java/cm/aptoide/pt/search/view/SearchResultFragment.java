@@ -735,6 +735,10 @@ public class SearchResultFragment extends BackButtonFragment
     followedStoresResultList.clearAnimation();
     setupDefaultTheme();
     super.onDestroyView();
+    if (moPubRecyclerAdapter != null) {
+      moPubRecyclerAdapter.destroy();
+      moPubRecyclerAdapter = null;
+    }
     if (bannerAd != null) {
       bannerAd.destroy();
       bannerAd = null;

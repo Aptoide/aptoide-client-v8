@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 
-
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
@@ -60,6 +59,4 @@ dependencies {
   implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-
-  implementation("org.nanohttpd:nanohttpd:2.3.0")
 }

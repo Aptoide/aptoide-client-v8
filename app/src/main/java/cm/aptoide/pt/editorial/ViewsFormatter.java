@@ -33,7 +33,7 @@ public class ViewsFormatter {
   }
 
   private static String getSuffix(int length) {
-    String[] suffixes = { "", "k", "m" };
+    String[] suffixes = { "", "k", "M" };
     String suffix = "";
     if (length < suffixes.length) {
       suffix = suffixes[length];

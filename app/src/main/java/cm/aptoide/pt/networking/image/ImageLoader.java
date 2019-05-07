@@ -352,52 +352,6 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<Bitmap> loadWithPalette(String url, ImageView imageView,
-      PublishSubject<Palette.Swatch> viewPaletteSwatchReceiver) {
-    Context context = weakContext.get();
-    if (context != null) {
-      String newImageUrl = AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager);
-      if (newImageUrl != null) {
-        Uri uri = Uri.parse(newImageUrl);
-        return Glide.with(context)
-            .asBitmap()
-            .load(uri)
-            .apply(getRequestOptions())
-            .listener(new RequestListener<Bitmap>() {
-
-              @Override public boolean onLoadFailed(@Nullable GlideException e, Object o,
-                  Target<Bitmap> target, boolean b) {
-                viewPaletteSwatchReceiver.onNext(null);
-                Log.e(TAG, "RequestListener on failed called");
-                return false;
-              }
-
-              @Override
-              public boolean onResourceReady(Bitmap bitmap, Object o, Target<Bitmap> target,
-                  DataSource dataSource, boolean b) {
-                Palette.from(bitmap)
-                    .maximumColorCount(6)
-                    .generate(palette -> {
-                      Palette.Swatch swatch = palette.getDominantSwatch();
-                      if (swatch == null) {
-                        Log.e(TAG, "Unable to get palette dominant swatch");
-                      }
-                      viewPaletteSwatchReceiver.onNext(swatch);
-                    });
-                return false;
-              }
-            })
-            .into(imageView);
-      } else {
-        Log.e(TAG, "newImageUrl is null");
-      }
-    } else {
-      Log.e(TAG, "::load() Context is null");
-    }
-    viewPaletteSwatchReceiver.onNext(null);
-    return null;
-  }
-
   public Target<Drawable> loadWithCenterCrop(String url, ImageView imageView) {
     return loadWithoutResizeCenterCrop(
         AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager), imageView);

@@ -8,6 +8,7 @@ public class ActionItemData {
   private String caption;
   private String url;
   private String views;
+  private String date;
 
   public String getType() {
     return type;
@@ -63,5 +64,13 @@ public class ActionItemData {
 
   public void setViews(String views) {
     this.views = views;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
   }
 }

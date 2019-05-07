@@ -7,11 +7,12 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
 /**
@@ -48,7 +49,6 @@ public class EditorialPresenter implements Presenter {
     handleRetryClick();
     handleClickOnMedia();
     handleClickOnAppCard();
-    handlePaletteColor();
 
     handleInstallClick();
     pauseDownload();
@@ -61,6 +61,12 @@ public class EditorialPresenter implements Presenter {
     handleMediaListDescriptionVisibility();
     handleClickActionButtonCard();
     handleMovingCollapse();
+
+    handleReactionButtonClick();
+    handleUserReaction();
+    handleLongPressReactionButton();
+    handleSnackLogInClick();
+    onCreateLoadReactionModel();
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
@@ -256,9 +262,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(view::showDownloadModel)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handlePlaceHolderVisibility() {
@@ -269,9 +273,7 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(model -> view.managePlaceHolderVisibity())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, error -> crashReporter.log(error));
   }
 
   private Completable openInstalledApp(String packageName) {
@@ -291,23 +293,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
-  }
-
-  @VisibleForTesting public void handlePaletteColor() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.paletteSwatchExtracted())
-        .observeOn(viewScheduler)
-        .doOnNext(paletteSwatch -> view.applyPaletteSwatch(paletteSwatch))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          view.applyPaletteSwatch(null);
-          throw new OnErrorNotImplementedException(error);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleMediaListDescriptionVisibility() {
@@ -327,9 +313,7 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleMovingCollapse() {
@@ -346,9 +330,52 @@ public class EditorialPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  private Observable<LoadReactionModel> handleSinglePressReactionButton(
+      EditorialViewModel editorialViewModel) {
+    return editorialManager.isFirstReaction(editorialViewModel.getCardId(),
+        editorialViewModel.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            editorialAnalytics.sendReactionButtonClickEvent();
+            view.showReactionsPopup(editorialViewModel.getCardId(),
+                editorialViewModel.getGroupId());
+            return Observable.just(new LoadReactionModel());
+          } else {
+            return editorialManager.deleteReaction(editorialViewModel.getCardId(),
+                editorialViewModel.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(editorialViewModel.getCardId(),
+                    editorialViewModel.getGroupId()));
+          }
         });
+  }
+
+  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return editorialManager.loadReactionModel(cardId, groupId)
+        .observeOn(viewScheduler)
+        .doOnSuccess(reactionModel -> view.showTopReactions(reactionModel.getMyReaction(),
+            reactionModel.getTopReactionList(), reactionModel.getTotal()));
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
+    if (reactionsResponse.wasSuccess()) {
+      if (isDelete) {
+        editorialAnalytics.sendDeletedEvent();
+      } else {
+        editorialAnalytics.sendReactedEvent();
+      }
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLoginDialog();
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
+      view.showGenericErrorToast();
+    }
   }
 
   private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
@@ -366,5 +393,71 @@ public class EditorialPresenter implements Presenter {
     return view.isViewReady()
         .flatMap(__ -> editorialManager.loadEditorialViewModel()
             .toObservable());
+  }
+
+  @VisibleForTesting public void handleReactionButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
+        .observeOn(viewScheduler)
+        .flatMap(editorialViewModel -> handleSinglePressReactionButton(editorialViewModel))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
+            reactionEvent.getGroupId(), reactionEvent.getReactionType())
+            .toObservable()
+            .filter(ReactionsResponse::differentReaction)
+            .observeOn(viewScheduler)
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+            .filter(ReactionsResponse::wasSuccess)
+            .flatMapSingle(
+                __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleLongPressReactionButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonLongPressed())
+        .flatMap(click -> editorialManager.loadEditorialViewModel()
+            .toObservable())
+        .doOnNext(editorialViewModel -> {
+          editorialAnalytics.sendReactionButtonClickEvent();
+          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void handleSnackLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLoginClick())
+        .doOnNext(homeEvent -> editorialNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting public void onCreateLoadReactionModel() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId(),
+            editorialViewModel.getGroupId()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 }

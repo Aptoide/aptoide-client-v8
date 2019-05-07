@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
+import static cm.aptoide.pt.editorial.EditorialAnalytics.REACTION_INTERACT;
 
 /**
  * Created by jdandrade on 28/03/2018.
@@ -30,6 +31,7 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  private static final String WHERE = "where";
   private static final String PACKAGE_NAME = "package_name";
   private static final String ACTION = "action";
   private static final String BUNDLE_TAG = "bundle_tag";
@@ -37,6 +39,7 @@ public class HomeAnalytics {
   private static final String PROMOTION_DIALOG = "promotion-dialog";
   private static final String GAMES = "games";
   private static final String APPS = "apps";
+  private static final String CURATION_CARD = "curation_card";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -143,6 +146,17 @@ public class HomeAnalytics {
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
 
+  public void sendActionItemEditorialTapOnCardInteractEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+  }
+
   public void sendActionItemDismissInteractEvent(String bundleTag, int bundlePosition) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_CARD_DISMISS);
@@ -181,6 +195,18 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, CURATION_CARD_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendActionItemEditorialImpressionEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, VIEW_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 
@@ -290,5 +316,29 @@ public class HomeAnalytics {
       return OPEN;
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
+  }
+
+  public void sendReactionButtonClickEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "view_reactions");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendReactedEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "click_to_react");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendDeleteEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "delete_reaction");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }
