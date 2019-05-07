@@ -14,6 +14,10 @@
   <color name="grey_900">#212121</color>
   <color name="google_grey">#666666</color>
   <color name="facebook_blue">#3b5999</color>
+  <color name="curation_blue">#4abee2</color>
+  <color name="curation_grey">#3c3c3c</color>
+  <color name="curation_green">#6ab518</color>
+  <color name="curation_default">@color/default_orange_gradient_end</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>

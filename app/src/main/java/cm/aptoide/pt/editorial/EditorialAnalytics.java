@@ -5,6 +5,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by franciscocalado on 03/09/2018.
@@ -14,9 +15,13 @@ public class EditorialAnalytics {
   public static final String CURATION_CARD_INSTALL = "Curation_Card_Install";
   public static final String EDITORIAL_BN_CURATION_CARD_INSTALL =
       "Editorial_BN_Curation_Card_Install";
+  public static final String REACTION_INTERACT = "Reaction_Interact";
+
   private static final String APPLICATION_NAME = "Application Name";
   private static final String TYPE = "type";
-
+  private static final String WHERE = "where";
+  private static final String ACTION = "action";
+  private static final String CURATION_DETAIL = "curation_detail";
   private final DownloadAnalytics downloadAnalytics;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -57,5 +62,29 @@ public class EditorialAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
+  }
+
+  public void sendReactionButtonClickEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "view_reactions");
+    data.put(WHERE, CURATION_DETAIL);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendReactedEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "click_to_react");
+    data.put(WHERE, CURATION_DETAIL);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendDeletedEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "delete_reaction");
+    data.put(WHERE, CURATION_DETAIL);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }

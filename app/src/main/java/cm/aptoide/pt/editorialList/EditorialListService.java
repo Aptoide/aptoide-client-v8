@@ -9,6 +9,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.EditorialListData;
 import cm.aptoide.pt.dataprovider.ws.v7.EditorialListRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.EditorialListResponse;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -54,7 +55,8 @@ public class EditorialListService {
   }
 
   private EditorialListViewModel mapEditorialListError(Throwable throwable) {
-    if (throwable instanceof NoNetworkConnectionException) {
+    if (throwable instanceof NoNetworkConnectionException
+        || throwable instanceof ConnectException) {
       return new EditorialListViewModel(EditorialListViewModel.Error.NETWORK);
     } else {
       return new EditorialListViewModel(EditorialListViewModel.Error.GENERIC);
@@ -73,7 +75,8 @@ public class EditorialListService {
     for (EditorialListData actionItemData : items) {
       CurationCard curationCard =
           new CurationCard(actionItemData.getId(), actionItemData.getCaption(),
-              actionItemData.getIcon(), actionItemData.getTitle(), actionItemData.getViews());
+              actionItemData.getIcon(), actionItemData.getTitle(), actionItemData.getViews(),
+              actionItemData.getType(), actionItemData.getDate());
       curationCards.add(curationCard);
     }
     return curationCards;

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.home.apps.BundleView;
+import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import rx.Observable;
 
 /**
@@ -12,6 +13,8 @@ public interface HomeView extends BundleView {
   Observable<EditorialHomeEvent> editorialCardClicked();
 
   Observable<HomeEvent> infoBundleKnowMoreClicked();
+
+  Observable<EditorialHomeEvent> reactionsButtonClicked();
 
   void scrollToTop();
 
@@ -30,4 +33,18 @@ public interface HomeView extends BundleView {
   void sendDeeplinkToWalletAppView(String url);
 
   void showConsentDialog();
+
+  Observable<ReactionsHomeEvent> reactionClicked();
+
+  Observable<EditorialHomeEvent> reactionButtonLongPress();
+
+  void showReactionsPopup(String cardId, String groupId, int bundlePosition);
+
+  void showLogInDialog();
+
+  Observable<Void> snackLogInClick();
+
+  void showGenericErrorToast();
+
+  void showNetworkErrorToast();
 }

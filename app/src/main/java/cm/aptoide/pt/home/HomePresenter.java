@@ -2,19 +2,22 @@ package cm.aptoide.pt.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import cm.aptoide.pt.view.app.Application;
+import java.util.Collections;
+import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
 import static cm.aptoide.pt.home.HomeBundle.BundleType.APPCOINS_ADS;
+import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORIAL;
 import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
 
 /**
@@ -29,19 +32,16 @@ public class HomePresenter implements Presenter {
   private final CrashReport crashReporter;
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
-  private final AptoideAccountManager accountManager;
   private final HomeAnalytics homeAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager accountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
     this.crashReporter = crashReporter;
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
-    this.accountManager = accountManager;
     this.homeAnalytics = homeAnalytics;
   }
 
@@ -71,7 +71,16 @@ public class HomePresenter implements Presenter {
     handleActionBundlesImpression();
 
     handleEditorialCardClick();
+
     handleInstallWalletOfferClick();
+
+    handleReactionButtonClick();
+
+    handleLongPressedReactionButton();
+
+    handleUserReaction();
+
+    handleSnackLogInClick();
 
     handleMoPubConsentDialog();
   }
@@ -117,6 +126,59 @@ public class HomePresenter implements Presenter {
         });
   }
 
+  @VisibleForTesting public void handleLongPressedReactionButton() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionButtonLongPress())
+        .doOnNext(homeEvent -> {
+          homeAnalytics.sendReactionButtonClickEvent();
+          view.showReactionsPopup(homeEvent.getCardId(), homeEvent.getGroupId(),
+              homeEvent.getBundlePosition());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
+    return home.loadReactionModel(cardId, groupId)
+        .observeOn(viewScheduler)
+        .doOnSuccess(view::updateEditorialCards);
+  }
+
+  private Observable<List<HomeBundle>> loadHomeAndReactions() {
+    return loadHome().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
+  private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
+    return loadFreshBundles().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
+  private Observable<List<HomeBundle>> loadNextBundlesAndReactions() {
+    return loadNextBundles().toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
   @VisibleForTesting public void handleActionBundlesImpression() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -135,6 +197,9 @@ public class HomePresenter implements Presenter {
             homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
                 homeEvent.getBundlePosition(), actionBundle.getActionItem()
                     .getCardId());
+            homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
+                homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                    .getCardId());
           }
         })
         .filter(homeEvent -> homeEvent.getBundle()
@@ -148,7 +213,7 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(actionBundle -> {
         }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
+          crashReporter.log(throwable);
         });
   }
 
@@ -167,6 +232,60 @@ public class HomePresenter implements Presenter {
         }, throwable -> {
           throw new OnErrorNotImplementedException(throwable);
         });
+  }
+
+  @VisibleForTesting public void handleReactionButtonClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionsButtonClicked())
+        .observeOn(viewScheduler)
+        .flatMap(this::singlePressReactionButtonAction)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, throwable -> crashReporter.log(throwable));
+  }
+
+  @VisibleForTesting public void handleUserReaction() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.reactionClicked())
+        .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
+            homeEvent.getReaction())
+            .toObservable()
+            .filter(ReactionsResponse::differentReaction)
+            .observeOn(viewScheduler)
+            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
+            .filter(ReactionsResponse::wasSuccess)
+            .flatMapSingle(__ -> loadReactionModel(homeEvent.getCardId(), homeEvent.getGroupId())))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
+    if (reactionsResponse.wasSuccess()) {
+      if (isDelete) {
+        homeAnalytics.sendDeleteEvent();
+      } else {
+        homeAnalytics.sendReactedEvent();
+      }
+    } else if (reactionsResponse.reactionsExceeded()) {
+      view.showLogInDialog();
+    } else if (reactionsResponse.wasNetworkError()) {
+      view.showNetworkErrorToast();
+    } else if (reactionsResponse.wasGeneralError()) {
+      view.showGenericErrorToast();
+    }
+  }
+
+  @VisibleForTesting public void handleSnackLogInClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.snackLogInClick())
+        .doOnNext(homeEvent -> homeNavigator.navigateToLogIn())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
   }
 
   @VisibleForTesting public void handleDismissClick() {
@@ -193,7 +312,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(__ -> loadHome())
+        .flatMap(__ -> loadHomeAndReactions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
@@ -284,14 +403,14 @@ public class HomePresenter implements Presenter {
             .doOnNext(click -> {
               homeAnalytics.sendEditorialInteractEvent(click.getBundle()
                   .getTag(), click.getBundlePosition(), click.getCardId());
+              homeAnalytics.sendActionItemEditorialTapOnCardInteractEvent(click.getBundle()
+                  .getTag(), click.getBundlePosition(), click.getCardId());
               homeNavigator.navigateToEditorial(click.getCardId());
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, crashReporter::log);
   }
 
   private void handleBottomNavigationEvents() {
@@ -302,9 +421,7 @@ public class HomePresenter implements Presenter {
         .doOnNext(navigated -> view.scrollToTop())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleAdClick() {
@@ -376,8 +493,7 @@ public class HomePresenter implements Presenter {
             .filter(__ -> home.hasMore())
             .observeOn(viewScheduler)
             .doOnNext(bottomReached -> view.showLoadMore())
-            .flatMapSingle(bottomReached -> loadNextBundles())
-            .doOnNext(__ -> homeAnalytics.sendLoadMoreInteractEvent())
+            .flatMap(bottomReached -> loadNextBundlesAndReactions())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -390,6 +506,7 @@ public class HomePresenter implements Presenter {
     return home.loadNextHomeBundles()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
+          homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());
           } else {
@@ -407,7 +524,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
-            .flatMapSingle(refreshed -> loadFreshBundles())
+            .flatMap(refreshed -> loadFreshBundlesAndReactions())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
@@ -437,10 +554,31 @@ public class HomePresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(click -> view.showLoading())
-            .flatMapSingle(click -> loadNextBundles())
+            .flatMap(click -> loadNextBundlesAndReactions())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
+  }
+
+  private Observable<List<HomeBundle>> singlePressReactionButtonAction(
+      EditorialHomeEvent editorialHomeEvent) {
+    return home.isFirstReaction(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId())
+        .flatMapObservable(firstReaction -> {
+          if (firstReaction) {
+            homeAnalytics.sendReactionButtonClickEvent();
+            view.showReactionsPopup(editorialHomeEvent.getCardId(), editorialHomeEvent.getGroupId(),
+                editorialHomeEvent.getBundlePosition());
+            return Observable.just(Collections.emptyList());
+          } else {
+            return home.deleteReaction(editorialHomeEvent.getCardId(),
+                editorialHomeEvent.getGroupId())
+                .toObservable()
+                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
+                .filter(ReactionsResponse::wasSuccess)
+                .flatMapSingle(__ -> loadReactionModel(editorialHomeEvent.getCardId(),
+                    editorialHomeEvent.getGroupId()));
+          }
+        });
   }
 }
