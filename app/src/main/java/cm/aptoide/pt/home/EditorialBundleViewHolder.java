@@ -10,7 +10,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
-import cm.aptoide.pt.reactions.TopReactionsSetup;
+import cm.aptoide.pt.reactions.TopReactionsPreview;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import java.text.DateFormat;
@@ -38,7 +38,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final ImageButton reactButton;
   private final CardView curationTypeBubble;
   private final TextView curationTypeBubbleText;
-  private TopReactionsSetup topReactionsSetup;
+  private TopReactionsPreview topReactionsPreview;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener) {
     super(view);
@@ -51,8 +51,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.reactButton = view.findViewById(R.id.add_reactions);
     this.curationTypeBubble = view.findViewById(R.id.curation_type_bubble);
     this.curationTypeBubbleText = view.findViewById(R.id.curation_type_bubble_text);
-    topReactionsSetup = new TopReactionsSetup();
-    topReactionsSetup.initialReactionsSetup(view);
+    topReactionsPreview = new TopReactionsPreview();
+    topReactionsPreview.initialReactionsSetup(view);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -113,7 +113,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private void setReactions(List<TopReaction> reactions, int numberOfReactions,
       String userReaction) {
     setUserReaction(userReaction);
-    topReactionsSetup.setReactions(reactions, numberOfReactions, itemView.getContext());
+    topReactionsPreview.setReactions(reactions, numberOfReactions, itemView.getContext());
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
@@ -136,7 +136,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   private void setUserReaction(String reaction) {
-    if (!reaction.equals("") && topReactionsSetup.isReactionValid(reaction)) {
+    if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
       reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
@@ -145,7 +145,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
   private void clearReactions() {
     reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
-    topReactionsSetup.clearReactions();
+    topReactionsPreview.clearReactions();
   }
 
   private void setCurationCardBubble(String caption) {

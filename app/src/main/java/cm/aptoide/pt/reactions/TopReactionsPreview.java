@@ -11,7 +11,7 @@ import java.util.List;
 
 import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
 
-public class TopReactionsSetup {
+public class TopReactionsPreview {
 
   private ImageView firstReaction;
   private ImageView secondReaction;
@@ -19,7 +19,7 @@ public class TopReactionsSetup {
   private TextView numberOfReactions;
   private ImageView[] imageView;
 
-  public TopReactionsSetup() {
+  public TopReactionsPreview() {
 
   }
 
@@ -55,7 +55,7 @@ public class TopReactionsSetup {
   }
 
   public boolean isReactionValid(String reaction) {
-    return mapReaction(reaction) != -1;
+    return !reaction.equals("") && mapReaction(reaction) != -1;
   }
 
   public void clearReactions() {
