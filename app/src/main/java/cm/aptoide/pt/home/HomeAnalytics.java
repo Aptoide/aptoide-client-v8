@@ -52,7 +52,6 @@ public class HomeAnalytics {
     sendTapOnMoreInteractEvent(bundlePosition, bundleTag, itemsInBundle, null);
   }
 
-
   public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle,
       String chipTag) {
     final Map<String, Object> data = new HashMap<>();
