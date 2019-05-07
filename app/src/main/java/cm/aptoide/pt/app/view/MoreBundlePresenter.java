@@ -124,10 +124,10 @@ public class MoreBundlePresenter implements Presenter {
                       .getTag(), click.getBundle()
                       .getContent()
                       .size(), chip != null ? chip.getName() : null);
-              if (chipManager.getCurrentChip() != null) {
+              if (chip != null) {
                 homeAnalytics.sendChipTapOnApp(click.getBundle()
                     .getTag(), click.getApp()
-                    .getPackageName(), chipManager.getCurrentChip()
+                    .getPackageName(), chip
                     .getName());
               }
             })

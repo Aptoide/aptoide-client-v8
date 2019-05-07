@@ -285,9 +285,8 @@ public class HomeAnalytics {
   }
 
   public void sendChipTapOnMore(String bundleTag, String chipTag) {
-    final Map<String, Object> data = createChipTapInteractMap(TAP_ON_MORE, bundleTag, chipTag);
-    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
+    analyticsManager.logEvent(createChipTapInteractMap(TAP_ON_MORE, bundleTag, chipTag),
+        HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
   }
 
   public void sendChipTapOnApp(String bundleTag, String packageName, String chipTag) {
