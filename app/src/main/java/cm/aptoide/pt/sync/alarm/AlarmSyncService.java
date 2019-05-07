@@ -23,11 +23,11 @@ public class AlarmSyncService extends Service {
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-
     if (intent != null && AlarmSyncScheduler.ACTION_SYNC.equals(intent.getAction())) {
 
       final String syncId = intent.getData()
           .getFragment();
+
       final Sync sync = storage.get(syncId);
       final boolean reschedule = intent.getBooleanExtra(AlarmSyncScheduler.EXTRA_RESCHEDULE, false);
 
@@ -45,7 +45,6 @@ public class AlarmSyncService extends Service {
         scheduler.cancel(syncId);
       }
     }
-
     return Service.START_REDELIVER_INTENT;
   }
 

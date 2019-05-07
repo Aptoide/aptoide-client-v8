@@ -7,7 +7,6 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
-import java.util.List;
 import rx.Observable;
 
 /**

@@ -25,6 +25,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import java.util.ArrayList;
@@ -125,6 +126,7 @@ public class AppViewPresenter implements Presenter {
     handleInstallWalletPromotion();
 
     claimApp();
+    handlePromotionClaimResult();
     resumePromotionDownload();
     cancelPromotionDownload();
     pausePromotionDownload();
@@ -902,6 +904,15 @@ public class AppViewPresenter implements Presenter {
               appViewAnalytics.sendWalletPromotionImpression();
               appViewManager.setAppcPromotionImpressionSent();
             }
+
+            if (walletPromotionViewModel.isWalletInstalled()
+                && walletPromotionViewModel.isAppViewAppInstalled()) {
+              appViewManager.scheduleNotification(
+                  String.valueOf(walletPromotionViewModel.getAppcValue()),
+                  appViewViewModel.getIcon(), appViewViewModel.getPackageName(),
+                  appViewViewModel.getStore()
+                      .getName());
+            }
           }
         });
   }
@@ -1248,6 +1259,19 @@ public class AppViewPresenter implements Presenter {
         .subscribe(created -> {
         }, error -> {
           throw new OnErrorNotImplementedException(error);
+        });
+  }
+
+  private void handlePromotionClaimResult() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> promotionsNavigator.claimDialogResults())
+        .filter(ClaimDialogResultWrapper::isOk)
+        .doOnNext(result -> appViewManager.unscheduleNotificationSync())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          throw new OnErrorNotImplementedException(throwable);
         });
   }
 

@@ -94,4 +94,8 @@ public class NotificationAccessor extends SimpleAccessor<Notification> {
   public Observable<List<Notification>> getAll() {
     return database.getAll(Notification.class);
   }
+
+  public Completable deleteAllOfType(int type) {
+    return Completable.fromAction(() -> database.delete(Notification.class, "type", type));
+  }
 }
