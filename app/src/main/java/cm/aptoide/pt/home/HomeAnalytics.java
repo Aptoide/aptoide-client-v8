@@ -30,6 +30,7 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  private static final String PACKAGE_NAME = "package_name";
   private static final String ACTION = "action";
   private static final String BUNDLE_TAG = "bundle_tag";
   private static final String PROMOTION_ICON = "promotion-icon";
@@ -100,7 +101,7 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_APP);
     data.put("app_rating", appRating);
-    data.put("package_name", packageName);
+    data.put(PACKAGE_NAME, packageName);
     data.put("app_position", appPosition);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
@@ -118,7 +119,7 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, actionType);
     data.put("app_rating", appRating);
-    data.put("package_name", packageName);
+    data.put(PACKAGE_NAME, packageName);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("network", network.getName());
@@ -259,22 +260,25 @@ public class HomeAnalytics {
   }
 
   public void sendChipTapOnMore(String bundleTag, String chipTag) {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, TAP_ON_MORE);
-    data.put(BUNDLE_TAG, bundleTag);
-    data.put(CHIP_TAG, chipTag);
+    final Map<String, Object> data = createChipTapInteractMap(TAP_ON_MORE, bundleTag, chipTag);
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
   public void sendChipTapOnApp(String bundleTag, String packageName, String chipTag) {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, TAP_ON_APP);
-    data.put(BUNDLE_TAG, bundleTag);
-    data.put("package_name", packageName);
-    data.put(CHIP_TAG, chipTag);
+    final Map<String, Object> data = createChipTapInteractMap(TAP_ON_APP, bundleTag, chipTag);
+    data.put(PACKAGE_NAME, packageName);
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
+  }
+
+  public Map<String, Object> createChipTapInteractMap(String action, String bundleTag,
+      String chipTag) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, action);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put(CHIP_TAG, chipTag);
+    return data;
   }
 
   public void convertAppcAdClick(String clickUrl) {
