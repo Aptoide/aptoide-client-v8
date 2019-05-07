@@ -1,21 +1,21 @@
 package cm.aptoide.pt.notification;
 
-import android.content.Context;
-import cm.aptoide.pt.R;
-
 public class AppcPromotionNotificationStringProvider {
 
-  private final Context context;
+  private final String notificationTitle;
+  private final String notificationBody;
 
-  public AppcPromotionNotificationStringProvider(Context context) {
-    this.context = context;
+  public AppcPromotionNotificationStringProvider(String notificationTitle,
+      String notificationBody) {
+    this.notificationTitle = notificationTitle;
+    this.notificationBody = notificationBody;
   }
 
   public String getNotificationTitle() {
-    return context.getString(R.string.promo_update2appc_claim_notification_title);
+    return notificationTitle;
   }
 
   public String getNotificationBody() {
-    return context.getString(R.string.promo_update2appc_claim_notification_body);
+    return notificationBody;
   }
 }

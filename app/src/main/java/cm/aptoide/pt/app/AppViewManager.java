@@ -617,10 +617,16 @@ public class AppViewManager {
     return promotionStatus;
   }
 
-  public void scheduleNotification(String appcValue, String image, String url) {
+  public void scheduleNotification(String appcValue, String image, String packageName,
+      String storeName) {
     localNotificationSyncManager.schedule(
         String.format(appcPromotionNotificationStringProvider.getNotificationTitle(), appcValue),
-        appcPromotionNotificationStringProvider.getNotificationBody(), image, url,
+        appcPromotionNotificationStringProvider.getNotificationBody(), image,
+        "aptoideinstall://package="
+            + packageName
+            + "&store="
+            + storeName
+            + "&show_install_popup=false",
         LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
   }
 

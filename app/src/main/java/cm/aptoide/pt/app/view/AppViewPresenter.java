@@ -909,12 +909,9 @@ public class AppViewPresenter implements Presenter {
                 && walletPromotionViewModel.isAppViewAppInstalled()) {
               appViewManager.scheduleNotification(
                   String.valueOf(walletPromotionViewModel.getAppcValue()),
-                  appViewViewModel.getIcon(), "aptoideinstall://package="
-                      + appViewViewModel.getPackageName()
-                      + "&store="
-                      + appViewViewModel.getStore()
-                      .getName()
-                      + "&show_install_popup=false");
+                  appViewViewModel.getIcon(), appViewViewModel.getPackageName(),
+                  appViewViewModel.getStore()
+                      .getName());
             }
           }
         });

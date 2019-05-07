@@ -553,6 +553,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides
   AppcPromotionNotificationStringProvider providesAppcPromotionNotificationStringProvider() {
-    return new AppcPromotionNotificationStringProvider(fragment.getContext());
+    return new AppcPromotionNotificationStringProvider(fragment.getContext()
+        .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
+        .getString(R.string.promo_update2appc_claim_notification_body));
   }
 }

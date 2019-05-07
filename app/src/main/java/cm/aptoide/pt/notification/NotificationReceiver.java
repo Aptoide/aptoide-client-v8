@@ -8,8 +8,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.AptoideApplication;
 import com.jakewharton.rxrelay.PublishRelay;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-
 public class NotificationReceiver extends BroadcastReceiver {
 
   public static final String NOTIFICATION_PRESSED_ACTION = "NOTIFICATION_PRESSED_ACTION";
@@ -27,7 +25,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     Bundle intentExtras = intent.getExtras();
     NotificationInfo notificationInfo;
     NotificationManager manager =
-        (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
 
     switch (intent.getAction()) {
