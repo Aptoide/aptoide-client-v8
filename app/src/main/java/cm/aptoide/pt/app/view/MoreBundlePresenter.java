@@ -127,8 +127,7 @@ public class MoreBundlePresenter implements Presenter {
               if (chip != null) {
                 homeAnalytics.sendChipTapOnApp(click.getBundle()
                     .getTag(), click.getApp()
-                    .getPackageName(), chip
-                    .getName());
+                    .getPackageName(), chip.getName());
               }
             })
             .observeOn(viewScheduler)
@@ -171,7 +170,7 @@ public class MoreBundlePresenter implements Presenter {
                       .getTag(), homeMoreClick.getBundle()
                       .getContent()
                       .size(), chip != null ? chip.getName() : null);
-              if (chipManager.getCurrentChip() != null) {
+              if (chip != null) {
                 homeAnalytics.sendChipTapOnMore(homeMoreClick.getBundle()
                     .getTag(), chip != null ? chip.getName() : null);
               }
