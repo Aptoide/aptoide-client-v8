@@ -171,7 +171,8 @@ public class MoreBundlePresenter implements Presenter {
                       .size(), chipManager.getCurrentChip());
               if (chipManager.getCurrentChip() != null) {
                 homeAnalytics.sendChipTapOnMore(homeMoreClick.getBundle()
-                    .getTag(), chipManager.getCurrentChip());
+                    .getTag(), chipManager.getCurrentChip()
+                    .getName());
               }
             })
             .observeOn(viewScheduler)

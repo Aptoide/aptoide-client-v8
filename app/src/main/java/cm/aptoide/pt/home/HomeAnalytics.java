@@ -257,11 +257,11 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendChipTapOnMore(String bundleTag, ChipManager.Chip chip) {
+  public void sendChipTapOnMore(String bundleTag, String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_MORE);
     data.put(BUNDLE_TAG, bundleTag);
-    data.put(CHIP_TAG, chip.getName());
+    data.put(CHIP_TAG, chipTag);
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }

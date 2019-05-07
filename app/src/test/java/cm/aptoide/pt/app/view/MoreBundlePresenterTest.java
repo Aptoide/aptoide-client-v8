@@ -221,7 +221,8 @@ public class MoreBundlePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     moreClickEvent.onNext(click);
 
-    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(), ChipManager.Chip.GAMES);
+    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(),
+        ChipManager.Chip.GAMES.getName());
   }
 
   @Test public void moreClicked_AppsChipAnalytics() {
@@ -232,7 +233,8 @@ public class MoreBundlePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     moreClickEvent.onNext(click);
 
-    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(), ChipManager.Chip.APPS);
+    verify(homeAnalytics).sendChipTapOnMore(localTopAppsBundle.getTag(),
+        ChipManager.Chip.APPS.getName());
   }
 
   @Test public void bottomReached_ShowNextBundles() {
