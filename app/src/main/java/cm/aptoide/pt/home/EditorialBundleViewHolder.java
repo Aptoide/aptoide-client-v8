@@ -74,7 +74,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
         .load(icon, backgroundImage);
     editorialTitle.setText(title);
     editorialViews.setText(String.format(itemView.getContext()
-        .getString(R.string.editorial_card_short_number_views), formatNumberOfViews(numberOfViews)));
+            .getString(R.string.editorial_card_short_number_views),
+        formatNumberOfViews(numberOfViews)));
     setCurationCardBubble(subTitle);
     setupCalendarDateString(date);
     reactButton.setOnClickListener(view -> uiEventsListener.onNext(
