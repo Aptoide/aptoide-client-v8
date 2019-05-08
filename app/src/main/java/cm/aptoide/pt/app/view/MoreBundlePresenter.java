@@ -172,7 +172,7 @@ public class MoreBundlePresenter implements Presenter {
                       .size(), chip != null ? chip.getName() : null);
               if (chip != null) {
                 homeAnalytics.sendChipTapOnMore(homeMoreClick.getBundle()
-                    .getTag(), chip != null ? chip.getName() : null);
+                    .getTag(), chip.getName());
               }
             })
             .observeOn(viewScheduler)
