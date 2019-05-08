@@ -19,8 +19,8 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
+import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
@@ -152,7 +152,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AuthenticationPersistence authenticationPersistence;
   @Inject Crashlytics crashlytics;
   @Inject SyncScheduler alarmSyncScheduler;
-  @Inject @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
+  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
   @Inject @Named("defaultInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
       bodyInterceptorV3;
@@ -164,7 +164,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("account-settings-pool-v7") BodyInterceptor<BaseBody>
+  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody>
       accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
@@ -722,7 +722,7 @@ public abstract class AptoideApplication extends Application {
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
     if (accountSettingsBodyInterceptorWebV7 == null) {
       accountSettingsBodyInterceptorWebV7 =
-          new AccountSettingsBodyInterceptorV7(bodyInterceptorWebV7, adultContent);
+          new MatureBodyInterceptorV7(bodyInterceptorWebV7, adultContent);
     }
     return accountSettingsBodyInterceptorWebV7;
   }

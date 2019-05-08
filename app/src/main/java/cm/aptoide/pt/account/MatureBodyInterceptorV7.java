@@ -5,12 +5,12 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import rx.Single;
 
-public class AccountSettingsBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
+public class MatureBodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
   private final AdultContent adultContent;
 
-  public AccountSettingsBodyInterceptorV7(BodyInterceptor<BaseBody> bodyInterceptorV7,
+  public MatureBodyInterceptorV7(BodyInterceptor<BaseBody> bodyInterceptorV7,
       AdultContent adultContent) {
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.adultContent = adultContent;

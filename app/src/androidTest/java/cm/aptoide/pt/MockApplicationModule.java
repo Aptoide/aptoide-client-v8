@@ -294,7 +294,7 @@ public class MockApplicationModule extends ApplicationModule {
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      @Named("account-settings-pool-v7")
+      @Named("mature-pool-v7")
           BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
