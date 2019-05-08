@@ -198,6 +198,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     subscriptions.add(view.walletCancelClick()
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnWalletDialogCancel(packageName);
+          navigator.popDialogWithResult(packageName, Activity.RESULT_CANCELED);
           view.dismissDialog();
         })
         .subscribe(__ -> {

@@ -117,6 +117,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -195,6 +196,10 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.RealmLocalNotificationSyncMapper;
+import cm.aptoide.pt.notification.RealmLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -869,8 +874,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
   }
 
-  @Singleton @Provides SyncStorage provideSyncStorage() {
-    return new SyncStorage(new HashMap<>());
+  @Singleton @Provides SyncStorage provideSyncStorage(
+      RealmLocalNotificationSyncPersistence persistence) {
+    return new SyncStorage(new HashMap<>(), persistence);
   }
 
   @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
@@ -1922,6 +1928,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
     return new PackageInstallerManager();
+  }
+
+  @Singleton @Provides NotificationProvider providesNotificationProvider(Database database) {
+    return new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
+        Schedulers.io());
+  }
+
+  @Singleton @Provides
+  RealmLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
+      Database database, NotificationProvider provider) {
+    return new RealmLocalNotificationSyncPersistence(database,
+        new RealmLocalNotificationSyncMapper(), provider);
+  }
+
+  @Singleton @Provides LocalNotificationSyncManager providesLocalNotificationSyncManager(
+      SyncScheduler syncScheduler, NotificationProvider provider) {
+    return new LocalNotificationSyncManager(syncScheduler, true, provider);
   }
 
   @Singleton @Provides ChipManager providesChipManager() {

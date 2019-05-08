@@ -106,4 +106,8 @@ public class NotificationProvider {
   public Completable save(AptoideNotification notification) {
     return save(convertToNotification(notification));
   }
+
+  public Completable deleteAllForType(int type) {
+    return notificationAccessor.deleteAllOfType(type);
+  }
 }

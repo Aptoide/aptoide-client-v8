@@ -18,6 +18,7 @@ public class NotificationPolicyFactory {
 
   Policy getPolicy(AptoideNotification notification) {
     switch (notification.getType()) {
+      case AptoideNotification.APPC_PROMOTION:
       case AptoideNotification.CAMPAIGN:
         return new CampaignPolicy();
       case AptoideNotification.COMMENT:

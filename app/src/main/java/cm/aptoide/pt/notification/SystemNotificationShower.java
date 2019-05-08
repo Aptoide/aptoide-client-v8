@@ -11,7 +11,11 @@ import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.RemoteViews;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -22,6 +26,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
 import rx.Single;
@@ -76,12 +81,18 @@ public class SystemNotificationShower implements Presenter {
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
-          notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
-              aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
-              aptoideNotification.getUrl());
-          return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
-              notification -> notificationManager.notify(notificationId, notification))
-              .toCompletable();
+          if (aptoideNotification.getType() != AptoideNotification.APPC_PROMOTION) {
+            notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
+                aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
+                aptoideNotification.getUrl());
+            return mapToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
+                notification -> notificationManager.notify(notificationId, notification))
+                .toCompletable();
+          } else {
+            return mapLocalToAndroidNotification(aptoideNotification, notificationId).doOnSuccess(
+                notification -> notificationManager.notify(notificationId, notification))
+                .toCompletable();
+          }
         })
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable)));
@@ -95,6 +106,15 @@ public class SystemNotificationShower implements Presenter {
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
             notificationId, getOnDismissAction(notificationId), aptoideNotification.getAppName(),
             aptoideNotification.getGraphic()));
+  }
+
+  private Single<Notification> mapLocalToAndroidNotification(
+      AptoideNotification aptoideNotification, int notificationId) {
+    return getPressIntentAction(aptoideNotification.getUrlTrack(), aptoideNotification.getUrl(),
+        notificationId, context).flatMap(
+        pressIntentAction -> buildLocalNotification(context, aptoideNotification.getTitle(),
+            aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
+            getOnDismissAction(notificationId)));
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
@@ -116,6 +136,41 @@ public class SystemNotificationShower implements Presenter {
           PendingIntent.FLAG_UPDATE_CURRENT);
     })
         .subscribeOn(Schedulers.computation());
+  }
+
+  @NonNull
+  private Single<Notification> buildLocalNotification(Context context, String title, String body,
+      String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
+
+    Spannable titleBold = new SpannableString(title);
+    titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(),
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return Single.fromCallable(() -> {
+      Notification notification =
+          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
+              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
+              .setContentTitle(titleBold)
+              .setContentText(body)
+              .addAction(0, context.getResources()
+                      .getString(R.string.promo_update2appc_notification_dismiss_button),
+                  onDismissAction)
+              .addAction(0, context.getResources()
+                      .getString(R.string.promo_update2appc_notification_claim_button),
+                  pressIntentAction)
+              .setLargeIcon(Glide.with(context)
+                  .asBitmap()
+                  .load(iconUrl)
+                  .submit()
+                  .get())
+              .build();
+      notification.flags =
+          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
+      return notification;
+    })
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
@@ -239,10 +294,15 @@ public class SystemNotificationShower implements Presenter {
 
   private void setNotificationDismissSubscribe() {
     view.getNotificationDismissed()
-        .filter(notificationInfo -> notificationInfo.getNotificationType() < 7)
+        .filter(notificationInfo -> notificationInfo.getNotificationType() < 8)
         .doOnNext(notificationInfo -> dismissNotificationAfterAction(
             notificationInfo.getNotificationType()))
-        .subscribe(__ -> {
+        .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
+            notificationInfo.getNotificationType())[0].equals(AptoideNotification.APPC_PROMOTION))
+        .flatMapCompletable(notificationInfo -> notificationProvider.deleteAllForType(
+            AptoideNotification.APPC_PROMOTION))
+        .toCompletable()
+        .subscribe(() -> {
         }, throwable -> crashReport.log(throwable));
   }
 
@@ -251,21 +311,29 @@ public class SystemNotificationShower implements Presenter {
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> {
-              notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
-                  notification.getAbTestingGroup(), notification.getCampaignId(),
-                  notification.getUrl());
-              notificationAnalytics.sendNotificationTouchEvent(
-                  notificationInfo.getNotificationTrackUrl(),
-                  notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
-                  notification.getCampaignId(), notification.getAbTestingGroup());
+              if (notification.getType() != AptoideNotification.APPC_PROMOTION) {
+                notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
+                    notification.getAbTestingGroup(), notification.getCampaignId(),
+                    notification.getUrl());
+                notificationAnalytics.sendNotificationTouchEvent(
+                    notificationInfo.getNotificationTrackUrl(),
+                    notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
+                    notification.getCampaignId(), notification.getAbTestingGroup());
+              }
             })
             .doOnSuccess(notification -> navigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build("Notification")))
             .map(notification -> notificationInfo))
-        .doOnNext(notificationInfo -> callDeepLink(context, notificationInfo))
-        .flatMapCompletable(notificationInfo -> dismissNotificationAfterAction(
-            notificationInfo.getNotificationType()))
-        .subscribe(__ -> {
+        .doOnNext(notificationInfo -> {
+          callDeepLink(context, notificationInfo);
+          dismissNotificationAfterAction(notificationInfo.getNotificationType());
+        })
+        .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
+            notificationInfo.getNotificationType())[0].equals(AptoideNotification.APPC_PROMOTION))
+        .flatMapCompletable(notificationInfo -> notificationProvider.deleteAllForType(
+            AptoideNotification.APPC_PROMOTION))
+        .toCompletable()
+        .subscribe(() -> {
         }, throwable -> crashReport.log(throwable));
   }
 }
