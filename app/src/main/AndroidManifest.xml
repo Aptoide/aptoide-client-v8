@@ -42,10 +42,10 @@
       com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial,
       com.mopub.mobileads.native_video, com.mopub.mobileads.native_static,
-      com.mopub.mobileads.base, com.flurry.android.ads.sdk, com.flurry.android.analytics.sdk,
-      com.appnext.ads.mediation.mopub, com.appnext.appnextsdkmopubbanners,
-      com.appnext.appnextsdk.API.mediation.MoPub, com.applovin.sdk, com.mopub.mobileads.applovin,
-      com.mopub.mobileads.ironsource, com.mopub.mobileads.vungle, com.mopub.mobileads.flurry"/>
+      com.mopub.mobileads.base, com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub,
+      com.appnext.appnextsdkmopubbanners, com.appnext.appnextsdk.API.mediation.MoPub,
+      com.applovin.sdk, com.mopub.mobileads.applovin, com.mopub.mobileads.ironsource,
+      com.mopub.mobileads.vungle"/>
 
   <application
       android:allowBackup="false"
@@ -65,11 +65,6 @@
     <activity
         android:name="com.mopub.common.MoPubBrowser"
         android:configChanges="keyboardHidden|orientation|screenSize"/>
-
-    <activity
-        android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
-        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
-    </activity>
 
     <!-- Interstitials -->
     <activity

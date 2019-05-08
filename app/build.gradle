@@ -287,6 +287,13 @@ android {
         "\"" + project.MOPUB_UNITYADS_GAME_ID + "\""
     variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
         "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_FYBER_APPLICATION_ID",
+        "\"" + project.MOPUB_FYBER_APPLICATION_ID + "\""
+    variant.buildConfigField "String", "MOPUB_FYBER_INTERSTITIAL_SPOT_ID",
+        "\"" + project.MOPUB_FYBER_INTERSTITIAL_SPOT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_FYBER_BANNER_SPOT_ID",
+        "\"" + project.MOPUB_FYBER_BANNER_SPOT_ID + "\""
+
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
@@ -449,15 +456,6 @@ dependencies {
     exclude module: "support-annotations"
     exclude module: "support-v4"
   }
-
-  // Yahoo! Flurry
-  implementation("com.flurry.android:ads:${FLURRY_ADS_VERSION}@aar") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-  implementation "com.mopub.mediation:flurry:${MOPUB_MEDIATION_FLURRY_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
