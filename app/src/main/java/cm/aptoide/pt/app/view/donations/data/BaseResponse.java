@@ -3,7 +3,7 @@ package cm.aptoide.pt.app.view.donations.data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-class BaseResponse {
+public class BaseResponse {
 
   private Info info;
   private List<Error> errors;
@@ -49,7 +49,7 @@ class BaseResponse {
     return result;
   }
 
-  protected boolean canEqual(Object other) {
+  public boolean canEqual(Object other) {
     return other instanceof BaseResponse;
   }
 
@@ -86,7 +86,7 @@ class BaseResponse {
       this.time = time;
     }
 
-    protected boolean canEqual(Object other) {
+    public boolean canEqual(Object other) {
       return other instanceof Info;
     }
 
@@ -118,7 +118,7 @@ class BaseResponse {
         this.human = human;
       }
 
-      protected boolean canEqual(Object other) {
+      public boolean canEqual(Object other) {
         return other instanceof Time;
       }
 
@@ -219,7 +219,7 @@ class BaseResponse {
       this.details = details;
     }
 
-    protected boolean canEqual(Object other) {
+    public boolean canEqual(Object other) {
       return other instanceof Error;
     }
 

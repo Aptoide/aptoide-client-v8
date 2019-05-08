@@ -9,6 +9,9 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -26,12 +29,14 @@ public class EditorialManager {
   private final NotificationAnalytics notificationAnalytics;
   private final InstallAnalytics installAnalytics;
   private final EditorialAnalytics editorialAnalytics;
+  private final ReactionsManager reactionsManager;
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics) {
+      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
+      ReactionsManager reactionsManager) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
@@ -41,6 +46,7 @@ public class EditorialManager {
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
     this.editorialAnalytics = editorialAnalytics;
+    this.reactionsManager = reactionsManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -102,5 +108,21 @@ public class EditorialManager {
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
     return Completable.fromAction(
         () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+  }
+
+  public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId);
+  }
+
+  public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
+    return reactionsManager.setReaction(cardId, groupId, reaction);
+  }
+
+  public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
+    return reactionsManager.deleteReaction(cardId, groupId);
+  }
+
+  public Single<Boolean> isFirstReaction(String cardId, String groupId) {
+    return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

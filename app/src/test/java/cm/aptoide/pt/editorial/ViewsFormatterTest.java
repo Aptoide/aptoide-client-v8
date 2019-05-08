@@ -27,8 +27,8 @@ public class ViewsFormatterTest {
     Assert.assertEquals("12.3k", formatNumberOfViews(fiveDigit));
     Assert.assertEquals("123k", formatNumberOfViews(sixDigit));
     Assert.assertEquals("1235k", formatNumberOfViews(sevenDigit));
-    Assert.assertEquals("12.3m", formatNumberOfViews(eightDigit));
-    Assert.assertEquals("123m", formatNumberOfViews(nineDigit));
-    Assert.assertEquals("1235m", formatNumberOfViews(tenDigit));
+    Assert.assertEquals("12.3M", formatNumberOfViews(eightDigit));
+    Assert.assertEquals("123M", formatNumberOfViews(nineDigit));
+    Assert.assertEquals("1235M", formatNumberOfViews(tenDigit));
   }
 }

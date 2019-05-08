@@ -27,6 +27,7 @@ public class HomeContainerPresenterTest {
   @Mock private Account account;
   @Mock private HomeAnalytics homeAnalytics;
   @Mock private HomeContainerNavigator homeContainerNavigator;
+  @Mock private ChipManager chipManager;
 
   private HomeContainerPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -36,7 +37,8 @@ public class HomeContainerPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new HomeContainerPresenter(view, Schedulers.immediate(), crashReporter,
-        aptoideAccountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+        aptoideAccountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
+        chipManager);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));
@@ -198,6 +200,9 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
+
     verify(homeContainerNavigator).loadMainHomeContent();
   }
 
@@ -205,6 +210,9 @@ public class HomeContainerPresenterTest {
     when(view.gamesChipClicked()).thenReturn(Observable.just(true));
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
 
     verify(homeContainerNavigator).loadGamesHomeContent();
   }
@@ -214,6 +222,9 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
+
     verify(homeContainerNavigator).loadMainHomeContent();
   }
 
@@ -221,6 +232,9 @@ public class HomeContainerPresenterTest {
     when(view.appsChipClicked()).thenReturn(Observable.just(true));
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
 
     verify(homeContainerNavigator).loadAppsHomeContent();
   }

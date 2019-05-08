@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
+import static cm.aptoide.pt.editorial.EditorialAnalytics.REACTION_INTERACT;
 
 /**
  * Created by jdandrade on 28/03/2018.
@@ -15,7 +16,7 @@ import static cm.aptoide.analytics.AnalyticsManager.Action.OPEN;
 public class HomeAnalytics {
 
   public static final String HOME_INTERACT = "Home_Interact";
-  public static final String HOME_CHIP_CLICK = "Home_Chip_Click";
+  public static final String HOME_CHIP_INTERACT = "Home_Chip_Interact";
   public static final String CURATION_CARD_IMPRESSION = "Curation_Card_Impression";
   public static final String CURATION_CARD_CLICK = "Curation_Card_Click";
   static final String SCROLL_RIGHT = "scroll right";
@@ -26,15 +27,18 @@ public class HomeAnalytics {
   static final String TAP_ON_MORE = "tap on more";
   static final String TAP_ON_CARD = "tap on card";
   static final String CHIP_CLICK = "chip";
+  static final String CHIP_TAG = "chip_tag";
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  private static final String TAP_ON_CHIP = "tap on chip";
+  private static final String WHERE = "where";
+  private static final String PACKAGE_NAME = "package_name";
   private static final String ACTION = "action";
   private static final String BUNDLE_TAG = "bundle_tag";
   private static final String PROMOTION_ICON = "promotion-icon";
   private static final String PROMOTION_DIALOG = "promotion-dialog";
-  private static final String GAMES = "games";
-  private static final String APPS = "apps";
+  private static final String CURATION_CARD = "curation_card";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
 
@@ -44,11 +48,19 @@ public class HomeAnalytics {
   }
 
   public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle) {
+    sendTapOnMoreInteractEvent(bundlePosition, bundleTag, itemsInBundle, null);
+  }
+
+  public void sendTapOnMoreInteractEvent(int bundlePosition, String bundleTag, int itemsInBundle,
+      String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_MORE);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
+    if (chipTag != null) {
+      data.put(CHIP_TAG, chipTag);
+    }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -81,14 +93,23 @@ public class HomeAnalytics {
 
   public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
       int bundlePosition, String bundleTag, int itemsInBundle) {
+    sendTapOnAppInteractEvent(appRating, packageName, appPosition, bundlePosition, bundleTag,
+        itemsInBundle, null);
+  }
+
+  public void sendTapOnAppInteractEvent(double appRating, String packageName, int appPosition,
+      int bundlePosition, String bundleTag, int itemsInBundle, String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, TAP_ON_APP);
     data.put("app_rating", appRating);
-    data.put("package_name", packageName);
+    data.put(PACKAGE_NAME, packageName);
     data.put("app_position", appPosition);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("bundle_total_items", itemsInBundle);
+    if (chipTag != null) {
+      data.put(CHIP_TAG, chipTag);
+    }
 
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
@@ -99,7 +120,7 @@ public class HomeAnalytics {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, actionType);
     data.put("app_rating", appRating);
-    data.put("package_name", packageName);
+    data.put(PACKAGE_NAME, packageName);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
     data.put("network", network.getName());
@@ -119,6 +140,17 @@ public class HomeAnalytics {
     data.put(ACTION, TAP_ON_CARD);
     data.put(BUNDLE_TAG, bundleTag);
     data.put("bundle_position", bundlePosition);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
+  }
+
+  public void sendActionItemEditorialTapOnCardInteractEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, TAP_ON_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
 
     analyticsManager.logEvent(data, HOME_INTERACT, OPEN, navigationTracker.getViewName(true));
   }
@@ -161,6 +193,18 @@ public class HomeAnalytics {
     data.put("bundle_position", bundlePosition);
 
     analyticsManager.logEvent(data, CURATION_CARD_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendActionItemEditorialImpressionEvent(String bundleTag, int bundlePosition,
+      String cardId) {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, VIEW_CARD);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put("bundle_position", bundlePosition);
+    data.put("card_id", cardId);
+
+    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 
@@ -209,34 +253,41 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendGamesChipHomeInteractEvent() {
+  public void sendChipHomeInteractEvent(String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, CHIP_CLICK);
-    data.put(BUNDLE_TAG, GAMES);
+    data.put(BUNDLE_TAG, chipTag);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppsChipHomeInteractEvent() {
+  public void sendChipInteractEvent(String chipTag) {
     final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, CHIP_CLICK);
-    data.put(BUNDLE_TAG, APPS);
-    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
+    data.put(ACTION, TAP_ON_CHIP);
+    data.put(CHIP_TAG, chipTag);
+    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppsChipInteractEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, APPS);
-    analyticsManager.logEvent(data, HOME_CHIP_CLICK, AnalyticsManager.Action.CLICK,
+  public void sendChipTapOnMore(String bundleTag, String chipTag) {
+    analyticsManager.logEvent(createChipTapInteractMap(TAP_ON_MORE, bundleTag, chipTag),
+        HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK, navigationTracker.getViewName(true));
+  }
+
+  public void sendChipTapOnApp(String bundleTag, String packageName, String chipTag) {
+    final Map<String, Object> data = createChipTapInteractMap(TAP_ON_APP, bundleTag, chipTag);
+    data.put(PACKAGE_NAME, packageName);
+    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendGamesChipInteractEvent() {
+  public Map<String, Object> createChipTapInteractMap(String action, String bundleTag,
+      String chipTag) {
     final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, GAMES);
-    analyticsManager.logEvent(data, HOME_CHIP_CLICK, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
+    data.put(ACTION, action);
+    data.put(BUNDLE_TAG, bundleTag);
+    data.put(CHIP_TAG, chipTag);
+    return data;
   }
 
   public void convertAppcAdClick(String clickUrl) {
@@ -248,5 +299,29 @@ public class HomeAnalytics {
       return OPEN;
     }
     throw new IllegalStateException("TYPE " + type.name() + " NOT VALID");
+  }
+
+  public void sendReactionButtonClickEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "view_reactions");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendReactedEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "click_to_react");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendDeleteEvent() {
+    final Map<String, Object> data = new HashMap<>();
+    data.put(ACTION, "delete_reaction");
+    data.put(WHERE, CURATION_CARD);
+    analyticsManager.logEvent(data, REACTION_INTERACT, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
   }
 }

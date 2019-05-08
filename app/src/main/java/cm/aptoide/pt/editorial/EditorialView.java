@@ -1,7 +1,9 @@
 package cm.aptoide.pt.editorial;
 
-import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.ReactionEvent;
+import cm.aptoide.pt.reactions.data.TopReaction;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -50,10 +52,6 @@ public interface EditorialView extends View {
 
   void managePlaceHolderVisibity();
 
-  Observable<Palette.Swatch> paletteSwatchExtracted();
-
-  void applyPaletteSwatch(Palette.Swatch swatch);
-
   Observable<EditorialEvent> mediaListDescriptionChanged();
 
   void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
@@ -65,4 +63,24 @@ public interface EditorialView extends View {
   Observable<Boolean> showDowngradeMessage();
 
   void showDowngradingMessage();
+
+  Observable<Void> reactionsButtonClicked();
+
+  Observable<Void> reactionsButtonLongPressed();
+
+  void showTopReactions(String userReaction, List<TopReaction> reactions, int numberOfReactions);
+
+  void showReactionsPopup(String cardId, String groupId);
+
+  Observable<ReactionEvent> reactionClicked();
+
+  void setUserReaction(String reaction);
+
+  void showLoginDialog();
+
+  Observable<Void> snackLoginClick();
+
+  void showGenericErrorToast();
+
+  void showNetworkErrorToast();
 }

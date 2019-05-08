@@ -10,11 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -37,11 +37,16 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reactions.ReactionEvent;
+import cm.aptoide.pt.reactions.TopReactionsPreview;
+import cm.aptoide.pt.reactions.data.TopReaction;
+import cm.aptoide.pt.reactions.ui.ReactionsPopup;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
+import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -56,7 +61,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 
-import static cm.aptoide.pt.util.AptoideColorUtils.getChangedColorLightness;
+import static cm.aptoide.pt.reactions.ReactionMapper.mapReaction;
+import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -88,7 +94,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private TextView appCardTitle;
   private Button appCardButton;
   private View editorialItemsCard;
-  private View actionItemCard;
+  private CardView actionItemCard;
   private LinearLayout downloadInfoLayout;
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
@@ -97,6 +103,7 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView resumeDownload;
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
+  private ImageButton reactButton;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -113,8 +120,10 @@ public class EditorialFragment extends NavigationTrackFragment
 
   private PublishSubject<EditorialEvent> uiEventsListener;
   private PublishSubject<EditorialDownloadEvent> downloadEventListener;
-  private PublishSubject<Palette.Swatch> paletteSwatchSubject;
+  private PublishSubject<ReactionEvent> reactionEventListener;
+  private PublishSubject<Void> snackListener;
   private PublishSubject<Boolean> movingCollapseSubject;
+  private TopReactionsPreview topReactionsPreview;
   private boolean shouldAnimate;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,10 +131,12 @@ public class EditorialFragment extends NavigationTrackFragment
     oneDecimalFormatter = new DecimalFormat("0.0");
     window = getActivity().getWindow();
     ready = PublishSubject.create();
-    paletteSwatchSubject = PublishSubject.create();
     uiEventsListener = PublishSubject.create();
     downloadEventListener = PublishSubject.create();
     movingCollapseSubject = PublishSubject.create();
+    reactionEventListener = PublishSubject.create();
+    snackListener = PublishSubject.create();
+    topReactionsPreview = new TopReactionsPreview();
     setHasOptionsMenu(true);
   }
 
@@ -167,6 +178,9 @@ public class EditorialFragment extends NavigationTrackFragment
         downloadEventListener);
     editorialItems.setLayoutManager(layoutManager);
     editorialItems.setAdapter(adapter);
+
+    reactButton = view.findViewById(R.id.add_reactions);
+    topReactionsPreview.initialReactionsSetup(view);
 
     cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
@@ -228,6 +242,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void onDestroy() {
     uiEventsListener = null;
+    snackListener = null;
+    reactionEventListener = null;
     downloadEventListener = null;
     super.onDestroy();
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
@@ -235,7 +251,6 @@ public class EditorialFragment extends NavigationTrackFragment
     }
     ready = null;
     window = null;
-    paletteSwatchSubject = null;
     oneDecimalFormatter = null;
     movingCollapseSubject = null;
   }
@@ -280,6 +295,8 @@ public class EditorialFragment extends NavigationTrackFragment
     adapter = null;
     backArrow = null;
 
+    reactButton = null;
+
     cardInfoLayout = null;
     downloadControlsLayout = null;
     downloadInfoLayout = null;
@@ -290,6 +307,7 @@ public class EditorialFragment extends NavigationTrackFragment
     pauseDownload = null;
     scrollView = null;
     appCardLayout = null;
+    topReactionsPreview.onDestroy();
     super.onDestroyView();
   }
 
@@ -485,22 +503,6 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public Observable<Palette.Swatch> paletteSwatchExtracted() {
-    return paletteSwatchSubject;
-  }
-
-  @Override public void applyPaletteSwatch(Palette.Swatch swatch) {
-    if (swatch != null) {
-      int color = swatch.getRgb();
-      if (ColorUtils.calculateLuminance(color) > 0.5) {
-        actionItemCard.setBackgroundColor(getChangedColorLightness(swatch.getHsl(), 0.7f));
-      } else {
-        actionItemCard.setBackgroundColor(color);
-      }
-    }
-    actionItemCard.setVisibility(View.VISIBLE);
-  }
-
   @Override public Observable<EditorialEvent> mediaListDescriptionChanged() {
     return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
         .equals(EditorialEvent.Type.MEDIA_LIST))
@@ -544,22 +546,100 @@ public class EditorialFragment extends NavigationTrackFragment
         .show();
   }
 
+  @Override public Observable<Void> reactionsButtonClicked() {
+    return RxView.clicks(reactButton);
+  }
+
+  @Override public Observable<Void> reactionsButtonLongPressed() {
+    return RxView.longClicks(reactButton);
+  }
+
+  @Override public void showTopReactions(String userReaction, List<TopReaction> reactions,
+      int numberOfReactions) {
+    setUserReaction(userReaction);
+    topReactionsPreview.setReactions(reactions, numberOfReactions, getContext());
+  }
+
+  @Override public void showReactionsPopup(String cardId, String groupId) {
+    ReactionsPopup reactionsPopup = new ReactionsPopup(getContext(), reactButton);
+    reactionsPopup.show();
+    reactionsPopup.setOnReactionsItemClickListener(item -> {
+      reactionEventListener.onNext(new ReactionEvent(cardId, mapUserReaction(item), groupId));
+      reactionsPopup.dismiss();
+      reactionsPopup.setOnReactionsItemClickListener(null);
+    });
+  }
+
+  @Override public Observable<ReactionEvent> reactionClicked() {
+    return reactionEventListener;
+  }
+
+  @Override public void setUserReaction(String reaction) {
+    if (topReactionsPreview.isReactionValid(reaction)) {
+      reactButton.setImageResource(mapReaction(reaction));
+    } else {
+      reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+    }
+  }
+
+  @Override public void showLoginDialog() {
+    Snackbar.make(getView(), getString(R.string.editorial_reactions_login_short),
+        Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public Observable<Void> snackLoginClick() {
+    return snackListener;
+  }
+
+  @Override public void showGenericErrorToast() {
+    Snackbar.make(getView(), getString(R.string.error_occured), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @Override public void showNetworkErrorToast() {
+    Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
+        .show();
+  }
+
   private void populateAppContent(EditorialViewModel editorialViewModel) {
     placeHolderPositions = editorialViewModel.getPlaceHolderPositions();
     shouldAnimate = editorialViewModel.shouldHaveAnimation();
     if (editorialViewModel.hasBackgroundImage()) {
       ImageLoader.with(getContext())
-          .loadWithPalette(editorialViewModel.getBackgroundImage(), appImage, paletteSwatchSubject);
+          .load(editorialViewModel.getBackgroundImage(), appImage);
     } else {
       appImage.setBackgroundColor(getResources().getColor(R.color.grey_fog_normal));
     }
     String caption = editorialViewModel.getCaption();
     toolbar.setTitle(caption);
-    toolbarTitle.setText(caption);
+    toolbarTitle.setText(editorialViewModel.getTitle());
     appImage.setVisibility(View.VISIBLE);
-    itemName.setText(editorialViewModel.getTitle());
+    itemName.setText(Translator.translate(caption, getContext(), ""));
+    setCurationCardBubble(caption);
     itemName.setVisibility(View.VISIBLE);
+    actionItemCard.setVisibility(View.VISIBLE);
     setBottomAppCardInfo(editorialViewModel);
+  }
+
+  public void setCurationCardBubble(String caption) {
+    switch (caption) {
+      case "Game of the Week":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_grey));
+        break;
+
+      case "App of the Week":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_blue));
+        break;
+
+      case "Collections":
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_green));
+        break;
+
+      default:
+        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_default));
+        break;
+    }
   }
 
   private void setBottomAppCardInfo(EditorialViewModel editorialViewModel) {

@@ -83,6 +83,7 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeContainerNavigator;
@@ -108,7 +109,9 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
@@ -124,6 +127,7 @@ import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
+import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -258,15 +262,16 @@ import rx.subscriptions.CompositeSubscription;
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
       HomeAnalytics homeAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, aptoideAccountManager, homeAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
+        accountNavigator);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
@@ -278,9 +283,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsId) {
+      @Named("homePromotionsId") String promotionsId, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsId);
+        promotionsPreferencesManager, blacklistManager, promotionsId, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -334,14 +339,17 @@ import rx.subscriptions.CompositeSubscription;
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
       @Named("wallet-offer-promotion-id") String promotionId,
-      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager) {
+      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
+      LocalNotificationSyncManager localNotificationSyncManager,
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
         marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
-        appcMigrationManager);
+        appcMigrationManager, localNotificationSyncManager,
+        appcPromotionNotificationStringProvider);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -373,10 +381,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
       MoreBundleManager moreBundleManager, CrashReport crashReport, HomeNavigator homeNavigator,
-      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics,
+      ChipManager chipManager) {
     return new MoreBundlePresenter((MoreBundleView) fragment, moreBundleManager,
         AndroidSchedulers.mainThread(), crashReport, homeNavigator, adMapper, bundleEvent,
-        homeAnalytics);
+        homeAnalytics, chipManager);
   }
 
   @FragmentScope @Provides MoreBundleManager providesGetStoreManager(
@@ -419,10 +428,11 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics) {
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager) {
     return new EditorialManager(editorialRepository,
         arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
-        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics);
+        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics,
+        reactionsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -469,8 +479,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository) {
-    return new EditorialListManager(editorialListRepository);
+      EditorialListRepository editorialListRepository, ReactionsManager reactionsManager) {
+    return new EditorialListManager(editorialListRepository, reactionsManager);
   }
 
   @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
@@ -487,8 +497,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListNavigator providesEditorialListNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new EditorialListNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AccountNavigator accountNavigator) {
+    return new EditorialListNavigator(fragmentNavigator, accountNavigator);
   }
 
   @FragmentScope @Provides EditorialListAnalytics editorialListAnalytics(
@@ -506,9 +517,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home) {
+      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
+        chipManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -544,5 +556,12 @@ import rx.subscriptions.CompositeSubscription;
     return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
         new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
+  }
+
+  @FragmentScope @Provides
+  AppcPromotionNotificationStringProvider providesAppcPromotionNotificationStringProvider() {
+    return new AppcPromotionNotificationStringProvider(fragment.getContext()
+        .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
+        .getString(R.string.promo_update2appc_claim_notification_body));
   }
 }

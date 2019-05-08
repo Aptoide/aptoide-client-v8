@@ -2,6 +2,8 @@ package cm.aptoide.pt.home;
 
 import android.os.Bundle;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
@@ -31,16 +33,19 @@ public class HomeNavigator {
   private final AppNavigator appNavigator;
   private final ActivityNavigator activityNavigator;
   private final String theme;
+  private final AccountNavigator accountNavigator;
 
   public HomeNavigator(FragmentNavigator fragmentNavigator,
       AptoideBottomNavigator aptoideBottomNavigator, BottomNavigationMapper bottomNavigationMapper,
-      AppNavigator appNavigator, ActivityNavigator activityNavigator, String theme) {
+      AppNavigator appNavigator, ActivityNavigator activityNavigator, String theme,
+      AccountNavigator accountNavigator) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.appNavigator = appNavigator;
     this.activityNavigator = activityNavigator;
     this.theme = theme;
+    this.accountNavigator = accountNavigator;
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
@@ -107,5 +112,9 @@ public class HomeNavigator {
 
   public void navigateToPromotions() {
     fragmentNavigator.navigateTo(new PromotionsFragment(), true);
+  }
+
+  public void navigateToLogIn() {
+    accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.EDITORIAL);
   }
 }

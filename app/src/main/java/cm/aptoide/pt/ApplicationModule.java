@@ -117,6 +117,7 @@ import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -161,6 +162,7 @@ import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BundleDataSource;
 import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.BundlesResponseMapper;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
@@ -194,6 +196,10 @@ import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.RealmLocalNotificationSyncMapper;
+import cm.aptoide.pt.notification.RealmLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
@@ -207,6 +213,9 @@ import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsService;
+import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
+import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
@@ -321,7 +330,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("obbPath") String obbPath, AppInstaller appInstaller,
       AppInstallerStatusReceiver appInstallerStatusReceiver,
       PackageInstallerManager packageInstallerManager) {
-
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
             getInstallingStateTimeout(), appInstallerStatusReceiver).create(application),
@@ -550,18 +558,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
       AndroidAccountProvider androidAccountProvider, IdsRepository idsRepository,
       @Named("partnerID") String partnerId) {
-    return new UserAgentInterceptor(androidAccountProvider, idsRepository, partnerId,
-        new DisplayMetrics(), AptoideUtils.SystemU.TERMINAL_INFO,
-        AptoideUtils.Core.getDefaultVername(application));
+    return new UserAgentInterceptor(idsRepository, partnerId, new DisplayMetrics(),
+        AptoideUtils.SystemU.TERMINAL_INFO, AptoideUtils.Core.getDefaultVername(application));
   }
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
-      IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage) {
+      IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage,
+      AuthenticationPersistence authenticationPersistence) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
         Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
-            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE);
+            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE,
+        authenticationPersistence);
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -864,8 +873,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
   }
 
-  @Singleton @Provides SyncStorage provideSyncStorage() {
-    return new SyncStorage(new HashMap<>());
+  @Singleton @Provides SyncStorage provideSyncStorage(
+      RealmLocalNotificationSyncPersistence persistence) {
+    return new SyncStorage(new HashMap<>(), persistence);
   }
 
   @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
@@ -1189,6 +1199,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("reactions-host") String providesReactionsHost() {
+    return cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_REACTIONS_HOST
+        + "/";
+  }
+
   @Singleton @Provides @Named("base-host") String providesBaseHost(
       @Named("default") SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
@@ -1254,6 +1271,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("retrofit-load-top-reactions")
+  Retrofit providesLoadTopReactionsRetrofit(@Named("reactions-host") String baseHost,
+      @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
+      @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
   @Singleton @Provides @Named("retrofit-apichain-bds") Retrofit providesApiChainBDSRetrofit(
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
@@ -1308,6 +1336,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
       @Named("retrofit-donations") Retrofit retrofit) {
     return retrofit.create(DonationsService.ServiceV8.class);
+  }
+
+  @Singleton @Provides ReactionsRemoteService.ServiceV8 providesReactionsServiceV8(
+      @Named("retrofit-load-top-reactions") Retrofit retrofit) {
+    return retrofit.create(ReactionsRemoteService.ServiceV8.class);
+  }
+
+  @Singleton @Provides ReactionsService providesReactionsService(
+      ReactionsRemoteService.ServiceV8 reactionServiceV8) {
+    return new ReactionsRemoteService(reactionServiceV8, Schedulers.io());
   }
 
   @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
@@ -1800,16 +1838,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
         BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
         HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
-        HomeAnalytics.HOME_CHIP_CLICK, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        HomeAnalytics.HOME_CHIP_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         BottomNavigationAnalytics.BOTTOM_NAVIGATION_INTERACT, DownloadAnalytics.DOWNLOAD_INTERACT,
         DonationsAnalytics.DONATIONS_INTERACT, EditorialAnalytics.CURATION_CARD_INSTALL,
-        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, PromotionsAnalytics.PROMOTION_DIALOG,
-        PromotionsAnalytics.PROMOTIONS_INTERACT, PromotionsAnalytics.VALENTINE_MIGRATOR,
-        AppViewAnalytics.ADS_BLOCK_BY_OFFER, AppViewAnalytics.APPC_SIMILAR_APP_INTERACT,
-        AppViewAnalytics.BONUS_MIGRATION_APPVIEW, AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
+        EditorialAnalytics.EDITORIAL_BN_CURATION_CARD_INSTALL, EditorialAnalytics.REACTION_INTERACT,
+        PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
+        PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
+        AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
+        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1871,6 +1910,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SearchExperiment(abTestManager);
   }
 
+  @Singleton @Provides ReactionsManager providesReactionsManager(
+      ReactionsService reactionsService) {
+    return new ReactionsManager(reactionsService, new HashMap<>());
+  }
+
   @Singleton @Provides AppInstaller providesAppInstaller(
       AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new AppInstaller(application.getApplicationContext(),
@@ -1883,5 +1927,26 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
     return new PackageInstallerManager();
+  }
+
+  @Singleton @Provides NotificationProvider providesNotificationProvider(Database database) {
+    return new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
+        Schedulers.io());
+  }
+
+  @Singleton @Provides
+  RealmLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
+      Database database, NotificationProvider provider) {
+    return new RealmLocalNotificationSyncPersistence(database,
+        new RealmLocalNotificationSyncMapper(), provider);
+  }
+
+  @Singleton @Provides LocalNotificationSyncManager providesLocalNotificationSyncManager(
+      SyncScheduler syncScheduler, NotificationProvider provider) {
+    return new LocalNotificationSyncManager(syncScheduler, true, provider);
+  }
+
+  @Singleton @Provides ChipManager providesChipManager() {
+    return new ChipManager();
   }
 }

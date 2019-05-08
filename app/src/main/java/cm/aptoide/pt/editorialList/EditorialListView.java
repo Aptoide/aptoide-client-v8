@@ -2,11 +2,14 @@ package cm.aptoide.pt.editorialList;
 
 import cm.aptoide.pt.home.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import java.util.List;
 import rx.Observable;
 
 public interface EditorialListView extends View {
   Observable<EditorialHomeEvent> editorialCardClicked();
+
+  Observable<EditorialHomeEvent> reactionsButtonClicked();
 
   void showLoading();
 
@@ -32,7 +35,7 @@ public interface EditorialListView extends View {
 
   Observable<Object> reachesBottom();
 
-  void populateView(EditorialListViewModel editorialListViewModel);
+  void populateView(List<CurationCard> curationCards);
 
   Observable<EditorialListEvent> visibleCards();
 
@@ -40,5 +43,21 @@ public interface EditorialListView extends View {
 
   void hideLoadMore();
 
-  void update(List<CurationCard> editorialListViewModel);
+  void update(List<CurationCard> curationCards);
+
+  Observable<ReactionsHomeEvent> reactionClicked();
+
+  Observable<EditorialHomeEvent> reactionButtonLongPress();
+
+  void showReactionsPopup(String cardId, String groupId, int bundlePosition);
+
+  void showLogInDialog();
+
+  Observable<Void> snackLogInClick();
+
+  void showGenericErrorToast();
+
+  void updateEditorialCard(CurationCard curationCard);
+
+  void showNetworkErrorToast();
 }

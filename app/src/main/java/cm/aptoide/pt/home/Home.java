@@ -5,6 +5,9 @@ import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
+import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Completable;
 import rx.Single;
@@ -21,12 +24,13 @@ public class Home {
   private final MoPubAdsManager moPubAdsManager;
   private final BlacklistManager blacklistManager;
   private final String promotionId;
+  private final ReactionsManager reactionsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
       BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BlacklistManager blacklistManager,
-      String promotionId) {
+      String promotionId, ReactionsManager reactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
@@ -34,6 +38,7 @@ public class Home {
     this.promotionsPreferencesManager = promotionsPreferencesManager;
     this.promotionId = promotionId;
     this.blacklistManager = blacklistManager;
+    this.reactionsManager = reactionsManager;
   }
 
   public Single<HomeBundlesModel> loadHomeBundles() {
@@ -119,7 +124,6 @@ public class Home {
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
         totalAppcValue += app.getAppcValue();
-
         if (!app.isClaimed()) {
           promotions++;
           unclaimedAppcValue += app.getAppcValue();
@@ -138,5 +142,43 @@ public class Home {
 
   public Single<Boolean> shouldShowConsentDialog() {
     return moPubAdsManager.shouldShowConsentDialog();
+  }
+
+  public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
+    return reactionsManager.loadReactionModel(cardId, groupId)
+        .flatMap(loadReactionModel -> bundlesRepository.loadHomeBundles()
+            .flatMap(
+                homeBundlesModel -> getUpdatedCards(homeBundlesModel, loadReactionModel, cardId)));
+  }
+
+  private Single<List<HomeBundle>> getUpdatedCards(HomeBundlesModel homeBundlesModel,
+      LoadReactionModel loadReactionModel, String cardId) {
+    List<HomeBundle> homeBundles = homeBundlesModel.getList();
+    for (HomeBundle homeBundle : homeBundles) {
+      if (homeBundle.getType() == HomeBundle.BundleType.EDITORIAL
+          && homeBundle instanceof ActionBundle) {
+        ActionItem actionBundle = ((ActionBundle) homeBundle).getActionItem();
+        if (actionBundle.getCardId()
+            .equals(cardId)) {
+          actionBundle.setReactions(loadReactionModel.getTopReactionList());
+          actionBundle.setNumberOfReactions(loadReactionModel.getTotal());
+          actionBundle.setUserReaction(loadReactionModel.getMyReaction());
+        }
+      }
+    }
+    bundlesRepository.updateCache(homeBundles);
+    return Single.just(homeBundles);
+  }
+
+  public Single<ReactionsResponse> setReaction(String cardId, String groupId, String reaction) {
+    return reactionsManager.setReaction(cardId, groupId, reaction);
+  }
+
+  public Single<ReactionsResponse> deleteReaction(String cardId, String groupId) {
+    return reactionsManager.deleteReaction(cardId, groupId);
+  }
+
+  public Single<Boolean> isFirstReaction(String cardId, String groupId) {
+    return reactionsManager.isFirstReaction(cardId, groupId);
   }
 }

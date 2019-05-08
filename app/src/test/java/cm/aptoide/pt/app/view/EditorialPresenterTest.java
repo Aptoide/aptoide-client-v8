@@ -1,7 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.graphics.Color;
-import android.support.v7.graphics.Palette;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -17,6 +15,9 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialViewModel;
 import cm.aptoide.pt.editorial.ScrollEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reactions.ReactionEvent;
+import cm.aptoide.pt.reactions.network.LoadReactionModel;
+import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +39,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class EditorialPresenterTest {
+  private static String GROUP_ID = "CURATION_1";
   @Mock private EditorialFragment view;
   @Mock private EditorialManager editorialManager;
   @Mock private CrashReport crashReport;
@@ -45,37 +48,48 @@ public class EditorialPresenterTest {
   @Mock private EditorialAnalytics editorialAnalytics;
   @Mock private EditorialNavigator editorialNavigator;
 
-  private EditorialPresenter editorialPresenter;
+  private EditorialPresenter presenter;
   private EditorialViewModel editorialViewModel;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private EditorialDownloadModel downloadModel;
   private EditorialViewModel errorEditorialViewModel;
   private EditorialViewModel loadingEditorialViewModel;
   private ArrayList<EditorialContent> editorialContent;
+  private PublishSubject<Void> reactionButtonClickEvent;
+  private PublishSubject<Void> reactionButtonLongPressEvent;
+  private PublishSubject<ReactionEvent> reactionClickEvent;
+  private PublishSubject<Void> snackLoginEvent;
 
   @Before public void setupEditorialPresenter() {
     MockitoAnnotations.initMocks(this);
-    editorialPresenter =
-        new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
-            permissionManager, permissionService, editorialAnalytics, editorialNavigator);
+    presenter = new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
+        permissionManager, permissionService, editorialAnalytics, editorialNavigator);
     lifecycleEvent = PublishSubject.create();
+    reactionButtonClickEvent = PublishSubject.create();
+    reactionButtonLongPressEvent = PublishSubject.create();
+    reactionClickEvent = PublishSubject.create();
+    snackLoginEvent = PublishSubject.create();
     editorialContent = new ArrayList<>();
     editorialContent.add(
         new EditorialContent("title", Collections.emptyList(), "message", "type", 1, "appName",
             "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
             "pathAlt", "md5", "actionTitle", "url", 1));
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
-        Collections.emptyList(), editorialContent, false);
+        Collections.emptyList(), editorialContent, false, "1", "CURATION_1");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
         DownloadModel.DownloadState.ACTIVE, null, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
     loadingEditorialViewModel = new EditorialViewModel(true);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
+    when(view.reactionsButtonClicked()).thenReturn(reactionButtonClickEvent);
+    when(view.reactionsButtonLongPressed()).thenReturn(reactionButtonLongPressEvent);
+    when(view.reactionClicked()).thenReturn(reactionClickEvent);
+    when(view.snackLoginClick()).thenReturn(snackLoginEvent);
   }
 
   @Test public void onCreateLoadAppOfTheWeekWithCorrectViewModelTest() {
     //Given an initialized presenter
-    editorialPresenter.onCreateLoadAppOfTheWeek();
+    presenter.onCreateLoadAppOfTheWeek();
     //When the view Model is requested the editorialViewModel should be returned
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 
@@ -92,7 +106,7 @@ public class EditorialPresenterTest {
 
   @Test public void onCreateLoadAppOfTheWeekWithErrorViewModelTest() {
     //Given an initialized presenter
-    editorialPresenter.onCreateLoadAppOfTheWeek();
+    presenter.onCreateLoadAppOfTheWeek();
     //When the view Model is requested the editorialViewModel should be returned
     when(editorialManager.loadEditorialViewModel()).thenReturn(
         Single.just(errorEditorialViewModel));
@@ -109,7 +123,7 @@ public class EditorialPresenterTest {
 
   @Test public void onCreateLoadAppOfTheWeekWithLoadingViewModelTest() {
     //Given an initialized presenter
-    editorialPresenter.onCreateLoadAppOfTheWeek();
+    presenter.onCreateLoadAppOfTheWeek();
 
     //When the view Model is requested the editorialViewModel should be returned
     when(editorialManager.loadEditorialViewModel()).thenReturn(
@@ -125,7 +139,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleRetryClickTest() {
     //Given an initialized presenter
-    editorialPresenter.handleRetryClick();
+    presenter.handleRetryClick();
 
     //When the user clicks on the retry button
     when(view.retryClicked()).thenReturn(Observable.just(null));
@@ -144,7 +158,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleClickOnMediaTest() {
     //Given an initialized presenter
-    editorialPresenter.handleClickOnMedia();
+    presenter.handleClickOnMedia();
 
     //When the user clicks on a media
     when(view.mediaContentClicked()).thenReturn(
@@ -158,7 +172,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleClickActionButtonTest() {
     //Given an initialized presenter
-    editorialPresenter.handleClickActionButtonCard();
+    presenter.handleClickActionButtonCard();
 
     //When the user clicks on a media
     when(view.actionButtonClicked()).thenReturn(
@@ -172,13 +186,16 @@ public class EditorialPresenterTest {
 
   @Test public void handleClickOnAppCardTest() {
     //Given an initialized presenter
-    editorialPresenter.handleClickOnAppCard();
+    presenter.handleClickOnAppCard();
 
     //When the view is ready
     when(view.isViewReady()).thenReturn(Observable.just(null));
 
     //Then it should request and load the editorialViewModel
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+
+    //When the view is ready
+    when(view.isViewReady()).thenReturn(Observable.just(null));
 
     //When the user clicks on an appCard
     when(view.appCardClicked(editorialViewModel)).thenReturn(
@@ -192,7 +209,7 @@ public class EditorialPresenterTest {
 
   @Test public void loadDownloadAppTest() {
     //Given an initialized presenter
-    editorialPresenter.loadDownloadApp();
+    presenter.loadDownloadApp();
 
     //When the view is ready
     when(view.isViewReady()).thenReturn(Observable.just(null));
@@ -213,7 +230,7 @@ public class EditorialPresenterTest {
 
   @Test public void handlePlaceHolderVisibilityTest() {
     //Given an initialized presenter
-    editorialPresenter.handlePlaceHolderVisibility();
+    presenter.handlePlaceHolderVisibility();
 
     //When the view is ready
     when(view.isViewReady()).thenReturn(Observable.just(null));
@@ -226,7 +243,7 @@ public class EditorialPresenterTest {
 
   @Test public void handlePlaceHolderVisibilityChangeRemoveTest() {
     //Given an initialized presenter
-    editorialPresenter.handlePlaceHolderVisibilityChange();
+    presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
     when(view.placeHolderVisibilityChange()).thenReturn(
@@ -240,7 +257,7 @@ public class EditorialPresenterTest {
 
   @Test public void handlePlaceHolderVisibilityChangeAddTest() {
     //Given an initialized presenter
-    editorialPresenter.handlePlaceHolderVisibilityChange();
+    presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
     when(view.placeHolderVisibilityChange()).thenReturn(
@@ -252,24 +269,9 @@ public class EditorialPresenterTest {
     verify(view).addBottomCardAnimation();
   }
 
-  @Test public void handlePaletterColorPickTest() {
-    Palette.Swatch swatch = new Palette.Swatch(Color.RED, 256);
-    //Given an initialized presenter
-    editorialPresenter.handlePaletteColor();
-
-    //when the palette swatch is extracted
-    when(view.paletteSwatchExtracted()).thenReturn(
-        Observable.just(new Palette.Swatch(Color.RED, 256)));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should deliver that swatch to the view
-    verify(view).applyPaletteSwatch(swatch);
-  }
-
   @Test public void handleMediaListDescriptionVisibilityOnlyOneMediaVisibleTest() {
     //Given an initialized presenter
-    editorialPresenter.handleMediaListDescriptionVisibility();
+    presenter.handleMediaListDescriptionVisibility();
     EditorialEvent editorialEvent =
         new EditorialEvent(EditorialEvent.Type.MEDIA_LIST, 1, 1, 3, Collections.emptyList());
     //When the mediaList description is changes, then an event with the first and last item position of that list, the position of the viewHolder, and a list of the media should be returned
@@ -283,7 +285,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleMediaListDescriptionVisibilityMoreThanOneMediaVisibleTest() {
     //Given an initialized presenter
-    editorialPresenter.handleMediaListDescriptionVisibility();
+    presenter.handleMediaListDescriptionVisibility();
     EditorialEvent editorialEvent =
         new EditorialEvent(EditorialEvent.Type.MEDIA_LIST, 1, 3, 3, Collections.emptyList());
     //When the mediaList description is changes, then an event with the first and last item position of that list, the position of the viewHolder, and a list of the media should be returned
@@ -297,7 +299,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleMovingCollapseVisiblePlaceHolderTest() {
     //Given an initialized presenter
-    editorialPresenter.handleMovingCollapse();
+    presenter.handleMovingCollapse();
     //If item is shown when collapse toolbar is moving
     when(view.handleMovingCollapse()).thenReturn(Observable.just(true));
 
@@ -309,7 +311,7 @@ public class EditorialPresenterTest {
 
   @Test public void handleMovingCollapseNotVisiblePlaceHolderTest() {
     //Given an initialized presenter
-    editorialPresenter.handleMovingCollapse();
+    presenter.handleMovingCollapse();
     //If item is shown when collapse toolbar is moving
     when(view.handleMovingCollapse()).thenReturn(Observable.just(false));
 
@@ -317,5 +319,137 @@ public class EditorialPresenterTest {
 
     //Then it should add the bottom app card
     verify(view).addBottomCardAnimation();
+  }
+
+  @Test public void handleReactionButtonClickFirstReactionTest() {
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And it's the first time the user is reacting to that card
+    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(true));
+    //Then it should request and load the editorialViewModel
+    when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(null);
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(editorialAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID);
+  }
+
+  @Test public void handleReactionButtonClickSecondReactionTest() {
+    //Given an initialised presenter
+    presenter.handleReactionButtonClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //And the user has a reaction already submitted on that card
+    when(editorialManager.isFirstReaction("1", GROUP_ID)).thenReturn(Single.just(false));
+    when(editorialManager.deleteReaction("1", GROUP_ID)).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(editorialManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(new LoadReactionModel(10, "myReaction", "userId", Collections.emptyList())));
+    //Then it should request and load the editorialViewModel
+    when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+    //The user clicks the reaction button
+    reactionButtonClickEvent.onNext(null);
+    //It should request the deletion of the reaction
+    verify(editorialManager).deleteReaction("1", GROUP_ID);
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialAnalytics).sendDeletedEvent();
+    verify(editorialManager).loadReactionModel("1", GROUP_ID);
+    verify(view).showTopReactions("myReaction", Collections.emptyList(), 10);
+  }
+
+  @Test public void handleReactionButtonLongPressTest() {
+    //Given an initialised presenter
+    presenter.handleLongPressReactionButton();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //Then it should request and load the editorialViewModel
+    when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+    //The user long presses the reaction button
+    reactionButtonLongPressEvent.onNext(null);
+    //It should send the corresponding analytic and show the reactions pop up
+    verify(editorialAnalytics).sendReactionButtonClickEvent();
+    verify(view).showReactionsPopup("1", GROUP_ID);
+  }
+
+  @Test public void handleUserReactionTest() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(
+        Single.just(new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SUCCESS)));
+    when(editorialManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(new LoadReactionModel(10, "myReaction", "userId", Collections.emptyList())));
+    //Then it should request and load the editorialViewModel
+    when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialAnalytics).sendReactedEvent();
+    verify(editorialManager).loadReactionModel("1", GROUP_ID);
+    verify(view).showTopReactions("myReaction", Collections.emptyList(), 10);
+  }
+
+  @Test public void handleUserReactionWithSameReactionTest() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user chooses a reaction
+    reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
+    //It should request to set said reaction
+    when(editorialManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.SAME_REACTION)));
+    //It should send the corresponding analytic and load the reactions and update the corresponding card
+    verify(editorialAnalytics, times(0)).sendReactedEvent();
+    when(editorialManager.loadReactionModel("1", GROUP_ID)).thenReturn(
+        Single.just(new LoadReactionModel(10, "myReaction", "userId", Collections.emptyList())));
+    verify(editorialManager, times(0)).loadReactionModel("1", GROUP_ID);
+    verify(view, times(0)).showTopReactions("myReaction", Collections.emptyList(), 10);
+  }
+
+  @Test public void handleSnackLogInTest() {
+    //Given an initialised presenter
+    presenter.handleSnackLogInClick();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //The user clicks on the log in button
+    snackLoginEvent.onNext(null);
+    //Then it should navigate to the log in view
+    verify(editorialNavigator).navigateToLogIn();
+  }
+
+  @Test public void handleReactionsExceeded() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.REACTIONS_EXCEEDED)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
+    verify(view).showLoginDialog();
+  }
+
+  @Test public void handleNetworkError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.NETWORK_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
+    verify(view).showNetworkErrorToast();
+  }
+
+  @Test public void handleGeneralError() {
+    //Given an initialised presenter
+    presenter.handleUserReaction();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    //It should request to set said reaction
+    when(editorialManager.setReaction("1", GROUP_ID, "laugh")).thenReturn(Single.just(
+        new ReactionsResponse(ReactionsResponse.ReactionResponseMessage.GENERAL_ERROR)));
+    //The user chooses a reaction
+    reactionClickEvent.onNext(new ReactionEvent("1", "laugh", GROUP_ID));
+    verify(view).showGenericErrorToast();
   }
 }

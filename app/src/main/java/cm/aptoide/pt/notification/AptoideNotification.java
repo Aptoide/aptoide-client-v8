@@ -17,6 +17,7 @@ public class AptoideNotification {
   public static final int NEW_FOLLOWER = 4;
   public static final int NEW_SHARE = 5;
   public static final int NEW_ACTIVITY = 6;
+  public static final int APPC_PROMOTION = 7;
   public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
   private Long expire;
   private String appName;
@@ -155,8 +156,8 @@ public class AptoideNotification {
     return notificationCenterUrlTrack;
   }
 
-  @Retention(RetentionPolicy.SOURCE)
-  @IntDef({ CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY })
-  public @interface NotificationType {
+  @Retention(RetentionPolicy.SOURCE) @IntDef({
+      CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY, APPC_PROMOTION
+  }) public @interface NotificationType {
   }
 }
