@@ -83,6 +83,7 @@ import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.BannerRepository;
 import cm.aptoide.pt.home.BundlesRepository;
+import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeContainerNavigator;
@@ -380,10 +381,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides MoreBundlePresenter providesGetStoreWidgetsPresenter(
       MoreBundleManager moreBundleManager, CrashReport crashReport, HomeNavigator homeNavigator,
-      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics) {
+      AdMapper adMapper, BundleEvent bundleEvent, HomeAnalytics homeAnalytics,
+      ChipManager chipManager) {
     return new MoreBundlePresenter((MoreBundleView) fragment, moreBundleManager,
         AndroidSchedulers.mainThread(), crashReport, homeNavigator, adMapper, bundleEvent,
-        homeAnalytics);
+        homeAnalytics, chipManager);
   }
 
   @FragmentScope @Provides MoreBundleManager providesGetStoreManager(
@@ -515,9 +517,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home) {
+      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home);
+        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
+        chipManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {

@@ -64,7 +64,9 @@ public class CurationCard {
     return type;
   }
 
-  public String getDate() { return date; }
+  public String getDate() {
+    return date;
+  }
 
   public List<TopReaction> getReactions() {
     return reactions;

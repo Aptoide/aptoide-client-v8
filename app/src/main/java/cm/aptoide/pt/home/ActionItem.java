@@ -60,7 +60,9 @@ public class ActionItem {
     return numberOfViews;
   }
 
-  public String getDate() { return date; }
+  public String getDate() {
+    return date;
+  }
 
   public void setReactions(List<TopReaction> topReactionList) {
     this.reactionList = topReactionList;

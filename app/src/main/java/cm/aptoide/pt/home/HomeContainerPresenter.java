@@ -20,11 +20,12 @@ public class HomeContainerPresenter implements Presenter {
   private final HomeNavigator homeNavigator;
   private final HomeAnalytics homeAnalytics;
   private final Home home;
+  private final ChipManager chipManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home) {
+      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.crashReport = crashReport;
@@ -33,6 +34,7 @@ public class HomeContainerPresenter implements Presenter {
     this.homeNavigator = homeNavigator;
     this.homeAnalytics = homeAnalytics;
     this.home = home;
+    this.chipManager = chipManager;
   }
 
   @Override public void present() {
@@ -260,11 +262,13 @@ public class HomeContainerPresenter implements Presenter {
         .doOnNext(isChecked -> {
           if (isChecked) {
             homeContainerNavigator.loadGamesHomeContent();
+            chipManager.setCurrentChip(ChipManager.Chip.GAMES);
           } else {
             homeContainerNavigator.loadMainHomeContent();
+            chipManager.setCurrentChip(null);
           }
-          homeAnalytics.sendGamesChipInteractEvent();
-          homeAnalytics.sendGamesChipHomeInteractEvent();
+          homeAnalytics.sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+          homeAnalytics.sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -280,11 +284,13 @@ public class HomeContainerPresenter implements Presenter {
         .doOnNext(isChecked -> {
           if (isChecked) {
             homeContainerNavigator.loadAppsHomeContent();
+            chipManager.setCurrentChip(ChipManager.Chip.APPS);
           } else {
             homeContainerNavigator.loadMainHomeContent();
+            chipManager.setCurrentChip(null);
           }
-          homeAnalytics.sendAppsChipInteractEvent();
-          homeAnalytics.sendAppsChipHomeInteractEvent();
+          homeAnalytics.sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+          homeAnalytics.sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

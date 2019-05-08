@@ -626,8 +626,7 @@ public class AppViewManager {
             + packageName
             + "&store="
             + storeName
-            + "&show_install_popup=false",
-        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+            + "&show_install_popup=false", LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
   }
 
   public void unscheduleNotificationSync() {

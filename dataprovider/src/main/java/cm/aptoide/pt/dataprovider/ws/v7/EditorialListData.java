@@ -40,5 +40,7 @@ public class EditorialListData extends BaseV7EndlessDataListResponse {
     return views;
   }
 
-  public String getDate() { return date;}
+  public String getDate() {
+    return date;
+  }
 }
