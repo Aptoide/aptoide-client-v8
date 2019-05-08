@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import cm.aptoide.pt.BuildConfig;
 import com.fyber.inneractive.sdk.external.InneractiveAdRequest;
 import com.fyber.inneractive.sdk.external.InneractiveAdSpot;
 import com.fyber.inneractive.sdk.external.InneractiveAdSpotManager;
@@ -25,10 +26,6 @@ import java.util.Map;
  * Inneractive Mopub interstitial plugin class
  */
 public class InneractiveInterstitialCustomEvent extends CustomEventInterstitial {
-
-  // Set your Inneractive's spot ID!
-  private static final String SAMPLE_INTERSTITIAL_SPOT_ID = "Set_Your_Inneractive_Spot_Id";
-  //for example, inneractive's spot id for testing: "150946"
 
   // Members
   /**
@@ -74,7 +71,7 @@ public class InneractiveInterstitialCustomEvent extends CustomEventInterstitial 
 
     //Make sure we have a spotId from the request.
     if (TextUtils.isEmpty(resultSpotId)) {
-      resultSpotId = SAMPLE_INTERSTITIAL_SPOT_ID;
+      resultSpotId = BuildConfig.MOPUB_FYBER_INTERSTITIAL_SPOT_ID;
       if (TextUtils.isEmpty(resultSpotId)) {
         listener.onInterstitialFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
         return;

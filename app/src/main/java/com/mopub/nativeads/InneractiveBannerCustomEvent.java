@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import cm.aptoide.pt.BuildConfig;
 import com.fyber.inneractive.sdk.external.InneractiveAdRequest;
 import com.fyber.inneractive.sdk.external.InneractiveAdSpot;
 import com.fyber.inneractive.sdk.external.InneractiveAdSpotManager;
@@ -24,10 +25,6 @@ import java.util.Map;
  * Inneractive Mopub banner plugin class
  */
 public class InneractiveBannerCustomEvent extends CustomEventBanner {
-
-  // Set your Inneractive's spot ID!
-  private static String SAMPLE_BANNER_SPOT_ID = "Set_Your_Inneractive_Spot_Id";
-  //for example, inneractive's spot id for testing: "150942"
 
   // Members
   /**
@@ -68,7 +65,7 @@ public class InneractiveBannerCustomEvent extends CustomEventBanner {
 
     //Make sure we have a spotId from the request.
     if (TextUtils.isEmpty(resultSpotId)) {
-      resultSpotId = SAMPLE_BANNER_SPOT_ID;
+      resultSpotId = BuildConfig.MOPUB_FYBER_BANNER_SPOT_ID;
       if (TextUtils.isEmpty(resultSpotId)) {
         customEventBannerListener.onBannerFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
         return;
