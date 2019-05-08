@@ -31,7 +31,7 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
-  private static final String TAP_ON_CHIP = "tap_on_chip";
+  private static final String TAP_ON_CHIP = "tap on chip";
   private static final String WHERE = "where";
   private static final String PACKAGE_NAME = "package_name";
   private static final String ACTION = "action";
