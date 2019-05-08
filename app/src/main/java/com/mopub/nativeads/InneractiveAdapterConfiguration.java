@@ -4,14 +4,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import com.fyber.inneractive.sdk.external.InneractiveAdManager;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.MoPubErrorCode;
-
 import java.util.Map;
 
 import static com.fyber.inneractive.sdk.external.InneractiveMediationDefs.REMOTE_KEY_APP_ID;

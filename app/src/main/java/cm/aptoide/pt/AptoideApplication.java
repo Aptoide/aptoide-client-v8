@@ -346,14 +346,15 @@ public abstract class AptoideApplication extends Application {
         BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
         AppLovinBaseAdapterConfiguration.class.toString())
         .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-            getPlacementMediationMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
         .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
-            getPlacementMediationMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
-            getPlacementMediationMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withMediatedNetworkConfiguration(InneractiveAdapterConfiguration.class.getName(),
-            getAppIdMediationMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
+            getMediatedNetworkConfigurationWithAppIdMap(
+                BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
                 BuildConfig.MOPUB_FYBER_APPLICATION_ID))
         .withLogLevel(MoPubLog.LogLevel.DEBUG)
         .build();
@@ -361,16 +362,17 @@ public abstract class AptoideApplication extends Application {
     MoPub.initializeSdk(this, sdkConfiguration, null);
   }
 
-  @NonNull private Map<String, String> getPlacementMediationMap(String mediatedNetworkPlacementId) {
+  @NonNull private Map<String, String> getMediatedNetworkConfigurationBaseMap(
+      String mediatedNetworkPlacementId) {
     Map<String, String> mediationNetworkConfiguration = new HashMap<>();
     mediationNetworkConfiguration.put("Placement_Id", mediatedNetworkPlacementId);
     return mediationNetworkConfiguration;
   }
 
-  @NonNull private Map<String, String> getAppIdMediationMap(String mediatedNetworkPlacementId,
-      String appId) {
+  @NonNull private Map<String, String> getMediatedNetworkConfigurationWithAppIdMap(
+      String mediatedNetworkPlacementId, String appId) {
     Map<String, String> mediationNetworkConfiguration =
-        getPlacementMediationMap(mediatedNetworkPlacementId);
+        getMediatedNetworkConfigurationBaseMap(mediatedNetworkPlacementId);
     mediationNetworkConfiguration.put("appID", appId);
     return mediationNetworkConfiguration;
   }
