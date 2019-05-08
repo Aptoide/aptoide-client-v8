@@ -267,8 +267,8 @@ public class HomeContainerPresenter implements Presenter {
             homeContainerNavigator.loadMainHomeContent();
             chipManager.setCurrentChip(null);
           }
-          homeAnalytics.sendGamesChipInteractEvent();
-          homeAnalytics.sendGamesChipHomeInteractEvent();
+          homeAnalytics.sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+          homeAnalytics.sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -289,8 +289,8 @@ public class HomeContainerPresenter implements Presenter {
             homeContainerNavigator.loadMainHomeContent();
             chipManager.setCurrentChip(null);
           }
-          homeAnalytics.sendAppsChipInteractEvent();
-          homeAnalytics.sendAppsChipHomeInteractEvent();
+          homeAnalytics.sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+          homeAnalytics.sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

@@ -31,14 +31,13 @@ public class HomeAnalytics {
   static final String TAP_ON_CARD_DISMISS = "tap on card dismiss";
   static final String TAP = "tap";
   static final String VIEW_CARD = "view card";
+  private static final String TAP_ON_CHIP = "tap_on_chip";
   private static final String WHERE = "where";
   private static final String PACKAGE_NAME = "package_name";
   private static final String ACTION = "action";
   private static final String BUNDLE_TAG = "bundle_tag";
   private static final String PROMOTION_ICON = "promotion-icon";
   private static final String PROMOTION_DIALOG = "promotion-dialog";
-  private static final String GAMES = "games";
-  private static final String APPS = "apps";
   private static final String CURATION_CARD = "curation_card";
   private final NavigationTracker navigationTracker;
   private final AnalyticsManager analyticsManager;
@@ -254,32 +253,18 @@ public class HomeAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendGamesChipHomeInteractEvent() {
+  public void sendChipHomeInteractEvent(String chipTag) {
     final Map<String, Object> data = new HashMap<>();
     data.put(ACTION, CHIP_CLICK);
-    data.put(BUNDLE_TAG, GAMES);
+    data.put(BUNDLE_TAG, chipTag);
     analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppsChipHomeInteractEvent() {
+  public void sendChipInteractEvent(String chipTag) {
     final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, CHIP_CLICK);
-    data.put(BUNDLE_TAG, APPS);
-    analyticsManager.logEvent(data, HOME_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendAppsChipInteractEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, APPS);
-    analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendGamesChipInteractEvent() {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, GAMES);
+    data.put(ACTION, TAP_ON_CHIP);
+    data.put(CHIP_TAG, chipTag);
     analyticsManager.logEvent(data, HOME_CHIP_INTERACT, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }

@@ -200,8 +200,8 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeAnalytics).sendGamesChipInteractEvent();
-    verify(homeAnalytics).sendGamesChipHomeInteractEvent();
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
 
     verify(homeContainerNavigator).loadMainHomeContent();
   }
@@ -211,8 +211,8 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnGamesChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeAnalytics).sendGamesChipInteractEvent();
-    verify(homeAnalytics).sendGamesChipHomeInteractEvent();
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.GAMES.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.GAMES.getName());
 
     verify(homeContainerNavigator).loadGamesHomeContent();
   }
@@ -222,8 +222,8 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeAnalytics).sendAppsChipHomeInteractEvent();
-    verify(homeAnalytics).sendAppsChipInteractEvent();
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
 
     verify(homeContainerNavigator).loadMainHomeContent();
   }
@@ -233,8 +233,8 @@ public class HomeContainerPresenterTest {
     presenter.handleClickOnAppsChip();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    verify(homeAnalytics).sendAppsChipHomeInteractEvent();
-    verify(homeAnalytics).sendAppsChipInteractEvent();
+    verify(homeAnalytics).sendChipInteractEvent(ChipManager.Chip.APPS.getName());
+    verify(homeAnalytics).sendChipHomeInteractEvent(ChipManager.Chip.APPS.getName());
 
     verify(homeContainerNavigator).loadAppsHomeContent();
   }
