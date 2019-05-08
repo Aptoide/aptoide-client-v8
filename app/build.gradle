@@ -288,7 +288,7 @@ android {
     variant.buildConfigField "String", "MOPUB_INMOBI_ACCOUNT_ID",
         "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
     variant.buildConfigField "String", "MOPUB_FYBER_APPLICATION_ID",
-        "\"" + project.MOPUB_INMOBI_ACCOUNT_ID + "\""
+        "\"" + project.MOPUB_FYBER_APPLICATION_ID + "\""
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
