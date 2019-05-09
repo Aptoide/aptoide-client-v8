@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +49,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private EditorialListAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<Void> snackListener;
-  private LinearLayoutManager layoutManager;
+  private ScrollControlLinearLayoutManager layoutManager;
   private SwipeRefreshLayout swipeRefreshLayout;
 
   //Error views
@@ -75,7 +74,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
-    layoutManager = new LinearLayoutManager(getContext());
+    layoutManager = new ScrollControlLinearLayoutManager(getContext());
     adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener);
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
@@ -245,9 +244,23 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(ReactionsHomeEvent.class);
   }
 
+  @Override public void setScrollEnabled(Boolean flag) {
+    layoutManager.setScrollEnabled(flag);
+  }
+
   @Override public Observable<EditorialHomeEvent> reactionButtonLongPress() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.REACT_LONG_PRESS))
+        .cast(EditorialHomeEvent.class)
+        .map(event -> {
+          setScrollEnabled(false);
+          return event;
+        });
+  }
+
+  @Override public Observable<EditorialHomeEvent> onPopupDismiss() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.POPUP_DISMISS))
         .cast(EditorialHomeEvent.class);
   }
 

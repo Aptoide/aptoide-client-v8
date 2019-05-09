@@ -48,6 +48,7 @@ public class EditorialListPresenter implements Presenter {
     handleLongPressReactionButton();
     handleUserReaction();
     handleSnackLogInClick();
+    handleOnDismissPopup();
   }
 
   private Single<CurationCard> loadReactionModel(String cardId, String groupId) {
@@ -219,7 +220,19 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionButtonLongPress())
-        .doOnNext(this::showReactions)
+        .doOnNext(editorialHomeEvent -> {
+          showReactions(editorialHomeEvent);
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(lifecycleEvent -> {
+        }, crashReporter::log);
+  }
+
+  @VisibleForTesting void handleOnDismissPopup() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.onPopupDismiss())
+        .doOnNext(item -> view.setScrollEnabled(true))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);
