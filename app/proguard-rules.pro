@@ -196,3 +196,6 @@
 
 #skip AVID classes
 -keep class com.integralads.avid.library.** {*;}
+
+#Don't warn about flurry ads
+-dontwarn com.flurry.**
