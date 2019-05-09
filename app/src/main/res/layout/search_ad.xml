@@ -89,11 +89,13 @@
         android:id="@+id/native_main_image"
         android:layout_width="1dp"
         android:layout_height="1dp"
+        android:background="@color/transparent"
         />
     <RelativeLayout
         android:id="@+id/primary_ad_view_layout"
         android:layout_width="1dp"
         android:layout_height="1dp"
+        android:background="@color/transparent"
         />
 
   </RelativeLayout>
