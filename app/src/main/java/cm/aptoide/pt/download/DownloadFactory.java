@@ -6,7 +6,6 @@
 package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
@@ -29,22 +28,6 @@ public class DownloadFactory {
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
     this.appValidator = appValidator;
-  }
-
-  private void validateApp(String md5, Obb appObb, String packageName, String appName,
-      String filePath, String filePathAlt) throws IllegalArgumentException {
-    if (TextUtils.isEmpty(md5)) {
-      throw new IllegalArgumentException("Invalid App MD5");
-    }
-    if (TextUtils.isEmpty(filePath) && TextUtils.isEmpty(filePathAlt)) {
-      throw new IllegalArgumentException("No download link provided");
-    } else if (appObb != null && TextUtils.isEmpty(packageName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the package name specified");
-    } else if (TextUtils.isEmpty(appName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the App name specified");
-    }
   }
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
