@@ -585,6 +585,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showLoginDialog() {
     Snackbar.make(getView(), getString(R.string.editorial_reactions_login_short),
         Snackbar.LENGTH_LONG)
+        .setAction(R.string.login, snackView -> snackListener.onNext(null))
         .show();
   }
 
