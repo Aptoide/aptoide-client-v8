@@ -60,4 +60,8 @@ public interface EditorialListView extends View {
   void updateEditorialCard(CurationCard curationCard);
 
   void showNetworkErrorToast();
+
+  void setScrollEnabled(Boolean flag);
+
+  Observable<EditorialHomeEvent> onPopupDismiss();
 }
