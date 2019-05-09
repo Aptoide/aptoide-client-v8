@@ -49,7 +49,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private EditorialListAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
   private PublishSubject<Void> snackListener;
-  private CustomLinearLayoutManager layoutManager;
+  private ScrollControlLinearLayoutManager layoutManager;
   private SwipeRefreshLayout swipeRefreshLayout;
 
   //Error views
@@ -74,7 +74,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
-    layoutManager = new CustomLinearLayoutManager(getContext());
+    layoutManager = new ScrollControlLinearLayoutManager(getContext());
     adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener);
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
