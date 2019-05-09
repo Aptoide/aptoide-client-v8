@@ -12,6 +12,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
+import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
@@ -60,9 +61,13 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     ViewBinder moPubViewBinder =
         new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
             .iconImageId(R.id.icon)
+            .mainImageId(R.id.native_main_image)
+            .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
             .build();
-    MoPubStaticNativeAdRenderer moPubRenderer = new MoPubStaticNativeAdRenderer(moPubViewBinder);
-    moPubRecyclerAdapter.registerAdRenderer(moPubRenderer);
+
+    moPubRecyclerAdapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(moPubViewBinder));
+    InMobiNativeAdRenderer inMobiNativeAdRenderer = new InMobiNativeAdRenderer(moPubViewBinder);
+    moPubRecyclerAdapter.registerAdRenderer(inMobiNativeAdRenderer);
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);
