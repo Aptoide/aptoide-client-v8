@@ -14,8 +14,7 @@ public class CustomLinearLayoutManager extends LinearLayoutManager {
     this.isScrollEnabled = flag;
   }
 
-  @Override
-  public boolean canScrollVertically() {
+  @Override public boolean canScrollVertically() {
     return isScrollEnabled && super.canScrollVertically();
   }
 }

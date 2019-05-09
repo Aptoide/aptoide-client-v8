@@ -134,8 +134,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
       reactionsPopup.setOnReactionsItemClickListener(null);
     });
     reactionsPopup.setOnDismissListener(item -> {
-      uiEventsListener.onNext(new EditorialHomeEvent(cardId, groupId, null, position,
-          HomeEvent.Type.POPUP_DISMISS));
+      uiEventsListener.onNext(
+          new EditorialHomeEvent(cardId, groupId, null, position, HomeEvent.Type.POPUP_DISMISS));
 
       reactionsPopup.setOnDismissListener(null);
     });
