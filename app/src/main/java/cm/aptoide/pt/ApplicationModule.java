@@ -57,7 +57,6 @@ import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
-import cm.aptoide.pt.account.AccountSettingsBodyInterceptorV7;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
@@ -66,6 +65,7 @@ import cm.aptoide.pt.account.DatabaseStoreDataPersist;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.LoginPreferences;
+import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.OAuthModeProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
@@ -881,7 +881,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("account-settings-pool-v7")
+      @Named("mature-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new StoreUtilsProxy(accountManager, bodyInterceptor,
         new StoreCredentialsProviderImpl(storeAccessor), storeAccessor, httpClient,
@@ -911,11 +911,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage);
   }
 
-  @Singleton @Provides @Named("account-settings-pool-v7")
+  @Singleton @Provides @Named("mature-pool-v7")
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideAccountSettingsBodyInterceptorPoolV7(
       @Named("pool-v7") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
       AdultContent adultContent) {
-    return new AccountSettingsBodyInterceptorV7(bodyInterceptor, adultContent);
+    return new MatureBodyInterceptorV7(bodyInterceptor, adultContent);
   }
 
   @Singleton @Provides @Named("pool-v7")
@@ -1052,7 +1052,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      @Named("account-settings-pool-v7")
+      @Named("mature-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
@@ -1076,7 +1076,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
-      @Named("default") OkHttpClient okHttpClient, @Named("pool-v7")
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       InstallManager installManager) {
@@ -1128,7 +1128,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreCredentialsProvider storeCredentialsProvider,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") OkHttpClient httpClient,
-      @Named("account-settings-pool-v7")
+      @Named("mature-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
     return new TrendingService(storeCredentialsProvider, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences);
@@ -1146,7 +1146,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return RxJavaCallAdapterFactory.create();
   }
 
-  @Singleton @Provides SearchManager providesSearchManager(@Named("pool-v7")
+  @Singleton @Provides SearchManager providesSearchManager(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
@@ -1164,7 +1164,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Schedulers.io());
   }
 
-  @Singleton @Provides WalletAdsOfferService providesWalletAdsOfferService(@Named("pool-v7")
+  @Singleton @Provides WalletAdsOfferService providesWalletAdsOfferService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
@@ -1353,7 +1353,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(CaptchaService.ServiceInterface.class);
   }
 
-  @Singleton @Provides PromotionsService providesPromotionsService(@Named("pool-v7")
+  @Singleton @Provides PromotionsService providesPromotionsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
@@ -1512,7 +1512,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppService providesAppService(
-      StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
+      StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
@@ -1537,7 +1537,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppCoinsManager(appCoinsService, donationsService);
   }
 
-  @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("pool-v7")
+  @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
@@ -1546,7 +1546,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(
-      @Named("pool-v7")
+      @Named("mature-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
@@ -1608,7 +1608,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
-      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("pool-v7")
+      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
@@ -1639,7 +1639,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides ReviewsService providesReviewsService(
-      StoreCredentialsProvider storeCredentialsProvider, @Named("pool-v7")
+      StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
@@ -1725,7 +1725,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadStateParser();
   }
 
-  @Singleton @Provides EditorialService providesEditorialService(@Named("pool-v7")
+  @Singleton @Provides EditorialService providesEditorialService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {

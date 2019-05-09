@@ -489,7 +489,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListService providesEditorialService(
-      @Named("pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
+      @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
     return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
