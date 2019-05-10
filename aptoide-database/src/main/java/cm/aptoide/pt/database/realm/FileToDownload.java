@@ -31,10 +31,11 @@ public class FileToDownload extends RealmObject {
   private String fileName;
   private int versionCode;
   private String versionName;
+  private long fileSize;
 
   public static FileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
-      String versionName, String cachePath) {
+      String versionName, String cachePath, long fileSize) {
     FileToDownload fileToDownload = new FileToDownload();
     fileToDownload.setLink(link);
     fileToDownload.setMd5(md5);
@@ -50,6 +51,7 @@ public class FileToDownload extends RealmObject {
         fileToDownload.setFileName(fileName);
       }
     }
+    fileToDownload.setFileSize(fileSize);
     fileToDownload.setPackageName(packageName);
     return fileToDownload;
   }
@@ -197,6 +199,14 @@ public class FileToDownload extends RealmObject {
 
   public void setMd5(String md5) {
     this.md5 = md5;
+  }
+
+  public long getFileSize() {
+    return this.fileSize;
+  }
+
+  private void setFileSize(long fileSize) {
+    this.fileSize = fileSize;
   }
 
   @IntDef({ APK, OBB, GENERIC }) @Retention(RetentionPolicy.SOURCE) public @interface FileType {
