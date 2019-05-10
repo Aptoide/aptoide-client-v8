@@ -33,9 +33,9 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     super(view);
     this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
-    bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
-    moreButton = (Button) view.findViewById(R.id.bundle_more);
-    appsList = (RecyclerView) view.findViewById(R.id.apps_list);
+    bundleTitle = view.findViewById(R.id.bundle_title);
+    moreButton = view.findViewById(R.id.bundle_more);
+    appsList = view.findViewById(R.id.apps_list);
     appsInBundleAdapter =
         new AdsInBundleAdapter(new ArrayList<>(), oneDecimalFormatter, adClickedEvents);
     LinearLayoutManager layoutManager =
