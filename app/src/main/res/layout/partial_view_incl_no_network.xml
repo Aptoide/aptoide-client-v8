@@ -19,7 +19,7 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
       android:orientation="vertical"
       >
 
@@ -27,36 +27,35 @@
         android:layout_width="wrap_content"
         android:layout_height="184dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="34dp"
         android:src="@drawable/error2"
         />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@string/font_family_medium"
+        android:layout_marginBottom="14dp"
         android:gravity="center_horizontal"
         android:text="@string/could_not_connect_internet"
-        android:textColor="?attr/colorPrimary"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:textSize="14sp"
         />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/retry"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
         android:focusable="true"
-        android:fontFamily="@string/font_family_medium"
         android:gravity="center"
         android:text="@string/retry_connection"
-        android:textAllCaps="true"
-        android:textSize="14sp"
-        style="?attr/customButtonThinLine"
+        android:paddingBottom="16dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
+        android:paddingTop="16dp"
+        style="@style/Aptoide.Button.Ghost"
         />
 
 
