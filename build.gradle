@@ -93,6 +93,7 @@ ext {
   RULES_VERSION = '1.0.1'
 
   JACKSON_VERSION = '2.8.5'
+  GSON_VERSION = '2.8.2'
 
   // Material tab strip
   MATERIAL_TAB_STRIP_VERSION = '1.1.0'

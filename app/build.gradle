@@ -434,7 +434,7 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
-  implementation "com.google.code.gson:gson:2.8.2"
+  implementation "com.google.code.gson:gson:${GSON_VERSION}"
 
 
   // Mopub
