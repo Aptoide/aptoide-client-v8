@@ -338,7 +338,7 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
-            cachedApp.hasAdvertising() || cachedApp.hasBilling()))
+            cachedApp.hasAdvertising() || cachedApp.hasBilling(), cachedApp.getFileSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
@@ -358,7 +358,8 @@ public class AppViewManager {
             .getAction()), promotionViewApp.getAppName(), promotionViewApp.getPackageName(),
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
-        promotionViewApp.getPathAlt(), promotionViewApp.getObb(), false))
+        promotionViewApp.getPathAlt(), promotionViewApp.getObb(), false,
+        promotionViewApp.getFileSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getDownloadModel()
@@ -550,7 +551,8 @@ public class AppViewManager {
                           viewModel.getVersionCode(), viewModel.getVersionName(),
                           viewModel.getPath(), viewModel.getPathAlt(), viewModel.getObb(),
                           viewModel.getAppcValue(), walletInstalled != null,
-                          viewModel.shouldShowOffer(), appViewAppInstalled != null)))));
+                          viewModel.shouldShowOffer(), appViewAppInstalled != null,
+                          viewModel.getFileSize())))));
     }
   }
 
@@ -569,7 +571,7 @@ public class AppViewManager {
           return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
               app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
               app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
-              Math.round(app.getAppcValue()), false, true, false);
+              Math.round(app.getAppcValue()), false, true, false, app.getFileSize());
         }
       } else {
         return new WalletPromotionViewModel(false);
