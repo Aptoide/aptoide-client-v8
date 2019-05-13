@@ -44,9 +44,6 @@ public class EditorialListPresenter implements Presenter {
     handleBottomReached();
     handleUserImageClick();
     loadUserImage();
-    handleReactionButtonClick();
-    handleLongPressReactionButton();
-    handleUserReaction();
     handleSnackLogInClick();
   }
 
@@ -68,9 +65,7 @@ public class EditorialListPresenter implements Presenter {
 
   private Observable<CurationCard> loadEditorialAndReactions(boolean loadMore, boolean refresh) {
     return loadEditorialListViewModel(loadMore, refresh).toObservable()
-        .flatMapIterable(EditorialListViewModel::getCurationCards)
-        .flatMapSingle(
-            curationCard -> loadReactionModel(curationCard.getId(), curationCard.getType()));
+        .flatMapIterable(EditorialListViewModel::getCurationCards);
   }
 
   @VisibleForTesting public void loadUserImage() {

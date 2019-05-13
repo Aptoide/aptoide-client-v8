@@ -62,11 +62,7 @@ public class EditorialPresenter implements Presenter {
     handleClickActionButtonCard();
     handleMovingCollapse();
 
-    handleReactionButtonClick();
-    handleUserReaction();
-    handleLongPressReactionButton();
     handleSnackLogInClick();
-    onCreateLoadReactionModel();
   }
 
   @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
