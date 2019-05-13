@@ -108,7 +108,7 @@ public class ReactionsRemoteService implements ReactionsService {
         @Path("uid") String uid, @retrofit2.http.Body Body body);
   }
 
-  public static class Body extends BaseBody {
+  public static class Body {
 
     private String objectUid;
     private String groupUid;
