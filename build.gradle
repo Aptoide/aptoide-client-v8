@@ -7,7 +7,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:3.4.0'
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
@@ -44,8 +44,8 @@ task clean(type: Delete) {
 // Gradle wrapper version is being specified dynamically here to prevent IDEA
 // from controlling version.
 // This will override gradle-wrapper.properties
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.6'
+ wrapper {
+  gradleVersion = '5.1.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
