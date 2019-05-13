@@ -40,14 +40,7 @@
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:text="@string/all_message_general_error"
-        style="?android:textAppearanceMedium"
-        />
+
 
     <TextView
         android:id="@+id/retry"
@@ -55,12 +48,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="5dp"
-        android:background="?attr/flatButtonBackground"
         android:focusable="true"
         android:gravity="center"
-        android:padding="5dp"
-        android:text="@string/download_retry"
-        android:textColor="@android:color/white"
+        android:paddingBottom="16dp"
+        android:paddingEnd="25dp"
+        android:paddingStart="25dp"
+        android:paddingTop="16dp"
+        android:text="@string/retry_connection"
+        style="@style/Aptoide.Button.Ghost"
         />
 
   </LinearLayout>
