@@ -21,6 +21,15 @@
       android:orientation="vertical"
       >
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_search_no_results"
+        />
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +37,7 @@
         android:layout_margin="20dp"
         android:gravity="center"
         android:text="@string/no_search_results_message"
+        style="@style/Aptoide.TextView.Regular.M"
         />
 
     <LinearLayout
@@ -56,25 +66,15 @@
           android:id="@+id/ic_search_button"
           android:layout_width="60dp"
           android:layout_height="50dp"
-          android:background="?attr/flatButtonBackground"
+          android:background="?attr/raisedButtonBackground"
           android:paddingEnd="15dp"
           android:paddingLeft="15dp"
           android:paddingRight="15dp"
           android:paddingStart="15dp"
-          android:scaleType="fitCenter"
           android:src="@drawable/ic_search_icon"
           />
 
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_search_no_results"
-        />
-
 
   </LinearLayout>
 </ScrollView>
