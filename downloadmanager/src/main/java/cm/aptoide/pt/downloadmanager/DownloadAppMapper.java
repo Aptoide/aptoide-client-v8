@@ -19,6 +19,6 @@ public class DownloadAppMapper {
     List<DownloadAppFile> fileList =
         downloadAppFileMapper.mapFileToDownloadList(download.getFilesToDownload());
     return new DownloadApp(download.getPackageName(), download.getVersionCode(), fileList,
-        download.getMd5());
+        download.getMd5(), download.getFileSize());
   }
 }

@@ -48,11 +48,11 @@ public class AppDownloadManagerTest {
             "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB, fileSize);
 
     DownloadApp appToDownload =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk");
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", size);
     DownloadApp appToDownloadWithObbs =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb");
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", size);
     DownloadApp appToDownloadEmptyError =
-        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty");
+        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", size);
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {

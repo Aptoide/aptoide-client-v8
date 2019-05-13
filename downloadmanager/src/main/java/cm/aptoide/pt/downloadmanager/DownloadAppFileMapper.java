@@ -22,7 +22,7 @@ public class DownloadAppFileMapper {
           new DownloadAppFile(fileToDownload.getLink(), fileToDownload.getAltLink(),
               fileToDownload.getMd5(), fileToDownload.getVersionCode(),
               fileToDownload.getPackageName(), fileToDownload.getFileName(),
-              mapFileType(fileToDownload.getFileType()), fileToDownload.getFileSize()));
+              mapFileType(fileToDownload.getFileType())));
     }
     return downloadAppFileList;
   }
