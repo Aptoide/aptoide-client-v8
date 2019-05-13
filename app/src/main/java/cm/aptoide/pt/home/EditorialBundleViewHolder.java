@@ -69,7 +69,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
       String numberOfViews, String type, String date, int position, HomeBundle homeBundle,
       List<TopReaction> reactions, int numberOfReactions, String userReaction) {
     clearReactions();
-    setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
         .load(icon, backgroundImage);
     editorialTitle.setText(title);
@@ -78,14 +77,6 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
         formatNumberOfViews(numberOfViews)));
     setCurationCardBubble(subTitle);
     setupCalendarDateString(date);
-    reactButton.setOnClickListener(view -> uiEventsListener.onNext(
-        new EditorialHomeEvent(cardId, type, homeBundle, position,
-            HomeEvent.Type.REACT_SINGLE_PRESS)));
-    reactButton.setOnLongClickListener(view -> {
-      uiEventsListener.onNext(new EditorialHomeEvent(cardId, type, homeBundle, position,
-          HomeEvent.Type.REACT_LONG_PRESS));
-      return true;
-    });
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
   }

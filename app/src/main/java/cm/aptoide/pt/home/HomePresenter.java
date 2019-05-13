@@ -74,12 +74,6 @@ public class HomePresenter implements Presenter {
 
     handleInstallWalletOfferClick();
 
-    handleReactionButtonClick();
-
-    handleLongPressedReactionButton();
-
-    handleUserReaction();
-
     handleSnackLogInClick();
 
     handleMoPubConsentDialog();
@@ -312,7 +306,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .doOnNext(created -> view.showLoading())
-        .flatMap(__ -> loadHomeAndReactions())
+        .flatMapSingle(__ -> loadHome())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
