@@ -338,7 +338,7 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
-            cachedApp.hasAdvertising() || cachedApp.hasBilling(), cachedApp.getFileSize()))
+            cachedApp.hasAdvertising() || cachedApp.hasBilling(), cachedApp.getSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
