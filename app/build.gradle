@@ -122,7 +122,6 @@ android {
     debug {
       testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
-      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
       ext.enableCrashlytics = false
       zipAlignEnabled false
       minifyEnabled false
@@ -134,7 +133,6 @@ android {
     release {
       testCoverageEnabled = true
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
-      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
       zipAlignEnabled true
       minifyEnabled true
       shrinkResources true
@@ -277,6 +275,15 @@ android {
       variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
           "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
+    }
+
+    def type = variant.variantData.variantConfiguration.buildType.name
+
+    if(flavors[1].name.contains('prod') && type == 'release'){
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+    }
+    else{
+      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
     variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
