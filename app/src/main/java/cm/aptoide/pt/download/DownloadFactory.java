@@ -129,7 +129,7 @@ public class DownloadFactory {
     download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
-    download.setFileSize(0);
+    download.setSize(0);
     download.setFilesToDownload(
         createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
             versionName));
@@ -138,7 +138,7 @@ public class DownloadFactory {
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc, long fileSize) {
+      boolean hasAppc, long size) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
@@ -157,7 +157,7 @@ public class DownloadFactory {
       download.setHasAppc(hasAppc);
       download.setVersionCode(versionCode);
       download.setVersionName(versionName);
-      download.setFileSize(fileSize);
+      download.setSize(size);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
               downloadPaths.getAltPath(), versionCode, versionName));
