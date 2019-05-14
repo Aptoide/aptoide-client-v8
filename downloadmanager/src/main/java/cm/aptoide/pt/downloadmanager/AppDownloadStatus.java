@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 
 /**
@@ -11,12 +12,14 @@ public class AppDownloadStatus {
   private String md5;
   private List<FileDownloadCallback> fileDownloadCallbackList;
   private AppDownloadState appDownloadState;
+  private long downloadSize;
 
   public AppDownloadStatus(String md5, List<FileDownloadCallback> fileDownloadCallbackList,
-      AppDownloadState appDownloadState) {
+      AppDownloadState appDownloadState, long downloadSize) {
     this.md5 = md5;
     this.fileDownloadCallbackList = fileDownloadCallbackList;
     this.appDownloadState = appDownloadState;
+    this.downloadSize = downloadSize;
   }
 
   public String getMd5() {
@@ -28,6 +31,24 @@ public class AppDownloadStatus {
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
       overallProgress += fileDownloadCallback.getDownloadProgress();
     }
+    Logger.getInstance()
+        .d("AptoideDownloadManager", "calculating progress - download size is: " + downloadSize);
+    if (downloadSize == 0) {
+      return calculateProgressByFileNumber(overallProgress);
+    } else {
+      return calculateProgressByFileSize(overallProgress);
+    }
+  }
+
+  private int calculateProgressByFileSize(int overallProgress) {
+    int progress = overallProgress / (int) downloadSize;
+    Logger.getInstance()
+        .d("AptoideDownloadManager",
+            "calculating progress: " + progress + " overall progress " + overallProgress);
+    return progress;
+  }
+
+  private int calculateProgressByFileNumber(int overallProgress) {
     if (fileDownloadCallbackList.size() > 0) {
       return overallProgress / fileDownloadCallbackList.size();
     } else {
