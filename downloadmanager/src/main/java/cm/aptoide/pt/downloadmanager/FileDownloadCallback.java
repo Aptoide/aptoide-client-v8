@@ -5,7 +5,7 @@ package cm.aptoide.pt.downloadmanager;
  */
 
 public interface FileDownloadCallback {
-  int getDownloadProgress();
+  FileDownloadProgressResult getDownloadProgress();
 
   AppDownloadStatus.AppDownloadState getDownloadState();
 

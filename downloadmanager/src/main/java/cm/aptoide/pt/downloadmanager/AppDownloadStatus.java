@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AppDownloadStatus {
 
+  private static final int PROGRESS_MAX_VALUE = 100;
   private String md5;
   private List<FileDownloadCallback> fileDownloadCallbackList;
   private AppDownloadState appDownloadState;
@@ -27,21 +28,76 @@ public class AppDownloadStatus {
   }
 
   public int getOverallProgress() {
-    int overallProgress = 0;
+    /*
+
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
       overallProgress += fileDownloadCallback.getDownloadProgress();
     }
+    */
     Logger.getInstance()
         .d("AptoideDownloadManager", "calculating progress - download size is: " + downloadSize);
     if (downloadSize == 0) {
-      return calculateProgressByFileNumber(overallProgress);
+
+      return calculateProgressByFileNumber(getOverallProgressAsPercentage());
     } else {
-      return calculateProgressByFileSize(overallProgress);
+      return calculateProgressByFileSize(getOverallProgressAsBytes());
     }
   }
 
+  private int getOverallProgressAsBytes() {
+    int overallProgress = 0;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      overallProgress += (int) fileDownloadCallback.getDownloadProgress()
+          .getDownloadedBytes();
+    }
+    return overallProgress;
+  }
+
+  private int getOverallProgressAsPercentage() {
+    int overallProgress = 0;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      /*
+      FileDownloadProgressResult fileDownloadProgressResult =
+          fileDownloadCallback.getDownloadProgress();
+
+      int percentageOfTotalProgress = (int) Math.floor(
+          (float) fileDownloadProgressResult.getDownloadedBytes()
+              / fileDownloadProgressResult.getTotalFileBytes() * PROGRESS_MAX_VALUE);
+*/
+      int percentageOfTotalProgress = getFileDownloadProgressAsPercentage(fileDownloadCallback);
+
+      overallProgress += percentageOfTotalProgress;
+    }
+    return overallProgress * 100;
+  }
+
+  private int getFileDownloadProgressAsPercentage(FileDownloadCallback fileDownloadCallback) {
+    return (int) Math.floor((float) fileDownloadCallback.getDownloadProgress()
+        .getDownloadedBytes() / fileDownloadCallback.getDownloadProgress()
+        .getTotalFileBytes() * PROGRESS_MAX_VALUE);
+  }
+
   private int calculateProgressByFileSize(int overallProgress) {
-    int progress = overallProgress / (int) downloadSize;
+
+    int numerador = overallProgress;
+    int denominador = (int) downloadSize;
+    float resultado = (float) numerador / denominador;
+
+    int resultadoPercent = (int) (resultado * 100);
+
+    Logger.getInstance()
+        .d("AptoideDownloadManager", "CONTA!!!! numerador "
+            + numerador
+            + " denominador "
+            + denominador
+            + " resultado "
+            + resultado
+            + " resultado em int "
+            + resultadoPercent);
+
+    float result = (float) overallProgress / ((int) downloadSize);
+
+    int progress = (int) (result * 100);
     Logger.getInstance()
         .d("AptoideDownloadManager",
             "calculating progress: " + progress + " overall progress " + overallProgress);
@@ -132,7 +188,7 @@ public class AppDownloadStatus {
     if (fileDownloadCallback == null) {
       return 0;
     } else {
-      return fileDownloadCallback.getDownloadProgress();
+      return getFileDownloadProgressAsPercentage(fileDownloadCallback);
     }
   }
 
