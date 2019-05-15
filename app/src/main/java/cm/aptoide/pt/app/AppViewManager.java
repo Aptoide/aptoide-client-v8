@@ -359,7 +359,7 @@ public class AppViewManager {
         promotionViewApp.getMd5sum(), promotionViewApp.getIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getPath(),
         promotionViewApp.getPathAlt(), promotionViewApp.getObb(), false,
-        promotionViewApp.getFileSize()))
+        promotionViewApp.getSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getDownloadModel()
@@ -552,7 +552,7 @@ public class AppViewManager {
                           viewModel.getPath(), viewModel.getPathAlt(), viewModel.getObb(),
                           viewModel.getAppcValue(), walletInstalled != null,
                           viewModel.shouldShowOffer(), appViewAppInstalled != null,
-                          viewModel.getFileSize())))));
+                          viewModel.getSize())))));
     }
   }
 
@@ -571,7 +571,7 @@ public class AppViewManager {
           return new WalletPromotionViewModel(null, app.getName(), app.getAppIcon(), app.getAppId(),
               app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
               app.getDownloadPath(), app.getAlternativePath(), app.getObb(),
-              Math.round(app.getAppcValue()), false, true, false, app.getFileSize());
+              Math.round(app.getAppcValue()), false, true, false, app.getSize());
         }
       } else {
         return new WalletPromotionViewModel(false);

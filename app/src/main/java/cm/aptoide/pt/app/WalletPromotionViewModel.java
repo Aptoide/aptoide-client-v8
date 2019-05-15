@@ -19,12 +19,12 @@ public class WalletPromotionViewModel {
   private final boolean isWalletInstalled;
   private final boolean shouldShowOffer;
   private final boolean isAppViewAppInstalled;
-  private final long fileSize;
+  private final long size;
 
   public WalletPromotionViewModel(DownloadModel downloadModel, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
       String pathAlt, Obb obb, int appcValue, boolean isWalletInstalled, boolean shouldShowOffer,
-      boolean isAppViewAppInstalled, long fileSize) {
+      boolean isAppViewAppInstalled, long size) {
     this.downloadModel = downloadModel;
     this.appName = appName;
     this.icon = icon;
@@ -40,7 +40,7 @@ public class WalletPromotionViewModel {
     this.isWalletInstalled = isWalletInstalled;
     this.shouldShowOffer = shouldShowOffer;
     this.isAppViewAppInstalled = isAppViewAppInstalled;
-    this.fileSize = fileSize;
+    this.size = size;
   }
 
   public WalletPromotionViewModel(boolean shouldShowOffer) {
@@ -59,7 +59,7 @@ public class WalletPromotionViewModel {
     this.obb = null;
     this.appcValue = -1;
     this.isWalletInstalled = false;
-    this.fileSize = 0;
+    this.size = 0;
   }
 
   public String getAppName() {
@@ -122,7 +122,7 @@ public class WalletPromotionViewModel {
     return isAppViewAppInstalled;
   }
 
-  public long getFileSize() {
-    return fileSize;
+  public long getSize() {
+    return size;
   }
 }

@@ -18,7 +18,7 @@ public class PromotionViewAppMapper {
         promotionApp.getName(), promotionApp.getPackageName(), promotionApp.getAppId(),
         promotionApp.getDownloadPath(), promotionApp.getAlternativePath(),
         promotionApp.getAppIcon(), promotionApp.isClaimed(), promotionApp.getDescription(),
-        promotionApp.getFileSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
+        promotionApp.getSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
         promotionApp.getMd5(), promotionApp.getVersionCode(), promotionApp.getVersionName(),
         promotionApp.getObb(), promotionApp.getAppcValue(), promotionApp.getSignature(),
         promotionApp.hasAppc());

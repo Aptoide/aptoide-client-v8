@@ -109,6 +109,7 @@ public class DownloadFactory {
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
               update.getPatchObbName()));
+      download.setSize(Math.round(update.getFileSize()));
       return download;
     } else {
       throw new IllegalArgumentException(validationResult.getMessage());

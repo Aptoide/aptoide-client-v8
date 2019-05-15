@@ -75,7 +75,7 @@ public class PromotionApp {
     return description;
   }
 
-  public long getFileSize() {
+  public long getSize() {
     return size;
   }
 
