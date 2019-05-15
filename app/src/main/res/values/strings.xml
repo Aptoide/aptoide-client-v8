@@ -539,12 +539,15 @@
   <!--APPC-->
   <string name="appc_title_iab">Spend Your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
+  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
+  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
   <string name="appc_title_about_appcoins">About AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app and get %s</string>
-  <string name="appc_message_appview_appcoins_reward_with_value">Try this app and get %1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get %1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
   <string name="appc_short_get_appc">GET APPC</string>
   <string name="appc_short_spend_appc">SPEND APPC</string>
+  <string name="appc_card_short">AppCoins</string>
   <string name="appc_title_homepage_card">You can get AppCoins now!</string>
   <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
