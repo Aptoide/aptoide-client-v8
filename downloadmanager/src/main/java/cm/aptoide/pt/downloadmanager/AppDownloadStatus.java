@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 
 /**
@@ -28,14 +27,6 @@ public class AppDownloadStatus {
   }
 
   public int getOverallProgress() {
-    /*
-
-    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      overallProgress += fileDownloadCallback.getDownloadProgress();
-    }
-    */
-    Logger.getInstance()
-        .d("AptoideDownloadManager", "calculating progress - download size is: " + downloadSize);
     if (downloadSize == 0) {
 
       return calculateProgressByFileNumber(getOverallProgressAsPercentage());
@@ -56,14 +47,6 @@ public class AppDownloadStatus {
   private int getOverallProgressAsPercentage() {
     int overallProgress = 0;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      /*
-      FileDownloadProgressResult fileDownloadProgressResult =
-          fileDownloadCallback.getDownloadProgress();
-
-      int percentageOfTotalProgress = (int) Math.floor(
-          (float) fileDownloadProgressResult.getDownloadedBytes()
-              / fileDownloadProgressResult.getTotalFileBytes() * PROGRESS_MAX_VALUE);
-*/
       int percentageOfTotalProgress = getFileDownloadProgressAsPercentage(fileDownloadCallback);
 
       overallProgress += percentageOfTotalProgress;
@@ -78,29 +61,9 @@ public class AppDownloadStatus {
   }
 
   private int calculateProgressByFileSize(int overallProgress) {
-
-    int numerador = overallProgress;
-    int denominador = (int) downloadSize;
-    float resultado = (float) numerador / denominador;
-
-    int resultadoPercent = (int) (resultado * 100);
-
-    Logger.getInstance()
-        .d("AptoideDownloadManager", "CONTA!!!! numerador "
-            + numerador
-            + " denominador "
-            + denominador
-            + " resultado "
-            + resultado
-            + " resultado em int "
-            + resultadoPercent);
-
     float result = (float) overallProgress / ((int) downloadSize);
 
     int progress = (int) (result * 100);
-    Logger.getInstance()
-        .d("AptoideDownloadManager",
-            "calculating progress: " + progress + " overall progress " + overallProgress);
     return progress;
   }
 
