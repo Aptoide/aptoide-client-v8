@@ -518,7 +518,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.refreshes()
             .doOnNext(__ -> homeAnalytics.sendPullRefreshInteractEvent())
-            .flatMap(refreshed -> loadFreshBundlesAndReactions())
+            .flatMapSingle(refreshed -> loadFreshBundles())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(bundles -> {
