@@ -40,19 +40,19 @@ public class AppDownloadManagerTest {
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
     apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "", "apkMd5", 123,
-        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK, fileSize);
+        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK);
     mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "mainObbMd5", 123,
-        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB, fileSize);
+        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB);
     patchObb =
         new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "patchObbMd5", 123,
-            "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB, fileSize);
+            "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
     DownloadApp appToDownload =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", size);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", 1231123);
     DownloadApp appToDownloadWithObbs =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", size);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", 12313);
     DownloadApp appToDownloadEmptyError =
-        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", size);
+        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", 123133);
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
