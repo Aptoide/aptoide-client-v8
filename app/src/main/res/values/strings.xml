@@ -661,6 +661,28 @@
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
+  
+   <!--Promo Center-->
+ <string name="promo_center_title">Promotions</string>
+ <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
+ <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
+ <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
+ <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
+ <string name="promo_center_offerwall_tab_title">OFFERWALL</string>
+ <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+ <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
+ <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
+ <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
+ <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+ <string name="promo_center_pending_tab_title">PENDING</string>
+ <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
+ <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
+ <string name="promo_center_pending_card_install_body">For installing %s</string>
+ <string name="promo_center_pending_card_update_body">For updating %s</string>
+ <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
+ <string name="promo_center_pending_claim_button">CLAIM</string>
+ <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the Offerwall to see the available promotions.</string>
+
 
 </resources>
 
