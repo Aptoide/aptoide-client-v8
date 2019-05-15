@@ -676,7 +676,7 @@
  <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
  <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
- <string name="promo_center_offerwall_tab_title">OFFERWALL</string>
+ <string name="promo_center_offerwall_tab_title">OFFERS</string>
  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
  <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
  <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
