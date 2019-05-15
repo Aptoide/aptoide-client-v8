@@ -51,7 +51,7 @@ public class AppDownloadStatus {
 
       overallProgress += percentageOfTotalProgress;
     }
-    return overallProgress * 100;
+    return overallProgress;
   }
 
   private int getFileDownloadProgressAsPercentage(FileDownloadCallback fileDownloadCallback) {
