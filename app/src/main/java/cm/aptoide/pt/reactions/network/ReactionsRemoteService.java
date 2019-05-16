@@ -1,7 +1,6 @@
 package cm.aptoide.pt.reactions.network;
 
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import java.net.ConnectException;
 import java.util.ArrayList;
@@ -108,7 +107,7 @@ public class ReactionsRemoteService implements ReactionsService {
         @Path("uid") String uid, @retrofit2.http.Body Body body);
   }
 
-  public static class Body extends BaseBody {
+  public static class Body {
 
     private String objectUid;
     private String groupUid;

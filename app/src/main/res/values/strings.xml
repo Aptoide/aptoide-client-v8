@@ -539,12 +539,15 @@
   <!--APPC-->
   <string name="appc_title_iab">Spend Your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
+  <string name="appc_home_bundle_iab">Use Your AppCoins</string>
+  <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
   <string name="appc_title_about_appcoins">About AppCoins</string>
   <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
   <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
   <string name="appc_short_get_appc">GET APPC</string>
   <string name="appc_short_spend_appc">SPEND APPC</string>
+  <string name="appc_card_short">AppCoins</string>
   <string name="appc_title_homepage_card">You can get AppCoins now!</string>
   <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
@@ -576,6 +579,7 @@
 
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_title_holidays">Carnival Frenzy</string>
+  <string name="promotion_title_conquer">Conquer Your AppCoins</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
@@ -583,22 +587,6 @@
   <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
-  <string name="holidayspromotion_message_legacy_description">Intense real-time combat in a huge fantasy world! Join friends to clash rivals in the Arena.</string>
-  <string name="holidayspromotion_message_era_description">Fight for the glory in a world of Elysians! It offers quality multiplayer brawls and 1v1 combats.</string>
-  <string name="holidayspromotion_message_shark_description">Take control of a Hungry Shark and go on a frantic ocean rampage to survive as long as possible.</string>
-  <string name="holidayspromotion_message_creative_description">A new sandbox survival mobile game that features the utmost fun of building and firing.</string>
-  <string name="holidayspromotion_message_lords_description">Driven by their ambition and greed, Lords seek power and shatter the peace that once reigned.</string>
-  <string name="holidayspromotion_message_metal_description">A 2D mobile shooter centered around an army of mercenaries trying to save the world.</string>
-  <string name="holidayspromotion_message_maximum_description">An explosion-laden, arcade racing game that will have you feeling like a badass in seconds.</string>
-  <string name="holidayspromotion_message_word_jungle">A great fun words game available offline. Find all the words for every level!</string>
-  <string name="holidayspromotion_message_big_sweet_bomb">Start the happy and mystery journey with various candies in sweet wonderland!</string>
-  <string name="holidayspromotion_message_word_mine">Reveal the hidden answer by eliminating letter tiles. A great brain challenge!</string>
-  <string name="holidayspromotion_message_brawling_animals">Welcome to the Jungle! Release your beast and jump into battle royale multiplayer battles!</string>
-  <string name="holidayspromotion_message_tiny_gladiators">Fight against powerful enemies and discover new virtual worlds in this unique action RPG game.</string>
-  <string name="holidayspromotion_message_skychamp_description">One of the best combinations of arcade Shoot \'Em Up and Monster Collecting Games.</string>
-  <string name="holidayspromotion_message_ropescape_description">Escape all the obstacles in the jungle, with this incredibly fun game.</string>
-  <string name="holidayspromotion_message_camera360_description">A free beauty camera and a global community of photography with over 800 million users.</string>
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
@@ -625,6 +613,29 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
+
+
+  <!--Apps Short Description for promotions-->
+  <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
+  <string name="holidayspromotion_message_legacy_description">Intense real-time combat in a huge fantasy world! Join friends to clash rivals in the Arena.</string>
+  <string name="holidayspromotion_message_era_description">Fight for the glory in a world of Elysians! It offers quality multiplayer brawls and 1v1 combats.</string>
+  <string name="holidayspromotion_message_shark_description">Take control of a Hungry Shark and go on a frantic ocean rampage to survive as long as possible.</string>
+  <string name="holidayspromotion_message_creative_description">A new sandbox survival mobile game that features the utmost fun of building and firing.</string>
+  <string name="holidayspromotion_message_lords_description">Driven by their ambition and greed, Lords seek power and shatter the peace that once reigned.</string>
+  <string name="holidayspromotion_message_metal_description">A 2D mobile shooter centered around an army of mercenaries trying to save the world.</string>
+  <string name="holidayspromotion_message_maximum_description">An explosion-laden, arcade racing game that will have you feeling like a badass in seconds.</string>
+  <string name="holidayspromotion_message_word_jungle">A great fun words game available offline. Find all the words for every level!</string>
+  <string name="holidayspromotion_message_big_sweet_bomb">Start the happy and mystery journey with various candies in sweet wonderland!</string>
+  <string name="holidayspromotion_message_word_mine">Reveal the hidden answer by eliminating letter tiles. A great brain challenge!</string>
+  <string name="holidayspromotion_message_brawling_animals">Welcome to the Jungle! Release your beast and jump into battle royale multiplayer battles!</string>
+  <string name="holidayspromotion_message_tiny_gladiators">Fight against powerful enemies and discover new virtual worlds in this unique action RPG game.</string>
+  <string name="holidayspromotion_message_skychamp_description">One of the best combinations of arcade Shoot \'Em Up and Monster Collecting Games.</string>
+  <string name="holidayspromotion_message_ropescape_description">Escape all the obstacles in the jungle, with this incredibly fun game.</string>
+  <string name="holidayspromotion_message_camera360_description">A free beauty camera and a global community of photography with over 800 million users.</string>
+  <string name="holidayspromotion_message_roadsofrome2_description">An addictive game that successfully combines strategy and time management features!</string>
+  <string name="holidayspromotion_message_dealformillions_description">Beat the banker by taking deals or simply not and holding out to reveal your briefcase.</string>
+  <string name="holidayspromotion_message_daysofempire_description">Build your army, construct a city and destroy your enemies on the battlefield.</string>
+  <string name="holidayspromotion_message_hercules_description">Help Hercules and Megara undo the damage done by the vengeful Gods in this greek adventure.</string>
 
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
@@ -658,6 +669,28 @@
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
+
+  <!--Promo Center-->
+  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
+  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
+  <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
+  <string name="promo_center_offerwall_tab_title">OFFERS</string>
+  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
+  <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
+  <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
+  <string name="promo_center_pending_card_install_body">For installing %s</string>
+  <string name="promo_center_pending_card_update_body">For updating %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
+  <string name="promo_center_pending_claim_button">CLAIM</string>
+  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the Offerwall to see the available promotions.</string>
+
 
 </resources>
 
