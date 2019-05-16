@@ -140,7 +140,7 @@
             android:id="@+id/appc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/appc_short_spend_appc"
+            android:text="@string/appc_card_short"
             style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
             />
 

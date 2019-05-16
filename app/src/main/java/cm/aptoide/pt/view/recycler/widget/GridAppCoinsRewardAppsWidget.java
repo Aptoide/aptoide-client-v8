@@ -41,7 +41,7 @@ public class GridAppCoinsRewardAppsWidget extends Widget<GridAppCoinsRewardAppsD
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
     appName.setText(app.getName());
     appReward.setText(itemView.getResources()
-        .getString(R.string.appc_short_get_appc));
+        .getString(R.string.appc_card_short));
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> displayable.openAppView(), throwable -> CrashReport.getInstance()
             .log(throwable)));

@@ -302,6 +302,15 @@ import cm.aptoide.pt.utils.AptoideUtils;
       case "Mysterious Donor":
         translated = context.getString(R.string.appview_title_donations_leaderboard_unknown);
         break;
+      case "Use Your AppCoins":
+        translated = context.getString(R.string.appc_home_bundle_iab);
+        break;
+      case "Earn AppCoins Credits":
+        translated = context.getString(R.string.appc_home_bundle_poa);
+        break;
+      case "Featured AppCoins Apps":
+        translated = context.getString(R.string.appc_title_featured);
+        break;
       default:
         translated = string;
         break;

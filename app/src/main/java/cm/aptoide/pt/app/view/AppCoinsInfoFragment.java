@@ -11,10 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,9 +81,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     TextView appcMessageAppcoinsSection4 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_4);
 
-    setupTextView(getString(R.string.appc_short_get_appc),
+    setupTextViewTwoPlaceholders(getString(R.string.appc_card_short),
+        getString(R.string.appc_home_bundle_poa),
         getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
-    setupTextView(getString(R.string.appc_short_spend_appc),
+    setupTextView(getString(R.string.appc_card_short),
         getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
 
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
@@ -93,7 +92,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
-    setupCoinbaseLink();
     setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
@@ -131,18 +129,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
   private void setupCoinbaseLink() {
     final String coinbase = getString(R.string.coinbase);
-    final String section2b =
-        String.format(getString(R.string.appc_message_appcoins_section_2b), coinbase);
-
-    SpannableString spannableString = new SpannableString(section2b);
-    spannableString.setSpan(coinbaseClickListener, section2b.indexOf(coinbase),
-        section2b.indexOf(coinbase) + coinbase.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(spannableColor)),
-        section2b.indexOf(coinbase), section2b.indexOf(coinbase) + coinbase.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-    appcMessageAppcoinsSection2b.setText(spannableString);
-    appcMessageAppcoinsSection2b.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
@@ -150,6 +136,16 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
             R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
     final String formatedText = String.format(text, spendGetAppcoinsLogo);
+    appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
+  }
+
+  private void setupTextViewTwoPlaceholders(String appcString, String bundle, String text,
+      TextView appcMessageAppcoinsSection) {
+    final String spendGetAppcoinsLogo =
+        String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
+            R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
+    String boldBundle = "<b>" + bundle + "</b> ";
+    final String formatedText = String.format(text, boldBundle, spendGetAppcoinsLogo);
     appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
   }
 
