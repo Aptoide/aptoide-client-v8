@@ -99,11 +99,41 @@ public class PromotionsService {
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
-    return GetPromotionAppsRequest.of(promotionId, bodyInterceptorPoolV7, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+    GetPromotionAppsRequest.Body body =
+        new GetPromotionAppsRequest.Body.Builder().promotionId(promotionId)
+            .build();
+    return GetPromotionAppsRequest.of(body, bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapPromotionsResponse)
         .toSingle();
+  }
+
+  public Single<Promotion> getPromotionForPackage(String packageName) {
+    GetPromotionAppsRequest.Body body =
+        new GetPromotionAppsRequest.Body.Builder().packageName(packageName)
+            .build();
+    return GetPromotionAppsRequest.of(body, bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe(false, false)
+        .map(this::mapToPromotion)
+        .toSingle();
+  }
+
+  private Promotion mapToPromotion(GetPromotionAppsResponse response) {
+    if (response != null
+        && response.getDataList() != null
+        && response.getDataList()
+        .getList() != null) {
+      List<GetPromotionAppsResponse.PromotionAppModel> dataList = response.getDataList()
+          .getList();
+      if (!dataList.isEmpty()) {
+        GetPromotionAppsResponse.PromotionAppModel model = dataList.get(0);
+        return new Promotion(model.isClaimed(), model.getAppc(), model.getDescription(),
+            model.getPromotionId());
+      }
+    }
+    return new Promotion();
   }
 
   private List<PromotionApp> mapPromotionsResponse(GetPromotionAppsResponse response) {
@@ -122,7 +152,7 @@ public class PromotionsService {
             .getPath(), app.getApp()
             .getFile()
             .getPathAlt(), app.getApp()
-            .getIcon(), app.getPromotionDescription(), app.getApp()
+            .getIcon(), app.getDescription(), app.getApp()
             .getSize(), app.getApp()
             .getStats()
             .getRating()

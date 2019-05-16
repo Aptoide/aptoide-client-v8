@@ -1,18 +1,18 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.app.WalletPromotionViewModel;
+import cm.aptoide.pt.app.PromotionViewModel;
 
 public class PromotionEvent {
 
-  private WalletPromotionViewModel app;
+  private PromotionViewModel app;
   private PromotionEvent.ClickType clickType;
 
-  public PromotionEvent(WalletPromotionViewModel app, PromotionEvent.ClickType clickType) {
+  public PromotionEvent(PromotionViewModel app, PromotionEvent.ClickType clickType) {
     this.app = app;
     this.clickType = clickType;
   }
 
-  public WalletPromotionViewModel getApp() {
+  public PromotionViewModel getApp() {
     return app;
   }
 
