@@ -537,8 +537,9 @@
 
 
   <!--APPC-->
-  <string name="appc_title_iab">Spend Your AppCoins</string>
+  <string name="appc_title_iab">Use Your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
+  <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
   <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
   <string name="appc_title_about_appcoins">About AppCoins</string>
