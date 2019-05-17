@@ -68,7 +68,7 @@ public class EditorialManager {
         editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
-        editorialDownloadEvent.getObb(), false))
+        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize()))
         .flatMapCompletable(download -> installManager.install(download)
             .doOnSubscribe(
                 __ -> setupDownloadEvents(download, editorialDownloadEvent.getPackageName(),

@@ -12,13 +12,15 @@ public class DownloadApp {
   private final int versionCode;
   private List<DownloadAppFile> downloadFiles;
   private String md5;
+  private long size;
 
   public DownloadApp(String packageName, int versionCode, List<DownloadAppFile> downloadFiles,
-      String md5) {
+      String md5, long size) {
     this.packageName = packageName;
     this.versionCode = versionCode;
     this.downloadFiles = downloadFiles;
     this.md5 = md5;
+    this.size = size;
   }
 
   public List<DownloadAppFile> getDownloadFiles() {
@@ -35,5 +37,9 @@ public class DownloadApp {
 
   public int getVersionCode() {
     return versionCode;
+  }
+
+  public long getSize() {
+    return size;
   }
 }

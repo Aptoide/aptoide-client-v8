@@ -52,6 +52,7 @@ public class Download extends RealmObject {
   private int action;
   private String versionName;
   private boolean hasAppc;
+  private long size;
   @Download.DownloadError private int downloadError;
 
   public Download() {
@@ -212,6 +213,14 @@ public class Download extends RealmObject {
     }
     return getVersionName() != null ? getVersionName().equals(download.getVersionName())
         : download.getVersionName() == null;
+  }
+
+  public long getSize() {
+    return size;
+  }
+
+  public void setSize(long size) {
+    this.size = size;
   }
 
   @IntDef({

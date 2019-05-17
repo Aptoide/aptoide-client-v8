@@ -188,7 +188,7 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
           bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
           bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
-          cardId, groupId);
+          cardId, groupId, bottomCardPlaceHolderContent.getSize());
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId);

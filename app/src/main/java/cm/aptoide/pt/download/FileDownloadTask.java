@@ -2,6 +2,7 @@ package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
+import cm.aptoide.pt.downloadmanager.FileDownloadProgressResult;
 import cm.aptoide.pt.logger.Logger;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener;
@@ -34,19 +35,19 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   @Override
   protected void pending(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PENDING,
-        calculateProgress(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
   }
 
   @Override
   protected void progress(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
-        calculateProgress(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
   }
 
   @Override
   protected void paused(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
-        calculateProgress(soFarBytes, totalBytes), md5));
+        new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
@@ -54,7 +55,8 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
     if (md5Comparator.compareMd5(md5, fileName)) {
       fileDownloadTaskStatus =
           new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
-              FileDownloadManager.PROGRESS_MAX_VALUE, md5);
+              new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
+                  baseDownloadTask.getLargeFileTotalBytes()), md5);
       Logger.getInstance()
           .d(TAG, " Download completed");
     } else {

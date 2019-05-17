@@ -6,7 +6,6 @@
 package cm.aptoide.pt.download;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
@@ -29,22 +28,6 @@ public class DownloadFactory {
     this.cachePath = cachePath;
     this.downloadApkPathsProvider = downloadApkPathsProvider;
     this.appValidator = appValidator;
-  }
-
-  private void validateApp(String md5, Obb appObb, String packageName, String appName,
-      String filePath, String filePathAlt) throws IllegalArgumentException {
-    if (TextUtils.isEmpty(md5)) {
-      throw new IllegalArgumentException("Invalid App MD5");
-    }
-    if (TextUtils.isEmpty(filePath) && TextUtils.isEmpty(filePathAlt)) {
-      throw new IllegalArgumentException("No download link provided");
-    } else if (appObb != null && TextUtils.isEmpty(packageName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the package name specified");
-    } else if (TextUtils.isEmpty(appName)) {
-      throw new IllegalArgumentException(
-          "This app has an OBB and doesn't have the App name specified");
-    }
   }
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
@@ -126,6 +109,7 @@ public class DownloadFactory {
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
               update.getPatchObbName()));
+      download.setSize(Math.round(update.getFileSize()));
       return download;
     } else {
       throw new IllegalArgumentException(validationResult.getMessage());
@@ -146,6 +130,7 @@ public class DownloadFactory {
     download.setVersionName(versionName);
     download.setAction(Download.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
+    download.setSize(0);
     download.setFilesToDownload(
         createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
             versionName));
@@ -154,7 +139,7 @@ public class DownloadFactory {
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc) {
+      boolean hasAppc, long size) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
@@ -173,7 +158,7 @@ public class DownloadFactory {
       download.setHasAppc(hasAppc);
       download.setVersionCode(versionCode);
       download.setVersionName(versionName);
-
+      download.setSize(size);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
               downloadPaths.getAltPath(), versionCode, versionName));

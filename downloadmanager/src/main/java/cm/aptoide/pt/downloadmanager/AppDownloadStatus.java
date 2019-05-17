@@ -8,15 +8,18 @@ import java.util.List;
 
 public class AppDownloadStatus {
 
+  private static final int PROGRESS_MAX_VALUE = 100;
   private String md5;
   private List<FileDownloadCallback> fileDownloadCallbackList;
   private AppDownloadState appDownloadState;
+  private long downloadSize;
 
   public AppDownloadStatus(String md5, List<FileDownloadCallback> fileDownloadCallbackList,
-      AppDownloadState appDownloadState) {
+      AppDownloadState appDownloadState, long downloadSize) {
     this.md5 = md5;
     this.fileDownloadCallbackList = fileDownloadCallbackList;
     this.appDownloadState = appDownloadState;
+    this.downloadSize = downloadSize;
   }
 
   public String getMd5() {
@@ -24,10 +27,47 @@ public class AppDownloadStatus {
   }
 
   public int getOverallProgress() {
+    if (downloadSize == 0) {
+
+      return calculateProgressByFileNumber(getOverallProgressAsPercentage());
+    } else {
+      return calculateProgressByFileSize(getOverallProgressAsBytes());
+    }
+  }
+
+  private int getOverallProgressAsBytes() {
     int overallProgress = 0;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      overallProgress += fileDownloadCallback.getDownloadProgress();
+      overallProgress += (int) fileDownloadCallback.getDownloadProgress()
+          .getDownloadedBytes();
     }
+    return overallProgress;
+  }
+
+  private int getOverallProgressAsPercentage() {
+    int overallProgress = 0;
+    for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
+      int percentageOfTotalProgress = getFileDownloadProgressAsPercentage(fileDownloadCallback);
+
+      overallProgress += percentageOfTotalProgress;
+    }
+    return overallProgress;
+  }
+
+  private int getFileDownloadProgressAsPercentage(FileDownloadCallback fileDownloadCallback) {
+    return (int) Math.floor((float) fileDownloadCallback.getDownloadProgress()
+        .getDownloadedBytes() / fileDownloadCallback.getDownloadProgress()
+        .getTotalFileBytes() * PROGRESS_MAX_VALUE);
+  }
+
+  private int calculateProgressByFileSize(int overallProgress) {
+    float result = (float) overallProgress / ((int) downloadSize);
+
+    int progress = (int) (result * 100);
+    return progress;
+  }
+
+  private int calculateProgressByFileNumber(int overallProgress) {
     if (fileDownloadCallbackList.size() > 0) {
       return overallProgress / fileDownloadCallbackList.size();
     } else {
@@ -111,7 +151,7 @@ public class AppDownloadStatus {
     if (fileDownloadCallback == null) {
       return 0;
     } else {
-      return fileDownloadCallback.getDownloadProgress();
+      return getFileDownloadProgressAsPercentage(fileDownloadCallback);
     }
   }
 

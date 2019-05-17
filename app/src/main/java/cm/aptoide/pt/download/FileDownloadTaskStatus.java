@@ -2,6 +2,7 @@ package cm.aptoide.pt.download;
 
 import cm.aptoide.pt.downloadmanager.AppDownloadStatus.AppDownloadState;
 import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
+import cm.aptoide.pt.downloadmanager.FileDownloadProgressResult;
 
 /**
  * Created by filipegoncalves on 8/29/18.
@@ -10,12 +11,12 @@ import cm.aptoide.pt.downloadmanager.FileDownloadCallback;
 public class FileDownloadTaskStatus implements FileDownloadCallback {
 
   private AppDownloadState appDownloadState;
-  private int downloadProgress;
+  private FileDownloadProgressResult downloadProgress;
   private String md5;
   private Throwable error;
 
-  public FileDownloadTaskStatus(AppDownloadState appDownloadState, int downloadProgress,
-      String md5) {
+  public FileDownloadTaskStatus(AppDownloadState appDownloadState,
+      FileDownloadProgressResult downloadProgress, String md5) {
     this.appDownloadState = appDownloadState;
     this.downloadProgress = downloadProgress;
     this.md5 = md5;
@@ -26,10 +27,10 @@ public class FileDownloadTaskStatus implements FileDownloadCallback {
     this.appDownloadState = appDownloadState;
     this.md5 = md5;
     this.error = error;
-    this.downloadProgress = 0;
+    this.downloadProgress = new FileDownloadProgressResult(0, 0);
   }
 
-  @Override public int getDownloadProgress() {
+  @Override public FileDownloadProgressResult getDownloadProgress() {
     return downloadProgress;
   }
 

@@ -33,7 +33,7 @@ public class AppDownloadManager implements AppDownloader {
     this.downloadAnalytics = downloadAnalytics;
     fileDownloadSubject = PublishSubject.create();
     appDownloadStatus = new AppDownloadStatus(app.getMd5(), new ArrayList<>(),
-        AppDownloadStatus.AppDownloadState.PENDING);
+        AppDownloadStatus.AppDownloadState.PENDING, app.getSize());
   }
 
   @Override public void startAppDownload() {
