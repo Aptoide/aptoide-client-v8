@@ -366,7 +366,7 @@ public class HomePresenterTest {
     //It should send the corresponding analytic and load the reactions and update the corresponding card
     verify(homeAnalytics).sendDeleteEvent();
     verify(home).loadReactionModel("1", GROUP_ID);
-    verify(view).updateEditorialCards(bundlesModel.getList());
+    verify(view).updateEditorialCards();
   }
 
   @Test public void handleReactionButtonLongPressTest() {
@@ -395,7 +395,7 @@ public class HomePresenterTest {
     //It should send the corresponding analytic and load the reactions and update the corresponding card
     verify(homeAnalytics).sendReactedEvent();
     verify(home).loadReactionModel("1", GROUP_ID);
-    verify(view).updateEditorialCards(bundlesModel.getList());
+    verify(view).updateEditorialCards();
   }
 
   @Test public void handleUserReactionWithSameReactionTest() {
@@ -412,7 +412,7 @@ public class HomePresenterTest {
     verify(homeAnalytics, times(0)).sendReactedEvent();
     when(home.loadReactionModel("1", GROUP_ID)).thenReturn(Single.just(bundlesModel.getList()));
     verify(home, times(0)).loadReactionModel("1", GROUP_ID);
-    verify(view, times(0)).updateEditorialCards(bundlesModel.getList());
+    verify(view, times(0)).updateEditorialCards();
   }
 
   @Test public void handleSnackLogInTest() {
