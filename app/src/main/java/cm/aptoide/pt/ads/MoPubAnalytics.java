@@ -3,6 +3,7 @@ package cm.aptoide.pt.ads;
 import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
+import com.flurry.android.FlurryAgent;
 
 public class MoPubAnalytics {
 
@@ -11,14 +12,18 @@ public class MoPubAnalytics {
     bundle.putString("ASV-1377-MoPub-Ads", isControlGroup ? "a_without_mopub" : "b_with_mopub");
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
+    FlurryAgent.addSessionProperty("ASV-1377-MoPub-Ads",
+        isControlGroup ? "a_without_mopub" : "b_with_mopub");
   }
 
   public void setAdsVisibilityUserProperty(
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     Bundle bundle = new Bundle();
-    bundle.putString("ads", mapToAdsVisibility(offerResponseStatus).getType());
+    String ads = mapToAdsVisibility(offerResponseStatus).getType();
+    bundle.putString("ads", ads);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
+    FlurryAgent.addSessionProperty("ads", ads);
   }
 
   private AdsVisibility mapToAdsVisibility(WalletAdsOfferManager.OfferResponseStatus status) {

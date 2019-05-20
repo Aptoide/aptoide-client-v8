@@ -9,6 +9,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
@@ -249,17 +250,24 @@ public class FirstLaunchAnalytics {
     parameters.putString(key, value);
     AppEventsLogger.updateUserProperties(parameters,
         response -> logger.logDebug("Facebook Analytics: ", response.toString()));
+    FlurryAgent.addSessionProperty(key, value);
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
     AppEventsLogger.updateUserProperties(data,
         response -> logger.logDebug("Facebook Analytics: ", response.toString()));
+
   }
 
   private void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
       String utmContent, String entryPoint) {
     setUserPropertiesWithBundle(
         createUserPropertiesBundle(utmSource, utmMedium, utmCampaign, utmContent, entryPoint));
+    FlurryAgent.addSessionProperty(UTM_SOURCE, utmSource);
+    FlurryAgent.addSessionProperty(UTM_MEDIUM, utmMedium);
+    FlurryAgent.addSessionProperty(UTM_CAMPAIGN, utmCampaign);
+    FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
+    FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -281,5 +289,10 @@ public class FirstLaunchAnalytics {
     data.putString(UTM_CONTENT, UNKNOWN);
     data.putString(ENTRY_POINT, UNKNOWN);
     setUserPropertiesWithBundle(data);
+    FlurryAgent.addSessionProperty(UTM_SOURCE, UNKNOWN);
+    FlurryAgent.addSessionProperty(UTM_MEDIUM, UNKNOWN);
+    FlurryAgent.addSessionProperty(UTM_CAMPAIGN, UNKNOWN);
+    FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
+    FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
   }
 }
