@@ -143,7 +143,7 @@ public class HomePresenter implements Presenter {
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
-        .doOnSuccess(view::updateEditorialCards);
+        .doOnSuccess(homeBundles -> view.updateEditorialCards());
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {

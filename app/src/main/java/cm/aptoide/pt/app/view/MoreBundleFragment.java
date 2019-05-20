@@ -291,8 +291,8 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
         .map(visibleItem -> new HomeEvent(adapter.getBundle(visibleItem), visibleItem, null));
   }
 
-  @Override public void updateEditorialCards(List<HomeBundle> homeBundles) {
-    adapter.updateEditorials(homeBundles);
+  @Override public void updateEditorialCards() {
+    adapter.updateEditorials();
     if (listState != null) {
       bundlesList.getLayoutManager()
           .onRestoreInstanceState(listState);
