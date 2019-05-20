@@ -268,8 +268,11 @@
           <include
               layout="@layout/appview_wallet_promotion_install_layout"
               android:id="@+id/wallet_install_promotion"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
               android:visibility="gone"
               tools:visibility="visible"
+              android:layout_marginTop="19dp"
               />
 
           <View

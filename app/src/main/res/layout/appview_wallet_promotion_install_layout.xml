@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/appc_gradient_translucent"
     >
 
   <android.support.constraint.Guideline
@@ -50,10 +51,12 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="2dp"
+      android:layout_marginBottom="19dp"
       app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="@+id/wallet_title"
       app:layout_constraintTop_toBottomOf="@+id/wallet_title"
+      app:layout_constraintBottom_toTopOf="@+id/titleBarrier"
       tools:text="Install this app and get 10 APPC Credits.  You need the AppCoins wallet to receive them."
       />
 
@@ -64,7 +67,6 @@
       android:layout_height="wrap_content"
       app:barrierDirection="bottom"
       app:constraint_referenced_ids="wallet_message"
-      tools:layout_editor_absoluteX="411dp"
       />
 
   <Button
@@ -93,6 +95,7 @@
       />
 
   <cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
+      android:id="@+id/progress_view"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       app:layout_constraintEnd_toStartOf="@id/baseGuidelineRight"
@@ -111,11 +114,10 @@
       android:enabled="false"
       app:layout_constraintBottom_toTopOf="@+id/baseGuidelineBottom"
       app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
-      app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
-      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      app:layout_constraintTop_toBottomOf="@+id/titleBarrier"
       tools:text="INSTALL TO GET 10 APPC CREDITS"
-      tools:visibility="gone"
+      tools:visibility="visible"
       />
 
   <Button
@@ -126,8 +128,9 @@
       app:layout_constraintBottom_toTopOf="@+id/baseGuidelineBottom"
       app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
       app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
-      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      android:visibility="gone"
       tools:text="CLAIM YOUR 10 APPC CREDITS"
+      app:layout_constraintTop_toBottomOf="@+id/titleBarrier"
       />
 
   <android.support.constraint.Group
@@ -136,12 +139,6 @@
       android:layout_height="wrap_content"
       android:visibility="gone"
       app:constraint_referenced_ids="download_button,cancel_button"
-      />
-  <android.support.constraint.Group
-      android:id="@+id/wallet_action_group"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      app:constraint_referenced_ids="wallet_claim_appc_button,wallet_install_disabled_button"
       />
   <android.support.constraint.Guideline
       android:id="@+id/baseGuidelineRight"
