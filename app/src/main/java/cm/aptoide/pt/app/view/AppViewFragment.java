@@ -46,6 +46,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -262,25 +263,21 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View collapsingAppcBackground;
   private TextView installStateText;
 
-  //wallet promotion
+  // Wallet promotion
   private View promotionView;
-  private View walletPromotionDownloadLayout;
+  private DownloadProgressView walletPromotionProgressView;
   private View walletPromotionClaimLayout;
   private View walletPromotionIcon;
   private Button walletPromotionClaimButton;
   private View walletPromotionInstallDisableLayout;
   private Button walletPromotionInstallDisableButton;
+
   private TextView walletPromotionTitle;
   private TextView walletPromotionMessage;
   private View walletPromotionButtonsLayout;
   private Button walletPromotionCancelButton;
   private Button walletPromotionDownloadButton;
-  private ProgressBar downloadWalletProgressBar;
-  private TextView downloadWalletProgressValue;
-  private ImageView cancelWalletDownload;
-  private ImageView pauseWalletDownload;
-  private ImageView resumeWalletDownload;
-  private View walletDownloadControlsLayout;
+
   private PublishSubject<PromotionEvent> promotionAppClick;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -1206,7 +1203,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
             viewModel.getPromotion()
                 .getAppc())));
     walletPromotionInstallDisableLayout.setVisibility(View.VISIBLE);
-    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionProgressView.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.GONE);
     walletPromotionIcon.setVisibility(View.GONE);
@@ -1218,7 +1215,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         String.format(getString(R.string.wallet_promotion_button_claim), String.valueOf(
             viewModel.getPromotion()
                 .getAppc())));
-    walletPromotionDownloadLayout.setVisibility(View.GONE);
+    walletPromotionProgressView.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
