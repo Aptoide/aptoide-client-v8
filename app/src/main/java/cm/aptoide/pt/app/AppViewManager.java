@@ -534,7 +534,7 @@ public class AppViewManager {
 
   public Observable<PromotionViewModel> loadPromotionViewModel(boolean hasAppc) {
     Observable<PromotionViewModel> promoViewModelObs =
-        Observable.just(new PromotionViewModel(new WalletApp(), new Promotion(), false, false));
+        Observable.just(new PromotionViewModel(new WalletApp(), new Promotion(), false));
     if (!hasAppc) {
       return promoViewModelObs;
     } else if (cachedPromotionViewModel != null) {
@@ -542,38 +542,56 @@ public class AppViewManager {
     } else {
       return promotionsManager.getPromotionForPackage(cachedApp.getPackageName())
           .filter(Promotion::exists)
-          .flatMap(promotion -> loadWallet().flatMap(
-              wallet -> Observable.just(new PromotionViewModel(wallet, promotion, false, false))
-                  .flatMap(promotionViewModel -> installManager.getInstall(wallet.getMd5sum(),
-                      wallet.getPackageName(), wallet.getVersionCode())
-                      .flatMap(walletInstall -> installedRepository.getInstalled(
-                          cachedApp.getPackageName())
-                          .flatMap(appViewAppInstalled -> installedRepository.getInstalled(
-                              wallet.getPackageName())
-                              .map(walletInstalled -> {
-                                wallet.setDownloadModel(mapToDownloadModel(walletInstall.getType(),
-                                    walletInstall.getProgress(), walletInstall.getState()));
-                                promotionViewModel.setWalletInstalled(walletInstalled != null);
-                                promotionViewModel.setAppViewAppInstalled(
-                                    appViewAppInstalled != null);
-                                return promotionViewModel;
-                              }))))))
+          .flatMap(promotion -> {
+            Observable<Promotion> promObs = Observable.just(promotion);
+            Observable<WalletApp> walletApp = loadWallet();
+            Observable<Boolean> isAppInstalled =
+                installedRepository.isInstalled(cachedApp.getPackageName());
+            return Observable.combineLatest(promObs, walletApp, isAppInstalled,
+                (prom, wallet, appInstalled) -> mergeToPromotionViewModel(wallet, prom,
+                    appInstalled));
+          })
           .switchIfEmpty(promoViewModelObs);
     }
   }
 
-  public Observable<WalletApp> loadWallet() {
+  private PromotionViewModel mergeToPromotionViewModel(WalletApp walletApp, Promotion promotion,
+      Boolean isAppInstalled) {
+    return new PromotionViewModel(walletApp, promotion, isAppInstalled);
+  }
+
+  private Observable<WalletApp> loadWallet() {
     return appCenter.loadDetailedApp("com.appcoins.wallet", "bds-store")
         .toObservable()
-        .map(this::mapToWalletApp);
+        .map(this::mapToWalletApp)
+        .flatMap(walletApp -> {
+          Observable<WalletApp> walletAppObs = Observable.just(walletApp);
+          Observable<Boolean> isWalletInstalled =
+              installedRepository.isInstalled(walletApp.getPackageName());
+          Observable<Install> walletDownload =
+              installManager.getInstall(walletApp.getMd5sum(), walletApp.getPackageName(),
+                  walletApp.getVersionCode());
+          return Observable.combineLatest(walletAppObs, isWalletInstalled, walletDownload,
+              this::mergeToWalletApp);
+        });
+  }
+
+  private WalletApp mergeToWalletApp(WalletApp walletApp, Boolean isInstalled,
+      Install walletDownload) {
+    DownloadModel downloadModel =
+        mapToDownloadModel(walletDownload.getType(), walletDownload.getProgress(),
+            walletDownload.getState());
+    walletApp.setDownloadModel(downloadModel);
+    walletApp.setInstalled(isInstalled);
+    return walletApp;
   }
 
   private WalletApp mapToWalletApp(DetailedAppRequestResult result) {
     if (result.hasError() || result.isLoading()) return new WalletApp();
     DetailedApp app = result.getDetailedApp();
-    return new WalletApp(null, app.getName(), app.getIcon(), app.getId(), app.getPackageName(),
-        app.getMd5(), app.getVersionCode(), app.getVersionName(), app.getPath(), app.getPathAlt(),
-        app.getObb());
+    return new WalletApp(null, false, app.getName(), app.getIcon(), app.getId(),
+        app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
+        app.getPath(), app.getPathAlt(), app.getObb());
   }
 
   private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,

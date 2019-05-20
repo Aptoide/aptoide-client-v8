@@ -6,6 +6,5 @@ import cm.aptoide.pt.promotions.WalletApp
 data class PromotionViewModel(
     var walletApp: WalletApp,
     var promotion: Promotion,
-    var isWalletInstalled: Boolean,
     var isAppViewAppInstalled: Boolean
 )

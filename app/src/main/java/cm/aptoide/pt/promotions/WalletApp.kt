@@ -5,6 +5,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb
 
 data class WalletApp(
     var downloadModel: DownloadModel? = null,
+    var isInstalled: Boolean = false,
     val appName: String = "",
     val icon: String = "",
     val id: Long = -1,
