@@ -129,9 +129,7 @@ public class AppViewPresenter implements Presenter {
 
     claimApp();
     handlePromotionClaimResult();
-    resumeWalletDownload();
-    cancelPromotionDownload();
-    pauseWalletDownload();
+    handleWalletInstallEvent();
     loadInterstitialAd();
     showInterstitial();
 
@@ -908,8 +906,7 @@ public class AppViewPresenter implements Presenter {
             }
 
             if (promotionViewModel.getWalletApp()
-                .isInstalled()
-                && promotionViewModel.isAppViewAppInstalled()) {
+                .isInstalled() && promotionViewModel.isAppViewAppInstalled()) {
               appViewManager.scheduleNotification(String.valueOf(promotion.getAppc()),
                   appViewViewModel.getIcon(), appViewViewModel.getPackageName(),
                   appViewViewModel.getStore()
@@ -1202,49 +1199,28 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void resumeWalletDownload() {
+  private void handleWalletInstallEvent() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(
-                promotionViewModel -> permissionManager.requestDownloadAccess(permissionService)
-                    .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                        permissionService))
-                    .flatMapCompletable(__ -> appViewManager.resumeDownload(
-                        promotionViewModel.getWalletApp()
-                            .getMd5sum(), promotionViewModel.getWalletApp()
-                            .getId()))
-                    .retry()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-        });
-  }
-
-  private void cancelPromotionDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.cancelPromotionDownload()
-            .flatMapCompletable(promotionViewModel -> {
+        .flatMap(__ -> view.walletInstallEvent()
+            .flatMapCompletable(action -> {
+              PromotionViewModel promotionViewModel = (PromotionViewModel) action.getPayload();
               WalletApp walletApp = promotionViewModel.getWalletApp();
-              return appViewManager.cancelDownload(walletApp.getMd5sum(),
-                  walletApp.getPackageName(), walletApp.getVersionCode());
+              if (action.getPayload() != null) {
+                switch (action.getType()) {
+                  case PAUSE:
+                    return appViewManager.pauseDownload(promotionViewModel.getWalletApp()
+                        .getMd5sum());
+                  case CANCEL:
+                    return appViewManager.cancelDownload(walletApp.getMd5sum(),
+                        walletApp.getPackageName(), walletApp.getVersionCode());
+                  case RESUME:
+                    return appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId());
+                }
+              }
+              return Observable.empty()
+                  .toCompletable();
             })
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void pauseWalletDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.pausePromotionDownload()
-            .flatMapCompletable(promotionViewModel -> appViewManager.pauseDownload(
-                promotionViewModel.getWalletApp()
-                    .getMd5sum()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

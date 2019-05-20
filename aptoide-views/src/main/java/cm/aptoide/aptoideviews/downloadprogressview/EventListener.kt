@@ -3,7 +3,10 @@ package cm.aptoide.aptoideviews.downloadprogressview
 interface EventListener {
   fun onActionClick(action: Action)
 
-  enum class Action {
-    CANCEL, RESUME, PAUSE
+  data class Action(val type: Type, val payload: Any?) {
+    enum class Type {
+      CANCEL, RESUME, PAUSE
+    }
   }
+
 }

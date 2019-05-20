@@ -23,6 +23,20 @@
       android:orientation="vertical"
       app:layout_constraintGuide_begin="16dp"
       />
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineRight"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="16dp"
+      />
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineBottom"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_end="12dp"
+      />
 
   <ImageView
       android:id="@+id/wallet_icon"
@@ -101,7 +115,7 @@
       app:layout_constraintEnd_toStartOf="@id/baseGuidelineRight"
       app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
       app:layout_constraintTop_toTopOf="@+id/titleBarrier"
-      tools:visibility="gone"
+      tools:visibility="visible"
       />
 
   <Button
@@ -117,7 +131,7 @@
       app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
       app:layout_constraintTop_toBottomOf="@+id/titleBarrier"
       tools:text="INSTALL TO GET 10 APPC CREDITS"
-      tools:visibility="visible"
+      tools:visibility="gone"
       />
 
   <Button
@@ -140,18 +154,5 @@
       android:visibility="gone"
       app:constraint_referenced_ids="download_button,cancel_button"
       />
-  <android.support.constraint.Guideline
-      android:id="@+id/baseGuidelineRight"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      app:layout_constraintGuide_end="16dp"
-      />
-  <android.support.constraint.Guideline
-      android:id="@+id/baseGuidelineBottom"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      app:layout_constraintGuide_end="12dp"
-      />
+
 </android.support.constraint.ConstraintLayout>

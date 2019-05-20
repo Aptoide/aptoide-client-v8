@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView;
+import cm.aptoide.aptoideviews.downloadprogressview.EventListener;
 import cm.aptoide.aptoideviews.downloadprogressview.ProgressState;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -1152,22 +1153,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  @Override public Observable<PromotionViewModel> pausePromotionDownload() {
-    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
-  }
-
-  @Override public Observable<PromotionViewModel> cancelPromotionDownload() {
-    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
-  }
-
-  @Override public Observable<PromotionViewModel> resumePromotionDownload() {
-    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
-        == PromotionEvent.ClickType.RESUME_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+  @Override public Observable<EventListener.Action> walletInstallEvent() {
+    return walletPromotionProgressView.events();
   }
 
   @Override public Observable<PromotionViewModel> claimAppClick() {
@@ -1290,23 +1277,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     walletPromotionProgressView.setVisibility(View.VISIBLE);
     walletPromotionButtonsGroup.setVisibility(View.GONE);
+    walletPromotionClaimButton.setVisibility(View.GONE);
+    walletPromotionInstallDisableButton.setVisibility(View.GONE);
     walletPromotionIcon.setVisibility(View.VISIBLE);
 
     DownloadModel.DownloadState downloadState = viewModel.getWalletApp()
         .getDownloadModel()
         .getDownloadState();
 
+    walletPromotionProgressView.setPayload(viewModel);
     switch (downloadState) {
-      case INSTALLING:
-      case ACTIVE:
-      case INDETERMINATE:
-      case PAUSE:
-      case COMPLETE:
-        walletPromotionProgressView.setProgress(viewModel.getWalletApp()
-            .getDownloadModel()
-            .getProgress());
-        walletPromotionProgressView.setState(mapToProgressState(downloadState));
-        break;
       case ERROR:
         showErrorDialog("", getContext().getString(R.string.error_occured));
         break;
@@ -1314,6 +1294,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
             getContext().getString(R.string.out_of_space_dialog_message));
         break;
+      default:
+        walletPromotionProgressView.setProgress(viewModel.getWalletApp()
+            .getDownloadModel()
+            .getProgress());
+        walletPromotionProgressView.setState(mapToProgressState(downloadState));
     }
   }
 

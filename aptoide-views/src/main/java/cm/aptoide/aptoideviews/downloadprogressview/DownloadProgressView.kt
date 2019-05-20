@@ -2,17 +2,20 @@ package cm.aptoide.aptoideviews.downloadprogressview
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.support.annotation.CheckResult
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import cm.aptoide.aptoideviews.R
 import kotlinx.android.synthetic.main.download_progress_view.view.*
+import rx.Observable
 
 /**
  * This view is responsible for handling the display of download progress
  */
 class DownloadProgressView : ConstraintLayout {
-
+  private var payload: Any? = null
   private var eventListener: EventListener? = null
 
   constructor(context: Context) : this(context, null)
@@ -26,13 +29,17 @@ class DownloadProgressView : ConstraintLayout {
 
   private fun setupClickListeners() {
     pause_button.setOnClickListener {
-      eventListener?.onActionClick(EventListener.Action.PAUSE)
+      Log.i("Pause_Button", "yeaBoiii, PauseShit")
+      eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.PAUSE, payload))
     }
     cancel_button.setOnClickListener {
-      eventListener?.onActionClick(EventListener.Action.CANCEL)
+      Log.i("Cancel_Button", "yeaBoiii, PauseShit")
+      eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.CANCEL, payload))
     }
     resume_button.setOnClickListener {
-      eventListener?.onActionClick(EventListener.Action.RESUME)
+      Log.i("Resume_Button", "yeaBoiii, PauseShit")
+
+      eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.RESUME, payload))
     }
   }
 
@@ -46,6 +53,14 @@ class DownloadProgressView : ConstraintLayout {
     }
     typedArray.recycle()
   }
+
+  // Do we actually want to clear everything on detach?
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    setEventListener(null)
+    payload = null
+  }
+
 
   /**
    * Sets the event listener
@@ -63,6 +78,26 @@ class DownloadProgressView : ConstraintLayout {
       cancel_button.setOnClickListener(null)
       resume_button.setOnClickListener(null)
     }
+  }
+
+  /**
+   * Retrieves the Rx binding for the event listener
+   *
+   * @return Observable<EventListener.Action>
+   */
+  @CheckResult
+  fun events(): Observable<EventListener.Action> {
+    return Observable.create(DownloadProgressViewEventOnSubscribe(this))
+  }
+
+  /**
+   * Sets an optional payload to be retrieved with the event listener
+   * E.g. Attaching an object identifying/describing the download
+   *
+   * @param payload
+   */
+  fun setPayload(payload: Any?) {
+    this.payload = payload
   }
 
   /**

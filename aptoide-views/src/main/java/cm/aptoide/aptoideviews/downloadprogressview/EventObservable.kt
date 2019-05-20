@@ -6,10 +6,10 @@ import rx.Subscriber
 import rx.android.MainThreadSubscription
 import rx.android.MainThreadSubscription.verifyMainThread
 
-@CheckResult
-fun DownloadProgressView.events(): Observable<EventListener.Action> {
-  return Observable.create(DownloadProgressViewEventOnSubscribe(this))
-}
+//@CheckResult
+//fun DownloadProgressView.events(): Observable<EventListener.Action> {
+//  return Observable.create(DownloadProgressViewEventOnSubscribe(this))
+//}
 
 /**
  * Rx Binding for DownloadProgressView
@@ -24,15 +24,13 @@ class DownloadProgressViewEventOnSubscribe(val view: DownloadProgressView) :
   override fun call(subscriber: Subscriber<in EventListener.Action>) {
     verifyMainThread()
 
-    view.setEventListener(
-        object : EventListener {
+    val eventListener = object : EventListener {
           override fun onActionClick(action: EventListener.Action) {
             if (!subscriber.isUnsubscribed) {
               subscriber.onNext(action)
             }
           }
         }
-    )
 
     subscriber.add(
         object : MainThreadSubscription() {
@@ -41,5 +39,8 @@ class DownloadProgressViewEventOnSubscribe(val view: DownloadProgressView) :
           }
         }
     )
+
+    view.setEventListener(eventListener)
+
   }
 }
