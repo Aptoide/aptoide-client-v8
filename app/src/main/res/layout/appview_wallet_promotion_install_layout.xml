@@ -1,244 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:background="@drawable/appc_gradient_translucent"
-    android:orientation="vertical"
     >
 
-  <RelativeLayout
-      android:layout_width="match_parent"
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineTop"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="28dp"
-      android:layout_marginEnd="16dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginRight="16dp"
-      android:layout_marginStart="16dp"
-      android:layout_marginTop="16dp"
-      >
-
-    <ImageView
-        android:id="@+id/wallet_icon"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/appcoins_wallet_icon"
-        />
-
-    <TextView
-        android:id="@+id/wallet_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/wallet_icon"
-        android:layout_toRightOf="@id/wallet_icon"
-        tools:text="Get 10 APPC Credits now!"
-        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
-        />
-
-    <TextView
-        android:id="@+id/wallet_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wallet_title"
-        android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/wallet_icon"
-        android:layout_toRightOf="@id/wallet_icon"
-        tools:text="Install this app and get 10 APPC Credits. You need the AppCoins wallet to receive them."
-        style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
-        />
-  </RelativeLayout>
-
-  <LinearLayout
-      android:id="@+id/buttons_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
-      android:visibility="visible"
-      >
-    <Button
-        android:id="@+id/cancel_button"
-        android:layout_weight="1"
-        android:text="@string/wallet_promotion_no_button"
-        android:textColor="@color/grey"
-        style="@style/Aptoide.Button.Flat"
-        />
-    <Button
-        android:id="@+id/download_button"
-        android:layout_weight="1"
-        android:text="@string/wallet_promotion_install_button"
-        android:textColor="#ff6600"
-        style="@style/Aptoide.Button.Flat"
-        />
-  </LinearLayout>
-
-  <LinearLayout
-      android:id="@+id/wallet_download_info"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="8dp"
       android:orientation="horizontal"
-      android:visibility="gone"
-      tools:visibility="visible"
-      >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="18dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        >
-
-
-      <FrameLayout
-          android:layout_width="fill_parent"
-          android:layout_height="4dp"
-          android:layout_marginBottom="4dp"
-          >
-
-        <ProgressBar
-            android:id="@+id/wallet_download_progress_bar"
-            android:layout_width="fill_parent"
-            android:layout_height="4dp"
-            android:indeterminate="false"
-            style="?android:attr/progressBarStyleHorizontal"
-            />
-      </FrameLayout>
-
-      <RelativeLayout
-          android:id="@+id/wallet_download_info_layout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="5dp"
-          >
-
-        <TextView
-            android:id="@+id/wallet_download_download_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/appview_short_downloading"
-            style="@style/Aptoide.TextView.Medium.XS.Grey"
-            />
-
-        <TextView
-            android:id="@+id/wallet_download_progress_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="start"
-            tools:text="80%"
-            style="@style/Aptoide.TextView.Medium.XS.Grey"
-            />
-      </RelativeLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/wallet_install_controls_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_weight="4"
-        android:gravity="end"
-        android:orientation="horizontal"
-        >
-
-      <ImageView
-          android:id="@+id/wallet_download_cancel_button"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:layout_gravity="center"
-          android:contentDescription="@null"
-          android:padding="12dp"
-          android:scaleType="center"
-          android:src="@drawable/ic_clear_action_black"
-          android:visibility="gone"
-          />
-
-      <ImageView
-          android:id="@+id/wallet_download_resume_download"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:layout_gravity="center"
-          android:contentDescription="@null"
-          android:padding="12dp"
-          android:scaleType="fitCenter"
-          android:src="@drawable/ic_play_arrow_action_black"
-          android:visibility="gone"
-          />
-
-      <ImageView
-          android:id="@+id/wallet_download_pause_download"
-          android:layout_width="48dp"
-          android:layout_height="48dp"
-          android:layout_gravity="center"
-          android:contentDescription="@null"
-          android:padding="12dp"
-          android:scaleType="fitCenter"
-          android:src="@drawable/ic_pause_action_black"
-          />
-
-    </LinearLayout>
-  </LinearLayout>
-  <LinearLayout
-      android:id="@+id/wallet_install_disabled_layout"
-      android:layout_width="match_parent"
+      app:layout_constraintGuide_begin="12dp"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineLeft"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:layout_marginBottom="8dp"
-      android:paddingEnd="16dp"
-      android:paddingLeft="16dp"
-      android:paddingRight="16dp"
-      android:paddingStart="16dp"
-      android:visibility="gone"
-      tools:visibility="visible"
-      >
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="16dp"
+      />
 
-    <Button
-        android:id="@+id/wallet_install_disabled_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/card_border_fog_grey_wallet_promotion"
-        android:enabled="false"
-        tools:text="INSTALL TO GET 10 APPC CREDITS"
-        style="@style/Aptoide.TextView.Medium.S.GreyFog"
-        />
+  <ImageView
+      android:id="@+id/wallet_icon"
+      android:layout_width="56dp"
+      android:layout_height="56dp"
+      android:src="@drawable/appcoins_wallet_icon"
+      app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
+      app:layout_constraintTop_toTopOf="@+id/baseGuidelineTop"
+      />
 
-  </LinearLayout>
-  <LinearLayout
-      android:id="@+id/wallet_claim_appc_layout"
-      android:layout_width="match_parent"
+  <TextView
+      android:id="@+id/wallet_title"
+      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:layout_marginBottom="8dp"
-      android:paddingEnd="16dp"
-      android:paddingLeft="16dp"
-      android:paddingRight="16dp"
-      android:paddingStart="16dp"
+      android:layout_marginStart="16dp"
+      android:layout_marginLeft="16dp"
+      app:layout_constraintStart_toEndOf="@+id/wallet_icon"
+      app:layout_constraintTop_toTopOf="@+id/baseGuidelineTop"
+      tools:text="Get 10 APPC Credits now!"
+      />
+
+  <TextView
+      android:id="@+id/wallet_message"
+      style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="2dp"
+      app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/wallet_title"
+      app:layout_constraintTop_toBottomOf="@+id/wallet_title"
+      tools:text="Install this app and get 10 APPC Credits.  You need the AppCoins wallet to receive them."
+      />
+
+
+  <android.support.constraint.Barrier
+      android:id="@+id/titleBarrier"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="bottom"
+      app:constraint_referenced_ids="wallet_message"
+      tools:layout_editor_absoluteX="411dp"
+      />
+
+  <Button
+      android:id="@+id/cancel_button"
+      style="@style/Aptoide.Button.Flat"
+      android:layout_width="0dp"
+      android:text="@string/wallet_promotion_no_button"
+      android:textColor="@color/grey"
+      app:layout_constraintEnd_toStartOf="@+id/download_button"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintHorizontal_weight="1"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      />
+  <Button
+      android:id="@+id/download_button"
+      style="@style/Aptoide.Button.Flat"
+      android:layout_width="0dp"
+      android:text="@string/wallet_promotion_install_button"
+      android:textColor="#ff6600"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintHorizontal_weight="1"
+      app:layout_constraintStart_toEndOf="@+id/cancel_button"
+      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      />
+
+  <cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toStartOf="@id/baseGuidelineRight"
+      app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
+      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      tools:visibility="gone"
+      />
+
+  <Button
+      android:id="@+id/wallet_install_disabled_button"
+      style="@style/Aptoide.TextView.Medium.S.GreyFog"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:background="@drawable/card_border_fog_grey_wallet_promotion"
+      android:enabled="false"
+      app:layout_constraintBottom_toTopOf="@+id/baseGuidelineBottom"
+      app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
+      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      tools:text="INSTALL TO GET 10 APPC CREDITS"
+      tools:visibility="gone"
+      />
+
+  <Button
+      android:id="@+id/wallet_claim_appc_button"
+      style="@style/Aptoide.Button.Install"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toTopOf="@+id/baseGuidelineBottom"
+      app:layout_constraintEnd_toStartOf="@+id/baseGuidelineRight"
+      app:layout_constraintStart_toStartOf="@+id/baseGuidelineLeft"
+      app:layout_constraintTop_toTopOf="@+id/titleBarrier"
+      tools:text="CLAIM YOUR 10 APPC CREDITS"
+      />
+
+  <android.support.constraint.Group
+      android:id="@+id/initial_buttons_group"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:visibility="gone"
-      tools:visibility="visible"
-      >
-
-    <Button
-        android:id="@+id/wallet_claim_appc_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="CLAIM YOUR 10 APPC CREDITS"
-        style="@style/Aptoide.Button.Install"
-        />
-
-  </LinearLayout>
-
-
-</LinearLayout>
+      app:constraint_referenced_ids="download_button,cancel_button"
+      />
+  <android.support.constraint.Group
+      android:id="@+id/wallet_action_group"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:constraint_referenced_ids="wallet_claim_appc_button,wallet_install_disabled_button"
+      />
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineRight"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="16dp"
+      />
+  <android.support.constraint.Guideline
+      android:id="@+id/baseGuidelineBottom"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_end="12dp"
+      />
+</android.support.constraint.ConstraintLayout>
