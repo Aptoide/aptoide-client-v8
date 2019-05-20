@@ -279,10 +279,9 @@ android {
 
     def type = variant.variantData.variantConfiguration.buildType.name
 
-    if(flavors[1].name.contains('prod') && type == 'release'){
+    if (flavors[1].name.contains('prod') && type == 'release') {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
-    }
-    else{
+    } else {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
@@ -300,7 +299,6 @@ android {
         "\"" + project.MOPUB_FYBER_INTERSTITIAL_SPOT_ID + "\""
     variant.buildConfigField "String", "MOPUB_FYBER_BANNER_SPOT_ID",
         "\"" + project.MOPUB_FYBER_BANNER_SPOT_ID + "\""
-
 
     variant.buildConfigField "String", "MOPUB_VIDEO_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_VIDEO_PLACEMENT_ID_PROD + "\""
@@ -560,7 +558,6 @@ dependencies {
 
   //careful updating this because of support library conflicts
   implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
-
 }
 
 String getDate() {
