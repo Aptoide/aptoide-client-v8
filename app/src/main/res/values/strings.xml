@@ -559,7 +559,7 @@
   <string name="appc_message_appcoins_section_2a">Get the %s</string>
   <!--This variable is a link to Coinbase (www.coinbase.com). The text is Coinbase. This is done using html-->
   <string name="coinbase" translatable="false">Coinbase</string>
-  <string name="appc_message_appcoins_section_2b">Open it to get your it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
+  <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
   <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
   <string name="appc_message_appcoins_section_3">Get AppCoins Credits for free! Download any of the apps of the bundle %1$s, in the homepage, and spend 2 minutes in it. The AppCoins Wallet will process your reward, and you can use it to buy your favorite items in any app with the symbol %2$s.</string>
