@@ -343,7 +343,7 @@ public class AppViewManager {
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
                   editorsChoicePosition, status);
-              if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+              if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
                 setupMigratorUninstallEvent(download.getPackageName());
               }
             })
