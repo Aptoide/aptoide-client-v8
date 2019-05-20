@@ -907,7 +907,8 @@ public class AppViewPresenter implements Presenter {
               appViewManager.setAppcPromotionImpressionSent();
             }
 
-            if (promotionViewModel.isWalletInstalled()
+            if (promotionViewModel.getWalletApp()
+                .isInstalled()
                 && promotionViewModel.isAppViewAppInstalled()) {
               appViewManager.scheduleNotification(String.valueOf(promotion.getAppc()),
                   appViewViewModel.getIcon(), appViewViewModel.getPackageName(),

@@ -267,7 +267,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View promotionView;
   private DownloadProgressView walletPromotionProgressView;
   private View walletPromotionClaimLayout;
-  private View walletPromotionIcon;
+  private ImageView walletPromotionIcon;
   private Button walletPromotionClaimButton;
   private View walletPromotionInstallDisableLayout;
   private Button walletPromotionInstallDisableButton;
@@ -1129,7 +1129,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void showAppcWalletPromotionView(PromotionViewModel viewModel) {
-    if (viewModel.isWalletInstalled()) {
+    if (viewModel.getWalletApp()
+        .isInstalled()) {
       if (!viewModel.isAppViewAppInstalled()) {
         setupInstallDependencyApp(viewModel);
       } else {
@@ -1206,7 +1207,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionProgressView.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.GONE);
-    walletPromotionIcon.setVisibility(View.GONE);
+    walletPromotionIcon.setImageResource(R.drawable.ic_promotion_coins);
   }
 
   private void setupClaimWalletPromotion(PromotionViewModel viewModel) {
