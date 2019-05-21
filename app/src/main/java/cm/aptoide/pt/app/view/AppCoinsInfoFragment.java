@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 30/07/2018.
@@ -43,25 +41,14 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("aptoide-theme") String theme;
   private Toolbar toolbar;
-  private PublishSubject<Void> coinbaseClickSubject;
   private View appCardView;
   private TextView appcMessageAppcoinsSection2a;
   private Button installButton;
-  private TextView appcMessageAppcoinsSection2b;
-  private ClickableSpan coinbaseClickListener;
   private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    coinbaseClickSubject = PublishSubject.create();
-    coinbaseClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (coinbaseClickSubject != null) {
-          coinbaseClickSubject.onNext(null);
-        }
-      }
-    };
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -73,9 +60,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     installButton = (Button) view.findViewById(R.id.appview_install_button);
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
-    appcMessageAppcoinsSection2b =
-        (TextView) view.findViewById(R.id.appc_message_appcoins_section_2b);
-
     TextView appcMessageAppcoinsSection3 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_3);
     TextView appcMessageAppcoinsSection4 =
@@ -103,18 +87,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         .getSimpleName());
   }
 
-  @Override public void onDestroy() {
-    coinbaseClickSubject = null;
-    coinbaseClickListener = null;
-    super.onDestroy();
-  }
-
   @Override public void onDestroyView() {
     toolbar = null;
     appCardView = null;
     installButton = null;
     appcMessageAppcoinsSection2a = null;
-    appcMessageAppcoinsSection2b = null;
     super.onDestroyView();
   }
 
@@ -125,10 +102,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     SpannableString spannableString = new SpannableString(formattedString);
     appcMessageAppcoinsSection2a.setText(spannableString);
     appcMessageAppcoinsSection2a.setMovementMethod(LinkMovementMethod.getInstance());
-  }
-
-  private void setupCoinbaseLink() {
-    final String coinbase = getString(R.string.coinbase);
   }
 
   private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
@@ -174,10 +147,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
       }
       return drawable;
     };
-  }
-
-  @Override public Observable<Void> coinbaseLinkClick() {
-    return coinbaseClickSubject;
   }
 
   @Override public Observable<Void> cardViewClick() {
