@@ -690,7 +690,7 @@
   <string name="promo_center_pending_card_update_body">For updating %s</string>
   <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
   <string name="promo_center_pending_claim_button">CLAIM</string>
-  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the Offerwall to see the available promotions.</string>
+  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
 
 
 </resources>
