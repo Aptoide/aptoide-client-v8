@@ -30,7 +30,7 @@ public class RewardAppInBundleViewHolder extends AppViewHolder {
         .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
     appName.setText(app.getName());
     appReward.setText(itemView.getResources()
-        .getString(R.string.appc_short_get_appc));
+        .getString(R.string.appc_card_short));
     itemView.setOnClickListener(v -> appClicks.onNext(
         new AppHomeEvent(app, position, homeBundle, bundlePosition, HomeEvent.Type.REWARD_APP)));
   }

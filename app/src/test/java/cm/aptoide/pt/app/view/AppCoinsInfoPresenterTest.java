@@ -48,7 +48,6 @@ public class AppCoinsInfoPresenterTest {
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);
-    when(view.coinbaseLinkClick()).thenReturn(coinbaseClickEvent);
     when(view.appCoinsWalletLinkClick()).thenReturn(walletClickEvent);
   }
 
@@ -73,16 +72,6 @@ public class AppCoinsInfoPresenterTest {
     installClickEvent.onNext(null);
     //Then it should open the wallet
     verify(view).openApp(packageName);
-  }
-
-  @Test public void handleClickOnCoinbaseLinkTest() {
-    //Given an initialized AppCoinsInfoPresenter
-    presenter.handleClickOnCoinbaseLink();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //And the user clicks on the link
-    coinbaseClickEvent.onNext(null);
-    //Then it should navigate to that link
-    verify(navigator).navigateToCoinbaseLink();
   }
 
   @Test public void handleClickOnAppcWalletLinkTest() {

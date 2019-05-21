@@ -537,14 +537,14 @@
 
 
   <!--APPC-->
-    <string name="appc_title_iab">Use Your AppCoins</string>
+  <string name="appc_title_iab">Spend Your AppCoins</string>
   <string name="appc_title_ads">Get Rewarded with AppCoins</string>
   <string name="appc_title_featured">Featured AppCoins Apps</string>
   <string name="appc_home_bundle_iab">Use Your AppCoins</string>
   <string name="appc_home_bundle_poa">Earn AppCoins Credits</string>
   <string name="appc_title_about_appcoins">About AppCoins</string>
-  <string name="appc_message_appview_appcoins_reward">Try this app and get %s</string>
-  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get %1$s %2$s</string>
+  <string name="appc_message_appview_appcoins_reward">Try this app for 2 minutes and get\n%s</string>
+  <string name="appc_message_appview_appcoins_reward_with_value">Try this app for 2 minutes and get\n%1$s %2$s</string>
   <string name="appc_message_appview_appcoins_iab">In-app purchases with AppCoins</string>
   <string name="appc_short_get_appc">GET APPC</string>
   <string name="appc_short_spend_appc">SPEND APPC</string>
@@ -568,11 +568,11 @@
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
   <string name="appc_message_appcoins_section_4">You\'ll identify the apps on which you can spend your AppCoins Credits with the symbol %s, and every time you buy an item you\'ll get a bonus in AppCoins Credits! Don\'t worry if you don\'t have AppCoins yet, you\'ll still be able to use your bank card, PayPal account or even ask a friend to send you the funds.</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
-  <string name="appc_message_appcoins_benefit_2">Earn free APPC</string>
+  <string name="appc_message_appcoins_benefit_2">Earn free AppCoins</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
-<string name="appc_title_bundle">AppCoins Apps</string>
+  <string name="appc_title_bundle">AppCoins Apps</string>
 
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
@@ -614,8 +614,8 @@
   <string name="promotion_update_popup_update_button">Update now</string>
   <string name="promotion_over_title">This promotion is over!</string>
   <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
-  
-  
+
+
   <!--Apps Short Description for promotions-->
   <string name="holidayspromotion_message_wallet_description">The AppCoins Wallet is your tool not only for receiving your APPC but also to process payments.</string>
   <string name="holidayspromotion_message_legacy_description">Intense real-time combat in a huge fantasy world! Join friends to clash rivals in the Arena.</string>
@@ -670,27 +670,27 @@
   <string name="promo_update2appc_notification_update_button">Update to AppCoins</string>
   <string name="promo_update2appc_claim_notification_title">Get %s APPC Credits Now!</string>
   <string name="promo_update2appc_claim_notification_body">Don\'t forget to claim your reward!</string>
-  
-   <!--Promo Center-->
- <string name="promo_center_title">Promotions</string>
- <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
- <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
- <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
- <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
- <string name="promo_center_offerwall_tab_title">OFFERS</string>
- <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
- <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
- <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
- <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
- <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
- <string name="promo_center_pending_tab_title">PENDING</string>
- <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
- <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
- <string name="promo_center_pending_card_install_body">For installing %s</string>
- <string name="promo_center_pending_card_update_body">For updating %s</string>
- <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
- <string name="promo_center_pending_claim_button">CLAIM</string>
- <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the Offerwall to see the available promotions.</string>
+
+  <!--Promo Center-->
+  <string name="promo_center_title">Promotions</string>
+  <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
+  <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
+  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
+  <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
+  <string name="promo_center_offerwall_tab_title">OFFERS</string>
+  <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
+  <string name="promo_center_offerwall_card_update_body">Update %s to AppCoins</string>
+  <string name="promo_center_offerwall_card_install_body">Install one of these apps with AppCoins</string>
+  <string name="promo_center_offerwall_empty_body">There are no promotions just yet. Come back later!</string>
+  <string name="promo_center_offerwall_empty_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="promo_center_pending_tab_title">PENDING</string>
+  <string name="promo_center_pending_title">You have %s APPC Credits to claim!</string>
+  <string name="promo_center_pending_card_title">Claim %s APPC Credits now!</string>
+  <string name="promo_center_pending_card_install_body">For installing %s</string>
+  <string name="promo_center_pending_card_update_body">For updating %s</string>
+  <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
+  <string name="promo_center_pending_claim_button">CLAIM</string>
+  <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the Offerwall to see the available promotions.</string>
 
 
 </resources>
