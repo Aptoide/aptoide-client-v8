@@ -84,7 +84,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -1583,7 +1582,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private SpannableString formatAppCoinsRewardMessage() {
     String appcValue = String.valueOf(getArguments().getFloat(BundleKeys.APPC.name(), -1));
-    String reward = "APPC";
+    String reward = "AppCoins Credits";
     String tryAppMessage;
     SpannableString spannable;
 
@@ -1592,18 +1591,20 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           getResources().getString(R.string.appc_message_appview_appcoins_reward_with_value,
               appcValue, reward);
       spannable = new SpannableString(tryAppMessage);
-      spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
-              .getPrimaryColor())), tryAppMessage.indexOf(appcValue),
-          tryAppMessage.indexOf(appcValue) + appcValue.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+      spannable.setSpan(
+          new ForegroundColorSpan(getResources().getColor(R.color.default_orange_gradient_end)),
+          tryAppMessage.indexOf(appcValue), tryAppMessage.indexOf(appcValue) + appcValue.length(),
+          Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     } else {
       tryAppMessage =
           getResources().getString(R.string.appc_message_appview_appcoins_reward, reward);
       spannable = new SpannableString(tryAppMessage);
     }
 
-    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(StoreTheme.get(theme)
-            .getPrimaryColor())), tryAppMessage.indexOf(reward),
-        tryAppMessage.indexOf(reward) + reward.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    spannable.setSpan(
+        new ForegroundColorSpan(getResources().getColor(R.color.default_orange_gradient_end)),
+        tryAppMessage.indexOf(reward), tryAppMessage.indexOf(reward) + reward.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
     return spannable;
   }
