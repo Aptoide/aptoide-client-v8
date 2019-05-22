@@ -68,7 +68,7 @@ public class Updates extends BaseTable {
         realmObject.setMd5(cursor.getString(cursor.getColumnIndex(COLUMN_MD5)));
         realmObject.setPackageName(cursor.getString(cursor.getColumnIndex(COLUMN_PACKAGE)));
         realmObject.setAlternativeApkPath(cursor.getString(cursor.getColumnIndex(COLUMN_ALT_URL)));
-        realmObject.setFileSize(cursor.getDouble(cursor.getColumnIndex(COLUMN_FILESIZE)));
+        realmObject.setSize(cursor.getDouble(cursor.getColumnIndex(COLUMN_FILESIZE)));
         realmObject.setTimestamp(cursor.getLong(cursor.getColumnIndex(COLUMN_TIMESTAMP)));
 
         realmObject.setUpdateVersionName(

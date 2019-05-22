@@ -39,7 +39,7 @@ public class Update extends RealmObject {
   private long timestamp;
   private String md5;
   private String apkPath;
-  private double fileSize;
+  private double size;
   private String updateVersionName;
   private int updateVersionCode;
   private boolean excluded;
@@ -63,7 +63,7 @@ public class Update extends RealmObject {
   }
 
   public Update(long id, String name, String icon, String packageName, String md5sum, String path,
-      double fileSize, String versionName, String pathAlt, int versionCode, String rankName,
+      double size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
       String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc) {
     this.appId = id;
@@ -72,7 +72,7 @@ public class Update extends RealmObject {
     this.packageName = packageName;
     this.md5 = md5sum;
     this.apkPath = path;
-    this.fileSize = fileSize;
+    this.size = size;
     this.updateVersionName = versionName;
     this.alternativeApkPath = pathAlt;
     this.updateVersionCode = versionCode;
@@ -151,12 +151,12 @@ public class Update extends RealmObject {
     this.apkPath = apkPath;
   }
 
-  public double getFileSize() {
-    return fileSize;
+  public double getSize() {
+    return size;
   }
 
-  public void setFileSize(double fileSize) {
-    this.fileSize = fileSize;
+  public void setSize(double size) {
+    this.size = size;
   }
 
   public String getUpdateVersionName() {

@@ -172,8 +172,7 @@ public class UpdateRepository {
 
     return new Update(app.getId(), app.getName(), app.getIcon(), app.getPackageName(), app.getFile()
         .getMd5sum(), app.getFile()
-        .getPath(), app.getFile()
-        .getFilesize(), app.getFile()
+        .getPath(), app.getSize(), app.getFile()
         .getVername(), app.getFile()
         .getPathAlt(), app.getFile()
         .getVercode(), app.getFile()
