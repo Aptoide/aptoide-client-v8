@@ -1,4 +1,4 @@
-package cm.aptoide.pt.app;
+package cm.aptoide.pt.app.migration;
 
 import cm.aptoide.pt.install.InstalledRepository;
 import rx.Observable;

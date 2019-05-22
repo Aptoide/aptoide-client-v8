@@ -109,7 +109,7 @@ public class PromotionsService {
         .toSingle();
   }
 
-  public Single<Promotion> getPromotionForPackage(String packageName) {
+  public Single<List<Promotion>> getPromotionsForPackage(String packageName) {
     GetPromotionAppsRequest.Body body =
         new GetPromotionAppsRequest.Body.Builder().packageName(packageName)
             .build();
@@ -120,20 +120,20 @@ public class PromotionsService {
         .toSingle();
   }
 
-  private Promotion mapToPromotion(GetPromotionAppsResponse response) {
+  private List<Promotion> mapToPromotion(GetPromotionAppsResponse response) {
+    ArrayList<Promotion> promotions = new ArrayList<>();
     if (response != null
         && response.getDataList() != null
         && response.getDataList()
         .getList() != null) {
       List<GetPromotionAppsResponse.PromotionAppModel> dataList = response.getDataList()
           .getList();
-      if (!dataList.isEmpty()) {
-        GetPromotionAppsResponse.PromotionAppModel model = dataList.get(0);
-        return new Promotion(model.isClaimed(), model.getAppc(), model.getDescription(),
-            model.getPromotionId());
+      for (GetPromotionAppsResponse.PromotionAppModel model : dataList) {
+        promotions.add(new Promotion(model.isClaimed(), model.getAppc(), model.getDescription(),
+            model.getPromotionId(), Promotion.ClaimAction.NONE));
       }
     }
-    return new Promotion();
+    return promotions;
   }
 
   private List<PromotionApp> mapPromotionsResponse(GetPromotionAppsResponse response) {
