@@ -19,6 +19,7 @@ import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
 import cm.aptoide.pt.install.installer.Installation;
 import cm.aptoide.pt.install.installer.InstallationProvider;
+import cm.aptoide.pt.logger.Logger;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -28,6 +29,7 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadInstallationProvider implements InstallationProvider {
 
+  private static final String TAG = "AptoideDownloadManager";
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
@@ -45,7 +47,10 @@ public class DownloadInstallationProvider implements InstallationProvider {
   }
 
   @Override public Observable<Installation> getInstallation(String md5) {
+    Logger.getInstance()
+        .d(TAG, "Getting the installation " + md5);
     return downloadManager.getDownload(md5)
+        .doOnError(throwable -> throwable.printStackTrace())
         .first()
         .flatMap(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
