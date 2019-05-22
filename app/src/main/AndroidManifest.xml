@@ -448,6 +448,16 @@
           android:resource="@xml/widget_search_app"/>
     </receiver>
 
+    <!--Smaato-->
+    <activity
+        android:name="com.smaato.soma.interstitial.InterstitialActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize">
+    </activity>
+    <activity
+        android:name="com.smaato.soma.ExpandedBannerActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize">
+    </activity>
+
   </application>
 
 </manifest>
