@@ -7,6 +7,8 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
@@ -78,6 +80,7 @@ public class AppViewManager {
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
 
+  private final AppcMigrationService appcMigrationService;
   private PromotionViewModel cachedPromotionViewModel;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
@@ -90,7 +93,8 @@ public class AppViewManager {
       AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      AppcMigrationService appcMigrationService) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -118,6 +122,7 @@ public class AppViewManager {
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
+    this.appcMigrationService = appcMigrationService;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -331,7 +336,7 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
-      String trustedValue, String editorsChoicePosition) {
+      String trustedValue, String editorsChoicePosition, String packageName) {
     return Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
@@ -346,13 +351,13 @@ public class AppViewManager {
                 setupMigratorUninstallEvent(download.getPackageName());
               }
             })
+            .doOnSuccess(__ -> appcMigrationService.addMigrationCandidate(packageName))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
-  public Completable downloadApp(PromotionViewModel promotionViewApp) {
-    final WalletApp walletApp = promotionViewApp.getWalletApp();
+  public Completable downloadApp(WalletApp walletApp) {
     return Observable.just(downloadFactory.create(downloadStateParser.parseDownloadAction(
         walletApp.getDownloadModel()
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
@@ -532,32 +537,41 @@ public class AppViewManager {
             && !cachedApp.isMature()));
   }
 
-  public Observable<PromotionViewModel> loadPromotionViewModel(boolean hasAppc) {
-    Observable<PromotionViewModel> promoViewModelObs =
-        Observable.just(new PromotionViewModel(new WalletApp(), new Promotion(), false));
-    if (!hasAppc) {
-      return promoViewModelObs;
-    } else if (cachedPromotionViewModel != null) {
+  public Observable<DownloadModel> appViewAppDownloadModel() {
+    return loadAppViewViewModel().toObservable()
+        .flatMap(app -> loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(),
+            app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
+                .getId(), app.hasAdvertising() || app.hasBilling()));
+  }
+
+  public Observable<PromotionViewModel> loadPromotionViewModel() {
+    Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
+    if (cachedPromotionViewModel != null) {
       return Observable.just(cachedPromotionViewModel);
     } else {
-      return promotionsManager.getPromotionForPackage(cachedApp.getPackageName())
-          .filter(Promotion::exists)
-          .flatMap(promotion -> {
-            Observable<Promotion> promObs = Observable.just(promotion);
+      return promotionsManager.getPromotionsForPackage(cachedApp.getPackageName())
+          .filter(promotions -> !promotions.isEmpty())
+          .flatMap(promotionList -> {
+            Observable<List<Promotion>> promObs = Observable.just(promotionList);
             Observable<WalletApp> walletApp = loadWallet();
-            Observable<Boolean> isAppInstalled =
-                installedRepository.isInstalled(cachedApp.getPackageName());
-            return Observable.combineLatest(promObs, walletApp, isAppInstalled,
-                (prom, wallet, appInstalled) -> mergeToPromotionViewModel(wallet, prom,
-                    appInstalled));
+            Observable<DownloadModel> appDownloadModel = appViewAppDownloadModel();
+            Observable<DetailedApp> appViewModel = Observable.just(cachedApp);
+            Observable<Boolean> isAppMigrated =
+                appcMigrationService.isAppMigrated(cachedApp.getPackageName());
+            return Observable.combineLatest(promObs, walletApp, appDownloadModel, appViewModel,
+                isAppMigrated,
+                (proms, wallet, appDLM, appVM, migrate) -> mergeToPromotionViewModel(wallet, proms,
+                    appDLM, appVM, migrate));
           })
+          //.doOnNext(promotionViewModel -> cachedPromotionViewModel = promotionViewModel)
           .switchIfEmpty(promoViewModelObs);
     }
   }
 
-  private PromotionViewModel mergeToPromotionViewModel(WalletApp walletApp, Promotion promotion,
-      Boolean isAppInstalled) {
-    return new PromotionViewModel(walletApp, promotion, isAppInstalled);
+  private PromotionViewModel mergeToPromotionViewModel(WalletApp walletApp,
+      List<Promotion> promotions, DownloadModel appDownloadModel, DetailedApp app,
+      Boolean isAppMigrated) {
+    return new PromotionViewModel(walletApp, promotions, appDownloadModel, app, isAppMigrated);
   }
 
   private Observable<WalletApp> loadWallet() {
@@ -648,19 +662,6 @@ public class AppViewManager {
 
   public Single<Boolean> shouldShowConsentDialog() {
     return moPubAdsManager.shouldShowConsentDialog();
-  }
-
-  public PromotionStatus getPromotionStatus() {
-    if (cachedPromotionViewModel != null && cachedPromotionViewModel.getPromotion()
-        .exists()) {
-      if (cachedPromotionViewModel.getPromotion()
-          .isClaimed()) {
-        return PromotionStatus.CLAIMED;
-      } else {
-        return PromotionStatus.NOT_CLAIMED;
-      }
-    }
-    return PromotionStatus.NO_PROMOTION;
   }
 
   public enum PromotionStatus {

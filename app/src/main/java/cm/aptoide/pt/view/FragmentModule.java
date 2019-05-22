@@ -37,12 +37,13 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
-import cm.aptoide.pt.app.AppcMigrationManager;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -341,15 +342,16 @@ import rx.subscriptions.CompositeSubscription;
       @Named("wallet-offer-promotion-id") String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      AppcMigrationService appcMigrationService) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
         marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
-        appcMigrationManager, localNotificationSyncManager,
-        appcPromotionNotificationStringProvider);
+        appcMigrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
+        appcMigrationService);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(

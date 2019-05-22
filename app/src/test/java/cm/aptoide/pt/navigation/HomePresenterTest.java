@@ -215,7 +215,7 @@ public class HomePresenterTest {
     verify(homeAnalytics).sendTapOnMoreInteractEvent(0, localTopAppsBundle.getTag(),
         localTopAppsBundle.getContent()
             .size());
-    //Then it should navigate with the specific action behaviour
+    //Then it should navigate with the specific claimAction behaviour
     verify(homeNavigator).navigateWithAction(click);
   }
 
@@ -325,7 +325,7 @@ public class HomePresenterTest {
     //Given an initialised HomePresenter
     presenter.handleActionBundlesImpression();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //And an action bundle
+    //And an claimAction bundle
     ActionBundle bundle = getFakeActionBundle();
     HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.KNOW_MORE);
     when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());

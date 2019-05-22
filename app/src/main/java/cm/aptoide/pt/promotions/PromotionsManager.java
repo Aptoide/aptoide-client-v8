@@ -62,9 +62,26 @@ public class PromotionsManager {
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
 
-  public Observable<Promotion> getPromotionForPackage(String packageName) {
-    return promotionsService.getPromotionForPackage(packageName)
-        .toObservable();
+  public Observable<List<Promotion>> getPromotionsForPackage(String packageName) {
+    return promotionsService.getPromotionsForPackage(packageName)
+        .toObservable()
+        .flatMapIterable(list -> list)
+        .map(this::mapPromotionAction)
+        .toList();
+  }
+
+  // This locally defines what action does the user need to do to claim a promotions
+  // It should probably be refactored so it is given by the WS
+  private Promotion mapPromotionAction(Promotion promotion) {
+    switch (promotion.getPromotionId()) {
+      case "BONUS_MIGRATION_19":
+        promotion.setClaimAction(Promotion.ClaimAction.MIGRATE);
+        break;
+      case "BONUS_GAME_WALLET_OFFER_19":
+        promotion.setClaimAction(Promotion.ClaimAction.INSTALL);
+        break;
+    }
+    return promotion;
   }
 
   private boolean isWalletInstalled() {

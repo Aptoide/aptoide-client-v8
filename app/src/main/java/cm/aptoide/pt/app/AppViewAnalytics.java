@@ -433,11 +433,11 @@ public class AppViewAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendWalletPromotionImpression() {
+  public void sendPromotionImpression(String promotionId) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, IMPRESSION);
 
-    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.IMPRESSION,
+    analyticsManager.logEvent(data, promotionId, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }
 
