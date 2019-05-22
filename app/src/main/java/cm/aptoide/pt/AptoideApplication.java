@@ -165,8 +165,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody>
-      accountSettingsBodyInterceptorPoolV7;
+  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
   @Inject NotificationAnalytics notificationAnalytics;
