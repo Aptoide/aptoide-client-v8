@@ -486,6 +486,8 @@ dependencies {
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
+  //Smaato
+  implementation (name:'SOMAAndroid-9.1.5-release', ext:'aar')
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
