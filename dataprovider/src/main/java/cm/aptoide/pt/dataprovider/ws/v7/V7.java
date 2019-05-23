@@ -62,6 +62,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
@@ -541,6 +543,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
         @Body GetPromotionAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+
+    @POST("appcoins/promotions/packages/getPromotions")
+    Observable<GetPackagePromotionsResponse> getPromotionsForPackage(
+        @Body GetPackagePromotionsRequest.Body body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
         @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
