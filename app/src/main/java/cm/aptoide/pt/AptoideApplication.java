@@ -109,7 +109,6 @@ import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
-import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import java.io.IOException;
@@ -346,9 +345,6 @@ public abstract class AptoideApplication extends Application {
         BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
         AppLovinBaseAdapterConfiguration.class.toString())
         .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
-        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))

@@ -171,10 +171,6 @@
 -dontwarn com.ironsource.adapters.unityads.**
 
 
-#AppNext
--keep class com.appnext.** { *; }
--dontwarn com.appnext.**
-
 #inmobi
 -keepattributes SourceFile,LineNumberTable
 -keep class com.inmobi.** { *; }
@@ -184,6 +180,13 @@
 -dontwarn com.squareup.picasso.**
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient{public *;}
 -keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info{public *;}
+
+
+#smaato
+-keep public class com.smaato.soma.internal.connector.OrmmaBridge {
+public *;
+}
+-keepattributes *Annotation*
 
 #skip the Picasso library classes
 -keep class com.squareup.picasso.** {*;}
