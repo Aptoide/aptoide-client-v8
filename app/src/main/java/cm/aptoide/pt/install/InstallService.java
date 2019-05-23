@@ -88,7 +88,7 @@ public class InstallService extends BaseService implements DownloadsNotification
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         Logger.getInstance()
-            .d(TAG, "Observing download and install with an intent different");
+            .d(TAG, "Observing download and install with an intent");
         subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
             .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false), intent.getExtras()
             .getBoolean(EXTRA_SET_PACKAGE_INSTALLER, false)).subscribe(
