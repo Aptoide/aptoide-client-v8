@@ -1,2 +1,16 @@
 <manifest
-    package="cm.aptoide.aptoideviews"/>
+    package="cm.aptoide.aptoideviews"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+
+  <!--  tools:replace="allowBackup"-->
+  <application
+      android:testOnly="true"
+      android:allowBackup="false"
+      >
+    <activity
+        android:name="cm.aptoide.aptoideviews.base.MockActivity">
+    </activity>
+  </application>
+</manifest>

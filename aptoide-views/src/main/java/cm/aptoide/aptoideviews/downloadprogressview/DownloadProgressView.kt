@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
 import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import cm.aptoide.aptoideviews.R
 import kotlinx.android.synthetic.main.download_progress_view.view.*
@@ -29,16 +28,12 @@ class DownloadProgressView : ConstraintLayout {
 
   private fun setupClickListeners() {
     pause_button.setOnClickListener {
-      Log.i("Pause_Button", "yeaBoiii, PauseShit")
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.PAUSE, payload))
     }
     cancel_button.setOnClickListener {
-      Log.i("Cancel_Button", "yeaBoiii, PauseShit")
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.CANCEL, payload))
     }
     resume_button.setOnClickListener {
-      Log.i("Resume_Button", "yeaBoiii, PauseShit")
-
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.RESUME, payload))
     }
   }
