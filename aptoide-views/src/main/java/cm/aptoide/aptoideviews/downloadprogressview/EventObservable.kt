@@ -15,7 +15,7 @@ import rx.android.MainThreadSubscription.verifyMainThread
  * Rx Binding for DownloadProgressView
  * This follows the same implementation used in RxBinding@1.0.0
  *
- * Note: Newer RxBinding versions use a different method that should be implemented
+ * Note: Newer RxBinding versions use a different method that should be replicated
  * if we are to bump our version.
  */
 class DownloadProgressViewEventOnSubscribe(val view: DownloadProgressView) :

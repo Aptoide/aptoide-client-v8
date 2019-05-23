@@ -78,6 +78,13 @@ class DownloadProgressView : ConstraintLayout {
   /**
    * Retrieves the Rx binding for the event listener
    *
+   * If there's lag between user input and state changes, the same action can be triggered several
+   * times by the user. If we want to avoid this case, we could try to debounce each input seperately.
+   * However a better solution would be to manage states internally depending on input.
+   *
+   * E.g. If the state is PAUSED, accept no progress updates.
+   *      If the state transitioned PAUSED -> IN_PROGRESS, ignore resume inputs after transition
+   *
    * @return Observable<EventListener.Action>
    */
   @CheckResult
