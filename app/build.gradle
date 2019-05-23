@@ -198,7 +198,8 @@ android {
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
          appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         fabricApiKey                    : "${project.FABRIC_API_KEY}"]
+         fabricApiKey                    : "${project.FABRIC_API_KEY}",
+         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -456,12 +457,7 @@ dependencies {
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
+  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
