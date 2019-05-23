@@ -351,8 +351,12 @@ public class AppViewManager {
                 setupMigratorUninstallEvent(download.getPackageName());
               }
             })
-            .doOnSuccess(__ -> appcMigrationService.addMigrationCandidate(packageName))
             .map(__ -> download))
+        .doOnNext(download -> {
+          if (downloadAction == DownloadModel.Action.MIGRATE) {
+            appcMigrationService.addMigrationCandidate(packageName);
+          }
+        })
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
