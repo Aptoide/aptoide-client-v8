@@ -142,16 +142,12 @@ public class SystemNotificationShower implements Presenter {
   private Single<Notification> buildLocalNotification(Context context, String title, String body,
       String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
 
-    Spannable titleBold = new SpannableString(title);
-    titleBold.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, title.length(),
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
     return Single.fromCallable(() -> {
       Notification notification =
           new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
               .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
-              .setContentTitle(titleBold)
+              .setContentTitle(title)
               .setContentText(body)
               .addAction(0, context.getResources()
                       .getString(R.string.promo_update2appc_notification_dismiss_button),
