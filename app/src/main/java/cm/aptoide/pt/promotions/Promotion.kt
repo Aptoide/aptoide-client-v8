@@ -2,7 +2,7 @@ package cm.aptoide.pt.promotions
 
 data class Promotion(var isClaimed: Boolean = false,
                      val appc: Float = -1f,
-                     val promotionDescription: String = "",
+                     val packageName: String = "",
                      val promotionId: String = "",
                      var claimAction: ClaimAction = ClaimAction.NONE) {
 

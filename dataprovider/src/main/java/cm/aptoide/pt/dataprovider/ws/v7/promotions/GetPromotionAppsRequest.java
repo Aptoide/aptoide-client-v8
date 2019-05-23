@@ -19,11 +19,12 @@ public class GetPromotionAppsRequest
         tokenInvalidator);
   }
 
-  public static GetPromotionAppsRequest of(Body params, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    return new GetPromotionAppsRequest(params, bodyInterceptor, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences);
+  public static GetPromotionAppsRequest of(String promotionId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    return new GetPromotionAppsRequest(new Body(promotionId), bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences);
   }
 
   @Override
@@ -34,41 +35,13 @@ public class GetPromotionAppsRequest
 
   public static class Body extends BaseBody {
     private String promotionId;
-    private String packageName;
 
-    public Body(String promotionId, String packageName) {
+    public Body(String promotionId) {
       this.promotionId = promotionId;
-      this.packageName = packageName;
     }
 
     public String getPromotionId() {
       return promotionId;
-    }
-
-    public String getPackageName() {
-      return packageName;
-    }
-
-    public static class Builder {
-      private String promotionId = null;
-      private String packageName = null;
-
-      public Builder() {
-      }
-
-      public Builder promotionId(String id) {
-        this.promotionId = id;
-        return this;
-      }
-
-      public Builder packageName(String name) {
-        this.packageName = name;
-        return this;
-      }
-
-      public Body build() {
-        return new Body(promotionId, packageName);
-      }
     }
   }
 }
