@@ -108,7 +108,6 @@ import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
-import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import java.io.IOException;
@@ -165,8 +164,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
-  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody>
-      accountSettingsBodyInterceptorPoolV7;
+  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
   @Inject NotificationAnalytics notificationAnalytics;
@@ -346,9 +344,6 @@ public abstract class AptoideApplication extends Application {
         BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
         AppLovinBaseAdapterConfiguration.class.toString())
         .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
-        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
         .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
