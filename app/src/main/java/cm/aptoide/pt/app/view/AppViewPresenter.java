@@ -53,7 +53,6 @@ public class AppViewPresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
   private final PromotionsNavigator promotionsNavigator;
-  private final String promotionId;
   private AppViewView view;
   private AccountNavigator accountNavigator;
   private AppViewAnalytics appViewAnalytics;
@@ -69,7 +68,7 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, String promotionId) {
+      PromotionsNavigator promotionsNavigator) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -82,7 +81,6 @@ public class AppViewPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
-    this.promotionId = promotionId;
   }
 
   @Override public void present() {
@@ -998,11 +996,10 @@ public class AppViewPresenter implements Presenter {
                                     appViewModel.getDeveloper()
                                         .getName(), action.toString());
 
-                                //TODO
-                                //if (appViewManager.getPromotionStatus()
-                                //    .equals(AppViewManager.PromotionStatus.NOT_CLAIMED)) {
-                                //  appViewAnalytics.sendInstallAppcWalletPromotionApp();
-                                //}
+                                if (appViewManager.hasClaimablePromotion(
+                                    Promotion.ClaimAction.INSTALL)) {
+                                  appViewAnalytics.sendInstallPromotionApp();
+                                }
                               })
                               .toSingleDefault(true)
                               .toCompletable());
@@ -1028,7 +1025,9 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(appViewViewModel -> {
-                        appViewAnalytics.sendAppcMigrationUpdateClick();
+                        if (appViewManager.hasClaimablePromotion(Promotion.ClaimAction.MIGRATE)) {
+                          appViewAnalytics.sendAppcMigrationUpdateClick();
+                        }
                         appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
                             appViewViewModel.getDeveloper()
                                 .getName(), "UPDATE TO APPC");
@@ -1186,8 +1185,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.dismissWalletPromotionClick())
-        .doOnNext(__ -> {
-          appViewAnalytics.sendClickOnNoThanksAppcWalletPromotion();
+        .doOnNext(promotion -> {
+          appViewAnalytics.sendClickOnNoThanksWallet(promotion.getPromotionId());
           view.dismissWalletPromotionView();
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -1201,8 +1200,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installWalletButtonClick()
-            .doOnNext(__2 -> appViewAnalytics.sendInstallAppcWalletPromotionWallet())
-            .flatMapCompletable(walletApp -> downloadApp(walletApp))
+            .doOnNext(pair -> appViewAnalytics.sendInstallAppcWallet(pair.first.getPromotionId()))
+            .flatMapCompletable(pair -> downloadWallet(pair.second))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1260,12 +1259,12 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.claimAppClick()
-            .flatMap(promotionViewModel -> {
-              appViewAnalytics.sendClickOnClaimAppcWalletPromotion(); // TODO: Change this
+            .flatMap(promotion -> {
+              appViewAnalytics.sendClickOnClaimAppViewPromotion(promotion.getPromotionId());
               return appViewManager.loadAppViewViewModel()
                   .toObservable()
                   .doOnNext(appViewViewModel -> promotionsNavigator.navigateToClaimDialog(
-                      appViewViewModel.getPackageName(), promotionId));
+                      appViewViewModel.getPackageName(), promotion.getPromotionId()));
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -1288,7 +1287,7 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Completable downloadApp(WalletApp walletApp) {
+  private Completable downloadWallet(WalletApp walletApp) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()

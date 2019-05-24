@@ -8,9 +8,9 @@ import cm.aptoide.pt.view.app.DetailedApp
 data class PromotionViewModel(
     var walletApp: WalletApp = WalletApp(),
     var promotions: List<Promotion> = ArrayList(),
-    val appDownloadModel: DownloadModel? = null,
+    var appDownloadModel: DownloadModel? = null,
     val app: DetailedApp? = null,
-    val isAppMigrated: Boolean = false
+    var isAppMigrated: Boolean = false
 ) {
 
   private val claimablePromotions = SparseArray<Promotion>()

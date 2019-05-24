@@ -63,6 +63,7 @@ public class AppViewManager {
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final Scheduler ioScheduler;
+  private final AppcMigrationService appcMigrationService;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
@@ -79,8 +80,6 @@ public class AppViewManager {
   private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
   private boolean appcPromotionImpressionSent;
   private boolean migrationImpressionSent;
-
-  private final AppcMigrationService appcMigrationService;
   private PromotionViewModel cachedPromotionViewModel;
 
   public AppViewManager(InstallManager installManager, DownloadFactory downloadFactory,
@@ -90,7 +89,7 @@ public class AppViewManager {
       MoPubAdsManager moPubAdsManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, int limit, Scheduler ioScheduler, String marketName,
-      AppCoinsManager appCoinsManager, PromotionsManager promotionsManager, String promotionId,
+      AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
@@ -551,7 +550,12 @@ public class AppViewManager {
   public Observable<PromotionViewModel> loadPromotionViewModel() {
     Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
     if (cachedPromotionViewModel != null) {
-      return Observable.just(cachedPromotionViewModel);
+      Observable<DownloadModel> downloadModel = appViewAppDownloadModel();
+      Observable<Boolean> isAppMigrated =
+          appcMigrationService.isAppMigrated(cachedApp.getPackageName());
+      Observable<PromotionViewModel> cachedViewModel = Observable.just(cachedPromotionViewModel);
+      return Observable.combineLatest(cachedViewModel, downloadModel, isAppMigrated,
+          this::mergeToCachedPromotionViewModel);
     } else {
       return promotionsManager.getPromotionsForPackage(cachedApp.getPackageName())
           .filter(promotions -> !promotions.isEmpty())
@@ -567,9 +571,27 @@ public class AppViewManager {
                 (proms, wallet, appDLM, appVM, migrate) -> mergeToPromotionViewModel(wallet, proms,
                     appDLM, appVM, migrate));
           })
-          //.doOnNext(promotionViewModel -> cachedPromotionViewModel = promotionViewModel)
+          .doOnNext(promotionViewModel -> cachedPromotionViewModel = promotionViewModel)
           .switchIfEmpty(promoViewModelObs);
     }
+  }
+
+  /**
+   * If the user clicks before cachedPromotionViewModel is set, this will return false, even though
+   * it might be true later. We could call loadPromotionViewModel(), but in this case it will do a
+   * lot of work twice. I think it's acceptable to assume it's false if the promotion wasn't shown
+   * yet.
+   */
+  public boolean hasClaimablePromotion(Promotion.ClaimAction action) {
+    return cachedPromotionViewModel != null
+        && cachedPromotionViewModel.getClaimablePromotion(action) != null;
+  }
+
+  private PromotionViewModel mergeToCachedPromotionViewModel(PromotionViewModel cached,
+      DownloadModel appDownloadModel, Boolean isMigrated) {
+    cached.setAppMigrated(isMigrated);
+    cached.setAppDownloadModel(appDownloadModel);
+    return cached;
   }
 
   private PromotionViewModel mergeToPromotionViewModel(WalletApp walletApp,
