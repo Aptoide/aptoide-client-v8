@@ -16,7 +16,7 @@ public class PromotionEvent {
     this.promotion = promotion;
   }
 
-  public WalletApp getApp() {
+  public WalletApp getWallet() {
     return walletApp;
   }
 
@@ -29,6 +29,6 @@ public class PromotionEvent {
   }
 
   enum ClickType {
-    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM, UPDATE, DOWNGRADE
+    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM, UPDATE, DOWNGRADE, DISMISS
   }
 }

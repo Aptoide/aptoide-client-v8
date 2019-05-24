@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.util.Pair;
 import android.view.MenuItem;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
@@ -165,11 +166,11 @@ public interface AppViewView extends InstallAppView {
   void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
       Promotion.ClaimAction action, DownloadModel appDownloadModel);
 
-  Observable<Void> dismissWalletPromotionClick();
+  Observable<Promotion> dismissWalletPromotionClick();
 
   void dismissWalletPromotionView();
 
-  Observable<WalletApp> installWalletButtonClick();
+  Observable<Pair<Promotion, WalletApp>> installWalletButtonClick();
 
   Observable<WalletApp> pausePromotionDownload();
 
@@ -177,7 +178,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<WalletApp> resumePromotionDownload();
 
-  Observable<WalletApp> claimAppClick();
+  Observable<Promotion> claimAppClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 

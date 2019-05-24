@@ -1765,11 +1765,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.HOME_PROMOTION_ID;
   }
 
-  @Singleton @Provides @Named("wallet-offer-promotion-id")
-  String providesAppViewWalletPromotionId() {
-    return BuildConfig.APP_VIEW_WALLET_PROMOTION_ID;
-  }
-
   @Singleton @Provides @Named("accountType") String provideAccountType() {
     return BuildConfig.APPLICATION_ID;
   }

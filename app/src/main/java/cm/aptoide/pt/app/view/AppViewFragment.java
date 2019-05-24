@@ -31,6 +31,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -1133,6 +1134,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showAppcWalletPromotionView(Promotion promotion, WalletApp walletApp,
       Promotion.ClaimAction action, DownloadModel appDownloadModel) {
+    walletPromotionCancelButton.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionEvent(promotion, walletApp, PromotionEvent.ClickType.DISMISS)));
     if (walletApp.isInstalled()) {
       if (!appDownloadModel.getAction()
           .equals(DownloadModel.Action.OPEN)) {
@@ -1151,45 +1154,48 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     promotionView.setVisibility(View.VISIBLE);
   }
 
-  @Override public Observable<Void> dismissWalletPromotionClick() {
-    return RxView.clicks(walletPromotionCancelButton);
+  @Override public Observable<Promotion> dismissWalletPromotionClick() {
+    return promotionAppClick.filter(
+        promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.DISMISS)
+        .map(promotionAppClick -> promotionAppClick.getPromotion());
   }
 
   @Override public void dismissWalletPromotionView() {
     promotionView.setVisibility(View.GONE);
   }
 
-  @Override public Observable<WalletApp> installWalletButtonClick() {
+  @Override public Observable<Pair<Promotion, WalletApp>> installWalletButtonClick() {
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.UPDATE
             || promotionAppClick.getClickType() == PromotionEvent.ClickType.INSTALL_APP
             || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNLOAD
             || promotionAppClick.getClickType() == PromotionEvent.ClickType.DOWNGRADE)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+        .map(promotionAppClick -> Pair.create(promotionAppClick.getPromotion(),
+            promotionAppClick.getWallet()));
   }
 
   @Override public Observable<WalletApp> pausePromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
         == PromotionEvent.ClickType.PAUSE_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+        .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
   @Override public Observable<WalletApp> cancelPromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
         == PromotionEvent.ClickType.CANCEL_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+        .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
   @Override public Observable<WalletApp> resumePromotionDownload() {
     return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
         == PromotionEvent.ClickType.RESUME_DOWNLOAD)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+        .map(promotionAppClick -> promotionAppClick.getWallet());
   }
 
-  @Override public Observable<WalletApp> claimAppClick() {
+  @Override public Observable<Promotion> claimAppClick() {
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
-        .map(promotionAppClick -> promotionAppClick.getApp());
+        .map(promotionAppClick -> promotionAppClick.getPromotion());
   }
 
   @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
@@ -1329,6 +1335,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     LinearLayout.LayoutParams pauseHidden =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT, 2f);
+
     switch (downloadState) {
       case ACTIVE:
         downloadWalletProgressBar.setIndeterminate(false);
