@@ -51,5 +51,5 @@ public interface BundleView extends View {
 
   Observable<HomeEvent> visibleBundles();
 
-  void updateEditorialCards(List<HomeBundle> homeBundles);
+  void updateEditorialCards();
 }

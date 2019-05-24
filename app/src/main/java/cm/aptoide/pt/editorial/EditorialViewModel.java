@@ -22,6 +22,7 @@ public class EditorialViewModel {
   private final String packageName;
   private final String md5sum;
   private final int versionCode;
+  private final long size;
   private final String versionName;
   private final String path;
   private final String pathAlt;
@@ -51,6 +52,7 @@ public class EditorialViewModel {
     packageName = "";
     md5sum = "";
     versionCode = -1;
+    size = 0;
     versionName = "";
     path = "";
     pathAlt = "";
@@ -74,6 +76,7 @@ public class EditorialViewModel {
     packageName = "";
     md5sum = "";
     versionCode = -1;
+    size = 0;
     versionName = "";
     path = "";
     pathAlt = "";
@@ -99,6 +102,7 @@ public class EditorialViewModel {
     packageName = "";
     md5sum = "";
     versionCode = -1;
+    size = 0;
     versionName = "";
     path = "";
     pathAlt = "";
@@ -111,7 +115,8 @@ public class EditorialViewModel {
       String caption, String background, List<Integer> placeHolderPositions,
       List<EditorialContent> placeHolderContent, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
-      String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId) {
+      String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId,
+      long size) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -127,6 +132,7 @@ public class EditorialViewModel {
     this.versionName = versionName;
     this.path = path;
     this.pathAlt = pathAlt;
+    this.size = size;
     this.obb = obb;
     this.shouldHaveAnimation = shouldHaveAnimation;
     this.cardId = cardId;
@@ -233,6 +239,10 @@ public class EditorialViewModel {
 
   public String getGroupId() {
     return groupId;
+  }
+
+  public long getBottomCardSize() {
+    return this.size;
   }
 
   public enum Error {

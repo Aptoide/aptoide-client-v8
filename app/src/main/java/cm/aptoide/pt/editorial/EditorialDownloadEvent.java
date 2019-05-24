@@ -17,9 +17,10 @@ public class EditorialDownloadEvent {
   private final Obb obb;
   private final DownloadModel.Action action;
   private final long appId;
+  private final long size;
 
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
-      String icon, String verName, int verCode, String path, String pathAlt, Obb obb) {
+      String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long size) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -32,23 +33,7 @@ public class EditorialDownloadEvent {
     this.obb = obb;
     this.appId = -1;
     this.action = null;
-  }
-
-  public EditorialDownloadEvent(EditorialDownloadEvent editorialDownloadEvent,
-      DownloadModel.Action action) {
-    super();
-    this.button = editorialDownloadEvent.getClickType();
-    this.appName = editorialDownloadEvent.getAppName();
-    this.packageName = editorialDownloadEvent.getPackageName();
-    this.md5sum = editorialDownloadEvent.getMd5();
-    this.icon = editorialDownloadEvent.getIcon();
-    this.verName = editorialDownloadEvent.getVerName();
-    this.verCode = editorialDownloadEvent.getVerCode();
-    this.path = editorialDownloadEvent.getPath();
-    this.pathAlt = editorialDownloadEvent.getPathAlt();
-    this.obb = editorialDownloadEvent.getObb();
-    this.appId = -1;
-    this.action = action;
+    this.size = size;
   }
 
   public EditorialDownloadEvent(EditorialViewModel editorialViewModel,
@@ -65,6 +50,7 @@ public class EditorialDownloadEvent {
     this.pathAlt = editorialViewModel.getBottomCardPathAlt();
     this.obb = editorialViewModel.getBottomCardObb();
     this.appId = editorialViewModel.getBottomCardAppId();
+    this.size = editorialViewModel.getBottomCardSize();
     this.action = action;
   }
 
@@ -76,6 +62,7 @@ public class EditorialDownloadEvent {
     this.md5sum = md5;
     this.icon = "";
     this.verName = "";
+    this.size = 0;
     this.verCode = verCode;
     this.path = "";
     this.pathAlt = "";
@@ -86,7 +73,7 @@ public class EditorialDownloadEvent {
 
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb,
-      DownloadModel.Action action) {
+      DownloadModel.Action action, long size) {
 
     this.button = button;
     this.appName = appName;
@@ -100,6 +87,7 @@ public class EditorialDownloadEvent {
     this.obb = obb;
     this.appId = -1;
     this.action = action;
+    this.size = size;
   }
 
   public Type getClickType() {
@@ -148,5 +136,9 @@ public class EditorialDownloadEvent {
 
   public long getAppId() {
     return appId;
+  }
+
+  public long getSize() {
+    return size;
   }
 }

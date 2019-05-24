@@ -341,12 +341,12 @@ public class AppViewManager {
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
             cachedApp.getIcon(), cachedApp.getVersionName(), cachedApp.getVersionCode(),
             cachedApp.getPath(), cachedApp.getPathAlt(), cachedApp.getObb(),
-            cachedApp.hasAdvertising() || cachedApp.hasBilling()))
+            cachedApp.hasAdvertising() || cachedApp.hasBilling(), cachedApp.getSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
                   editorsChoicePosition, status);
-              if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+              if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
                 setupMigratorUninstallEvent(download.getPackageName());
               }
             })
@@ -366,7 +366,7 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false))
+        false, walletApp.getSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
@@ -631,7 +631,7 @@ public class AppViewManager {
     DetailedApp app = result.getDetailedApp();
     return new WalletApp(null, false, app.getName(), app.getIcon(), app.getId(),
         app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
-        app.getPath(), app.getPathAlt(), app.getObb());
+        app.getPath(), app.getPathAlt(), app.getObb(), app.getSize());
   }
 
   private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,
@@ -688,9 +688,5 @@ public class AppViewManager {
 
   public Single<Boolean> shouldShowConsentDialog() {
     return moPubAdsManager.shouldShowConsentDialog();
-  }
-
-  public enum PromotionStatus {
-    NO_PROMOTION, NOT_CLAIMED, CLAIMED
   }
 }

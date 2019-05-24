@@ -615,7 +615,7 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
         detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
         detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
-        detailedApp.getObb(), false)).thenReturn(download);
+        detailedApp.getObb(), false, detailedApp.getSize())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");

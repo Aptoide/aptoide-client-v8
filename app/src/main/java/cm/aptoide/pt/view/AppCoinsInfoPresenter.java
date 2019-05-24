@@ -34,7 +34,6 @@ public class AppCoinsInfoPresenter implements Presenter {
   }
 
   @Override public void present() {
-    handleClickOnCoinbaseLink();
     handleClickOnAppcWalletLink();
     handleClickOnInstallButton();
     handleButtonText();
@@ -63,16 +62,6 @@ public class AppCoinsInfoPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.appCoinsWalletLinkClick())
         .doOnNext(click -> appCoinsInfoNavigator.navigateToAppCoinsWallet())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReport::log);
-  }
-
-  @VisibleForTesting public void handleClickOnCoinbaseLink() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.coinbaseLinkClick())
-        .doOnNext(click -> appCoinsInfoNavigator.navigateToCoinbaseLink())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);

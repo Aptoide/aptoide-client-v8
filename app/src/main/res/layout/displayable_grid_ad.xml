@@ -19,7 +19,7 @@
       style="?attr/backgroundCard"
       >
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/icon_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
           android:id="@+id/native_main_image"
           android:layout_width="1dp"
           android:layout_height="1dp"
-          android:layout_gravity="center_horizontal"
+          android:layout_centerHorizontal="true"
           android:background="@color/transparent"
           android:contentDescription="native_main_image"
           />
@@ -39,7 +39,7 @@
           android:id="@+id/primary_ad_view_layout"
           android:layout_width="1dp"
           android:layout_height="1dp"
-          android:layout_gravity="center_horizontal"
+          android:layout_centerHorizontal="true"
           android:background="@color/transparent"
           />
 
@@ -50,7 +50,7 @@
           android:adjustViewBounds="true"
           android:contentDescription="@null"
           />
-    </FrameLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="107dp"
@@ -140,7 +140,7 @@
             android:id="@+id/appc_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/appc_short_spend_appc"
+            android:text="@string/appc_card_short"
             style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
             />
 

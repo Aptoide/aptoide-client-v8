@@ -24,7 +24,7 @@ public class AppSecondaryInfoViewHolder {
   public void setInfo(boolean hasAppcBilling, float appRating, boolean showRating,
       boolean showBoth) {
     if (appcText != null) {
-      appcText.setText(R.string.appc_short_spend_appc);
+      appcText.setText(R.string.appc_card_short);
     }
     setRating(appRating);
     if (showBoth) {

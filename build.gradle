@@ -1,5 +1,5 @@
 buildscript {
-  ext.kotlin_version = "1.3.21"
+  ext.kotlin_version = "1.3.31"
   repositories {
     mavenLocal()
     google()
@@ -7,7 +7,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.1'
+    classpath 'com.android.tools.build:gradle:3.4.1'
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
@@ -44,8 +44,8 @@ task clean(type: Delete) {
 // Gradle wrapper version is being specified dynamically here to prevent IDEA
 // from controlling version.
 // This will override gradle-wrapper.properties
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.6'
+wrapper {
+  gradleVersion = '5.1.1'
   distributionUrl = "https://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
 
@@ -93,6 +93,7 @@ ext {
   RULES_VERSION = '1.0.1'
 
   JACKSON_VERSION = '2.8.5'
+  GSON_VERSION = '2.8.2'
 
   // Material tab strip
   MATERIAL_TAB_STRIP_VERSION = '1.1.0'
@@ -114,7 +115,7 @@ ext {
   // Flurry Android SDK
   FLURRY_VERSION = '11.6.0'
 
-  CRASHLYTICS_VERSION = '2.6.5'
+  CRASHLYTICS_VERSION = '2.10.0'
 
 
   //MOPUB ADS
@@ -147,7 +148,7 @@ ext {
 
   DAGGER_VERSION = '2.12'
 
-  FABRIC_VERSION = '1.25.4'
+  FABRIC_VERSION = '1.29.0'
 
   APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.reactions.network;
 
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import java.net.ConnectException;
 import java.util.ArrayList;

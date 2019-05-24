@@ -1,37 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="9dp"
-    android:layout_marginLeft="9dp"
-    android:layout_marginRight="9dp"
-    android:layout_marginStart="9dp"
     android:layout_marginTop="5dp"
-    android:background="@drawable/background_arrow_appc_reward"
-    android:gravity="center"
-    android:orientation="horizontal"
+    android:background="@color/white"
     >
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#f6f7f9"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
 
   <ImageView
       android:id="@+id/appcoins_logo"
-      android:layout_width="36dp"
-      android:layout_height="36dp"
-      android:layout_marginBottom="10dp"
-      android:layout_marginEnd="21dp"
-      android:layout_marginLeft="15dp"
-      android:layout_marginRight="21dp"
-      android:layout_marginStart="15dp"
-      android:layout_marginTop="10dp"
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginBottom="15dp"
+      android:layout_marginLeft="22dp"
+      android:layout_marginStart="22dp"
+      android:layout_marginTop="16dp"
       android:src="@drawable/ic_appcoins"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       />
 
   <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginLeft="18dp"
+      android:layout_marginStart="18dp"
+      android:layout_marginTop="13dp"
       android:orientation="vertical"
+      app:layout_constraintStart_toEndOf="@id/appcoins_logo"
+      app:layout_constraintTop_toTopOf="parent"
       >
 
     <TextView
@@ -41,7 +49,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
-        tools:text="try this app and get a 100000 appcoins"
+        tools:text="try this app for 2 minutes and get\n100000 appcoins"
         style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
         />
 
@@ -54,4 +62,13 @@
         style="@style/Aptoide.TextView.Medium.XXS"
         />
   </LinearLayout>
-</LinearLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="#f6f7f9"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      />
+
+</android.support.constraint.ConstraintLayout>

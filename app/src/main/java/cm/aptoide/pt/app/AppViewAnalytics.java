@@ -307,7 +307,7 @@ public class AppViewAnalytics {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
     }
-    if (downloadAction.equals(DownloadModel.Action.MIGRATE)) {
+    if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus);
     }

@@ -141,7 +141,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       setPlaceHolderListeners(editorialItem.getAppName(), editorialItem.getPackageName(),
           editorialItem.getMd5sum(), editorialItem.getIcon(), editorialItem.getVerName(),
           editorialItem.getVerCode(), editorialItem.getPath(), editorialItem.getPathAlt(),
-          editorialItem.getObb(), editorialItem.getId());
+          editorialItem.getObb(), editorialItem.getId(), editorialItem.getSize());
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
       if (shouldHaveAnimation) {
@@ -358,19 +358,20 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   }
 
   private void setPlaceHolderListeners(String appName, String packageName, String md5sum,
-      String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id) {
+      String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id,
+      long size) {
     cancelDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.CANCEL, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb)));
+            verName, verCode, path, pathAlt, obb, size)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb)));
+            verName, verCode, path, pathAlt, obb, size)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb)));
+            verName, verCode, path, pathAlt, obb, size)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, action)));
+            verName, verCode, path, pathAlt, obb, action, size)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

@@ -54,6 +54,14 @@ public class ReactionsResponse {
         case 429:
           reactionResponseMessage = REACTIONS_EXCEEDED;
           break;
+        case 400:
+        case 401:
+        case 403:
+        case 405:
+        case 406:
+        case 500:
+          reactionResponseMessage = GENERAL_ERROR;
+          break;
       }
       return reactionResponseMessage;
     }
