@@ -4,7 +4,11 @@ import cm.aptoide.pt.database.accessors.AppcMigrationAccessor
 import rx.Observable
 import java.util.*
 
-class AppcMigrationService(val appcMigrationAccessor: AppcMigrationAccessor) {
+/**
+ * This class is open just because of Mockito compat.
+ * Mockito 2 does not have this restriction however.
+ */
+open class AppcMigrationService(val appcMigrationAccessor: AppcMigrationAccessor) {
 
   private val migrationCandidates = ArrayList<String>()
 
