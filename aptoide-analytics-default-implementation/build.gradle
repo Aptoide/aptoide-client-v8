@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'io.fabric'
-
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
@@ -18,7 +16,6 @@ buildscript {
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
-
 
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION

@@ -11,10 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +30,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by D01 on 30/07/2018.
@@ -45,25 +41,14 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("aptoide-theme") String theme;
   private Toolbar toolbar;
-  private PublishSubject<Void> coinbaseClickSubject;
   private View appCardView;
   private TextView appcMessageAppcoinsSection2a;
   private Button installButton;
-  private TextView appcMessageAppcoinsSection2b;
-  private ClickableSpan coinbaseClickListener;
   private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    coinbaseClickSubject = PublishSubject.create();
-    coinbaseClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (coinbaseClickSubject != null) {
-          coinbaseClickSubject.onNext(null);
-        }
-      }
-    };
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -75,17 +60,15 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     installButton = (Button) view.findViewById(R.id.appview_install_button);
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
-    appcMessageAppcoinsSection2b =
-        (TextView) view.findViewById(R.id.appc_message_appcoins_section_2b);
-
     TextView appcMessageAppcoinsSection3 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_3);
     TextView appcMessageAppcoinsSection4 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_4);
 
-    setupTextView(getString(R.string.appc_short_get_appc),
+    setupTextViewTwoPlaceholders(getString(R.string.appc_card_short),
+        getString(R.string.appc_home_bundle_poa),
         getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
-    setupTextView(getString(R.string.appc_short_spend_appc),
+    setupTextView(getString(R.string.appc_card_short),
         getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
 
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
@@ -93,7 +76,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
-    setupCoinbaseLink();
     setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
@@ -105,18 +87,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         .getSimpleName());
   }
 
-  @Override public void onDestroy() {
-    coinbaseClickSubject = null;
-    coinbaseClickListener = null;
-    super.onDestroy();
-  }
-
   @Override public void onDestroyView() {
     toolbar = null;
     appCardView = null;
     installButton = null;
     appcMessageAppcoinsSection2a = null;
-    appcMessageAppcoinsSection2b = null;
     super.onDestroyView();
   }
 
@@ -129,27 +104,21 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     appcMessageAppcoinsSection2a.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  private void setupCoinbaseLink() {
-    final String coinbase = getString(R.string.coinbase);
-    final String section2b =
-        String.format(getString(R.string.appc_message_appcoins_section_2b), coinbase);
-
-    SpannableString spannableString = new SpannableString(section2b);
-    spannableString.setSpan(coinbaseClickListener, section2b.indexOf(coinbase),
-        section2b.indexOf(coinbase) + coinbase.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(spannableColor)),
-        section2b.indexOf(coinbase), section2b.indexOf(coinbase) + coinbase.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-    appcMessageAppcoinsSection2b.setText(spannableString);
-    appcMessageAppcoinsSection2b.setMovementMethod(LinkMovementMethod.getInstance());
-  }
-
   private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
     final String spendGetAppcoinsLogo =
         String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
             R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
     final String formatedText = String.format(text, spendGetAppcoinsLogo);
+    appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
+  }
+
+  private void setupTextViewTwoPlaceholders(String appcString, String bundle, String text,
+      TextView appcMessageAppcoinsSection) {
+    final String spendGetAppcoinsLogo =
+        String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
+            R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
+    String boldBundle = "<b>" + bundle + "</b> ";
+    final String formatedText = String.format(text, boldBundle, spendGetAppcoinsLogo);
     appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
   }
 
@@ -178,10 +147,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
       }
       return drawable;
     };
-  }
-
-  @Override public Observable<Void> coinbaseLinkClick() {
-    return coinbaseClickSubject;
   }
 
   @Override public Observable<Void> cardViewClick() {

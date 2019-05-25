@@ -9,8 +9,6 @@ import rx.Observable;
 
 public interface AppCoinsInfoView extends View {
 
-  Observable<Void> coinbaseLinkClick();
-
   Observable<Void> cardViewClick();
 
   Observable<Void> installButtonClick();

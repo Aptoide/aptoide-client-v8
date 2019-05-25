@@ -455,5 +455,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("size", long.class);
       oldVersion++;
     }
+    if (oldVersion == 8100) {
+      schema.get("Update")
+          .addField("size", long.class)
+          .removeField("fileSize");
+
+      oldVersion++;
+    }
   }
 }
