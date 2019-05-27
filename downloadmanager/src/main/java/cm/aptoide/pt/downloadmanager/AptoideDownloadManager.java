@@ -227,8 +227,12 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void removeAppDownloader(String md5) {
     AppDownloader appDownloader = appDownloaderMap.get(md5);
+    Logger.getInstance()
+        .d(TAG, "removing download manager");
     if (appDownloader != null) {
       appDownloader.stop();
+      Logger.getInstance()
+          .d(TAG, "removed download manager ");
       appDownloaderMap.remove(md5);
     }
   }
