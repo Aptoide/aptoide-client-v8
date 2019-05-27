@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
 
 public class InstallManager {
 
+  private static final String TAG = "InstallManager";
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
@@ -191,7 +192,9 @@ public class InstallManager {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
         (download, installationState, installationType) -> createInstall(download,
-            installationState, md5, packageName, versioncode, installationType));
+            installationState, md5, packageName, versioncode, installationType))
+        .doOnNext(install -> Logger.getInstance()
+            .d(TAG, install.toString()));
   }
 
   private Install createInstall(Download download, InstallationState installationState, String md5,
@@ -269,6 +272,11 @@ public class InstallManager {
     int progress = 0;
     if (download != null) {
       progress = download.getOverallProgress();
+      Logger.getInstance()
+          .d(TAG, " download is not null " + progress);
+    } else {
+      Logger.getInstance()
+          .d(TAG, " download is null");
     }
     return progress;
   }
@@ -340,6 +348,9 @@ public class InstallManager {
           status = Install.InstallationStatus.IN_QUEUE;
           break;
       }
+    } else {
+      Logger.getInstance()
+          .d(TAG, "mapping a null Download state");
     }
     return status;
   }
