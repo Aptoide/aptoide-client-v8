@@ -24,6 +24,7 @@ public class DownloadStateParser {
         downloadState = DownloadModel.DownloadState.PAUSE;
         break;
       case IN_QUEUE:
+      case INITIAL_STATE:
         downloadState = DownloadModel.DownloadState.INDETERMINATE;
         break;
       case INSTALLED:
@@ -43,8 +44,7 @@ public class DownloadStateParser {
         downloadState = DownloadModel.DownloadState.INSTALLING;
         break;
       default:
-        downloadState = DownloadModel.DownloadState.COMPLETE;
-        break;
+        throw new IllegalStateException("Wrong type of download state");
     }
     return downloadState;
   }
