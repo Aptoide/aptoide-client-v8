@@ -595,17 +595,31 @@ public class InstallManager {
   }
 
   public void moveCompletedDownloadFiles(Download download) {
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+    if (!haveFilesBeenMoved(download)) {
+      for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+        Logger.getInstance()
+            .d("AptoideDownloadManager", "trying to move file : "
+                + fileToDownload.getFileName()
+                + " "
+                + fileToDownload.getPackageName());
+        String newFilePath = getFilePathFromFileType(fileToDownload);
+        fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
+        fileToDownload.setPath(newFilePath);
+      }
+    } else {
       Logger.getInstance()
-          .d("AptoideDownloadManager", "trying to move file : "
-              + fileToDownload.getFileName()
-              + " "
-              + fileToDownload.getPackageName());
-      String newFilePath = getFilePathFromFileType(fileToDownload);
-      fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
-      fileToDownload.setPath(newFilePath);
+          .d(TAG, "Tried moving files that were already on the final path");
     }
     downloadRepository.save(download);
+  }
+
+  private boolean haveFilesBeenMoved(Download download) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      if (!FileUtils.fileExists(getFilePathFromFileType(fileToDownload))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
