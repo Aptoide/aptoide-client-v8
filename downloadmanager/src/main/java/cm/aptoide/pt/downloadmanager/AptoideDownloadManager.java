@@ -201,6 +201,11 @@ public class AptoideDownloadManager implements DownloadManager {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
           downloadState = Download.FILE_MISSING;
+          Logger.getInstance()
+              .d(TAG, "File is missing: "
+                  + fileToDownload.getFileName()
+                  + " file path: "
+                  + fileToDownload.getFilePath());
           break;
         }
       }
