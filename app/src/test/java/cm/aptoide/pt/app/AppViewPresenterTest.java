@@ -292,6 +292,8 @@ public class AppViewPresenterTest {
         Single.just(emptyEditorsChoiceAppViewViewModel));
     when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
     when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
+    when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),
+        Promotion.ClaimAction.INSTALL)).thenReturn(promotion);
 
     presenter.handleAppcPromotion();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
