@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app
 
-import android.util.SparseArray
+import android.support.v4.util.SparseArrayCompat
 import cm.aptoide.pt.promotions.Promotion
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.view.app.DetailedApp
@@ -9,11 +9,11 @@ data class PromotionViewModel(
     var walletApp: WalletApp = WalletApp(),
     var promotions: List<Promotion> = ArrayList(),
     var appDownloadModel: DownloadModel? = null,
-    val app: DetailedApp? = null,
+    var app: DetailedApp? = null,
     var isAppMigrated: Boolean = false
 ) {
 
-  private val claimablePromotions = SparseArray<Promotion>()
+  private val claimablePromotions = SparseArrayCompat<Promotion>()
 
   /**
    * Retrieves the first claimable promotion for an action, if possible.
@@ -25,8 +25,9 @@ data class PromotionViewModel(
   fun getClaimablePromotion(action: Promotion.ClaimAction): Promotion? {
     if (hasCachedClaimableAction(action)) {
       val promotion = claimablePromotions[action.ordinal]
-      if (!promotion.isClaimed)
+      if (promotion != null && !promotion.isClaimed)
         return promotion
+      return null
     }
     var claimablePromotion: Promotion? = null
     for (promotion in promotions) {
