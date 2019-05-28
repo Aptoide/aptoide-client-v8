@@ -184,4 +184,19 @@ public class PromotionsManager {
           }
         });
   }
+
+  public Promotion getClaimablePromotion(List<Promotion> promotions,
+      Promotion.ClaimAction claimAction) {
+    Promotion claimablePromotion = null;
+    for (Promotion promotion : promotions) {
+      if (promotion.getClaimAction() == claimAction) {
+        claimablePromotion = promotion;
+      }
+      if (!promotion.isClaimable()) {
+        claimablePromotion = null;
+        break;
+      }
+    }
+    return claimablePromotion;
+  }
 }

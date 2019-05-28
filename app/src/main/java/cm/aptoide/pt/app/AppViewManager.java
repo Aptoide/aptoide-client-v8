@@ -584,7 +584,12 @@ public class AppViewManager {
    */
   public boolean hasClaimablePromotion(Promotion.ClaimAction action) {
     return cachedPromotionViewModel != null
-        && cachedPromotionViewModel.getClaimablePromotion(action) != null;
+        && getClaimablePromotion(cachedPromotionViewModel.getPromotions(), action) != null;
+  }
+
+  public Promotion getClaimablePromotion(List<Promotion> promotions,
+      Promotion.ClaimAction claimAction) {
+    return promotionsManager.getClaimablePromotion(promotions, claimAction);
   }
 
   private PromotionViewModel mergeToCachedPromotionViewModel(PromotionViewModel cached,

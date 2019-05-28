@@ -318,7 +318,8 @@ public class AppViewPresenter implements Presenter {
               && appDownloadModel.getAction() == DownloadModel.Action.OPEN) {
             action = Promotion.ClaimAction.MIGRATE;
           }
-          Promotion promotion = promotionViewModel.getClaimablePromotion(action);
+          Promotion promotion =
+              appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(), action);
 
           if (promotion != null) {
             view.showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(), action,
