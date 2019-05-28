@@ -298,7 +298,7 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void handleAppcPromotion() {
+  @VisibleForTesting public void handleAppcPromotion() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.isAppViewReadyToDownload())
