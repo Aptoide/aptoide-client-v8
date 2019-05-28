@@ -134,7 +134,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = startFromPackageName(u.getQueryParameter("id"));
       } else if (u.getHost()
           .contains("play.google.com") && u.getPath()
-          .equalsIgnoreCase("store/apps/details")) {
+          .contains("store/apps/details")) {
         intent = dealWithGoogleHost(u);
       } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
         intent = dealWithAptword(uri);
