@@ -481,17 +481,12 @@ dependencies {
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  //AppNext
-  implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
-
   //Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
+  //Smaato
+  //implementation (name:'SOMAAndroid-9.1.5-release', ext:'aar')
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
