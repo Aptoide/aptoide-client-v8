@@ -511,12 +511,12 @@ dependencies {
 
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
+  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_AUTH_VERSION}"
+  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_ADS_VERSION}"
+  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_SAFETYNET_VERSION}"
 
 
   // Facebook Core (Analytics)
