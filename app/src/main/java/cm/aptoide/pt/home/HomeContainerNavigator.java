@@ -16,7 +16,12 @@ public class HomeContainerNavigator {
   }
 
   public void loadMainHomeContent() {
-    fragmentNavigator.navigateToWithoutBackSave(new HomeFragment(), true);
+    Fragment fragment = fragmentNavigator.peekLast();
+    if (fragment != null && fragment instanceof HomeFragment) {
+      fragmentNavigator.navigateToWithoutBackSave(fragment, true);
+    } else {
+      fragmentNavigator.navigateTo(new HomeFragment(), true);
+    }
   }
 
   public void loadGamesHomeContent() {
