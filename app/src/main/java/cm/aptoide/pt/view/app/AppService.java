@@ -224,9 +224,10 @@ public class AppService {
                   app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
                   file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
                   file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(),
-                  app.getMd5(), file.getPath(), file.getPathAlt(), file.getVercode(),
-                  file.getVername(), appDeveloper, app.getStore(), appMedia, appStats, app.getObb(),
-                  app.getPay(), app.getUrls()
+                  app.getMd5(), paidApp.getPath()
+                  .getStringPath(), paidApp.getPath()
+                  .getStringPath(), file.getVercode(), file.getVername(), appDeveloper,
+                  app.getStore(), appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
                   .getW(), app.isPaid(), paidApp.getPayment()
                   .isPaid(), paidApp.getPath()
                   .getStringPath(), paidApp.getPayment()
