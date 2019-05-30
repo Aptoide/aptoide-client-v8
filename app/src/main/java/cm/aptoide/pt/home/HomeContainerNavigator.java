@@ -10,17 +10,20 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 public class HomeContainerNavigator {
 
   private FragmentNavigator fragmentNavigator;
+  private String homeTag;
+  private String gamesTag;
+  private String appsTag;
 
   public HomeContainerNavigator(FragmentNavigator fragmentNavigator) {
     this.fragmentNavigator = fragmentNavigator;
   }
 
   public void loadMainHomeContent() {
-    Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && fragment instanceof HomeFragment) {
+    Fragment fragment = fragmentNavigator.getFragment(homeTag);
+    if (fragment != null) {
       fragmentNavigator.navigateToWithoutBackSave(fragment, true);
     } else {
-      fragmentNavigator.navigateTo(new HomeFragment(), true);
+      homeTag = fragmentNavigator.navigateTo(new HomeFragment(), true);
     }
   }
 
@@ -33,7 +36,15 @@ public class HomeContainerNavigator {
         "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=games/widget=apps_list%3A0%262%3Adownloads7d");
     args.putBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, false);
     fragment.setArguments(args);
-    fragmentNavigator.navigateToWithoutBackSave(fragment, true);
+
+    Fragment gamesFragment = fragmentNavigator.getFragment(gamesTag);
+    if (gamesFragment != null) {
+      //fragmentNavigator.cleanBackStackUntil(homeTag);
+      fragmentNavigator.navigateToWithoutBackSave(gamesFragment, true);
+    } else {
+      //fragmentNavigator.cleanBackStackUntil(homeTag);
+      gamesTag = fragmentNavigator.navigateTo(fragment, true);
+    }
   }
 
   public void loadAppsHomeContent() {
@@ -45,6 +56,14 @@ public class HomeContainerNavigator {
         "https://ws75.aptoide.com/api/7/getStoreWidgets/store_id=15/context=apps/widget=apps_list%3A0%262%3Apdownloads7d");
     args.putBoolean(StoreTabGridRecyclerFragment.BundleCons.TOOLBAR, false);
     fragment.setArguments(args);
-    fragmentNavigator.navigateToWithoutBackSave(fragment, true);
+
+    Fragment appsFragment = fragmentNavigator.getFragment(appsTag);
+    if (appsFragment != null) {
+      //fragmentNavigator.cleanBackStackUntil(homeTag);
+      fragmentNavigator.navigateToWithoutBackSave(appsFragment, true);
+    } else {
+      //fragmentNavigator.cleanBackStackUntil(homeTag);
+      appsTag = fragmentNavigator.navigateTo(fragment, true);
+    }
   }
 }
