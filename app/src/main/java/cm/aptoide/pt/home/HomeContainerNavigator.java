@@ -39,10 +39,8 @@ public class HomeContainerNavigator {
 
     Fragment gamesFragment = fragmentNavigator.getFragment(gamesTag);
     if (gamesFragment != null) {
-      //fragmentNavigator.cleanBackStackUntil(homeTag);
       fragmentNavigator.navigateToWithoutBackSave(gamesFragment, true);
     } else {
-      //fragmentNavigator.cleanBackStackUntil(homeTag);
       gamesTag = fragmentNavigator.navigateTo(fragment, true);
     }
   }
@@ -59,10 +57,8 @@ public class HomeContainerNavigator {
 
     Fragment appsFragment = fragmentNavigator.getFragment(appsTag);
     if (appsFragment != null) {
-      //fragmentNavigator.cleanBackStackUntil(homeTag);
       fragmentNavigator.navigateToWithoutBackSave(appsFragment, true);
     } else {
-      //fragmentNavigator.cleanBackStackUntil(homeTag);
       appsTag = fragmentNavigator.navigateTo(fragment, true);
     }
   }

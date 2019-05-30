@@ -95,10 +95,6 @@ public class FragmentResultNavigator implements FragmentNavigator {
     fragmentManager.executePendingTransactions();
   }
 
-  @Override public void cleanBackStackUntil(String fragmentTag) {
-    fragmentManager.popBackStackImmediate(fragmentTag, 0);
-  }
-
   @Override public Fragment peekLast() {
     if (fragmentManager.getBackStackEntryCount() > 0) {
       FragmentManager.BackStackEntry backStackEntry =
