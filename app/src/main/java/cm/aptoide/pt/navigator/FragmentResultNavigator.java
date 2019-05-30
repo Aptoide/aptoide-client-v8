@@ -95,22 +95,8 @@ public class FragmentResultNavigator implements FragmentNavigator {
     fragmentManager.executePendingTransactions();
   }
 
-  @Override public boolean cleanBackStackUntil(String fragmentTag) {
-    if (fragmentManager.getBackStackEntryCount() == 0) {
-      return false;
-    }
-
-    boolean popped = false;
-
-    while (fragmentManager.getBackStackEntryCount() > 0 && !popped) {
-      if (fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1)
-          .getName()
-          .equals(fragmentTag)) {
-        popped = true;
-      }
-      fragmentManager.popBackStackImmediate();
-    }
-    return popped;
+  @Override public void cleanBackStackUntil(String fragmentTag) {
+    fragmentManager.popBackStackImmediate(fragmentTag, 0);
   }
 
   @Override public Fragment peekLast() {
@@ -125,6 +111,10 @@ public class FragmentResultNavigator implements FragmentNavigator {
 
   @Override public Fragment getFragment() {
     return fragmentManager.findFragmentById(containerId);
+  }
+
+  @Override public Fragment getFragment(String tag) {
+    return fragmentManager.findFragmentByTag(tag);
   }
 
   @Override public void navigateToDialogFragment(DialogFragment fragment) {
