@@ -56,7 +56,7 @@ public class PullingContentService extends BaseService {
     intent.setAction(action);
     PendingIntent pendingIntent =
         PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, 5000, time, pendingIntent);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, time, time, pendingIntent);
   }
 
   @Override public void onCreate() {
