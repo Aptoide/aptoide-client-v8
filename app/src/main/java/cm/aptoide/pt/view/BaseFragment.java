@@ -78,13 +78,9 @@ public abstract class BaseFragment extends RxFragment {
   }
 
   @Override public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-    // WORKAROUND FOR NESTED FRAGMENTS DISAPPEARING DURING PARENT ANIMATION
     // See https://code.google.com/p/android/issues/detail?id=55228
-    /*  find top most parent in my hierarchy that is currently removing */
     final Fragment removingParent = getRemovingParent(getParentFragment());
-    /*  if its not an enter animation and removing parent was found, otherwise workaround not needed */
     if (!enter && removingParent != null) {
-      /*  apply stub animation with same duration as the one that will be played for removing parent */
       Animation doNothingAnim = new AlphaAnimation(1, 1);
       doNothingAnim.setDuration(getRemovingParentAnimationDuration(removingParent, 300));
       return doNothingAnim;
@@ -94,15 +90,10 @@ public abstract class BaseFragment extends RxFragment {
   }
 
   private Fragment getRemovingParent(Fragment fragment) {
-    /* if im null, then noone is removing */
     if (fragment == null) return null;
-    /* get my parent */
     Fragment parent = fragment.getParentFragment();
-    /* if my parent exists and is removing then continue checking higher in hierarchy */
     if (parent != null && parent.isRemoving()) return getRemovingParent(parent);
-    /* if my parent doesnt exists or is not removing then check if I am */
     if (fragment.isRemoving()) return fragment;
-    /* seems like none of my parents is removing, neither am I, so no one really is */
     return null;
   }
 }
