@@ -17,6 +17,9 @@ class DownloadProgressView : ConstraintLayout {
   private var payload: Any? = null
   private var eventListener: EventListener? = null
 
+  private var progressState: ProgressState = ProgressState.INDETERMINATE
+  private var currentProgress: Int = 0
+
   constructor(context: Context) : this(context, null)
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
@@ -28,12 +31,20 @@ class DownloadProgressView : ConstraintLayout {
 
   private fun setupClickListeners() {
     pause_button.setOnClickListener {
+      if (progressState == ProgressState.PAUSED) return@setOnClickListener
+      setState(ProgressState.PAUSED)
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.PAUSE, payload))
     }
     cancel_button.setOnClickListener {
+      if (progressState == ProgressState.INDETERMINATE || progressState == ProgressState.IN_PROGRESS || progressState == ProgressState.COMPLETE)
+        return@setOnClickListener
+      setState(ProgressState.INDETERMINATE)
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.CANCEL, payload))
     }
     resume_button.setOnClickListener {
+      if (progressState == ProgressState.INDETERMINATE || progressState == ProgressState.IN_PROGRESS || progressState == ProgressState.COMPLETE)
+        return@setOnClickListener
+      setState(ProgressState.IN_PROGRESS)
       eventListener?.onActionClick(EventListener.Action(EventListener.Action.Type.RESUME, payload))
     }
   }
@@ -49,7 +60,6 @@ class DownloadProgressView : ConstraintLayout {
     typedArray.recycle()
   }
 
-  // Do we actually want to clear everything on detach?
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     setEventListener(null)
@@ -107,9 +117,12 @@ class DownloadProgressView : ConstraintLayout {
    * @param progress, 0-100
    */
   fun setProgress(progress: Int) {
-    progress_bar.progress = progress
-    val progressPercent = "$progress%"
-    download_progress_number.text = progressPercent
+    currentProgress = progress
+    if (progressState == ProgressState.IN_PROGRESS) {
+      progress_bar.progress = progress
+      val progressPercent = "$progress%"
+      download_progress_number.text = progressPercent
+    }
   }
 
   /**
@@ -118,12 +131,15 @@ class DownloadProgressView : ConstraintLayout {
    * @see ProgressState
    */
   fun setState(state: ProgressState) {
+    progressState = state
     when (state) {
       ProgressState.IN_PROGRESS -> {
+        setProgress(currentProgress)
         progress_bar.isIndeterminate = false
         pause_button.visibility = View.VISIBLE
         cancel_button.visibility = View.GONE
         resume_button.visibility = View.GONE
+        download_progress_number.visibility = View.VISIBLE
         download_state.setText(R.string.appview_short_downloading)
       }
       ProgressState.PAUSED -> {
@@ -131,6 +147,7 @@ class DownloadProgressView : ConstraintLayout {
         pause_button.visibility = View.GONE
         cancel_button.visibility = View.VISIBLE
         resume_button.visibility = View.VISIBLE
+        download_progress_number.visibility = View.VISIBLE
         download_state.setText(R.string.appview_short_downloading)
       }
       ProgressState.INDETERMINATE -> {
@@ -138,6 +155,7 @@ class DownloadProgressView : ConstraintLayout {
         pause_button.visibility = View.VISIBLE
         cancel_button.visibility = View.GONE
         resume_button.visibility = View.GONE
+        download_progress_number.visibility = View.GONE
         download_state.setText(R.string.appview_short_downloading)
       }
       ProgressState.COMPLETE -> {
@@ -145,6 +163,7 @@ class DownloadProgressView : ConstraintLayout {
         pause_button.visibility = View.VISIBLE
         cancel_button.visibility = View.GONE
         resume_button.visibility = View.GONE
+        download_progress_number.visibility = View.VISIBLE
         download_state.setText(R.string.appview_short_downloading)
       }
       ProgressState.INSTALLING -> {
@@ -152,6 +171,7 @@ class DownloadProgressView : ConstraintLayout {
         pause_button.visibility = View.GONE
         cancel_button.visibility = View.VISIBLE
         resume_button.visibility = View.VISIBLE
+        download_progress_number.visibility = View.GONE
         download_state.setText(R.string.appview_short_installing)
       }
     }
