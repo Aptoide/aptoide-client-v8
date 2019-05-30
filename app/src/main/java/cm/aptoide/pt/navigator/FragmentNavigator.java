@@ -24,8 +24,6 @@ public interface FragmentNavigator {
 
   void cleanBackStack();
 
-  void cleanBackStackUntil(String fragmentTag);
-
   Fragment peekLast();
 
   Fragment getFragment();
