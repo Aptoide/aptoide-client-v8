@@ -275,8 +275,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
-      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new HomeContainerNavigator(fragmentNavigator);
+      @Named("home-fragment-navigator") FragmentNavigator childFragmentNavigator) {
+    return new HomeContainerNavigator(childFragmentNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
