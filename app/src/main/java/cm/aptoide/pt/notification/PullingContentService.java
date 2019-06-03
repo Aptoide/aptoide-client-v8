@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
@@ -56,7 +57,8 @@ public class PullingContentService extends BaseService {
     intent.setAction(action);
     PendingIntent pendingIntent =
         PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, time, time, pendingIntent);
+    am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME, getElapsedRealtimeTrigger(time),
+        getElapsedRealtimeTrigger(time), pendingIntent);
   }
 
   @Override public void onCreate() {
@@ -102,6 +104,10 @@ public class PullingContentService extends BaseService {
     Intent intent = new Intent(context, PullingContentService.class);
     intent.setAction(action);
     return (PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_NO_CREATE) != null);
+  }
+
+  private long getElapsedRealtimeTrigger(long trigger) {
+    return SystemClock.elapsedRealtime() + trigger;
   }
 
   /**
