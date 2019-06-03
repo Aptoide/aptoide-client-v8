@@ -29,7 +29,7 @@ import rx.schedulers.Schedulers;
  */
 public class DownloadInstallationProvider implements InstallationProvider {
 
-  private static final String TAG = "AptoideDownloadManager";
+  private static final String TAG = "DownloadInstallationPro";
   private final AptoideDownloadManager downloadManager;
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
