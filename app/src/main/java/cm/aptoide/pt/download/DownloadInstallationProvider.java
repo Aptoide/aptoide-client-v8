@@ -50,7 +50,6 @@ public class DownloadInstallationProvider implements InstallationProvider {
     Logger.getInstance()
         .d(TAG, "Getting the installation " + md5);
     return downloadManager.getDownload(md5)
-        .doOnError(throwable -> throwable.printStackTrace())
         .first()
         .flatMap(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
