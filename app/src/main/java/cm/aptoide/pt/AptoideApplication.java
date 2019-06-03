@@ -107,6 +107,7 @@ import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
+import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
@@ -351,6 +352,8 @@ public abstract class AptoideApplication extends Application {
             getMediatedNetworkConfigurationWithAppIdMap(
                 BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
                 BuildConfig.MOPUB_FYBER_APPLICATION_ID))
+        .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
+            getAdMobAdsPreferencesMap())
         .withLogLevel(MoPubLog.LogLevel.DEBUG)
         .build();
 
@@ -370,6 +373,12 @@ public abstract class AptoideApplication extends Application {
         getMediatedNetworkConfigurationBaseMap(mediatedNetworkPlacementId);
     mediationNetworkConfiguration.put("appID", appId);
     return mediationNetworkConfiguration;
+  }
+
+  private Map<String, String> getAdMobAdsPreferencesMap() {
+    HashMap<String, String> result = new HashMap<>();
+    result.put("npa", "1");
+    return result;
   }
 
   public ApplicationComponent getApplicationComponent() {

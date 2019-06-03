@@ -198,7 +198,8 @@ android {
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
          appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         fabricApiKey                    : "${project.FABRIC_API_KEY}"]
+         fabricApiKey                    : "${project.FABRIC_API_KEY}",
+         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -456,12 +457,7 @@ dependencies {
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
+  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
@@ -515,12 +511,12 @@ dependencies {
 
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
+  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_AUTH_VERSION}"
+  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_ADS_VERSION}"
+  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_SAFETYNET_VERSION}"
 
 
   // Facebook Core (Analytics)
