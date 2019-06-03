@@ -45,6 +45,7 @@ public class PromotionsPresenter implements Presenter {
     claimApp();
     handlePromotionClaimResult();
     handleRetryClick();
+    handlePromotionOverDialogClick();
   }
 
   private void claimApp() {
@@ -131,6 +132,17 @@ public class PromotionsPresenter implements Presenter {
         });
   }
 
+  private void handlePromotionOverDialogClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.promotionOverDialogClick())
+        .doOnNext(__ -> promotionsNavigator.navigateToHome())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+        });
+  }
+
   private Completable downloadApp(PromotionViewApp promotionViewApp) {
     return Observable.defer(() -> {
       if (promotionsManager.shouldShowRootInstallWarningPopup()) {
@@ -151,11 +163,24 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadPromotionApps())
+        .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+        .doOnNext(__ -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
+        .observeOn(viewScheduler)
+        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
+        .flatMap(appsModel -> {
+          if (appsModel.getAppsList()
+              .isEmpty()) {
+            view.showPromotionOverDialog();
+            return Observable.empty();
+          } else {
+            return handlePromotionApps(appsModel);
+          }
+        })
         .doOnError(__ -> view.showErrorView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
+          throwable.printStackTrace();
         });
   }
 
@@ -177,7 +202,19 @@ public class PromotionsPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.retryClicked()
             .doOnNext(__ -> view.showLoading())
-            .flatMap(__ -> loadPromotionApps())
+            .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+            .observeOn(viewScheduler)
+            .doOnNext(
+                promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
+            .flatMap(appsModel -> {
+              if (appsModel.getAppsList()
+                  .isEmpty()) {
+                view.showPromotionOverDialog();
+                return Observable.empty();
+              } else {
+                return handlePromotionApps(appsModel);
+              }
+            })
             .doOnError(__ -> view.showErrorView())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -186,19 +223,15 @@ public class PromotionsPresenter implements Presenter {
         });
   }
 
-  private Observable<PromotionViewApp> loadPromotionApps() {
-    return promotionsManager.getPromotionsModel(promotionId)
-        .doOnNext(promotionsModel -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
-        .observeOn(viewScheduler)
-        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
-        .flatMap(promotionsModel -> Observable.just(promotionsModel)
-            .flatMapIterable(promotionsModel1 -> promotionsModel1.getAppsList())
-            .filter(promotionApp -> promotionApp.getPackageName()
-                .equals("com.appcoins.wallet"))
-            .doOnNext(wallet -> view.lockPromotionApps(
-                promotionsModel.isWalletInstalled() && wallet.isClaimed()))
-            .map(promotionApp -> promotionsModel))
-        .flatMap(promotionsModel -> Observable.just(promotionsModel)
+  private Observable<PromotionsModel> handlePromotionApps(PromotionsModel promotionsModel) {
+    return Observable.just(promotionsModel)
+        .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
+        .filter(promotionApp -> promotionApp.getPackageName()
+            .equals("com.appcoins.wallet"))
+        .doOnNext(wallet -> view.lockPromotionApps(
+            promotionsModel.isWalletInstalled() && wallet.isClaimed()))
+        .map(promotionApp -> promotionsModel)
+        .flatMap(__ -> Observable.just(promotionsModel)
             .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
             .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
             .observeOn(viewScheduler)
@@ -214,6 +247,6 @@ public class PromotionsPresenter implements Presenter {
                     .equals(signature))
                 .doOnNext(signatureMatch -> promotionsAnalytics.sendValentineMigratorEvent(
                     promotionViewApp.getPackageName(), signatureMatch))
-                .map(__ -> promotionViewApp)));
+                .map(__2 -> promotionsModel)));
   }
 }
