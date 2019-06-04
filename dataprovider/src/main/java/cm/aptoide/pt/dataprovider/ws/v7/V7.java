@@ -546,7 +546,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("appcoins/promotions/packages/getPromotions")
     Observable<GetPackagePromotionsResponse> getPromotionsForPackage(
-        @Body GetPackagePromotionsRequest.Body body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Body GetPackagePromotionsRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
         @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
