@@ -8,7 +8,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
@@ -63,7 +62,6 @@ public class AppViewManager {
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final Scheduler ioScheduler;
-  private final AppcMigrationService appcMigrationService;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
@@ -92,8 +90,7 @@ public class AppViewManager {
       AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      AppcMigrationService appcMigrationService) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.appCenter = appCenter;
@@ -121,7 +118,6 @@ public class AppViewManager {
     this.isFirstLoad = true;
     this.appcPromotionImpressionSent = false;
     this.migrationImpressionSent = false;
-    this.appcMigrationService = appcMigrationService;
   }
 
   public Single<AppViewViewModel> loadAppViewViewModel() {
@@ -353,7 +349,7 @@ public class AppViewManager {
             .map(__ -> download))
         .doOnNext(download -> {
           if (downloadAction == DownloadModel.Action.MIGRATE) {
-            appcMigrationService.addMigrationCandidate(packageName);
+            appcMigrationManager.addMigrationCandidate(packageName);
           }
         })
         .flatMapCompletable(download -> installManager.install(download))
@@ -552,7 +548,7 @@ public class AppViewManager {
     if (cachedPromotionViewModel != null) {
       Observable<DownloadModel> downloadModel = appViewAppDownloadModel();
       Observable<Boolean> isAppMigrated =
-          appcMigrationService.isAppMigrated(cachedApp.getPackageName());
+          appcMigrationManager.isAppMigrated(cachedApp.getPackageName());
       Observable<PromotionViewModel> cachedViewModel = Observable.just(cachedPromotionViewModel);
       return Observable.combineLatest(cachedViewModel, downloadModel, isAppMigrated,
           this::mergeToCachedPromotionViewModel);
@@ -565,7 +561,7 @@ public class AppViewManager {
             Observable<DownloadModel> appDownloadModel = appViewAppDownloadModel();
             Observable<DetailedApp> appViewModel = Observable.just(cachedApp);
             Observable<Boolean> isAppMigrated =
-                appcMigrationService.isAppMigrated(cachedApp.getPackageName());
+                appcMigrationManager.isAppMigrated(cachedApp.getPackageName());
             return Observable.combineLatest(promObs, walletApp, appDownloadModel, appViewModel,
                 isAppMigrated,
                 (proms, wallet, appDLM, appVM, migrate) -> mergeToPromotionViewModel(wallet, proms,

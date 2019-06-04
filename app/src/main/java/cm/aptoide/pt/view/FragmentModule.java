@@ -325,11 +325,6 @@ import rx.subscriptions.CompositeSubscription;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository) {
-    return new AppcMigrationManager(repository);
-  }
-
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -348,9 +343,8 @@ import rx.subscriptions.CompositeSubscription;
         appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        marketName, appCoinsManager, promotionsManager, installedRepository,
-        appcMigrationManager, localNotificationSyncManager, appcPromotionNotificationStringProvider,
-        appcMigrationService);
+        marketName, appCoinsManager, promotionsManager, installedRepository, appcMigrationManager,
+        localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
