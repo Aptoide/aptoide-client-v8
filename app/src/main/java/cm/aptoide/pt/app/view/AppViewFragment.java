@@ -1789,8 +1789,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
-        downloadProgressValue.setVisibility(View.INVISIBLE);
-        downloadControlsLayout.setVisibility(View.INVISIBLE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
         installStateText.setText(getString(R.string.appview_short_installing));
         break;
       case ERROR:

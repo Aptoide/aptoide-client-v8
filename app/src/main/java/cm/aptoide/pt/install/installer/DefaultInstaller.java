@@ -85,13 +85,6 @@ public class DefaultInstaller implements Installer {
     return packageManager;
   }
 
-  public Observable<Boolean> isInstalled(String md5) {
-    return installationProvider.getInstallation(md5)
-        .map(installation -> isInstalled(installation.getPackageName(),
-            installation.getVersionCode()))
-        .onErrorReturn(throwable -> false);
-  }
-
   @Override public Completable install(Context context, String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
@@ -105,7 +98,10 @@ public class DefaultInstaller implements Installer {
           installation.setType(Installed.TYPE_UNKNOWN);
           moveInstallationFiles(installation);
         })
-        .flatMap(installation -> isInstalled(md5).first()
+        .flatMap(installation -> Observable.just(
+            isInstalled(installation.getPackageName(), installation.getVersionCode()))
+            .onErrorReturn(throwable -> false)
+            .first()
             .flatMap(isInstalled -> {
               if (isInstalled) {
                 installation.setStatus(Installed.STATUS_COMPLETED);

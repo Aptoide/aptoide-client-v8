@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -190,9 +189,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides @Named("home-fragment-navigator")
   FragmentNavigator provideHomeFragmentNavigator(Map<Integer, Result> fragmentResultMap,
-      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
-    return new FragmentResultNavigator(fragmentManager, R.id.main_content, android.R.anim.fade_in,
-        android.R.anim.fade_out, fragmentResultMap, fragmentResultRelay);
+      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay) {
+    return new FragmentResultNavigator(fragment.getChildFragmentManager(),
+        R.id.main_home_container_content, android.R.anim.fade_in, android.R.anim.fade_out,
+        fragmentResultMap, fragmentResultRelay);
   }
 
   @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
@@ -276,8 +276,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
-      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new HomeContainerNavigator(fragmentNavigator);
+      @Named("home-fragment-navigator") FragmentNavigator childFragmentNavigator) {
+    return new HomeContainerNavigator(childFragmentNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,

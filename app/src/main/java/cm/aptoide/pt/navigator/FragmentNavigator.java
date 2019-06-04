@@ -24,11 +24,11 @@ public interface FragmentNavigator {
 
   void cleanBackStack();
 
-  boolean cleanBackStackUntil(String fragmentTag);
-
   Fragment peekLast();
 
   Fragment getFragment();
+
+  Fragment getFragment(String tag);
 
   void navigateToDialogFragment(DialogFragment fragment);
 

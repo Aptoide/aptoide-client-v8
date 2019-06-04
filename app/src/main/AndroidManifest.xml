@@ -42,8 +42,7 @@
       com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial,
       com.mopub.mobileads.native_video, com.mopub.mobileads.native_static,
-      com.mopub.mobileads.base, com.flurry.android.analytics.sdk, com.appnext.ads.mediation.mopub,
-      com.appnext.appnextsdkmopubbanners, com.appnext.appnextsdk.API.mediation.MoPub,
+      com.mopub.mobileads.base, com.flurry.android.analytics.sdk,
       com.applovin.sdk, com.mopub.mobileads.applovin, com.mopub.mobileads.ironsource,
       com.mopub.mobileads.vungle"/>
 
@@ -167,6 +166,10 @@
     <meta-data
         android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version"/>
+
+    <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="${adMobApiKey}"/>
 
     <activity
         android:name="com.inmobi.rendering.InMobiAdActivity"
@@ -443,6 +446,16 @@
           android:name="android.appwidget.provider"
           android:resource="@xml/widget_search_app"/>
     </receiver>
+
+    <!--Smaato-->
+    <activity
+        android:name="com.smaato.soma.interstitial.InterstitialActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize">
+    </activity>
+    <activity
+        android:name="com.smaato.soma.ExpandedBannerActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize">
+    </activity>
 
   </application>
 
