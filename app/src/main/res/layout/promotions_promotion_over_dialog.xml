@@ -19,7 +19,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
-        android:text="The promotion is over"
+        android:text="@string/promotion_over_title"
         style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
         />
     <TextView
@@ -30,7 +30,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Keep aptoide installed and we will notify you when there is another promotion."
+        android:text="@string/promotion_over_message"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
     <Button
@@ -41,7 +41,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="20dp"
-        android:text="got it"
+        android:text="@string/all_button_got_it"
         style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
         />
   </LinearLayout>
