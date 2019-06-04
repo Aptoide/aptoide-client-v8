@@ -331,7 +331,7 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
-      String trustedValue, String editorsChoicePosition, String packageName) {
+      String trustedValue, String editorsChoicePosition) {
     return Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             cachedApp.getName(), cachedApp.getPackageName(), cachedApp.getMd5(),
@@ -349,7 +349,7 @@ public class AppViewManager {
             .map(__ -> download))
         .doOnNext(download -> {
           if (downloadAction == DownloadModel.Action.MIGRATE) {
-            appcMigrationManager.addMigrationCandidate(packageName);
+            appcMigrationManager.addMigrationCandidate(download.getPackageName());
           }
         })
         .flatMapCompletable(download -> installManager.install(download))
