@@ -98,7 +98,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
   }
 
   @Test public void loadAppViewViewModelTestWithAppIdTest() {
@@ -120,7 +120,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with an AppId
     //And a result is returned
@@ -171,7 +171,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with a Md5
     //And a result is returned
@@ -223,7 +223,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with a uniqueName
     //And a result is returned with success
@@ -273,7 +273,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
     //And a result is returned with success
@@ -317,7 +317,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -345,7 +345,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -373,7 +373,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     //When the presenter ask for an App
     //And a result is returned
@@ -486,7 +486,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "marketName", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -594,7 +594,7 @@ public class AppViewManagerTest {
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
             promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider, appcMigrationService);
+            appcPromotionNotificationStringProvider);
 
     when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
         Single.just(detailedAppRequestResult));
@@ -624,7 +624,7 @@ public class AppViewManagerTest {
     when(download.getAction()).thenReturn(3);
 
     //Then the AppViewManager should return a Complete when the download starts
-    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "aString", null, "packageName")
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "aString", null)
         .test()
         .assertCompleted();
 
