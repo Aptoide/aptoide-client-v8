@@ -95,6 +95,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
@@ -245,6 +246,7 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
+import cm.aptoide.pt.view.FragmentScope;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
@@ -1945,6 +1947,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ChipManager providesChipManager() {
     return new ChipManager();
+  }
+
+  @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository, AppcMigrationService appcMigrationService) {
+    return new AppcMigrationManager(repository, appcMigrationService);
   }
 
   @Singleton @Provides AppcMigrationService providesAppcMigrationService(
