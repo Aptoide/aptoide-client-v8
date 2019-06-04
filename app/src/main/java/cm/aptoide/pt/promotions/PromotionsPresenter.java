@@ -166,13 +166,13 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
         .doOnNext(__ -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
-        .doOnNext(promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
         .flatMap(appsModel -> {
           if (appsModel.getAppsList()
               .isEmpty()) {
             view.showPromotionOverDialog();
             return Observable.empty();
           } else {
+            view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
             return handlePromotionApps(appsModel);
           }
         })
@@ -204,14 +204,13 @@ public class PromotionsPresenter implements Presenter {
             .doOnNext(__ -> view.showLoading())
             .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
             .observeOn(viewScheduler)
-            .doOnNext(
-                promotionsModel -> view.showAppCoinsAmount((promotionsModel.getTotalAppcValue())))
             .flatMap(appsModel -> {
               if (appsModel.getAppsList()
                   .isEmpty()) {
                 view.showPromotionOverDialog();
                 return Observable.empty();
               } else {
+                view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
                 return handlePromotionApps(appsModel);
               }
             })
