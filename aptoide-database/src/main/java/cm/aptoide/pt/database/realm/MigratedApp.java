@@ -1,9 +1,11 @@
 package cm.aptoide.pt.database.realm;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 public class MigratedApp extends RealmObject {
-  private String packageName;
+  @PrimaryKey @Required private String packageName;
 
   public MigratedApp() {
   }
