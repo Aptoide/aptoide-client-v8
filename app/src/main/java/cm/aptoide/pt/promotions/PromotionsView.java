@@ -30,4 +30,8 @@ public interface PromotionsView extends View {
   void showErrorView();
 
   Observable<Void> retryClicked();
+
+  void showPromotionOverDialog();
+
+  Observable<Void> promotionOverDialogClick();
 }
