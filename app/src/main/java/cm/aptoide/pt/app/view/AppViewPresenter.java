@@ -1090,7 +1090,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appViewModel.getAppId(),
                 appViewModel.getMalware()
                     .getRank()
-                    .name(), appViewModel.getEditorsChoice(), appViewModel.getPackageName())))
+                    .name(), appViewModel.getEditorsChoice())))
         .toCompletable();
   }
 
