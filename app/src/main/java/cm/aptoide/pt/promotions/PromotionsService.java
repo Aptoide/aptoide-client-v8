@@ -102,8 +102,7 @@ public class PromotionsService {
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
     return GetPromotionAppsRequest.of(promotionId, bodyInterceptorPoolV7, okHttpClient,
-        converterFactory,
-        tokenInvalidator, sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapPromotionsResponse)
         .toSingle();
@@ -111,8 +110,7 @@ public class PromotionsService {
 
   public Single<List<Promotion>> getPromotionsForPackage(String packageName) {
     return GetPackagePromotionsRequest.of(packageName, bodyInterceptorPoolV7, okHttpClient,
-        converterFactory,
-        tokenInvalidator, sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapToPromotion)
         .toSingle();

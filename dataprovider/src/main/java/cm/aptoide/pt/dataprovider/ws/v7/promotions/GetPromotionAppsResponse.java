@@ -45,6 +45,5 @@ public class GetPromotionAppsResponse
     public String getDescription() {
       return description;
     }
-
   }
 }
