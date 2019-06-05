@@ -128,7 +128,7 @@
     <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
     <item name="icTimelineAccessSecure">@drawable/ic_locked_appview</item>
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
-    <item name="alertDialogTheme">@style/AlertDialogAptoide</item>
+    <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
 
