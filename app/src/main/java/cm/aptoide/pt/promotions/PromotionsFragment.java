@@ -1,6 +1,6 @@
 package cm.aptoide.pt.promotions;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -320,12 +320,13 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void showPromotionOverDialog() {
     loading.setVisibility(View.GONE);
-    Dialog dialog = new Dialog(getContext());
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    LayoutInflater inflater = LayoutInflater.from(getContext());
+    View dialogLayout = inflater.inflate(R.layout.promotions_promotion_over_dialog, null);
+    AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
+        .create();
     dialog.setCancelable(false);
-    dialog.setContentView(R.layout.promotions_promotion_over_dialog);
 
-    dialog.findViewById(R.id.dismiss_button)
+    dialogLayout.findViewById(R.id.dismiss_button)
         .setOnClickListener(view -> {
           promotionOverDialogClick.onNext(null);
           dialog.dismiss();
