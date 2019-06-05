@@ -36,7 +36,7 @@
           android:layout_gravity="center"
           android:layout_marginLeft="14dp"
           android:layout_marginStart="14dp"
-          android:src="@drawable/ic_promotions_home"
+          android:src="@drawable/ic_promotions_seasonal_notification"
           android:visibility="gone"
           tools:visibility="visible"
           />
