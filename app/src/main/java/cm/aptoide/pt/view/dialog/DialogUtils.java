@@ -125,11 +125,6 @@ import rx.subscriptions.Subscriptions;
 
       final AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(view);
       final AlertDialog dialog = builder.create();
-      //WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-      //layoutParams.dimAmount=0.6f;
-      //dialog.getWindow().setAttributes(layoutParams);
-      //dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-
       subscriber.add(Subscriptions.create(() -> {
         if (dialog != null && dialog.isShowing()) {
           dialog.dismiss();
