@@ -35,7 +35,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.dialog.BaseDialog;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -44,7 +44,7 @@ import retrofit2.Converter;
  * use File | Settings |
  * File Templates.
  */
-public class PrivateStoreDialog extends BaseDialog {
+public class PrivateStoreDialog extends BaseDialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
   private AptoideAccountManager accountManager;

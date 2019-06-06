@@ -17,13 +17,14 @@ import android.view.Window;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 
 import static cm.aptoide.pt.dataprovider.model.v7.Malware.Reason.Status;
 
 /**
  * Created by hsousa on 18/11/15.
  */
-public class DialogBadgeV7 extends BaseDialog {
+public class DialogBadgeV7 extends BaseDialogFragment {
 
   protected Malware malware;
   protected String appName;
