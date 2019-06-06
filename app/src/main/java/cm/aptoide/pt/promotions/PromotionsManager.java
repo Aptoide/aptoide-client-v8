@@ -185,15 +185,14 @@ public class PromotionsManager {
         });
   }
 
-  public Promotion getClaimablePromotion(List<Promotion> promotions,
-      Promotion.ClaimAction claimAction) {
+  /**
+   * Retrieves the first claimable promotion for an action
+   */
+  public Promotion getClaimablePromotion(List<Promotion> promotions, Promotion.ClaimAction claimAction) {
     Promotion claimablePromotion = null;
     for (Promotion promotion : promotions) {
-      if (promotion.getClaimAction() == claimAction) {
+      if (promotion.getClaimAction() == claimAction && promotion.isClaimable()) {
         claimablePromotion = promotion;
-      }
-      if (!promotion.isClaimable()) {
-        claimablePromotion = null;
         break;
       }
     }
