@@ -4,7 +4,7 @@ data class Promotion(var isClaimed: Boolean = false,
                      val appc: Float = -1f,
                      val packageName: String = "",
                      val promotionId: String = "",
-                     var claimAction: ClaimAction = ClaimAction.NONE) {
+                     var claimActions: List<ClaimAction> = emptyList()) {
 
   fun exists(): Boolean {
     return !promotionId.isEmpty()
@@ -18,6 +18,6 @@ data class Promotion(var isClaimed: Boolean = false,
    * Represents what action is necessary to claim the promotions
    */
   enum class ClaimAction {
-    INSTALL, MIGRATE, NONE
+    INSTALL, MIGRATE
   }
 }

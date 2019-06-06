@@ -12,6 +12,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -126,7 +127,7 @@ public class PromotionsService {
           .getList();
       for (GetPackagePromotionsResponse.PromotionAppModel model : dataList) {
         promotions.add(new Promotion(model.isClaimed(), model.getAppc(), model.getPackageName(),
-            model.getPromotionId(), Promotion.ClaimAction.NONE));
+            model.getPromotionId(), Collections.emptyList()));
       }
     }
     return promotions;

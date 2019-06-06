@@ -1264,7 +1264,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           state = UPDATE;
           break;
         default:
-          throw new IllegalArgumentException("Invalid type of download claimAction");
+          throw new IllegalArgumentException("Invalid type of download action");
       }
       return state;
     }
