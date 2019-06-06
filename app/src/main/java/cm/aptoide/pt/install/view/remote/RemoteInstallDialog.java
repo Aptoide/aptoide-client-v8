@@ -22,14 +22,15 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.remote.ReceiverDevice;
 import cm.aptoide.pt.install.remote.RemoteInstallationSenderListener;
 import cm.aptoide.pt.install.remote.RemoteInstallationSenderManager;
-import cm.aptoide.pt.view.dialog.BaseDialog;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by franciscoaleixo on 18-08-2016.
  */
-public class RemoteInstallDialog extends BaseDialog implements RemoteInstallationSenderListener {
+public class RemoteInstallDialog extends BaseDialogFragment
+    implements RemoteInstallationSenderListener {
   private final static String APP_ID_TAG = "appid";
   private ProgressBar pBar;
   private ListView listView;
