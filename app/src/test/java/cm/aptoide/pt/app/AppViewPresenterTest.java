@@ -282,8 +282,8 @@ public class AppViewPresenterTest {
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
             false, bdsFlags, "", "");
-    Promotion promotion =
-        new Promotion(false, 10f, "cm.aptoide.pt", "install_prom", Promotion.ClaimAction.INSTALL);
+    Promotion promotion = new Promotion(false, 10f, "cm.aptoide.pt", "install_prom",
+        Collections.singletonList(Promotion.ClaimAction.INSTALL));
     PromotionViewModel promotionViewModel = new PromotionViewModel();
     promotionViewModel.setPromotions(Collections.singletonList(promotion));
     when(view.isAppViewReadyToDownload()).thenReturn(Observable.just(null));
