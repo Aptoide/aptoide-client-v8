@@ -13,6 +13,8 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -75,10 +77,11 @@ public class PromotionsManager {
   private Promotion mapPromotionAction(Promotion promotion) {
     switch (promotion.getPromotionId()) {
       case "BONUS_MIGRATION_19":
-        promotion.setClaimAction(Promotion.ClaimAction.MIGRATE);
+        promotion.setClaimActions(Collections.singletonList(Promotion.ClaimAction.MIGRATE));
         break;
       case "BONUS_GAME_WALLET_OFFER_19":
-        promotion.setClaimAction(Promotion.ClaimAction.INSTALL);
+        promotion.setClaimActions(
+            Arrays.asList(Promotion.ClaimAction.INSTALL, Promotion.ClaimAction.MIGRATE));
         break;
     }
     return promotion;
@@ -188,10 +191,12 @@ public class PromotionsManager {
   /**
    * Retrieves the first claimable promotion for an action
    */
-  public Promotion getClaimablePromotion(List<Promotion> promotions, Promotion.ClaimAction claimAction) {
+  public Promotion getClaimablePromotion(List<Promotion> promotions,
+      Promotion.ClaimAction claimAction) {
     Promotion claimablePromotion = null;
     for (Promotion promotion : promotions) {
-      if (promotion.getClaimAction() == claimAction && promotion.isClaimable()) {
+      if (promotion.getClaimActions()
+          .contains(claimAction) && promotion.isClaimable()) {
         claimablePromotion = promotion;
         break;
       }

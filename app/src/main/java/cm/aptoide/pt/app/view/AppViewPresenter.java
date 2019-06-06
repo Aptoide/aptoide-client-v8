@@ -1037,7 +1037,7 @@ public class AppViewPresenter implements Presenter {
                   break;
                 default:
                   completable = Completable.error(
-                      new IllegalArgumentException("Invalid type of claimAction"));
+                      new IllegalArgumentException("Invalid type of action"));
               }
               return completable;
             })
