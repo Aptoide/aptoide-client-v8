@@ -249,6 +249,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="11dp"
                 android:visibility="gone"
                 tools:visibility="visible"
                 />
