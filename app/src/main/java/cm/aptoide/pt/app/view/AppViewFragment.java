@@ -1294,14 +1294,19 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return clickType;
   }
 
+  private int getPromotionMessage(DownloadModel appDownloadModel) {
+    int messageStringId = R.string.wallet_promotion_wallet_notinstalled_message;
+    if (appDownloadModel.getAction()
+        .equals(DownloadModel.Action.MIGRATE) || appDownloadModel.getAction()
+        .equals(DownloadModel.Action.UPDATE)) {
+      messageStringId = R.string.wallet_promotion_wallet_installed_update_message;
+    }
+    return messageStringId;
+  }
+
   private void setupInactiveWalletPromotion(Promotion promotion, WalletApp walletApp,
       DownloadModel appDownloadModel) {
-    int walletMessageStringId = R.string.wallet_promotion_wallet_notinstalled_message;
-    if (appDownloadModel.getAction()
-        .equals(DownloadModel.Action.OPEN)) {
-      walletMessageStringId = R.string.wallet_promotion_wallet_installed_update_message;
-    }
-    setupWalletPromotionText(promotion, walletMessageStringId);
+    setupWalletPromotionText(promotion, getPromotionMessage(appDownloadModel));
 
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
@@ -1314,13 +1319,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private void setupActiveWalletPromotion(Promotion promotion, WalletApp walletApp,
       DownloadModel appDownloadModel) {
-    int walletMessageStringId = R.string.wallet_promotion_wallet_notinstalled_message;
-    if (appDownloadModel.getAction()
-        .equals(DownloadModel.Action.MIGRATE) || appDownloadModel.getAction()
-        .equals(DownloadModel.Action.UPDATE)) {
-      walletMessageStringId = R.string.wallet_promotion_wallet_installed_update_message;
-    }
-    setupWalletPromotionText(promotion, walletMessageStringId);
+    setupWalletPromotionText(promotion, getPromotionMessage(appDownloadModel));
 
     walletPromotionDownloadLayout.setVisibility(View.VISIBLE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
