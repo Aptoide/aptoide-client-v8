@@ -4,8 +4,8 @@ import android.view.MenuItem;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.PromotionViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
-import cm.aptoide.pt.app.WalletPromotionViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -161,21 +161,21 @@ public interface AppViewView extends InstallAppView {
 
   void setupAppcAppView();
 
-  void showAppcWalletPromotionView(WalletPromotionViewModel walletPromotionViewModel);
+  void showAppcWalletPromotionView(PromotionViewModel promotionViewModel);
 
   Observable<Void> dismissWalletPromotionClick();
 
   void dismissWalletPromotionView();
 
-  Observable<WalletPromotionViewModel> installWalletButtonClick();
+  Observable<PromotionViewModel> installWalletButtonClick();
 
-  Observable<WalletPromotionViewModel> pausePromotionDownload();
+  Observable<PromotionViewModel> pausePromotionDownload();
 
-  Observable<WalletPromotionViewModel> cancelPromotionDownload();
+  Observable<PromotionViewModel> cancelPromotionDownload();
 
-  Observable<WalletPromotionViewModel> resumePromotionDownload();
+  Observable<PromotionViewModel> resumePromotionDownload();
 
-  Observable<WalletPromotionViewModel> claimAppClick();
+  Observable<PromotionViewModel> claimAppClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 

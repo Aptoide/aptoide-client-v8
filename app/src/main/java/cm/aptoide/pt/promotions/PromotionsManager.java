@@ -62,6 +62,11 @@ public class PromotionsManager {
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
 
+  public Observable<Promotion> getPromotionForPackage(String packageName) {
+    return promotionsService.getPromotionForPackage(packageName)
+        .toObservable();
+  }
+
   private boolean isWalletInstalled() {
     for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
       if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
