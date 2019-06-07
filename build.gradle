@@ -25,7 +25,6 @@ allprojects {
     maven { url "https://dl.bintray.com/asf/asf" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
     maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
-    maven { url "http://dl.appnext.com/" }
 
     google()
     jcenter()
@@ -65,7 +64,11 @@ ext {
   SUPPORT_LIB_VERSION = '27.1.0'
 
   // Google Play Services
-  PLAY_SERVICES_VERSION = '15.0.1'
+  PLAY_SERVICES_BASEMENT_VERSION = '16.1.0'
+  PLAY_SERVICES_ADS_VERSION = '17.2.1'
+  PLAY_SERVICES_SAFETYNET_VERSION = '16.0.0'
+  PLAY_SERVICES_AUTH_VERSION = '16.0.1'
+  PLAY_SERVICES_LOCATION_VERSION = '16.0.0'
 
   JAVAX_ANNOTATIONS_VERSION = '10.0-b28'
 
@@ -86,7 +89,7 @@ ext {
   // Test
   MOCK_WEB_SERVER_VERSION = '3.4.1'
   JUNIT_VERSION = '4.12'
-  MOCKITO_CORE_VERSION = '1.10.19'
+  MOCKITO_CORE_VERSION = '2.27.0'
   MOCKITO_CORE_ANDROID_VERSION = '2.7.15'
   ESPRESSO_VERSION = '3.0.1'
   RUNNER_VERSION = '1.0.1'
@@ -130,8 +133,8 @@ ext {
   MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.2'
   UNITY_ADS_SDK_VERSION = '3.0.1'
   MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.1.0'
-  APPNEXT_SDK_VERSION = '2.4.4.472'
   INMOBI_SDK_VERSION = '7.2.7'
+  AD_MOB_SDK_VERSION = '17.2.0.0'
 
   PICASSO_VERSION = '2.5.2'
 

@@ -22,7 +22,7 @@
           android:layout_width="match_parent"
           android:layout_height="218dp"
           android:scaleType="fitXY"
-          android:src="@drawable/ic_valentines_illustration"
+          android:src="@drawable/ic_seasonal_promotion"
           />
       <TextView
           android:layout_width="match_parent"
@@ -30,7 +30,7 @@
           android:layout_marginLeft="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="8dp"
-          android:text="@string/holidayspromotion_title_holidays"
+          android:text="@string/promotion_title_conquer"
           style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
           />
 

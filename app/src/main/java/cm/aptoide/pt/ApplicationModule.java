@@ -95,6 +95,8 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
@@ -109,6 +111,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -1763,11 +1766,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return BuildConfig.HOME_PROMOTION_ID;
   }
 
-  @Singleton @Provides @Named("wallet-offer-promotion-id")
-  String providesAppViewWalletPromotionId() {
-    return BuildConfig.APP_VIEW_WALLET_PROMOTION_ID;
-  }
-
   @Singleton @Provides @Named("accountType") String provideAccountType() {
     return BuildConfig.APPLICATION_ID;
   }
@@ -1948,5 +1946,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ChipManager providesChipManager() {
     return new ChipManager();
+  }
+
+  @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
+      InstalledRepository repository, AppcMigrationService appcMigrationService) {
+    return new AppcMigrationManager(repository, appcMigrationService);
+  }
+
+  @Singleton @Provides AppcMigrationService providesAppcMigrationService(
+      AppcMigrationAccessor accessor) {
+    return new AppcMigrationService(accessor);
+  }
+
+  @Singleton @Provides AppcMigrationAccessor providesAppcMigrationAccessor(Database database) {
+    return new AppcMigrationAccessor(database);
   }
 }

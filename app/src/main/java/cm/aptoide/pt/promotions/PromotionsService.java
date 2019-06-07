@@ -7,9 +7,12 @@ import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -99,41 +102,35 @@ public class PromotionsService {
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
-    GetPromotionAppsRequest.Body body =
-        new GetPromotionAppsRequest.Body.Builder().promotionId(promotionId)
-            .build();
-    return GetPromotionAppsRequest.of(body, bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+    return GetPromotionAppsRequest.of(promotionId, bodyInterceptorPoolV7, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapPromotionsResponse)
         .toSingle();
   }
 
-  public Single<Promotion> getPromotionForPackage(String packageName) {
-    GetPromotionAppsRequest.Body body =
-        new GetPromotionAppsRequest.Body.Builder().packageName(packageName)
-            .build();
-    return GetPromotionAppsRequest.of(body, bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+  public Single<List<Promotion>> getPromotionsForPackage(String packageName) {
+    return GetPackagePromotionsRequest.of(packageName, bodyInterceptorPoolV7, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe(false, false)
         .map(this::mapToPromotion)
         .toSingle();
   }
 
-  private Promotion mapToPromotion(GetPromotionAppsResponse response) {
+  private List<Promotion> mapToPromotion(GetPackagePromotionsResponse response) {
+    ArrayList<Promotion> promotions = new ArrayList<>();
     if (response != null
         && response.getDataList() != null
         && response.getDataList()
         .getList() != null) {
-      List<GetPromotionAppsResponse.PromotionAppModel> dataList = response.getDataList()
+      List<GetPackagePromotionsResponse.PromotionAppModel> dataList = response.getDataList()
           .getList();
-      if (!dataList.isEmpty()) {
-        GetPromotionAppsResponse.PromotionAppModel model = dataList.get(0);
-        return new Promotion(model.isClaimed(), model.getAppc(), model.getDescription(),
-            model.getPromotionId());
+      for (GetPackagePromotionsResponse.PromotionAppModel model : dataList) {
+        promotions.add(new Promotion(model.isClaimed(), model.getAppc(), model.getPackageName(),
+            model.getPromotionId(), Collections.emptyList()));
       }
     }
-    return new Promotion();
+    return promotions;
   }
 
   private List<PromotionApp> mapPromotionsResponse(GetPromotionAppsResponse response) {

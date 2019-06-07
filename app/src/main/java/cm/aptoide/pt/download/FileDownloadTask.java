@@ -110,9 +110,4 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   public Observable<FileDownloadCallback> onDownloadStateChanged() {
     return downloadStatus;
   }
-
-  private int calculateProgress(long soFarBytes, long totalBytes) {
-    return (int) Math.floor(
-        (float) soFarBytes / totalBytes * FileDownloadManager.PROGRESS_MAX_VALUE);
-  }
 }

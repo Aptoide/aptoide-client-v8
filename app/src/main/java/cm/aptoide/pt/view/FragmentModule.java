@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -37,12 +36,13 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
-import cm.aptoide.pt.app.AppcMigrationManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -189,9 +189,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides @Named("home-fragment-navigator")
   FragmentNavigator provideHomeFragmentNavigator(Map<Integer, Result> fragmentResultMap,
-      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay, FragmentManager fragmentManager) {
-    return new FragmentResultNavigator(fragmentManager, R.id.main_content, android.R.anim.fade_in,
-        android.R.anim.fade_out, fragmentResultMap, fragmentResultRelay);
+      BehaviorRelay<Map<Integer, Result>> fragmentResultRelay) {
+    return new FragmentResultNavigator(fragment.getChildFragmentManager(),
+        R.id.main_home_container_content, android.R.anim.fade_in, android.R.anim.fade_out,
+        fragmentResultMap, fragmentResultRelay);
   }
 
   @FragmentScope @Provides ImagePickerPresenter provideImagePickerPresenter(
@@ -275,8 +276,8 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
-      @Named("home-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new HomeContainerNavigator(fragmentNavigator);
+      @Named("home-fragment-navigator") FragmentNavigator childFragmentNavigator) {
+    return new HomeContainerNavigator(childFragmentNavigator);
   }
 
   @FragmentScope @Provides Home providesHome(BundlesRepository bundlesRepository,
@@ -324,11 +325,6 @@ import rx.subscriptions.CompositeSubscription;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository) {
-    return new AppcMigrationManager(repository);
-  }
-
   @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
       AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
@@ -338,30 +334,28 @@ import rx.subscriptions.CompositeSubscription;
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
-      @Named("wallet-offer-promotion-id") String promotionId,
       InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
+      AppcMigrationService appcMigrationService) {
     return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
         adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
         notificationAnalytics, installAnalytics,
         (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        marketName, appCoinsManager, promotionsManager, promotionId, installedRepository,
-        appcMigrationManager, localNotificationSyncManager,
-        appcPromotionNotificationStringProvider);
+        marketName, appCoinsManager, promotionsManager, installedRepository, appcMigrationManager,
+        localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator,
-      @Named("wallet-offer-promotion-id") String promotionId) {
+      PromotionsNavigator promotionsNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, promotionId);
+        ((PermissionService) fragment.getContext()), promotionsNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

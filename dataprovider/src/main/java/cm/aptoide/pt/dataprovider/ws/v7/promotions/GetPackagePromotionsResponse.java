@@ -1,19 +1,17 @@
 package cm.aptoide.pt.dataprovider.ws.v7.promotions;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 
-public class GetPromotionAppsResponse
-    extends BaseV7EndlessDataListResponse<GetPromotionAppsResponse.PromotionAppModel> {
-
-  public GetPromotionAppsResponse() {
+public class GetPackagePromotionsResponse
+    extends BaseV7EndlessDataListResponse<GetPackagePromotionsResponse.PromotionAppModel> {
+  public GetPackagePromotionsResponse() {
   }
 
   public static class PromotionAppModel {
     private boolean claimed;
     private float appc;
-    private String description;
-    private GetAppMeta.App app;
+    private String packageName;
+    private String promotionId;
 
     public PromotionAppModel() {
     }
@@ -34,16 +32,20 @@ public class GetPromotionAppsResponse
       this.appc = appc;
     }
 
-    public GetAppMeta.App getApp() {
-      return app;
+    public String getPromotionId() {
+      return promotionId;
     }
 
-    public void setApp(GetAppMeta.App app) {
-      this.app = app;
+    public void setPromotionId(String promotionId) {
+      this.promotionId = promotionId;
     }
 
-    public String getDescription() {
-      return description;
+    public String getPackageName() {
+      return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+      this.packageName = packageName;
     }
   }
 }

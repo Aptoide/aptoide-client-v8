@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.app.AlertDialog;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -63,6 +64,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
+  private PublishSubject<Void> promotionOverDialogClick;
   private TextView promotionFirstMessage;
   private View walletActiveView;
   private View walletInactiveView;
@@ -87,6 +89,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     window = getActivity().getWindow();
+    promotionOverDialogClick = PublishSubject.create();
     setHasOptionsMenu(true);
   }
 
@@ -136,7 +139,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         toolbar.setBackgroundDrawable(drawable);
 
         toolbarTitle.setTextColor(toolbarColor);
-        toolbarTitle.setText(getString(R.string.holidayspromotion_title_holidays));
+        toolbarTitle.setText(getString(R.string.promotion_title_conquer));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           handleStatusBar(isCollapsed);
         }
@@ -313,6 +316,26 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<Void> retryClicked() {
     return RxView.clicks(genericErrorViewRetry);
+  }
+
+  @Override public void showPromotionOverDialog() {
+    loading.setVisibility(View.GONE);
+    LayoutInflater inflater = LayoutInflater.from(getContext());
+    View dialogLayout = inflater.inflate(R.layout.promotions_promotion_over_dialog, null);
+    AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
+        .create();
+    dialog.setCancelable(false);
+
+    dialogLayout.findViewById(R.id.dismiss_button)
+        .setOnClickListener(view -> {
+          promotionOverDialogClick.onNext(null);
+          dialog.dismiss();
+        });
+    dialog.show();
+  }
+
+  @Override public Observable<Void> promotionOverDialogClick() {
+    return promotionOverDialogClick;
   }
 
   private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
@@ -630,6 +653,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     super.onDestroy();
     window = null;
     promotionAppClick = null;
+    promotionOverDialogClick = null;
     if (errorMessageSubscription != null && !errorMessageSubscription.isUnsubscribed()) {
       errorMessageSubscription.unsubscribe();
     }

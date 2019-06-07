@@ -200,7 +200,8 @@ android {
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
          appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         fabricApiKey                    : "${project.FABRIC_API_KEY}"]
+         fabricApiKey                    : "${project.FABRIC_API_KEY}",
+         adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
     variant.resValue "string", "search_suggestion_provider_authority",
@@ -236,8 +237,6 @@ android {
         "\"" + project.APTOIDE_WEB_SERVICES_APICHAIN_BDS_HOST + "\""
     variant.buildConfigField "String", "HOME_PROMOTION_ID",
         "\"" + project.HOME_PROMOTION_ID + "\""
-    variant.buildConfigField "String", "APP_VIEW_WALLET_PROMOTION_ID",
-        "\"" + project.APP_VIEW_WALLET_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
     variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
@@ -451,12 +450,7 @@ dependencies {
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation("com.mopub.mediation:admob:${MOPUB_MEDIATION_ADMOB_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
+  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
@@ -476,17 +470,12 @@ dependencies {
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
 
-  //AppNext
-  implementation "com.appnext.sdk:ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk:banners:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk:native-ads2:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
-  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
-
   //Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
+  //Smaato
+  //implementation (name:'SOMAAndroid-9.1.5-release', ext:'aar')
 
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
@@ -515,12 +504,12 @@ dependencies {
 
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
+  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_VERSION}"
-  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_VERSION}"
+  implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_AUTH_VERSION}"
+  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_ADS_VERSION}"
+  implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_SAFETYNET_VERSION}"
 
 
   // Facebook Core (Analytics)

@@ -2,8 +2,9 @@ package cm.aptoide.pt.promotions
 
 data class Promotion(var isClaimed: Boolean = false,
                      val appc: Float = -1f,
-                     val promotionDescription: String = "",
-                     val promotionId: String = "") {
+                     val packageName: String = "",
+                     val promotionId: String = "",
+                     var claimActions: List<ClaimAction> = emptyList()) {
 
   fun exists(): Boolean {
     return !promotionId.isEmpty()
@@ -11,5 +12,12 @@ data class Promotion(var isClaimed: Boolean = false,
 
   fun isClaimable(): Boolean {
     return exists() && !isClaimed
+  }
+
+  /**
+   * Represents what action is necessary to claim the promotions
+   */
+  enum class ClaimAction {
+    INSTALL, MIGRATE
   }
 }

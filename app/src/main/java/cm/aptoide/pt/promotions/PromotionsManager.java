@@ -13,6 +13,8 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -62,9 +64,27 @@ public class PromotionsManager {
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }
 
-  public Observable<Promotion> getPromotionForPackage(String packageName) {
-    return promotionsService.getPromotionForPackage(packageName)
-        .toObservable();
+  public Observable<List<Promotion>> getPromotionsForPackage(String packageName) {
+    return promotionsService.getPromotionsForPackage(packageName)
+        .toObservable()
+        .flatMapIterable(list -> list)
+        .map(this::mapPromotionAction)
+        .toList();
+  }
+
+  // This locally defines what action does the user need to do to claim a promotions
+  // It should probably be refactored so it is given by the WS
+  private Promotion mapPromotionAction(Promotion promotion) {
+    switch (promotion.getPromotionId()) {
+      case "BONUS_MIGRATION_19":
+        promotion.setClaimActions(Collections.singletonList(Promotion.ClaimAction.MIGRATE));
+        break;
+      case "BONUS_GAME_WALLET_OFFER_19":
+        promotion.setClaimActions(
+            Arrays.asList(Promotion.ClaimAction.INSTALL, Promotion.ClaimAction.MIGRATE));
+        break;
+    }
+    return promotion;
   }
 
   private boolean isWalletInstalled() {
@@ -105,7 +125,7 @@ public class PromotionsManager {
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
-        promotionViewApp.hasAppc()))
+        promotionViewApp.hasAppc(), promotionViewApp.getSize()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
@@ -166,5 +186,21 @@ public class PromotionsManager {
             return "";
           }
         });
+  }
+
+  /**
+   * Retrieves the first claimable promotion for an action
+   */
+  public Promotion getClaimablePromotion(List<Promotion> promotions,
+      Promotion.ClaimAction claimAction) {
+    Promotion claimablePromotion = null;
+    for (Promotion promotion : promotions) {
+      if (promotion.getClaimActions()
+          .contains(claimAction) && promotion.isClaimable()) {
+        claimablePromotion = promotion;
+        break;
+      }
+    }
+    return claimablePromotion;
   }
 }

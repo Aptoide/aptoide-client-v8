@@ -405,11 +405,20 @@ public class AppViewAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppcMigrationPromotionImpression() {
+  private void sendPromotionImpressionEvent(String promotion) {
     Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "promotion impression");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.IMPRESSION,
+    data.put(ACTION, IMPRESSION);
+
+    analyticsManager.logEvent(data, promotion, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
+  }
+
+  public void sendPromotionImpression(String promotionId) {
+    if (promotionId.equals("BONUS_MIGRATION_19")) {
+      sendPromotionImpressionEvent(BONUS_MIGRATION_APPVIEW);
+    } else if (promotionId.equals("BONUS_GAME_WALLET_OFFER_19")) {
+      sendPromotionImpressionEvent(BONUS_GAME_WALLET_OFFER_19);
+    }
   }
 
   public void sendAppcMigrationUpdateClick() {
@@ -419,29 +428,7 @@ public class AppViewAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendAppMigrationWalletInstallClick() {
-    Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "install wallet");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendAppMigrationClaimClick() {
-    Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, "claim");
-    analyticsManager.logEvent(data, BONUS_MIGRATION_APPVIEW, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendWalletPromotionImpression() {
-    Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, IMPRESSION);
-
-    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.IMPRESSION,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendInstallAppcWalletPromotionApp() {
+  public void sendInstallPromotionApp() {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "install appc app");
 
@@ -449,27 +436,48 @@ public class AppViewAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendInstallAppcWalletPromotionWallet() {
+  private void sendInstallAppcWalletEvent(String promotion) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "install wallet");
 
-    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(data, promotion, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendClickOnNoThanksAppcWalletPromotion() {
+  public void sendInstallAppcWallet(String promotionId) {
+    sendInstallAppcWalletEvent(mapToPromotionOffer(promotionId));
+  }
+
+  private void sendClickOnNoThanksWalletInstall(String promotion) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "no thanks");
 
-    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(data, promotion, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
   }
 
-  public void sendClickOnClaimAppcWalletPromotion() {
+  public void sendClickOnNoThanksWallet(String promotionId) {
+    sendClickOnNoThanksWalletInstall(mapToPromotionOffer(promotionId));
+  }
+
+  private void sendClickOnClaimAppcWalletPromotion(String promotion) {
     Map<String, Object> data = new HashMap<>();
     data.put(ACTION, "claim");
 
-    analyticsManager.logEvent(data, BONUS_GAME_WALLET_OFFER_19, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(data, promotion, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
+  }
+
+  public void sendClickOnClaimAppViewPromotion(String promotionId) {
+    sendClickOnClaimAppcWalletPromotion(mapToPromotionOffer(promotionId));
+  }
+
+  private String mapToPromotionOffer(String promotionId) {
+    if (promotionId.equals("BONUS_MIGRATION_19")) {
+      return BONUS_MIGRATION_APPVIEW;
+    } else if (promotionId.equals("BONUS_GAME_WALLET_OFFER_19")) {
+      return BONUS_GAME_WALLET_OFFER_19;
+    }
+    return "N/A";
   }
 }

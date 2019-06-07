@@ -1,17 +1,18 @@
 package cm.aptoide.pt.app.view;
 
+import android.util.Pair;
 import android.view.MenuItem;
-import cm.aptoide.aptoideviews.downloadprogressview.EventListener;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppViewViewModel;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.app.PromotionViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.appview.InstallAppView;
+import cm.aptoide.pt.promotions.Promotion;
+import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
@@ -162,17 +163,22 @@ public interface AppViewView extends InstallAppView {
 
   void setupAppcAppView();
 
-  void showAppcWalletPromotionView(PromotionViewModel promotionViewModel);
+  void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
+      Promotion.ClaimAction action, DownloadModel appDownloadModel);
 
-  Observable<Void> dismissWalletPromotionClick();
+  Observable<Promotion> dismissWalletPromotionClick();
 
   void dismissWalletPromotionView();
 
-  Observable<PromotionViewModel> installWalletButtonClick();
+  Observable<Pair<Promotion, WalletApp>> installWalletButtonClick();
 
-  Observable<EventListener.Action> walletInstallEvent();
+  Observable<WalletApp> pausePromotionDownload();
 
-  Observable<PromotionViewModel> claimAppClick();
+  Observable<WalletApp> cancelPromotionDownload();
+
+  Observable<WalletApp> resumePromotionDownload();
+
+  Observable<Promotion> claimAppClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 

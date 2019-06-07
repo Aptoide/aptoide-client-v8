@@ -203,7 +203,11 @@
             >
 
           <include
-              layout="@layout/install_app_view"/>
+              layout="@layout/install_app_view"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="11dp"
+              />
 
 
           <include
@@ -216,7 +220,7 @@
               android:layout_marginLeft="8dp"
               android:layout_marginRight="8dp"
               android:layout_marginStart="8dp"
-              android:layout_marginTop="26dp"
+              android:layout_marginTop="15dp"
               android:visibility="gone"
               tools:visibility="visible"
               />
@@ -236,11 +240,6 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center_horizontal"
-                  android:layout_marginEnd="8dp"
-                  android:layout_marginLeft="8dp"
-                  android:layout_marginRight="8dp"
-                  android:layout_marginStart="8dp"
-                  android:layout_marginTop="11dp"
                   android:visibility="gone"
                   tools:visibility="visible"
                   />
@@ -250,7 +249,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="11dp"
+                android:layout_marginBottom="11dp"
                 android:visibility="gone"
                 tools:visibility="visible"
                 />
@@ -261,18 +260,15 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center_horizontal"
-              android:layout_marginTop="12dp"
+              android:layout_marginBottom="12dp"
               android:visibility="gone"
               />
 
           <include
               layout="@layout/appview_wallet_promotion_install_layout"
               android:id="@+id/wallet_install_promotion"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
               android:visibility="gone"
               tools:visibility="visible"
-              android:layout_marginTop="19dp"
               />
 
           <View
@@ -291,7 +287,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
             />
 
         <include

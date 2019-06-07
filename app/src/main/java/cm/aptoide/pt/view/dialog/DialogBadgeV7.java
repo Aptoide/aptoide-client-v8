@@ -10,7 +10,6 @@ import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +17,14 @@ import android.view.Window;
 import android.widget.TextView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 
 import static cm.aptoide.pt.dataprovider.model.v7.Malware.Reason.Status;
 
 /**
  * Created by hsousa on 18/11/15.
  */
-public class DialogBadgeV7 extends BaseDialog {
+public class DialogBadgeV7 extends BaseDialogFragment {
 
   protected Malware malware;
   protected String appName;
@@ -44,7 +44,6 @@ public class DialogBadgeV7 extends BaseDialog {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
     setRetainInstance(true);
   }
 

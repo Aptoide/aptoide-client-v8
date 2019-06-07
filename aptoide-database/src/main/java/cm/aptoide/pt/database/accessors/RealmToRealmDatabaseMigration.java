@@ -449,5 +449,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
 
       oldVersion++;
     }
+
+    if (oldVersion == 8099) {
+      schema.create("MigratedApp")
+          .addField("packageName", String.class, FieldAttribute.PRIMARY_KEY,
+              FieldAttribute.REQUIRED);
+      oldVersion++;
+    }
   }
 }

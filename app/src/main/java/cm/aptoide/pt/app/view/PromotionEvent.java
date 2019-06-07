@@ -1,19 +1,27 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.app.PromotionViewModel;
+import cm.aptoide.pt.promotions.Promotion;
+import cm.aptoide.pt.promotions.WalletApp;
 
 public class PromotionEvent {
 
-  private PromotionViewModel app;
+  private WalletApp walletApp;
   private PromotionEvent.ClickType clickType;
+  private Promotion promotion;
 
-  public PromotionEvent(PromotionViewModel app, PromotionEvent.ClickType clickType) {
-    this.app = app;
+  public PromotionEvent(Promotion promotion, WalletApp walletApp,
+      PromotionEvent.ClickType clickType) {
+    this.walletApp = walletApp;
     this.clickType = clickType;
+    this.promotion = promotion;
   }
 
-  public PromotionViewModel getApp() {
-    return app;
+  public WalletApp getWallet() {
+    return walletApp;
+  }
+
+  public Promotion getPromotion() {
+    return promotion;
   }
 
   public PromotionEvent.ClickType getClickType() {
@@ -21,6 +29,6 @@ public class PromotionEvent {
   }
 
   enum ClickType {
-    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM, UPDATE, DOWNGRADE
+    PAUSE_DOWNLOAD, CANCEL_DOWNLOAD, RESUME_DOWNLOAD, INSTALL_APP, DOWNLOAD, RETRY_DOWNLOAD, CLAIM, UPDATE, DOWNGRADE, DISMISS
   }
 }
