@@ -151,14 +151,22 @@ public class DefaultInstaller implements Installer {
     return installedRepository.getAsList(packageName, versionCode)
         .map(installed -> {
           if (installed != null) {
-            return new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                installed.getVersionName(), installed.getStatus(), installed.getType(),
-                installed.getName(), installed.getIcon());
+            InstallationState installationState =
+                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                    installed.getVersionName(), installed.getStatus(), installed.getType(),
+                    installed.getName(), installed.getIcon());
+            return installationState;
           } else {
             return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
                 Installed.TYPE_UNKNOWN);
           }
-        });
+        })
+        .doOnNext(installationState -> Logger.getInstance()
+            .d("AptoideDownloadManager", "creating an installation state "
+                + installationState.getPackageName()
+                + " state is: "
+                + installationState.getStatus()))
+        .distinctUntilChanged();
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,

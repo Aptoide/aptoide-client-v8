@@ -503,7 +503,9 @@ public class InstallManager {
           } else {
             return Install.InstallationType.UPDATE;
           }
-        });
+        })
+        .doOnNext(installationType -> Logger.getInstance()
+            .d("AptoideDownloadManager", " emiting installation type"));
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
