@@ -6,7 +6,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -22,8 +21,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 
-import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
-import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 /**
@@ -260,45 +257,13 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getInstalledDownloads() {
-    return installManager.fetchInstalled()
+    return installManager.getInstalledApps()
         .distinctUntilChanged()
-        .flatMapIterable(installedAppsList -> installedAppsList)
-        .flatMap(installedApp -> getDownloads(installedApp))
-        .toList()
-        .map(installedApps -> appMapper.getDownloadApps(installedApps));
-  }
-
-  private Observable<Install> getDownloads(Installed installedApp) {
-    return installManager.getInstallations()
-        .first()
-        .flatMap(installations -> {
-          if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
-          }
-          return Observable.just(installations)
-              .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() == INSTALL || install.getType() == INSTALLED)
-              .toList()
-              .flatMap(updates -> getMatchingInstalledUpdate(updates, installedApp));
-        });
+        .map(installedDownloads -> appMapper.getDownloadApps(installedDownloads));
   }
 
   public Completable refreshAllUpdates() {
     return updatesManager.refreshUpdates();
-  }
-
-  private Observable<Install> getMatchingInstalledUpdate(List<Install> updates,
-      Installed installedApp) {
-    for (Install update : updates) {
-      if (installedApp.getPackageName()
-          .equals(update.getPackageName())
-          && installedApp.getVersionName()
-          .equals(update.getVersionName())
-          && installedApp.getVersionCode() == update.getVersionCode()) {
-        return Observable.just(update);
-      }
-    }
-    return Observable.empty();
   }
 }
 
