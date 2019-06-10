@@ -18,6 +18,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -149,6 +150,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesList(List<App> list) {
+    Logger.getInstance()
+        .d("Apps", "showing updates list");
     if (list != null && !list.isEmpty()) {
       adapter.setAvailableUpdatesList(list);
     }
@@ -159,6 +162,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showInstalledApps(List<App> installedApps) {
+    Logger.getInstance()
+        .d("Apps", "showing installed apps list");
     if (installedApps != null && !installedApps.isEmpty()) {
       adapter.addInstalledAppsList(installedApps);
     }
@@ -169,6 +174,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showDownloadsList(List<App> list) {
+    Logger.getInstance()
+        .d("Apps", "showing downloads list");
+
     list.removeAll(blackListDownloads);
     if (list != null && !list.isEmpty()) {
       adapter.addDownloadAppsList(list);
