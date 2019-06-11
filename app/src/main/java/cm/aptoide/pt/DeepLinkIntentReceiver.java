@@ -249,8 +249,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
     }
     String utmSourceParameter = u.getQueryParameter("utm_source");
-    if (utmSourceParameter != null && utmSourceParameter.equals("myappcoins")) {
-      return startWalletInstallIntent();
+    if (utmSourceParameter != null && (utmSourceParameter.equals("myappcoins")
+        || utmSourceParameter.equals("appcoinssdk"))) {
+      return startWalletInstallIntent(utmSourceParameter);
     }
     return startFromPackageName(packageName);
   }
@@ -478,9 +479,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
   }
 
-  public Intent startWalletInstallIntent() {
+  public Intent startWalletInstallIntent(String utmSource) {
     Intent intent = new Intent(this, WalletInstallActivity.class);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSource);
     return intent;
   }
 
