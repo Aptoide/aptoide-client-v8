@@ -80,6 +80,9 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
+import cm.aptoide.pt.wallet.WalletInstallNavigator;
+import cm.aptoide.pt.wallet.WalletInstallPresenter;
+import cm.aptoide.pt.wallet.WalletInstallView;
 import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -351,5 +354,15 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
     return new PromotionsNavigator(fragmentNavigator);
+  }
+
+  @ActivityScope @Provides WalletInstallPresenter providesPromotionsPresenter(
+      WalletInstallNavigator walletInstallNavigator) {
+    return new WalletInstallPresenter((WalletInstallView) view, walletInstallNavigator);
+  }
+
+  @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new WalletInstallNavigator(fragmentNavigator);
   }
 }

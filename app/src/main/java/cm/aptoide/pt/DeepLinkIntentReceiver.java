@@ -33,6 +33,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
+import cm.aptoide.pt.wallet.WalletInstallActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -246,6 +247,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if (packageName.contains("pub:")) {
         packageName = packageName.substring(4);
       }
+    }
+    String utmSourceParameter = u.getQueryParameter("utm_source");
+    if (utmSourceParameter != null && utmSourceParameter.equals("myappcoins")) {
+      return startWalletInstallIntent();
     }
     return startFromPackageName(packageName);
   }
@@ -471,6 +476,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+  }
+
+  public Intent startWalletInstallIntent() {
+    Intent intent = new Intent(this, WalletInstallActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    return intent;
   }
 
   public Intent startFromPackageName(String packageName) {

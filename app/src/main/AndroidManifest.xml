@@ -131,6 +131,14 @@
         android:windowSoftInputMode="adjustPan"></activity>
 
     <activity
+        android:name=".wallet.WalletInstallActivity"
+        android:excludeFromRecents="true"
+        android:noHistory="true"
+        android:taskAffinity=".wallet.WalletInstallActivity"
+        android:theme="@style/Aptoide.DialogTheme"
+        android:windowSoftInputMode="adjustPan"/>
+
+    <activity
         android:name="com.ironsource.sdk.controller.ControllerActivity"
         android:configChanges="orientation|screenSize"
         android:hardwareAccelerated="true"/>
