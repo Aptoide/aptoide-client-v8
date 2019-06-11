@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="DownloadProgressView">
+    <attr format="reference" name="progressDrawable"/>
+  </declare-styleable>
+</resources>
