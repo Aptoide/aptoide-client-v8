@@ -262,6 +262,7 @@
     <activity
         android:name=".DeepLinkIntentReceiver"
         android:exported="true"
+        android:taskAffinity=""
         >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>
