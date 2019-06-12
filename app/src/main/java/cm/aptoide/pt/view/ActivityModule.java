@@ -372,7 +372,7 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
       WalletInstallConfiguration configuration) {
-    return new WalletInstallManager(configuration);
+    return new WalletInstallManager(configuration, activity.getPackageManager());
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {
