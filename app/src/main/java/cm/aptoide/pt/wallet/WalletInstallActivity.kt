@@ -22,16 +22,14 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     activityComponent.inject(this)
-
-    initStyling()
-
     setContentView(R.layout.wallet_install_activity)
+    initStyling()
     attachPresenter(presenter)
   }
 
   private fun initStyling() {
-    val message = ""
-    val walletAppName = ""
+    val walletAppName = getString(R.string.wallet_install_appcoins_wallet)
+    val message = getString(R.string.wallet_install_request_message_body, walletAppName)
     messageTextView.text = message
     messageTextView.setSubstringTypeface(Pair(walletAppName, Typeface.BOLD))
   }
