@@ -4,7 +4,9 @@ import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import rx.exceptions.OnErrorNotImplementedException
 
-class WalletInstallPresenter(val view: WalletInstallView, val navigator: WalletInstallNavigator) :
+class WalletInstallPresenter(val view: WalletInstallView,
+                             val walletInstallManager: WalletInstallManager,
+                             val navigator: WalletInstallNavigator) :
     Presenter {
 
   override fun present() {
