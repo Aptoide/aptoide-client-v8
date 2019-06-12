@@ -37,8 +37,8 @@
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-    <!--<item name="android:windowMinWidthMajor">67%</item>-->
-    <!--<item name="android:windowMinWidthMinor">296dp</item>-->
+    <item name="android:windowMinWidthMajor">384dp</item>
+    <item name="android:windowMinWidthMinor">296dp</item>
 
     <item name="windowActionBar">false</item>
     <item name="windowActionModeOverlay">true</item>
