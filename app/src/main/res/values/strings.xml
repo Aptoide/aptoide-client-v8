@@ -698,6 +698,8 @@
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>
+  <string name="wallet_install_request_close_button">CLOSE</string>
+  <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
   <string name="wallet_install_complete_body">Go back to the game to make your purchase!</string>
 
