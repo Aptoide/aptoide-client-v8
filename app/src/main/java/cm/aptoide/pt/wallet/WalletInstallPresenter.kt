@@ -12,7 +12,7 @@ class WalletInstallPresenter(val view: WalletInstallView, val navigator: WalletI
   }
 
   private fun showDialog() {
-    view.getLifecycleEvent()
+    view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .doOnNext {
           navigator.navigateToWalletInstallView()
