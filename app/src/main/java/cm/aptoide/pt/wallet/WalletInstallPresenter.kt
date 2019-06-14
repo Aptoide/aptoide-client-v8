@@ -12,7 +12,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
   }
 
   private fun loadWalletInstall() {
-    view.getLifecycleEvent()
+    view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
           walletInstallManager.getAppIcon()
@@ -21,7 +21,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
           view.showWalletInstallationView(appIcon)
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe({}, { throwable ->
+        .subscribe({}, {
           view.dismissDialog()
         })
   }
