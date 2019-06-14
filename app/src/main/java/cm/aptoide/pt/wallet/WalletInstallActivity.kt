@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.networking.image.ImageLoader
+import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.view.ActivityView
 import kotlinx.android.synthetic.main.wallet_install_activity.*
 import javax.inject.Inject
@@ -34,7 +35,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     messageTextView.setSubstringTypeface(Pair(walletAppName, Typeface.BOLD))
   }
 
-  override fun showWalletInstallationView(appIcon: String) {
+  override fun showWalletInstallationView(appIcon: String,
+                                          walletApp: WalletApp) {
     progressView.visibility = View.GONE
     walletInstallViewGroup.visibility = View.VISIBLE
 

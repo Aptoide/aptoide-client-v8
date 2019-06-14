@@ -2,10 +2,16 @@ package cm.aptoide.pt.wallet
 
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
+import cm.aptoide.pt.promotions.PromotionsManager
+import cm.aptoide.pt.promotions.WalletApp
+import rx.Observable
+import rx.Scheduler
 
 class WalletInstallPresenter(val view: WalletInstallView,
                              val walletInstallManager: WalletInstallManager,
-                             val navigator: WalletInstallNavigator) : Presenter {
+                             val navigator: WalletInstallNavigator,
+                             val promotionsManager: PromotionsManager,
+                             val viewScheduler: Scheduler) : Presenter {
 
   override fun present() {
     loadWalletInstall()
@@ -15,10 +21,15 @@ class WalletInstallPresenter(val view: WalletInstallView,
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
-          walletInstallManager.getAppIcon()
+          Observable.zip(walletInstallManager.getAppIcon(),
+              promotionsManager.walletApp) { appIcon, walletApp ->
+            Pair<String, WalletApp>(appIcon, walletApp)
+          }
         }
-        .doOnNext { appIcon ->
-          view.showWalletInstallationView(appIcon)
+        .observeOn(viewScheduler)
+        .doOnNext { pair ->
+          view.showWalletInstallationView(pair.first, pair.second)
+
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
