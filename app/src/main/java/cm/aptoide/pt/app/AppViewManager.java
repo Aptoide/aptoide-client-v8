@@ -557,7 +557,7 @@ public class AppViewManager {
           .filter(promotions -> !promotions.isEmpty())
           .flatMap(promotionList -> {
             Observable<List<Promotion>> promObs = Observable.just(promotionList);
-            Observable<WalletApp> walletApp = loadWallet();
+            Observable<WalletApp> walletApp = promotionsManager.getWalletApp();
             Observable<DownloadModel> appDownloadModel = appViewAppDownloadModel();
             Observable<DetailedApp> appViewModel = Observable.just(cachedApp);
             Observable<Boolean> isAppMigrated =
@@ -599,46 +599,6 @@ public class AppViewManager {
       List<Promotion> promotions, DownloadModel appDownloadModel, DetailedApp app,
       Boolean isAppMigrated) {
     return new PromotionViewModel(walletApp, promotions, appDownloadModel, app, isAppMigrated);
-  }
-
-  private Observable<WalletApp> loadWallet() {
-    return appCenter.loadDetailedApp("com.appcoins.wallet", "bds-store")
-        .toObservable()
-        .map(this::mapToWalletApp)
-        .flatMap(walletApp -> {
-          Observable<WalletApp> walletAppObs = Observable.just(walletApp);
-          Observable<Boolean> isWalletInstalled =
-              installedRepository.isInstalled(walletApp.getPackageName());
-          Observable<Install> walletDownload =
-              installManager.getInstall(walletApp.getMd5sum(), walletApp.getPackageName(),
-                  walletApp.getVersionCode());
-          return Observable.combineLatest(walletAppObs, isWalletInstalled, walletDownload,
-              this::mergeToWalletApp);
-        });
-  }
-
-  private WalletApp mergeToWalletApp(WalletApp walletApp, Boolean isInstalled,
-      Install walletDownload) {
-    DownloadModel downloadModel =
-        mapToDownloadModel(walletDownload.getType(), walletDownload.getProgress(),
-            walletDownload.getState());
-    walletApp.setDownloadModel(downloadModel);
-    walletApp.setInstalled(isInstalled);
-    return walletApp;
-  }
-
-  private WalletApp mapToWalletApp(DetailedAppRequestResult result) {
-    if (result.hasError() || result.isLoading()) return new WalletApp();
-    DetailedApp app = result.getDetailedApp();
-    return new WalletApp(null, false, app.getName(), app.getIcon(), app.getId(),
-        app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
-        app.getPath(), app.getPathAlt(), app.getObb(), app.getSize());
-  }
-
-  private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,
-      Install.InstallationStatus state) {
-    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
-        progress, downloadStateParser.parseDownloadState(state), null);
   }
 
   public SimilarAppsViewModel getCachedAppcSimilarAppsViewModel() {
