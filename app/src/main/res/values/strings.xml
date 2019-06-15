@@ -694,7 +694,7 @@
   <string name="promo_center_pending_card_seasonal_promo_body">For the promotion %s</string>
   <string name="promo_center_pending_claim_button">CLAIM</string>
   <string name="promo_center_pending_empty_body">No AppCoins Credits to claim yet! Check the tab Offers to see the available promotions.</string>
- 
+
   <!--Purchase Flow - Wallet Installation-->
   <string name="wallet_install_request_message_body">To buy this item you first need to get the %s.</string>
   <string name="wallet_install_appcoins_wallet">AppCoins Wallet</string>

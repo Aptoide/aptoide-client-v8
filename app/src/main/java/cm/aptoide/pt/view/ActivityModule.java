@@ -359,7 +359,7 @@ import static android.content.Context.WINDOW_SERVICE;
     return new PromotionsNavigator(fragmentNavigator);
   }
 
-  @ActivityScope @Provides WalletInstallPresenter providesPromotionsPresenter(
+  @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
       WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager,
       PromotionsManager promotionsManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
