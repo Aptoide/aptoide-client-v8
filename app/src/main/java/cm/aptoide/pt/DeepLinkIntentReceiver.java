@@ -249,9 +249,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
     }
     String utmSourceParameter = u.getQueryParameter("utm_source");
-    if (utmSourceParameter != null && (utmSourceParameter.equals("myappcoins")
-        || utmSourceParameter.equals("appcoinssdk"))) {
-      return startWalletInstallIntent(utmSourceParameter);
+    String appSourceParameter = u.getQueryParameter("app_source");
+    if (utmSourceParameter != null && appSourceParameter != null && (utmSourceParameter.equals(
+        "myappcoins") || utmSourceParameter.equals("appcoinssdk"))) {
+      return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
     }
     return startFromPackageName(packageName);
   }
@@ -479,10 +480,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
   }
 
-  public Intent startWalletInstallIntent(String utmSource) {
+  public Intent startWalletInstallIntent(String packageName, String utmSourceParameter,
+      String appPackageName) {
     Intent intent = new Intent(this, WalletInstallActivity.class);
+    intent.putExtra(DeepLinksKeys.WALLET_PACKAGE_NAME_KEY, packageName);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, appPackageName);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSource);
+    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
     return intent;
   }
 
@@ -720,6 +724,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String TITLE = "title";
     public static final String STORE_THEME = "storetheme";
     public static final String APK_FY = "APK_FY";
+
+    // Wallet Install Dialog
+    public static final String WALLET_PACKAGE_NAME_KEY = "wallet_package_name";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

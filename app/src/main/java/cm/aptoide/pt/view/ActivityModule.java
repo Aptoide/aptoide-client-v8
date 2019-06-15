@@ -14,6 +14,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.DeepLinkAnalytics;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -80,6 +81,8 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
+import cm.aptoide.pt.wallet.WalletInstallConfiguration;
+import cm.aptoide.pt.wallet.WalletInstallManager;
 import cm.aptoide.pt.wallet.WalletInstallNavigator;
 import cm.aptoide.pt.wallet.WalletInstallPresenter;
 import cm.aptoide.pt.wallet.WalletInstallView;
@@ -356,13 +359,25 @@ import static android.content.Context.WINDOW_SERVICE;
     return new PromotionsNavigator(fragmentNavigator);
   }
 
-  @ActivityScope @Provides WalletInstallPresenter providesPromotionsPresenter(
-      WalletInstallNavigator walletInstallNavigator) {
-    return new WalletInstallPresenter((WalletInstallView) view, walletInstallNavigator);
+  @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
+      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
+    return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
+        walletInstallNavigator);
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
     return new WalletInstallNavigator(fragmentNavigator);
+  }
+
+  @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
+      WalletInstallConfiguration configuration) {
+    return new WalletInstallManager(configuration);
+  }
+
+  @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {
+    return new WalletInstallConfiguration(
+        intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
+        intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
   }
 }
