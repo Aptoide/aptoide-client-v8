@@ -197,7 +197,7 @@ public class PromotionsManager {
   }
 
   public Observable<WalletApp> getWalletApp() {
-    return appService.loadDetailedApp("com.appcoins.wallet", "bds-store")
+    return appService.loadDetailedApp("com.appcoins.wallet", "catappult")
         .toObservable()
         .map(this::mapToWalletApp)
         .flatMap(walletApp -> {
