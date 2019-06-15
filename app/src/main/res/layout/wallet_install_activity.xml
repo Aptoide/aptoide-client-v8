@@ -50,6 +50,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/appIconImageView"
       tools:text="@string/wallet_install_request_message_body"
+      tools:visibility="visible"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
