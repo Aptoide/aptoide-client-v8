@@ -15,7 +15,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.view.app.AppService;
+import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class PromotionsManager {
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
-  private final AppService appService;
+  private final AppCenter appCenter;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -47,7 +47,7 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
       InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
-      AppService appService) {
+      AppCenter appCenter) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -59,7 +59,7 @@ public class PromotionsManager {
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
     this.moPubAdsManager = moPubAdsManager;
-    this.appService = appService;
+    this.appCenter = appCenter;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
@@ -197,7 +197,7 @@ public class PromotionsManager {
   }
 
   public Observable<WalletApp> getWalletApp() {
-    return appService.loadDetailedApp("com.appcoins.wallet", "catappult")
+    return appCenter.loadDetailedApp("com.appcoins.wallet", "catappult")
         .toObservable()
         .map(this::mapToWalletApp)
         .flatMap(walletApp -> {
