@@ -2,24 +2,38 @@ package cm.aptoide.pt.wallet
 
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
-import rx.exceptions.OnErrorNotImplementedException
+import cm.aptoide.pt.promotions.PromotionsManager
+import cm.aptoide.pt.promotions.WalletApp
+import rx.Observable
+import rx.Scheduler
 
 class WalletInstallPresenter(val view: WalletInstallView,
                              val walletInstallManager: WalletInstallManager,
-                             val navigator: WalletInstallNavigator) :
-    Presenter {
+                             val navigator: WalletInstallNavigator,
+                             val promotionsManager: PromotionsManager,
+                             val viewScheduler: Scheduler) : Presenter {
 
   override fun present() {
-    showDialog()
+    loadWalletInstall()
   }
 
-  private fun showDialog() {
+  private fun loadWalletInstall() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
-        .doOnNext {
-          navigator.navigateToWalletInstallView()
+        .flatMap {
+          Observable.zip(walletInstallManager.getAppIcon(),
+              promotionsManager.walletApp) { appIcon, walletApp ->
+            Pair<String, WalletApp>(appIcon, walletApp)
+          }
         }
-        .compose(view.bindUntilEvent<View.LifecycleEvent>(View.LifecycleEvent.DESTROY))
-        .subscribe({}, { throwable -> throw OnErrorNotImplementedException(throwable) })
+        .observeOn(viewScheduler)
+        .doOnNext { pair ->
+          view.showWalletInstallationView(pair.first, pair.second)
+
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {
+          view.dismissDialog()
+        })
   }
 }
