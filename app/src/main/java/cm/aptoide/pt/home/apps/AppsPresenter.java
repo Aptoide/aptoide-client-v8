@@ -195,6 +195,7 @@ public class AppsPresenter implements Presenter {
   private void observeUpdatesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.onLoadUpdatesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getUpdateDownloadsList())
         .observeOn(viewScheduler)
@@ -207,6 +208,7 @@ public class AppsPresenter implements Presenter {
   private void observeAppcUpgradesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.onLoadAppcUpgradesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
         .observeOn(viewScheduler)
@@ -397,6 +399,8 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
+        .doOnNext(installs -> Logger.getInstance()
+            .d("Apps", "getting download apps"))
         .flatMap(__ -> appsManager.getDownloadApps())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showDownloadsList(list))

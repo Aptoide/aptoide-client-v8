@@ -554,11 +554,13 @@ public class InstallManager {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return Observable.just(installedRepository.contains(packageName));
+    return installedRepository.isInstalled(packageName)
+        .first();
   }
 
   public Observable<Install> filterInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.empty();
@@ -568,7 +570,8 @@ public class InstallManager {
   }
 
   public Observable<Install> filterNonInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.just(item);

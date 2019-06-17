@@ -13,6 +13,7 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
@@ -112,18 +113,27 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
-        .distinctUntilChanged()
+        .doOnNext(installs -> Logger.getInstance()
+            .d("Apps", "emit list of installs from getDownloadApps - before throttle"))
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
           }
           return Observable.just(installations)
+              .doOnNext(__ -> Logger.getInstance()
+                  .d("Apps", "emit list of installs from getDownloadApps - after throttle"))
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(item -> installManager.filterInstalled(item))
+              .doOnNext(item -> Logger.getInstance()
+                  .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
               .flatMap(item -> updatesManager.filterAppcUpgrade(item))
+              .doOnNext(item -> Logger.getInstance()
+                  .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
+              .doOnNext(__ -> Logger.getInstance()
+                  .d("Apps", "emit list of installs from getDownloadApps - after toList"))
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
   }

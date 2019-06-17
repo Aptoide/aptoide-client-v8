@@ -62,6 +62,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private boolean showInstalled;
   private boolean showUpgrades;
   private List<App> blackListDownloads;
+  private PublishSubject<Void> appcUpgradesSectionLoaded;
+  private PublishSubject<Void> updatesSectionLoaded;
 
   public static AppsFragment newInstance() {
     return new AppsFragment();
@@ -72,6 +74,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     getFragmentComponent(savedInstanceState).inject(this);
     appItemClicks = PublishSubject.create();
     updateAll = PublishSubject.create();
+    appcUpgradesSectionLoaded = PublishSubject.create();
+    updatesSectionLoaded = PublishSubject.create();
     blackListDownloads = new ArrayList<>();
   }
 
@@ -157,6 +161,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       adapter.setAvailableUpdatesList(list);
     }
     showUpdates = true;
+    updatesSectionLoaded.onNext(null);
     if (shouldShowAppsList()) {
       showAppsList();
     }
@@ -265,16 +270,19 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showUpdatesDownloadList(List<App> updatesDownloadList) {
+    Logger.getInstance()
+        .d("Apps", "showing updates observable list");
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       adapter.addUpdateAppsList(updatesDownloadList);
     }
-    showUpdates = true;
     if (shouldShowAppsList()) {
       showAppsList();
     }
   }
 
   @Override public void showAppcUpgradesDownloadList(List<App> updatesDownloadList) {
+    Logger.getInstance()
+        .d("Apps", "showing appc upgrades observable list");
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
     }
@@ -374,6 +382,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showIndeterminateAllUpdates() {
+    Logger.getInstance()
+        .d("Apps", "show indeterminate all uploads");
     adapter.setAllUpdatesIndeterminate();
   }
 
@@ -397,6 +407,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       appcAppsAdapter.setAvailableUpgradesList(list);
     }
     showUpgrades = true;
+    appcUpgradesSectionLoaded.onNext(null);
     if (shouldShowAppsList()) {
       showAppsList();
     }
@@ -407,11 +418,21 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
   }
 
+  @Override public Observable<Void> onLoadAppcUpgradesSection() {
+    return appcUpgradesSectionLoaded;
+  }
+
+  @Override public Observable<Void> onLoadUpdatesSection() {
+    return updatesSectionLoaded;
+  }
+
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
     triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
     recyclerView.setVisibility(View.VISIBLE);
+    Logger.getInstance()
+        .d("Apps", "showing apps lists");
   }
 
   private void triggerAppcUpgradesVisibility(int itemCount) {

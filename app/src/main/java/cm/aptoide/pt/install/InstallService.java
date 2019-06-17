@@ -113,6 +113,9 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   @Override public void onDestroy() {
+    Logger.getInstance()
+        .d(this.getClass()
+            .getName(), "InstallService.onDestroy");
     subscriptions.unsubscribe();
     presenter.onDestroy();
     openAppViewAction = null;
