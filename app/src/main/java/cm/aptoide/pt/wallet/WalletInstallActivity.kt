@@ -8,10 +8,12 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.widget.TextView
 import cm.aptoide.pt.R
+import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.view.ActivityView
 import kotlinx.android.synthetic.main.wallet_install_activity.*
+import kotlinx.android.synthetic.main.wallet_install_download_view.*
 import javax.inject.Inject
 
 
@@ -37,10 +39,42 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   override fun showWalletInstallationView(appIcon: String,
                                           walletApp: WalletApp) {
-    progressView.visibility = View.GONE
-    walletInstallViewGroup.visibility = View.VISIBLE
-
     ImageLoader.with(this).load(appIcon, appIconImageView)
+    val downloadModel = walletApp.downloadModel
+    if (downloadModel!!.isDownloading) {
+      setDownloadProgress(downloadModel)
+    } else {
+      progressView.visibility = View.GONE
+      walletInstallViewGroup.visibility = View.VISIBLE
+    }
+  }
+
+  private fun setDownloadProgress(downloadModel: DownloadModel) {
+    when (downloadModel.downloadState) {
+      DownloadModel.DownloadState.ACTIVE -> {
+        wallet_download_progress_bar.setIndeterminate(false)
+        wallet_download_progress_bar.setProgress(downloadModel
+            .progress)
+        wallet_download_progress_number.setText(downloadModel
+            .progress.toString() + "%")
+        wallet_download_cancel_button.setVisibility(View.GONE)
+      }
+      DownloadModel.DownloadState.INDETERMINATE, DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
+        wallet_download_progress_bar.setIndeterminate(true)
+        wallet_download_cancel_button.setVisibility(View.GONE)
+      }
+      DownloadModel.DownloadState.ERROR -> showErrorMessage(
+          getString(R.string.error_occured))
+      DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR -> showErrorMessage(
+          getString(R.string.out_of_space_dialog_title))
+      else -> {
+        throw IllegalArgumentException("Invalid download state")
+      }
+    }
+  }
+
+  private fun showErrorMessage(errorMessage: String?) {
+    wallet_download_download_state.text = errorMessage
   }
 
   override fun dismissDialog() {

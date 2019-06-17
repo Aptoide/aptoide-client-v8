@@ -21,7 +21,6 @@
       android:orientation="vertical"
       >
 
-
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="4dp"
@@ -50,7 +49,7 @@
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
-          android:text="@string/appview_short_downloading"
+          android:text="@string/installing_msg"
           style="@style/Aptoide.TextView.Medium.XS.Grey"
           />
 
@@ -94,7 +93,6 @@
       android:orientation="horizontal"
       android:visibility="gone"
       >
-
 
   </LinearLayout>
 </LinearLayout>
