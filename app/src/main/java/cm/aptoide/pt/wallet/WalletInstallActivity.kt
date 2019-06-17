@@ -11,9 +11,11 @@ import cm.aptoide.pt.R
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
+import cm.aptoide.pt.utils.GenericDialogs
 import cm.aptoide.pt.view.ActivityView
 import kotlinx.android.synthetic.main.wallet_install_activity.*
 import kotlinx.android.synthetic.main.wallet_install_download_view.*
+import rx.Observable
 import javax.inject.Inject
 
 
@@ -79,6 +81,12 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   override fun dismissDialog() {
     finish()
+  }
+
+  override fun showRootInstallWarningPopup(): Observable<Boolean>? {
+    return GenericDialogs.createGenericYesNoCancelMessage(applicationContext, null,
+        resources.getString(R.string.root_access_dialog))
+        .map { response -> response.equals(GenericDialogs.EResponse.YES) }
   }
 
 
