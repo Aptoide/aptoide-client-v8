@@ -1,16 +1,22 @@
 package cm.aptoide.pt.wallet
 
+import cm.aptoide.pt.actions.PermissionManager
+import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.PromotionsManager
 import cm.aptoide.pt.promotions.WalletApp
+import rx.Completable
 import rx.Observable
 import rx.Scheduler
+import rx.schedulers.Schedulers
 
 class WalletInstallPresenter(val view: WalletInstallView,
                              val walletInstallManager: WalletInstallManager,
                              val navigator: WalletInstallNavigator,
                              val promotionsManager: PromotionsManager,
+                             val permissionManager: PermissionManager,
+                             val permissionService: PermissionService,
                              val viewScheduler: Scheduler) : Presenter {
 
   override fun present() {
@@ -22,11 +28,34 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
           showWalletInitialState()
+        }.flatMapCompletable {
+          handleWalletDownload(it.second)
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
           view.dismissDialog()
         })
+  }
+
+  private fun handleWalletDownload(walletApp: WalletApp): Completable? {
+
+    return Observable.defer {
+      if (walletInstallManager.shouldShowRootInstallWarningPopup()) {
+        view.showRootInstallWarningPopup()
+            ?.doOnNext { answer -> walletInstallManager.allowRootInstall(answer) }
+      }
+      Observable.just(null)
+    }.observeOn(viewScheduler)
+        .flatMap {
+          permissionManager.requestDownloadAccess(permissionService)
+              .flatMap { success ->
+                permissionManager.requestExternalStoragePermission(permissionService)
+              }
+              .observeOn(Schedulers.io())
+              .flatMapCompletable { void ->
+                walletInstallManager.downloadApp(walletApp)
+              }
+        }.toCompletable()
   }
 
   private fun showWalletInitialState(): Observable<Pair<String, WalletApp>>? {
