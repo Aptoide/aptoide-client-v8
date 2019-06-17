@@ -250,6 +250,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
+import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -1712,12 +1713,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      MoPubAdsManager moPubAdsManager, AppCenter appCenter) {
+      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
             .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        appCenter);
+        walletAppProvider);
+  }
+
+  @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter) {
+    return new WalletAppProvider(appCenter);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

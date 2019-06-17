@@ -15,9 +15,7 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
-import cm.aptoide.pt.view.app.AppCenter;
-import cm.aptoide.pt.view.app.DetailedApp;
-import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import cm.aptoide.pt.wallet.WalletAppProvider;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -39,7 +37,7 @@ public class PromotionsManager {
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
-  private final AppCenter appCenter;
+  private final WalletAppProvider walletAppProvider;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
@@ -47,7 +45,7 @@ public class PromotionsManager {
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
       InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
-      AppCenter appCenter) {
+      WalletAppProvider walletAppProvider) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -59,7 +57,7 @@ public class PromotionsManager {
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
     this.moPubAdsManager = moPubAdsManager;
-    this.appCenter = appCenter;
+    this.walletAppProvider = walletAppProvider;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
@@ -197,9 +195,7 @@ public class PromotionsManager {
   }
 
   public Observable<WalletApp> getWalletApp() {
-    return appCenter.loadDetailedApp("com.appcoins.wallet", "catappult")
-        .toObservable()
-        .map(this::mapToWalletApp)
+    return walletAppProvider.getWalletApp()
         .flatMap(walletApp -> {
           Observable<WalletApp> walletAppObs = Observable.just(walletApp);
           Observable<Boolean> isWalletInstalled =
@@ -210,14 +206,6 @@ public class PromotionsManager {
           return Observable.combineLatest(walletAppObs, isWalletInstalled, walletDownload,
               this::mergeToWalletApp);
         });
-  }
-
-  private WalletApp mapToWalletApp(DetailedAppRequestResult result) {
-    if (result.hasError() || result.isLoading()) return new WalletApp();
-    DetailedApp app = result.getDetailedApp();
-    return new WalletApp(null, false, app.getName(), app.getIcon(), app.getId(),
-        app.getPackageName(), app.getMd5(), app.getVersionCode(), app.getVersionName(),
-        app.getPath(), app.getPathAlt(), app.getObb(), app.getSize());
   }
 
   private WalletApp mergeToWalletApp(WalletApp walletApp, Boolean isInstalled,

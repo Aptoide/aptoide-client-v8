@@ -24,6 +24,7 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewNavigator;
@@ -81,6 +82,7 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
+import cm.aptoide.pt.wallet.WalletAppProvider;
 import cm.aptoide.pt.wallet.WalletInstallConfiguration;
 import cm.aptoide.pt.wallet.WalletInstallManager;
 import cm.aptoide.pt.wallet.WalletInstallNavigator;
@@ -363,7 +365,8 @@ import static android.content.Context.WINDOW_SERVICE;
       WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager,
       PromotionsManager promotionsManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
-        walletInstallNavigator, promotionsManager, AndroidSchedulers.mainThread());
+        walletInstallNavigator, promotionsManager, new PermissionManager(),
+        ((PermissionService) activity.getApplicationContext()), AndroidSchedulers.mainThread());
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
@@ -372,8 +375,10 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
-      WalletInstallConfiguration configuration) {
-    return new WalletInstallManager(configuration, activity.getPackageManager());
+      WalletInstallConfiguration configuration, WalletAppProvider walletAppProvider,
+      InstallManager installManager) {
+    return new WalletInstallManager(configuration, walletAppProvider, activity.getPackageManager(),
+        installManager);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {
