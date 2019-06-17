@@ -21,19 +21,23 @@ class WalletInstallPresenter(val view: WalletInstallView,
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
-          Observable.zip(walletInstallManager.getAppIcon(),
-              promotionsManager.walletApp) { appIcon, walletApp ->
-            Pair<String, WalletApp>(appIcon, walletApp)
-          }
-        }
-        .observeOn(viewScheduler)
-        .doOnNext { pair ->
-          view.showWalletInstallationView(pair.first, pair.second)
-
+          showWalletInitialState()
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
           view.dismissDialog()
         })
   }
+
+  private fun showWalletInitialState(): Observable<Pair<String, WalletApp>>? {
+    return Observable.zip(walletInstallManager.getAppIcon(),
+        promotionsManager.walletApp) { appIcon, walletApp ->
+      Pair<String, WalletApp>(appIcon, walletApp)
+    }.first().observeOn(viewScheduler)
+        .doOnNext { pair ->
+          view.showWalletInstallationView(pair.first, pair.second)
+        }
+  }
+
+
 }
