@@ -60,6 +60,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private boolean showDownloads;
   private boolean showUpdates;
   private boolean showInstalled;
+  private boolean showUpgrades;
   private List<App> blackListDownloads;
 
   public static AppsFragment newInstance() {
@@ -390,10 +391,15 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void showAppcUpgradesList(List<App> list) {
+    Logger.getInstance()
+        .d("Apps", "showing appc upgrades list");
     if (list != null && !list.isEmpty()) {
       appcAppsAdapter.setAvailableUpgradesList(list);
     }
-    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
+    showUpgrades = true;
+    if (shouldShowAppsList()) {
+      showAppsList();
+    }
   }
 
   @Override public void removeExcludedAppcUpgrades(List<App> excludedUpdatesList) {
@@ -404,6 +410,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private void showAppsList() {
     recyclerView.scrollToPosition(0);
     hideLoadingProgressBar();
+    triggerAppcUpgradesVisibility(appcAppsAdapter.getTotalItemCount());
     recyclerView.setVisibility(View.VISIBLE);
   }
 
@@ -426,6 +433,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     return showDownloads
         && showUpdates
         && showInstalled
+        && showUpgrades
         && recyclerView.getVisibility() != View.VISIBLE;
   }
 

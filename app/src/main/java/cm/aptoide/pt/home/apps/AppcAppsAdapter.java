@@ -75,6 +75,7 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
       case UPDATING:
         return UPDATING;
       case STANDBY:
+      case INSTALLING:
         return STANDBY_UPDATE;
       case ERROR:
         return ERROR_UPDATE;
