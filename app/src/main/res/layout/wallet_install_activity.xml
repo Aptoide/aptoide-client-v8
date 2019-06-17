@@ -64,6 +64,16 @@
       app:layout_constraintTop_toTopOf="parent"
       tools:visibility="gone"
       />
+
+  <include
+      layout="@layout/wallet_install_download_view"
+      android:id="@+id/wallet_install_download_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:visibility="visible"
+      />
+
   <android.support.constraint.Group
       android:id="@+id/walletInstallViewGroup"
       android:layout_width="wrap_content"
