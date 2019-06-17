@@ -178,7 +178,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .d("Apps", "showing downloads list");
 
     list.removeAll(blackListDownloads);
-    if (list != null && !list.isEmpty()) {
+    if (!list.isEmpty()) {
       adapter.addDownloadAppsList(list);
     }
     showDownloads = true;
