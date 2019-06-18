@@ -16,10 +16,24 @@
       android:layout_height="wrap_content"
       android:scaleType="fitXY"
       android:src="@drawable/ic_wallet_install_header_bg"
-      android:visibility="invisible"
+      android:visibility="visible"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <ImageView
+      android:id="@+id/appIconImageBackground"
+      android:layout_width="58dp"
+      android:layout_height="58dp"
+      android:layout_below="@id/header_bg"
+      android:layout_centerHorizontal="true"
+      android:src="@drawable/ic_white_circle"
+      android:visibility="visible"
+      app:layout_constraintBottom_toBottomOf="@+id/header_bg"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/header_bg"
       />
 
   <ImageView
@@ -34,6 +48,7 @@
       app:layout_constraintTop_toBottomOf="@+id/header_bg"
       tools:src="@drawable/appcoins_icon_gradient"
       />
+
 
   <TextView
       android:id="@+id/messageTextView"
@@ -52,6 +67,34 @@
       tools:text="@string/wallet_install_request_message_body"
       tools:visibility="visible"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+
+  <TextView
+      android:id="@+id/installCompleteMessage"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:gravity="center"
+      android:maxWidth="232dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/messageTextView"
+      tools:text="Just tap to buy again"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+
+  <Button
+      android:id="@+id/closeButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:text="@string/got_it_button_text"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/installCompleteMessage"
+      style="@style/Aptoide.Button.Flat.GreyMedium"
       />
 
   <ProgressBar
@@ -85,7 +128,14 @@
       android:layout_height="wrap_content"
       android:visibility="invisible"
       app:constraint_referenced_ids="appIconImageView,header_bg,messageTextView"
-      tools:visibility="visible"
+      />
+
+  <android.support.constraint.Group
+      android:id="@+id/walletInstallSuccessViewGroup"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground,closeButton"
       />
 
 

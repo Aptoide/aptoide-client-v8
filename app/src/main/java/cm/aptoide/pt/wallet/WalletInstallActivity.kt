@@ -14,6 +14,7 @@ import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.GenericDialogs
 import cm.aptoide.pt.view.ActivityView
+import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.wallet_install_activity.*
 import kotlinx.android.synthetic.main.wallet_install_download_view.*
 import rx.Observable
@@ -29,7 +30,6 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     super.onCreate(savedInstanceState)
     activityComponent.inject(this)
     setContentView(R.layout.wallet_install_activity)
-    initStyling()
     attachPresenter(presenter)
   }
 
@@ -42,6 +42,11 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   override fun showWalletInstallationView(appIcon: String,
                                           walletApp: WalletApp) {
+    initStyling()
+    progressView.visibility = View.GONE
+    walletInstallSuccessViewGroup.visibility = View.GONE
+    walletInstallViewGroup.visibility = View.VISIBLE
+
     ImageLoader.with(this).load(appIcon, appIconImageView)
     Logger.getInstance().d("lol", "showing wallet installation view");
     val downloadModel = walletApp.downloadModel
@@ -86,6 +91,23 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   private fun showErrorMessage(errorMessage: String?) {
     wallet_download_download_state.text = errorMessage
+  }
+
+  override fun showInstallationSuccessView() {
+    appIconImageView.setImageDrawable(
+        getResources().getDrawable(R.drawable.ic_check_orange_gradient_start))
+    val message = getString(R.string.wallet_install_complete_title)
+    messageTextView.text = message
+    messageTextView.setSubstringTypeface(Pair(message, Typeface.BOLD))
+    installCompleteMessage.text = getString(R.string.wallet_install_complete_body)
+    progressView.visibility = View.GONE
+    walletInstallSuccessViewGroup.visibility = View.VISIBLE
+    walletInstallViewGroup.visibility = View.VISIBLE
+
+  }
+
+  override fun closeButtonClicked(): Observable<Void> {
+    return RxView.clicks(closeButton)
   }
 
   override fun dismissDialog() {

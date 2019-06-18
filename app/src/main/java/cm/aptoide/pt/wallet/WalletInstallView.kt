@@ -9,6 +9,10 @@ interface WalletInstallView : View {
   fun showWalletInstallationView(appIcon: String,
                                  walletApp: WalletApp)
 
+  fun showInstallationSuccessView()
+
+  fun closeButtonClicked(): Observable<Void>
+
   fun dismissDialog()
 
   fun showRootInstallWarningPopup(): Observable<Boolean>?
