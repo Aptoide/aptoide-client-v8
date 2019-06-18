@@ -19,7 +19,6 @@ import rx.Completable
 import rx.Observable
 
 class WalletInstallManager(val configuration: WalletInstallConfiguration,
-                           val walletAppProvider: WalletAppProvider,
                            val packageManager: PackageManager, val installManager: InstallManager,
                            val downloadFactory: DownloadFactory,
                            val downloadStateParser: DownloadStateParser,

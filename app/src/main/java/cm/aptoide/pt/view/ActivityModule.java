@@ -85,7 +85,6 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
-import cm.aptoide.pt.wallet.WalletAppProvider;
 import cm.aptoide.pt.wallet.WalletInstallAnalytics;
 import cm.aptoide.pt.wallet.WalletInstallConfiguration;
 import cm.aptoide.pt.wallet.WalletInstallManager;
@@ -379,14 +378,14 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
-      WalletInstallConfiguration configuration, WalletAppProvider walletAppProvider,
-      InstallManager installManager, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
-      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository) {
-    return new WalletInstallManager(configuration, walletAppProvider, activity.getPackageManager(),
-        installManager, downloadFactory, downloadStateParser, moPubAdsManager,
-        notificationAnalytics, installAnalytics, walletInstallAnalytics, installedRepository);
+      WalletInstallConfiguration configuration, InstallManager installManager,
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      MoPubAdsManager moPubAdsManager, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, WalletInstallAnalytics walletInstallAnalytics,
+      InstalledRepository installedRepository) {
+    return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
+        downloadFactory, downloadStateParser, moPubAdsManager, notificationAnalytics,
+        installAnalytics, walletInstallAnalytics, installedRepository);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
