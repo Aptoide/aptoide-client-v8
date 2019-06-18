@@ -149,7 +149,7 @@ public class PromotionsService {
             .getPath(), app.getApp()
             .getFile()
             .getPathAlt(), app.getApp()
-            .getIcon(), app.getDescription(), app.getApp()
+            .getIcon(), app.getPromotionDescription(), app.getApp()
             .getSize(), app.getApp()
             .getStats()
             .getRating()
