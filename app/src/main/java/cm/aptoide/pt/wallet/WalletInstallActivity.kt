@@ -56,16 +56,16 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     wallet_install_download_view.visibility = View.VISIBLE
     when (downloadModel.downloadState) {
       DownloadModel.DownloadState.ACTIVE -> {
-        wallet_download_progress_bar.setIndeterminate(false)
-        wallet_download_progress_bar.setProgress(downloadModel
-            .progress)
-        wallet_download_progress_number.setText(downloadModel
-            .progress.toString() + "%")
-        wallet_download_cancel_button.setVisibility(View.GONE)
+        wallet_download_progress_bar.isIndeterminate = false
+        wallet_download_progress_bar.progress = downloadModel
+            .progress
+        wallet_download_progress_number.text = downloadModel
+            .progress.toString() + "%"
+        wallet_download_cancel_button.visibility = View.GONE
       }
       DownloadModel.DownloadState.INDETERMINATE, DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
-        wallet_download_progress_bar.setIndeterminate(true)
-        wallet_download_cancel_button.setVisibility(View.GONE)
+        wallet_download_progress_bar.isIndeterminate = true
+        wallet_download_cancel_button.visibility = View.GONE
       }
       DownloadModel.DownloadState.ERROR -> showErrorMessage(
           getString(R.string.error_occured))
