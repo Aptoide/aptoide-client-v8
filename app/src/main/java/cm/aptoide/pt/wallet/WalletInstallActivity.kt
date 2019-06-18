@@ -45,7 +45,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     initStyling()
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.GONE
-    walletInstallViewGroup.visibility = View.VISIBLE
+    //walletInstallViewGroup.visibility = View.VISIBLE
 
     ImageLoader.with(this).load(appIcon, appIconImageView)
     Logger.getInstance().d("lol", "showing wallet installation view");
@@ -102,8 +102,10 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     installCompleteMessage.text = getString(R.string.wallet_install_complete_body)
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.VISIBLE
-    walletInstallViewGroup.visibility = View.VISIBLE
-
+    //walletInstallViewGroup.visibility = View.VISIBLE
+    appIconImageView.visibility = View.VISIBLE
+    header_bg.visibility = View.VISIBLE
+    messageTextView.visibility = View.VISIBLE
   }
 
   override fun closeButtonClicked(): Observable<Void> {

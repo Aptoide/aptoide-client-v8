@@ -123,14 +123,6 @@
       />
 
   <android.support.constraint.Group
-      android:id="@+id/walletInstallViewGroup"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:visibility="invisible"
-      app:constraint_referenced_ids="appIconImageView,header_bg,messageTextView"
-      />
-
-  <android.support.constraint.Group
       android:id="@+id/walletInstallSuccessViewGroup"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
