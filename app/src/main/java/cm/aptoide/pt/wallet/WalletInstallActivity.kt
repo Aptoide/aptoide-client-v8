@@ -46,12 +46,14 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     if (downloadModel!!.isDownloading) {
       setDownloadProgress(downloadModel)
     } else {
+      wallet_install_download_view.visibility = View.GONE
       progressView.visibility = View.GONE
       walletInstallViewGroup.visibility = View.VISIBLE
     }
   }
 
   private fun setDownloadProgress(downloadModel: DownloadModel) {
+    wallet_install_download_view.visibility = View.VISIBLE
     when (downloadModel.downloadState) {
       DownloadModel.DownloadState.ACTIVE -> {
         wallet_download_progress_bar.setIndeterminate(false)
