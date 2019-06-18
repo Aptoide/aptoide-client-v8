@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.app.DownloadModel
+import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.GenericDialogs
@@ -42,17 +43,23 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun showWalletInstallationView(appIcon: String,
                                           walletApp: WalletApp) {
     ImageLoader.with(this).load(appIcon, appIconImageView)
+    Logger.getInstance().d("lol", "showing wallet installation view");
     val downloadModel = walletApp.downloadModel
     if (downloadModel!!.isDownloading) {
       setDownloadProgress(downloadModel)
     } else {
+      Logger.getInstance().d("lol", "hiding download view and showing message");
       wallet_install_download_view.visibility = View.GONE
       progressView.visibility = View.GONE
-      walletInstallViewGroup.visibility = View.VISIBLE
+      appIconImageView.visibility = View.VISIBLE
+      header_bg.visibility = View.VISIBLE
+      messageTextView.visibility = View.VISIBLE
+      //walletInstallViewGroup.visibility = View.VISIBLE
     }
   }
 
   private fun setDownloadProgress(downloadModel: DownloadModel) {
+    Logger.getInstance().d("lol", "showing download model");
     wallet_install_download_view.visibility = View.VISIBLE
     when (downloadModel.downloadState) {
       DownloadModel.DownloadState.ACTIVE -> {
@@ -115,4 +122,13 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
 
+  override fun showIndeterminateDownload() {
+    Logger.getInstance().d("lol", "showing indeterminate");
+    wallet_install_download_view.visibility = View.VISIBLE
+    wallet_download_progress_bar.isIndeterminate = true
+    messageTextView.visibility = View.GONE
+    appIconImageView.visibility = View.VISIBLE
+    header_bg.visibility = View.VISIBLE
+
+  }
 }

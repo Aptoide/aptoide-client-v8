@@ -28,11 +28,13 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
           showWalletInitialState()
-        }.flatMapCompletable {
+        }.observeOn(viewScheduler)
+        .doOnNext { view.showIndeterminateDownload() }.flatMapCompletable {
           handleWalletDownload(it.second)
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
+          it.printStackTrace()
           view.dismissDialog()
         })
   }
