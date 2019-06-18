@@ -45,7 +45,6 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     initStyling()
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.GONE
-    //walletInstallViewGroup.visibility = View.VISIBLE
 
     ImageLoader.with(this).load(appIcon, appIconImageView)
     Logger.getInstance().d("lol", "showing wallet installation view");
@@ -56,10 +55,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
       Logger.getInstance().d("lol", "hiding download view and showing message");
       wallet_install_download_view.visibility = View.GONE
       progressView.visibility = View.GONE
-      appIconImageView.visibility = View.VISIBLE
-      header_bg.visibility = View.VISIBLE
-      messageTextView.visibility = View.VISIBLE
-      //walletInstallViewGroup.visibility = View.VISIBLE
+      walletInstallViewGroup.visibility = View.VISIBLE
     }
   }
 
@@ -102,11 +98,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     installCompleteMessage.text = getString(R.string.wallet_install_complete_body)
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.VISIBLE
-    //walletInstallViewGroup.visibility = View.VISIBLE
-    appIconImageView.visibility = View.VISIBLE
-    header_bg.visibility = View.VISIBLE
-    messageTextView.visibility = View.VISIBLE
-    Logger.getInstance().d("lol", "showing installation success")
+    walletInstallViewGroup.visibility = View.VISIBLE
     wallet_install_download_view.visibility = View.GONE
 
   }
@@ -147,7 +139,6 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     }
     this.setText(spannableString, TextView.BufferType.SPANNABLE)
   }
-
 
   override fun showIndeterminateDownload() {
     Logger.getInstance().d("lol", "showing indeterminate");
