@@ -133,7 +133,6 @@
     <activity
         android:name=".wallet.WalletInstallActivity"
         android:excludeFromRecents="true"
-        android:noHistory="true"
         android:taskAffinity=".wallet.WalletInstallActivity"
         android:theme="@style/Aptoide.DialogTheme"
         android:windowSoftInputMode="adjustPan"/>

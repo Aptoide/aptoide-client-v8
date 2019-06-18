@@ -383,10 +383,10 @@ import static android.content.Context.WINDOW_SERVICE;
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      WalletInstallAnalytics walletInstallAnalytics) {
+      WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository) {
     return new WalletInstallManager(configuration, walletAppProvider, activity.getPackageManager(),
         installManager, downloadFactory, downloadStateParser, moPubAdsManager,
-        notificationAnalytics, installAnalytics, walletInstallAnalytics);
+        notificationAnalytics, installAnalytics, walletInstallAnalytics, installedRepository);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(

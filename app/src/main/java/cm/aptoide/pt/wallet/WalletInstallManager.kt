@@ -11,6 +11,8 @@ import cm.aptoide.pt.download.AppContext
 import cm.aptoide.pt.download.DownloadFactory
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.install.InstallManager
+import cm.aptoide.pt.install.InstalledRepository
+import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.notification.NotificationAnalytics
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.AptoideUtils
@@ -25,7 +27,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val moPubAdsManager: MoPubAdsManager,
                            val notificationAnalytics: NotificationAnalytics,
                            val installAnalytics: InstallAnalytics,
-                           val walletInstallAnalytics: WalletInstallAnalytics) {
+                           val walletInstallAnalytics: WalletInstallAnalytics,
+                           val installedRepository: InstalledRepository) {
 
   fun getAppIcon(): Observable<String> {
     return Observable.just(AptoideUtils.SystemU.getApkIconPath(
@@ -70,4 +73,10 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE)
   }
 
+  fun onWalletInstalled(): Observable<Boolean> {
+    return installedRepository.isInstalled("com.appcoins.wallet")
+        .doOnNext { Logger.getInstance().d("lol", "emitted is installed ") }.filter {
+          it
+        }
+  }
 }

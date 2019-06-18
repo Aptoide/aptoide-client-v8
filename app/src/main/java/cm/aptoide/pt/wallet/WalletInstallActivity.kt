@@ -106,6 +106,9 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     appIconImageView.visibility = View.VISIBLE
     header_bg.visibility = View.VISIBLE
     messageTextView.visibility = View.VISIBLE
+    Logger.getInstance().d("lol", "showing installation success")
+    wallet_install_download_view.visibility = View.GONE
+
   }
 
   override fun closeButtonClicked(): Observable<Void> {
@@ -113,7 +116,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
   override fun dismissDialog() {
-    finish()
+    //finish()
   }
 
   override fun showRootInstallWarningPopup(): Observable<Boolean>? {
@@ -154,5 +157,10 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     appIconImageView.visibility = View.VISIBLE
     header_bg.visibility = View.VISIBLE
 
+  }
+
+  override fun onDestroy() {
+    Logger.getInstance().d("lol", "activity was destroyed")
+    super.onDestroy()
   }
 }

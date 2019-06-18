@@ -22,6 +22,20 @@ class WalletInstallPresenter(val view: WalletInstallView,
   override fun present() {
     loadWalletInstall()
     handleCloseButtonClick()
+    handleWalletInstalled();
+  }
+
+  private fun handleWalletInstalled() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .flatMap { walletInstallManager.onWalletInstalled() }
+        .observeOn(viewScheduler)
+        .doOnNext { view.showInstallationSuccessView() }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {
+          it.printStackTrace()
+          view.dismissDialog()
+        })
   }
 
   private fun loadWalletInstall() {
@@ -72,7 +86,6 @@ class WalletInstallPresenter(val view: WalletInstallView,
   }
 
 
-
   private fun handleCloseButtonClick() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
@@ -80,6 +93,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .doOnNext { view.dismissDialog() }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
+          it.printStackTrace()
           view.dismissDialog()
         })
   }
