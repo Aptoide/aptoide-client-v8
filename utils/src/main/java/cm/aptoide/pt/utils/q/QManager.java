@@ -116,7 +116,8 @@ public class QManager {
         + "&maxGles="
         + getGlEs()
         + "&myCPU="
-        + getCpuAbi() + "&leanback=0"
+        + getCpuAbi()
+        + "&leanback=0"
         + "&myDensity="
         + getDensityDpi()
         + (getSupportedOpenGlExtensionsManager().equals("") ? ""
