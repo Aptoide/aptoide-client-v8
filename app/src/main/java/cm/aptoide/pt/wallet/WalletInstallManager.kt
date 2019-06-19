@@ -20,7 +20,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val downloadStateParser: DownloadStateParser,
                            val moPubAdsManager: MoPubAdsManager,
                            val walletInstallAnalytics: WalletInstallAnalytics,
-                           val installedRepository: InstalledRepository) {
+                           val installedRepository: InstalledRepository,
+                           val walletAppProvider: WalletAppProvider) {
 
   fun getAppIcon(): Observable<String> {
     return Observable.just(AptoideUtils.SystemU.getApkIconPath(
@@ -64,4 +65,9 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
       it
     }
   }
+
+  fun getWallet(): Observable<WalletApp> {
+    return walletAppProvider.getWalletApp()
+  }
+
 }

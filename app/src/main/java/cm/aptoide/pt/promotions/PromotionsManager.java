@@ -5,12 +5,10 @@ import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -195,33 +193,7 @@ public class PromotionsManager {
   }
 
   public Observable<WalletApp> getWalletApp() {
-    return walletAppProvider.getWalletApp()
-        .flatMap(walletApp -> {
-          Observable<WalletApp> walletAppObs = Observable.just(walletApp);
-          Observable<Boolean> isWalletInstalled =
-              installedRepository.isInstalled(walletApp.getPackageName());
-          Observable<Install> walletDownload =
-              installManager.getInstall(walletApp.getMd5sum(), walletApp.getPackageName(),
-                  walletApp.getVersionCode());
-          return Observable.combineLatest(walletAppObs, isWalletInstalled, walletDownload,
-              this::mergeToWalletApp);
-        });
-  }
-
-  private WalletApp mergeToWalletApp(WalletApp walletApp, Boolean isInstalled,
-      Install walletDownload) {
-    DownloadModel downloadModel =
-        mapToDownloadModel(walletDownload.getType(), walletDownload.getProgress(),
-            walletDownload.getState());
-    walletApp.setDownloadModel(downloadModel);
-    walletApp.setInstalled(isInstalled);
-    return walletApp;
-  }
-
-  private DownloadModel mapToDownloadModel(Install.InstallationType type, int progress,
-      Install.InstallationStatus state) {
-    return new DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
-        progress, downloadStateParser.parseDownloadState(state), null);
+    return walletAppProvider.getWalletApp();
   }
 
   /**

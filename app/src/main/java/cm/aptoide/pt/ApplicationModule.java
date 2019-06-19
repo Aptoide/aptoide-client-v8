@@ -1721,8 +1721,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         walletAppProvider);
   }
 
-  @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter) {
-    return new WalletAppProvider(appCenter);
+  @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,
+      InstalledRepository installedRepository, InstallManager installManager,
+      DownloadStateParser downloadStateParser) {
+    return new WalletAppProvider(appCenter, installedRepository, installManager,
+        downloadStateParser);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

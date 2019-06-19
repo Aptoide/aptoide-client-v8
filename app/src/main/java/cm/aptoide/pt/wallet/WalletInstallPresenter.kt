@@ -22,7 +22,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
   override fun present() {
     loadWalletInstall()
     handleCloseButtonClick()
-    handleWalletInstalled();
+    handleWalletInstalled()
   }
 
   private fun handleWalletInstalled() {
@@ -77,7 +77,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
 
   private fun showWalletInitialState(): Observable<Pair<String, WalletApp>>? {
     return Observable.zip(walletInstallManager.getAppIcon(),
-        promotionsManager.walletApp) { appIcon, walletApp ->
+        walletInstallManager.getWallet()) { appIcon, walletApp ->
       Pair<String, WalletApp>(appIcon, walletApp)
     }.first().observeOn(viewScheduler)
         .doOnNext { pair ->
