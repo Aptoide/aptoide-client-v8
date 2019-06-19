@@ -304,7 +304,7 @@ android {
     variant.buildConfigField "String", "MOPUB_NATIVE_APPVIEW_PLACEMENT_ID",
         "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_HOME_PLACEMENT_ID",
-        "\"" + project.MOPUB_NATIVE_PLACEMENT_ID_PROD + "\""
+        "\"" + project.MOPUB_NATIVE_HOME_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_NATIVE_SEARCH_PLACEMENT_ID",
         "\"" + project.MOPUB_NATIVE_SEARCH_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID",
