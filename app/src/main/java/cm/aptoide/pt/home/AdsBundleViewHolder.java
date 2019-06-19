@@ -52,7 +52,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setNestedScrollingEnabled(false);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     if (!(homeBundle instanceof AdBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
@@ -60,19 +60,19 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, position);
+    appsInBundleAdapter.updateBundle(homeBundle, getAdapterPosition());
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
     appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         if (dx > 0) {
-          uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.SCROLL_RIGHT));
+          uiEventsListener.onNext(new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
         }
       }
     });
 
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
   }
 }

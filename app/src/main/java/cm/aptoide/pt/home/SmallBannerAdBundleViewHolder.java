@@ -19,7 +19,7 @@ class SmallBannerAdBundleViewHolder extends AppBundleViewHolder {
     bannerView.setAdUnitId(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     if (!hasLoaded) {
       bannerView.loadAd();
       hasLoaded = true;

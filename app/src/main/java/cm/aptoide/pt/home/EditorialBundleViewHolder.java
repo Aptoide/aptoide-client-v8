@@ -55,13 +55,13 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     topReactionsPreview.initialReactionsSetup(view);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
         actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
-        actionItem.getDate(), position, homeBundle, actionItem.getReactionList(),
+        actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
         actionItem.getTotal(), actionItem.getUserReaction());
   }
 

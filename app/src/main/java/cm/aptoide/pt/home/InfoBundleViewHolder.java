@@ -27,7 +27,7 @@ class InfoBundleViewHolder extends AppBundleViewHolder {
     this.message = view.findViewById(R.id.message);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
     ImageLoader.with(itemView.getContext())
@@ -37,8 +37,8 @@ class InfoBundleViewHolder extends AppBundleViewHolder {
     title.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
     message.setText(Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
     knowMoreButton.setOnClickListener(view -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, position, HomeEvent.Type.KNOW_MORE)));
+        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.KNOW_MORE)));
     dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, position, HomeEvent.Type.DISMISS_BUNDLE)));
+        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.DISMISS_BUNDLE)));
   }
 }

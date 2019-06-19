@@ -49,16 +49,16 @@ public class TopBundleViewHolder extends AppBundleViewHolder {
     topList.setNestedScrollingEnabled(false);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle, int position) {
+  @Override public void setBundle(HomeBundle homeBundle) {
     if (!(homeBundle instanceof AppBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
-    topBundleAdapter.updateBundle(homeBundle, position);
+    topBundleAdapter.updateBundle(homeBundle, getAdapterPosition());
     topBundleAdapter.update((List<Application>) homeBundle.getContent());
     moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE_TOP)));
+        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE_TOP)));
   }
 }
