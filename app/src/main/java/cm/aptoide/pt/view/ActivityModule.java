@@ -380,17 +380,18 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
       WalletInstallConfiguration configuration, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
-      MoPubAdsManager moPubAdsManager, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, WalletInstallAnalytics walletInstallAnalytics,
+      MoPubAdsManager moPubAdsManager, WalletInstallAnalytics walletInstallAnalytics,
       InstalledRepository installedRepository) {
     return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
-        downloadFactory, downloadStateParser, moPubAdsManager, notificationAnalytics,
-        installAnalytics, walletInstallAnalytics, installedRepository);
+        downloadFactory, downloadStateParser, moPubAdsManager, walletInstallAnalytics,
+        installedRepository);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
-      DownloadAnalytics downloadAnalytics) {
-    return new WalletInstallAnalytics(downloadAnalytics);
+      DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser) {
+    return new WalletInstallAnalytics(downloadAnalytics, notificationAnalytics, installAnalytics,
+        downloadStateParser);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {

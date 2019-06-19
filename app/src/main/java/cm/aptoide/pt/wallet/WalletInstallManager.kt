@@ -1,18 +1,14 @@
 package cm.aptoide.pt.wallet
 
 import android.content.pm.PackageManager
-import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.ads.MoPubAdsManager
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.realm.Download
-import cm.aptoide.pt.download.AppContext
 import cm.aptoide.pt.download.DownloadFactory
-import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.install.InstalledRepository
-import cm.aptoide.pt.notification.NotificationAnalytics
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Completable
@@ -23,8 +19,6 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val downloadFactory: DownloadFactory,
                            val downloadStateParser: DownloadStateParser,
                            val moPubAdsManager: MoPubAdsManager,
-                           val notificationAnalytics: NotificationAnalytics,
-                           val installAnalytics: InstallAnalytics,
                            val walletInstallAnalytics: WalletInstallAnalytics,
                            val installedRepository: InstalledRepository) {
 
@@ -61,14 +55,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
   private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
                                   appId: Long, malwareRank: String?, editorsChoice: String?,
                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
-    val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
-    val abTestGroup = notificationAnalytics.getAbTestingGroup(download.packageName, appId)
-    walletInstallAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus)
-    installAnalytics.installStarted(download.packageName, download.versionCode,
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
-        downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
-        downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE)
+    walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, malwareRank,
+        editorsChoice, offerResponseStatus)
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
