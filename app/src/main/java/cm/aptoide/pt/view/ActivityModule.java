@@ -366,11 +366,10 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
-      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager,
-      PromotionsManager promotionsManager) {
+      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
-        walletInstallNavigator, promotionsManager, new PermissionManager(),
-        ((PermissionService) activity), AndroidSchedulers.mainThread());
+        walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
+        AndroidSchedulers.mainThread());
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(

@@ -4,7 +4,6 @@ import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
-import cm.aptoide.pt.promotions.PromotionsManager
 import cm.aptoide.pt.promotions.WalletApp
 import rx.Completable
 import rx.Observable
@@ -14,7 +13,6 @@ import rx.schedulers.Schedulers
 class WalletInstallPresenter(val view: WalletInstallView,
                              val walletInstallManager: WalletInstallManager,
                              val navigator: WalletInstallNavigator,
-                             val promotionsManager: PromotionsManager,
                              val permissionManager: PermissionManager,
                              val permissionService: PermissionService,
                              val viewScheduler: Scheduler) : Presenter {
