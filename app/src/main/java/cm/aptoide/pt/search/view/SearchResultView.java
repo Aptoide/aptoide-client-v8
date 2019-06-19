@@ -45,9 +45,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void setAllStoresAdsEmpty();
 
-  Observable<Void> followedStoresResultReachedBottom();
+  Observable<Object> followedStoresResultReachedBottom();
 
-  Observable<Void> allStoresResultReachedBottom();
+  Observable<Object> allStoresResultReachedBottom();
 
   void showLoadingMore();
 

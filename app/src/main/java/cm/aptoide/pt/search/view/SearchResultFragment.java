@@ -51,6 +51,7 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
+import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
@@ -66,7 +67,6 @@ import com.mopub.nativeads.ViewBinder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.parceler.Parcels;
@@ -84,7 +84,7 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
 
-  private static final int VISIBLE_THRESHOLD = 5;
+  private static final int VISIBLE_THRESHOLD = 2;
   private static final long ANIMATION_DURATION = 125L;
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
   private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
@@ -333,11 +333,11 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override public Observable<Void> followedStoresResultReachedBottom() {
+  @Override public Observable<Object> followedStoresResultReachedBottom() {
     return recyclerViewReachedBottom(followedStoresResultList);
   }
 
-  @Override public Observable<Void> allStoresResultReachedBottom() {
+  @Override public Observable<Object> allStoresResultReachedBottom() {
     return recyclerViewReachedBottom(allStoresResultList);
   }
 
@@ -536,21 +536,19 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
-  private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
+  private Observable<Object> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
-        .filter(event -> event.dy() > 4)
-        .filter(event -> event.view()
-            .isAttachedToWindow())
-        .filter(event -> {
-          final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
-              .getLayoutManager();
-          final int visibleItemCount = layoutManager.getChildCount();
-          final int totalItemCount = layoutManager.getItemCount();
-          final int pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
-          return (visibleItemCount + pastVisibleItems) >= (totalItemCount - VISIBLE_THRESHOLD);
-        })
-        .debounce(650, TimeUnit.MILLISECONDS)
-        .map(event -> null);
+        .map(this::isEndReached)
+        .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
+        .cast(Object.class);
+  }
+
+  private boolean isEndReached(RecyclerViewScrollEvent event) {
+    final LinearLayoutManager layoutManager = (LinearLayoutManager) event.view()
+        .getLayoutManager();
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
+        <= VISIBLE_THRESHOLD;
   }
 
   private void setFollowedStoresButtonSelected() {
