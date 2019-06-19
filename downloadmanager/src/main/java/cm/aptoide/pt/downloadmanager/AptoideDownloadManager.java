@@ -95,7 +95,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Observable<Download> getDownloadsByMd5(String md5) {
     return downloadsRepository.getDownloadListByMd5(md5)
         .flatMap(downloads -> Observable.from(downloads)
-            .filter(download -> download != null || isFileMissingFromCompletedDownload(download))
+            .filter(download -> download != null && !isFileMissingFromCompletedDownload(download))
             .toList())
         .map(downloads -> {
           if (downloads.isEmpty()) {
@@ -104,7 +104,9 @@ public class AptoideDownloadManager implements DownloadManager {
             return downloads.get(0);
           }
         })
-        .distinctUntilChanged();
+        .distinctUntilChanged()
+        .doOnNext(download -> Logger.getInstance()
+            .d(TAG, "passing a download : "));
   }
 
   @Override public Observable<List<Download>> getDownloadsList() {
