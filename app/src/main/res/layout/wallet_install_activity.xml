@@ -111,14 +111,14 @@
   <include
       layout="@layout/wallet_install_download_view"
       android:id="@+id/wallet_install_download_view"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:visibility="gone"
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/appIconImageView"
+      app:layout_constraintTop_toBottomOf="@+id/messageTextView"
       tools:visibility="visible"
       />
 
