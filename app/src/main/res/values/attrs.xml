@@ -74,6 +74,7 @@
   <attr format="reference" name="icAppviewsPencil"/>
   <attr format="reference" name="loggedInIcon"/>
   <attr format="reference" name="homeChips"/>
+  <attr format="reference" name="ratingDrawable"/>
   <attr format="color" name="navigationDrawerColor"/>
   <attr format="reference" name="timelineButtonsBackgroundColor"/>
   <attr format="reference" name="timelinePostBackground"/>
@@ -86,6 +87,7 @@
   <attr format="reference|color" name="storesTextColor"/>
   <attr format="reference" name="defaultTextStyle"/>
   <attr format="reference|color" name="appviewRatingCardTextColor"/>
+  <attr format="reference|color" name="textColorBlackAlpha"/>
 
   <!--New styles attributes-->
   <attr format="reference" name="raisedButtonBackground"/>

@@ -64,7 +64,7 @@
     <item name="inverseTextColor">@android:color/white</item>
     <item name="storesTextColor">@color/white</item>
     <item name="appviewRatingCardTextColor">@color/white</item>
-
+    <item name="textColorBlackAlpha">@color/black_87_alpha</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
@@ -131,6 +131,7 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="ratingDrawable">@drawable/ic_star_black</item>
 
   </style>
 
@@ -211,6 +212,7 @@
     <item name="storesTextColor">@color/white</item>
     <item name="appviewRatingCardTextColor">@color/white</item>
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
+    <item name="textColorBlackAlpha">@color/white</item>
 
 
     <!--widgets-->
@@ -278,6 +280,7 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="ratingDrawable">@drawable/ic_star_white</item>
 
   </style>
 

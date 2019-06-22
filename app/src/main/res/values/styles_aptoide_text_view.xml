@@ -8,7 +8,7 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:ellipsize">end</item>
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular">
@@ -88,11 +88,11 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.M.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.L.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.Grey">
@@ -112,11 +112,11 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.GreyMedium">
@@ -124,19 +124,19 @@
   </style>
 
   <style name="Aptoide.TextView.Regular.XS.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.XS.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.S.Grey_900">
@@ -144,15 +144,15 @@
   </style>
 
   <style name="Aptoide.TextView.Medium.XS.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.M.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XS.White">
@@ -170,15 +170,15 @@
 
 
   <style name="Aptoide.TextView.Medium.L.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.L.BlackAlpha">
-    <item name="android:textColor">@color/black_87_alpha</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.S.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.S.GreyFog">
@@ -215,7 +215,7 @@
   </style>
 
   <style name="Aptoide.TextView.Medium.XXS.Black">
-    <item name="android:textColor">@color/black</item>
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <!-- Text Style -->
