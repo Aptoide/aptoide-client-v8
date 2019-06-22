@@ -26,8 +26,9 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      app:itemIconTint="?attr/nav_item_color_state"
-      app:itemTextColor="?attr/nav_item_color_state"
+      android:background="?attr/backgroundCardColor"
+      app:itemIconTint="?attr/bnItemColorState"
+      app:itemTextColor="?attr/bnItemColorState"
       app:menu="@menu/bottom_navigation_main"
       />
 </RelativeLayout>

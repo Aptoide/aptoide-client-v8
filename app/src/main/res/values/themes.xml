@@ -17,7 +17,7 @@
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
-    <item name="nav_item_color_state">@drawable/default_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/default_nav_item_color_state</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
@@ -164,7 +164,7 @@
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
-    <item name="nav_item_color_state">@drawable/default_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/default_nav_item_color_state_dark</item>
 
     <!--toolbar-->
     <item name="toolbarTheme">@style/ToolbarDark</item>
@@ -298,7 +298,7 @@
     <item name="toolbarBackground">@drawable/grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/grey_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
     <item name="homeChips">@drawable/grey_home_chips_background</item>
@@ -323,7 +323,7 @@
     <item name="toolbarBackground">@drawable/teal_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_teal</item>
     <item name="colorControlHighlight">@color/teal_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/teal_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/teal_nav_item_color_state</item>
     <item name="wizard3Color">@color/teal</item>
     <item name="loggedInIcon">@drawable/teal_ic_logged_in</item>
     <item name="homeChips">@drawable/teal_home_chips_background</item>
@@ -347,7 +347,7 @@
     <item name="toolbarBackground">@drawable/brown_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_brown</item>
     <item name="colorControlHighlight">@color/brown_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/brown_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/brown_nav_item_color_state</item>
     <item name="wizard3Color">@color/brown</item>
     <item name="loggedInIcon">@drawable/brown_ic_logged_in</item>
     <item name="homeChips">@drawable/brown_home_chips_background</item>
@@ -372,7 +372,7 @@
     <item name="toolbarBackground">@drawable/blue_grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_bluegrey</item>
     <item name="colorControlHighlight">@color/blue_grey_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/blue_grey_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/blue_grey_nav_item_color_state</item>
     <item name="wizard3Color">@color/blue_grey</item>
     <item name="loggedInIcon">@drawable/blue_grey_ic_logged_in</item>
     <item name="homeChips">@drawable/blue_grey_home_chips_background</item>
@@ -399,7 +399,7 @@
     <item name="toolbarBackground">@drawable/light_green_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lightgreen</item>
     <item name="colorControlHighlight">@color/light_green_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/light_green_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/light_green_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_green</item>
     <item name="loggedInIcon">@drawable/light_green_ic_logged_in</item>
     <item name="homeChips">@drawable/light_green_home_chips_background</item>
@@ -424,7 +424,7 @@
     <item name="toolbarBackground">@drawable/light_blue_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lightblue</item>
     <item name="colorControlHighlight">@color/light_blue_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/light_blue_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/light_blue_nav_item_color_state</item>
     <item name="wizard3Color">@color/light_blue</item>
     <item name="loggedInIcon">@drawable/light_blue_ic_logged_in</item>
     <item name="homeChips">@drawable/light_blue_home_chips_background</item>
@@ -449,7 +449,7 @@
     <item name="toolbarBackground">@drawable/amber_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_amber</item>
     <item name="colorControlHighlight">@color/amber_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/amber_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/amber_nav_item_color_state</item>
     <item name="wizard3Color">@color/amber</item>
     <item name="loggedInIcon">@drawable/amber_ic_logged_in</item>
     <item name="homeChips">@drawable/amber_home_chips_background</item>
@@ -473,7 +473,7 @@
     <item name="toolbarBackground">@drawable/lime_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_lime</item>
     <item name="colorControlHighlight">@color/lime_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/lime_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/lime_nav_item_color_state</item>
     <item name="wizard3Color">@color/lime</item>
     <item name="loggedInIcon">@drawable/lime_ic_logged_in</item>
     <item name="homeChips">@drawable/lime_home_chips_background</item>
@@ -498,7 +498,7 @@
     <item name="toolbarBackground">@drawable/orange_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_orange</item>
     <item name="colorControlHighlight">@color/orange_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/orange_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/orange_nav_item_color_state</item>
     <item name="wizard3Color">@color/orange</item>
     <item name="loggedInIcon">@drawable/orange_ic_logged_in</item>
     <item name="homeChips">@drawable/orange_home_chips_background</item>
@@ -523,7 +523,7 @@
     <item name="toolbarBackground">@drawable/pink_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_pink</item>
     <item name="colorControlHighlight">@color/pink_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/pink_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/pink_nav_item_color_state</item>
     <item name="wizard3Color">@color/pink</item>
     <item name="loggedInIcon">@drawable/pink_ic_logged_in</item>
     <item name="homeChips">@drawable/pink_home_chips_background</item>
@@ -549,7 +549,7 @@
     <item name="toolbarBackground">@drawable/indigo_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_indigo</item>
     <item name="colorControlHighlight">@color/indigo_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/indigo_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/indigo_nav_item_color_state</item>
     <item name="wizard3Color">@color/indigo</item>
     <item name="loggedInIcon">@drawable/indigo_ic_logged_in</item>
     <item name="homeChips">@drawable/indigo_home_chips_background</item>
@@ -577,7 +577,7 @@
     <item name="toolbarBackground">@drawable/red_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_red</item>
     <item name="colorControlHighlight">@color/red_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/red_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/red_nav_item_color_state</item>
     <item name="wizard3Color">@color/red</item>
     <item name="loggedInIcon">@drawable/red_ic_logged_in</item>
     <item name="homeChips">@drawable/red_home_chips_background</item>
@@ -602,7 +602,7 @@
     <item name="toolbarBackground">@drawable/green_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_green</item>
     <item name="colorControlHighlight">@color/green_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/green_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/green_nav_item_color_state</item>
     <item name="wizard3Color">@color/green</item>
     <item name="loggedInIcon">@drawable/green_ic_logged_in</item>
     <item name="homeChips">@drawable/green_home_chips_background</item>
@@ -631,7 +631,7 @@
     <item name="toolbarBackground">@drawable/deep_purple_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_deeppurple</item>
     <item name="colorControlHighlight">@color/deep_purple_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/deep_purple_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/deep_purple_nav_item_color_state</item>
     <item name="wizard3Color">@color/deep_purple</item>
     <item name="loggedInIcon">@drawable/deep_purple_ic_logged_in</item>
     <item name="homeChips">@drawable/deep_purple_home_chips_background</item>
@@ -655,7 +655,7 @@
     <item name="toolbarBackground">@drawable/black_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_black</item>
     <item name="colorControlHighlight">@color/black_gradient_end</item>
-    <item name="nav_item_color_state">@drawable/black_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/black_nav_item_color_state</item>
     <item name="wizard3Color">@color/black</item>
     <item name="loggedInIcon">@drawable/black_ic_logged_in</item>
     <item name="homeChips">@drawable/black_home_chips_background</item>

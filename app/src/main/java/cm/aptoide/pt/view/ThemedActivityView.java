@@ -10,6 +10,6 @@ public abstract class ThemedActivityView extends ActivityView {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     ThemeUtils.setStatusBarThemeColor(this, theme);
-    ThemeUtils.setAptoideTheme(this, theme);
+    ThemeUtils.setAptoideTheme(this, "dark");
   }
 }
