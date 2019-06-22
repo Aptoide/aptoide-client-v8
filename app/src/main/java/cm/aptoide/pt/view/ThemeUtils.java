@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.store.StoreTheme;
+import com.ironsource.sdk.utils.Logger;
 
 /**
  * Created by pedroribeiro on 23/06/16.
@@ -41,11 +42,13 @@ public class ThemeUtils {
       sPref.edit()
           .putString("theme", "default_dark")
           .apply();
+      Logger.d("theme", "setting dark theme");
       activity.setTheme(R.style.AptoideThemeDefaultDark);
     } else {
       sPref.edit()
           .putString("theme", theme)
           .apply();
+      Logger.d("theme", "setting default light theme");
       activity.setTheme(R.style.AptoideThemeDefault);
     }
   }
