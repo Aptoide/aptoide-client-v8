@@ -162,10 +162,31 @@
     <item name="colorAccent">@color/aptoide_color_focused</item>
     <item name="customColor">@color/aptoide_orange</item>
 
+    <!--bottomNavigation-->
+    <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
+    <item name="nav_item_color_state">@drawable/default_nav_item_color_state</item>
+
     <!--toolbar-->
     <item name="toolbarTheme">@style/ToolbarDark</item>
+    <item name="toolbarBackground">@drawable/aptoide_gradient</item>
+    <item name="toolbarTextColor">@color/white</item>
+    <item name="actionMenuTextColor">@color/white</item>
 
-    <!--for settings preference theme -->
+    <!--Buttons-->
+    <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
+    <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
+    <item name="raisedButtonTextColor">@color/white</item>
+    <item name="buttonTextFont">roboto-medium</item>
+    <item name="buttonTextSize">14sp</item>
+    <item name="buttonTextSizeSmall">10sp</item>
+    <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
+
+    <!--for settings preference theme-->
+    <item name="preferenceTitleColor">@color/black_87_alpha</item>
+    <item name="preferenceTitleTextSize">16sp</item>
+    <item name="preferenceSummaryColor">@color/grey_medium</item>
+    <item name="preferenceSummaryTextSize">14dp</item>
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
     <!--background-->
@@ -180,6 +201,7 @@
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
+    <item name="wizard3Color">@color/wizard_color_3_orange</item>
 
     <!--text-->
     <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
@@ -188,6 +210,7 @@
     <item name="inverseTextColor">@android:color/black</item>
     <item name="storesTextColor">@color/white</item>
     <item name="appviewRatingCardTextColor">@color/white</item>
+    <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
 
 
     <!--widgets-->
@@ -205,7 +228,7 @@
     <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
     <item name="titleLabelStyle">@style/titleLabel</item>
     <item name="separatorColor">@color/light_custom_gray</item>
-
+    <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
 
     <!--recycler-->
     <item name="android:cacheColorHint">@android:color/transparent</item>
@@ -252,11 +275,13 @@
     <item name="icTimelineDrawable">@drawable/ic_action_timeline_light</item>
     <item name="icTimelineAccessSecure">@drawable/ic_locked_appview</item>
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
-
+    <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
+    <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
+    <item name="homeChips">@drawable/default_home_chips_background</item>
 
   </style>
 
-  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark"></style>
+  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark"/>
 
   <!-- Non-default themes -->
 
