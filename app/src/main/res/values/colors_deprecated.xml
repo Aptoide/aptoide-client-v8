@@ -57,16 +57,4 @@
 
   <!-- Address book colors -->
   <color name="twitter_color">#00aced</color>
-
-  <!-- Radar colors -->
-  <color name="radar_color_2">#6c6c6c</color>
-
-  <color name="create_user_dark_orange">#C16114</color>
-
-  <!-- Bottom Nav -->
-  <color name="bottom_nav_non_selected_item_color">#8A000000</color>
-
-  <!-- Default Window Color -->
-  <color name="default_background_color">#F9F9F9</color>
-
 </resources>

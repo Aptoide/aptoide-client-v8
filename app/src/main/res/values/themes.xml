@@ -7,7 +7,7 @@
 
   <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
 
-    <item name="android:windowBackground">@color/default_background_color</item>
+    <item name="android:windowBackground">@color/default_background_color_light</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
     <item name="colorPrimary">@color/default_orange_gradient_start</item>
@@ -154,7 +154,7 @@
   </style>
 
   <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
-    <item name="android:windowBackground">@color/transparent_black</item>
+    <item name="android:windowBackground">@color/default_background_color_dark</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
     <item name="colorPrimary">@color/aptoide_orange</item>

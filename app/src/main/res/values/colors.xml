@@ -50,4 +50,11 @@
   <!-- transparent -->
   <color name="transparent">#00000000</color>
 
+  <!-- Bottom Nav -->
+  <color name="bottom_nav_non_selected_item_color">#8A000000</color>
+
+  <!-- Window Color -->
+  <color name="default_background_color_light">#F9F9F9</color>
+  <color name="default_background_color_dark">#000000</color>
+
 </resources>
