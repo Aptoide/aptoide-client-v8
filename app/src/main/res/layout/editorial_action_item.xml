@@ -67,16 +67,15 @@
         android:layout_marginStart="15dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/white"
         tools:text="TESTING SOME STUFF"
-        style="@style/Aptoide.TextView.Medium.XS"
+        style="@style/Aptoide.TextView.Medium.XS.White"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignBottom="@id/background_image"
-        android:background="@color/white"
+        android:background="?attr/backgroundCardColor"
         android:paddingBottom="2dp"
         android:paddingTop="7dp"
         >

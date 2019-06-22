@@ -578,7 +578,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+      reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
     }
   }
 

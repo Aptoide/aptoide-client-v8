@@ -75,6 +75,7 @@
   <attr format="reference" name="loggedInIcon"/>
   <attr format="reference" name="homeChips"/>
   <attr format="reference" name="ratingDrawable"/>
+  <attr format="reference" name="reactionInputDrawable"/>
   <attr format="color" name="navigationDrawerColor"/>
   <attr format="reference" name="timelineButtonsBackgroundColor"/>
   <attr format="reference" name="timelinePostBackground"/>

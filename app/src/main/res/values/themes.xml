@@ -132,6 +132,7 @@
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
     <item name="ratingDrawable">@drawable/ic_star_black</item>
+    <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
 
   </style>
 
@@ -281,6 +282,7 @@
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
+    <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
 
   </style>
 

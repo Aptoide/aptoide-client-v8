@@ -19,7 +19,7 @@
       android:paddingLeft="8dp"
       android:paddingRight="8dp"
       android:paddingTop="4dp"
-      android:src="@drawable/ic_reaction_emoticon"
+      android:src="?attr/reactionInputDrawable"
       />
 
   <include
