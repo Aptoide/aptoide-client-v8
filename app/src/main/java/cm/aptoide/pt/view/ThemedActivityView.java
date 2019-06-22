@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public abstract class ThemedActivityView extends ActivityView {
-  @Inject @Named("aptoide-theme") String theme;
+  public @Inject @Named("aptoide-theme") String theme;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

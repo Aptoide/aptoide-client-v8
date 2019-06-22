@@ -33,11 +33,10 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   private Animation animationdown;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
-    ThemeUtils.setAptoideTheme(this, BuildConfig.APTOIDE_THEME);
+    super.onCreate(savedInstanceState);
     setContentView(LAYOUT);
     navigationSubject = PublishSubject.create();
     bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-    super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
     if (savedInstanceState != null) {
       bottomNavigationNavigator.setBottomNavigationItems(
