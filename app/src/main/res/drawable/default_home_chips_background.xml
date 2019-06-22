@@ -20,8 +20,8 @@
           android:color="#FE6446"
           android:width="1dip"/>
       <gradient
-          android:endColor="#FFFFFF"
-          android:startColor="#FFFFFF"/>
+          android:endColor="?attr/backgroundMain"
+          android:startColor="?attr/backgroundMain"/>
     </shape>
   </item>
 </selector>

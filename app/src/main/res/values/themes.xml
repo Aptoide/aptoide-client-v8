@@ -43,7 +43,7 @@
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
     <!--background-->
-    <item name="backgroundMain">@color/white</item>
+    <item name="backgroundMain">@color/default_background_color_light</item>
     <item name="backgroundSecondary">@color/light_custom_gray</item>
     <item name="backgroundInverse">@android:color/black</item>
     <item name="backgroundTabs">@android:color/transparent</item>
