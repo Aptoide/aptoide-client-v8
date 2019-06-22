@@ -5,7 +5,6 @@
 
 package cm.aptoide.pt.store.view;
 
-import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,8 +40,6 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
-
-    storeLayout.setBackgroundColor(Color.WHITE);
 
     final Action1<Void> handleStoreClick = v -> {
       String origin = gridStoreDisplayable.getOrigin();

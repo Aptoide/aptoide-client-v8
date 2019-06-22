@@ -9,8 +9,8 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/white_card"
       android:orientation="vertical"
+      style="?attr/backgroundCard"
       >
     <RelativeLayout
         android:id="@+id/store_layout"

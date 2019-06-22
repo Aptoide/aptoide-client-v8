@@ -7,8 +7,6 @@
     app:cardCornerRadius="4dp"
     >
   <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
       android:id="@+id/store_main_layout_row"
       android:layout_width="match_parent"
       android:layout_height="110dp"
