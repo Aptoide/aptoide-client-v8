@@ -46,8 +46,7 @@ public class ThemeUtils {
       sPref.edit()
           .putString("theme", theme)
           .apply();
-      activity.setTheme(StoreTheme.get(theme)
-          .getThemeResource());
+      activity.setTheme(R.style.AptoideThemeDefault);
     }
   }
 
