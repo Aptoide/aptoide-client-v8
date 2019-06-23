@@ -5,11 +5,6 @@ import rx.Subscriber
 import rx.android.MainThreadSubscription
 import rx.android.MainThreadSubscription.verifyMainThread
 
-//@CheckResult
-//fun DownloadProgressView.events(): Observable<EventListener.Action> {
-//  return Observable.create(DownloadProgressViewEventOnSubscribe(this))
-//}
-
 /**
  * Rx Binding for DownloadProgressView
  * This follows the same implementation used in RxBinding@1.0.0
@@ -18,13 +13,13 @@ import rx.android.MainThreadSubscription.verifyMainThread
  * if we are to bump our version.
  */
 class DownloadProgressViewEventOnSubscribe(val view: DownloadProgressView) :
-    Observable.OnSubscribe<EventListener.Action> {
+    Observable.OnSubscribe<DownloadEventListener.Action> {
 
-  override fun call(subscriber: Subscriber<in EventListener.Action>) {
+  override fun call(subscriber: Subscriber<in DownloadEventListener.Action>) {
     verifyMainThread()
 
-    val eventListener = object : EventListener {
-      override fun onActionClick(action: EventListener.Action) {
+    val eventListener = object : DownloadEventListener {
+      override fun onActionClick(action: DownloadEventListener.Action) {
         if (!subscriber.isUnsubscribed) {
           subscriber.onNext(action)
         }

@@ -8,8 +8,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.widget.ProgressBar
 import cm.aptoide.aptoideviews.base.BaseTestView
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
-import cm.aptoide.aptoideviews.downloadprogressview.EventListener
-import cm.aptoide.aptoideviews.downloadprogressview.ProgressState
+import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener
 import cm.aptoide.aptoideviews.matchers.ProgressIndeterminate.Companion.withIndeterminate
 import cm.aptoide.aptoideviews.viewactions.ProgressBarTestAction.Companion.replaceProgressBarDrawable
 import org.junit.Before
@@ -23,13 +22,13 @@ import org.mockito.MockitoAnnotations
 class DownloadProgressViewTest : BaseTestView() {
 
   private val pauseButton = withId(R.id.pause_button)
-  private val resumeButton = withId(R.id.resume_button)
-  private val cancelButton = withId(R.id.cancel_button)
-  private val progressBar = withId(R.id.progress_bar)
-  private val downloadStateText = withId(R.id.download_state)
+  private val resumeButton = withId(R.id.resumePauseButton)
+  private val cancelButton = withId(R.id.cancelButton)
+  private val progressBar = withId(R.id.progressBar)
+  private val downloadStateText = withId(R.id.downloadState)
 
   @Mock
-  lateinit var eventListener: EventListener
+  lateinit var eventListener: DownloadEventListener
 
   private val downloadProgressView by lazy {
     DownloadProgressView(getContext())
@@ -49,7 +48,7 @@ class DownloadProgressViewTest : BaseTestView() {
     activityRule.runOnUiThread { downloadProgressView.setState(ProgressState.IN_PROGRESS) }
     onView(pauseButton).perform(click())
 
-    verify(eventListener).onActionClick(EventListener.Action(EventListener.Action.Type.PAUSE, null))
+    verify(eventListener).onActionClick(DownloadEventListener.Action(DownloadEventListener.Action.Type.PAUSE, null))
   }
 
   @Test
@@ -58,7 +57,7 @@ class DownloadProgressViewTest : BaseTestView() {
     onView(resumeButton).perform(click())
 
     verify(eventListener).onActionClick(
-        EventListener.Action(EventListener.Action.Type.RESUME, null))
+        DownloadEventListener.Action(DownloadEventListener.Action.Type.RESUME, null))
   }
 
   @Test
@@ -67,7 +66,7 @@ class DownloadProgressViewTest : BaseTestView() {
     onView(cancelButton).perform(click())
 
     verify(eventListener).onActionClick(
-        EventListener.Action(EventListener.Action.Type.CANCEL, null))
+        DownloadEventListener.Action(DownloadEventListener.Action.Type.CANCEL, null))
   }
 
 

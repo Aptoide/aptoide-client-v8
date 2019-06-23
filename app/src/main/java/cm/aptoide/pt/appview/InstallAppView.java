@@ -1,5 +1,6 @@
 package cm.aptoide.pt.appview;
 
+import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener;
 import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.view.AppBoughClickEvent;
@@ -14,6 +15,8 @@ public interface InstallAppView extends View {
 
   Observable<DownloadModel.Action> installAppClick();
 
+  Observable<DownloadEventListener.Action> downloadViewEvents();
+
   Observable<Boolean> showRootInstallWarningPopup();
 
   void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations);
@@ -23,12 +26,6 @@ public interface InstallAppView extends View {
   Observable<Boolean> showDowngradeMessage();
 
   void showDowngradingMessage();
-
-  Observable<Void> pauseDownload();
-
-  Observable<Void> resumeDownload();
-
-  Observable<Void> cancelDownload();
 
   Observable<Void> isAppViewReadyToDownload();
 

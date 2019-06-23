@@ -11,6 +11,7 @@ android {
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    vectorDrawables.useSupportLibrary = true
   }
 
   compileOptions {
@@ -98,6 +99,7 @@ dependencies {
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+  implementation "com.github.tinder:statemachine:0.1.2"
 
   testImplementation 'junit:junit:4.12'
   androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"

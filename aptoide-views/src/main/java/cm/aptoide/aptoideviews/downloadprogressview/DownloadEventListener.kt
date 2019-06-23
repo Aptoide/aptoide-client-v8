@@ -1,6 +1,6 @@
 package cm.aptoide.aptoideviews.downloadprogressview
 
-interface EventListener {
+interface DownloadEventListener {
   fun onActionClick(action: Action)
 
   data class Action(val type: Type, val payload: Any?) {
