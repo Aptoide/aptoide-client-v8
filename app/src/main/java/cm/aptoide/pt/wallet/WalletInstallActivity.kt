@@ -48,7 +48,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
     ImageLoader.with(this).load(appIcon, appIconImageView)
     val downloadModel = walletApp.downloadModel
-    Logger.getInstance().d("lol", "download state is " + downloadModel!!.downloadState)
+    Logger.getInstance()
+        .d("WalletInstallActivity", "download state is " + downloadModel!!.downloadState)
     if (downloadModel!!.isDownloading) {
       setDownloadProgress(downloadModel)
     } else {
@@ -68,7 +69,6 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
             .progress
         wallet_download_progress_number.text = downloadModel
             .progress.toString() + "%"
-        //wallet_download_cancel_button.visibility = View.GONE
       }
       DownloadModel.DownloadState.INDETERMINATE, DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
         wallet_download_progress_bar.isIndeterminate = true

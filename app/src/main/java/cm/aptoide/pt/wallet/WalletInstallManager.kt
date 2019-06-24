@@ -69,14 +69,6 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
     return walletAppProvider.getWalletApp()
   }
 
-  /* fun cancelDownload(): Completable {
-     return walletAppProvider.getWalletApp().first()
-         .flatMapCompletable { removeDownload(it) }
-         .doOnSubscribe { Logger.getInstance().d("lol", "just completed removing the files") }
-         .toCompletable()
-   }*/
-
-
   fun removeDownload(app: WalletApp) {
     return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
 

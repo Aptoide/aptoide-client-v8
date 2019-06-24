@@ -2,7 +2,6 @@ package cm.aptoide.pt.wallet
 
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
-import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.WalletApp
@@ -34,7 +33,6 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .observeOn(viewScheduler)
         .doOnCompleted {
           view.dismissDialog()
-          Logger.getInstance().d("lol", "dismissing dialog")
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
