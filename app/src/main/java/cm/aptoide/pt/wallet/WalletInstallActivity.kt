@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.app.DownloadModel
+import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.GenericDialogs
@@ -47,6 +48,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
     ImageLoader.with(this).load(appIcon, appIconImageView)
     val downloadModel = walletApp.downloadModel
+    Logger.getInstance().d("lol", "download state is " + downloadModel!!.downloadState)
     if (downloadModel!!.isDownloading) {
       setDownloadProgress(downloadModel)
     } else {
@@ -59,24 +61,27 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   private fun setDownloadProgress(downloadModel: DownloadModel) {
     wallet_install_download_view.visibility = View.VISIBLE
     when (downloadModel.downloadState) {
-      DownloadModel.DownloadState.ACTIVE -> {
+      DownloadModel.DownloadState.ACTIVE, DownloadModel.DownloadState.PAUSE -> {
+        walletInstallViewGroup.visibility = View.VISIBLE
         wallet_download_progress_bar.isIndeterminate = false
         wallet_download_progress_bar.progress = downloadModel
             .progress
         wallet_download_progress_number.text = downloadModel
             .progress.toString() + "%"
-        wallet_download_cancel_button.visibility = View.GONE
+        //wallet_download_cancel_button.visibility = View.GONE
       }
       DownloadModel.DownloadState.INDETERMINATE, DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
         wallet_download_progress_bar.isIndeterminate = true
         wallet_download_cancel_button.visibility = View.GONE
+        walletInstallViewGroup.visibility = View.VISIBLE
+
       }
       DownloadModel.DownloadState.ERROR -> showErrorMessage(
           getString(R.string.error_occured))
       DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR -> showErrorMessage(
           getString(R.string.out_of_space_dialog_title))
       else -> {
-        throw IllegalArgumentException("Invalid download state")
+        throw IllegalArgumentException("Invalid download state" + downloadModel.downloadState)
       }
     }
   }
@@ -139,9 +144,10 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun showIndeterminateDownload() {
     wallet_install_download_view.visibility = View.VISIBLE
     wallet_download_progress_bar.isIndeterminate = true
-    messageTextView.visibility = View.GONE
-    appIconImageView.visibility = View.VISIBLE
-    header_bg.visibility = View.VISIBLE
+    walletInstallViewGroup.visibility = View.VISIBLE
+  }
 
+  override fun cancelDownloadButtonClicked(): Observable<Void> {
+    return RxView.clicks(wallet_download_cancel_button)
   }
 }
