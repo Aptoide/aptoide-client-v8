@@ -1,5 +1,6 @@
 package cm.aptoide.pt.wallet
 
+import android.content.pm.PackageManager
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.PromotionsManager
@@ -24,7 +25,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap {
           Observable.zip(walletInstallManager.getAppIcon(),
               promotionsManager.walletApp) { appIcon, walletApp ->
-            Pair<String, WalletApp>(appIcon, walletApp)
+            Pair<String?, WalletApp>(appIcon, walletApp)
           }
         }
         .observeOn(viewScheduler)

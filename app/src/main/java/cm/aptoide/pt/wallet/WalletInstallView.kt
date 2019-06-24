@@ -6,7 +6,7 @@ import rx.Observable
 
 interface WalletInstallView : View {
 
-  fun showWalletInstallationView(appIcon: String,
+  fun showWalletInstallationView(appIcon: String?,
                                  walletApp: WalletApp)
 
   fun showInstallationSuccessView()
