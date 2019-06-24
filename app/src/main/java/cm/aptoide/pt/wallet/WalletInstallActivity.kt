@@ -26,6 +26,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     super.onCreate(savedInstanceState)
     activityComponent.inject(this)
     setContentView(R.layout.wallet_install_activity)
+    initStyling()
     attachPresenter(presenter)
   }
 
@@ -36,14 +37,15 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     messageTextView.setSubstringTypeface(Pair(walletAppName, Typeface.BOLD))
   }
 
-  override fun showWalletInstallationView(appIcon: String,
+  override fun showWalletInstallationView(appIcon: String?,
                                           walletApp: WalletApp) {
-    initStyling()
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.GONE
     walletInstallViewGroup.visibility = View.VISIBLE
 
-    ImageLoader.with(this).load(appIcon, appIconImageView)
+    appIcon?.let {
+      ImageLoader.with(this).load(appIcon, appIconImageView)
+    }
   }
 
   override fun showInstallationSuccessView() {
