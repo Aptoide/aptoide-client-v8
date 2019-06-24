@@ -61,7 +61,7 @@ class DownloadProgressView : FrameLayout {
       when (validTransition.sideEffect) {
         ViewSideEffects.ShowCanceledView -> {
           resetProgress()
-          progressBar.isIndeterminate = false
+          progressBar.isIndeterminate = true
           cancelButton.visibility = View.GONE
           if (isPausable) resumePauseButton.visibility = View.VISIBLE
           downloadProgressNumber.visibility = View.VISIBLE
