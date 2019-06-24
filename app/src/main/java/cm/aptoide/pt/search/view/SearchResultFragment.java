@@ -333,11 +333,11 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override public Observable<Object> followedStoresResultReachedBottom() {
+  @Override public Observable<Void> followedStoresResultReachedBottom() {
     return recyclerViewReachedBottom(followedStoresResultList);
   }
 
-  @Override public Observable<Object> allStoresResultReachedBottom() {
+  @Override public Observable<Void> allStoresResultReachedBottom() {
     return recyclerViewReachedBottom(allStoresResultList);
   }
 
@@ -536,12 +536,12 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
-  private Observable<Object> recyclerViewReachedBottom(RecyclerView recyclerView) {
+  private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .map(this::isEndReached)
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
-        .cast(Object.class);
+        .map(__ -> null);
   }
 
   private boolean isEndReached(RecyclerViewScrollEvent event) {
