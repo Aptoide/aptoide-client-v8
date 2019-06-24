@@ -52,7 +52,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setNestedScrollingEnabled(false);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AdBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
@@ -60,7 +60,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, getAdapterPosition());
+    appsInBundleAdapter.updateBundle(homeBundle, position);
     appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
     appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

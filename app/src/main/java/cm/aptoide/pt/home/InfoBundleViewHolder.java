@@ -27,7 +27,7 @@ class InfoBundleViewHolder extends AppBundleViewHolder {
     this.message = view.findViewById(R.id.message);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
     ImageLoader.with(itemView.getContext())

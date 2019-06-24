@@ -51,14 +51,14 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
     appsList.setNestedScrollingEnabled(false);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AppBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
-    appsInBundleAdapter.updateBundle(homeBundle, getAdapterPosition());
+    appsInBundleAdapter.updateBundle(homeBundle, position);
     appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
     appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

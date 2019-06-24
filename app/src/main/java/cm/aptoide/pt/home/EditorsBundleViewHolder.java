@@ -51,14 +51,14 @@ class EditorsBundleViewHolder extends AppBundleViewHolder {
     graphicsList.setNestedScrollingEnabled(false);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     if (!(homeBundle instanceof AppBundle)) {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
-    graphicAppsAdapter.updateBundle(homeBundle, getAdapterPosition());
+    graphicAppsAdapter.updateBundle(homeBundle, position);
     graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
     graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {

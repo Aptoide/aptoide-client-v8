@@ -55,7 +55,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     topReactionsPreview.initialReactionsSetup(view);
   }
 
-  @Override public void setBundle(HomeBundle homeBundle) {
+  @Override public void setBundle(HomeBundle homeBundle, int position) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
 
