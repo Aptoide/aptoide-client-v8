@@ -16,10 +16,11 @@
       android:layout_height="wrap_content"
       android:scaleType="fitXY"
       android:src="@drawable/ic_wallet_install_header_bg"
-      android:visibility="visible"
+      android:visibility="invisible"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      tools:visibility="visible"
       />
 
   <ImageView
@@ -42,11 +43,13 @@
       android:layout_height="56dp"
       android:layout_below="@id/header_bg"
       android:layout_centerHorizontal="true"
+      android:src="@mipmap/ic_launcher"
+      android:visibility="invisible"
       app:layout_constraintBottom_toBottomOf="@+id/header_bg"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/header_bg"
-      tools:src="@drawable/appcoins_icon_gradient"
+      tools:visibility="visible"
       />
 
 

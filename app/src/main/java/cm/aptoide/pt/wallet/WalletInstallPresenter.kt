@@ -91,10 +91,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
         }.toCompletable()
   }
 
-  private fun showWalletInitialState(): Observable<Pair<String, WalletApp>>? {
+  private fun showWalletInitialState(): Observable<Pair<String?, WalletApp>>? {
     return Observable.zip(walletInstallManager.getAppIcon(),
         walletInstallManager.getWallet()) { appIcon, walletApp ->
-      Pair<String, WalletApp>(appIcon, walletApp)
+      Pair<String?, WalletApp>(appIcon, walletApp)
     }.first().observeOn(viewScheduler)
         .doOnNext { pair ->
           view.showWalletInstallationView(pair.first, pair.second)

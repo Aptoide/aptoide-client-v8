@@ -123,8 +123,7 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
+    return aptoideDownloadManager.getDownloadsList()
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
@@ -506,7 +505,9 @@ public class InstallManager {
           } else {
             return Install.InstallationType.UPDATE;
           }
-        });
+        })
+        .doOnNext(installationType -> Logger.getInstance()
+            .d("AptoideDownloadManager", " emiting installation type"));
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
@@ -556,11 +557,13 @@ public class InstallManager {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return Observable.just(installedRepository.contains(packageName));
+    return installedRepository.isInstalled(packageName)
+        .first();
   }
 
   public Observable<Install> filterInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.empty();
@@ -570,7 +573,8 @@ public class InstallManager {
   }
 
   public Observable<Install> filterNonInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.just(item);

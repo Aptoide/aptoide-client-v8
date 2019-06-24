@@ -24,8 +24,11 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val walletAppProvider: WalletAppProvider) {
 
   fun getAppIcon(): Observable<String> {
-    return Observable.just(AptoideUtils.SystemU.getApkIconPath(
-        packageManager.getPackageInfo(configuration.appPackageName, 0)))
+    return Observable.fromCallable {
+      AptoideUtils.SystemU.getApkIconPath(
+          packageManager.getPackageInfo(configuration.appPackageName, 0))
+    }.onErrorReturn { null }
+
   }
 
   fun shouldShowRootInstallWarningPopup(): Boolean {

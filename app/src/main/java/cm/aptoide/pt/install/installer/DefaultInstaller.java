@@ -158,7 +158,13 @@ public class DefaultInstaller implements Installer {
             return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
                 Installed.TYPE_UNKNOWN);
           }
-        });
+        })
+        .doOnNext(installationState -> Logger.getInstance()
+            .d("AptoideDownloadManager", "creating an installation state "
+                + installationState.getPackageName()
+                + " state is: "
+                + installationState.getStatus()))
+        .distinctUntilChanged();
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
