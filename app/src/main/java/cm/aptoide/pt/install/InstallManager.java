@@ -85,8 +85,11 @@ public class InstallManager {
     installedRepository.remove(packageName, versionCode)
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          throwable.printStackTrace();
+        });
   }
 
   public void stopInstallation(String md5) {

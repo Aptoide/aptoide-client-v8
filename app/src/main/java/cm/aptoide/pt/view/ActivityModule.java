@@ -369,7 +369,7 @@ import static android.content.Context.WINDOW_SERVICE;
       WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
         walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), Schedulers.io());
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(

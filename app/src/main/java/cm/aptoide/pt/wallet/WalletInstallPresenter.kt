@@ -2,6 +2,7 @@ package cm.aptoide.pt.wallet
 
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
+import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.WalletApp
@@ -15,12 +16,31 @@ class WalletInstallPresenter(val view: WalletInstallView,
                              val navigator: WalletInstallNavigator,
                              val permissionManager: PermissionManager,
                              val permissionService: PermissionService,
-                             val viewScheduler: Scheduler) : Presenter {
+                             val viewScheduler: Scheduler, val io: Scheduler) : Presenter {
 
   override fun present() {
     loadWalletInstall()
     handleCloseButtonClick()
     handleWalletInstalled()
+    handleCancelDownloadButton()
+  }
+
+  private fun handleCancelDownloadButton() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .flatMap { view.cancelDownloadButtonClicked() }
+        .flatMap { walletInstallManager.getWallet() }.first()
+        .doOnNext { walletInstallManager.removeDownload(it) }
+        .observeOn(viewScheduler)
+        .doOnCompleted {
+          view.dismissDialog()
+          Logger.getInstance().d("lol", "dismissing dialog")
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {
+          it.printStackTrace()
+          view.dismissDialog()
+        })
   }
 
   private fun handleWalletInstalled() {
