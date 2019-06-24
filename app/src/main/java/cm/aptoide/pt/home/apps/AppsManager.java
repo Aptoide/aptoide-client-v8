@@ -165,7 +165,7 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
         false);
@@ -176,7 +176,7 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false);
   }

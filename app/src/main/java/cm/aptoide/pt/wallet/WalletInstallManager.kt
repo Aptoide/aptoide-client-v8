@@ -47,17 +47,16 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             false, walletApp.size!!))
         .flatMapSingle { download ->
           moPubAdsManager.adsVisibilityStatus.doOnSuccess {
-            setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id, "no", "no",
+            setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
                 it)
           }.map { download }
         }.flatMapCompletable { download -> installManager.install(download) }.toCompletable()
   }
 
   private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
-                                  appId: Long, malwareRank: String?, editorsChoice: String?,
+                                  appId: Long,
                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
-    walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, malwareRank,
-        editorsChoice, offerResponseStatus)
+    walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
