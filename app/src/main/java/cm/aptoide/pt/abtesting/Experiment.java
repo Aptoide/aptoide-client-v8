@@ -6,7 +6,7 @@ package cm.aptoide.pt.abtesting;
 
 public class Experiment {
   private static final long TWENTY_FOUR_HOURS = 86400000;
-  private static final long MAX_CACHE_TIME_IN_MILLIS = TWENTY_FOUR_HOURS * 30;
+  public static final long MAX_CACHE_TIME_IN_MILLIS = TWENTY_FOUR_HOURS * 30;
 
   private long requestTime;
   private String assignment;
