@@ -202,12 +202,14 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(editorialViewModel -> view.resumeDownload(editorialViewModel)
-            .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
-                    editorialEvent.getPackageName(), editorialEvent.getAppId()))
-                .retry()))
+            .flatMap(
+                editorialEvent -> permissionManager.requestDownloadAccess(permissionService, true)
+                    .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                        permissionService))
+                    .flatMapCompletable(
+                        __ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
+                            editorialEvent.getPackageName(), editorialEvent.getAppId()))
+                    .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -240,7 +242,7 @@ public class EditorialPresenter implements Presenter {
       return Observable.just(editorialDownloadEvent);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService, true))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(viewModel -> editorialManager.downloadApp(editorialDownloadEvent))

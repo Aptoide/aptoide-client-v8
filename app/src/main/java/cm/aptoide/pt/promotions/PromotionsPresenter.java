@@ -67,13 +67,14 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(promotionViewApp -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(
-                    __ -> promotionsManager.resumeDownload(promotionViewApp.getMd5(),
-                        promotionViewApp.getPackageName(), promotionViewApp.getAppId()))
-                .retry()))
+            .flatMap(
+                promotionViewApp -> permissionManager.requestDownloadAccess(permissionService, true)
+                    .flatMap(success -> permissionManager.requestExternalStoragePermission(
+                        permissionService))
+                    .flatMapCompletable(
+                        __ -> promotionsManager.resumeDownload(promotionViewApp.getMd5(),
+                            promotionViewApp.getPackageName(), promotionViewApp.getAppId()))
+                    .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -152,7 +153,7 @@ public class PromotionsPresenter implements Presenter {
       return Observable.just(null);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService, true))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> promotionsManager.downloadApp(promotionViewApp))

@@ -23,7 +23,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
   }
 
   fun requestPermissions(permissionService: PermissionService): Observable<Void> {
-    return permissionManager.requestDownloadAccess(permissionService)
+    return permissionManager.requestDownloadAccess(permissionService, true)
         .flatMap { permissionManager.requestExternalStoragePermission(permissionService) }
   }
 

@@ -105,7 +105,7 @@ public class SeeMoreAppcPresenter implements Presenter {
                   }
                   return Observable.just(true);
                 })
-                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService, true))
                 .doOnNext(__ -> view.setAppcStandbyState(app))
                 .observeOn(ioScheduler)
                 .flatMapCompletable(__3 -> seeMoreAppcManager.updateApp(app)))
