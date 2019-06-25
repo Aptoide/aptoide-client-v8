@@ -1783,7 +1783,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("default-followed-stores")
   List<String> provideDefaultFollowedStores() {
-    return Arrays.asList("apps", "bds-store");
+    return Arrays.asList("apps", "catappult");
   }
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {

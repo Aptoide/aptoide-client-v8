@@ -535,8 +535,6 @@
   <string name="all_url_terms_conditions" translatable="false">https://www.aptoide.com/legal/terms?header=0&amp;menu=0</string>
   <string name="all_url_privacy_policy" translatable="false">https://www.aptoide.com/legal/privacy?header=0&amp;menu=0</string>
   <string name="settings_url_delete_account" translatable="false">https://www.aptoide.com/account/delete?access_token=%1$s</string>
-  <string name="coinbase_url" translatable="false">https://www.coinbase.com</string>
-
 
   <!--APPC-->
   <string name="appc_title_iab">Spend Your AppCoins</string>
@@ -559,8 +557,6 @@
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
   <string name="appc_message_appcoins_section_2a">Get the %s</string>
-  <!--This variable is a link to Coinbase (www.coinbase.com). The text is Coinbase. This is done using html-->
-  <string name="coinbase" translatable="false">Coinbase</string>
   <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
   <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
