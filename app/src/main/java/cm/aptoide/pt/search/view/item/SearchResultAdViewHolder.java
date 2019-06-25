@@ -23,7 +23,6 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
   private TextView downloadsTextView;
   private TextView ratingBar;
   private SearchAdResult adResult;
-  private int position;
 
   public SearchResultAdViewHolder(View itemView,
       PublishRelay<SearchAdResultWrapper> onItemViewClickRelay) {
@@ -39,14 +38,14 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
     ratingBar = (TextView) itemView.findViewById(R.id.rating);
     RxView.clicks(itemView)
         .map(__ -> adResult)
-        .subscribe(data -> onItemViewClickRelay.call(new SearchAdResultWrapper(data, position)));
+        .subscribe(data -> onItemViewClickRelay.call(
+            new SearchAdResultWrapper(data, getAdapterPosition())));
   }
 
-  @Override public void setup(SearchAdResult searchAd, int position) {
+  @Override public void setup(SearchAdResult searchAd) {
     final Context context = itemView.getContext();
     final Resources resources = itemView.getResources();
     this.adResult = searchAd;
-    this.position = position;
     setName(searchAd);
     setIcon(searchAd, context);
     setDownloadsCount(searchAd, resources);
