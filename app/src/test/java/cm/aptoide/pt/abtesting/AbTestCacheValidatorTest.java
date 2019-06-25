@@ -5,8 +5,6 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static cm.aptoide.pt.abtesting.Experiment.MAX_CACHE_TIME_IN_MILLIS;
-
 public class AbTestCacheValidatorTest {
 
   private AbTestCacheValidator cacheValidator;
@@ -15,8 +13,8 @@ public class AbTestCacheValidatorTest {
     HashMap<String, ExperimentModel> localCache = new HashMap<>();
     localCache.put("experiment1", new ExperimentModel(new Experiment(), false));
     localCache.put("experiment2", new ExperimentModel(
-        new Experiment(System.currentTimeMillis() - MAX_CACHE_TIME_IN_MILLIS, "payload", "", false),
-        false));
+        new Experiment(System.currentTimeMillis() - Experiment.MAX_CACHE_TIME_IN_MILLIS - 1000,
+            "payload", "", false), false));
     localCache.put("experiment3", new ExperimentModel(new Experiment(), true));
     localCache.put("experiment4",
         new ExperimentModel(new Experiment(System.currentTimeMillis(), "payload", "", true),
@@ -32,6 +30,8 @@ public class AbTestCacheValidatorTest {
   }
 
   @Test public void invalidateExpiredExperimentTest() {
+    System.out.println("AbTestCacheValidatorTest.invalidateExpiredExperimentTest "
+        + cacheValidator.isExperimentValid("experiment2"));
     Assert.assertFalse(cacheValidator.isExperimentValid("experiment2"));
   }
 
