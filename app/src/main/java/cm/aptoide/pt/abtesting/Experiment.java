@@ -6,6 +6,7 @@ package cm.aptoide.pt.abtesting;
 
 public class Experiment {
   private static final long TWENTY_FOUR_HOURS = 86400000;
+  private static final long MAX_CACHE_TIME_IN_MILLIS = TWENTY_FOUR_HOURS * 30;
 
   private long requestTime;
   private String assignment;
@@ -42,7 +43,7 @@ public class Experiment {
   }
 
   public boolean isExpired() {
-    return requestTime < (System.currentTimeMillis() - TWENTY_FOUR_HOURS);
+    return requestTime < (System.currentTimeMillis() - MAX_CACHE_TIME_IN_MILLIS);
   }
 
   public String getAssignment() {
