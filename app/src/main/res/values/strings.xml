@@ -281,6 +281,7 @@
   <string name="libraries_demo">Libraries &amp; Demo</string>
   <string name="shopping">Shopping</string>
   <string name="weather">Weather</string>
+  <string name="other_category">Others</string>
   <string name="latest_applications">Latest Apps</string>
   <string name="top_apps_in_store">Top Apps In This Store</string>
   <string name="apps_for_kids">Apps for Kids</string>
@@ -702,6 +703,7 @@
   <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
   <string name="wallet_install_complete_body">Go back to the game to make your purchase!</string>
+  <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
 
 </resources>
 
