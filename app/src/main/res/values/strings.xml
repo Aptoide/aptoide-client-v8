@@ -700,6 +700,8 @@
   <string name="wallet_install_complete_title">Installation Complete</string>
   <string name="wallet_install_complete_body">Go back to the game to make your purchase!</string>
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
+  <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
+  <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
 
 </resources>
 
