@@ -11,7 +11,7 @@
 
   <string name="setting_updates">Updates</string>
   <string name="settings_updates_filter_setting_title">Beta versions</string>
-  <string name="settings_updates_filter_summary">You\'ll see updates for beta versions.</string>
+  <string name="settings_updates_filter_summary">You\'ll also see beta versions</string>
   <string name="settings_include_system_apps_title">System apps</string>
   <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
   <string name="settings_excluded_updates">Excluded updates</string>
