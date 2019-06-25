@@ -101,7 +101,7 @@ public class AptoideUtils {
           .invoke(null, key);
     } catch (Exception e) {
       Logger.getInstance()
-          .w("SAIUtils", e.getMessage());
+          .w("AptoideUtils", e.getMessage());
       return null;
     }
   }
