@@ -1917,7 +1917,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppInstaller providesAppInstaller(
       AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new AppInstaller(application.getApplicationContext(),
-        installStatus -> appInstallerStatusReceiver.onStatusReceived(installStatus));
+        (installStatus) -> appInstallerStatusReceiver.onStatusReceived(installStatus));
   }
 
   @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
