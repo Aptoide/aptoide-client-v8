@@ -16,9 +16,12 @@ public class PermissionManager {
     return Observable.create(new RequestAccessToExternalFileSystemOnSubscribe(permissionService));
   }
 
-  public Observable<Void> requestDownloadAccess(PermissionService permissionService,
-      boolean shouldValidateMobileData) {
-    return Observable.create(
-        new RequestDownloadAccessOnSubscribe(permissionService, shouldValidateMobileData));
+  public Observable<Void> requestDownloadAccess(PermissionService permissionService) {
+    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, true));
+  }
+
+  public Observable<Void> requestDownloadAccessValidatingMobileData(
+      PermissionService permissionService) {
+    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, false));
   }
 }

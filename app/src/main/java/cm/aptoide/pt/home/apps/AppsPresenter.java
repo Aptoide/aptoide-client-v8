@@ -298,7 +298,7 @@ public class AppsPresenter implements Presenter {
                   }
                   return Observable.just(true);
                 })
-                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService, true))
+                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
                 .doOnNext(__ -> setStandbyState(appClickEventWrapper))
                 .observeOn(ioScheduler)
                 .flatMapCompletable(__3 -> appsManager.updateApp(appClickEventWrapper.getApp(),
@@ -373,8 +373,7 @@ public class AppsPresenter implements Presenter {
             .doOnNext(app -> view.setStandbyState(app))
             .observeOn(viewScheduler)
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
-                .flatMap(
-                    success -> permissionManager.requestDownloadAccess(permissionService, true))
+                .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
                 .observeOn(ioScheduler)
                 .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
             .retry())

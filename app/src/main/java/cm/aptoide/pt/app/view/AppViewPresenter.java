@@ -945,7 +945,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService, true)
+            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
@@ -1083,7 +1083,7 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(action);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService, true)
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
@@ -1215,7 +1215,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService, true)
+            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapCompletable(
@@ -1297,7 +1297,7 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(null);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService, true))
+        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> appViewManager.downloadApp(walletApp))
