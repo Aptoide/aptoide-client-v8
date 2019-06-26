@@ -217,10 +217,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               } catch (Exception e) {
                 e.printStackTrace();
               }
-              // TODO: 28-07-2016 Baikova Failed to extract referrer.
             } else {
               // A lista de excluded networks deve ser limpa a cada "ronda"
-              // TODO: 28-07-2016 Baikova referrer successfully extracted.
               clearExcludedNetworks(packageName);
             }
 
@@ -232,9 +230,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
       });
 
       wv.loadUrl(internalClickUrl[0]);
-
-      // TODO: 28-07-2016 Baikova Opened click_url
-
       windowManager.addView(view, params);
     } catch (Exception e) {
       // TODO: 09-06-2016 neuro
@@ -270,6 +265,5 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
     context.sendBroadcast(i);
     Logger.getInstance()
         .d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
-    // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 }
