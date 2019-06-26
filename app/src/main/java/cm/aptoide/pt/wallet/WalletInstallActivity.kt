@@ -49,16 +49,24 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
   override fun showInstallationSuccessView() {
+    showSuccessView(getString(R.string.wallet_install_complete_title),
+        getString(R.string.wallet_install_complete_body))
+  }
+
+  override fun showWalletInstalledAlreadyView() {
+    showSuccessView(getString(R.string.wallet_install_request_already_installed_title),
+        getString(R.string.wallet_install_request_already_installed_body))
+  }
+
+  private fun showSuccessView(title: String, body: String) {
     appIconImageView.setImageDrawable(
         getResources().getDrawable(R.drawable.ic_check_orange_gradient_start))
-    val message = getString(R.string.wallet_install_complete_title)
-    messageTextView.text = message
-    messageTextView.setSubstringTypeface(Pair(message, Typeface.BOLD))
-    installCompleteMessage.text = getString(R.string.wallet_install_complete_body)
+    messageTextView.text = title
+    messageTextView.setSubstringTypeface(Pair(title, Typeface.BOLD))
+    installCompleteMessage.text = body
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.VISIBLE
     walletInstallViewGroup.visibility = View.VISIBLE
-
   }
 
   override fun closeButtonClicked(): Observable<Void> {
