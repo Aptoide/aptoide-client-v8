@@ -16,6 +16,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.EditorialHomeEvent;
@@ -44,6 +45,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private static final int VISIBLE_THRESHOLD = 1;
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.CURATION;
   @Inject public EditorialListPresenter presenter;
+  @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private BottomNavigationActivity bottomNavigationActivity;
   private RecyclerView editorialList;
   private EditorialListAdapter adapter;
@@ -51,14 +53,12 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private PublishSubject<Void> snackListener;
   private ScrollControlLinearLayoutManager layoutManager;
   private SwipeRefreshLayout swipeRefreshLayout;
-
   //Error views
   private View genericErrorView;
   private View noNetworkErrorView;
   private ProgressBar progressBar;
   private View noNetworkRetryButton;
   private View retryButton;
-
   private ImageView userAvatar;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +75,8 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     }
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
     layoutManager = new ScrollControlLinearLayoutManager(getContext());
-    adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener);
+    adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener,
+        captionBackgroundPainter);
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
     editorialList.setAdapter(adapter);
@@ -244,10 +245,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .cast(ReactionsHomeEvent.class);
   }
 
-  @Override public void setScrollEnabled(Boolean flag) {
-    layoutManager.setScrollEnabled(flag);
-  }
-
   @Override public Observable<EditorialHomeEvent> reactionButtonLongPress() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.REACT_LONG_PRESS))
@@ -256,12 +253,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
           setScrollEnabled(false);
           return event;
         });
-  }
-
-  @Override public Observable<EditorialHomeEvent> onPopupDismiss() {
-    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.POPUP_DISMISS))
-        .cast(EditorialHomeEvent.class);
   }
 
   @Override public void showReactionsPopup(String cardId, String groupId, int bundlePosition) {
@@ -293,6 +284,16 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void setScrollEnabled(Boolean flag) {
+    layoutManager.setScrollEnabled(flag);
+  }
+
+  @Override public Observable<EditorialHomeEvent> onPopupDismiss() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.POPUP_DISMISS))
+        .cast(EditorialHomeEvent.class);
   }
 
   private boolean isEndReached() {

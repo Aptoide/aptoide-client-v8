@@ -180,6 +180,9 @@ public class EditorialService {
   private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
       Data card, List<Integer> placeHolderPositions, List<EditorialContent> placeHolderContent,
       EditorialContent bottomCardPlaceHolderContent, String cardId, String groupId) {
+    String captionColor = card.getAppearance() != null ? card.getAppearance()
+        .getCaption()
+        .getTheme() : "";
     if (bottomCardPlaceHolderContent != null) {
       return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
           card.getBackground(), placeHolderPositions, placeHolderContent,
@@ -188,9 +191,10 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
           bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
           bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
-          cardId, groupId, bottomCardPlaceHolderContent.getSize());
+          cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor);
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
-        card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId);
+        card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,
+        captionColor);
   }
 }

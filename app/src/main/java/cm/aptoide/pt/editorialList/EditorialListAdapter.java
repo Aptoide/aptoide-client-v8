@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.HomeEvent;
 import java.util.List;
@@ -15,22 +16,25 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
   private static final int EDITORIAL_CARD = R.layout.editorial_action_item;
   private final ProgressCard progressBundle;
   private final PublishSubject<HomeEvent> uiEventsListener;
+  private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<CurationCard> editorialListItems;
 
   public EditorialListAdapter(List<CurationCard> editorialListItems, ProgressCard progressBundle,
-      PublishSubject<HomeEvent> uiEventsListener) {
+      PublishSubject<HomeEvent> uiEventsListener,
+      CaptionBackgroundPainter captionBackgroundPainter) {
     this.editorialListItems = editorialListItems;
     this.progressBundle = progressBundle;
     this.uiEventsListener = uiEventsListener;
+    this.captionBackgroundPainter = captionBackgroundPainter;
   }
 
   @Override public EditorialBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == EDITORIAL_CARD) {
       return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener);
+          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter);
     } else {
       return new LoadingViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(LOADING, parent, false), uiEventsListener);
+          .inflate(LOADING, parent, false), uiEventsListener, captionBackgroundPainter);
     }
   }
 

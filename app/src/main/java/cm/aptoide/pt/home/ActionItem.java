@@ -13,12 +13,13 @@ public class ActionItem {
   private final String url;
   private final String numberOfViews;
   private final String date;
+  private final String captionColor;
   private List<TopReaction> reactionList;
   private int total;
   private String userReaction;
 
   public ActionItem(String cardId, String type, String title, String subTitle, String icon,
-      String url, String numberOfViews, String date) {
+      String url, String numberOfViews, String date, String captionColor) {
     this.cardId = cardId;
     this.type = type;
     this.title = title;
@@ -27,6 +28,7 @@ public class ActionItem {
     this.url = url;
     this.numberOfViews = numberOfViews;
     this.date = date;
+    this.captionColor = captionColor;
     this.reactionList = Collections.emptyList();
     this.total = -1;
     this.userReaction = "";
@@ -86,5 +88,9 @@ public class ActionItem {
 
   public void setUserReaction(String myReaction) {
     this.userReaction = myReaction;
+  }
+
+  public String getCaptionColor() {
+    return captionColor;
   }
 }

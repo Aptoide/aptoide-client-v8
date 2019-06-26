@@ -70,7 +70,8 @@ public class EditorialListPresenterTest {
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
         editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
     CurationCard curationCard =
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56",
+            captionColor);
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);
     successEditorialViewModel = new EditorialListViewModel(curationCardList, 0, 0);
     loadingEditorialViewModel = new EditorialListViewModel(true);
@@ -291,7 +292,8 @@ public class EditorialListPresenterTest {
 
   @Test public void handleReactionButtonClickSecondReactionTest() {
     CurationCard curationCard =
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56",
+            captionColor);
     //Given an initialised presenter
     presenter.handleReactionButtonClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -326,7 +328,8 @@ public class EditorialListPresenterTest {
 
   @Test public void handleUserReactionTest() {
     CurationCard curationCard =
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56",
+            captionColor);
     //Given an initialised presenter
     presenter.handleUserReaction();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -346,7 +349,8 @@ public class EditorialListPresenterTest {
 
   @Test public void handleUserReactionWithSameReactionTest() {
     CurationCard curationCard =
-        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56");
+        new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56",
+            captionColor);
     //Given an initialised presenter
     presenter.handleUserReaction();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
