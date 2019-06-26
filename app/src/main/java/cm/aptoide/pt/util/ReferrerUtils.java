@@ -211,14 +211,14 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                               qManager, context, sharedPreferences, new MinimalAdMapper()),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
-                  // A lista de excluded networks deve ser limpa a cada "ronda"
+                  // Must clean Excluded Networks least after each "round"
                   clearExcludedNetworks(packageName);
                 }
               } catch (Exception e) {
                 e.printStackTrace();
               }
             } else {
-              // A lista de excluded networks deve ser limpa a cada "ronda"
+              // Must clean Excluded Networks least after each "round"
               clearExcludedNetworks(packageName);
             }
 
