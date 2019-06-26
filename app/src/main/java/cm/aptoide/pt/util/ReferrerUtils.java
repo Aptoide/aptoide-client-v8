@@ -152,15 +152,15 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               .d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
-            future = postponeReferrerExtraction(searchAdResult, TIME_OUT, retries, httpClient,
+            future = postponeReferrerExtraction(searchAdResult, DELAY, retries, httpClient,
                 converterFactory, qManager);
           }
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
-            int delta, int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
+            int delay, int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
-          return postponeReferrerExtraction(searchAdResult, delta, false, retries, httpClient,
+          return postponeReferrerExtraction(searchAdResult, delay, false, retries, httpClient,
               converterFactory,
               qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
@@ -176,10 +176,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
-            int delta, final boolean success, final int retries, OkHttpClient httpClient,
+            int delay, final boolean success, final int retries, OkHttpClient httpClient,
             Converter.Factory converterFactory, String q, QManager qManager) {
           Logger.getInstance()
-              .d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
+              .d("ExtractReferrer", "Referrer postponed " + delay + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.getInstance()
@@ -224,7 +224,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
             return null;
           };
 
-          return executorService.schedule(callable, delta, TimeUnit.SECONDS);
+          return executorService.schedule(callable, delay, TimeUnit.SECONDS);
         }
       });
 
