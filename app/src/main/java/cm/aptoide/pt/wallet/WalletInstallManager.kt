@@ -53,7 +53,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
                 it)
           }.map { download }
-        }.flatMapCompletable { download -> installManager.install(download) }.toCompletable()
+        }.flatMapCompletable { download -> installManager.splitInstall(download) }.toCompletable()
   }
 
   private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
