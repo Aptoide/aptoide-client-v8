@@ -20,7 +20,6 @@ class WalletInstallPresenter(val view: WalletInstallView,
   override fun present() {
     loadWalletInstall()
     handleCloseButtonClick()
-    handleWalletInstalled()
     handleCancelDownloadButton()
   }
 
@@ -41,17 +40,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
         })
   }
 
-  private fun handleWalletInstalled() {
-    view.lifecycleEvent
-        .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
-        .flatMap { walletInstallManager.onWalletInstalled() }
+  private fun handleWalletInstallation(): Completable? {
+    return walletInstallManager.onWalletInstalled().first()
         .observeOn(viewScheduler)
-        .doOnNext { view.showInstallationSuccessView() }
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe({}, {
-          it.printStackTrace()
-          view.dismissDialog()
-        })
+        .doOnNext { view.showInstallationSuccessView() }.toCompletable()
   }
 
   private fun loadWalletInstall() {
@@ -60,8 +52,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap {
           showWalletInitialState()
         }.observeOn(viewScheduler)
-        .doOnNext { view.showIndeterminateDownload() }.flatMapCompletable {
-          handleWalletDownload(it.second)
+        .doOnNext { view.showIndeterminateDownload() }
+        .first()
+        .flatMapCompletable {
+          handleWalletDownload(it.second)?.andThen(handleWalletInstallation())
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
@@ -77,7 +71,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         view.showRootInstallWarningPopup()
             ?.doOnNext { answer -> walletInstallManager.allowRootInstall(answer) }
       }
-      Observable.just(null)
+      Observable.just(walletApp)
     }.observeOn(viewScheduler)
         .flatMap {
           permissionManager.requestDownloadAccessValidatingMobileData(permissionService)
