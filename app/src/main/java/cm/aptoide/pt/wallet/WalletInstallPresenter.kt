@@ -40,10 +40,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
         })
   }
 
-  private fun handleWalletInstallation(): Completable {
+  private fun handleWalletInstallation(): Observable<Boolean> {
     return walletInstallManager.onWalletInstalled().first()
         .observeOn(viewScheduler)
-        .doOnNext { view.showInstallationSuccessView() }.toCompletable()
+        .doOnNext { view.showInstallationSuccessView() }
   }
 
   private fun loadWalletInstall() {
@@ -54,14 +54,20 @@ class WalletInstallPresenter(val view: WalletInstallView,
         }.first()
         .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
-        .flatMapCompletable {
-          startWalletDownload(it.second)?.andThen(handleWalletInstallation())
+        .flatMap {
+          startWalletDownload(it.second)?.andThen(
+              Observable.merge(handleWalletInstallation(), observeDownloadProgress(it.second)))
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
           it.printStackTrace()
           view.dismissDialog()
         })
+  }
+
+  private fun observeDownloadProgress(walletApp: WalletApp): Observable<WalletApp> {
+    return walletInstallManager.loadDownloadModel(walletApp).observeOn(viewScheduler)
+        .doOnNext { view.showDownloadState(it) }.map { walletApp }
   }
 
   private fun startWalletDownload(walletApp: WalletApp): Completable? {

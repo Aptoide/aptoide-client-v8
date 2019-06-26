@@ -152,4 +152,15 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun cancelDownloadButtonClicked(): Observable<Void> {
     return RxView.clicks(wallet_download_cancel_button)
   }
+
+  override fun showDownloadState(downloadModel: DownloadModel) {
+    if (downloadModel.isDownloadingOrInstalling) {
+      wallet_install_download_view.visibility = View.VISIBLE
+      setDownloadProgress(downloadModel)
+    } else {
+      wallet_install_download_view.visibility = View.GONE
+      progressView.visibility = View.GONE
+      walletInstallViewGroup.visibility = View.VISIBLE
+    }
+  }
 }
