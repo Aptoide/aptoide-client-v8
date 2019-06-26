@@ -40,7 +40,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         })
   }
 
-  private fun handleWalletInstallation(): Completable? {
+  private fun handleWalletInstallation(): Completable {
     return walletInstallManager.onWalletInstalled().first()
         .observeOn(viewScheduler)
         .doOnNext { view.showInstallationSuccessView() }.toCompletable()
@@ -51,11 +51,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
           showWalletInitialState()
-        }.observeOn(viewScheduler)
+        }.first()
+        .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
-        .first()
         .flatMapCompletable {
-          handleWalletDownload(it.second)?.andThen(handleWalletInstallation())
+          startWalletDownload(it.second)?.andThen(handleWalletInstallation())
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
@@ -64,7 +64,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         })
   }
 
-  private fun handleWalletDownload(walletApp: WalletApp): Completable? {
+  private fun startWalletDownload(walletApp: WalletApp): Completable? {
 
     return Observable.defer {
       if (walletInstallManager.shouldShowRootInstallWarningPopup()) {
