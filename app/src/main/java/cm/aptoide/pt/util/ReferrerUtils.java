@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -258,9 +257,7 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   public static void broadcastReferrer(String packageName, String referrer, Context context) {
     Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
     i.setPackage(packageName);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-    }
+    i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     i.putExtra("referrer", referrer);
     context.sendBroadcast(i);
     Logger.getInstance()
