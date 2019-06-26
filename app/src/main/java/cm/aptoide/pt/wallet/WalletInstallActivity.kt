@@ -66,6 +66,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     when (downloadModel.downloadState) {
       DownloadModel.DownloadState.ACTIVE, DownloadModel.DownloadState.PAUSE -> {
         walletInstallViewGroup.visibility = View.VISIBLE
+        wallet_download_cancel_button.visibility = View.VISIBLE
         wallet_download_progress_bar.isIndeterminate = false
         wallet_download_progress_bar.progress = downloadModel
             .progress
