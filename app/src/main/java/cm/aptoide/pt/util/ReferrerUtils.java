@@ -131,11 +131,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer, context);
               } else {
-                //@Cleanup Realm realm = DeprecatedDatabase.get();
-                //DeprecatedDatabase.save(
-                //    new StoredMinimalAd(packageName, referrer, searchAdResult.getCpiUrl(),
-                //        searchAdResult.getAdId()), realm);
-
                 StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
                     ((AptoideApplication) context.getApplicationContext()
                         .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
