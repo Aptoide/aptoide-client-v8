@@ -1,5 +1,6 @@
 package cm.aptoide.pt.wallet
 
+import android.os.Build
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
 import cm.aptoide.pt.presenter.Presenter
@@ -49,6 +50,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
   private fun loadWalletInstall() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .doOnNext {
+          if (!hasMinimumSdk())
+            view.showSdkErrorView()
+        }
+        .filter { hasMinimumSdk() }
         .flatMap {
           showWalletInitialState()
         }.first()
@@ -105,6 +111,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
             view.showWalletInstallationView(pair.first, pair.second)
           }
         }
+  }
+
+  private fun hasMinimumSdk(): Boolean {
+    return Build.VERSION.SDK_INT >= 21
   }
 
   private fun handleCloseButtonClick() {

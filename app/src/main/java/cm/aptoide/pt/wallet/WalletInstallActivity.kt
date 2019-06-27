@@ -124,6 +124,14 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     finish()
   }
 
+  override fun showSdkErrorView() {
+    sdkErrorViewGroup.visibility = View.VISIBLE
+    progressView.visibility = View.GONE
+    walletInstallSuccessViewGroup.visibility = View.GONE
+    walletInstallViewGroup.visibility = View.INVISIBLE
+
+  }
+
   override fun showRootInstallWarningPopup(): Observable<Boolean>? {
     return GenericDialogs.createGenericYesNoCancelMessage(applicationContext, null,
         resources.getString(R.string.root_access_dialog))

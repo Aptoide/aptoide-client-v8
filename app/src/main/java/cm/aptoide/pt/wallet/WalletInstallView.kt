@@ -25,4 +25,6 @@ interface WalletInstallView : View {
   fun showDownloadState(downloadModel: DownloadModel)
 
   fun showWalletInstalledAlreadyView()
+
+  fun showSdkErrorView()
 }
