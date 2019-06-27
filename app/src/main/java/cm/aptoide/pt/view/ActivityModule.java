@@ -48,6 +48,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
@@ -380,10 +381,11 @@ import static android.content.Context.WINDOW_SERVICE;
       WalletInstallConfiguration configuration, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       MoPubAdsManager moPubAdsManager, WalletInstallAnalytics walletInstallAnalytics,
-      InstalledRepository installedRepository, WalletAppProvider walletAppProvider) {
+      InstalledRepository installedRepository, WalletAppProvider walletAppProvider,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
         downloadFactory, downloadStateParser, moPubAdsManager, walletInstallAnalytics,
-        installedRepository, walletAppProvider);
+        installedRepository, walletAppProvider, appInstallerStatusReceiver);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(

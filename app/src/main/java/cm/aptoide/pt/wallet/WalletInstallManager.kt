@@ -7,8 +7,10 @@ import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.realm.Download
 import cm.aptoide.pt.download.DownloadFactory
+import cm.aptoide.pt.install.AppInstallerStatusReceiver
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.install.InstalledRepository
+import cm.aptoide.pt.packageinstaller.InstallStatus
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.utils.AptoideUtils
 import rx.Completable
@@ -21,7 +23,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val moPubAdsManager: MoPubAdsManager,
                            val walletInstallAnalytics: WalletInstallAnalytics,
                            val installedRepository: InstalledRepository,
-                           val walletAppProvider: WalletAppProvider) {
+                           val walletAppProvider: WalletAppProvider,
+                           val appInstallerStatusReceiver: AppInstallerStatusReceiver) {
 
   fun getAppIcon(): Observable<String> {
     return Observable.fromCallable {
@@ -85,4 +88,10 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         }
   }
 
+  fun onWalletInstallationCanceled(): Observable<Boolean> {
+    return appInstallerStatusReceiver.installerInstallStatus
+        .map {
+          InstallStatus.Status.CANCELED.equals(it.status)
+        }.filter { it }
+  }
 }
