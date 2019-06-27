@@ -35,8 +35,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
         }
         .observeOn(viewScheduler)
         .doOnNext { pair ->
-          view.showWalletInstallationView(pair.first, pair.second)
-
+          if (pair.second.isInstalled) {
+            view.showWalletInstalledAlreadyView()
+          } else {
+            view.showWalletInstallationView(pair.first, pair.second)
+          }
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {

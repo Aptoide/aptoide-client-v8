@@ -147,8 +147,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   public void add(List<HomeBundle> bundles) {
+    int initialPosition = this.bundles.size();
     this.bundles.addAll(bundles);
-    notifyDataSetChanged();
+    notifyItemRangeInserted(initialPosition, bundles.size());
   }
 
   public void addLoadMore() {

@@ -4,6 +4,7 @@ import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.UiModeManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -308,6 +309,7 @@ import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.UI_MODE_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
@@ -966,7 +968,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
       WindowManager windowManager) {
     return new QManager(sharedPreferences, resources,
-        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager);
+        ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager,
+        (UiModeManager) application.getSystemService(UI_MODE_SERVICE));
   }
 
   @Singleton @Provides WindowManager provideWindowManager() {
@@ -1783,7 +1786,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("default-followed-stores")
   List<String> provideDefaultFollowedStores() {
-    return Arrays.asList("apps", "bds-store");
+    return Arrays.asList("apps", "catappult");
   }
 
   @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {

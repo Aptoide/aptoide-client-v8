@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.home.AdClick;
 import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.HomeBundle;
@@ -16,8 +15,6 @@ import rx.Observable;
 public interface BundleView extends View {
 
   void showBundles(List<HomeBundle> bundles);
-
-  void addHighlightedAd(AdClick click);
 
   void showLoading();
 
