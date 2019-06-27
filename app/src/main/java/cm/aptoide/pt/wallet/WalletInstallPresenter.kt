@@ -52,6 +52,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap {
           showWalletInitialState()
         }.first()
+        .filter { !it.second.isInstalled }
         .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
         .flatMap {
