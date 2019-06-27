@@ -94,6 +94,7 @@
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
       android:text="@string/got_it_button_text"
+      android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@id/installCompleteMessage"
@@ -148,6 +149,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
+      android:layout_marginLeft="15dp"
+      android:layout_marginStart="15dp"
       android:visibility="gone"
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
@@ -170,7 +173,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground,closeButton"
+      app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground"
       />
 
   <android.support.constraint.Group
@@ -178,7 +181,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="closeButton,appcImage,errorMessageTextView"
+      app:constraint_referenced_ids="appcImage,errorMessageTextView"
       />
 
 

@@ -45,6 +45,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
                                           walletApp: WalletApp) {
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.GONE
+    closeButton.visibility = View.GONE
 
     appIcon?.let {
       ImageLoader.with(this).load(appIcon, appIconImageView)
@@ -73,11 +74,15 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
         wallet_download_progress_number.text = downloadModel
             .progress.toString() + "%"
       }
-      DownloadModel.DownloadState.INDETERMINATE, DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
+      DownloadModel.DownloadState.INDETERMINATE -> {
         wallet_download_progress_bar.isIndeterminate = true
-        wallet_download_cancel_button.visibility = View.GONE
         walletInstallViewGroup.visibility = View.VISIBLE
-
+        wallet_download_cancel_button.visibility = View.VISIBLE
+      }
+      DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
+        wallet_download_progress_bar.isIndeterminate = true
+        walletInstallViewGroup.visibility = View.VISIBLE
+        wallet_download_cancel_button.visibility = View.GONE
       }
       DownloadModel.DownloadState.ERROR -> showErrorMessage(
           getString(R.string.error_occured))
@@ -111,6 +116,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     installCompleteMessage.text = body
     progressView.visibility = View.GONE
     walletInstallSuccessViewGroup.visibility = View.VISIBLE
+    closeButton.visibility = View.VISIBLE
     walletInstallViewGroup.visibility = View.VISIBLE
     wallet_install_download_view.visibility = View.GONE
 
@@ -127,6 +133,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun showSdkErrorView() {
     sdkErrorViewGroup.visibility = View.VISIBLE
     progressView.visibility = View.GONE
+    closeButton.visibility = View.VISIBLE
     walletInstallSuccessViewGroup.visibility = View.GONE
     walletInstallViewGroup.visibility = View.INVISIBLE
 
