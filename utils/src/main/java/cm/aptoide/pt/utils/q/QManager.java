@@ -129,9 +129,7 @@ public class QManager {
         + "&maxGles="
         + getGlEs()
         + "&myCPU="
-        + getCpuAbi()
-        + "&leanback="
-        + hasLeanback()
+        + getCpuAbi() + "&leanback=" + hasLeanback()
         + "&myDensity="
         + getDensityDpi()
         + (getSupportedOpenGlExtensionsManager().equals("") ? ""

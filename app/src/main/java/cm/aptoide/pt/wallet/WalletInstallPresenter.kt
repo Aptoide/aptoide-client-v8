@@ -1,6 +1,6 @@
 package cm.aptoide.pt.wallet
 
-import android.content.pm.PackageManager
+import android.os.Build
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.PromotionsManager
@@ -22,6 +22,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
   private fun loadWalletInstall() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .doOnNext {
+          if (!hasMinimumSdk())
+            view.showSdkErrorView()
+        }
+        .filter { hasMinimumSdk() }
         .flatMap {
           Observable.zip(walletInstallManager.getAppIcon(),
               promotionsManager.walletApp) { appIcon, walletApp ->
@@ -40,6 +45,10 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .subscribe({}, {
           view.dismissDialog()
         })
+  }
+
+  private fun hasMinimumSdk(): Boolean {
+    return Build.VERSION.SDK_INT >= 21
   }
 
   private fun handleCloseButtonClick() {

@@ -77,6 +77,13 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     finish()
   }
 
+  override fun showSdkErrorView() {
+    sdkErrorViewGroup.visibility = View.VISIBLE
+    progressView.visibility = View.GONE
+    walletInstallSuccessViewGroup.visibility = View.GONE
+    walletInstallViewGroup.visibility = View.INVISIBLE
+
+  }
 
   /**
    * Sets the specified Typeface Style on the first instance of the specified substring(s)

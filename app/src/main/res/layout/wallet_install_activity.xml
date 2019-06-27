@@ -111,6 +111,37 @@
       tools:visibility="gone"
       />
 
+  <ImageView
+      android:id="@+id/appcImage"
+      android:layout_width="82dp"
+      android:layout_height="82dp"
+      android:layout_marginTop="31dp"
+      android:src="@drawable/ic_appcoins"
+      android:visibility="gone"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      />
+
+  <TextView
+      android:id="@+id/errorMessageTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="29dp"
+      android:layout_marginRight="29dp"
+      android:layout_marginTop="24dp"
+      android:maxWidth="232dp"
+      android:textAlignment="center"
+      android:visibility="gone"
+      android:gravity="center"
+      app:layout_constrainedWidth="true"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:text="@string/appc_not_supported_body"
+      app:layout_constraintTop_toBottomOf="@id/appcImage"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+
   <android.support.constraint.Group
       android:id="@+id/walletInstallViewGroup"
       android:layout_width="wrap_content"
@@ -125,6 +156,14 @@
       android:layout_height="wrap_content"
       android:visibility="gone"
       app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground,closeButton"
+      />
+
+  <android.support.constraint.Group
+      android:id="@+id/sdkErrorViewGroup"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:constraint_referenced_ids="closeButton,appcImage,errorMessageTextView"
       />
 
 

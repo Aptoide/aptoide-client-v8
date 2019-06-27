@@ -16,4 +16,6 @@ interface WalletInstallView : View {
   fun dismissDialog()
 
   fun showWalletInstalledAlreadyView()
+
+  fun showSdkErrorView()
 }
