@@ -15,7 +15,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:scaleType="centerCrop"
-      android:src="@drawable/ic_wallet_install_header_bg"
+      android:src="@drawable/ic_wallet_install_header_background"
       android:visibility="invisible"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
