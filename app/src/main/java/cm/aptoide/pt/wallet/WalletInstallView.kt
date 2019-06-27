@@ -14,4 +14,6 @@ interface WalletInstallView : View {
   fun closeButtonClicked(): Observable<Void>
 
   fun dismissDialog()
+
+  fun showWalletInstalledAlreadyView()
 }
