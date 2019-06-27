@@ -133,6 +133,7 @@
       android:maxWidth="232dp"
       android:textAlignment="center"
       android:visibility="gone"
+      android:gravity="center"
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
