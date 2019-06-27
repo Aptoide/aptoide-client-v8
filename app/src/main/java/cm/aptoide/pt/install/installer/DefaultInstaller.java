@@ -284,6 +284,7 @@ public class DefaultInstaller implements Installer {
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
                 .filter(installStatus -> installation.getPackageName()
                     .equalsIgnoreCase(installStatus.getPackageName()))
+                .distinctUntilChanged()
                 .doOnNext(installStatus -> {
                   Logger.getInstance()
                       .d("Installer", "status: " + installStatus.getStatus()
@@ -293,7 +294,11 @@ public class DefaultInstaller implements Installer {
                           : Installed.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
                     startInstallIntent(context, installation.getFile());
+                  } else if (installStatus.getStatus()
+                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
                   }
                 })))
         .map(success -> installation)

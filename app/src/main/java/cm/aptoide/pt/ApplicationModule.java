@@ -171,7 +171,7 @@ import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
-import cm.aptoide.pt.install.InstallFabricEvents;
+import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -344,9 +344,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
       AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
       @Named("default") SharedPreferences sharedPreferences,
-      RootAvailabilityManager rootAvailabilityManager) {
-    return new InstallFabricEvents(analyticsManager, installAnalytics, sharedPreferences,
-        rootAvailabilityManager);
+      RootAvailabilityManager rootAvailabilityManager, NavigationTracker navigationTracker) {
+    return new InstallEvents(analyticsManager, installAnalytics, sharedPreferences,
+        rootAvailabilityManager, navigationTracker);
   }
 
   @Singleton @Provides DownloadAnalytics providesDownloadAnalytics(
@@ -1467,9 +1467,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
-    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
-        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, InstallEvents.ROOT_V2_COMPLETE,
+        InstallEvents.ROOT_V2_START, InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
         AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
@@ -1826,8 +1825,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
         AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT,
         PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
-        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
-        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallEvents.ROOT_V2_COMPLETE,
+        InstallEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
@@ -1847,7 +1846,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
-        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK);
+        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
