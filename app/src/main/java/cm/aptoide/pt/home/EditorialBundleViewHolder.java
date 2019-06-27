@@ -61,7 +61,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
     setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
         actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
-        actionItem.getDate(), position, homeBundle, actionItem.getReactionList(),
+        actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
         actionItem.getTotal(), actionItem.getUserReaction());
   }
 

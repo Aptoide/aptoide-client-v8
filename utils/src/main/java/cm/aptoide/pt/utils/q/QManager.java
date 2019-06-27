@@ -1,7 +1,9 @@
 package cm.aptoide.pt.utils.q;
 
 import android.app.ActivityManager;
+import android.app.UiModeManager;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Base64;
 import android.view.WindowManager;
@@ -24,13 +26,15 @@ public class QManager {
   private String glEs;
   private Integer densityDpi;
   private String cachedFilters;
+  private UiModeManager uiModeManager;
 
   public QManager(SharedPreferences sharedPreferences, Resources resources,
-      ActivityManager activityManager, WindowManager windowManager) {
+      ActivityManager activityManager, WindowManager windowManager, UiModeManager uiModeManager) {
     this.glExtensionsManager = new GlExtensionsManager(sharedPreferences);
     this.resources = resources;
     this.activityManager = activityManager;
     this.windowManager = windowManager;
+    this.uiModeManager = uiModeManager;
   }
 
   public Integer getMinSdk() {
@@ -108,7 +112,16 @@ public class QManager {
     return cachedFilters;
   }
 
+  private String hasLeanback() {
+    if (uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION) {
+      return "1";
+    } else {
+      return "0";
+    }
+  }
+
   private String computeFilters() {
+
     String filters = "maxSdk="
         + getMinSdk()
         + "&maxScreen="
@@ -117,7 +130,8 @@ public class QManager {
         + getGlEs()
         + "&myCPU="
         + getCpuAbi()
-        + "&leanback=0"
+        + "&leanback="
+        + hasLeanback()
         + "&myDensity="
         + getDensityDpi()
         + (getSupportedOpenGlExtensionsManager().equals("") ? ""

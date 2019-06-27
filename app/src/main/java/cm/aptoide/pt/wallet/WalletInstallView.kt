@@ -23,4 +23,6 @@ interface WalletInstallView : View {
   fun cancelDownloadButtonClicked(): Observable<Void>
 
   fun showDownloadState(downloadModel: DownloadModel)
+
+  fun showWalletInstalledAlreadyView()
 }

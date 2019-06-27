@@ -304,9 +304,8 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      @Named("aptoide-theme") String theme) {
-    return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator, theme);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new AppCoinsInfoNavigator(fragmentNavigator);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,

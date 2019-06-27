@@ -97,7 +97,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
       Pair<String?, WalletApp>(appIcon, walletApp)
     }.first().observeOn(viewScheduler)
         .doOnNext { pair ->
-          view.showWalletInstallationView(pair.first, pair.second)
+          if (pair.second.isInstalled) {
+            view.showWalletInstalledAlreadyView()
+          } else {
+            view.showWalletInstallationView(pair.first, pair.second)
+          }
         }
   }
 

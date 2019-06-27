@@ -184,10 +184,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     }
   }
 
-  @Override public void addHighlightedAd(AdClick click) {
-    adapter.addHighlightedAd(click);
-  }
-
   @Override public void showLoading() {
     bundlesList.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.GONE);
