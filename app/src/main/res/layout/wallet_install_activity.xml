@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="296dp"
-    android:animateLayoutChanges="true"
+    android:animateLayoutChanges="false"
     android:background="@android:color/white"
     tools:layout_width="296dp"
     >
