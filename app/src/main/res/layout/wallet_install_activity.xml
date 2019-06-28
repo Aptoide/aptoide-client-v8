@@ -3,11 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="296dp"
-    android:animateLayoutChanges="false"
+    android:animateLayoutChanges="true"
     android:background="@android:color/white"
-    tools:layout_width="296dp"
     >
 
   <ImageView
@@ -146,12 +145,12 @@
   <include
       layout="@layout/wallet_install_download_view"
       android:id="@+id/wallet_install_download_view"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
       android:layout_marginLeft="15dp"
       android:layout_marginStart="15dp"
-      android:visibility="gone"
+      android:visibility="invisible"
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
