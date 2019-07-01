@@ -21,6 +21,7 @@ import rx.Observable
  * This is handled by a state machine represented below.
  * Purple events are user-driven events while red events are set programatically.
  *
+ * [State Diagram](https://github.com/Aptoide/aptoide-client-v8/blob/codelabs/aptoide-views-arch/docs/aptoide-views/DownloadProgressView_States.png?raw=true "State Diagram")
  *
  */
 class DownloadProgressView : FrameLayout {
