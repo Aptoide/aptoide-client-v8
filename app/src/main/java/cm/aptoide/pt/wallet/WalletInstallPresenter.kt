@@ -58,12 +58,13 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap {
           showWalletInitialState()
         }.first()
-        .filter { !it.second.isInstalled }
+        .filter { walletInitialState -> !walletInitialState.second.isInstalled }
         .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
-        .flatMap {
-          startWalletDownload(it.second)?.andThen(
-              Observable.merge(handleWalletInstallation(), observeDownloadProgress(it.second),
+        .flatMap { walletInitialState ->
+          startWalletDownload(walletInitialState.second)?.andThen(
+              Observable.merge(handleWalletInstallation(),
+                  observeDownloadProgress(walletInitialState.second),
                   handleInstallDialogCancelButtonPress()))
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -123,8 +124,8 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap { view.closeButtonClicked() }
         .doOnNext { view.dismissDialog() }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe({}, {
-          it.printStackTrace()
+        .subscribe({}, { error ->
+          error.printStackTrace()
           view.dismissDialog()
         })
   }

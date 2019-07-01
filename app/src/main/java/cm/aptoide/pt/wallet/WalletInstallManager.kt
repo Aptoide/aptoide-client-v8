@@ -52,9 +52,9 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
             false, walletApp.size!!))
         .flatMapSingle { download ->
-          moPubAdsManager.adsVisibilityStatus.doOnSuccess {
+          moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
-                it)
+                responseStatus)
           }.map { download }
         }.flatMapCompletable { download -> installManager.splitInstall(download) }.toCompletable()
   }
@@ -66,8 +66,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
-    return installedRepository.isInstalled("com.appcoins.wallet").filter {
-      it
+    return installedRepository.isInstalled("com.appcoins.wallet").filter { isInstalled ->
+      isInstalled
     }
   }
 
@@ -82,16 +82,16 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
 
   fun loadDownloadModel(walletApp: WalletApp): Observable<DownloadModel> {
     return installManager.getInstall(walletApp.md5sum, walletApp.packageName, walletApp.versionCode)
-        .map {
-          DownloadModel(downloadStateParser.parseDownloadType(it.type, false, false, false),
-              it.progress, downloadStateParser.parseDownloadState(it.state), null)
+        .map { install ->
+          DownloadModel(downloadStateParser.parseDownloadType(install.type, false, false, false),
+              install.progress, downloadStateParser.parseDownloadState(install.state), null)
         }
   }
 
   fun onWalletInstallationCanceled(): Observable<Boolean> {
     return appInstallerStatusReceiver.installerInstallStatus
-        .map {
-          InstallStatus.Status.CANCELED.equals(it.status)
-        }.filter { it }
+        .map { installStatus ->
+          InstallStatus.Status.CANCELED.equals(installStatus.status)
+        }.filter { isCanceled -> isCanceled }
   }
 }
