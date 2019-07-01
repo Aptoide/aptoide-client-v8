@@ -163,7 +163,7 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+        .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionId))
         .doOnNext(__ -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
         .flatMap(appsModel -> {
@@ -202,7 +202,7 @@ public class PromotionsPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.retryClicked()
             .doOnNext(__ -> view.showLoading())
-            .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+            .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionId))
             .observeOn(viewScheduler)
             .flatMap(appsModel -> {
               if (appsModel.getAppsList()

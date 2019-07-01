@@ -18,6 +18,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -66,8 +67,15 @@ public class PromotionsManager {
     return promotionsService.getPromotionApps(promotionId);
   }
 
-  public Observable<PromotionsModel> getPromotionsModel(String promotionsId) {
-    return getPromotionApps(promotionsId).toObservable()
+  public Single<PromotionsModel> getPromotionsModel(String promotionsType) {
+    return promotionsService.getPromotions(promotionsType)
+        .flatMap(promotions -> {
+          if (promotions.isEmpty()) {
+            return Single.just(new ArrayList<PromotionApp>());
+          }
+          return getPromotionApps(promotions.get(0)
+              .getPromotionId());
+        })
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
   }

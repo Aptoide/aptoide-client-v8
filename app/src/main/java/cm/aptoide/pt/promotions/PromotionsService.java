@@ -1,6 +1,7 @@
 package cm.aptoide.pt.promotions;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -11,12 +12,15 @@ import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionsResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
+import rx.functions.Func1;
 
 public class PromotionsService {
   private static final String WRONG_CAPTCHA = "PROMOTION-1";
@@ -99,6 +103,30 @@ public class PromotionsService {
       }
     }
     return result;
+  }
+
+  public Single<List<Promotion>> getPromotions(String type) {
+    return GetPromotionsRequest.of(type, bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe()
+        .map(promotionsResult())
+        .toSingle();
+  }
+
+  @NonNull private Func1<GetPromotionsResponse, List<Promotion>> promotionsResult() {
+    return promotions -> {
+      List<Promotion> promotionList = Collections.emptyList();
+      if (promotions.getDataList() == null
+          || promotions.getDataList()
+          .getList() == null) {
+        return promotionList;
+      }
+      for (GetPromotionsResponse.PromotionModel promotionModel : promotions.getDataList()
+          .getList()) {
+        // TODO: 2019-07-01 map to List<Promotion>
+      }
+      return Collections.emptyList();
+    };
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
