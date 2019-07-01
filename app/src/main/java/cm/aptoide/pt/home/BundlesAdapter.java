@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -28,17 +29,20 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final String marketName;
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
+  private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<HomeBundle> bundles;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      String marketName, AdsBundlesViewHolderFactory adsBundlesViewHolderFactory) {
+      String marketName, AdsBundlesViewHolderFactory adsBundlesViewHolderFactory,
+      CaptionBackgroundPainter captionBackgroundPainter) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.marketName = marketName;
     this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
+    this.captionBackgroundPainter = captionBackgroundPainter;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,7 +65,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener);
+            .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener,
+            captionBackgroundPainter);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));

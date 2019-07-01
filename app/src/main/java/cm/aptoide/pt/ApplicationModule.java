@@ -157,6 +157,7 @@ import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
@@ -1964,5 +1965,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppcMigrationAccessor providesAppcMigrationAccessor(Database database) {
     return new AppcMigrationAccessor(database);
+  }
+
+  @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
+    return new CaptionBackgroundPainter(getApplicationContext().getResources());
   }
 }

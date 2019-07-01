@@ -24,6 +24,7 @@ import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
@@ -60,6 +61,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Inject HomePresenter presenter;
   @Inject @Named("marketName") String marketName;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
+  @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -342,7 +344,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives));
+            marketName, showNatives), captionBackgroundPainter);
     bundlesList.setAdapter(adapter);
   }
 
