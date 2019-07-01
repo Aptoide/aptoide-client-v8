@@ -17,7 +17,7 @@ class WalletAppProvider(val appCenter: AppCenter, val installedRepository: Insta
   fun getWalletApp(): Observable<WalletApp> {
     return appCenter.loadDetailedApp("com.appcoins.wallet", "catappult")
         .toObservable()
-        .map { this.mapToWalletApp(it) }.flatMap { walletApp ->
+        .map { app -> this.mapToWalletApp(app) }.flatMap { walletApp ->
           val walletAppObs = Observable.just<WalletApp>(walletApp)
           val isWalletInstalled = installedRepository.isInstalled(walletApp.packageName)
           val walletDownload = installManager.getInstall(walletApp.md5sum, walletApp.packageName,
