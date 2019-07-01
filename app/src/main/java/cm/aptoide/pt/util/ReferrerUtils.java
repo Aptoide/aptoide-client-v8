@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.WindowManager;
@@ -131,11 +130,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer, context);
               } else {
-                //@Cleanup Realm realm = DeprecatedDatabase.get();
-                //DeprecatedDatabase.save(
-                //    new StoredMinimalAd(packageName, referrer, searchAdResult.getCpiUrl(),
-                //        searchAdResult.getAdId()), realm);
-
                 StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
                     ((AptoideApplication) context.getApplicationContext()
                         .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
@@ -158,15 +152,15 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               .d("ExtractReferrer", "Openened clickUrl: " + url);
 
           if (future == null) {
-            future = postponeReferrerExtraction(searchAdResult, TIME_OUT, retries, httpClient,
+            future = postponeReferrerExtraction(searchAdResult, DELAY, retries, httpClient,
                 converterFactory, qManager);
           }
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
-            int delta, int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
+            int delay, int retries, OkHttpClient httpClient, Converter.Factory converterFactory,
             QManager qManager) {
-          return postponeReferrerExtraction(searchAdResult, delta, false, retries, httpClient,
+          return postponeReferrerExtraction(searchAdResult, delay, false, retries, httpClient,
               converterFactory,
               qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
               qManager);
@@ -182,10 +176,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         }
 
         private ScheduledFuture<Void> postponeReferrerExtraction(SearchAdResult searchAdResult,
-            int delta, final boolean success, final int retries, OkHttpClient httpClient,
+            int delay, final boolean success, final int retries, OkHttpClient httpClient,
             Converter.Factory converterFactory, String q, QManager qManager) {
           Logger.getInstance()
-              .d("ExtractReferrer", "Referrer postponed " + delta + " seconds.");
+              .d("ExtractReferrer", "Referrer postponed " + delay + " seconds.");
 
           Callable<Void> callable = () -> {
             Logger.getInstance()
@@ -216,30 +210,25 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                               qManager, context, sharedPreferences, new MinimalAdMapper()),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
-                  // A lista de excluded networks deve ser limpa a cada "ronda"
+                  // Must clean Excluded Networks least after each "round"
                   clearExcludedNetworks(packageName);
                 }
               } catch (Exception e) {
                 e.printStackTrace();
               }
-              // TODO: 28-07-2016 Baikova Failed to extract referrer.
             } else {
-              // A lista de excluded networks deve ser limpa a cada "ronda"
-              // TODO: 28-07-2016 Baikova referrer successfully extracted.
+              // Must clean Excluded Networks least after each "round"
               clearExcludedNetworks(packageName);
             }
 
             return null;
           };
 
-          return executorService.schedule(callable, delta, TimeUnit.SECONDS);
+          return executorService.schedule(callable, delay, TimeUnit.SECONDS);
         }
       });
 
       wv.loadUrl(internalClickUrl[0]);
-
-      // TODO: 28-07-2016 Baikova Opened click_url
-
       windowManager.addView(view, params);
     } catch (Exception e) {
       // TODO: 09-06-2016 neuro
@@ -268,13 +257,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   public static void broadcastReferrer(String packageName, String referrer, Context context) {
     Intent i = new Intent("com.android.vending.INSTALL_REFERRER");
     i.setPackage(packageName);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-      i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-    }
+    i.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
     i.putExtra("referrer", referrer);
     context.sendBroadcast(i);
     Logger.getInstance()
         .d(TAG, "Sent broadcast to " + packageName + " with referrer " + referrer);
-    // TODO: 28-07-2016 Baikova referrer broadcasted.
   }
 }

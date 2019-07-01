@@ -9,6 +9,7 @@ public class ActionItemData {
   private String url;
   private String views;
   private String date;
+  private Appearance appearance;
 
   public String getType() {
     return type;
@@ -72,5 +73,13 @@ public class ActionItemData {
 
   public void setDate(String date) {
     this.date = date;
+  }
+
+  public Appearance getAppearance() {
+    return appearance;
+  }
+
+  public void setAppearance(Appearance appearance) {
+    this.appearance = appearance;
   }
 }

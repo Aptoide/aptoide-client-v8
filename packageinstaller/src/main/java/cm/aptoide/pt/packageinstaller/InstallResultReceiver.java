@@ -24,13 +24,14 @@ class InstallResultReceiver extends BroadcastReceiver {
     if (extras != null && INSTALL_SESSION_API_COMPLETE_ACTION.equals(intent.getAction())) {
       int status = extras.getInt(PackageInstaller.EXTRA_STATUS);
       String message = extras.getString(PackageInstaller.EXTRA_STATUS_MESSAGE);
+      String packageName = extras.getString(PackageInstaller.EXTRA_PACKAGE_NAME);
       switch (status) {
         case PackageInstaller.STATUS_PENDING_USER_ACTION:
           packageInstallerResultCallback.onPendingUserAction(extras);
           break;
         case PackageInstaller.STATUS_SUCCESS:
           packageInstallerResultCallback.onInstallationResult(
-              new InstallStatus(InstallStatus.Status.SUCCESS, "Install succeeded"));
+              new InstallStatus(InstallStatus.Status.SUCCESS, "Install succeeded", packageName));
           break;
         case PackageInstaller.STATUS_FAILURE:
         case PackageInstaller.STATUS_FAILURE_BLOCKED:
@@ -40,7 +41,7 @@ class InstallResultReceiver extends BroadcastReceiver {
         case PackageInstaller.STATUS_FAILURE_STORAGE:
           packageInstallerResultCallback.onInstallationResult(
               new InstallStatus(InstallStatus.Status.FAIL,
-                  "Install failed " + status + ", " + message));
+                  "Install failed " + status + ", " + message, packageName));
           break;
         case PackageInstaller.STATUS_FAILURE_ABORTED:
           packageInstallerResultCallback.onInstallationResult(
@@ -49,7 +50,7 @@ class InstallResultReceiver extends BroadcastReceiver {
         default:
           packageInstallerResultCallback.onInstallationResult(
               new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR,
-                  "Unrecognized status received from installer"));
+                  "Unrecognized status received from installer", packageName));
       }
     }
   }
