@@ -98,7 +98,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     }
   }
 
-  private fun showErrorMessage(errorMessage: String?) {
+  private fun showErrorMessage(errorMessage: String) {
     wallet_download_download_state.text = errorMessage
   }
 
