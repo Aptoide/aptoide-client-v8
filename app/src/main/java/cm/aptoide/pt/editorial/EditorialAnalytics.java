@@ -38,7 +38,7 @@ public class EditorialAnalytics {
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.EDITORIAL, action);
+        DownloadAnalytics.AppContext.EDITORIAL, action, false);
   }
 
   public void sendDownloadPauseEvent(String packageName) {

@@ -24,9 +24,11 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   public static final String EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Editors Choice_Download_Complete";
   public static final String DOWNLOAD_INTERACT = "Download_Interact";
+  private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
   private static final String AB_TEST_GROUP = "ab_test_group";
   private static final String ACTION = "action";
   private static final String APP = "app";
+  private static final String APPC = "appc";
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String FAIL = "FAIL";
   private static final String FRAGMENT = "fragment";
@@ -164,17 +166,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,
-      AppContext context) {
-    downloadStartEvent(download, 0, null, context, action);
+      AppContext context, Boolean isMigration) {
+    downloadStartEvent(download, 0, null, context, action, isMigration);
   }
 
   public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
-      AppContext context, AnalyticsManager.Action action) {
+      AppContext context, AnalyticsManager.Action action, boolean isMigration) {
     Map<String, Object> event = new HashMap<>();
     ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     event.put(APP, createAppData(download));
     event.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
+    if (isMigration) {
+      event.put(ORIGIN, UPDATE_TO_APPC);
+    } else {
+      event.put(ORIGIN, getOrigin(download));
+    }
     event.put(ORIGIN, getOrigin(download));
     event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
     event.put(PREVIOUS_TAG, screenTagHistory.getTag());
@@ -255,21 +262,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void installClicked(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc) {
     setUpInstallEvent(md5, packageName, trustedValue, editorsBrickPosition, installType, action,
-        offerResponseStatus, false);
+        offerResponseStatus, false, hasAppc);
   }
 
   public void migrationClicked(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc) {
     setUpInstallEvent(md5, packageName, trustedValue, editorsBrickPosition, installType, action,
-        offerResponseStatus, true);
+        offerResponseStatus, true, hasAppc);
   }
 
   private void setUpInstallEvent(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean hasAppc) {
     String previousContext = navigationTracker.getViewName(false);
     String currentContext = navigationTracker.getViewName(true);
     editorsChoiceDownloadCompletedEvent(previousContext, md5, packageName, editorsBrickPosition,
@@ -282,36 +290,37 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
           previousContext,
           offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE),
-          isMigration);
+          isMigration, hasAppc);
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, trustedValue, action,
-          previousContext, isMigration);
+          previousContext, isMigration, hasAppc);
     }
   }
 
   public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc) {
     String previousContext = navigationTracker.getViewName(false);
 
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
 
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE), false);
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE), false,
+          hasAppc);
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          false);
+          false, hasAppc);
     }
   }
 
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String id, String packageName, String trustedValue, AnalyticsManager.Action action,
-      String previousContext, boolean areAdsBlockedByOffer, boolean isMigration) {
+      String previousContext, boolean areAdsBlockedByOffer, boolean isMigration, boolean hasAppc) {
     HashMap<String, Object> downloadMap =
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration);
+            isMigration, hasAppc);
     downloadMap.put(ADS_BLOCK_BY_OFFER, areAdsBlockedByOffer);
     DownloadEvent downloadEvent =
         new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, previousContext, action);
@@ -320,20 +329,21 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
       String id, String packageName, String trustedValue, AnalyticsManager.Action action,
-      String previousContext, boolean isMigration) {
+      String previousContext, boolean isMigration, Boolean hasAppc) {
     DownloadEvent downloadEvent = new DownloadEvent(DOWNLOAD_COMPLETE_EVENT,
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration), previousContext, action);
+            isMigration, hasAppc), previousContext, action);
     cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
   }
 
   @NonNull
   private HashMap<String, Object> createDownloadCompleteEventMap(ScreenTagHistory previousScreen,
-      ScreenTagHistory currentScreen, String packageName, String trustedValue,
-      boolean isMigration) {
+      ScreenTagHistory currentScreen, String packageName, String trustedValue, boolean isMigration,
+      boolean hasAppc) {
     HashMap<String, Object> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGENAME, packageName);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
+    downloadMap.put(APPC, hasAppc);
     downloadMap.put(MIGRATOR, isMigration);
     if (previousScreen != null) {
       downloadMap.put(TAG, currentScreen.getTag());
@@ -397,14 +407,14 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE));
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE), false);
     } else {
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
-          previousContext, false);
+          previousContext, false, false);
     }
 
     downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
-        previousContext, false);
+        previousContext, false, false);
   }
 
   public enum AppContext {

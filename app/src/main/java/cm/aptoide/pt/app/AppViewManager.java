@@ -14,7 +14,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -392,7 +391,8 @@ public class AppViewManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
-        downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE));
+        downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
+        download.hasAppc());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
