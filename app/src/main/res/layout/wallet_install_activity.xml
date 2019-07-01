@@ -23,7 +23,7 @@
       />
 
   <ImageView
-      android:id="@+id/appIconImageBackground"
+      android:id="@+id/app_icon_image_background"
       android:layout_width="58dp"
       android:layout_height="58dp"
       android:layout_below="@id/header_bg"
@@ -37,7 +37,7 @@
       />
 
   <ImageView
-      android:id="@+id/appIconImageView"
+      android:id="@+id/app_icon_imageview"
       android:layout_width="56dp"
       android:layout_height="56dp"
       android:layout_below="@id/header_bg"
@@ -53,7 +53,7 @@
 
 
   <TextView
-      android:id="@+id/messageTextView"
+      android:id="@+id/message_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"
@@ -65,14 +65,14 @@
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/appIconImageView"
+      app:layout_constraintTop_toBottomOf="@+id/app_icon_imageview"
       tools:text="@string/wallet_install_request_message_body"
       tools:visibility="visible"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <TextView
-      android:id="@+id/installCompleteMessage"
+      android:id="@+id/install_complete_message"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -80,13 +80,13 @@
       android:maxWidth="232dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/messageTextView"
+      app:layout_constraintTop_toBottomOf="@id/message_textview"
       tools:text="Just tap to buy again"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <Button
-      android:id="@+id/closeButton"
+      android:id="@+id/close_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
@@ -96,12 +96,12 @@
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/installCompleteMessage"
+      app:layout_constraintTop_toBottomOf="@id/install_complete_message"
       style="@style/Aptoide.Button.Flat.GreyMedium"
       />
 
   <ProgressBar
-      android:id="@+id/progressView"
+      android:id="@+id/progress_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +112,7 @@
       />
 
   <ImageView
-      android:id="@+id/appcImage"
+      android:id="@+id/appc_image"
       android:layout_width="82dp"
       android:layout_height="82dp"
       android:layout_marginTop="31dp"
@@ -124,7 +124,7 @@
       />
 
   <TextView
-      android:id="@+id/errorMessageTextView"
+      android:id="@+id/error_message_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"
@@ -138,7 +138,7 @@
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/appcImage"
+      app:layout_constraintTop_toBottomOf="@id/appc_image"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
@@ -154,33 +154,33 @@
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/messageTextView"
+      app:layout_constraintTop_toBottomOf="@+id/message_textview"
       tools:visibility="visible"
       />
 
   <android.support.constraint.Group
-      android:id="@+id/walletInstallViewGroup"
+      android:id="@+id/wallet_install_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="invisible"
-      app:constraint_referenced_ids="appIconImageView,header_bg,messageTextView"
+      app:constraint_referenced_ids="app_icon_imageview,header_bg,message_textview"
       tools:visibility="visible"
       />
 
   <android.support.constraint.Group
-      android:id="@+id/walletInstallSuccessViewGroup"
+      android:id="@+id/wallet_install_success_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground"
+      app:constraint_referenced_ids="install_complete_message,app_icon_image_background"
       />
 
   <android.support.constraint.Group
-      android:id="@+id/sdkErrorViewGroup"
+      android:id="@+id/sdk_error_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="appcImage,errorMessageTextView"
+      app:constraint_referenced_ids="appc_image,error_message_textview"
       />
 
 

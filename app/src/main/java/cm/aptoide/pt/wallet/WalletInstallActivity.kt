@@ -37,18 +37,18 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   private fun initStyling() {
     val walletAppName = getString(R.string.wallet_install_appcoins_wallet)
     val message = getString(R.string.wallet_install_request_message_body, walletAppName)
-    messageTextView.text = message
-    messageTextView.setSubstringTypeface(Pair(walletAppName, Typeface.BOLD))
+    message_textview.text = message
+    message_textview.setSubstringTypeface(Pair(walletAppName, Typeface.BOLD))
   }
 
   override fun showWalletInstallationView(appIcon: String?,
                                           walletApp: WalletApp) {
-    progressView.visibility = View.GONE
-    walletInstallSuccessViewGroup.visibility = View.GONE
-    closeButton.visibility = View.GONE
+    progress_view.visibility = View.GONE
+    wallet_install_success_view_group.visibility = View.GONE
+    close_button.visibility = View.GONE
 
     appIcon?.let {
-      ImageLoader.with(this).load(appIcon, appIconImageView)
+      ImageLoader.with(this).load(appIcon, app_icon_imageview)
     }
     val downloadModel = walletApp.downloadModel
     Logger.getInstance()
@@ -57,8 +57,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
       setDownloadProgress(downloadModel)
     } else {
       wallet_install_download_view.visibility = View.GONE
-      progressView.visibility = View.GONE
-      walletInstallViewGroup.visibility = View.VISIBLE
+      progress_view.visibility = View.GONE
+      wallet_install_view_group.visibility = View.VISIBLE
     }
   }
 
@@ -67,7 +67,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     when (downloadModel.downloadState) {
       DownloadModel.DownloadState.ACTIVE,
       DownloadModel.DownloadState.PAUSE -> {
-        walletInstallViewGroup.visibility = View.VISIBLE
+        wallet_install_view_group.visibility = View.VISIBLE
         wallet_download_cancel_button.visibility = View.VISIBLE
         wallet_download_progress_bar.isIndeterminate = false
         wallet_download_progress_bar.progress = downloadModel
@@ -78,14 +78,14 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
       }
       DownloadModel.DownloadState.INDETERMINATE -> {
         wallet_download_progress_bar.isIndeterminate = true
-        walletInstallViewGroup.visibility = View.VISIBLE
+        wallet_install_view_group.visibility = View.VISIBLE
         wallet_download_cancel_button.visibility = View.VISIBLE
       }
       DownloadModel.DownloadState.INSTALLING,
       DownloadModel.DownloadState.COMPLETE -> {
         wallet_download_progress_bar.isIndeterminate = true
         wallet_download_progress_number.visibility = View.GONE
-        walletInstallViewGroup.visibility = View.VISIBLE
+        wallet_install_view_group.visibility = View.VISIBLE
         wallet_download_cancel_button.visibility = View.INVISIBLE
       }
       DownloadModel.DownloadState.ERROR -> showErrorMessage(
@@ -113,21 +113,21 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
   private fun showSuccessView(title: String, body: String) {
-    appIconImageView.setImageDrawable(
+    app_icon_imageview.setImageDrawable(
         getResources().getDrawable(R.drawable.ic_check_orange_gradient_start))
-    messageTextView.text = title
-    messageTextView.setSubstringTypeface(Pair(title, Typeface.BOLD))
-    installCompleteMessage.text = body
-    progressView.visibility = View.GONE
-    walletInstallSuccessViewGroup.visibility = View.VISIBLE
-    closeButton.visibility = View.VISIBLE
-    walletInstallViewGroup.visibility = View.VISIBLE
+    message_textview.text = title
+    message_textview.setSubstringTypeface(Pair(title, Typeface.BOLD))
+    install_complete_message.text = body
+    progress_view.visibility = View.GONE
+    wallet_install_success_view_group.visibility = View.VISIBLE
+    close_button.visibility = View.VISIBLE
+    wallet_install_view_group.visibility = View.VISIBLE
     wallet_install_download_view.visibility = View.GONE
 
   }
 
   override fun closeButtonClicked(): Observable<Void> {
-    return RxView.clicks(closeButton)
+    return RxView.clicks(close_button)
   }
 
   override fun dismissDialog() {
@@ -135,11 +135,11 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
   override fun showSdkErrorView() {
-    sdkErrorViewGroup.visibility = View.VISIBLE
-    progressView.visibility = View.GONE
-    closeButton.visibility = View.VISIBLE
-    walletInstallSuccessViewGroup.visibility = View.GONE
-    walletInstallViewGroup.visibility = View.INVISIBLE
+    sdk_error_view_group.visibility = View.VISIBLE
+    progress_view.visibility = View.GONE
+    close_button.visibility = View.VISIBLE
+    wallet_install_success_view_group.visibility = View.GONE
+    wallet_install_view_group.visibility = View.INVISIBLE
 
   }
 
@@ -175,7 +175,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   override fun showIndeterminateDownload() {
     wallet_install_download_view.visibility = View.VISIBLE
     wallet_download_progress_bar.isIndeterminate = true
-    walletInstallViewGroup.visibility = View.VISIBLE
+    wallet_install_view_group.visibility = View.VISIBLE
   }
 
   override fun cancelDownloadButtonClicked(): Observable<Void> {
@@ -188,8 +188,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
       setDownloadProgress(downloadModel)
     } else {
       wallet_install_download_view.visibility = View.GONE
-      progressView.visibility = View.GONE
-      walletInstallViewGroup.visibility = View.VISIBLE
+      progress_view.visibility = View.GONE
+      wallet_install_view_group.visibility = View.VISIBLE
     }
   }
 }
