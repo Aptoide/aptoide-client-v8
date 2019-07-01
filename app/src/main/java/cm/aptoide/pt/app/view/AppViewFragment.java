@@ -1657,6 +1657,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         appcRewardView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
       }
+      downloadProgressView.reset();
       downloadProgressView.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);

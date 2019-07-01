@@ -4,6 +4,7 @@ internal sealed class State {
   object Indeterminate: State()
   object InProgress: State()
   object Paused: State()
+  object Installing: State()
 }
 
 internal sealed class Event {
@@ -15,11 +16,5 @@ internal sealed class Event {
   // System driven events
   object DownloadStart: Event()
   object InstallStart: Event() // This also implies the end of the download
-}
-
-internal sealed class ViewSideEffects {
-  object ShowInProgressView: ViewSideEffects()
-  object ShowPausedView: ViewSideEffects()
-  object ShowInstallingView: ViewSideEffects()
-  object ShowCanceledView: ViewSideEffects()
+  object Reset: Event()
 }

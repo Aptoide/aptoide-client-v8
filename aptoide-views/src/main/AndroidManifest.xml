@@ -9,7 +9,6 @@
   <application
       android:allowBackup="false"
       android:testOnly="true"
-      tools:replace="allowBackup"
       >
     <activity
         android:name="cm.aptoide.aptoideviews.base.MockActivity">
