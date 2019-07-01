@@ -17,11 +17,10 @@ public class PermissionManager {
   }
 
   public Observable<Void> requestDownloadAccess(PermissionService permissionService) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, true));
+    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, false));
   }
 
-  public Observable<Void> requestDownloadAccessValidatingMobileData(
-      PermissionService permissionService) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, false));
+  public Observable<Void> requestDownloadAllowingMobileData(PermissionService permissionService) {
+    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, true));
   }
 }

@@ -110,10 +110,10 @@ import rx.functions.Action0;
   }
 
   @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDenied, boolean shouldValidateMobileData) {
+      @Nullable Action0 toRunWhenAccessIsDenied, boolean allowDownloadOnMobileData) {
     int message;
 
-    if (shouldValidateMobileData & (AptoideUtils.SystemU.getConnectionType(connectivityManager)
+    if (!allowDownloadOnMobileData && (AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
 
       message = R.string.general_downloads_dialog_only_wifi_message;

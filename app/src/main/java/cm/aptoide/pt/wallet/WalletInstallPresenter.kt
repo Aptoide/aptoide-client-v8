@@ -89,7 +89,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
       Observable.just(walletApp)
     }.observeOn(viewScheduler)
         .flatMap {
-          permissionManager.requestDownloadAccessValidatingMobileData(permissionService)
+          permissionManager.requestDownloadAllowingMobileData(permissionService)
               .flatMap { success ->
                 permissionManager.requestExternalStoragePermission(permissionService)
               }
