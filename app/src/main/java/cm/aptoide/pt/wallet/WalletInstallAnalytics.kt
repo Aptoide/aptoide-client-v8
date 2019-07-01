@@ -9,11 +9,19 @@ import cm.aptoide.pt.download.AppContext
 import cm.aptoide.pt.download.DownloadAnalytics
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.notification.NotificationAnalytics
+import java.util.*
 
 class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val notificationAnalytics: NotificationAnalytics,
                              val installAnalytics: InstallAnalytics,
-                             val downloadStateParser: DownloadStateParser) {
+                             val downloadStateParser: DownloadStateParser,
+                             val analyticsManager: AnalyticsManager) {
+
+  private val TYPE = "type"
+  private val APPLICATION_NAME = "Application Name"
+  private val APPLICATION_PUBLISHER = "Application Publisher"
+  private val CLICK_INSTALL = "Clicked on install button"
+
 
   fun setupDownloadAnalyticsEvents(download: Download, campaignId: Int, abTestGroup: String,
                                    downloadAction: DownloadModel.Action?,
@@ -43,5 +51,14 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE)
 
+  }
+
+  fun sendClickOnInstallButtonEvent(packageName: String, applicationPublisher: String) {
+    val map = HashMap<String, Any>()
+    map[TYPE] = "Install"
+    map[APPLICATION_NAME] = packageName
+    map[APPLICATION_PUBLISHER] = applicationPublisher
+    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+        "WalletInstallActivity")
   }
 }

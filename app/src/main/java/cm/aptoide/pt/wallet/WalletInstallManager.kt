@@ -54,15 +54,19 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         .flatMapSingle { download ->
           moPubAdsManager.adsVisibilityStatus.doOnSuccess {
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
-                it)
+                it, walletApp.packageName, walletApp.developer)
           }.map { download }
         }.flatMapCompletable { download -> installManager.splitInstall(download) }.toCompletable()
   }
 
-  private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
+  private fun setupDownloadEvents(download: Download,
+                                  downloadAction: DownloadModel.Action?,
                                   appId: Long,
-                                  offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
+                                  offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
+                                  packageName: String?,
+                                  developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
+    packageName?.let { walletInstallAnalytics.sendClickOnInstallButtonEvent(it, developer) }
   }
 
   fun onWalletInstalled(): Observable<Boolean> {

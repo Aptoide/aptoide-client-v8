@@ -390,9 +390,10 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
       DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser) {
+      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser,
+      AnalyticsManager analyticsManager) {
     return new WalletInstallAnalytics(downloadAnalytics, notificationAnalytics, installAnalytics,
-        downloadStateParser);
+        downloadStateParser, analyticsManager);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {
