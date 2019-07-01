@@ -16,7 +16,12 @@ import rx.Observable
 
 
 /**
- * This view is responsible for handling the display of download progress
+ * This view is responsible for handling the display of download progress.
+ *
+ * This is handled by a state machine represented below.
+ * Purple events are user-driven events while red events are set programatically.
+ *
+ *
  */
 class DownloadProgressView : FrameLayout {
   private var isPausable: Boolean = true
