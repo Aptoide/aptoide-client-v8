@@ -65,7 +65,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   private fun setDownloadProgress(downloadModel: DownloadModel) {
     wallet_install_download_view.visibility = View.VISIBLE
     when (downloadModel.downloadState) {
-      DownloadModel.DownloadState.ACTIVE, DownloadModel.DownloadState.PAUSE -> {
+      DownloadModel.DownloadState.ACTIVE,
+      DownloadModel.DownloadState.PAUSE -> {
         walletInstallViewGroup.visibility = View.VISIBLE
         wallet_download_cancel_button.visibility = View.VISIBLE
         wallet_download_progress_bar.isIndeterminate = false
@@ -80,7 +81,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
         walletInstallViewGroup.visibility = View.VISIBLE
         wallet_download_cancel_button.visibility = View.VISIBLE
       }
-      DownloadModel.DownloadState.INSTALLING, DownloadModel.DownloadState.COMPLETE -> {
+      DownloadModel.DownloadState.INSTALLING,
+      DownloadModel.DownloadState.COMPLETE -> {
         wallet_download_progress_bar.isIndeterminate = true
         wallet_download_progress_number.visibility = View.GONE
         walletInstallViewGroup.visibility = View.VISIBLE
