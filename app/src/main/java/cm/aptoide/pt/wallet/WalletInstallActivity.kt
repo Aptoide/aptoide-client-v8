@@ -53,7 +53,7 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     val downloadModel = walletApp.downloadModel
     Logger.getInstance()
         .d("WalletInstallActivity", "download state is " + downloadModel!!.downloadState)
-    if (downloadModel!!.isDownloading) {
+    if (downloadModel.isDownloading) {
       setDownloadProgress(downloadModel)
     } else {
       wallet_install_download_view.visibility = View.GONE
