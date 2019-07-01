@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.AppHomeEvent;
@@ -57,6 +58,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   private static final int VISIBLE_THRESHOLD = 1;
   @Inject MoreBundlePresenter presenter;
   @Inject @Named("marketName") String marketName;
+  @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -106,7 +108,7 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, false));
+            marketName, false), captionBackgroundPainter);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

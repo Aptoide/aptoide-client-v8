@@ -75,7 +75,7 @@ public class EditorialPresenterTest {
             "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
             "pathAlt", "md5", "actionTitle", "url", 1));
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
-        Collections.emptyList(), editorialContent, false, "1", "CURATION_1");
+        Collections.emptyList(), editorialContent, false, "1", "CURATION_1", "");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
         DownloadModel.DownloadState.ACTIVE, null, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);

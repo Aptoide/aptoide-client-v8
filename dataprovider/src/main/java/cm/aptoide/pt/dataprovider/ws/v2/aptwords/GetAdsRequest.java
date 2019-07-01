@@ -380,9 +380,6 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
                 }
               });
         });
-
-    // TODO: 28-07-2016 Baikova getAds called.
-
     return result;
   }
 
