@@ -146,11 +146,10 @@ public class HomeContainerPresenter implements Presenter {
           home.setPromotionsDialogShown();
           view.showPromotionsHomeDialog(apps);
         })
+        .doOnError(Throwable::printStackTrace)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          view.hidePromotionsIcon();
-        });
+        }, err -> view.hidePromotionsIcon());
   }
 
   @VisibleForTesting public void handleClickOnPromotionsDialogContinue() {

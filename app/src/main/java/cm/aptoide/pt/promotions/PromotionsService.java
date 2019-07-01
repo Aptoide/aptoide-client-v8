@@ -105,7 +105,7 @@ public class PromotionsService {
     return result;
   }
 
-  public Single<List<Promotion>> getPromotions(String type) {
+  public Single<List<PromotionMeta>> getPromotions(String type) {
     return GetPromotionsRequest.of(type, bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()
@@ -113,9 +113,9 @@ public class PromotionsService {
         .toSingle();
   }
 
-  @NonNull private Func1<GetPromotionsResponse, List<Promotion>> promotionsResult() {
+  @NonNull private Func1<GetPromotionsResponse, List<PromotionMeta>> promotionsResult() {
     return promotions -> {
-      List<Promotion> promotionList = Collections.emptyList();
+      List<PromotionMeta> promotionList = new ArrayList<>();
       if (promotions.getDataList() == null
           || promotions.getDataList()
           .getList() == null) {
@@ -123,9 +123,11 @@ public class PromotionsService {
       }
       for (GetPromotionsResponse.PromotionModel promotionModel : promotions.getDataList()
           .getList()) {
-        // TODO: 2019-07-01 map to List<Promotion>
+        promotionList.add(
+            new PromotionMeta(promotionModel.getTitle(), promotionModel.getPromotionId(),
+                promotionModel.getType(), promotionModel.getBackground()));
       }
-      return Collections.emptyList();
+      return promotionList;
     };
   }
 
