@@ -102,10 +102,13 @@ dependencies {
   implementation "com.github.tinder:statemachine:0.1.2"
 
   testImplementation 'junit:junit:4.12'
+  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
+
   androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
+  androidTestImplementation "org.mockito:mockito-android:2.28.2"
+
 
   // These are just for styling compatibility when we run instrumentation tests.
   // This essentially means that we are directly dependent on these libraries for resources.

@@ -4,6 +4,7 @@ import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
+import android.support.annotation.VisibleForTesting
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -26,7 +27,7 @@ class DownloadProgressView : FrameLayout {
 
   private var currentProgress: Int = 0
 
-  private val stateMachine = StateMachine.create<State, Event, ViewSideEffects> {
+  private var stateMachine = StateMachine.create<State, Event, ViewSideEffects> {
     initialState(State.Indeterminate)
     state<State.Indeterminate> {
       on<Event.DownloadStart> {
@@ -104,6 +105,17 @@ class DownloadProgressView : FrameLayout {
     setupClickListeners()
   }
 
+  private fun retrievePreferences(attrs: AttributeSet?, defStyleAttr: Int) {
+    val typedArray =
+        context.obtainStyledAttributes(attrs, R.styleable.DownloadProgressView, defStyleAttr, 0)
+
+    setProgressDrawable(typedArray.getDrawable(R.styleable.DownloadProgressView_progressDrawable))
+    setEnableAnimations(
+        typedArray.getBoolean(R.styleable.DownloadProgressView_enableAnimations, false))
+    isPausable = typedArray.getBoolean(R.styleable.DownloadProgressView_isPausable, true)
+    typedArray.recycle()
+  }
+
   private fun setupClickListeners() {
     cancelButton.setOnClickListener {
       debouncer.execute {
@@ -122,43 +134,12 @@ class DownloadProgressView : FrameLayout {
     }
   }
 
-  private fun retrievePreferences(attrs: AttributeSet?, defStyleAttr: Int) {
-    val typedArray =
-        context.obtainStyledAttributes(attrs, R.styleable.DownloadProgressView, defStyleAttr, 0)
-
-    setProgressDrawable(typedArray.getDrawable(R.styleable.DownloadProgressView_progressDrawable))
-    setEnableAnimations(typedArray.getBoolean(R.styleable.DownloadProgressView_enableAnimations, false))
-    isPausable = typedArray.getBoolean(R.styleable.DownloadProgressView_isPausable, true)
-    typedArray.recycle()
-  }
-
-  fun setEnableAnimations(enableAnimations: Boolean){
-    resumePauseButton.isAnimationsEnabled = enableAnimations
-    rootLayout.layoutTransition = if(enableAnimations) LayoutTransition() else null
-  }
-
-  fun setProgressDrawable(progressDrawable: Drawable?) {
-    progressDrawable?.let { drawable ->
-      progressBar.progressDrawable = drawable
-    }
-  }
-
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     setEventListener(null)
     payload = null
   }
 
-
-  /**
-   * Sets the event listener
-   *
-   * Currently this is marked as internal to force the usage of Rx bindings
-   * @see DownloadProgressView.events
-   *
-   * @param eventListener
-   * @see DownloadEventListener.Action
-   */
   internal fun setEventListener(eventListener: DownloadEventListener?) {
     this.eventListener = eventListener
     if (eventListener == null) {
@@ -167,21 +148,61 @@ class DownloadProgressView : FrameLayout {
     }
   }
 
+  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+  internal fun resetProgress() {
+    currentProgress = 0
+    progressBar.progress = currentProgress
+    val progressPercent = "$currentProgress%"
+    downloadProgressNumber.text = progressPercent
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+  internal fun setState(state: State) {
+    stateMachine = stateMachine.with { initialState(state) }
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+  internal fun consumeEvent(event: Event) {
+    stateMachine.transition(event)
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+  internal fun getState(): State {
+    return stateMachine.state
+  }
+
+  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+  internal fun setDebounceTime(time: Long) {
+    debouncer = Debouncer(time)
+  }
+
   /**
-   * Retrieves the Rx binding for the event listener
+   * Sets if animations should be enabled
+   * @param enableAnimations true to enable animations, false to disable animations
+   */
+  fun setEnableAnimations(enableAnimations: Boolean) {
+    resumePauseButton.isAnimationsEnabled = enableAnimations
+    rootLayout.layoutTransition = if (enableAnimations) LayoutTransition() else null
+  }
+
+  /**
+   * Sets a specific drawable for progress
+   * @param progressDrawable Progress drawable
+   */
+  fun setProgressDrawable(progressDrawable: Drawable?) {
+    progressDrawable?.let { drawable ->
+      progressBar.progressDrawable = drawable
+    }
+  }
+
+  /**
+   * Retrieves the events stream for this view.
    *
    * @return Observable<DownloadEventListener.Action>
    */
   @CheckResult
   fun events(): Observable<DownloadEventListener.Action> {
     return Observable.create(DownloadProgressViewEventOnSubscribe(this))
-  }
-
-  private fun resetProgress() {
-    currentProgress = 0
-    progressBar.progress = currentProgress
-    val progressPercent = "$currentProgress%"
-    downloadProgressNumber.text = progressPercent
   }
 
   /**
@@ -195,7 +216,9 @@ class DownloadProgressView : FrameLayout {
   }
 
   /**
-   * Sets the download progress
+   * Sets the download progress. Note that it clips to 0-100.
+   * If the view is in a paused state, it caches the value and sets it when it's in the resume state.
+   *
    * @param progress, 0-100
    */
   fun setProgress(progress: Int) {
@@ -210,17 +233,18 @@ class DownloadProgressView : FrameLayout {
 
   /**
    * Notifies the view that downloading will now begin.
+   * It changes the view to a InProgress state.
    */
   fun startDownload() {
     stateMachine.transition(Event.DownloadStart)
   }
 
   /**
-   * Notifies the view that installation will now begin.
+   * Notifies the view that installation will now begin. This implies that the download has ended.
+   * It changes the view to an Indeterminate state.
    */
   fun startInstallation() {
     stateMachine.transition(Event.InstallStart)
-
   }
 
 }
