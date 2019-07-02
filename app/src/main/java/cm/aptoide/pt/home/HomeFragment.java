@@ -47,7 +47,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class HomeFragment extends NavigationTrackFragment implements HomeView {
+public class HomeFragment extends NavigationTrackFragment implements HomeView, ScrollableView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -317,6 +317,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
       bundlesList.scrollToPosition(10);
     }
     bundlesList.smoothScrollToPosition(0);
+  }
+
+  @Override public boolean isAtTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    return layoutManager.findFirstVisibleItemPosition() == 0;
   }
 
   @Override public void setUserImage(String userAvatarUrl) {

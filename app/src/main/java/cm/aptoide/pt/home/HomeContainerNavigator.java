@@ -6,6 +6,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import rx.Observable;
 
 public class HomeContainerNavigator {
 
@@ -63,5 +64,19 @@ public class HomeContainerNavigator {
     } else {
       appsTag = childFragmentNavigator.navigateTo(fragment, true);
     }
+  }
+
+  public Observable<Boolean> navigateHome() {
+    Fragment fragment = childFragmentNavigator.getFragment();
+    if (fragment instanceof ScrollableView) {
+      ScrollableView view = (ScrollableView) fragment;
+      if (view.isAtTop()) {
+        if (fragment instanceof MoreBundleFragment) {
+          return Observable.just(true);
+        }
+      }
+      view.scrollToTop();
+    }
+    return Observable.just(false);
   }
 }
