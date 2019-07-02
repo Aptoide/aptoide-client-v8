@@ -391,7 +391,8 @@ public class AppViewManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
-        downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE));
+        downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
+        download.hasAppc());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
