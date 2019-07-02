@@ -100,7 +100,6 @@ public class HomeContainerPresenter implements Presenter {
         });
   }
 
-
   @VisibleForTesting public void loadUserImage() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
