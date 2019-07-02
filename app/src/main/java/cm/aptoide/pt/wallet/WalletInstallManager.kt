@@ -50,13 +50,19 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             walletApp.packageName,
             walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size!!))
+            false, walletApp.size))
         .flatMapSingle { download ->
           moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
                 responseStatus)
-          }.map { download }
-        }.flatMapCompletable { download -> installManager.splitInstall(download) }.toCompletable()
+          }.map {
+            download
+          }
+        }
+        .flatMapCompletable { download ->
+          installManager.splitInstall(download)
+        }
+        .toCompletable()
   }
 
   private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
@@ -77,7 +83,6 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
 
   fun removeDownload(app: WalletApp) {
     return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
-
   }
 
   fun loadDownloadModel(walletApp: WalletApp): Observable<DownloadModel> {
