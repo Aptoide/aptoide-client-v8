@@ -303,12 +303,14 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration, boolean hasAppc) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean hasAppc) {
     setUpInstallEvent(md5, packageName, action, offerResponseStatus, isMigration, hasAppc);
   }
 
   private void setUpInstallEvent(String md5, String packageName, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration, boolean hasAppc) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean hasAppc) {
     String previousContext = navigationTracker.getViewName(false);
 
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
