@@ -90,11 +90,11 @@ class WalletInstallPresenter(val view: WalletInstallView,
     }.observeOn(viewScheduler)
         .flatMap {
           permissionManager.requestDownloadAllowingMobileData(permissionService)
-              .flatMap { success ->
+              .flatMap {
                 permissionManager.requestExternalStoragePermission(permissionService)
               }
               .observeOn(Schedulers.io())
-              .flatMapCompletable { void ->
+              .flatMapCompletable {
                 walletInstallManager.downloadApp(walletApp)
               }
         }.toCompletable()
