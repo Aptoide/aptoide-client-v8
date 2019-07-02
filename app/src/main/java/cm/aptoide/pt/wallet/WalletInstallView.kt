@@ -16,7 +16,7 @@ interface WalletInstallView : View {
 
   fun dismissDialog()
 
-  fun showRootInstallWarningPopup(): Observable<Boolean>?
+  fun showRootInstallWarningPopup(): Observable<Boolean>
 
   fun showIndeterminateDownload()
 

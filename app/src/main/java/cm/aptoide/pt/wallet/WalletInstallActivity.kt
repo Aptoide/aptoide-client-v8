@@ -50,15 +50,17 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
     appIcon?.let {
       ImageLoader.with(this).load(appIcon, app_icon_imageview)
     }
-    val downloadModel = walletApp.downloadModel
-    Logger.getInstance()
-        .d("WalletInstallActivity", "download state is " + downloadModel!!.downloadState)
-    if (downloadModel.isDownloading) {
-      setDownloadProgress(downloadModel)
-    } else {
-      wallet_install_download_view.visibility = View.GONE
-      progress_view.visibility = View.GONE
-      wallet_install_view_group.visibility = View.VISIBLE
+
+    walletApp.downloadModel?.let { downloadModel ->
+      Logger.getInstance()
+          .d("WalletInstallActivity", "download state is " + downloadModel.downloadState)
+      if (downloadModel.isDownloading) {
+        setDownloadProgress(downloadModel)
+      } else {
+        wallet_install_download_view.visibility = View.GONE
+        progress_view.visibility = View.GONE
+        wallet_install_view_group.visibility = View.VISIBLE
+      }
     }
   }
 
