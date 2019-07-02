@@ -74,19 +74,18 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       boolean trustedOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Boolean isMature, String experimentId,
-      String experimentGroup) {
+      SharedPreferences sharedPreferences, Boolean isMature) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds, null, trustedOnly,
-              sharedPreferences, isMature, experimentId, experimentGroup), getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+              sharedPreferences, isMature), getHost(sharedPreferences), bodyInterceptor, httpClient,
+          converterFactory, tokenInvalidator);
     } else {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences, isMature,
-              experimentId, experimentGroup), getHost(sharedPreferences), bodyInterceptor,
-          httpClient, converterFactory, tokenInvalidator);
+          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences, isMature),
+          getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
+          tokenInvalidator);
     }
   }
 
@@ -104,8 +103,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     private List<String> storeNames;
     private HashMapNotNull<String, List<String>> storesAuthMap;
     private Boolean trusted;
-    private String abTestUid;
-    private String abTestGroup;
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
@@ -121,8 +118,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
-        SharedPreferences sharedPreferences, Boolean isMature, String abTestUid,
-        String abTestGroup) {
+        SharedPreferences sharedPreferences, Boolean isMature) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
@@ -130,8 +126,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.storeIds = storeIds;
       this.storesAuthMap = storesAuthMap;
       this.trusted = trusted;
-      this.abTestUid = abTestUid;
-      this.abTestGroup = abTestGroup;
       this.setMature(isMature);
     }
 
@@ -167,15 +161,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     }
 
     public Body(Integer limit, int offset, String query, Boolean trusted,
-        SharedPreferences sharedPreferences, Boolean isMature, String abTestUid,
-        String abTestGroup) {
+        SharedPreferences sharedPreferences, Boolean isMature) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.query = query;
       this.trusted = trusted;
-      this.abTestUid = abTestUid;
-      this.abTestGroup = abTestGroup;
       this.setMature(isMature);
     }
 
@@ -209,22 +200,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     @Override public Integer getLimit() {
       return limit;
-    }
-
-    public String getAbTestUid() {
-      return abTestUid;
-    }
-
-    public void setAbTestUid(String abTestUid) {
-      this.abTestUid = abTestUid;
-    }
-
-    public String getAbTestGroup() {
-      return abTestGroup;
-    }
-
-    public void setAbTestGroup(String abTestGroup) {
-      this.abTestGroup = abTestGroup;
     }
   }
 }
