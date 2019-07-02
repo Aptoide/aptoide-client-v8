@@ -52,7 +52,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
             false, walletApp.size))
         .flatMapSingle { download ->
-          moPubAdsManager.adsVisibilityStatus.doOnSuccess { responseStatus ->
+          moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
                 responseStatus)
           }.map {
