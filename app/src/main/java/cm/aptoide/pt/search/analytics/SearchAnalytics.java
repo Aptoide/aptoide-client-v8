@@ -88,28 +88,6 @@ public class SearchAnalytics {
     return navigationTracker.getViewName(isCurrent);
   }
 
-  public void recordAbTestActionAnalytics(String experimentId, String experimentGroup, String query,
-      int position, String packageName) {
-    Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.AB_TEST_ID, experimentId);
-    map.put(AttributeKey.AB_TEST_GROUP, experimentGroup);
-    map.put(AttributeKey.QUERY, query);
-    map.put(AttributeKey.POSITION, position);
-    map.put(AttributeKey.PACKAGE_NAME, packageName);
-    analyticsManager.logEvent(map, AB_SEARCH_ACTION, AnalyticsManager.Action.CLICK,
-        getViewName(true));
-  }
-
-  public void recordAbTestImpressionAnalytics(String experimentId, String experimentGroup,
-      String query) {
-    Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.AB_TEST_ID, experimentId);
-    map.put(AttributeKey.AB_TEST_GROUP, experimentGroup);
-    map.put(AttributeKey.QUERY, query);
-    analyticsManager.logEvent(map, AB_SEARCH_IMPRESSION, AnalyticsManager.Action.IMPRESSION,
-        getViewName(true));
-  }
-
   private static final class AttributeKey {
     private static final String QUERY = "search_term";
     private static final String SOURCE = "source";
