@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -88,6 +89,22 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  * Created by neuro on 26-05-2016.
  */
 public class AptoideUtils {
+
+  public static boolean isDeviceMIUI() {
+    return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
+  }
+
+  @SuppressLint("PrivateApi") private static String getSystemProperty(String key) {
+    try {
+      return (String) Class.forName("android.os.SystemProperties")
+          .getDeclaredMethod("get", String.class)
+          .invoke(null, key);
+    } catch (Exception e) {
+      Logger.getInstance()
+          .w("AptoideUtils", e.getMessage());
+      return null;
+    }
+  }
 
   public static class Core {
 

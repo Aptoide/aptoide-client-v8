@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 public class ReferrerUtils {
 
   public static final int RETRIES = 2;
-  public static final int TIME_OUT = 5;
+  public static final int DELAY = 5;
   public static final ReferrersMap excludedNetworks = new ReferrersMap();
   protected static final ScheduledExecutorService executorService =
       Executors.newSingleThreadScheduledExecutor();
