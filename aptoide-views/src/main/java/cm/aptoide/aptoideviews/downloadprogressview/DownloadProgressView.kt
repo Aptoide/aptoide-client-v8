@@ -48,6 +48,9 @@ class DownloadProgressView : FrameLayout {
         debouncer.reset()
         transitionTo(State.InProgress)
       }
+      on<Event.Reset> {
+        dontTransition()
+      }
     }
     state<State.InProgress> {
       onEnter {
@@ -67,6 +70,9 @@ class DownloadProgressView : FrameLayout {
       on<Event.InstallStart> {
         transitionTo(State.Installing)
       }
+      on<Event.Reset> {
+        transitionTo(State.Indeterminate)
+      }
     }
     state<State.Paused> {
       onEnter {
@@ -85,6 +91,9 @@ class DownloadProgressView : FrameLayout {
       on<Event.CancelClick> {
         eventListener?.onActionClick(
             DownloadEventListener.Action(DownloadEventListener.Action.Type.CANCEL, payload))
+        transitionTo(State.Indeterminate)
+      }
+      on<Event.Reset> {
         transitionTo(State.Indeterminate)
       }
     }
@@ -154,27 +163,11 @@ class DownloadProgressView : FrameLayout {
     }
   }
 
-  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  internal fun resetProgress() {
+  private fun resetProgress() {
     currentProgress = 0
     progressBar.progress = currentProgress
     val progressPercent = "$currentProgress%"
     downloadProgressNumber.text = progressPercent
-  }
-
-  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-  internal fun setState(state: State) {
-    stateMachine = stateMachine.with { initialState(state) }
-  }
-
-  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-  internal fun consumeEvent(event: Event) {
-    stateMachine.transition(event)
-  }
-
-  @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-  internal fun getState(): State {
-    return stateMachine.state
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.NONE)

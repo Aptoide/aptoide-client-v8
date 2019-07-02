@@ -1,19 +1,15 @@
 package cm.aptoide.aptoideviews
 
-import android.support.test.annotation.UiThreadTest
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.runner.AndroidJUnit4
-import android.widget.ProgressBar
 import cm.aptoide.aptoideviews.base.BaseTestView
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
-import cm.aptoide.aptoideviews.downloadprogressview.Event
-import cm.aptoide.aptoideviews.downloadprogressview.State
+import cm.aptoide.aptoideviews.matchers.ProgressIndeterminate.Companion.withIndeterminate
 import cm.aptoide.aptoideviews.viewactions.ProgressBarTestAction.Companion.replaceProgressBarDrawable
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,76 +39,112 @@ class DownloadProgressViewTest : BaseTestView() {
     downloadProgressView.setEventListener(eventListener)
     downloadProgressView.setDebounceTime(0)
     setView(downloadProgressView)
-    onView(isAssignableFrom(ProgressBar::class.java)).perform(replaceProgressBarDrawable())
+    onView(progressBar).perform(replaceProgressBarDrawable())
   }
 
   @Test
   fun testPauseInput_fromInProgressState() {
     activityRule.runOnUiThread {
-      downloadProgressView.setState(State.Indeterminate)
-      downloadProgressView.consumeEvent(Event.DownloadStart)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
     }
     onView(resumePauseButton).perform(click())
 
     verify(eventListener).onActionClick(
         DownloadEventListener.Action(DownloadEventListener.Action.Type.PAUSE, null))
-    assertEquals(downloadProgressView.getState(), State.Paused)
+    onView(progressBar).check(matches(withIndeterminate(false)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
   }
 
   @Test
   fun testResumeInput_fromPausedState() {
     activityRule.runOnUiThread {
-      downloadProgressView.setState(State.Indeterminate)
-      downloadProgressView.consumeEvent(Event.DownloadStart)
-      downloadProgressView.consumeEvent(Event.PauseClick)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
     }
-    onView(resumePauseButton).perform(click())
+    onView(resumePauseButton).perform(click()) // Pause
+    onView(resumePauseButton).perform(click()) // Resume
 
     verify(eventListener).onActionClick(
         DownloadEventListener.Action(DownloadEventListener.Action.Type.RESUME, null))
-    assertEquals(downloadProgressView.getState(), State.InProgress)
+    onView(progressBar).check(matches(withIndeterminate(false)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
   }
 
 
   @Test
   fun testCancelInput_fromPausedState() {
     activityRule.runOnUiThread {
-      downloadProgressView.setState(State.Indeterminate)
-      downloadProgressView.consumeEvent(Event.DownloadStart)
-      downloadProgressView.consumeEvent(Event.PauseClick)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
     }
-
+    onView(resumePauseButton).perform(click())
     onView(cancelButton).perform(click())
 
     verify(eventListener).onActionClick(
         DownloadEventListener.Action(DownloadEventListener.Action.Type.CANCEL, null))
-    assertEquals(downloadProgressView.getState(), State.Indeterminate)
+    onView(progressBar).check(matches(withIndeterminate(true)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
   }
 
   @Test
   fun testDownloadStartInput_fromIndeterminateState() {
     activityRule.runOnUiThread {
-      downloadProgressView.setState(State.Indeterminate)
+      downloadProgressView.reset()
       downloadProgressView.startDownload()
     }
-    assertEquals(downloadProgressView.getState(), State.InProgress)
+
+    onView(progressBar).check(matches(withIndeterminate(false)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
   }
 
   @Test
   fun testInstallStartInput_fromInProgressState() {
     activityRule.runOnUiThread {
-      downloadProgressView.setState(State.InProgress)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
       downloadProgressView.startInstallation()
     }
+    onView(progressBar).check(matches(withIndeterminate(true)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.INVISIBLE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_installing)))
+  }
 
-    assertEquals(downloadProgressView.getState(), State.Indeterminate)
+  @Test
+  fun testResetInput_fromInstallingState() {
+    activityRule.runOnUiThread {
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
+      downloadProgressView.startInstallation()
+      downloadProgressView.reset()
+    }
+
+    onView(progressBar).check(matches(withIndeterminate(true)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.GONE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
   }
 
   @Test
   fun testSetProgress_fromInProgressState() {
     activityRule.runOnUiThread {
-      downloadProgressView.resetProgress()
-      downloadProgressView.setState(State.InProgress)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
       downloadProgressView.setProgress(37)
     }
 
@@ -122,30 +154,27 @@ class DownloadProgressViewTest : BaseTestView() {
   @Test
   fun testSetProgress_fromIndeterminateState() {
     activityRule.runOnUiThread {
-      downloadProgressView.resetProgress()
-      downloadProgressView.setState(State.Indeterminate)
+      downloadProgressView.reset()
       downloadProgressView.setProgress(37)
     }
-
     onView(progressNumber).check(matches(withText("0%")))
 
-    // Check if anything changes when we go back to InProgress
-    activityRule.runOnUiThread { downloadProgressView.consumeEvent(Event.InstallStart) }
+    activityRule.runOnUiThread { downloadProgressView.startDownload() }
     onView(progressNumber).check(matches(withText("0%")))
   }
 
   @Test
   fun testSetProgress_fromPausedState() {
     activityRule.runOnUiThread {
-      downloadProgressView.resetProgress()
-      downloadProgressView.setState(State.Paused)
-      downloadProgressView.setProgress(37)
+      downloadProgressView.reset()
+      downloadProgressView.startDownload()
     }
+    onView(resumePauseButton).perform(click()) // Pause
+    activityRule.runOnUiThread { downloadProgressView.setProgress(37) }
 
     onView(progressNumber).check(matches(withText("0%")))
 
-    // Check if anything changes when we go back to InProgress
-    activityRule.runOnUiThread { downloadProgressView.consumeEvent(Event.ResumeClick) }
+    onView(resumePauseButton).perform(click()) // Resume
     onView(progressNumber).check(matches(withText("37%")))
   }
 

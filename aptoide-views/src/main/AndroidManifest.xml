@@ -5,7 +5,7 @@
     >
 
 
-  <!--  -->
+  <!--  tools:replace="allowBackup"-->
   <application
       android:allowBackup="false"
       android:testOnly="true"
