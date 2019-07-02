@@ -3,6 +3,7 @@ package cm.aptoide.pt.app.view;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.home.BundlesAdapter;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.ProgressBundle;
+import cm.aptoide.pt.home.ScrollableView;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -49,7 +51,8 @@ import static android.view.View.GONE;
  * Created by D01 on 04/06/2018.
  */
 
-public class MoreBundleFragment extends NavigationTrackFragment implements MoreBundleView {
+public class MoreBundleFragment extends NavigationTrackFragment
+    implements MoreBundleView, ScrollableView {
 
   private static final String MORE_LIST_STATE_KEY = "cm.aptoide.pt.more.ListState";
   /**
@@ -305,5 +308,19 @@ public class MoreBundleFragment extends NavigationTrackFragment implements MoreB
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
         <= VISIBLE_THRESHOLD;
+  }
+
+  @UiThread @Override public void scrollToTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+    if (lastVisibleItemPosition > 10) {
+      bundlesList.scrollToPosition(10);
+    }
+    bundlesList.smoothScrollToPosition(0);
+  }
+
+  @Override public boolean isAtTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    return layoutManager.findFirstVisibleItemPosition() == 0;
   }
 }
