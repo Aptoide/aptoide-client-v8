@@ -57,12 +57,12 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .filter { hasMinimumSdk() }
         .flatMap {
           showWalletInitialState()
-        }.first()
+        }
         .filter { walletInitialState -> !walletInitialState.second.isInstalled }
         .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
         .flatMap { walletInitialState ->
-          startWalletDownload(walletInitialState.second)?.andThen(
+          startWalletDownload(walletInitialState.second).andThen(
               Observable.merge(handleWalletInstallation(),
                   observeDownloadProgress(walletInitialState.second),
                   handleInstallDialogCancelButtonPress()))
@@ -79,7 +79,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .doOnNext { view.showDownloadState(it) }.map { walletApp }
   }
 
-  private fun startWalletDownload(walletApp: WalletApp): Completable? {
+  private fun startWalletDownload(walletApp: WalletApp): Completable {
 
     return Observable.defer {
       if (walletInstallManager.shouldShowRootInstallWarningPopup()) {
