@@ -267,6 +267,11 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
         offerResponseStatus, true);
   }
 
+  public void migrationClicked(String md5, String packageName, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    setUpInstallEvent(md5, packageName, action, offerResponseStatus, true);
+  }
+
   private void setUpInstallEvent(String md5, String packageName, String trustedValue,
       String editorsBrickPosition, InstallType installType, AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration) {
@@ -291,18 +296,24 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration) {
+    setUpInstallEvent(md5, packageName, action, offerResponseStatus, isMigration);
+  }
+
+  private void setUpInstallEvent(String md5, String packageName, AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration) {
     String previousContext = navigationTracker.getViewName(false);
 
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
 
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE), false);
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE),
+          isMigration);
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          false);
+          isMigration);
     }
   }
 

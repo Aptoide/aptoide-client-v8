@@ -34,7 +34,6 @@ class InstallResultReceiver extends BroadcastReceiver {
               new InstallStatus(InstallStatus.Status.SUCCESS, "Install succeeded", packageName));
           break;
         case PackageInstaller.STATUS_FAILURE:
-        case PackageInstaller.STATUS_FAILURE_ABORTED:
         case PackageInstaller.STATUS_FAILURE_BLOCKED:
         case PackageInstaller.STATUS_FAILURE_CONFLICT:
         case PackageInstaller.STATUS_FAILURE_INCOMPATIBLE:
@@ -44,6 +43,10 @@ class InstallResultReceiver extends BroadcastReceiver {
               new InstallStatus(InstallStatus.Status.FAIL,
                   "Install failed " + status + ", " + message, packageName));
           break;
+        case PackageInstaller.STATUS_FAILURE_ABORTED:
+          packageInstallerResultCallback.onInstallationResult(
+              new InstallStatus(InstallStatus.Status.CANCELED,
+                  "Install failed " + status + ", " + message, packageName));
         default:
           packageInstallerResultCallback.onInstallationResult(
               new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR,

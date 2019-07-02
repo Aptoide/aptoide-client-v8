@@ -7,15 +7,14 @@
     android:layout_height="296dp"
     android:animateLayoutChanges="true"
     android:background="@android:color/white"
-    tools:layout_width="296dp"
     >
 
   <ImageView
       android:id="@+id/header_bg"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:scaleType="fitXY"
-      android:src="@drawable/ic_wallet_install_header_bg"
+      android:scaleType="centerCrop"
+      android:src="@drawable/ic_wallet_install_header_background"
       android:visibility="invisible"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +23,7 @@
       />
 
   <ImageView
-      android:id="@+id/appIconImageBackground"
+      android:id="@+id/app_icon_image_background"
       android:layout_width="58dp"
       android:layout_height="58dp"
       android:layout_below="@id/header_bg"
@@ -38,7 +37,7 @@
       />
 
   <ImageView
-      android:id="@+id/appIconImageView"
+      android:id="@+id/app_icon_imageview"
       android:layout_width="56dp"
       android:layout_height="56dp"
       android:layout_below="@id/header_bg"
@@ -54,7 +53,7 @@
 
 
   <TextView
-      android:id="@+id/messageTextView"
+      android:id="@+id/message_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"
@@ -66,14 +65,14 @@
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/appIconImageView"
+      app:layout_constraintTop_toBottomOf="@+id/app_icon_imageview"
       tools:text="@string/wallet_install_request_message_body"
       tools:visibility="visible"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <TextView
-      android:id="@+id/installCompleteMessage"
+      android:id="@+id/install_complete_message"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -81,27 +80,28 @@
       android:maxWidth="232dp"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/messageTextView"
+      app:layout_constraintTop_toBottomOf="@id/message_textview"
       tools:text="Just tap to buy again"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <Button
-      android:id="@+id/closeButton"
+      android:id="@+id/close_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
       android:text="@string/got_it_button_text"
+      android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/installCompleteMessage"
+      app:layout_constraintTop_toBottomOf="@id/install_complete_message"
       style="@style/Aptoide.Button.Flat.GreyMedium"
       />
 
   <ProgressBar
-      android:id="@+id/progressView"
+      android:id="@+id/progress_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toBottomOf="parent"
@@ -112,7 +112,7 @@
       />
 
   <ImageView
-      android:id="@+id/appcImage"
+      android:id="@+id/appc_image"
       android:layout_width="82dp"
       android:layout_height="82dp"
       android:layout_marginTop="31dp"
@@ -124,46 +124,63 @@
       />
 
   <TextView
-      android:id="@+id/errorMessageTextView"
+      android:id="@+id/error_message_textview"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"
       android:layout_marginRight="29dp"
       android:layout_marginTop="24dp"
+      android:gravity="center"
       android:maxWidth="232dp"
+      android:text="@string/appc_not_supported_body"
       android:textAlignment="center"
       android:visibility="gone"
-      android:gravity="center"
       app:layout_constrainedWidth="true"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      android:text="@string/appc_not_supported_body"
-      app:layout_constraintTop_toBottomOf="@id/appcImage"
+      app:layout_constraintTop_toBottomOf="@id/appc_image"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
+  <include
+      layout="@layout/wallet_install_download_view"
+      android:id="@+id/wallet_install_download_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginLeft="15dp"
+      android:layout_marginStart="15dp"
+      android:visibility="invisible"
+      app:layout_constrainedWidth="true"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/message_textview"
+      tools:visibility="visible"
+      />
+
   <android.support.constraint.Group
-      android:id="@+id/walletInstallViewGroup"
+      android:id="@+id/wallet_install_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="invisible"
-      app:constraint_referenced_ids="appIconImageView,header_bg,messageTextView"
+      app:constraint_referenced_ids="app_icon_imageview,header_bg,message_textview"
+      tools:visibility="visible"
       />
 
   <android.support.constraint.Group
-      android:id="@+id/walletInstallSuccessViewGroup"
+      android:id="@+id/wallet_install_success_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="installCompleteMessage,appIconImageBackground,closeButton"
+      app:constraint_referenced_ids="install_complete_message,app_icon_image_background"
       />
 
   <android.support.constraint.Group
-      android:id="@+id/sdkErrorViewGroup"
+      android:id="@+id/sdk_error_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:visibility="gone"
-      app:constraint_referenced_ids="closeButton,appcImage,errorMessageTextView"
+      app:constraint_referenced_ids="appc_image,error_message_textview"
       />
 
 
