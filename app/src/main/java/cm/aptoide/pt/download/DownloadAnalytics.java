@@ -182,7 +182,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     } else {
       event.put(ORIGIN, getOrigin(download));
     }
-    event.put(ORIGIN, getOrigin(download));
     event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
     event.put(PREVIOUS_TAG, screenTagHistory.getTag());
     event.put(STORE, navigationTracker.getPreviousScreen()
@@ -299,19 +298,20 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void installClicked(String md5, String packageName, AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean hasAppc) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean hasAppc) {
     String previousContext = navigationTracker.getViewName(false);
 
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
 
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE), false,
-          hasAppc);
+          offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE),
+          isMigration, hasAppc);
     } else {
       downloadCompleteEvent(navigationTracker.getPreviousScreen(),
           navigationTracker.getCurrentScreen(), md5, packageName, null, action, previousContext,
-          false, hasAppc);
+          isMigration, hasAppc);
     }
   }
 
