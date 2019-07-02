@@ -29,7 +29,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap { view.cancelDownloadButtonClicked() }
         .flatMap { walletInstallManager.getWallet() }.first()
-        .doOnNext { walletInstallManager.removeDownload(it) }
+        .doOnNext { walletApp -> walletInstallManager.removeDownload(walletApp) }
         .observeOn(viewScheduler)
         .doOnCompleted {
           view.dismissDialog()
