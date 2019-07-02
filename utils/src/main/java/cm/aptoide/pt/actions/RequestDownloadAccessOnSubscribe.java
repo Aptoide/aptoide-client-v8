@@ -9,12 +9,12 @@ import rx.Subscriber;
 public class RequestDownloadAccessOnSubscribe implements Observable.OnSubscribe<Void> {
 
   private final PermissionService permissionRequest;
-  private final boolean shouldValidateMobileData;
+  private final boolean allowDownloadOnMobileData;
 
   public RequestDownloadAccessOnSubscribe(PermissionService permissionRequest,
-      boolean shouldValidateMobileData) {
+      boolean allowDownloadOnMobileData) {
     this.permissionRequest = permissionRequest;
-    this.shouldValidateMobileData = shouldValidateMobileData;
+    this.allowDownloadOnMobileData = allowDownloadOnMobileData;
   }
 
   @Override public void call(Subscriber<? super Void> subscriber) {
@@ -24,6 +24,6 @@ public class RequestDownloadAccessOnSubscribe implements Observable.OnSubscribe<
             subscriber.onCompleted();
           }
         }, () -> subscriber.onError(new SecurityException("Permission denied to download file")),
-        shouldValidateMobileData);
+        allowDownloadOnMobileData);
   }
 }

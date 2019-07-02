@@ -46,7 +46,7 @@ class InstallResultReceiver extends BroadcastReceiver {
         case PackageInstaller.STATUS_FAILURE_ABORTED:
           packageInstallerResultCallback.onInstallationResult(
               new InstallStatus(InstallStatus.Status.CANCELED,
-                  "Install failed " + status + ", " + message));
+                  "Install failed " + status + ", " + message, packageName));
         default:
           packageInstallerResultCallback.onInstallationResult(
               new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR,

@@ -34,7 +34,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
             installManager.install(download)
                 .doOnSubscribe {
                   downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK
-                      , DownloadAnalytics.AppContext.AUTO_UPDATE)
+                      , DownloadAnalytics.AppContext.AUTO_UPDATE, false)
                 }
           }
           .toCompletable()

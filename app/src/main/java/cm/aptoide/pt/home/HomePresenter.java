@@ -58,8 +58,6 @@ public class HomePresenter implements Presenter {
 
     handlePullToRefresh();
 
-    handleBottomNavigationEvents();
-
     handleRetryClick();
 
     handleBundleScrolledRight();
@@ -411,17 +409,6 @@ public class HomePresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
         }, crashReporter::log);
-  }
-
-  private void handleBottomNavigationEvents() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> homeNavigator.bottomNavigation())
-        .observeOn(viewScheduler)
-        .doOnNext(navigated -> view.scrollToTop())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
   }
 
   @VisibleForTesting public void handleAdClick() {

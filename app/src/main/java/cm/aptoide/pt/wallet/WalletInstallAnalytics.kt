@@ -28,10 +28,10 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                    action: AnalyticsManager.Action,
                                    offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.APPVIEW, action)
+        DownloadAnalytics.AppContext.APPVIEW, action, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.md5, download.packageName,
-          action, offerResponseStatus, false)
+          action, offerResponseStatus, false, download.hasAppc())
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(download.md5, download.packageName, action,
@@ -49,7 +49,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
     installAnalytics.installStarted(download.packageName, download.versionCode,
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
-        downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE)
+        downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE, download.hasAppc())
 
   }
 

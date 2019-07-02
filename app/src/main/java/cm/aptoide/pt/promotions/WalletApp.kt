@@ -16,7 +16,7 @@ data class WalletApp(
     val path: String? = null,
     val pathAlt: String? = null,
     val obb: Obb? = null,
-    val size: Long? = 0,
+    val size: Long = 0,
     val developer: String = ""
 
 ) {
