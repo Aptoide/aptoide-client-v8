@@ -21,12 +21,13 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
   private val APPLICATION_NAME = "Application Name"
   private val APPLICATION_PUBLISHER = "Application Publisher"
   private val CLICK_INSTALL = "Clicked on install button"
+  private val VIEW_CONTEXT = "WalletInstallActivity"
 
 
-  fun setupDownloadAnalyticsEvents(download: Download, campaignId: Int, abTestGroup: String,
-                                   downloadAction: DownloadModel.Action?,
-                                   action: AnalyticsManager.Action,
-                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
+  private fun setupDownloadAnalyticsEvents(download: Download, campaignId: Int, abTestGroup: String,
+                                           downloadAction: DownloadModel.Action?,
+                                           action: AnalyticsManager.Action,
+                                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
@@ -60,6 +61,6 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
     map[APPLICATION_NAME] = packageName
     map[APPLICATION_PUBLISHER] = applicationPublisher
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
-        "WalletInstallActivity")
+        VIEW_CONTEXT)
   }
 }
