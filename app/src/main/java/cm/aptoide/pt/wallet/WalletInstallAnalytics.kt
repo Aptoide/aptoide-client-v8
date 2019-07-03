@@ -1,6 +1,7 @@
 package cm.aptoide.pt.wallet
 
 import cm.aptoide.analytics.AnalyticsManager
+import cm.aptoide.analytics.implementation.navigation.NavigationTracker
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
@@ -15,7 +16,8 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val notificationAnalytics: NotificationAnalytics,
                              val installAnalytics: InstallAnalytics,
                              val downloadStateParser: DownloadStateParser,
-                             val analyticsManager: AnalyticsManager) {
+                             val analyticsManager: AnalyticsManager,
+                             val navigationTracker: NavigationTracker) {
 
   private val TYPE = "type"
   private val APPLICATION_NAME = "Application Name"

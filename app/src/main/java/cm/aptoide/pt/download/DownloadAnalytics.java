@@ -200,6 +200,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   @NonNull private Map<String, Object> createAppData(Download download) {
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, download.getPackageName());
+    app.put(APPC, download.hasAppc());
     return app;
   }
 
