@@ -24,7 +24,7 @@
           android:layout_width="match_parent"
           android:layout_height="250dp"
           android:scaleType="centerCrop"
-          tools:src="@drawable/ic_seasonal_promotion"
+          tools:src="@drawable/wizard_1"
           />
       <TextView
           android:id="@+id/promotion_title"
