@@ -17,10 +17,6 @@ public interface HomeContainerView extends View {
 
   void showPromotionsHomeIcon(HomePromotionsWrapper homePromotionsWrapper);
 
-  void setPromotionsTickerWithValue(int promotions);
-
-  void setEllipsizedPromotionsTicker();
-
   void showPromotionsHomeDialog(HomePromotionsWrapper homePromotionsWrapper);
 
   void hidePromotionsIcon();

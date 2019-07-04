@@ -111,7 +111,6 @@ public class Home {
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
     return promotionsManager.getPromotionsModel(promotionType)
-        .map(PromotionsModel::getAppsList)
         .map(this::mapPromotions);
   }
 
@@ -119,8 +118,9 @@ public class Home {
     promotionsPreferencesManager.setPromotionsDialogShown();
   }
 
-  private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
+  private HomePromotionsWrapper mapPromotions(PromotionsModel promotionsModel) {
     int promotions = 0;
+    List<PromotionApp> apps = promotionsModel.getAppsList();
     float unclaimedAppcValue = 0;
     float totalAppcValue = 0;
     if (apps.size() > 0) {
@@ -133,7 +133,8 @@ public class Home {
       }
     }
 
-    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, unclaimedAppcValue,
+    return new HomePromotionsWrapper(promotionsModel.getTitle(),
+        promotionsModel.getFeatureGraphic(), !apps.isEmpty(), promotions, unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
         totalAppcValue);
   }
