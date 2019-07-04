@@ -1,10 +1,11 @@
 package cm.aptoide.aptoideviews.downloadprogressview
 
 internal sealed class State {
-  object Indeterminate: State()
+  object Canceled: State()
   object InProgress: State()
   object Paused: State()
   object Installing: State()
+  object Queue: State()
 }
 
 internal sealed class Event {
