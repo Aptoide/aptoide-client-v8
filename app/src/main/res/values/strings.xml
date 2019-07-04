@@ -577,8 +577,6 @@
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
 
   <!--Holidays AppCoins Craze-->
-  <string name="holidayspromotion_title_holidays">Carnival Frenzy</string>
-  <string name="promotion_title_conquer">Conquer Your AppCoins</string>
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>

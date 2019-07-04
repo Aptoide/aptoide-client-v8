@@ -141,7 +141,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         toolbar.setBackgroundDrawable(drawable);
 
         toolbarTitle.setTextColor(toolbarColor);
-        toolbarTitle.setText(getString(R.string.promotion_title_conquer));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           handleStatusBar(isCollapsed);
         }
@@ -342,6 +341,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void showPromotionTitle(String title) {
     promotionTitle.setText(title);
+    toolbarTitle.setText(title);
   }
 
   @Override public void showPromotionFeatureGraphic(String background) {
