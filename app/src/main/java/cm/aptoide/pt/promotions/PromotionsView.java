@@ -34,4 +34,8 @@ public interface PromotionsView extends View {
   void showPromotionOverDialog();
 
   Observable<Void> promotionOverDialogClick();
+
+  void showPromotionTitle(String title);
+
+  void showPromotionFeatureGraphic(String background);
 }

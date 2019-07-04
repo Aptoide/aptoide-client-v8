@@ -166,22 +166,24 @@ public class PromotionsPresenter implements Presenter {
         .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionId))
         .doOnNext(__ -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
-        .flatMap(appsModel -> {
-          if (appsModel.getAppsList()
-              .isEmpty()) {
-            view.showPromotionOverDialog();
-            return Observable.empty();
-          } else {
-            view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
-            return handlePromotionApps(appsModel);
-          }
-        })
+        .flatMap(this::showPromotions)
         .doOnError(__ -> view.showErrorView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throwable.printStackTrace();
-        });
+        }, Throwable::printStackTrace);
+  }
+
+  private Observable<? extends PromotionsModel> showPromotions(PromotionsModel appsModel) {
+    if (appsModel.getAppsList()
+        .isEmpty()) {
+      view.showPromotionOverDialog();
+      return Observable.empty();
+    } else {
+      view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
+      view.showPromotionTitle(appsModel.getTitle());
+      view.showPromotionFeatureGraphic(appsModel.getFeatureGraphic());
+      return handlePromotionApps(appsModel);
+    }
   }
 
   private void handlePromotionClaimResult() {
@@ -204,22 +206,12 @@ public class PromotionsPresenter implements Presenter {
             .doOnNext(__ -> view.showLoading())
             .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionId))
             .observeOn(viewScheduler)
-            .flatMap(appsModel -> {
-              if (appsModel.getAppsList()
-                  .isEmpty()) {
-                view.showPromotionOverDialog();
-                return Observable.empty();
-              } else {
-                view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
-                return handlePromotionApps(appsModel);
-              }
-            })
+            .flatMap(this::showPromotions)
             .doOnError(__ -> view.showErrorView())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-        });
+        }, Throwable::printStackTrace);
   }
 
   private Observable<PromotionsModel> handlePromotionApps(PromotionsModel promotionsModel) {

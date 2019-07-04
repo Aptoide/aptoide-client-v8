@@ -38,6 +38,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:adjustViewBounds="true"
+          android:maxHeight="250dp"
           android:scaleType="fitCenter"
           android:src="@drawable/ic_seasonal_promotion"
           android:visibility="gone"
@@ -92,6 +93,7 @@
           />
 
       <TextView
+          android:id="@+id/promotions_title"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="16dp"

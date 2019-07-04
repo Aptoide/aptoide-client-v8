@@ -71,13 +71,14 @@ public class PromotionsManager {
     return promotionsService.getPromotions(promotionsType)
         .flatMap(promotions -> {
           if (promotions.isEmpty()) {
-            return Single.just(new ArrayList<PromotionApp>());
+            return Single.just(new ArrayList<PromotionApp>())
+                .map(__ -> PromotionsModel.ofError());
           }
-          return getPromotionApps(promotions.get(0)
-              .getPromotionId());
-        })
-        .map(
-            appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
+          PromotionMeta meta = promotions.get(0);
+          return getPromotionApps(meta.getPromotionId()).map(
+              appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), meta.getTitle(),
+                  meta.getBackground(), isWalletInstalled(), false));
+        });
   }
 
   public Observable<List<Promotion>> getPromotionsForPackage(String packageName) {
