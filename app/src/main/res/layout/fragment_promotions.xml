@@ -40,10 +40,11 @@
           android:adjustViewBounds="true"
           android:maxHeight="250dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/ic_seasonal_promotion"
           android:visibility="gone"
           app:layout_collapseMode="parallax"
           tools:background="@color/grey_fog_normal"
+          tools:src="@drawable/wizard_1"
+          tools:visibility="visible"
           />
 
       <android.support.v7.widget.Toolbar
