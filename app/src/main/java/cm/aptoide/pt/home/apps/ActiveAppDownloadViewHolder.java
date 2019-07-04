@@ -42,6 +42,8 @@ class ActiveAppDownloadViewHolder extends AppsViewHolder {
 
     progressBar.setIndeterminate(((DownloadApp) app).isIndeterminate());
 
+    itemView.setOnClickListener(
+        __ -> pauseDownload.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
     pauseButton.setOnClickListener(
         pause -> pauseDownload.onNext(new AppClick(app, AppClick.ClickType.PAUSE_DOWNLOAD)));
   }

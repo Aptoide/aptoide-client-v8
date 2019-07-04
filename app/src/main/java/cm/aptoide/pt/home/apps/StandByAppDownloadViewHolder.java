@@ -75,7 +75,8 @@ class StandByAppDownloadViewHolder extends AppsViewHolder {
       downloadState.setText(itemView.getResources()
           .getString(R.string.apps_short_download_paused));
     }
-
+    itemView.setOnClickListener(
+        __ -> downloadAction.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
     cancelButton.setOnClickListener(
         cancel -> downloadAction.onNext(new AppClick(app, AppClick.ClickType.CANCEL_DOWNLOAD)));
     resumeButton.setOnClickListener(

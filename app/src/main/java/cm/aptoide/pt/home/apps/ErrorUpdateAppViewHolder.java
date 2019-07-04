@@ -44,6 +44,8 @@ class ErrorUpdateAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     appName.setText(((UpdateApp) app).getName());
+    itemView.setOnClickListener(
+        __ -> retryUpdate.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
     retryButton.setOnClickListener(install -> retryUpdate.onNext(new AppClick(app,
         isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_RETRY : AppClick.ClickType.RETRY_UPDATE)));
   }

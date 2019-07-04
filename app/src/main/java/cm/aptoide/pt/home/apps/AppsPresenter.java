@@ -135,8 +135,14 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> view.updateClick())
-        .doOnNext(app -> appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
-            ((UpdateApp) app).getPackageName()))
+        .doOnNext(app -> {
+          if (app.getType() == App.Type.DOWNLOAD) {
+            appsNavigator.navigateToAppView(((DownloadApp) app).getMd5());
+          } else {
+            appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
+                ((UpdateApp) app).getPackageName());
+          }
+        })
         .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

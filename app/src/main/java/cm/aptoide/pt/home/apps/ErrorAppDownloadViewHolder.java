@@ -30,6 +30,8 @@ class ErrorAppDownloadViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((DownloadApp) app).getIcon(), appIcon);
     appName.setText(((DownloadApp) app).getName());
+    itemView.setOnClickListener(
+        __ -> retryDownload.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
     retryButton.setOnClickListener(
         install -> retryDownload.onNext(new AppClick(app, AppClick.ClickType.RETRY_DOWNLOAD)));
   }
