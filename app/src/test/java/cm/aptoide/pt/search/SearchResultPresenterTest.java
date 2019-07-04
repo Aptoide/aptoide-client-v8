@@ -313,7 +313,6 @@ public class SearchResultPresenterTest {
     //When the user clicks on an item from the search result list
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResultWrapper));
-    when(searchManager.recordAbTestAction(1)).thenReturn(Observable.just(true));
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");

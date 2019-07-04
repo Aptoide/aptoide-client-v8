@@ -243,19 +243,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
-        .observeOn(ioScheduler)
-        .flatMap(data -> searchManager.recordAbTestAction(data.getPosition())
-            .doOnNext(__ -> openAppView(data))
-            .map(__ -> data))
-        .flatMap(data -> searchManager.getExperimentResult()
-            .doOnNext(result -> {
-              if (result != null) {
-                analytics.recordAbTestActionAnalytics(result.getExperimentId(),
-                    result.getExperimentGroup(), data.getQuery(), data.getPosition(),
-                    data.getSearchAppResult()
-                        .getPackageName());
-              }
-            }))
+        .doOnNext(data -> openAppView(data))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -431,16 +419,6 @@ import rx.exceptions.OnErrorNotImplementedException;
             .zipWith(Single.just(viewModel),
                 (itemCount, model) -> new SearchResultCount(itemCount, model)))
         .filter(result -> result.getResultCount() != -1)
-        .observeOn(ioScheduler)
-        .flatMap(result -> searchManager.getExperimentResult()
-            .doOnNext(experimentResult -> {
-              if (experimentResult != null) {
-                analytics.recordAbTestImpressionAnalytics(experimentResult.getExperimentId(),
-                    experimentResult.getExperimentGroup(), result.getSearchResultViewModel()
-                        .getCurrentQuery());
-              }
-            }))
-        .flatMap(__ -> searchManager.recordAbTestImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

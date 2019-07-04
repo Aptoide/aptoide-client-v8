@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private BottomNavigationActivity bottomNavigationActivity;
   private CheckBox gamesChip;
   private CheckBox appsChip;
+  private AppBarLayout appBarLayout;
   private ImageView userAvatar;
   private ImageView promotionsIcon;
   private TextView promotionsTicker;
@@ -69,6 +71,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     }
     gamesChip = view.findViewById(R.id.games_chip);
     appsChip = view.findViewById(R.id.apps_chip);
+    appBarLayout = view.findViewById(R.id.app_bar_layout);
 
     gamesChip.setOnCheckedChangeListener((__, isChecked) -> {
       if (isChecked) {
@@ -211,6 +214,15 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   @Override public Observable<ChipsEvents> isChipChecked() {
     return chipCheckedEvent;
+  }
+
+  @Override public void uncheckChips() {
+    gamesChip.setChecked(false);
+    appsChip.setChecked(false);
+  }
+
+  @Override public void expandChips() {
+    appBarLayout.setExpanded(true, true);
   }
 
   public enum ChipsEvents {

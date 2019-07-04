@@ -52,6 +52,7 @@ public class HomeContainerPresenter implements Presenter {
     handleClickOnPrivacyPolicy();
     handleClickOnGamesChip();
     handleClickOnAppsChip();
+    handleBottomNavigationEvents();
   }
 
   @VisibleForTesting public void loadMainHomeContent() {
@@ -69,6 +70,27 @@ public class HomeContainerPresenter implements Presenter {
             default:
               homeContainerNavigator.loadMainHomeContent();
               break;
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  private void handleBottomNavigationEvents() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> homeNavigator.bottomNavigation())
+        .observeOn(viewScheduler)
+        .flatMap(__ -> homeContainerNavigator.navigateHome())
+        .doOnNext(shouldGoHome -> {
+          view.expandChips();
+          if (shouldGoHome) {
+            homeContainerNavigator.loadMainHomeContent();
+            chipManager.setCurrentChip(null);
+            view.uncheckChips();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

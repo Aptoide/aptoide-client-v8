@@ -44,7 +44,7 @@ public class PromotionsAnalytics {
       AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action);
+        DownloadAnalytics.AppContext.PROMOTIONS, action, false);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
         action, offerResponseStatus);
   }

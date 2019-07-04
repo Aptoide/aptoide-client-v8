@@ -47,12 +47,9 @@ import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
-import cm.aptoide.pt.abtesting.AbTestSearchRepository;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
-import cm.aptoide.pt.abtesting.SearchAbTestService;
-import cm.aptoide.pt.abtesting.SearchExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -157,6 +154,7 @@ import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloadManagerProvider;
 import cm.aptoide.pt.downloadmanager.RetryFileDownloaderProvider;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
@@ -172,7 +170,7 @@ import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
-import cm.aptoide.pt.install.InstallFabricEvents;
+import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -251,6 +249,7 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
+import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -346,9 +345,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
       AnalyticsManager analyticsManager, InstallAnalytics installAnalytics,
       @Named("default") SharedPreferences sharedPreferences,
-      RootAvailabilityManager rootAvailabilityManager) {
-    return new InstallFabricEvents(analyticsManager, installAnalytics, sharedPreferences,
-        rootAvailabilityManager);
+      RootAvailabilityManager rootAvailabilityManager, NavigationTracker navigationTracker) {
+    return new InstallEvents(analyticsManager, installAnalytics, sharedPreferences,
+        rootAvailabilityManager, navigationTracker);
   }
 
   @Singleton @Provides DownloadAnalytics providesDownloadAnalytics(
@@ -1157,11 +1156,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, SearchExperiment searchExperiment) {
+      MoPubAdsManager moPubAdsManager) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
         AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubAdsManager, searchExperiment);
+        accountManager, moPubAdsManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1324,16 +1323,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(Service.class);
   }
 
-  @Singleton @Provides SearchAbTestService.Service providesSearchAbTestRetrofit(
-      @Named("retrofit-auto-update") Retrofit retrofit) {
-    return retrofit.create(SearchAbTestService.Service.class);
-  }
-
-  @Singleton @Provides SearchAbTestService providesSearchAbTestService(
-      SearchAbTestService.Service service) {
-    return new SearchAbTestService(service);
-  }
-
   @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
@@ -1470,9 +1459,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
-    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT,
-        InstallFabricEvents.ROOT_V2_COMPLETE, InstallFabricEvents.ROOT_V2_START,
-        InstallFabricEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, InstallEvents.ROOT_V2_COMPLETE,
+        InstallEvents.ROOT_V2_START, InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
         AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
@@ -1691,22 +1679,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
   }
 
-  @Singleton @Provides AbTestSearchRepository providesAbTestSearchRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence,
-      SearchAbTestService searchAbTestService,
-      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
-      AbTestCacheValidator abTestCacheValidator) {
-    return new AbTestSearchRepository(abTestService, localCache, persistence, searchAbTestService,
-        abTestCacheValidator);
-  }
-
   @Singleton @Provides @Named("ab-test") ABTestManager providesABTestManager(
       ABTestCenterRepository abTestCenterRepository) {
-    return new ABTestManager(abTestCenterRepository);
-  }
-
-  @Singleton @Provides @Named("search-ab-test") ABTestManager providesSearchABTestManager(
-      AbTestSearchRepository abTestCenterRepository) {
     return new ABTestManager(abTestCenterRepository);
   }
 
@@ -1715,12 +1689,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PromotionsService promotionsService, InstalledRepository installedRepository,
-      MoPubAdsManager moPubAdsManager, AppCenter appCenter) {
+      MoPubAdsManager moPubAdsManager, WalletAppProvider walletAppProvider) {
     return new PromotionsManager(promotionViewAppMapper, installManager, downloadFactory,
         downloadStateParser, promotionsAnalytics, notificationAnalytics, installAnalytics,
         application.getApplicationContext()
             .getPackageManager(), promotionsService, installedRepository, moPubAdsManager,
-        appCenter);
+        walletAppProvider);
+  }
+
+  @Singleton @Provides WalletAppProvider providesWalletAppProvider(AppCenter appCenter,
+      InstalledRepository installedRepository, InstallManager installManager,
+      DownloadStateParser downloadStateParser) {
+    return new WalletAppProvider(appCenter, installedRepository, installManager,
+        downloadStateParser);
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -1829,8 +1810,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoreAnalytics.STORES_INTERACT, AccountAnalytics.SIGN_UP_EVENT_NAME,
         AccountAnalytics.LOGIN_EVENT_NAME, UpdatesAnalytics.UPDATE_EVENT,
         PageViewsAnalytics.PAGE_VIEW_EVENT, FirstLaunchAnalytics.FIRST_LAUNCH,
-        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallFabricEvents.ROOT_V2_COMPLETE,
-        InstallFabricEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
+        FirstLaunchAnalytics.PLAY_PROTECT_EVENT, InstallEvents.ROOT_V2_COMPLETE,
+        InstallEvents.ROOT_V2_START, AppViewAnalytics.SIMILAR_APP_INTERACT,
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
@@ -1850,7 +1831,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.PROMOTION_DIALOG, PromotionsAnalytics.PROMOTIONS_INTERACT,
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
-        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK);
+        AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1907,11 +1889,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DecimalFormat("0.0");
   }
 
-  @Singleton @Provides SearchExperiment providesSearchExperiment(
-      @Named("search-ab-test") ABTestManager abTestManager) {
-    return new SearchExperiment(abTestManager);
-  }
-
   @Singleton @Provides ReactionsManager providesReactionsManager(
       ReactionsService reactionsService) {
     return new ReactionsManager(reactionsService, new HashMap<>());
@@ -1920,7 +1897,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppInstaller providesAppInstaller(
       AppInstallerStatusReceiver appInstallerStatusReceiver) {
     return new AppInstaller(application.getApplicationContext(),
-        installStatus -> appInstallerStatusReceiver.onStatusReceived(installStatus));
+        (installStatus) -> appInstallerStatusReceiver.onStatusReceived(installStatus));
   }
 
   @Singleton @Provides AppInstallerStatusReceiver providesAppInstallerStatusReceiver() {
@@ -1964,5 +1941,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppcMigrationAccessor providesAppcMigrationAccessor(Database database) {
     return new AppcMigrationAccessor(database);
+  }
+
+  @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
+    return new CaptionBackgroundPainter(getApplicationContext().getResources());
   }
 }
