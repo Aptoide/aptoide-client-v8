@@ -47,4 +47,8 @@ class AnimatedImageView : ImageView {
     }
   }
 
+  fun setReverseAsDefault() {
+    setImageDrawable(reverse as Drawable)
+  }
+
 }

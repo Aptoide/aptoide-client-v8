@@ -685,8 +685,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
-    downloadProgressView.setVisibility(View.GONE);
-    install.setVisibility(View.VISIBLE);
     install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
@@ -1720,13 +1718,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
-    downloadProgressView.setProgress(progress);
     switch (downloadState) {
       case ACTIVE:
         downloadProgressView.startDownload();
         break;
       case INSTALLING:
         downloadProgressView.startInstallation();
+        break;
+      case PAUSE:
+        downloadProgressView.pauseInstallation();
         break;
       case ERROR:
         showErrorDialog("", getString(R.string.error_occured));
@@ -1738,6 +1738,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       default:
         break;
     }
+    downloadProgressView.setProgress(progress);
   }
 
   private void showErrorDialog(String title, String message) {

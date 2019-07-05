@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.CheckResult
 import android.support.annotation.VisibleForTesting
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import cm.aptoide.aptoideviews.R
@@ -37,6 +38,7 @@ class DownloadProgressView : FrameLayout {
     initialState(State.Queue)
     state<State.Queue>{
       onEnter {
+        Log.d("DownloadProgressView", "State.Queue")
         resetProgress()
         progressBar.isIndeterminate = true
         if(isPausable){
@@ -50,7 +52,12 @@ class DownloadProgressView : FrameLayout {
         downloadState.setText(R.string.appview_short_downloading)
       }
       on<Event.DownloadStart> {
+        debouncer.reset()
         transitionTo(State.InProgress)
+      }
+      on<Event.PauseStart> {
+        debouncer.reset()
+        transitionTo(State.InitialPaused)
       }
       on<Event.Reset> {
         dontTransition()
@@ -58,6 +65,7 @@ class DownloadProgressView : FrameLayout {
     }
     state<State.Canceled> {
       onEnter {
+        Log.d("DownloadProgressView", "State.Canceled")
         resetProgress()
         progressBar.isIndeterminate = true
         if(isPausable){
@@ -76,6 +84,7 @@ class DownloadProgressView : FrameLayout {
     }
     state<State.InProgress> {
       onEnter {
+        Log.d("DownloadProgressView", "State.InProgress")
         setProgress(currentProgress)
         progressBar.isIndeterminate = false
         if(isPausable){
@@ -108,6 +117,7 @@ class DownloadProgressView : FrameLayout {
     }
     state<State.Paused> {
       onEnter {
+        Log.d("DownloadProgressView", "State.Paused")
         progressBar.isIndeterminate = false
         cancelButton.visibility = View.VISIBLE
         resumePauseButton.visibility = View.VISIBLE
@@ -129,8 +139,33 @@ class DownloadProgressView : FrameLayout {
         transitionTo(State.Queue)
       }
     }
+    state<State.InitialPaused> {
+      onEnter {
+        Log.d("DownloadProgressView", "State.InitialPaused")
+        progressBar.isIndeterminate = false
+        cancelButton.visibility = View.VISIBLE
+        resumePauseButton.visibility = View.VISIBLE
+        resumePauseButton.setReverseAsDefault()
+        downloadProgressNumber.visibility = View.VISIBLE
+        downloadState.setText(R.string.appview_short_downloading)
+      }
+      on<Event.ResumeClick> {
+        eventListener?.onActionClick(
+            DownloadEventListener.Action(DownloadEventListener.Action.Type.RESUME, payload))
+        transitionTo(State.InProgress)
+      }
+      on<Event.CancelClick> {
+        eventListener?.onActionClick(
+            DownloadEventListener.Action(DownloadEventListener.Action.Type.CANCEL, payload))
+        transitionTo(State.Canceled)
+      }
+      on<Event.Reset> {
+        transitionTo(State.Queue)
+      }
+    }
     state<State.Installing>{
       onEnter {
+        Log.d("DownloadProgressView", "State.Installing")
         progressBar.isIndeterminate = true
         cancelButton.visibility = View.INVISIBLE
         resumePauseButton.visibility = View.GONE
@@ -255,7 +290,7 @@ class DownloadProgressView : FrameLayout {
   fun setProgress(progress: Int) {
     if (stateMachine.state == State.Queue || stateMachine.state == State.Canceled) return
     currentProgress = Math.min(Math.max(progress, 0), 100)
-    if (stateMachine.state == State.InProgress) {
+    if (stateMachine.state == State.InProgress || stateMachine.state == State.InitialPaused) {
       progressBar.progress = currentProgress
       val progressPercent = "$currentProgress%"
       downloadProgressNumber.text = progressPercent
@@ -276,6 +311,10 @@ class DownloadProgressView : FrameLayout {
    */
   fun startInstallation() {
     stateMachine.transition(Event.InstallStart)
+  }
+
+  fun pauseInstallation() {
+    stateMachine.transition(Event.PauseStart)
   }
 
   /**
