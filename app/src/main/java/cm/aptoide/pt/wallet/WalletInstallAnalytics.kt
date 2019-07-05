@@ -2,6 +2,7 @@ package cm.aptoide.pt.wallet
 
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker
+import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
@@ -19,6 +20,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val analyticsManager: AnalyticsManager,
                              val navigationTracker: NavigationTracker) {
 
+  private var shouldRegister: Boolean = true
   private val TYPE = "type"
   private val APPLICATION_NAME = "Application Name"
   private val APPLICATION_PUBLISHER = "Application Publisher"
@@ -64,5 +66,23 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
     map[APPLICATION_PUBLISHER] = applicationPublisher
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         VIEW_CONTEXT)
+  }
+
+  fun setupHistoryTracker() {
+    val historyTracker = getHistoryTracker()
+    if (shouldRegister) {
+      if (historyTracker == null) {
+        throw RuntimeException("If "
+            + this.javaClass
+            .simpleName
+            + " should be logged to screen history, it has to return a value on method NavigationTrackFragment#getHistoryTracker")
+      }
+      navigationTracker.registerScreen(historyTracker)
+    }
+    shouldRegister = false;
+  }
+
+  private fun getHistoryTracker(): ScreenTagHistory? {
+    return ScreenTagHistory.Builder.build(VIEW_CONTEXT)
   }
 }

@@ -103,4 +103,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
           InstallStatus.Status.CANCELED.equals(installStatus.status)
         }.filter { isCanceled -> isCanceled }
   }
+
+  fun setupAnalyticsHistroryTracker() {
+    walletInstallAnalytics.setupHistoryTracker();
+  }
 }
