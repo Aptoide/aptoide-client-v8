@@ -53,7 +53,7 @@ class UpdatingAppViewHolder extends AppsViewHolder {
     updateProgress.setText(String.format("%d%%", ((UpdateApp) app).getProgress()));
 
     itemView.setOnClickListener(
-        __ -> pauseUpdate.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
+        __ -> pauseUpdate.onNext(new AppClick(app, AppClick.ClickType.CARD_CLICK)));
 
     pauseButton.setOnClickListener(pause -> pauseUpdate.onNext(new AppClick(app,
         isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_PAUSE : AppClick.ClickType.PAUSE_UPDATE)));

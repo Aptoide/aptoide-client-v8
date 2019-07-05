@@ -89,7 +89,7 @@ class StandByUpdateAppViewHolder extends AppsViewHolder {
           .getString(R.string.apps_short_update_paused));
     }
     itemView.setOnClickListener(
-        __ -> updateAction.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
+        __ -> updateAction.onNext(new AppClick(app, AppClick.ClickType.CARD_CLICK)));
 
     cancelButton.setOnClickListener(cancel -> updateAction.onNext(new AppClick(app,
         isAppcUpgrade ? AppClick.ClickType.APPC_UPGRADE_CANCEL

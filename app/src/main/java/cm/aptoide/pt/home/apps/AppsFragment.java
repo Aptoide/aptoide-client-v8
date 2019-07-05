@@ -321,9 +321,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     return RxView.clicks(appcSeeMoreButton);
   }
 
-  @Override public Observable<App> updateClick() {
+  @Override public Observable<App> cardClick() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_CLICK)
+        appClick -> appClick.getClickType() == AppClick.ClickType.CARD_CLICK)
         .map(appClick -> appClick.getApp());
   }
 
