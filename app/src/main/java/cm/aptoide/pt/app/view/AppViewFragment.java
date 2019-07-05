@@ -380,7 +380,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     listDonateButton = view.findViewById(R.id.donate_button);
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
       @Override public boolean canScrollVertically() {
-        return false;
+        return true;
       }
     };
     donationsList.setLayoutManager(linearLayoutManager);
