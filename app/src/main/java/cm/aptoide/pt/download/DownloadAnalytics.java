@@ -423,9 +423,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
           currentContext, false, false);
     }
-
-    downloadCompleteEvent(previousScreen, currentScreen, id, packageName, trustedValue, action,
-        currentContext, false, false);
   }
 
   public enum AppContext {
