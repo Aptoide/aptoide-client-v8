@@ -177,9 +177,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromPickApp();
     } else if ("promotions".equals(u.getQueryParameter("name"))) {
       return startFromPromotions();
-    } else if ("CURATION_1".equals(u.getQueryParameter("name"))
-        && u.getQueryParameter("id") != null) {
+    } else if ("CURATION_1".equals(u.getQueryParameter("name")) && u.getQueryParameter("id") != null) {
       return startFromEditorialCard(u.getQueryParameter("id"));
+    } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
+      return startAppcInfoView();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
@@ -575,6 +576,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
+  private Intent startAppcInfoView() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APPC_INFO_VIEW, true);
+    return intent;
+  }
+
   public Intent startFromAppView(String packageName) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
@@ -702,6 +709,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
     public static final String PROMOTIONS_DEEPLINK = "promotions";
     public static final String EDITORIAL_DEEPLINK = "editorial";
+    public static final String APPC_INFO_VIEW = "appc_info_view";
   }
 
   public static class DeepLinksKeys {
