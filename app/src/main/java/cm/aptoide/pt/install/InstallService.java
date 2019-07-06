@@ -87,6 +87,8 @@ public class InstallService extends BaseService implements DownloadsNotification
     if (intent != null) {
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
+        Logger.getInstance()
+            .d(TAG, "Observing download and install with an intent");
         subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
             .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false), intent.getExtras()
             .getBoolean(EXTRA_SET_PACKAGE_INSTALLER, false)).subscribe(
@@ -102,6 +104,8 @@ public class InstallService extends BaseService implements DownloadsNotification
         stopAllDownloads();
       }
     } else {
+      Logger.getInstance()
+          .d(TAG, "Observing current download and installation without an intent");
       subscriptions.add(downloadAndInstallCurrentDownload(this, false, false).subscribe(
           hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
     }
@@ -109,6 +113,9 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   @Override public void onDestroy() {
+    Logger.getInstance()
+        .d(this.getClass()
+            .getName(), "InstallService.onDestroy");
     subscriptions.unsubscribe();
     presenter.onDestroy();
     openAppViewAction = null;
@@ -164,6 +171,11 @@ public class InstallService extends BaseService implements DownloadsNotification
             downloadAnalytics.startProgress(download);
           }
         })
+        .doOnNext(download -> Logger.getInstance()
+            .d(TAG, "received download: "
+                + download.getPackageName()
+                + " state: "
+                + download.getOverallDownloadStatus()))
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> installManager.moveCompletedDownloadFiles(download))
         .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
@@ -197,6 +209,8 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   private Completable stopForegroundAndInstall(Context context, Download download,
       boolean removeNotification, boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
+    Logger.getInstance()
+        .d(TAG, "Stopping download notification and starting installation");
     Installer installer = getInstaller();
     stopForeground(removeNotification);
     switch (download.getAction()) {

@@ -91,4 +91,8 @@ public interface AppsFragmentView extends View {
   void showAppcUpgradesList(List<App> list);
 
   void removeExcludedAppcUpgrades(List<App> excludedUpdatesList);
+
+  Observable<Void> onLoadAppcUpgradesSection();
+
+  Observable<Void> onLoadUpdatesSection();
 }

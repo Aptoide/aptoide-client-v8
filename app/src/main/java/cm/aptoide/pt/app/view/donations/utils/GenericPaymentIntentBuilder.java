@@ -93,9 +93,10 @@ public class GenericPaymentIntentBuilder {
 
   private static String buildUriData(String skuId, String packageName, String paymentType,
       String payload) throws UnsupportedEncodingException {
-    return "0x" + Hex.bytesToStringLowercase(
+    return "0x" + Hex.bytesToStringUppercase(
         new Gson().toJson(new TransactionData(paymentType, packageName, skuId, payload))
-            .getBytes("UTF-8"));
+            .getBytes("UTF-8"))
+        .toLowerCase();
   }
 
   /**

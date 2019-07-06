@@ -11,6 +11,7 @@ import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
@@ -62,7 +63,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
         appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService, promotionsNavigator, "");
+        permissionManager, permissionService, promotionsNavigator);
 
     lifecycleEvent = PublishSubject.create();
 
@@ -261,5 +262,44 @@ public class AppViewPresenterTest {
             .getRank()
             .name(), emptyEditorsChoiceAppViewViewModel.hasBilling(),
         emptyEditorsChoiceAppViewViewModel.hasAdvertising());
+  }
+
+  @Test public void handleAppcPromotionTest() {
+    Malware malware = new Malware();
+    malware.setRank(Malware.Rank.CRITICAL);
+    List<String> bdsFlags = new ArrayList<>();
+    AppViewViewModel emptyEditorsChoiceAppViewViewModel =
+        new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
+            "", true, malware, new AppFlags("", Collections.emptyList()),
+            Collections.<String>emptyList(), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), 121312312, "md5dajskdjas", "mypath", "myAltPath",
+            12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
+            new AppRating(0, 100, Collections.emptyList()), 1231231,
+            new AppRating(0, 100, Collections.emptyList()),
+            new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
+            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
+            "weburls", false, false, "paid path", "no", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
+            false, bdsFlags, "", "");
+    Promotion promotion = new Promotion(false, 10f, "cm.aptoide.pt", "install_prom",
+        Collections.singletonList(Promotion.ClaimAction.INSTALL));
+    PromotionViewModel promotionViewModel = new PromotionViewModel();
+    promotionViewModel.setPromotions(Collections.singletonList(promotion));
+    when(view.isAppViewReadyToDownload()).thenReturn(Observable.just(null));
+    when(appViewManager.loadAppViewViewModel()).thenReturn(
+        Single.just(emptyEditorsChoiceAppViewViewModel));
+    when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
+    when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
+    when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),
+        Promotion.ClaimAction.INSTALL)).thenReturn(promotion);
+
+    presenter.handleAppcPromotion();
+    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+
+    verify(view).showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(),
+        Promotion.ClaimAction.INSTALL, null);
+    verify(appViewAnalytics).sendPromotionImpression(promotion.getPromotionId());
+    verify(appViewManager).setAppcPromotionImpressionSent();
   }
 }

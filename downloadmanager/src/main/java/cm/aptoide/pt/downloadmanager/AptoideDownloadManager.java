@@ -95,7 +95,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Observable<Download> getDownloadsByMd5(String md5) {
     return downloadsRepository.getDownloadListByMd5(md5)
         .flatMap(downloads -> Observable.from(downloads)
-            .filter(download -> download != null || isFileMissingFromCompletedDownload(download))
+            .filter(download -> download != null && !isFileMissingFromCompletedDownload(download))
             .toList())
         .map(downloads -> {
           if (downloads.isEmpty()) {
@@ -104,7 +104,9 @@ public class AptoideDownloadManager implements DownloadManager {
             return downloads.get(0);
           }
         })
-        .distinctUntilChanged();
+        .distinctUntilChanged()
+        .doOnNext(download -> Logger.getInstance()
+            .d(TAG, "passing a download : "));
   }
 
   @Override public Observable<List<Download>> getDownloadsList() {
@@ -201,6 +203,11 @@ public class AptoideDownloadManager implements DownloadManager {
       for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
         if (!FileUtils.fileExists(fileToDownload.getFilePath())) {
           downloadState = Download.FILE_MISSING;
+          Logger.getInstance()
+              .d(TAG, "File is missing: "
+                  + fileToDownload.getFileName()
+                  + " file path: "
+                  + fileToDownload.getFilePath());
           break;
         }
       }
@@ -222,8 +229,12 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void removeAppDownloader(String md5) {
     AppDownloader appDownloader = appDownloaderMap.get(md5);
+    Logger.getInstance()
+        .d(TAG, "removing download manager");
     if (appDownloader != null) {
       appDownloader.stop();
+      Logger.getInstance()
+          .d(TAG, "removed download manager ");
       appDownloaderMap.remove(md5);
     }
   }

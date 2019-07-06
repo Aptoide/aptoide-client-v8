@@ -1,5 +1,7 @@
 package cm.aptoide.pt.install;
 
+import cm.aptoide.pt.packageinstaller.InstallStatus;
+
 /**
  * Created by trinkes on 30/06/2017.
  */
@@ -18,4 +20,6 @@ public interface InstallerAnalytics {
   void installationType(boolean isRootAllowed, boolean isRoot);
 
   void logInstallErrorEvent(String packageName, int versionCode, Exception e);
+
+  void sendMiuiInstallResultEvent(InstallStatus.Status status);
 }

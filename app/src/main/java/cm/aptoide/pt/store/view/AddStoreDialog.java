@@ -46,7 +46,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import cm.aptoide.pt.view.dialog.BaseDialog;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
@@ -62,7 +62,7 @@ import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class AddStoreDialog extends BaseDialog {
+public class AddStoreDialog extends BaseDialogFragment {
 
   public static final int PRIVATE_STORE_INVALID_CREDENTIALS_CODE = 21;
   public static final int PRIVATE_STORE_ERROR_CODE = 22;
@@ -140,14 +140,6 @@ public class AddStoreDialog extends BaseDialog {
     searchSuggestionManager = application.getSearchSuggestionManager();
   }
 
-  @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    bindViews(view);
-    setupSearch();
-    setupButtonHandlers();
-    dismissIfFocusIsLost();
-  }
-
   @Override public void onResume() {
     super.onResume();
     final Dialog dialog = getDialog();
@@ -172,6 +164,14 @@ public class AddStoreDialog extends BaseDialog {
       subscriptions.unsubscribe();
     }
     super.onDestroyView();
+  }
+
+  @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    bindViews(view);
+    setupSearch();
+    setupButtonHandlers();
+    dismissIfFocusIsLost();
   }
 
   private void dismissIfFocusIsLost() {

@@ -9,6 +9,48 @@
     <item name="android:windowAnimationStyle">@android:style/Animation</item>
   </style>
 
+  <style name="Theme.AppCompat.Transparent" parent="Theme.AppCompat">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:fitsSystemWindows">true</item>
+    <item name="listPreferredItemPaddingLeft">24dip</item>
+    <item name="listPreferredItemPaddingRight">24dip</item>
+  </style>
+
+  <style name="Aptoide.DialogTheme" parent="AppBaseTheme">
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowFrame">@null</item>
+    <item name="android:fitsSystemWindows">true</item>
+    <item name="android:windowTitleStyle">@style/RtlOverlay.DialogWindowTitle.AppCompat</item>
+    <item name="android:windowBackground">@drawable/dialog_bg</item>
+    <item name="android:windowIsFloating">true</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+    <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    <item name="android:windowMinWidthMajor">384dp</item>
+    <item name="android:windowMinWidthMinor">296dp</item>
+
+    <item name="windowActionBar">false</item>
+    <item name="windowActionModeOverlay">true</item>
+
+    <item name="android:listDivider">@null</item>
+
+    <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+    <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+    <item name="android:windowCloseOnTouchOutside">true</item>
+  </style>
+
+
   <style name="Widget.Aptoide.Card" parent="">
     <item name="cardCornerRadius">8.3dp</item>
     <item name="cardBackgroundColor">?attr/backgroundCardColor</item>

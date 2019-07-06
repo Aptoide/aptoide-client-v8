@@ -151,6 +151,7 @@ public class SearchResultPresenterTest {
         Observable.just(new Pair<>("a", searchQueryEvent)));
     when(searchQueryEvent.hasQuery()).thenReturn(true);
     when(searchQueryEvent.isSubmitted()).thenReturn(true);
+    when(searchQueryEvent.getQuery()).thenReturn("anyString");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -312,12 +313,11 @@ public class SearchResultPresenterTest {
     //When the user clicks on an item from the search result list
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultView.onViewItemClicked()).thenReturn(Observable.just(searchAppResultWrapper));
-    when(searchManager.recordAbTestAction(1)).thenReturn(Observable.just(true));
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");
     when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
-
+    when(searchResultModel.getStoreTheme()).thenReturn("non-empty");
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
@@ -365,6 +365,7 @@ public class SearchResultPresenterTest {
     when(searchResultModel.hasReachedBottomOfAllStores()).thenReturn(false);
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
+    when(searchResultModel.getCurrentQuery()).thenReturn("anyQuery");
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
     searchAppResultList.add(searchAppResult);
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
@@ -375,7 +376,7 @@ public class SearchResultPresenterTest {
 
     //Then it should display the loading more animation and load more
     verify(searchResultView).showLoadingMore();
-    verify(searchResultView).addAllStoresResult(null, searchAppResultList);
+    verify(searchResultView).addAllStoresResult(anyString(), eq(searchAppResultList));
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfAllStores(anyInt());
     verify(searchResultView).hideLoadingMore();
     verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
@@ -415,6 +416,7 @@ public class SearchResultPresenterTest {
     when(searchQueryEvent.hasQuery()).thenReturn(true);
     when(searchQueryEvent.isSubmitted()).thenReturn(true);
     when(searchQueryEvent.isSuggestion()).thenReturn(true);
+    when(searchQueryEvent.getQuery()).thenReturn("anyString");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -434,6 +436,7 @@ public class SearchResultPresenterTest {
     when(searchQueryEvent.hasQuery()).thenReturn(true);
     when(searchQueryEvent.isSubmitted()).thenReturn(true);
     when(searchQueryEvent.isSuggestion()).thenReturn(false);
+    when(searchQueryEvent.getQuery()).thenReturn("anyString");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

@@ -13,7 +13,8 @@ public class AbTestCacheValidatorTest {
     HashMap<String, ExperimentModel> localCache = new HashMap<>();
     localCache.put("experiment1", new ExperimentModel(new Experiment(), false));
     localCache.put("experiment2", new ExperimentModel(
-        new Experiment(System.currentTimeMillis() - 86600000, "payload", "", false), false));
+        new Experiment(System.currentTimeMillis() - Experiment.MAX_CACHE_TIME_IN_MILLIS - 1000,
+            "payload", "", false), false));
     localCache.put("experiment3", new ExperimentModel(new Experiment(), true));
     localCache.put("experiment4",
         new ExperimentModel(new Experiment(System.currentTimeMillis(), "payload", "", true),
@@ -29,6 +30,8 @@ public class AbTestCacheValidatorTest {
   }
 
   @Test public void invalidateExpiredExperimentTest() {
+    System.out.println("AbTestCacheValidatorTest.invalidateExpiredExperimentTest "
+        + cacheValidator.isExperimentValid("experiment2"));
     Assert.assertFalse(cacheValidator.isExperimentValid("experiment2"));
   }
 

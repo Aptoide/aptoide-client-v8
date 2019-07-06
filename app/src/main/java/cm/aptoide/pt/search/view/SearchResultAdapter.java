@@ -61,7 +61,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   @SuppressWarnings("unchecked") @Override
   public void onBindViewHolder(SearchResultItemView holder, int position) {
     try {
-      holder.setup(getItem(position), position);
+      holder.setup(getItem(position));
     } catch (ClassCastException e) {
       crashReport.log(e);
     }

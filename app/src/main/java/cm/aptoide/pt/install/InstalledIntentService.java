@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.CampaignAnalytics;
+import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -41,6 +42,7 @@ public class InstalledIntentService extends IntentService {
   private static final String TAG = InstalledIntentService.class.getName();
   @Inject InstallAnalytics installAnalytics;
   @Inject CampaignAnalytics campaignAnalytics;
+  @Inject AppcMigrationManager appcMigrationManager;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
@@ -113,6 +115,7 @@ public class InstalledIntentService extends IntentService {
     checkAndBroadcastReferrer(packageName);
     sendInstallEvent(packageName, packageInfo);
     sendCampaignConversion(packageName, packageInfo);
+    appcMigrationManager.persistCandidate(packageName);
   }
 
   protected void onPackageReplaced(String packageName) {
@@ -153,7 +156,8 @@ public class InstalledIntentService extends IntentService {
           if (storeMinimalAd != null) {
             return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
           } else {
-            return extractReferrer(packageName);
+            //return extractReferrer(packageName);
+            return null;
           }
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {

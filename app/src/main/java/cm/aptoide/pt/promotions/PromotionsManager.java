@@ -13,6 +13,9 @@ import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
+import cm.aptoide.pt.wallet.WalletAppProvider;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -32,13 +35,15 @@ public class PromotionsManager {
   private final PromotionsService promotionsService;
   private final InstalledRepository installedRepository;
   private final MoPubAdsManager moPubAdsManager;
+  private final WalletAppProvider walletAppProvider;
 
   public PromotionsManager(PromotionViewAppMapper promotionViewAppMapper,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, PromotionsAnalytics promotionsAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       PackageManager packageManager, PromotionsService promotionsService,
-      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager) {
+      InstalledRepository installedRepository, MoPubAdsManager moPubAdsManager,
+      WalletAppProvider walletAppProvider) {
     this.promotionViewAppMapper = promotionViewAppMapper;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
@@ -50,6 +55,7 @@ public class PromotionsManager {
     this.promotionsService = promotionsService;
     this.installedRepository = installedRepository;
     this.moPubAdsManager = moPubAdsManager;
+    this.walletAppProvider = walletAppProvider;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
@@ -60,6 +66,29 @@ public class PromotionsManager {
     return getPromotionApps(promotionsId).toObservable()
         .map(
             appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
+  }
+
+  public Observable<List<Promotion>> getPromotionsForPackage(String packageName) {
+    return promotionsService.getPromotionsForPackage(packageName)
+        .toObservable()
+        .flatMapIterable(list -> list)
+        .map(this::mapPromotionAction)
+        .toList();
+  }
+
+  // This locally defines what action does the user need to do to claim a promotions
+  // It should probably be refactored so it is given by the WS
+  private Promotion mapPromotionAction(Promotion promotion) {
+    switch (promotion.getPromotionId()) {
+      case "BONUS_MIGRATION_19":
+        promotion.setClaimActions(Collections.singletonList(Promotion.ClaimAction.MIGRATE));
+        break;
+      case "BONUS_GAME_WALLET_OFFER_19":
+        promotion.setClaimActions(
+            Arrays.asList(Promotion.ClaimAction.INSTALL, Promotion.ClaimAction.MIGRATE));
+        break;
+    }
+    return promotion;
   }
 
   private boolean isWalletInstalled() {
@@ -118,7 +147,8 @@ public class PromotionsManager {
         AnalyticsManager.Action.CLICK, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
-        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false);
+        downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
+        download.hasAppc());
   }
 
   public Completable pauseDownload(String md5) {
@@ -161,5 +191,25 @@ public class PromotionsManager {
             return "";
           }
         });
+  }
+
+  public Observable<WalletApp> getWalletApp() {
+    return walletAppProvider.getWalletApp();
+  }
+
+  /**
+   * Retrieves the first claimable promotion for an action
+   */
+  public Promotion getClaimablePromotion(List<Promotion> promotions,
+      Promotion.ClaimAction claimAction) {
+    Promotion claimablePromotion = null;
+    for (Promotion promotion : promotions) {
+      if (promotion.getClaimActions()
+          .contains(claimAction) && promotion.isClaimable()) {
+        claimablePromotion = promotion;
+        break;
+      }
+    }
+    return claimablePromotion;
   }
 }

@@ -125,7 +125,6 @@ import rx.subscriptions.Subscriptions;
 
       final AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(view);
       final AlertDialog dialog = builder.create();
-
       subscriber.add(Subscriptions.create(() -> {
         if (dialog != null && dialog.isShowing()) {
           dialog.dismiss();

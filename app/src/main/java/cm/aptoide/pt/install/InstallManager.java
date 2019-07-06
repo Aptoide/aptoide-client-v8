@@ -38,6 +38,7 @@ import rx.schedulers.Schedulers;
 
 public class InstallManager {
 
+  private static final String TAG = "InstallManager";
   private final AptoideDownloadManager aptoideDownloadManager;
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
@@ -84,8 +85,11 @@ public class InstallManager {
     installedRepository.remove(packageName, versionCode)
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          throwable.printStackTrace();
+        });
   }
 
   public void stopInstallation(String md5) {
@@ -119,8 +123,7 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
+    return aptoideDownloadManager.getDownloadsList()
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
@@ -161,14 +164,19 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false);
+    return install(download, false, false);
   }
 
-  public Completable defaultInstall(Download download) {
-    return install(download, true);
+  private Completable defaultInstall(Download download) {
+    return install(download, true, false);
   }
 
-  public Completable install(Download download, boolean forceDefaultInstall) {
+  public Completable splitInstall(Download download) {
+    return install(download, false, true);
+  }
+
+  private Completable install(Download download, boolean forceDefaultInstall,
+      boolean forceSplitInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -182,7 +190,7 @@ public class InstallManager {
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall,
-            packageInstallerManager.shouldSetInstallerPackageName(download)))
+            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
         .first()
         .toCompletable();
   }
@@ -191,7 +199,9 @@ public class InstallManager {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsByMd5(md5),
         installer.getState(packageName, versioncode), getInstallationType(packageName, versioncode),
         (download, installationState, installationType) -> createInstall(download,
-            installationState, md5, packageName, versioncode, installationType));
+            installationState, md5, packageName, versioncode, installationType))
+        .doOnNext(install -> Logger.getInstance()
+            .d(TAG, install.toString()));
   }
 
   private Install createInstall(Download download, InstallationState installationState, String md5,
@@ -269,6 +279,11 @@ public class InstallManager {
     int progress = 0;
     if (download != null) {
       progress = download.getOverallProgress();
+      Logger.getInstance()
+          .d(TAG, " download is not null " + progress);
+    } else {
+      Logger.getInstance()
+          .d(TAG, " download is null");
     }
     return progress;
   }
@@ -340,6 +355,9 @@ public class InstallManager {
           status = Install.InstallationStatus.IN_QUEUE;
           break;
       }
+    } else {
+      Logger.getInstance()
+          .d(TAG, "mapping a null Download state");
     }
     return status;
   }
@@ -492,7 +510,9 @@ public class InstallManager {
           } else {
             return Install.InstallationType.UPDATE;
           }
-        });
+        })
+        .doOnNext(installationType -> Logger.getInstance()
+            .d("AptoideDownloadManager", " emiting installation type"));
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
@@ -542,11 +562,13 @@ public class InstallManager {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return Observable.just(installedRepository.contains(packageName));
+    return installedRepository.isInstalled(packageName)
+        .first();
   }
 
   public Observable<Install> filterInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.empty();
@@ -556,7 +578,8 @@ public class InstallManager {
   }
 
   public Observable<Install> filterNonInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.just(item);
@@ -585,14 +608,23 @@ public class InstallManager {
 
   public void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      Logger.getInstance()
-          .d("AptoideDownloadManager", "trying to move file : "
-              + fileToDownload.getFileName()
-              + " "
-              + fileToDownload.getPackageName());
-      String newFilePath = getFilePathFromFileType(fileToDownload);
-      fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
-      fileToDownload.setPath(newFilePath);
+      if (!FileUtils.fileExists(getFilePathFromFileType(fileToDownload))) {
+        Logger.getInstance()
+            .d(TAG, "trying to move file : "
+                + fileToDownload.getFileName()
+                + " "
+                + fileToDownload.getPackageName());
+        String newFilePath = getFilePathFromFileType(fileToDownload);
+        fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
+        fileToDownload.setPath(newFilePath);
+      } else {
+        Logger.getInstance()
+            .d(TAG, "tried moving file: "
+                + fileToDownload.getFileName()
+                + " "
+                + fileToDownload.getPackageName()
+                + " but it was already moved");
+      }
     }
     downloadRepository.save(download);
   }
