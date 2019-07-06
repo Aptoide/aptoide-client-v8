@@ -9,12 +9,15 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.SettingsFragment;
+import cm.aptoide.pt.wallet.WalletInstallActivity;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = { ActivityModule.class, FlavourActivityModule.class })
 public interface ActivityComponent {
 
   void inject(MainActivity activity);
+
+  void inject(WalletInstallActivity activity);
 
   void inject(ActivityResultNavigator activityResultNavigator);
 

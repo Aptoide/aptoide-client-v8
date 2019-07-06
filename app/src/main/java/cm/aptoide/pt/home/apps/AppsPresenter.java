@@ -5,6 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -194,6 +195,7 @@ public class AppsPresenter implements Presenter {
   private void observeUpdatesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.onLoadUpdatesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getUpdateDownloadsList())
         .observeOn(viewScheduler)
@@ -206,6 +208,7 @@ public class AppsPresenter implements Presenter {
   private void observeAppcUpgradesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> view.onLoadAppcUpgradesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
         .observeOn(viewScheduler)
@@ -396,6 +399,8 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
+        .doOnNext(installs -> Logger.getInstance()
+            .d("Apps", "getting download apps"))
         .flatMap(__ -> appsManager.getDownloadApps())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showDownloadsList(list))
@@ -420,6 +425,8 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
+        .doOnNext(__ -> Logger.getInstance()
+            .d("Apps", "going to get available updates list"))
         .flatMap(__ -> appsManager.getUpdatesList(false))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showUpdatesList(list))

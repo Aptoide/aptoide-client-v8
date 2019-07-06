@@ -131,6 +131,13 @@
         android:windowSoftInputMode="adjustPan"></activity>
 
     <activity
+        android:name=".wallet.WalletInstallActivity"
+        android:excludeFromRecents="true"
+        android:taskAffinity=".wallet.WalletInstallActivity"
+        android:theme="@style/Aptoide.DialogTheme"
+        android:windowSoftInputMode="adjustPan"/>
+
+    <activity
         android:name="com.ironsource.sdk.controller.ControllerActivity"
         android:configChanges="orientation|screenSize"
         android:hardwareAccelerated="true"/>
@@ -254,6 +261,7 @@
     <activity
         android:name=".DeepLinkIntentReceiver"
         android:exported="true"
+        android:taskAffinity=".DeepLinkIntentReceiver"
         >
       <intent-filter>
         <action android:name="android.intent.action.VIEW"/>

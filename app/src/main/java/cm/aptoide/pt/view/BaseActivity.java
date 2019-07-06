@@ -12,7 +12,6 @@ import javax.inject.Named;
 
 public abstract class BaseActivity extends RxAppCompatActivity {
 
-  @Inject @Named("aptoide-theme") String theme;
   private ActivityComponent activityComponent;
   private boolean firstCreated;
 
@@ -20,8 +19,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     super.onCreate(savedInstanceState);
     firstCreated = savedInstanceState == null;
     getActivityComponent().inject(this);
-    ThemeUtils.setStatusBarThemeColor(this, theme);
-    ThemeUtils.setAptoideTheme(this, theme);
   }
 
   @Override protected void onDestroy() {

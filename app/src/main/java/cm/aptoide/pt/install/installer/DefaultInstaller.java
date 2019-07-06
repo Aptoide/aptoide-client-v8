@@ -32,6 +32,7 @@ import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootShell;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
@@ -158,7 +159,13 @@ public class DefaultInstaller implements Installer {
             return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
                 Installed.TYPE_UNKNOWN);
           }
-        });
+        })
+        .doOnNext(installationState -> Logger.getInstance()
+            .d("AptoideDownloadManager", "creating an installation state "
+                + installationState.getPackageName()
+                + " state is: "
+                + installationState.getStatus()))
+        .distinctUntilChanged();
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
@@ -259,7 +266,7 @@ public class DefaultInstaller implements Installer {
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
       if (shouldSetPackageInstaller) {
-        appInstaller.install(installation.getFile());
+        appInstaller.install(installation.getFile(), installation.getPackageName());
       } else {
         startInstallIntent(context, installation.getFile());
       }
@@ -275,13 +282,33 @@ public class DefaultInstaller implements Installer {
                   }
                   return null;
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
-                .doOnNext(installStatus -> updateInstallation(installation,
-                    shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                        : Installed.TYPE_DEFAULT, map(installStatus)))))
+                .filter(installStatus -> installation.getPackageName()
+                    .equalsIgnoreCase(installStatus.getPackageName()))
+                .distinctUntilChanged()
+                .doOnNext(installStatus -> {
+                  Logger.getInstance()
+                      .d("Installer", "status: " + installStatus.getStatus()
+                          .name() + " " + installation.getPackageName());
+                  updateInstallation(installation,
+                      shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                          : Installed.TYPE_DEFAULT, map(installStatus));
+                  if (installStatus.getStatus()
+                      .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
+                    startInstallIntent(context, installation.getFile());
+                  } else if (installStatus.getStatus()
+                      .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
+                    installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
+                  }
+                })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
             shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                 : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  private boolean isDeviceMIUI() {
+    return AptoideUtils.isDeviceMIUI();
   }
 
   private int map(InstallStatus installStatus) {

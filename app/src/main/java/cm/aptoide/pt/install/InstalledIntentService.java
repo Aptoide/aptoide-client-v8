@@ -156,7 +156,8 @@ public class InstalledIntentService extends IntentService {
           if (storeMinimalAd != null) {
             return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
           } else {
-            return extractReferrer(packageName);
+            //return extractReferrer(packageName);
+            return null;
           }
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {

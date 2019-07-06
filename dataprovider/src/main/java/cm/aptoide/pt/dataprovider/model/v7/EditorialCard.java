@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.model.v7;
 
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
+import cm.aptoide.pt.dataprovider.ws.v7.home.Appearance;
 import java.util.List;
 
 /**
@@ -32,6 +33,7 @@ public class EditorialCard extends BaseV7Response {
     private String title;
     private String caption;
     private String background;
+    private Appearance appearance;
 
     public Data() {
 
@@ -75,6 +77,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setTitle(String title) {
       this.title = title;
+    }
+
+    public Appearance getAppearance() {
+      return appearance;
+    }
+
+    public void setAppearance(Appearance appearance) {
+      this.appearance = appearance;
     }
 
     //3rd level

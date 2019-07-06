@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class DeepLinkAnalytics {
   public static final String FACEBOOK_APP_LAUNCH = "Aptoide Launch";
+  public static final String APPCOINS_WALLET_DEEPLINK = "AppCoins_Wallet_Deeplink";
   public static final String APP_LAUNCH = "Application Launch";
   private static final String NEW_UPDATES_NOTIFICATION = "New Updates Available";
   private static final String DOWNLOADING_UPDATES = "Downloading Updates";
@@ -108,5 +109,10 @@ public class DeepLinkAnalytics {
 
   private String getViewName(boolean isCurrent) {
     return navigationTracker.getViewName(isCurrent);
+  }
+
+  public void sendWalletDeepLinkEvent(String utmSource) {
+    analyticsManager.logEvent(createMap(SOURCE, utmSource), APPCOINS_WALLET_DEEPLINK,
+        AnalyticsManager.Action.AUTO, getViewName(true));
   }
 }

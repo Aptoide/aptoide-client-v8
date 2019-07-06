@@ -85,8 +85,11 @@ public class InstallManager {
     installedRepository.remove(packageName, versionCode)
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+        }, throwable -> {
+          CrashReport.getInstance()
+              .log(throwable);
+          throwable.printStackTrace();
+        });
   }
 
   public void stopInstallation(String md5) {
@@ -120,8 +123,7 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), (downloads, installeds) -> downloads)
+    return aptoideDownloadManager.getDownloadsList()
         .observeOn(Schedulers.io())
         .concatMap(downloadList -> Observable.from(downloadList)
             .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
@@ -162,14 +164,19 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false);
+    return install(download, false, false);
   }
 
-  public Completable defaultInstall(Download download) {
-    return install(download, true);
+  private Completable defaultInstall(Download download) {
+    return install(download, true, false);
   }
 
-  public Completable install(Download download, boolean forceDefaultInstall) {
+  public Completable splitInstall(Download download) {
+    return install(download, false, true);
+  }
+
+  private Completable install(Download download, boolean forceDefaultInstall,
+      boolean forceSplitInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -183,7 +190,7 @@ public class InstallManager {
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall,
-            packageInstallerManager.shouldSetInstallerPackageName(download)))
+            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
         .first()
         .toCompletable();
   }
@@ -503,7 +510,9 @@ public class InstallManager {
           } else {
             return Install.InstallationType.UPDATE;
           }
-        });
+        })
+        .doOnNext(installationType -> Logger.getInstance()
+            .d("AptoideDownloadManager", " emiting installation type"));
   }
 
   public Completable onUpdateConfirmed(Installed installed) {
@@ -553,11 +562,13 @@ public class InstallManager {
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return Observable.just(installedRepository.contains(packageName));
+    return installedRepository.isInstalled(packageName)
+        .first();
   }
 
   public Observable<Install> filterInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.empty();
@@ -567,7 +578,8 @@ public class InstallManager {
   }
 
   public Observable<Install> filterNonInstalled(Install item) {
-    return Observable.just(installedRepository.contains(item.getPackageName()))
+    return installedRepository.isInstalled(item.getPackageName())
+        .first()
         .flatMap(isInstalled -> {
           if (isInstalled) {
             return Observable.just(item);

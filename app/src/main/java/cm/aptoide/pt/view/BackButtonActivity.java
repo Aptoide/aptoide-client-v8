@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class BackButtonActivity extends ActivityView implements BackButton {
+public abstract class BackButtonActivity extends ThemedActivityView implements BackButton {
 
   private Set<BackButton.ClickHandler> clickHandlers;
 

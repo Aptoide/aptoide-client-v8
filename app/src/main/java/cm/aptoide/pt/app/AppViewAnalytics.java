@@ -301,15 +301,18 @@ public class AppViewAnalytics {
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.APPVIEW, action);
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action, offerResponseStatus);
+          editorsChoice, InstallType.INSTALL, action, offerResponseStatus, download.hasAppc());
+      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
+          DownloadAnalytics.AppContext.APPVIEW, action, false);
     }
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus);
+          editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
+          download.hasAppc());
+      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
+          DownloadAnalytics.AppContext.APPVIEW, action, true);
     }
   }
 

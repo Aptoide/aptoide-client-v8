@@ -8,6 +8,8 @@
   <string name="setting_appfiltertitle">Only show compatible apps</string>
   <string name="setting_appfiltersum">You\'ll only see apps compatible with this device</string>
   <string name="setting_mobile">Download only over wifi</string>
+  <string name="settings_beta_filter_setting_title">Beta versions</string>
+  <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
 
   <string name="setting_updates">Updates</string>
   <string name="settings_updates_filter_setting_title">Beta versions</string>

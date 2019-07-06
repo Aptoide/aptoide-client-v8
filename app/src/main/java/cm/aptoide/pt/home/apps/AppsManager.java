@@ -6,7 +6,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
@@ -22,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 
-import static cm.aptoide.pt.install.Install.InstallationType.INSTALL;
-import static cm.aptoide.pt.install.Install.InstallationType.INSTALLED;
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 /**
@@ -115,18 +113,27 @@ public class AppsManager {
 
   public Observable<List<App>> getDownloadApps() {
     return installManager.getInstallations()
-        .distinctUntilChanged()
+        .doOnNext(installs -> Logger.getInstance()
+            .d("Apps", "emit list of installs from getDownloadApps - before throttle"))
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
           }
           return Observable.just(installations)
+              .doOnNext(__ -> Logger.getInstance()
+                  .d("Apps", "emit list of installs from getDownloadApps - after throttle"))
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(item -> installManager.filterInstalled(item))
+              .doOnNext(item -> Logger.getInstance()
+                  .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
               .flatMap(item -> updatesManager.filterAppcUpgrade(item))
+              .doOnNext(item -> Logger.getInstance()
+                  .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
+              .doOnNext(__ -> Logger.getInstance()
+                  .d("Apps", "emit list of installs from getDownloadApps - after toList"))
               .map(installedApps -> appMapper.getDownloadApps(installedApps));
         });
   }
@@ -163,22 +170,23 @@ public class AppsManager {
   private void setupDownloadEvents(Download download,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false);
+        false, download.hasAppc());
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
+        download.hasAppc());
   }
 
   private Origin getOrigin(int action) {
@@ -260,45 +268,13 @@ public class AppsManager {
   }
 
   public Observable<List<App>> getInstalledDownloads() {
-    return installManager.fetchInstalled()
+    return installManager.getInstalledApps()
         .distinctUntilChanged()
-        .flatMapIterable(installedAppsList -> installedAppsList)
-        .flatMap(installedApp -> getDownloads(installedApp))
-        .toList()
-        .map(installedApps -> appMapper.getDownloadApps(installedApps));
-  }
-
-  private Observable<Install> getDownloads(Installed installedApp) {
-    return installManager.getInstallations()
-        .first()
-        .flatMap(installations -> {
-          if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
-          }
-          return Observable.just(installations)
-              .flatMapIterable(installs -> installs)
-              .filter(install -> install.getType() == INSTALL || install.getType() == INSTALLED)
-              .toList()
-              .flatMap(updates -> getMatchingInstalledUpdate(updates, installedApp));
-        });
+        .map(installedDownloads -> appMapper.getDownloadApps(installedDownloads));
   }
 
   public Completable refreshAllUpdates() {
     return updatesManager.refreshUpdates();
-  }
-
-  private Observable<Install> getMatchingInstalledUpdate(List<Install> updates,
-      Installed installedApp) {
-    for (Install update : updates) {
-      if (installedApp.getPackageName()
-          .equals(update.getPackageName())
-          && installedApp.getVersionName()
-          .equals(update.getVersionName())
-          && installedApp.getVersionCode() == update.getVersionCode()) {
-        return Observable.just(update);
-      }
-    }
-    return Observable.empty();
   }
 }
 

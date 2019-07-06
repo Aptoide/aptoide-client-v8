@@ -32,16 +32,16 @@ public final class AppInstaller {
     registerInstallResultBroadcastReceiver();
   }
 
-  public void install(File file) {
+  public void install(File file, String packageName) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      installWithPackageInstaller(file);
+      installWithPackageInstaller(file, packageName);
     } else {
-      installWithActionInstallPackageIntent(file);
+      installWithActionInstallPackageIntent(file, packageName);
     }
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void installWithPackageInstaller(File file) {
+  private void installWithPackageInstaller(File file, String packageName) {
     PackageInstaller.Session session = null;
     try {
       PackageInstaller packageInstaller = context.getPackageManager()
@@ -63,11 +63,11 @@ public final class AppInstaller {
         session.abandon();
       }
       installResultCallback.onInstallationResult(
-          new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR, e.getMessage()));
+          new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR, e.getMessage(), packageName));
     }
   }
 
-  private void installWithActionInstallPackageIntent(File file) {
+  private void installWithActionInstallPackageIntent(File file, String packageName) {
     Intent promptInstall = new Intent(Intent.ACTION_INSTALL_PACKAGE);
     promptInstall.putExtra(Intent.EXTRA_RETURN_RESULT, true);
     promptInstall.putExtra(Intent.EXTRA_INSTALLER_PACKAGE_NAME, context.getApplicationContext()
@@ -77,7 +77,7 @@ public final class AppInstaller {
     promptInstall.setFlags(
         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     installResultCallback.onInstallationResult(
-        new InstallStatus(InstallStatus.Status.INSTALLING, "Installing..."));
+        new InstallStatus(InstallStatus.Status.INSTALLING, "Installing...", packageName));
     context.startActivity(promptInstall);
   }
 
@@ -98,7 +98,8 @@ public final class AppInstaller {
               context.startActivity(confirmIntent);
             } catch (ActivityNotFoundException exception) {
               installResultCallback.onInstallationResult(
-                  new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found"));
+                  new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                      "n/a"));
             }
           }
         });
@@ -129,13 +130,13 @@ public final class AppInstaller {
     if (requestCode == AppInstaller.REQUEST_INSTALL) {
       if (resultCode == Activity.RESULT_OK) {
         installResultCallback.onInstallationResult(
-            new InstallStatus(InstallStatus.Status.SUCCESS, "Install succeeded"));
+            new InstallStatus(InstallStatus.Status.SUCCESS, "Install succeeded", "n/a"));
       } else if (resultCode == Activity.RESULT_CANCELED) {
         installResultCallback.onInstallationResult(
-            new InstallStatus(InstallStatus.Status.CANCELED, "Install canceled"));
+            new InstallStatus(InstallStatus.Status.CANCELED, "Install canceled", "n/a"));
       } else {
         installResultCallback.onInstallationResult(
-            new InstallStatus(InstallStatus.Status.FAIL, "Install failed"));
+            new InstallStatus(InstallStatus.Status.FAIL, "Install failed", "n/a"));
       }
     }
   }

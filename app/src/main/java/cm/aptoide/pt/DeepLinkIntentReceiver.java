@@ -33,6 +33,7 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
+import cm.aptoide.pt.wallet.WalletInstallActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -246,6 +247,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if (packageName.contains("pub:")) {
         packageName = packageName.substring(4);
       }
+    }
+    String utmSourceParameter = u.getQueryParameter("utm_source");
+    String appSourceParameter = u.getQueryParameter("app_source");
+    if (utmSourceParameter != null && appSourceParameter != null && (utmSourceParameter.equals(
+        "myappcoins") || utmSourceParameter.equals("appcoinssdk"))) {
+      return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
     }
     return startFromPackageName(packageName);
   }
@@ -471,6 +478,16 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+  }
+
+  public Intent startWalletInstallIntent(String packageName, String utmSourceParameter,
+      String appPackageName) {
+    Intent intent = new Intent(this, WalletInstallActivity.class);
+    intent.putExtra(DeepLinksKeys.WALLET_PACKAGE_NAME_KEY, packageName);
+    intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, appPackageName);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
+    return intent;
   }
 
   public Intent startFromPackageName(String packageName) {
@@ -707,6 +724,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String TITLE = "title";
     public static final String STORE_THEME = "storetheme";
     public static final String APK_FY = "APK_FY";
+
+    // Wallet Install Dialog
+    public static final String WALLET_PACKAGE_NAME_KEY = "wallet_package_name";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

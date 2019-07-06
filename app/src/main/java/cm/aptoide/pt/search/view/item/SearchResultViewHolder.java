@@ -28,7 +28,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private TextView storeTextView;
   private View bottomView;
   private SearchAppResult searchApp;
-  private int position;
   private CompositeSubscription subscriptions;
 
   public SearchResultViewHolder(View itemView, PublishRelay<SearchAppResultWrapper> onItemViewClick,
@@ -41,9 +40,8 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     bindViews(itemView);
   }
 
-  @Override public void setup(SearchAppResult result, int position) {
+  @Override public void setup(SearchAppResult result) {
     this.searchApp = result;
-    this.position = position;
     appInfoViewHolder.setInfo(result.hasAppcBilling(), result.getAverageRating(), false, false);
     setAppName();
     setDownloadCount();
@@ -99,7 +97,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)
-        .subscribe(
-            data -> onItemViewClick.call(new SearchAppResultWrapper(query, data, position))));
+        .subscribe(data -> onItemViewClick.call(
+            new SearchAppResultWrapper(query, data, getAdapterPosition()))));
   }
 }
