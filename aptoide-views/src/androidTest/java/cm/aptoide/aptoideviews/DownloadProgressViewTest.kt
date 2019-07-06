@@ -141,6 +141,20 @@ class DownloadProgressViewTest : BaseTestView() {
   }
 
   @Test
+  fun testInitialPausedState() {
+    activityRule.runOnUiThread {
+      downloadProgressView.reset()
+      downloadProgressView.pauseInstallation()
+    }
+
+    onView(progressBar).check(matches(withIndeterminate(false)))
+    onView(cancelButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(resumePauseButton).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(progressNumber).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+    onView(downloadStateText).check(matches(withText(R.string.appview_short_downloading)))
+  }
+
+  @Test
   fun testSetProgress_fromInProgressState() {
     activityRule.runOnUiThread {
       downloadProgressView.reset()
@@ -175,6 +189,17 @@ class DownloadProgressViewTest : BaseTestView() {
     onView(progressNumber).check(matches(withText("0%")))
 
     onView(resumePauseButton).perform(click()) // Resume
+    onView(progressNumber).check(matches(withText("37%")))
+  }
+
+  @Test
+  fun testSetProgress_fromInitialPausedState() {
+    activityRule.runOnUiThread {
+      downloadProgressView.reset()
+      downloadProgressView.pauseInstallation()
+      downloadProgressView.setProgress(37)
+    }
+
     onView(progressNumber).check(matches(withText("37%")))
   }
 
