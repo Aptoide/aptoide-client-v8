@@ -306,6 +306,14 @@ class DownloadProgressView : FrameLayout {
   }
 
   /**
+   * Notifies the view that the download is paused.
+   * It truly only does something if the download state is initially paused.
+   */
+  fun pauseDownload() {
+    stateMachine.transition(Event.PauseStart)
+  }
+
+  /**
    * Notifies the view that installation will now begin. This implies that the download has ended.
    * It changes the view to an Canceled state.
    */
@@ -313,9 +321,6 @@ class DownloadProgressView : FrameLayout {
     stateMachine.transition(Event.InstallStart)
   }
 
-  fun pauseInstallation() {
-    stateMachine.transition(Event.PauseStart)
-  }
 
   /**
    * Notifies the view to reset the view. Use this after installing an app.

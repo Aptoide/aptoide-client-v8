@@ -144,7 +144,7 @@ class DownloadProgressViewTest : BaseTestView() {
   fun testInitialPausedState() {
     activityRule.runOnUiThread {
       downloadProgressView.reset()
-      downloadProgressView.pauseInstallation()
+      downloadProgressView.pauseDownload()
     }
 
     onView(progressBar).check(matches(withIndeterminate(false)))
@@ -196,7 +196,7 @@ class DownloadProgressViewTest : BaseTestView() {
   fun testSetProgress_fromInitialPausedState() {
     activityRule.runOnUiThread {
       downloadProgressView.reset()
-      downloadProgressView.pauseInstallation()
+      downloadProgressView.pauseDownload()
       downloadProgressView.setProgress(37)
     }
 

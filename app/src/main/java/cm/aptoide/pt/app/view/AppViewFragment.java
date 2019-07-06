@@ -1726,7 +1726,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         downloadProgressView.startInstallation();
         break;
       case PAUSE:
-        downloadProgressView.pauseInstallation();
+        downloadProgressView.pauseDownload();
         break;
       case ERROR:
         showErrorDialog("", getString(R.string.error_occured));
