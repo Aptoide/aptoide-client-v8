@@ -9,7 +9,7 @@ data class WalletApp(
     val appName: String = "",
     val icon: String = "",
     val id: Long = -1,
-    val packageName: String? = null,
+    val packageName: String = "",
     val md5sum: String? = null,
     val versionCode: Int = -1,
     val versionName: String? = null,

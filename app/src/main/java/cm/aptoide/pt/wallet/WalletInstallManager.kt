@@ -69,10 +69,10 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                                   downloadAction: DownloadModel.Action?,
                                   appId: Long,
                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
-                                  packageName: String?,
+                                  packageName: String,
                                   developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
-    packageName?.let { walletInstallAnalytics.sendClickOnInstallButtonEvent(it, developer) }
+    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer)
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
