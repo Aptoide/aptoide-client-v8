@@ -113,6 +113,6 @@ public class DeepLinkAnalytics {
 
   public void sendWalletDeepLinkEvent(String utmSource) {
     analyticsManager.logEvent(createMap(SOURCE, utmSource), APPCOINS_WALLET_DEEPLINK,
-        AnalyticsManager.Action.AUTO, getViewName(true));
+        AnalyticsManager.Action.CLICK, "Application");
   }
 }

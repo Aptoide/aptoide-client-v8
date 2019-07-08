@@ -148,16 +148,17 @@ public class InstallAnalytics {
       AppContext context, Origin origin, boolean isMigration, boolean hasAppc) {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc);
-    createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration);
+    createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
+        hasAppc);
   }
 
   private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
       Origin origin, String packageName, int installingVersion, int campaignId,
       String abTestingGroup, List<String> fragmentNameList, boolean isMigration, boolean hasAppc) {
-    Map<String, Object> data = getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup);
+    Map<String, Object> data =
+        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc);
     data.put(MIGRATOR, isMigration);
     data.put(ORIGIN, origin);
-    data.put(APPC, hasAppc);
 
     String applicationInstallEventName = "";
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
@@ -198,7 +199,7 @@ public class InstallAnalytics {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup, Collections.emptyList(), isMigration, hasAppc);
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup, isMigration);
+        abTestingGroup, isMigration, hasAppc);
   }
 
   public void uninstallStarted(String packageName, AnalyticsManager.Action action,
@@ -214,8 +215,9 @@ public class InstallAnalytics {
 
   private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
       String packageName, int installingVersion, int campaignId, String abTestingGroup,
-      boolean isMigration) {
-    Map<String, Object> data = getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup);
+      boolean isMigration, boolean hasAppc) {
+    Map<String, Object> data =
+        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc);
     if (isMigration) {
       data.put(ORIGIN, UPDATE_TO_APPC);
     } else {
@@ -227,10 +229,10 @@ public class InstallAnalytics {
 
   @NonNull
   private Map<String, Object> getInstallEventsBaseBundle(String packageName, int campaignId,
-      String abTestingGroup) {
+      String abTestingGroup, boolean hasAppc) {
     ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     Map<String, Object> data = new HashMap<>();
-    data.put(APP, createApp(packageName));
+    data.put(APP, createApp(packageName, hasAppc));
     data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
     data.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
@@ -254,9 +256,10 @@ public class InstallAnalytics {
     return root;
   }
 
-  private Map<String, Object> createApp(String packageName) {
+  private Map<String, Object> createApp(String packageName, boolean hasAppc) {
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, packageName);
+    app.put(APPC, hasAppc);
     return app;
   }
 

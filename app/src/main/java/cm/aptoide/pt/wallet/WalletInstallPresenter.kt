@@ -22,6 +22,18 @@ class WalletInstallPresenter(val view: WalletInstallView,
     loadWalletInstall()
     handleCloseButtonClick()
     handleCancelDownloadButton()
+    handleAnalyticsContextSetup()
+  }
+
+  private fun handleAnalyticsContextSetup() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .doOnNext { walletInstallManager.setupAnalyticsHistoryTracker() }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {
+          it.printStackTrace()
+          view.dismissDialog()
+        })
   }
 
   private fun handleCancelDownloadButton() {
