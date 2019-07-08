@@ -79,7 +79,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
       }
       navigationTracker.registerScreen(historyTracker)
     }
-    shouldRegister = false;
+    shouldRegister = false
   }
 
   private fun getHistoryTracker(): ScreenTagHistory? {

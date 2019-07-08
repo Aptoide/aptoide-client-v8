@@ -104,7 +104,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         }.filter { isCanceled -> isCanceled }
   }
 
-  fun setupAnalyticsHistroryTracker() {
-    walletInstallAnalytics.setupHistoryTracker();
+  fun setupAnalyticsHistoryTracker() {
+    walletInstallAnalytics.setupHistoryTracker()
   }
 }

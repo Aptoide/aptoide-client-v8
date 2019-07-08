@@ -22,13 +22,13 @@ class WalletInstallPresenter(val view: WalletInstallView,
     loadWalletInstall()
     handleCloseButtonClick()
     handleCancelDownloadButton()
-    handleAnalyticsContextSetup();
+    handleAnalyticsContextSetup()
   }
 
   private fun handleAnalyticsContextSetup() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
-        .doOnNext { walletInstallManager.setupAnalyticsHistroryTracker() }
+        .doOnNext { walletInstallManager.setupAnalyticsHistoryTracker() }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {
           it.printStackTrace()
