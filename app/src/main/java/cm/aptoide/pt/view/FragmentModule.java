@@ -524,10 +524,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides AppsManager providesAppsManager(UpdatesManager updatesManager,
       InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
-      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
+      PromotionsManager promotionsManager) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
-        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager);
+        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
+        promotionsManager);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
