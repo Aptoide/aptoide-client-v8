@@ -15,7 +15,7 @@ public class AppCoinsManager {
     this.donationsService = donationsService;
   }
 
-  public Single<Boolean> hasAdvertising(String packageName, int versionCode) {
+  public Single<Boolean> hasActiveCampaign(String packageName, int versionCode) {
     return appCoinsService.isCampaignValid(packageName, versionCode);
   }
 

@@ -57,9 +57,8 @@ import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
-import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
@@ -617,7 +616,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     noNetworkErrorView.setVisibility(View.GONE);
   }
 
-  @Override public void showAppView(AppViewViewModel model) {
+  @Override public void showAppView(AppModel model) {
     collapsingToolbarLayout.setTitle(model.getAppName());
 
     appName.setText(model.getAppName());
@@ -722,7 +721,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return readMoreClick;
   }
 
-  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
+  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppModel app) {
     List<AppReview> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
@@ -882,13 +881,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return reviewsAutoScroll;
   }
 
-  @Override public void navigateToDeveloperWebsite(AppViewViewModel app) {
+  @Override public void navigateToDeveloperWebsite(AppModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperEmail(AppViewViewModel app) {
+  @Override public void navigateToDeveloperEmail(AppModel app) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri data = Uri.parse("mailto:" + app.getDeveloper()
         .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
@@ -896,13 +895,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     getContext().startActivity(intent);
   }
 
-  @Override public void navigateToDeveloperPrivacy(AppViewViewModel app) {
+  @Override public void navigateToDeveloperPrivacy(AppModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getPrivacy()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperPermissions(AppViewViewModel app) {
+  @Override public void navigateToDeveloperPermissions(AppModel app) {
     DialogPermissions dialogPermissions =
         DialogPermissions.newInstance(app.getAppName(), app.getVersionName(), app.getIcon(),
             AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
@@ -914,7 +913,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (!isFollowing) storeFollow.setText(R.string.followed);
   }
 
-  @Override public void showTrustedDialog(AppViewViewModel app) {
+  @Override public void showTrustedDialog(AppModel app) {
     DialogBadgeV7.newInstance(marketName, app.getMalware(), app.getAppName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
@@ -1051,19 +1050,19 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     });
   }
 
-  @Override
-  public Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName) {
+  @Override public Observable<Void> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName))
         .filter(response -> response.equals(YES))
-        .map(__ -> action);
+        .map(__ -> null);
   }
 
-  @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
-      String appName, double appc, float rating, String icon, int downloads) {
+  @Override
+  public Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
+      float rating, String icon, int downloads) {
     return createCustomDialogForApkfy(appName, appc, rating, icon, downloads).filter(
         response -> response.equals(YES))
-        .map(__ -> action);
+        .map(__ -> null);
   }
 
   @Override public void showApkfyElement(String appName) {

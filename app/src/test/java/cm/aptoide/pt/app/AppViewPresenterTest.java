@@ -55,8 +55,8 @@ public class AppViewPresenterTest {
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
-  private AppViewViewModel appViewViewModel;
-  private AppViewViewModel errorAppViewViewModel;
+  private AppModel appModel;
+  private AppModel errorAppModel;
   private DownloadAppViewModel downloadAppViewModel;
 
   @Before public void setupAppViewPresenter() {
@@ -71,13 +71,12 @@ public class AppViewPresenterTest {
     malware.setRank(Malware.Rank.CRITICAL);
     List<String> bdsFlags = new ArrayList<>();
 
-    appViewViewModel =
-        new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
-            "", true, malware, new AppFlags("", Collections.emptyList()),
-            Collections.<String>emptyList(), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), 121312312, "md5dajskdjas", "mypath", "myAltPath",
-            12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
-            new AppRating(0, 100, Collections.emptyList()), 1231231,
+    appModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
@@ -93,7 +92,7 @@ public class AppViewPresenterTest {
     downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
         new SimilarAppsViewModel(), new AppCoinsViewModel());
 
-    errorAppViewViewModel = new AppViewViewModel(DetailedAppRequestResult.Error.GENERIC);
+    errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -102,18 +101,16 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //When the app model is requested
-    when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
 
     //When the appCoinsInformation is requested
     when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-        appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
-        appViewViewModel.getStore()
-            .getId(),
-        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
+    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
+        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
+        appModel.getStore()
+            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -130,18 +127,16 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
 
     //When the appCoinsInformation is requested
     when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-        appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
-        appViewViewModel.getStore()
-            .getId(),
-        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
+    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
+        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
+        appModel.getStore()
+            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -149,25 +144,23 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //and the view should populated
-    verify(view).showAppView(appViewViewModel);
+    verify(view).showAppView(appModel);
   }
 
   @Test public void handleLoadAppViewWithError() {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(errorAppViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(errorAppModel));
 
     //When the appCoinsInformation is requested
     when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(errorAppViewViewModel.getMd5(),
-        errorAppViewViewModel.getPackageName(), errorAppViewViewModel.getVersionCode(),
-        errorAppViewViewModel.isPaid(), errorAppViewViewModel.getPay(),
-        errorAppViewViewModel.getSignature(), errorAppViewViewModel.getStore()
-            .getId(),
-        errorAppViewViewModel.hasAdvertising() || errorAppViewViewModel.hasBilling())).thenReturn(
+    when(appViewManager.loadDownloadAppViewModel(errorAppModel.getMd5(),
+        errorAppModel.getPackageName(), errorAppModel.getVersionCode(), errorAppModel.isPaid(),
+        errorAppModel.getPay(), errorAppModel.getSignature(), errorAppModel.getStore()
+            .getId(), errorAppModel.hasAdvertising() || errorAppModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -175,39 +168,37 @@ public class AppViewPresenterTest {
     //then the loading should be shown
     verify(view).showLoading();
     //the view should not be populated with the app info
-    verify(view, never()).showAppView(errorAppViewViewModel);
+    verify(view, never()).showAppView(errorAppModel);
     //and the error should be handled
-    verify(view).handleError(errorAppViewViewModel.getError());
+    verify(view).handleError(errorAppModel.getError());
   }
 
   @Test public void handleOpenAppViewEventsWithEditorsChoice() {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewViewModel()).thenReturn(Single.just(appViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
 
     //When the appCoinsInformation is requested
     when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appViewViewModel.getMd5(),
-        appViewViewModel.getPackageName(), appViewViewModel.getVersionCode(),
-        appViewViewModel.isPaid(), appViewViewModel.getPay(), appViewViewModel.getSignature(),
-        appViewViewModel.getStore()
-            .getId(),
-        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
+    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
+        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
+        appModel.getStore()
+            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
-    verify(appViewManager).sendEditorsChoiceClickEvent(appViewViewModel.getPackageName(),
-        appViewViewModel.getEditorsChoice());
+    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
+        appModel.getEditorsChoice());
     //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(appViewViewModel.getPackageName(),
-        appViewViewModel.getDeveloper()
-            .getName(), appViewViewModel.getMalware()
+    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+        appModel.getDeveloper()
+            .getName(), appModel.getMalware()
             .getRank()
-            .name(), appViewViewModel.hasBilling(), appViewViewModel.hasAdvertising());
+            .name(), appModel.hasBilling(), appModel.hasAdvertising());
   }
 
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
@@ -215,13 +206,12 @@ public class AppViewPresenterTest {
     malware.setRank(Malware.Rank.CRITICAL);
     List<String> bdsFlags = new ArrayList<>();
 
-    AppViewViewModel emptyEditorsChoiceAppViewViewModel =
-        new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
-            "", true, malware, new AppFlags("", Collections.emptyList()),
-            Collections.<String>emptyList(), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), 121312312, "md5dajskdjas", "mypath", "myAltPath",
-            12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
-            new AppRating(0, 100, Collections.emptyList()), 1231231,
+    AppModel emptyEditorsChoiceAppModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
@@ -233,48 +223,42 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewViewModel()).thenReturn(
-        Single.just(emptyEditorsChoiceAppViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(emptyEditorsChoiceAppModel));
 
     //When the appCoinsInformation is requested
     when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
 
     //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppViewViewModel.getMd5(),
-        emptyEditorsChoiceAppViewViewModel.getPackageName(),
-        emptyEditorsChoiceAppViewViewModel.getVersionCode(),
-        emptyEditorsChoiceAppViewViewModel.isPaid(), emptyEditorsChoiceAppViewViewModel.getPay(),
-        appViewViewModel.getSignature(), appViewViewModel.getStore()
-            .getId(),
-        appViewViewModel.hasAdvertising() || appViewViewModel.hasBilling())).thenReturn(
+    when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppModel.getMd5(),
+        emptyEditorsChoiceAppModel.getPackageName(), emptyEditorsChoiceAppModel.getVersionCode(),
+        emptyEditorsChoiceAppModel.isPaid(), emptyEditorsChoiceAppModel.getPay(),
+        appModel.getSignature(), appModel.getStore()
+            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
         Observable.just(downloadAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
     verify(appViewManager, never()).sendEditorsChoiceClickEvent(
-        emptyEditorsChoiceAppViewViewModel.getPackageName(),
-        emptyEditorsChoiceAppViewViewModel.getEditorsChoice());
+        emptyEditorsChoiceAppModel.getPackageName(), emptyEditorsChoiceAppModel.getEditorsChoice());
     //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(
-        emptyEditorsChoiceAppViewViewModel.getPackageName(),
-        emptyEditorsChoiceAppViewViewModel.getDeveloper()
-            .getName(), emptyEditorsChoiceAppViewViewModel.getMalware()
+    verify(appViewManager).sendAppViewOpenedFromEvent(emptyEditorsChoiceAppModel.getPackageName(),
+        emptyEditorsChoiceAppModel.getDeveloper()
+            .getName(), emptyEditorsChoiceAppModel.getMalware()
             .getRank()
-            .name(), emptyEditorsChoiceAppViewViewModel.hasBilling(),
-        emptyEditorsChoiceAppViewViewModel.hasAdvertising());
+            .name(), emptyEditorsChoiceAppModel.hasBilling(),
+        emptyEditorsChoiceAppModel.hasAdvertising());
   }
 
   @Test public void handleAppcPromotionTest() {
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
     List<String> bdsFlags = new ArrayList<>();
-    AppViewViewModel emptyEditorsChoiceAppViewViewModel =
-        new AppViewViewModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(),
-            "", true, malware, new AppFlags("", Collections.emptyList()),
-            Collections.<String>emptyList(), Collections.<String>emptyList(),
-            Collections.<String>emptyList(), 121312312, "md5dajskdjas", "mypath", "myAltPath",
-            12311, "9.0.0", "cm.aptoide.pt", 12311, 100210312,
-            new AppRating(0, 100, Collections.emptyList()), 1231231,
+    AppModel emptyEditorsChoiceAppModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
@@ -287,8 +271,7 @@ public class AppViewPresenterTest {
     PromotionViewModel promotionViewModel = new PromotionViewModel();
     promotionViewModel.setPromotions(Collections.singletonList(promotion));
     when(view.isAppViewReadyToDownload()).thenReturn(Observable.just(null));
-    when(appViewManager.loadAppViewViewModel()).thenReturn(
-        Single.just(emptyEditorsChoiceAppViewViewModel));
+    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(emptyEditorsChoiceAppModel));
     when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
     when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
     when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),

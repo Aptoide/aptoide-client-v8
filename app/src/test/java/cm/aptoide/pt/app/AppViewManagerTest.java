@@ -129,25 +129,25 @@ public class AppViewManagerTest {
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
+    AppModel appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
 
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedApp((long) 1, "anyString", "anyString");
 
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    //And a AppModel should be returned with a not null app, with no loading and no errors
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
+    appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Since there's a cached app there should not be any interactions with the appCenter
     verifyZeroInteractions(appCenter);
@@ -179,26 +179,26 @@ public class AppViewManagerTest {
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
+    AppModel appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
 
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromMd5("md5");
 
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    //And a AppModel should be returned with a not null app, with no loading and no errors
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
+    appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
 
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Since there's a cached app there should not be any interactions with the appCenter
     verifyZeroInteractions(appCenter);
@@ -232,25 +232,25 @@ public class AppViewManagerTest {
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
+    AppModel appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
 
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromUniqueName("uniqueName");
 
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    //And a AppModel should be returned with a not null app, with no loading and no errors
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
+    appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Since there's a cached app there should not be any interactions with the appCenter
     verifyZeroInteractions(appCenter);
@@ -281,25 +281,25 @@ public class AppViewManagerTest {
     when(store.getId()).thenReturn((long) 1);
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
+    AppModel appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
 
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedApp("", "");
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    //And a AppModel should be returned with a not null app, with no loading and no errors
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Test if app is cached
     when(store.getName()).thenReturn("");
-    appViewViewModel = appViewManager.loadAppViewViewModel()
+    appModel = appViewManager.loadAppViewModel()
         .toBlocking()
         .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
+    Assert.assertNotNull(appModel.getAppId());
+    Assert.assertEquals(false, appModel.isLoading());
+    Assert.assertEquals(false, appModel.hasError());
 
     //Since there's a cached app there should not be any interactions with the appCenter
     verifyZeroInteractions(appCenter);
@@ -324,9 +324,9 @@ public class AppViewManagerTest {
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
 
-    //Then an AppViewViewModel should be returned with a null app, with loading and no errors
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::isLoading)
+    //Then an AppModel should be returned with a null app, with loading and no errors
+    appViewManager.loadAppViewModel()
+        .map(AppModel::isLoading)
         .test()
         .assertValue(true);
   }
@@ -352,9 +352,9 @@ public class AppViewManagerTest {
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
 
-    //Then an AppViewViewModel should be returned with a null app, with no loading and an error
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::getError)
+    //Then an AppModel should be returned with a null app, with no loading and an error
+    appViewManager.loadAppViewModel()
+        .map(AppModel::getError)
         .test()
         .assertValue(DetailedAppRequestResult.Error.NETWORK);
   }
@@ -380,9 +380,9 @@ public class AppViewManagerTest {
     when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
         Single.just(detailedAppRequestResult));
 
-    //Then an AppViewViewModel should be returned with a null app, with no loading and with a generic error
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::getError)
+    //Then an AppModel should be returned with a null app, with no loading and with a generic error
+    appViewManager.loadAppViewModel()
+        .map(AppModel::getError)
         .test()
         .assertValue(DetailedAppRequestResult.Error.GENERIC);
   }
@@ -492,7 +492,7 @@ public class AppViewManagerTest {
         Single.just(detailedAppRequestResult));
     when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
 
-    appViewManager.loadAppViewViewModel()
+    appViewManager.loadAppViewModel()
         .subscribe();
 
     //Test loadAdsFromAppView
@@ -605,7 +605,7 @@ public class AppViewManagerTest {
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
-    appViewManager.loadAppViewViewModel()
+    appViewManager.loadAppViewModel()
         .subscribe();
 
     //DownloadApp Test

@@ -18,7 +18,7 @@ import java.util.List;
  * Created by D01 on 07/05/18.
  */
 
-public class AppViewViewModel {
+public class AppModel {
   private static final String BDS_STORE_FLAG = "STORE_BDS";
 
   private final AppMedia media;
@@ -67,23 +67,24 @@ public class AppViewViewModel {
   private final boolean loading;
   private final DetailedAppRequestResult.Error error;
   private final String marketName;
+  private final boolean isMature;
   private boolean hasBilling;
   private boolean hasAdvertising;
   private List<String> bdsFlags;
   private String campaignUrl;
   private String signature;
 
-  public AppViewViewModel(long appId, String appName, Store store, String storeTheme,
-      boolean isGoodApp, Malware malware, AppFlags appFlags, List<String> tags,
-      List<String> usedFeatures, List<String> usedPermissions, long fileSize, String md5,
-      String path, String pathAlt, int versionCode, String versionName, String packageName,
-      long size, int downloads, AppRating globalRating, int packageDownloads, AppRating rating,
-      AppDeveloper appDeveloper, String graphic, String icon, AppMedia media, String modified,
-      String appAdded, Obb obb, GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid,
-      String paidAppPath, String paymentStatus, boolean isLatestTrustedVersion, String uniqueName,
-      OpenType openType, double appc, SearchAdResult minimalAd, String editorsChoice,
-      String originTag, boolean isStoreFollowed, String marketName, boolean hasBilling,
-      boolean hasAdvertising, List<String> bdsFlags, String campaignUrl, String signature) {
+  public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
+      Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
+      List<String> usedPermissions, long fileSize, String md5, String path, String pathAlt,
+      int versionCode, String versionName, String packageName, long size, int downloads,
+      AppRating globalRating, int packageDownloads, AppRating rating, AppDeveloper appDeveloper,
+      String graphic, String icon, AppMedia media, String modified, String appAdded, Obb obb,
+      GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
+      String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
+      double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
+      boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
+      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -133,11 +134,12 @@ public class AppViewViewModel {
     this.bdsFlags = bdsFlags;
     this.campaignUrl = campaignUrl;
     this.signature = signature;
+    this.isMature = isMature;
     this.loading = false;
     this.error = null;
   }
 
-  public AppViewViewModel(boolean loading) {
+  public AppModel(boolean loading) {
     this.loading = loading;
     this.appId = -1;
     this.appName = "";
@@ -187,11 +189,12 @@ public class AppViewViewModel {
     this.error = null;
     this.hasBilling = false;
     this.hasAdvertising = false;
+    this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
   }
 
-  public AppViewViewModel(DetailedAppRequestResult.Error error) {
+  public AppModel(DetailedAppRequestResult.Error error) {
     this.error = error;
     this.appId = -1;
     this.appName = "";
@@ -242,8 +245,13 @@ public class AppViewViewModel {
     this.loading = false;
     this.hasBilling = false;
     this.hasAdvertising = false;
+    this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
+  }
+
+  public boolean isMature() {
+    return isMature;
   }
 
   public boolean isStoreFollowed() {
