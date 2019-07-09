@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.promotions.PromotionsManager;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -18,28 +20,33 @@ import static cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus.NO_ADS
 
 public class SeeMoreAppcManager {
 
+  private static final String MIGRATION_PROMOTION = "BONUS_MIGRATION_19";
+
   private final UpdatesManager updatesManager;
   private final InstallManager installManager;
   private final AppMapper appMapper;
   private final DownloadFactory downloadFactory;
   private final DownloadAnalytics downloadAnalytics;
   private final InstallAnalytics installAnalytics;
+  private final PromotionsManager promotionsManager;
 
   public SeeMoreAppcManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
-      InstallAnalytics installAnalytics) {
+      InstallAnalytics installAnalytics, PromotionsManager promotionsManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
     this.downloadFactory = downloadFactory;
     this.downloadAnalytics = downloadAnalytics;
     this.installAnalytics = installAnalytics;
+    this.promotionsManager = promotionsManager;
   }
 
-  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded) {
+  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded, boolean hasPromotion,
+      float appcValue) {
     return updatesManager.getAppcUpgradesList(isExcluded)
         .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
+        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, hasPromotion, appcValue));
   }
 
   public Observable<List<App>> getAppcUpgradeDownloadsList() {
@@ -102,6 +109,19 @@ public class SeeMoreAppcManager {
         })
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
+  }
+
+  public Observable<Pair<Boolean, Float>> migrationPromotionActive() {
+    return promotionsManager.getPromotionsModel(MIGRATION_PROMOTION)
+        .map(promotions -> new Pair<>(!promotions.getAppsList()
+            .isEmpty(), !promotions.getAppsList()
+            .isEmpty() ? promotions.getAppsList()
+            .get(0)
+            .getAppcValue() : 0));
+  }
+
+  public Observable<Void> excludeUpdate(App app) {
+    return updatesManager.excludeUpdate(((UpdateApp) app).getPackageName());
   }
 
   private void setupUpdateEvents(Download download, Origin origin,

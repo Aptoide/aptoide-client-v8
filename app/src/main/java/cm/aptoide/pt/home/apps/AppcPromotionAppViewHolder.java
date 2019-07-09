@@ -27,7 +27,7 @@ public class AppcPromotionAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     updateAppButton.setOnClickListener(
-        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
+        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)));
 
     itemView.setOnClickListener(
         __ -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));

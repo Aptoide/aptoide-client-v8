@@ -799,13 +799,15 @@ public class AppViewPresenter implements Presenter {
 
             return accountManager.accountStatus()
                 .first()
+                .flatMap(__ -> appViewManager.appViewAppDownloadModel())
+                .first()
                 .observeOn(viewScheduler)
-                .flatMapCompletable(account -> downloadApp(DownloadModel.Action.INSTALL,
-                    appViewModel).doOnCompleted(
-                    () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
-                        appViewModel.getDeveloper()
-                            .getName(), DownloadModel.Action.INSTALL.toString()))
-                    .observeOn(viewScheduler))
+                .flatMapCompletable(
+                    model -> downloadApp(model.getAction(), appViewModel).doOnCompleted(
+                        () -> appViewAnalytics.clickOnInstallButton(appViewModel.getPackageName(),
+                            appViewModel.getDeveloper()
+                                .getName(), DownloadModel.Action.INSTALL.toString()))
+                        .observeOn(viewScheduler))
                 .map(__ -> appViewModel);
           } else if (appViewModel.getOpenType()
               == AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {

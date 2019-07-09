@@ -94,6 +94,20 @@ public class AppsPresenter implements Presenter {
     handleBottomNavigationEvents();
 
     handleRefreshApps();
+
+    handleNavigateToAppViewWithDownload();
+  }
+
+  private void handleNavigateToAppViewWithDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.startDownloadInAppview())
+        .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((UpdateApp) app).getAppId(),
+            ((UpdateApp) app).getPackageName()))
+        .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleRefreshApps() {
@@ -208,6 +222,8 @@ public class AppsPresenter implements Presenter {
   private void observeAppcUpgradesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> appsManager.migrationPromotionActive())
+        .filter(hasPromotion -> !hasPromotion.first)
         .flatMap(created -> view.onLoadAppcUpgradesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())

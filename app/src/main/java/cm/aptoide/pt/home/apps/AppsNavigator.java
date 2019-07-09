@@ -33,6 +33,11 @@ public class AppsNavigator {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
   }
 
+  public void navigateToAppViewAndInstall(long appId, String packageName) {
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL,
+        "");
+  }
+
   public void navigateToMyAccount() {
     fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }

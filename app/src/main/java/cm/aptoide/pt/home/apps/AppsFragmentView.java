@@ -26,6 +26,8 @@ public interface AppsFragmentView extends View {
 
   Observable<App> pauseDownload();
 
+  Observable<App> startDownloadInAppview();
+
   Observable<AppClickEventWrapper> retryUpdate();
 
   Observable<AppClickEventWrapper> updateApp();

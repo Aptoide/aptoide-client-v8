@@ -227,6 +227,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
+  @Override public Observable<App> startDownloadInAppview() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)
+        .map(appClick -> appClick.getApp());
+  }
+
   @Override public Observable<AppClickEventWrapper> retryUpdate() {
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE
@@ -475,11 +481,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private boolean shouldShowAppsList() {
-    return showDownloads
-        && showUpdates
-        && showInstalled
-        && showUpgrades
-        && recyclerView.getVisibility() != View.VISIBLE;
+    return showDownloads && showUpdates && showInstalled && showUpgrades;
   }
 
   private void hideLoadingProgressBar() {

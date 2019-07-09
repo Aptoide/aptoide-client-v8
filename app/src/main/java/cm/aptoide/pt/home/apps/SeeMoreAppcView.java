@@ -30,4 +30,16 @@ interface SeeMoreAppcView extends View {
   void setAppcPausingDownloadState(App app);
 
   void showAppcUpgradesDownloadList(List<App> list);
+
+  Observable<App> startDownloadInAppview();
+
+  Observable<App> updateClick();
+
+  Observable<App> updateLongClick();
+
+  void showIgnoreUpdate();
+
+  Observable<Void> ignoreUpdate();
+
+  void showUnknownErrorMessage();
 }

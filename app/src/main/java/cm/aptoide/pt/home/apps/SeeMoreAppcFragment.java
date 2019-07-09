@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -20,6 +21,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
   private AppcAppsAdapter appcAppsAdapter;
   private PublishSubject<AppClick> appItemClicks;
   private Toolbar toolbar;
+  private RxAlertDialog ignoreUpdateDialog;
 
   public static Fragment newInstance() {
     return new SeeMoreAppcFragment();
@@ -74,7 +77,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
-
+    buildIgnoreUpdatesDialog();
     attachPresenter(seeMoreAppcPresenter);
   }
 
@@ -95,6 +98,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     swipeRefreshLayout = null;
     appcAppsRecyclerView = null;
     appcAppsAdapter = null;
+    ignoreUpdateDialog = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -178,5 +182,45 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     if (updatesDownloadList != null && !updatesDownloadList.isEmpty()) {
       appcAppsAdapter.addApps(updatesDownloadList);
     }
+  }
+
+  @Override public Observable<App> startDownloadInAppview() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> updateClick() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_CLICK)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public Observable<App> updateLongClick() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_LONG_CLICK)
+        .map(appClick -> appClick.getApp());
+  }
+
+  @Override public void showIgnoreUpdate() {
+    ignoreUpdateDialog.show();
+  }
+
+  @Override public Observable<Void> ignoreUpdate() {
+    return ignoreUpdateDialog.positiveClicks()
+        .map(__ -> null);
+  }
+
+  @Override public void showUnknownErrorMessage() {
+    Snackbar.make(this.getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT)
+        .show();
+  }
+
+  private void buildIgnoreUpdatesDialog() {
+    ignoreUpdateDialog =
+        new RxAlertDialog.Builder(getContext()).setTitle(R.string.apps_title_ignore_updates)
+            .setPositiveButton(R.string.apps_button_ignore_updates_yes)
+            .setNegativeButton(R.string.apps_button_ignore_updates_no)
+            .build();
   }
 }
