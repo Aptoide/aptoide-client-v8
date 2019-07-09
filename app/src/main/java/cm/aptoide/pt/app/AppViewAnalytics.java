@@ -301,19 +301,40 @@ public class AppViewAnalytics {
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    if (downloadAction == DownloadModel.Action.INSTALL) {
-      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
-          editorsChoice, InstallType.INSTALL, action, offerResponseStatus, download.hasAppc());
-      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, false);
-    }
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
           download.hasAppc());
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true);
+    } else {
+      downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
+          editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
+          download.hasAppc());
+      downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
+          DownloadAnalytics.AppContext.APPVIEW, action, false);
     }
+  }
+
+  private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {
+    InstallType installType = InstallType.INSTALL;
+    switch (downloadAction) {
+      case DOWNGRADE:
+        installType = InstallType.DOWNGRADE;
+        break;
+      case INSTALL:
+        installType = InstallType.INSTALL;
+        break;
+      case UPDATE:
+        installType = InstallType.UPDATE;
+        break;
+      case PAY:
+      case MIGRATE:
+      case OPEN:
+        throw new IllegalStateException(
+            "Mapping an invalid download action " + downloadAction.name());
+    }
+    return installType;
   }
 
   public void sendDownloadPauseEvent(String packageName) {
