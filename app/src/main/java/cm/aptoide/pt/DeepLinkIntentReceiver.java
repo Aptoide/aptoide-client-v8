@@ -250,8 +250,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     String utmSourceParameter = u.getQueryParameter("utm_source");
     String appSourceParameter = u.getQueryParameter("app_source");
-    if (utmSourceParameter != null && appSourceParameter != null && (utmSourceParameter.equals(
-        "myappcoins") || utmSourceParameter.equals("appcoinssdk"))) {
+    if (utmSourceParameter != null && (utmSourceParameter.equals("myappcoins")
+        || utmSourceParameter.equals("appcoinssdk")) && "com.appcoins.wallet".equals(packageName)) {
       return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
     }
     return startFromPackageName(packageName);

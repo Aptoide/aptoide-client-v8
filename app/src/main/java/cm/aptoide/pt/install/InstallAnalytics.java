@@ -179,7 +179,7 @@ public class InstallAnalytics {
           new InstallEvent(data, applicationInstallEventName, context.name(), action));
     }
     cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
-        new InstallEvent(data, applicationInstallEventName, context.name(), action));
+        new InstallEvent(data, APPLICATION_INSTALL, context.name(), action));
   }
 
   private void createMigrationInstallEvent(AnalyticsManager.Action action, AppContext context,
