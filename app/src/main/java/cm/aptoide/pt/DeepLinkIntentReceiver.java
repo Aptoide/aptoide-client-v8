@@ -250,11 +250,19 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     String utmSourceParameter = u.getQueryParameter("utm_source");
     String appSourceParameter = u.getQueryParameter("app_source");
-    if (utmSourceParameter != null && (utmSourceParameter.equals("myappcoins")
-        || utmSourceParameter.equals("appcoinssdk")) && "com.appcoins.wallet".equals(packageName)) {
-      return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
+    if (utmSourceParameter != null
+        && isFromAppCoins(utmSourceParameter)
+        && "com.appcoins.wallet".equals(packageName)) {
+      deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
+      if (utmSourceParameter.equals("appcoinssdk")) {
+        return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
+      }
     }
     return startFromPackageName(packageName);
+  }
+
+  private boolean isFromAppCoins(String utmSourceParameter) {
+    return utmSourceParameter.equals("myappcoins") || utmSourceParameter.equals("appcoinssdk");
   }
 
   private Intent dealWithAptoideXml(String uri) {
@@ -486,7 +494,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     intent.putExtra(DeepLinksKeys.WALLET_PACKAGE_NAME_KEY, packageName);
     intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, appPackageName);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
     return intent;
   }
 
