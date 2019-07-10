@@ -84,7 +84,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     if (bottomNavigationActivity != null) {
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
-    recyclerView = (RecyclerView) view.findViewById(R.id.fragment_apps_recycler_view);
+    recyclerView = view.findViewById(R.id.fragment_apps_recycler_view);
     recyclerView.setNestedScrollingEnabled(false);
     adapter =
         new AppsAdapter(new ArrayList<>(), new AppsCardViewHolderFactory(appItemClicks, updateAll));
@@ -96,14 +96,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
     appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks, APPC_UPDATES_LIMIT);
 
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_apps_swipe_container);
+    swipeRefreshLayout = view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar = view.findViewById(R.id.progress_bar);
     progressBar.setVisibility(View.VISIBLE);
     setupRecyclerView();
     buildIgnoreUpdatesDialog();
-    userAvatar = (ImageView) view.findViewById(R.id.user_actionbar_icon);
+    userAvatar = view.findViewById(R.id.user_actionbar_icon);
 
     attachPresenter(appsPresenter);
   }
