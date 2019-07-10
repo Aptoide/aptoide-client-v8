@@ -258,6 +258,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   public void startProgress(Download download) {
     cache.get(download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME)
         .setHadProgress(true);
+    cache.get(download.getMd5() + DOWNLOAD_COMPLETE_EVENT)
+        .setHadProgress(true);
   }
 
   public void installClicked(String md5, String packageName, String trustedValue,
