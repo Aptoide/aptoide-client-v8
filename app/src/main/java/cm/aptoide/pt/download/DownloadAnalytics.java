@@ -158,7 +158,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   private void sendDownloadEvent(String downloadCacheKey) {
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
-    if (downloadEvent != null) {
+    if (downloadEvent != null && downloadEvent.isHadProgress()) {
       analyticsManager.logEvent(downloadEvent.getData(), downloadEvent.getEventName(),
           downloadEvent.getAction(), downloadEvent.getContext());
       cache.remove(downloadCacheKey);
