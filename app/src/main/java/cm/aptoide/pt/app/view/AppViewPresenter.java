@@ -1088,14 +1088,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(created -> view.isAppViewReadyToDownload())
-        .flatMap(create -> appViewManager.loadAppViewViewModel()
-            .toObservable())
-        .filter(app -> !app.isLoading())
-        .flatMap(app -> appViewManager.loadDownloadAppViewModel(app.getMd5(), app.getPackageName(),
-            app.getVersionCode(), app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
-                .getId(), app.hasAdvertising() || app.hasBilling())
+        .flatMap(app -> appViewManager.observeAppViewModel()
             .observeOn(viewScheduler)
-            .doOnNext(model -> view.showDownloadAppModel(model, app.hasDonations())))
+            .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
+                model.getAppCoinsViewModel())))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

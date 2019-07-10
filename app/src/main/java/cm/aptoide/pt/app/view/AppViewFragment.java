@@ -696,8 +696,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
-    downloadInfoLayout.setVisibility(View.GONE);
-    install.setVisibility(View.VISIBLE);
     install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
@@ -1644,9 +1642,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations) {
-    DownloadModel downloadModel = model.getDownloadModel();
-    AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
+  @Override public void showDownloadAppModel(DownloadModel downloadModel,
+      AppCoinsViewModel appCoinsViewModel) {
     this.action = downloadModel.getAction();
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();

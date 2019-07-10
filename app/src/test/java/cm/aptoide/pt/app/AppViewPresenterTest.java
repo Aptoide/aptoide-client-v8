@@ -118,7 +118,8 @@ public class AppViewPresenterTest {
     //Then the loading should be shown
     verify(view).showLoading();
     //Then should set the download information
-    verify(view).showDownloadAppModel(downloadAppViewModel, false);
+    verify(view).showDownloadAppModel(appViewModel.getDownloadModel(),
+        appViewModel.getAppCoinsViewModel());
     //Then should set the download ready to download
     verify(view).readyToDownload();
   }

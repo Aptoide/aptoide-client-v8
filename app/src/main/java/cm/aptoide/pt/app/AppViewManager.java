@@ -195,15 +195,6 @@ public class AppViewManager {
     return moPubAdsManager.recordInterstitialAdClick();
   }
 
-  public Observable<DownloadAppViewModel> loadDownloadAppViewModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
-      boolean hasAppc) {
-    return loadDownloadModel(md5, packageName, versionCode, paidApp, pay, signature, storeId,
-        hasAppc).map(
-        downloadModel -> new DownloadAppViewModel(downloadModel, cachedSimilarAppsViewModel,
-            cachedAppcSimilarAppsViewModel, cachedAppCoinsViewModel));
-  }
-
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
     return flagManager.flagApk(storeName, md5, type.name()
         .toLowerCase())
@@ -422,19 +413,9 @@ public class AppViewManager {
         .flatMap(this::shouldLoadAds);
   }
 
-  public Observable<DownloadModel> appViewAppDownloadModel() {
-    return loadAppViewViewModel().toObservable()
-        .flatMap(app -> loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(),
-            app.isPaid(), app.getPay(), app.getSignature(), app.getStore()
-                .getId(), app.hasAdvertising() || app.hasBilling()));
-  }
-
   public Observable<PromotionViewModel> loadPromotionViewModel() {
     Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
     if (cachedPromotionViewModel != null) {
-      Observable<DownloadModel> downloadModel = appViewAppDownloadModel();
-      Observable<Boolean> isAppMigrated =
-          appcMigrationManager.isAppMigrated(cachedApp.getPackageName());
       Observable<PromotionViewModel> cachedViewModel = Observable.just(cachedPromotionViewModel);
       Observable<AppViewModel> appViewModel = observeAppViewModel();
       return Observable.combineLatest(cachedViewModel, appViewModel,
