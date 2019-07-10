@@ -139,8 +139,7 @@ public class AppsPresenter implements Presenter {
           if (app.getType() == App.Type.DOWNLOAD) {
             appsNavigator.navigateToAppView(((DownloadApp) app).getMd5());
           } else {
-            appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
-                ((UpdateApp) app).getPackageName());
+            appsNavigator.navigateToAppView(((UpdateApp) app).getMd5());
           }
         })
         .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
