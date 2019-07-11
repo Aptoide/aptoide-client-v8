@@ -119,24 +119,23 @@ public class Home {
   }
 
   private HomePromotionsWrapper mapPromotions(PromotionsModel promotionsModel) {
-    int promotions = 0;
+    int unclaimedPromotions = 0;
     List<PromotionApp> apps = promotionsModel.getAppsList();
     float unclaimedAppcValue = 0;
-    float totalAppcValue = 0;
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
-        totalAppcValue += app.getAppcValue();
         if (!app.isClaimed()) {
-          promotions++;
+          unclaimedPromotions++;
           unclaimedAppcValue += app.getAppcValue();
         }
       }
     }
 
     return new HomePromotionsWrapper(promotionsModel.getTitle(),
-        promotionsModel.getFeatureGraphic(), !apps.isEmpty(), promotions, unclaimedAppcValue,
+        promotionsModel.getFeatureGraphic(), !apps.isEmpty(), unclaimedPromotions,
+        unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
-        totalAppcValue);
+        promotionsModel.getTotalAppcValue());
   }
 
   public Single<Boolean> shouldLoadNativeAd() {
