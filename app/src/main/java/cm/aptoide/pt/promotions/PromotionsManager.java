@@ -14,7 +14,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.wallet.WalletAppProvider;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -67,8 +66,7 @@ public class PromotionsManager {
     return promotionsService.getPromotions(promotionsType)
         .flatMap(promotions -> {
           if (promotions.isEmpty()) {
-            return Single.just(new ArrayList<PromotionApp>())
-                .map(__ -> PromotionsModel.ofError());
+            return Single.just(PromotionsModel.ofError());
           }
           PromotionMeta meta = promotions.get(0);
           return getPromotionApps(meta.getPromotionId()).map(
