@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -57,7 +56,8 @@ public class AppViewPresenterTest {
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private AppModel appModel;
   private AppModel errorAppModel;
-  private DownloadAppViewModel downloadAppViewModel;
+  private AppViewModel appViewModel;
+  private AppViewModel errorAppViewModel;
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
@@ -83,16 +83,21 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "");
+            "marketName", false, false, bdsFlags, "", "", false);
+
+    errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
 
-    downloadAppViewModel = new DownloadAppViewModel(downloadModel, new SimilarAppsViewModel(),
-        new SimilarAppsViewModel(), new AppCoinsViewModel());
+    appViewModel =
+        new AppViewModel(appModel, downloadModel, new AppCoinsViewModel(false, false, false),
+            new MigrationModel(false));
 
-    errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
+    errorAppViewModel =
+        new AppViewModel(errorAppModel, downloadModel, new AppCoinsViewModel(false, false, false),
+            new MigrationModel(false));
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -100,18 +105,9 @@ public class AppViewPresenterTest {
   @Test public void handleLoadDownloadAppViewModel() {
     //Given an initialized presenter
     presenter.handleFirstLoad();
-    //When the app model is requested
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
 
     //When the appCoinsInformation is requested
-    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
-
-    //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
-        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
-        appModel.getStore()
-            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
-        Observable.just(downloadAppViewModel));
+    when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -128,17 +124,7 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
-
-    //When the appCoinsInformation is requested
-    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
-
-    //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
-        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
-        appModel.getStore()
-            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
-        Observable.just(downloadAppViewModel));
+    when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -152,17 +138,7 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(errorAppModel));
-
-    //When the appCoinsInformation is requested
-    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
-
-    //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(errorAppModel.getMd5(),
-        errorAppModel.getPackageName(), errorAppModel.getVersionCode(), errorAppModel.isPaid(),
-        errorAppModel.getPay(), errorAppModel.getSignature(), errorAppModel.getStore()
-            .getId(), errorAppModel.hasAdvertising() || errorAppModel.hasBilling())).thenReturn(
-        Observable.just(downloadAppViewModel));
+    when(appViewManager.getAppViewModel()).thenReturn(Single.just(errorAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -178,17 +154,7 @@ public class AppViewPresenterTest {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(appModel));
-
-    //When the appCoinsInformation is requested
-    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
-
-    //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(appModel.getMd5(), appModel.getPackageName(),
-        appModel.getVersionCode(), appModel.isPaid(), appModel.getPay(), appModel.getSignature(),
-        appModel.getStore()
-            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
-        Observable.just(downloadAppViewModel));
+    when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
@@ -219,23 +185,18 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags, "", "");
+            false, bdsFlags, "", "", false);
+    DownloadModel downloadModel =
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            null);
+    AppViewModel editorsChoiceAppViewModel =
+        new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
+            new AppCoinsViewModel(false, false, false), new MigrationModel(false));
 
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(emptyEditorsChoiceAppModel));
-
-    //When the appCoinsInformation is requested
-    when(appViewManager.loadAppCoinsInformation()).thenReturn(Completable.complete());
-
-    //when the download model is requested
-    when(appViewManager.loadDownloadAppViewModel(emptyEditorsChoiceAppModel.getMd5(),
-        emptyEditorsChoiceAppModel.getPackageName(), emptyEditorsChoiceAppModel.getVersionCode(),
-        emptyEditorsChoiceAppModel.isPaid(), emptyEditorsChoiceAppModel.getPay(),
-        appModel.getSignature(), appModel.getStore()
-            .getId(), appModel.hasAdvertising() || appModel.hasBilling())).thenReturn(
-        Observable.just(downloadAppViewModel));
+    when(appViewManager.getAppViewModel()).thenReturn(Single.just(editorsChoiceAppViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
@@ -254,7 +215,7 @@ public class AppViewPresenterTest {
     Malware malware = new Malware();
     malware.setRank(Malware.Rank.CRITICAL);
     List<String> bdsFlags = new ArrayList<>();
-    AppModel emptyEditorsChoiceAppModel =
+    AppModel appModel =
         new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
             malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
             Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
@@ -266,13 +227,21 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
-            false, bdsFlags, "", "");
+            true, bdsFlags, "", "", false);
+    DownloadModel downloadModel =
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
+            null);
+    AppViewModel appViewModel =
+        new AppViewModel(appModel, downloadModel, new AppCoinsViewModel(false, false, false),
+            new MigrationModel(false));
+
     Promotion promotion = new Promotion(false, 10f, "cm.aptoide.pt", "install_prom",
         Collections.singletonList(Promotion.ClaimAction.INSTALL));
     PromotionViewModel promotionViewModel = new PromotionViewModel();
     promotionViewModel.setPromotions(Collections.singletonList(promotion));
+    promotionViewModel.setAppViewModel(appViewModel);
     when(view.isAppViewReadyToDownload()).thenReturn(Observable.just(null));
-    when(appViewManager.loadAppViewModel()).thenReturn(Single.just(emptyEditorsChoiceAppModel));
+    when(appViewManager.getAppModel()).thenReturn(Single.just(appModel));
     when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
     when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
     when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),
@@ -282,7 +251,7 @@ public class AppViewPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     verify(view).showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(),
-        Promotion.ClaimAction.INSTALL, null);
+        Promotion.ClaimAction.INSTALL, downloadModel);
     verify(appViewAnalytics).sendPromotionImpression(promotion.getPromotionId());
     verify(appViewManager).setAppcPromotionImpressionSent();
   }
