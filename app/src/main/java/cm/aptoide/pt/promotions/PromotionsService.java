@@ -20,7 +20,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
-import rx.functions.Func1;
 
 public class PromotionsService {
   private static final String WRONG_CAPTCHA = "PROMOTION-1";
@@ -109,26 +108,24 @@ public class PromotionsService {
     return GetPromotionsRequest.of(type, bodyInterceptorPoolV7, okHttpClient, converterFactory,
         tokenInvalidator, sharedPreferences)
         .observe()
-        .map(promotionsResult())
+        .map(promotionsResponse -> map(promotionsResponse))
         .toSingle();
   }
 
-  @NonNull private Func1<GetPromotionsResponse, List<PromotionMeta>> promotionsResult() {
-    return promotions -> {
-      List<PromotionMeta> promotionList = new ArrayList<>();
-      if (promotions.getDataList() == null
-          || promotions.getDataList()
-          .getList() == null) {
-        return promotionList;
-      }
-      for (GetPromotionsResponse.PromotionModel promotionModel : promotions.getDataList()
-          .getList()) {
-        promotionList.add(
-            new PromotionMeta(promotionModel.getTitle(), promotionModel.getPromotionId(),
-                promotionModel.getType(), promotionModel.getBackground()));
-      }
+  @NonNull private List<PromotionMeta> map(GetPromotionsResponse promotions) {
+    List<PromotionMeta> promotionList = new ArrayList<>();
+    if (promotions.getDataList() == null
+        || promotions.getDataList()
+        .getList() == null) {
       return promotionList;
-    };
+    }
+    for (GetPromotionsResponse.PromotionModel promotionModel : promotions.getDataList()
+        .getList()) {
+      promotionList.add(
+          new PromotionMeta(promotionModel.getTitle(), promotionModel.getPromotionId(),
+              promotionModel.getType(), promotionModel.getBackground()));
+    }
+    return promotionList;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
