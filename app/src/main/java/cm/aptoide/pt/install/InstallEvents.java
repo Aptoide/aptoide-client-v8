@@ -89,6 +89,10 @@ public class InstallEvents implements InstallerAnalytics {
             .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
   }
 
+  @Override public void logInstallCancelEvent(String packageName, int versionCode) {
+    installAnalytics.logInstallCancelEvent(packageName, versionCode);
+  }
+
   @Override public void sendMiuiInstallResultEvent(InstallStatus.Status status) {
     Map<String, Object> parameters = new HashMap<>();
     String key = "successful_installation_type";
