@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PromotionsModel {
 
+  private final String promotionId;
   private final List<PromotionApp> appsList;
   private final int totalAppcValue;
   private final String title;
@@ -12,8 +13,9 @@ public class PromotionsModel {
   private final boolean isWalletInstalled;
   private final boolean isError;
 
-  public PromotionsModel(List<PromotionApp> appsList, int totalAppcValue, String title,
-      String featureGraphic, boolean isWalletInstalled, boolean isError) {
+  public PromotionsModel(String promotionId, List<PromotionApp> appsList, int totalAppcValue,
+      String title, String featureGraphic, boolean isWalletInstalled, boolean isError) {
+    this.promotionId = promotionId;
     this.appsList = appsList;
     this.totalAppcValue = totalAppcValue;
     this.title = title;
@@ -23,7 +25,7 @@ public class PromotionsModel {
   }
 
   public static PromotionsModel ofError() {
-    return new PromotionsModel(Collections.emptyList(), -1, "", "", false, true);
+    return new PromotionsModel("n/a", Collections.emptyList(), -1, "", "", false, true);
   }
 
   public List<PromotionApp> getAppsList() {
@@ -48,5 +50,9 @@ public class PromotionsModel {
 
   public boolean isError() {
     return isError;
+  }
+
+  public String getPromotionId() {
+    return promotionId;
   }
 }
