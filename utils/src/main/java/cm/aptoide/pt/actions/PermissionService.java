@@ -15,7 +15,8 @@ public interface PermissionService {
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
 
   @TargetApi(Build.VERSION_CODES.M) void requestDownloadAccess(
-      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);
+      @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied,
+      boolean shouldValidateMobileData);
 
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToCamera(
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDenied);

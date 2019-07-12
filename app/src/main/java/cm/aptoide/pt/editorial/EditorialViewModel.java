@@ -32,11 +32,12 @@ public class EditorialViewModel {
   private final String groupId;
   private final boolean loading;
   private final Error error;
+  private final String captionColor;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
       List<EditorialContent> placeHolderContent, boolean shouldHaveAnimation, String cardId,
-      String groupId) {
+      String groupId, String captionColor) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -46,6 +47,7 @@ public class EditorialViewModel {
     this.shouldHaveAnimation = shouldHaveAnimation;
     this.cardId = cardId;
     this.groupId = groupId;
+    this.captionColor = captionColor;
     appName = "";
     icon = null;
     id = -1;
@@ -84,6 +86,7 @@ public class EditorialViewModel {
     cardId = "";
     shouldHaveAnimation = false;
     error = null;
+    captionColor = "";
   }
 
   public EditorialViewModel(Error error) {
@@ -109,6 +112,7 @@ public class EditorialViewModel {
     cardId = "";
     obb = null;
     shouldHaveAnimation = false;
+    captionColor = "";
   }
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
@@ -116,7 +120,7 @@ public class EditorialViewModel {
       List<EditorialContent> placeHolderContent, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
       String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId,
-      long size) {
+      long size, String captionColor) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -137,6 +141,7 @@ public class EditorialViewModel {
     this.shouldHaveAnimation = shouldHaveAnimation;
     this.cardId = cardId;
     this.groupId = groupId;
+    this.captionColor = captionColor;
     error = null;
     loading = false;
   }
@@ -243,6 +248,10 @@ public class EditorialViewModel {
 
   public long getBottomCardSize() {
     return this.size;
+  }
+
+  public String getCaptionColor() {
+    return this.captionColor;
   }
 
   public enum Error {

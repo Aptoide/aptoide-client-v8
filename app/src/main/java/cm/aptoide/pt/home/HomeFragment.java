@@ -24,6 +24,7 @@ import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
@@ -47,7 +48,7 @@ import rx.subjects.PublishSubject;
  * Created by jdandrade on 05/03/2018.
  */
 
-public class HomeFragment extends NavigationTrackFragment implements HomeView {
+public class HomeFragment extends NavigationTrackFragment implements HomeView, ScrollableView {
 
   private static final String LIST_STATE_KEY = "cm.aptoide.pt.BottomHomeFragment.ListState";
 
@@ -60,6 +61,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Inject HomePresenter presenter;
   @Inject @Named("marketName") String marketName;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
+  @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -182,10 +184,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
           .onRestoreInstanceState(listState);
       listState = null;
     }
-  }
-
-  @Override public void addHighlightedAd(AdClick click) {
-    adapter.addHighlightedAd(click);
   }
 
   @Override public void showLoading() {
@@ -346,7 +344,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
         oneDecimalFormatter, marketName,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives));
+            marketName, showNatives), captionBackgroundPainter);
     bundlesList.setAdapter(adapter);
   }
 
@@ -402,6 +400,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView {
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public boolean isAtTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    return layoutManager.findFirstVisibleItemPosition() == 0;
   }
 
   private boolean isEndReached() {

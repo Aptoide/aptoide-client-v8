@@ -467,7 +467,7 @@ public class HomePresenterTest {
   @NonNull private ActionBundle getFakeActionBundle() {
     return new ActionBundle("title", HomeBundle.BundleType.INFO_BUNDLE, null, "tag",
         new ActionItem("1", "type", "title", "message", "icon", "url", "1000",
-            "2018-11-29 17:14:56"));
+            "2018-11-29 17:14:56", "#e3e3e3"));
   }
 
   private AdHomeEvent createAdHomeEvent() {

@@ -58,7 +58,7 @@ public class TopBundleViewHolder extends AppBundleViewHolder {
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
     topBundleAdapter.updateBundle(homeBundle, position);
     topBundleAdapter.update((List<Application>) homeBundle.getContent());
-    moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE_TOP)));
+    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE_TOP)));
   }
 }

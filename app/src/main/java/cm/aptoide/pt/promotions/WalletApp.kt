@@ -9,14 +9,15 @@ data class WalletApp(
     val appName: String = "",
     val icon: String = "",
     val id: Long = -1,
-    val packageName: String? = null,
+    val packageName: String = "",
     val md5sum: String? = null,
     val versionCode: Int = -1,
     val versionName: String? = null,
     val path: String? = null,
     val pathAlt: String? = null,
     val obb: Obb? = null,
-    val size: Long? = 0
+    val size: Long = 0,
+    val developer: String = ""
 
 ) {
   fun exists(): Boolean {

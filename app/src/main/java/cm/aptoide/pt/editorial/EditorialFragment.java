@@ -79,6 +79,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
   @Inject @Named("aptoide-theme") String theme;
+  @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private Toolbar toolbar;
   private ImageView appImage;
   private TextView itemName;
@@ -617,30 +618,11 @@ public class EditorialFragment extends NavigationTrackFragment
     toolbarTitle.setText(editorialViewModel.getTitle());
     appImage.setVisibility(View.VISIBLE);
     itemName.setText(Translator.translate(caption, getContext(), ""));
-    setCurationCardBubble(caption);
+    captionBackgroundPainter.addColorBackgroundToCaption(actionItemCard,
+        editorialViewModel.getCaptionColor());
     itemName.setVisibility(View.VISIBLE);
     actionItemCard.setVisibility(View.VISIBLE);
     setBottomAppCardInfo(editorialViewModel);
-  }
-
-  public void setCurationCardBubble(String caption) {
-    switch (caption) {
-      case "Game of the Week":
-        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_grey));
-        break;
-
-      case "App of the Week":
-        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_blue));
-        break;
-
-      case "Collections":
-        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_green));
-        break;
-
-      default:
-        actionItemCard.setCardBackgroundColor(getResources().getColor(R.color.curation_default));
-        break;
-    }
   }
 
   private void setBottomAppCardInfo(EditorialViewModel editorialViewModel) {

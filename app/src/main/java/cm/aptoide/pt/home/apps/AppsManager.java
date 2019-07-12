@@ -170,22 +170,23 @@ public class AppsManager {
   private void setupDownloadEvents(Download download,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false);
+        false, download.hasAppc());
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus);
+        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false);
+        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
+        download.hasAppc());
   }
 
   private Origin getOrigin(int action) {

@@ -29,13 +29,16 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
+  private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
   private static final int MIGRATION_UNINSTALL_KEY = 8726;
   private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
   private static final String APP = "app";
+  private static final String APPC = "appc";
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String EDITORS_CHOICE = "apps-group-editors-choice";
   private static final String FAIL = "FAIL";
+  private static final String CANCEL = "CANCEL";
   private static final String MAIN = "MAIN";
   private static final String MESSAGE = "message";
   private static final String MIGRATOR = "migrator";
@@ -143,18 +146,21 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, boolean isMigration) {
+      AppContext context, Origin origin, boolean isMigration, boolean hasAppc) {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
-        Collections.emptyList(), isMigration);
-    createInstallEvent(action, context, origin, packageName, versionCode, -1, null);
+        Collections.emptyList(), isMigration, hasAppc);
+    createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
+        hasAppc);
   }
 
   private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
       Origin origin, String packageName, int installingVersion, int campaignId,
-      String abTestingGroup, List<String> fragmentNameList, boolean isMigration) {
+      String abTestingGroup, List<String> fragmentNameList, boolean isMigration, boolean hasAppc) {
     Map<String, Object> data =
-        getInstallEventsBaseBundle(origin, packageName, campaignId, abTestingGroup);
+        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc);
     data.put(MIGRATOR, isMigration);
+    data.put(ORIGIN, origin);
+
     String applicationInstallEventName = "";
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreen = navigationTracker.getCurrentScreen();
@@ -174,7 +180,7 @@ public class InstallAnalytics {
           new InstallEvent(data, applicationInstallEventName, context.name(), action));
     }
     cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
-        new InstallEvent(data, applicationInstallEventName, context.name(), action));
+        new InstallEvent(data, APPLICATION_INSTALL, context.name(), action));
   }
 
   private void createMigrationInstallEvent(AnalyticsManager.Action action, AppContext context,
@@ -187,14 +193,14 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, int campaignId, String abTestingGroup,
-      boolean isMigration) {
+      AppContext context, Origin origin, int campaignId, String abTestingGroup, boolean isMigration,
+      boolean hasAppc) {
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup, Collections.emptyList(), isMigration);
+        abTestingGroup, Collections.emptyList(), isMigration, hasAppc);
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup);
+        abTestingGroup, isMigration, hasAppc);
   }
 
   public void uninstallStarted(String packageName, AnalyticsManager.Action action,
@@ -209,21 +215,27 @@ public class InstallAnalytics {
   }
 
   private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
-      String packageName, int installingVersion, int campaignId, String abTestingGroup) {
+      String packageName, int installingVersion, int campaignId, String abTestingGroup,
+      boolean isMigration, boolean hasAppc) {
     Map<String, Object> data =
-        getInstallEventsBaseBundle(origin, packageName, campaignId, abTestingGroup);
+        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc);
+    if (isMigration) {
+      data.put(ORIGIN, UPDATE_TO_APPC);
+    } else {
+      data.put(ORIGIN, origin);
+    }
     cache.put(getKey(packageName, installingVersion, INSTALL_EVENT_NAME),
         new InstallEvent(data, INSTALL_EVENT_NAME, context.name(), action));
   }
 
-  @NonNull private Map<String, Object> getInstallEventsBaseBundle(Origin origin, String packageName,
-      int campaignId, String abTestingGroup) {
+  @NonNull
+  private Map<String, Object> getInstallEventsBaseBundle(String packageName, int campaignId,
+      String abTestingGroup, boolean hasAppc) {
     ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     Map<String, Object> data = new HashMap<>();
-    data.put(APP, createApp(packageName));
+    data.put(APP, createApp(packageName, hasAppc));
     data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
-    data.put(ORIGIN, origin);
     data.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
     data.put(PREVIOUS_TAG, screenTagHistory.getTag());
     if (campaignId >= 0) {
@@ -245,9 +257,10 @@ public class InstallAnalytics {
     return root;
   }
 
-  private Map<String, Object> createApp(String packageName) {
+  private Map<String, Object> createApp(String packageName, boolean hasAppc) {
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, packageName);
+    app.put(APPC, hasAppc);
     return app;
   }
 
@@ -313,19 +326,36 @@ public class InstallAnalytics {
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
       data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-      data.put(RESULT, createResult(exception));
+      data.put(RESULT, createFailResult(exception));
       analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     }
   }
 
-  private Map<String, Object> createResult(Exception exception) {
+  private Map<String, Object> createFailResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
     result.put(STATUS, FAIL);
     result.put(TYPE, exception.getClass()
         .getSimpleName());
     result.put(MESSAGE, exception.getMessage());
+    return result;
+  }
+
+  public void logInstallCancelEvent(String packageName, int versionCode) {
+    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    if (installEvent != null) {
+      Map<String, Object> data = installEvent.getData();
+      data.put(RESULT, createCancelResult());
+      analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
+          installEvent.getContext());
+      cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    }
+  }
+
+  private Map<String, Object> createCancelResult() {
+    Map<String, Object> result = new HashMap<>();
+    result.put(STATUS, CANCEL);
     return result;
   }
 

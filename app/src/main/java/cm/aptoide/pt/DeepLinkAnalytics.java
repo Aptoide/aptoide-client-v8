@@ -1,5 +1,6 @@
 package cm.aptoide.pt;
 
+import android.net.Uri;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class DeepLinkAnalytics {
   private static final String NEW_REPO = "New Repository";
   private static final String WEBSITE = "Website";
   private static final String URI = "Uri";
+  private static final String HOSTNAME = "Hostname";
   private static final String SOURCE = "Source";
   private static final String LAUNCHER = "Launcher";
   private static final String SOURCE_GROUP_OPTION_APP_VIEW = "aptoide app view";
@@ -47,6 +49,8 @@ public class DeepLinkAnalytics {
 
     if (uri != null) {
       map.put(URI, uri.substring(0, uri.indexOf(":")));
+      map.put(HOSTNAME, Uri.parse(uri)
+          .getHost());
     }
   }
 
@@ -113,6 +117,6 @@ public class DeepLinkAnalytics {
 
   public void sendWalletDeepLinkEvent(String utmSource) {
     analyticsManager.logEvent(createMap(SOURCE, utmSource), APPCOINS_WALLET_DEEPLINK,
-        AnalyticsManager.Action.AUTO, getViewName(true));
+        AnalyticsManager.Action.CLICK, "Application");
   }
 }

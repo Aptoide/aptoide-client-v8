@@ -24,8 +24,11 @@ import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.user.ManageUserNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -45,6 +48,8 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -81,6 +86,8 @@ import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.settings.MyAccountNavigator;
+import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletInstallAnalytics;
 import cm.aptoide.pt.wallet.WalletInstallConfiguration;
 import cm.aptoide.pt.wallet.WalletInstallManager;
 import cm.aptoide.pt.wallet.WalletInstallNavigator;
@@ -298,9 +305,8 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides AppCoinsInfoNavigator providesAppCoinsInfoNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      @Named("aptoide-theme") String theme) {
-    return new AppCoinsInfoNavigator(((ActivityNavigator) activity), fragmentNavigator, theme);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new AppCoinsInfoNavigator(fragmentNavigator);
   }
 
   @ActivityScope @Provides EditorialNavigator providesEditorialNavigator(AppNavigator appNavigator,
@@ -360,10 +366,10 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
-      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager,
-      PromotionsManager promotionsManager) {
+      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
-        walletInstallNavigator, promotionsManager, AndroidSchedulers.mainThread());
+        walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
+        AndroidSchedulers.mainThread(), Schedulers.io());
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
@@ -372,8 +378,22 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
-      WalletInstallConfiguration configuration) {
-    return new WalletInstallManager(configuration, activity.getPackageManager());
+      WalletInstallConfiguration configuration, InstallManager installManager,
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      MoPubAdsManager moPubAdsManager, WalletInstallAnalytics walletInstallAnalytics,
+      InstalledRepository installedRepository, WalletAppProvider walletAppProvider,
+      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
+        downloadFactory, downloadStateParser, moPubAdsManager, walletInstallAnalytics,
+        installedRepository, walletAppProvider, appInstallerStatusReceiver);
+  }
+
+  @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
+      DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser,
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new WalletInstallAnalytics(downloadAnalytics, notificationAnalytics, installAnalytics,
+        downloadStateParser, analyticsManager, navigationTracker);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {

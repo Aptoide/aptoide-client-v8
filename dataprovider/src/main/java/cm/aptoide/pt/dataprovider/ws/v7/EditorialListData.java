@@ -1,6 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.home.Appearance;
 
 public class EditorialListData extends BaseV7EndlessDataListResponse {
 
@@ -11,6 +12,7 @@ public class EditorialListData extends BaseV7EndlessDataListResponse {
   public String icon;
   public String views;
   public String date;
+  public Appearance appearance;
 
   public EditorialListData() {
 
@@ -42,5 +44,9 @@ public class EditorialListData extends BaseV7EndlessDataListResponse {
 
   public String getDate() {
     return date;
+  }
+
+  public Appearance getAppearance() {
+    return appearance;
   }
 }

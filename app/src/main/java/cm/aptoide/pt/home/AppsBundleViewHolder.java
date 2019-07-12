@@ -64,11 +64,12 @@ class AppsBundleViewHolder extends AppBundleViewHolder {
       @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         if (dx > 0) {
-          uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.SCROLL_RIGHT));
+          uiEventsListener.onNext(
+              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
         }
       }
     });
-    moreButton.setOnClickListener(
-        v -> uiEventsListener.onNext(new HomeEvent(homeBundle, position, HomeEvent.Type.MORE)));
+    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
   }
 }

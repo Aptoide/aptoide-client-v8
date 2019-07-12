@@ -1,6 +1,7 @@
 package cm.aptoide.pt.promotions;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -11,6 +12,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionAppsResponse;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionsRequest;
+import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPromotionsResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +102,30 @@ public class PromotionsService {
       }
     }
     return result;
+  }
+
+  public Single<List<PromotionMeta>> getPromotions(String type) {
+    return GetPromotionsRequest.of(type, bodyInterceptorPoolV7, okHttpClient, converterFactory,
+        tokenInvalidator, sharedPreferences)
+        .observe()
+        .map(promotionsResponse -> map(promotionsResponse))
+        .toSingle();
+  }
+
+  @NonNull private List<PromotionMeta> map(GetPromotionsResponse promotions) {
+    List<PromotionMeta> promotionList = new ArrayList<>();
+    if (promotions.getDataList() == null
+        || promotions.getDataList()
+        .getList() == null) {
+      return promotionList;
+    }
+    for (GetPromotionsResponse.PromotionModel promotionModel : promotions.getDataList()
+        .getList()) {
+      promotionList.add(
+          new PromotionMeta(promotionModel.getTitle(), promotionModel.getPromotionId(),
+              promotionModel.getType(), promotionModel.getBackground()));
+    }
+    return promotionList;
   }
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {

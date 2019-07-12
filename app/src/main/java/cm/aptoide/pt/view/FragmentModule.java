@@ -284,9 +284,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsId, ReactionsManager reactionsManager) {
+      @Named("homePromotionsId") String promotionsType, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsId, reactionsManager);
+        promotionsPreferencesManager, blacklistManager, promotionsType, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -444,10 +444,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsId) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsId);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

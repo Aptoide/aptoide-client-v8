@@ -31,6 +31,8 @@ class CompletedAppDownloadViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((DownloadApp) app).getIcon(), appIcon);
     appName.setText(((DownloadApp) app).getName());
+    itemView.setOnClickListener(
+        __ -> installApp.onNext(new AppClick(app, AppClick.ClickType.CARD_CLICK)));
     card.setOnClickListener(
         install -> installApp.onNext(new AppClick(app, AppClick.ClickType.INSTALL_APP)));
   }
