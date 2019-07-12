@@ -111,7 +111,7 @@ public class InstallAnalytics {
       boolean aptoideSettings, String packageName, int installingVersion) {
     Map<String, Object> data = installEvent.getData();
     data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-    data.put(RESULT, createFailResult());
+    data.put(RESULT, createResult());
     analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
         installEvent.getContext());
     cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
@@ -126,7 +126,7 @@ public class InstallAnalytics {
     cache.remove(getKey(packageName, installingVersion, APPLICATION_INSTALL));
   }
 
-  private Map<String, Object> createFailResult() {
+  private Map<String, Object> createResult() {
     Map<String, Object> result = new HashMap<>();
     result.put(STATUS, SUCCESS);
     return result;
