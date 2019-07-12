@@ -21,5 +21,7 @@ public interface InstallerAnalytics {
 
   void logInstallErrorEvent(String packageName, int versionCode, Exception e);
 
+  void logInstallCancelEvent(String packageName, int versionCode);
+
   void sendMiuiInstallResultEvent(InstallStatus.Status status);
 }
