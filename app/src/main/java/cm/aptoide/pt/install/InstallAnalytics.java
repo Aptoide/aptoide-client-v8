@@ -111,7 +111,7 @@ public class InstallAnalytics {
       boolean aptoideSettings, String packageName, int installingVersion) {
     Map<String, Object> data = installEvent.getData();
     data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-    data.put(RESULT, createResult());
+    data.put(RESULT, createFailResult());
     analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
         installEvent.getContext());
     cache.remove(getKey(packageName, installingVersion, INSTALL_EVENT_NAME));
@@ -126,7 +126,7 @@ public class InstallAnalytics {
     cache.remove(getKey(packageName, installingVersion, APPLICATION_INSTALL));
   }
 
-  private Map<String, Object> createResult() {
+  private Map<String, Object> createFailResult() {
     Map<String, Object> result = new HashMap<>();
     result.put(STATUS, SUCCESS);
     return result;
@@ -326,14 +326,14 @@ public class InstallAnalytics {
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
       data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-      data.put(RESULT, createResult(exception));
+      data.put(RESULT, createFailResult(exception));
       analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     }
   }
 
-  private Map<String, Object> createResult(Exception exception) {
+  private Map<String, Object> createFailResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
     result.put(STATUS, FAIL);
     result.put(TYPE, exception.getClass()
