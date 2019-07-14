@@ -2,6 +2,7 @@ package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import java.util.HashMap;
@@ -36,7 +37,11 @@ public class EditorialAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action) {
+      AnalyticsManager.Action action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+    downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), action,
+        offerResponseStatus, false, download.hasAppc());
+
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false);
   }
