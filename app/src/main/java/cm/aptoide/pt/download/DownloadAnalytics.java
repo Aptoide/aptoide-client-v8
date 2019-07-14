@@ -257,18 +257,18 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void startProgress(Download download) {
-    DownloadEvent downloadEvent =
-        cache.get(download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
-    if (downloadEvent != null) {
-      downloadEvent.setHadProgress(true);
+    startProgressOnDownloadEvent(
+        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
+    startProgressOnDownloadEvent(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+  }
+
+  private void startProgressOnDownloadEvent(String key) {
+    DownloadEvent event = cache.get(key);
+    if (event != null) {
+      event.setHadProgress(true);
     } else {
       Logger.getInstance()
-          .d("DownloadAnalytics", "tried to update download");
-    }
-
-    DownloadEvent downloadCompleteEvent = cache.get(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
-    if (downloadCompleteEvent != null) {
-      downloadCompleteEvent.setHadProgress(true);
+          .d("DownloadAnalytics", "Tried setting progress on an event that was not setup " + key);
     }
   }
 
