@@ -422,11 +422,12 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager) {
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
+      MoPubAdsManager moPubAdsManager) {
     return new EditorialManager(editorialRepository,
         arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
         downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics,
-        reactionsManager);
+        reactionsManager, moPubAdsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(

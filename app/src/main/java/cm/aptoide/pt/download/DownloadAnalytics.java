@@ -8,6 +8,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
 import java.util.ArrayList;
@@ -256,10 +257,19 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void startProgress(Download download) {
-    cache.get(download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME)
-        .setHadProgress(true);
-    cache.get(download.getMd5() + DOWNLOAD_COMPLETE_EVENT)
-        .setHadProgress(true);
+    updateDownloadEventWithHasProgress(
+        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
+    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+  }
+
+  private void updateDownloadEventWithHasProgress(String key) {
+    DownloadEvent event = cache.get(key);
+    if (event != null) {
+      event.setHadProgress(true);
+    } else {
+      Logger.getInstance()
+          .d("DownloadAnalytics", "Tried setting progress on an event that was not setup " + key);
+    }
   }
 
   public void installClicked(String md5, String packageName, String trustedValue,
