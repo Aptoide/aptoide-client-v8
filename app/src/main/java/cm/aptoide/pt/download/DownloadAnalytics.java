@@ -257,12 +257,12 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   }
 
   public void startProgress(Download download) {
-    startProgressOnDownloadEvent(
+    updateDownloadEventWithHasProgress(
         download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
-    startProgressOnDownloadEvent(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
   }
 
-  private void startProgressOnDownloadEvent(String key) {
+  private void updateDownloadEventWithHasProgress(String key) {
     DownloadEvent event = cache.get(key);
     if (event != null) {
       event.setHadProgress(true);
