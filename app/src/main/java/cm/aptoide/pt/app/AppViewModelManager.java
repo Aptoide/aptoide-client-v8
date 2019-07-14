@@ -43,11 +43,11 @@ public class AppViewModelManager {
   }
 
   public Observable<AppViewModel> observeAppViewModel() {
-    return loadAppModel().toObservable()
+    return getAppModel().toObservable()
         .flatMap(appModel -> {
-          Observable<DownloadModel> downloadModelObservable = loadDownloadModel(appModel);
+          Observable<DownloadModel> downloadModelObservable = getDownloadModel(appModel);
           Observable<AppCoinsViewModel> appCoinsViewModelObservable =
-              loadAppCoinsInformation(appModel);
+              getAppCoinsViewModel(appModel);
           Observable<MigrationModel> migrationModelObservable = getMigrationModel(appModel);
           return Observable.combineLatest(downloadModelObservable, appCoinsViewModelObservable,
               migrationModelObservable,
@@ -56,21 +56,36 @@ public class AppViewModelManager {
         });
   }
 
+  /**
+   * Returns a snapshot of the AppViewModel. Useful for one-off operations.
+   */
   public Single<AppViewModel> getAppViewModel() {
     return observeAppViewModel().first()
         .toSingle();
   }
 
+  /**
+   * This method exists as a performance optimization. Most times only AppModel is needed, and it
+   * doesn't make sense to wait for DownloadModel (the heaviest model to load as it can't be
+   * cached).
+   *
+   * @return A single of this AppViewModel's AppModel
+   */
   public Single<AppModel> getAppModel() {
-    return loadAppModel();
+    if (appViewConfiguration.getAppId() >= 0) {
+      return loadAppModel(appViewConfiguration.getAppId(), appViewConfiguration.getStoreName(),
+          appViewConfiguration.getPackageName());
+    } else if (appViewConfiguration.hasMd5()) {
+      return loadAppModelFromMd5(appViewConfiguration.getMd5());
+    } else if (appViewConfiguration.hasUniqueName()) {
+      return loadAppViewViewModelFromUniqueName(appViewConfiguration.getUniqueName());
+    } else {
+      return loadAppModel(appViewConfiguration.getPackageName(),
+          appViewConfiguration.getStoreName());
+    }
   }
 
-  private AppViewModel mergeToAppViewModel(AppModel appModel, DownloadModel downloadModel,
-      AppCoinsViewModel appCoinsModel, MigrationModel migrationModel) {
-    return new AppViewModel(appModel, downloadModel, appCoinsModel, migrationModel);
-  }
-
-  private Observable<AppCoinsViewModel> loadAppCoinsInformation(AppModel app) {
+  private Observable<AppCoinsViewModel> getAppCoinsViewModel(AppModel app) {
     if (cachedAppCoinsViewModel == null) {
       if (app.hasAdvertising()) {
         return appCoinsManager.hasActiveCampaign(app.getPackageName(), app.getVersionCode())
@@ -90,13 +105,18 @@ public class AppViewModelManager {
         .map(MigrationModel::new);
   }
 
-  public Observable<DownloadModel> loadDownloadModel(AppModel app) {
+  private Observable<DownloadModel> getDownloadModel(AppModel app) {
     return loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(), app.isPaid(),
         app.getPay(), app.getSignature(), app.getStore()
             .getId(), app.hasAdvertising() || app.hasBilling());
   }
 
-  public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
+  private AppViewModel mergeToAppViewModel(AppModel appModel, DownloadModel downloadModel,
+      AppCoinsViewModel appCoinsModel, MigrationModel migrationModel) {
+    return new AppViewModel(appModel, downloadModel, appCoinsModel, migrationModel);
+  }
+
+  private Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
       int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
       boolean hasAppc) {
     return combineLatest(installManager.getInstall(md5, packageName, versionCode),
@@ -105,20 +125,6 @@ public class AppViewModelManager {
             downloadStateParser.parseDownloadType(install.getType(), paidApp,
                 pay != null && pay.isPaid(), isMigration), install.getProgress(),
             downloadStateParser.parseDownloadState(install.getState()), pay));
-  }
-
-  public Single<AppModel> loadAppModel() {
-    if (appViewConfiguration.getAppId() >= 0) {
-      return loadAppModel(appViewConfiguration.getAppId(), appViewConfiguration.getStoreName(),
-          appViewConfiguration.getPackageName());
-    } else if (appViewConfiguration.hasMd5()) {
-      return loadAppModelFromMd5(appViewConfiguration.getMd5());
-    } else if (appViewConfiguration.hasUniqueName()) {
-      return loadAppViewViewModelFromUniqueName(appViewConfiguration.getUniqueName());
-    } else {
-      return loadAppModel(appViewConfiguration.getPackageName(),
-          appViewConfiguration.getStoreName());
-    }
   }
 
   private Single<AppModel> loadAppModel(long appId, String storeName, String packageName) {
