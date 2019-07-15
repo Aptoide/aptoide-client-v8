@@ -409,6 +409,7 @@
 
   <!-- layouts -->
   <string name="all_message_general_error">Something went wrong. Try again.</string>
+  <string name="error_no_internet_body">Oops, something went wrong. Please check your Internet connection.</string>
   <string name="download_retry">Retry</string>
   <string name="retry_connection">Retry connection</string>
   <string name="error503">Ufff… Is it just me or is everyone installing apps at the same time?</string>
