@@ -31,6 +31,7 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,9 +62,10 @@ public class AppViewPresenterTest {
 
   @Before public void setupAppViewPresenter() {
     MockitoAnnotations.initMocks(this);
-    presenter = new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
+    presenter =
+        spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
         appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-        permissionManager, permissionService, promotionsNavigator);
+            permissionManager, permissionService, promotionsNavigator));
 
     lifecycleEvent = PublishSubject.create();
 
@@ -82,7 +84,7 @@ public class AppViewPresenterTest {
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null, "editorsChoice", "origin", false,
             "marketName", false, false, bdsFlags, "", "", false);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
@@ -120,7 +122,7 @@ public class AppViewPresenterTest {
     verify(view).readyToDownload();
   }
 
-  @Test public void handleLoadAppViewNoError() {
+  @Test public void handleLoadAppView() {
     //Given an initialized presenter
     presenter.handleFirstLoad();
     //when the app model is requested
@@ -128,10 +130,24 @@ public class AppViewPresenterTest {
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
-    //then the loading should be shown
+    // Verify view methods
     verify(view).showLoading();
-    //and the view should populated
     verify(view).showAppView(appModel);
+
+    // Verify analytics
+    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+        appModel.getDeveloper()
+            .getName(), appModel.getMalware()
+            .getRank()
+            .name(), appModel.hasBilling(), appModel.hasAdvertising());
+    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
+        appModel.getEditorsChoice());
+
+    // Verify App View Open Options
+    verify(presenter).handleAppViewOpenOptions(appViewModel);
+
+    // Verify other components load
+    verify(presenter).loadOtherAppViewComponents(appViewModel);
   }
 
   @Test public void handleLoadAppViewWithError() {

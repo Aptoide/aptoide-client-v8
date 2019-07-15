@@ -189,19 +189,19 @@ public class AppViewPresenter implements Presenter {
     }
   }
 
-  private Observable<AppViewModel> handleAppViewOpenOptions(AppViewModel appViewModel) {
+  @VisibleForTesting
+  public Observable<AppViewModel> handleAppViewOpenOptions(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
     DownloadModel.Action action = appViewModel.getDownloadModel()
         .getAction();
-    return accountManager.accountStatus()
-        .first()
-        .observeOn(viewScheduler)
-        .flatMap(__ -> handleOpenAppViewDialogInput(appViewModel.getAppModel()))
+    return handleOpenAppViewDialogInput(appViewModel.getAppModel())
         .filter(shouldDownload -> shouldDownload)
-        .flatMapCompletable(__ -> downloadApp(action, appModel))
-        .doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
-            appModel.getDeveloper()
-                .getName(), action.toString()))
+        .flatMapCompletable(__ -> downloadApp(action, appModel).doOnCompleted(
+            () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+                appModel.getDeveloper()
+                    .getName(), action.toString()))
+            .onErrorComplete())
+        .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel);
   }
 
@@ -220,7 +220,8 @@ public class AppViewPresenter implements Presenter {
     return Observable.just(false);
   }
 
-  private Observable<AppViewModel> loadOtherAppViewComponents(AppViewModel appViewModel) {
+  @VisibleForTesting
+  public Observable<AppViewModel> loadOtherAppViewComponents(AppViewModel appViewModel) {
     return Observable.zip(updateSimilarAppsBundles(appViewModel.getAppModel()),
         updateReviews(appViewModel.getAppModel()),
         (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
@@ -436,9 +437,7 @@ public class AppViewPresenter implements Presenter {
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(walletPromotionViewModel -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+        }, err -> crashReport.log(err));
   }
 
   private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
