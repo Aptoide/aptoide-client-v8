@@ -77,6 +77,10 @@ public class AppsManager {
         .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, hasPromotion, appcValue));
   }
 
+  public Observable<List<App>> getExcludedAppcUpgradesList() {
+    return getAppcUpgradesList(true, false, 0);
+  }
+
   public Observable<List<App>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
@@ -282,6 +286,10 @@ public class AppsManager {
 
   public void setAppViewAnalyticsEvent() {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
+  }
+
+  public void setMigrationAppViewAnalyticsEvent() {
+    updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW_MIGRATIOM);
   }
 
   public Observable<List<App>> getInstalledDownloads() {

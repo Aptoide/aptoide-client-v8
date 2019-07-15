@@ -104,7 +104,7 @@ public class AppsPresenter implements Presenter {
         .flatMap(__ -> view.startDownloadInAppview())
         .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((UpdateApp) app).getAppId(),
             ((UpdateApp) app).getPackageName()))
-        .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
+        .doOnNext(__ -> appsManager.setMigrationAppViewAnalyticsEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -177,7 +177,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradesList(true, false, 0))
+        .flatMap(__ -> appsManager.getExcludedAppcUpgradesList())
         .distinctUntilChanged()
         .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
         .observeOn(viewScheduler)
