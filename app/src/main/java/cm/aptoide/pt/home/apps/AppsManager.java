@@ -115,12 +115,11 @@ public class AppsManager {
   }
 
   public Observable<Pair<Boolean, Float>> migrationPromotionActive() {
-    return promotionsManager.getPromotionsModel(MIGRATION_PROMOTION)
-        .map(promotions -> new Pair<>(!promotions.getAppsList()
-            .isEmpty(), !promotions.getAppsList()
-            .isEmpty() ? promotions.getAppsList()
-            .get(0)
-            .getAppcValue() : 0));
+    return promotionsManager.getPromotionApps(MIGRATION_PROMOTION)
+        .map(promotions -> new Pair<>(!promotions.isEmpty(),
+            !promotions.isEmpty() ? promotions.get(0)
+                .getAppcValue() : 0))
+        .toObservable();
   }
 
   public Observable<List<App>> getInstalledApps() {

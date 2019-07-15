@@ -192,7 +192,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
 
   @Override public Observable<App> updateClick() {
     return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_CLICK)
+        appClick -> appClick.getClickType() == AppClick.ClickType.CARD_CLICK)
         .map(appClick -> appClick.getApp());
   }
 

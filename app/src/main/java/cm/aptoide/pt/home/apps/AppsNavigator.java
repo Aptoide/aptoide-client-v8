@@ -33,6 +33,10 @@ public class AppsNavigator {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_ONLY, "");
   }
 
+  public void navigateToAppView(String md5) {
+    appNavigator.navigateWithMd5(md5);
+  }
+
   public void navigateToAppViewAndInstall(long appId, String packageName) {
     appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL,
         "");

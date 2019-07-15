@@ -62,10 +62,18 @@ public class PromotionsManager {
     return promotionsService.getPromotionApps(promotionId);
   }
 
-  public Observable<PromotionsModel> getPromotionsModel(String promotionsId) {
-    return getPromotionApps(promotionsId).toObservable()
-        .map(
-            appsList -> new PromotionsModel(appsList, getTotalAppc(appsList), isWalletInstalled()));
+  public Single<PromotionsModel> getPromotionsModel(String promotionsType) {
+    return promotionsService.getPromotions(promotionsType)
+        .flatMap(promotions -> {
+          if (promotions.isEmpty()) {
+            return Single.just(PromotionsModel.ofError());
+          }
+          PromotionMeta meta = promotions.get(0);
+          return getPromotionApps(meta.getPromotionId()).map(
+              appsList -> new PromotionsModel(meta.getPromotionId(), appsList,
+                  getTotalAppc(appsList), meta.getTitle(), meta.getBackground(),
+                  isWalletInstalled(), false));
+        });
   }
 
   public Observable<List<Promotion>> getPromotionsForPackage(String packageName) {

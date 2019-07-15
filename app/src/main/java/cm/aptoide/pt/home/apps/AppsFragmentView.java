@@ -58,7 +58,7 @@ public interface AppsFragmentView extends View {
 
   Observable<Void> moreAppcClick();
 
-  Observable<App> updateClick();
+  Observable<App> cardClick();
 
   void setUserImage(String userAvatarUrl);
 

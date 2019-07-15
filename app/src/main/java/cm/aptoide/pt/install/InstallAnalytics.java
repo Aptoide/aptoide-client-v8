@@ -38,6 +38,7 @@ public class InstallAnalytics {
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String EDITORS_CHOICE = "apps-group-editors-choice";
   private static final String FAIL = "FAIL";
+  private static final String CANCEL = "CANCEL";
   private static final String MAIN = "MAIN";
   private static final String MESSAGE = "message";
   private static final String MIGRATOR = "migrator";
@@ -179,7 +180,7 @@ public class InstallAnalytics {
           new InstallEvent(data, applicationInstallEventName, context.name(), action));
     }
     cache.put(getKey(packageName, installingVersion, APPLICATION_INSTALL),
-        new InstallEvent(data, applicationInstallEventName, context.name(), action));
+        new InstallEvent(data, APPLICATION_INSTALL, context.name(), action));
   }
 
   private void createMigrationInstallEvent(AnalyticsManager.Action action, AppContext context,
@@ -325,19 +326,36 @@ public class InstallAnalytics {
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
       data.put(ROOT, createRoot(isPhoneRoot, aptoideSettings));
-      data.put(RESULT, createResult(exception));
+      data.put(RESULT, createFailResult(exception));
       analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     }
   }
 
-  private Map<String, Object> createResult(Exception exception) {
+  private Map<String, Object> createFailResult(Exception exception) {
     Map<String, Object> result = new HashMap<>();
     result.put(STATUS, FAIL);
     result.put(TYPE, exception.getClass()
         .getSimpleName());
     result.put(MESSAGE, exception.getMessage());
+    return result;
+  }
+
+  public void logInstallCancelEvent(String packageName, int versionCode) {
+    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    if (installEvent != null) {
+      Map<String, Object> data = installEvent.getData();
+      data.put(RESULT, createCancelResult());
+      analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
+          installEvent.getContext());
+      cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    }
+  }
+
+  private Map<String, Object> createCancelResult() {
+    Map<String, Object> result = new HashMap<>();
+    result.put(STATUS, CANCEL);
     return result;
   }
 

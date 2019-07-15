@@ -117,7 +117,8 @@ public class SeeMoreAppcManager {
             .isEmpty(), !promotions.getAppsList()
             .isEmpty() ? promotions.getAppsList()
             .get(0)
-            .getAppcValue() : 0));
+            .getAppcValue() : 0))
+        .toObservable();
   }
 
   public Observable<Void> excludeUpdate(App app) {
