@@ -422,7 +422,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     }
     showUpgrades = true;
     appcUpgradesSectionLoaded.onNext(null);
-    if (shouldShowAppsList()) {
+    if (shouldShowAppcAppsList()) {
       showAppsList();
     }
   }
@@ -481,6 +481,14 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private boolean shouldShowAppsList() {
+    return showDownloads
+        && showUpdates
+        && showInstalled
+        && showUpgrades
+        && recyclerView.getVisibility() != View.VISIBLE;
+  }
+
+  private boolean shouldShowAppcAppsList() {
     return showDownloads && showUpdates && showInstalled && showUpgrades;
   }
 
