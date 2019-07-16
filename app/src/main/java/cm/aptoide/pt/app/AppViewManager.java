@@ -31,6 +31,7 @@ import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
+import rx.annotations.Experimental;
 
 /**
  * Created by D01 on 04/05/18.
@@ -118,6 +119,11 @@ public class AppViewManager {
 
   public Single<AppModel> getAppModel() {
     return appViewModelManager.getAppModel();
+  }
+
+  @Experimental
+  public Observable<Boolean> onAppViewModelCached() {
+    return appViewModelManager.onAppViewModelCached();
   }
 
   public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,

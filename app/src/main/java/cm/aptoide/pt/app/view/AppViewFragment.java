@@ -161,7 +161,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Integer> reviewsAutoScroll;
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
-  private PublishSubject<Void> ready;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
@@ -290,7 +289,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
-    ready = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
@@ -513,7 +511,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = null;
     loginSnackClick = null;
     similarAppClick = null;
-    ready = null;
     reviewsAutoScroll = null;
     noNetworkRetryClick = null;
     genericRetryClick = null;
@@ -1696,14 +1693,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> cancelDownload() {
     return RxView.clicks(cancelDownload);
-  }
-
-  @Override public Observable<Void> isAppViewReadyToDownload() {
-    return ready;
-  }
-
-  @Override public void readyToDownload() {
-    ready.onNext(null);
   }
 
   @Override public Observable<AppBoughClickEvent> appBought() {

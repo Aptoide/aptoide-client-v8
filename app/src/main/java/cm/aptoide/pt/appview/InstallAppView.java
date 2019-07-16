@@ -30,9 +30,5 @@ public interface InstallAppView extends View {
 
   Observable<Void> cancelDownload();
 
-  Observable<Void> isAppViewReadyToDownload();
-
-  void readyToDownload();
-
   Observable<AppBoughClickEvent> appBought();
 }

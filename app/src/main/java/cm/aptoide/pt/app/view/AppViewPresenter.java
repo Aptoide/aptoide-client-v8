@@ -163,7 +163,6 @@ public class AppViewPresenter implements Presenter {
         view.setupAppcAppView();
       }
       view.recoverScrollViewState();
-      view.readyToDownload();
     }
   }
 
@@ -256,7 +255,7 @@ public class AppViewPresenter implements Presenter {
   private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> appViewManager.onAppViewModelCached())
         .flatMap(__ -> downloadInRange(0, 100))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showDownloadingSimilarApps(
@@ -271,7 +270,7 @@ public class AppViewPresenter implements Presenter {
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> appViewManager.onAppViewModelCached())
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(appModel -> !appModel.isAppCoinApp())
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
@@ -389,7 +388,7 @@ public class AppViewPresenter implements Presenter {
   @VisibleForTesting public void handleAppcPromotion() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> appViewManager.onAppViewModelCached())
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(app -> app.hasBilling() || app.hasAdvertising())
         .flatMap(__ -> appViewManager.loadPromotionViewModel())
@@ -1082,7 +1081,7 @@ public class AppViewPresenter implements Presenter {
   private void observeDownloadApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isAppViewReadyToDownload())
+        .flatMap(__ -> appViewManager.onAppViewModelCached())
         .flatMap(app -> appViewManager.observeAppViewModel()
             .observeOn(viewScheduler)
             .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),

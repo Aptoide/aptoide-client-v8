@@ -12,6 +12,8 @@ import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import rx.Observable;
 import rx.Single;
+import rx.annotations.Experimental;
+import rx.subjects.BehaviorSubject;
 
 import static rx.Observable.combineLatest;
 
@@ -27,6 +29,8 @@ public class AppViewModelManager {
 
   private AppModel cachedApp;
   private AppCoinsViewModel cachedAppCoinsViewModel;
+
+  private BehaviorSubject<Boolean> cachedBehaviorSubject = BehaviorSubject.create(false);
 
   public AppViewModelManager(AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       String marketName, AppCenter appCenter, DownloadStateParser downloadStateParser,
@@ -85,18 +89,45 @@ public class AppViewModelManager {
     }
   }
 
+  /**
+   * This observable emits a true boolean value if the AppViewModel is cached (whatever can be
+   * cached anyway), or false otherwise.
+   */
+  @Experimental public Observable<Boolean> isAppViewModelCached() {
+    return cachedBehaviorSubject;
+  }
+
+  /**
+   * This observable emits only if the AppViewModel is cached.
+   * This is generally useful for chains that are meant to be executed only after caching.
+   *
+   * Might be removed in the future for a better solution.
+   */
+
+  @Experimental public Observable<Boolean> onAppViewModelCached() {
+    return isAppViewModelCached().filter(isCached -> isCached);
+  }
+
+  private void setAppViewModelToCached() {
+    if (!cachedBehaviorSubject.hasValue() || !cachedBehaviorSubject.getValue()) {
+      cachedBehaviorSubject.onNext(true);
+    }
+  }
+
   private Observable<AppCoinsViewModel> getAppCoinsViewModel(AppModel app) {
     if (cachedAppCoinsViewModel == null) {
       if (app.hasAdvertising()) {
         return appCoinsManager.hasActiveCampaign(app.getPackageName(), app.getVersionCode())
             .flatMapObservable(hasCampaign -> {
               cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), hasCampaign);
+              setAppViewModelToCached();
               return Observable.just(cachedAppCoinsViewModel);
             });
       } else {
         cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), false);
       }
     }
+    setAppViewModelToCached();
     return Observable.just(cachedAppCoinsViewModel);
   }
 
