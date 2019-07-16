@@ -130,12 +130,9 @@ public class AppViewPresenter implements Presenter {
     resumeWalletDownload();
     cancelPromotionDownload();
     pauseWalletDownload();
-    loadInterstitialAd();
     showInterstitial();
 
     handleDownloadingSimilarApp();
-
-    handleMoPubConsentDialog();
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -144,6 +141,7 @@ public class AppViewPresenter implements Presenter {
         .doOnSuccess(this::showAppView)
         .doOnSuccess(this::sendAppViewLoadAnalytics)
         .toObservable()
+        .flatMap(this::loadAds)
         .flatMap(this::handleAppViewOpenOptions)
         .filter(model -> !model.getAppModel()
             .hasError())
@@ -189,20 +187,46 @@ public class AppViewPresenter implements Presenter {
     }
   }
 
+  private Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
+    return appViewManager.shouldLoadInterstitialAd()
+        .observeOn(viewScheduler)
+        .flatMap(shouldLoad -> {
+          if (shouldLoad) {
+            return handleConsentDialog();
+          }
+          return Single.just(false);
+        })
+        .doOnSuccess(shouldLoad -> {
+          if (shouldLoad) {
+            view.initInterstitialAd();
+          }
+        })
+        .map(__ -> appViewModel)
+        .toObservable()
+        .onErrorReturn(throwable -> {
+          crashReport.log(throwable);
+          return appViewModel;
+        });
+  }
+
   @VisibleForTesting
   public Observable<AppViewModel> handleAppViewOpenOptions(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
     DownloadModel.Action action = appViewModel.getDownloadModel()
         .getAction();
-    return handleOpenAppViewDialogInput(appViewModel.getAppModel())
-        .filter(shouldDownload -> shouldDownload)
+    return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
+        shouldDownload -> shouldDownload)
         .flatMapCompletable(__ -> downloadApp(action, appModel).doOnCompleted(
             () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
                     .getName(), action.toString()))
             .onErrorComplete())
         .switchIfEmpty(Observable.just(false))
-        .map(__ -> appViewModel);
+        .map(__ -> appViewModel)
+        .onErrorReturn(throwable -> {
+          crashReport.log(throwable);
+          return appViewModel;
+        });
   }
 
   private Observable<Boolean> handleOpenAppViewDialogInput(AppModel appModel) {
@@ -227,19 +251,6 @@ public class AppViewPresenter implements Presenter {
         (similarAppsBundles, reviewsViewModel) -> Observable.just(appViewModel))
         .first()
         .map(__ -> appViewModel);
-  }
-
-  private void handleMoPubConsentDialog() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.isAppViewReadyToDownload())
-        .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
-        .filter(loadInterstitial -> loadInterstitial)
-        .observeOn(viewScheduler)
-        .flatMapSingle(__ -> handleConsentDialog())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleDownloadingSimilarApp() {
@@ -281,21 +292,6 @@ public class AppViewPresenter implements Presenter {
         .filter(downloadModel -> downloadModel.getProgress() >= min
             && downloadModel.getProgress() < max)
         .first();
-  }
-
-  private void loadInterstitialAd() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isAppViewReadyToDownload())
-        .flatMapSingle(model -> appViewManager.shouldLoadInterstitialAd())
-        .filter(loadInterstitial -> loadInterstitial)
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.initInterstitialAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
   }
 
   private Single<Boolean> handleConsentDialog() {
