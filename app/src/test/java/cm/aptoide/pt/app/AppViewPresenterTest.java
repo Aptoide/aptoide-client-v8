@@ -118,16 +118,16 @@ public class AppViewPresenterTest {
     //Then should set the download information
     verify(view).showDownloadAppModel(appViewModel.getDownloadModel(),
         appViewModel.getAppCoinsViewModel());
-    //Then should set the download ready to download
-    verify(view).readyToDownload();
   }
 
   @Test public void handleLoadAppView() {
-    //Given an initialized presenter
-    presenter.handleFirstLoad();
-    //when the app model is requested
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
+    when(appViewManager.observeAppViewModel()).thenReturn(Observable.just(appViewModel));
+    when(appViewManager.shouldLoadInterstitialAd()).thenReturn(Single.just(false));
+    when(appViewManager.loadPromotionViewModel()).thenReturn(
+        Observable.just(new PromotionViewModel()));
 
+    presenter.handleFirstLoad();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     // Verify view methods
@@ -143,11 +143,12 @@ public class AppViewPresenterTest {
     verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
         appModel.getEditorsChoice());
 
-    // Verify App View Open Options
+    // Verify our init streams
+    verify(presenter).loadAds(appViewModel);
     verify(presenter).handleAppViewOpenOptions(appViewModel);
-
-    // Verify other components load
     verify(presenter).loadOtherAppViewComponents(appViewModel);
+    verify(presenter).loadAppcPromotion(appViewModel);
+    verify(presenter).observeDownloadApp();
   }
 
   @Test public void handleLoadAppViewWithError() {
@@ -256,15 +257,14 @@ public class AppViewPresenterTest {
     PromotionViewModel promotionViewModel = new PromotionViewModel();
     promotionViewModel.setPromotions(Collections.singletonList(promotion));
     promotionViewModel.setAppViewModel(appViewModel);
-    when(view.isAppViewReadyToDownload()).thenReturn(Observable.just(null));
     when(appViewManager.getAppModel()).thenReturn(Single.just(appModel));
     when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
     when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
     when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),
         Promotion.ClaimAction.INSTALL)).thenReturn(promotion);
 
-    presenter.handleAppcPromotion();
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
+    presenter.loadAppcPromotion(appViewModel)
+        .subscribe();
 
     verify(view).showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(),
         Promotion.ClaimAction.INSTALL, downloadModel);

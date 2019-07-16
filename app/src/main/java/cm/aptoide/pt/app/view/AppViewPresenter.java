@@ -112,15 +112,12 @@ public class AppViewPresenter implements Presenter {
     pauseDownload();
     resumeDownload();
     cancelDownload();
-    observeDownloadApp();
     handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
 
     handleInterstitialAdClick();
-
-    handleAppcPromotion();
 
     handleDismissWalletPromotion();
     handleInstallWalletPromotion();
@@ -141,11 +138,11 @@ public class AppViewPresenter implements Presenter {
         .doOnSuccess(this::showAppView)
         .doOnSuccess(this::sendAppViewLoadAnalytics)
         .toObservable()
-        .flatMap(this::loadAds)
-        .flatMap(this::handleAppViewOpenOptions)
         .filter(model -> !model.getAppModel()
             .hasError())
-        .flatMap(this::loadOtherAppViewComponents);
+        .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
+            handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
+            observeDownloadApp(), loadOtherAppViewComponents(appViewModel)));
   }
 
   private void showAppView(AppViewModel appViewModel) {
@@ -186,19 +183,15 @@ public class AppViewPresenter implements Presenter {
     }
   }
 
-  private Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
+  public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return appViewManager.shouldLoadInterstitialAd()
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
+            view.initInterstitialAd();
             return handleConsentDialog();
           }
           return Single.just(false);
-        })
-        .doOnSuccess(shouldLoad -> {
-          if (shouldLoad) {
-            view.initInterstitialAd();
-          }
         })
         .map(__ -> appViewModel)
         .toObservable()
@@ -252,10 +245,66 @@ public class AppViewPresenter implements Presenter {
         .map(__ -> appViewModel);
   }
 
+  @VisibleForTesting public Observable<AppViewModel> loadAppcPromotion(AppViewModel appViewModel) {
+    return Observable.just(appViewModel.getAppModel())
+        .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
+        .flatMap(__ -> appViewManager.loadPromotionViewModel())
+        .observeOn(viewScheduler)
+        .doOnNext(promotionViewModel -> {
+          if (promotionViewModel.getAppViewModel() == null) return;
+          DownloadModel appDownloadModel = promotionViewModel.getAppViewModel()
+              .getDownloadModel();
+          AppModel app = promotionViewModel.getAppViewModel()
+              .getAppModel();
+
+          Promotion.ClaimAction action = Promotion.ClaimAction.INSTALL;
+          if (appDownloadModel != null
+              && appDownloadModel.getAction() == DownloadModel.Action.MIGRATE) {
+            action = Promotion.ClaimAction.MIGRATE;
+          } else if (promotionViewModel.getAppViewModel()
+              .getMigrationModel()
+              .isMigrated()
+              && appDownloadModel != null
+              && appDownloadModel.getAction() == DownloadModel.Action.OPEN) {
+            action = Promotion.ClaimAction.MIGRATE;
+          }
+          Promotion promotion =
+              appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(), action);
+
+          if (promotion != null && app != null && appDownloadModel != null) {
+            view.showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(), action,
+                appDownloadModel);
+            if (!appViewManager.isAppcPromotionImpressionSent()) {
+              appViewAnalytics.sendPromotionImpression(promotion.getPromotionId());
+              appViewManager.setAppcPromotionImpressionSent();
+            }
+
+            if (promotionViewModel.getWalletApp()
+                .isInstalled() && appDownloadModel.getAction() == DownloadModel.Action.OPEN) {
+              appViewManager.scheduleNotification(String.valueOf(promotion.getAppc()),
+                  app.getIcon(), app.getPackageName(), app.getStore()
+                      .getName());
+            }
+          }
+        })
+        .map(__ -> appViewModel)
+        .onErrorReturn(throwable -> {
+          crashReport.log(throwable);
+          return appViewModel;
+        });
+  }
+
+  public Observable<AppViewModel> observeDownloadApp() {
+    return appViewManager.observeAppViewModel()
+        .observeOn(viewScheduler)
+        .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
+            model.getAppCoinsViewModel()));
+  }
+
   private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> appViewManager.onAppViewModelCached())
+        .flatMap(__ -> view.installAppClick())
         .flatMap(__ -> downloadInRange(0, 100))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showDownloadingSimilarApps(
@@ -270,7 +319,7 @@ public class AppViewPresenter implements Presenter {
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> appViewManager.onAppViewModelCached())
+        .flatMap(__ -> view.installAppClick())
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(appModel -> !appModel.isAppCoinApp())
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
@@ -383,56 +432,6 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> {
           crashReport.log(throwable);
         });
-  }
-
-  @VisibleForTesting public void handleAppcPromotion() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> appViewManager.onAppViewModelCached())
-        .flatMapSingle(__ -> appViewManager.getAppModel())
-        .filter(app -> app.hasBilling() || app.hasAdvertising())
-        .flatMap(__ -> appViewManager.loadPromotionViewModel())
-        .observeOn(viewScheduler)
-        .doOnNext(promotionViewModel -> {
-          if (promotionViewModel.getAppViewModel() == null) return;
-          DownloadModel appDownloadModel = promotionViewModel.getAppViewModel()
-              .getDownloadModel();
-          AppModel app = promotionViewModel.getAppViewModel()
-              .getAppModel();
-
-          Promotion.ClaimAction action = Promotion.ClaimAction.INSTALL;
-          if (appDownloadModel != null
-              && appDownloadModel.getAction() == DownloadModel.Action.MIGRATE) {
-            action = Promotion.ClaimAction.MIGRATE;
-          } else if (promotionViewModel.getAppViewModel()
-              .getMigrationModel()
-              .isMigrated()
-              && appDownloadModel != null
-              && appDownloadModel.getAction() == DownloadModel.Action.OPEN) {
-            action = Promotion.ClaimAction.MIGRATE;
-          }
-          Promotion promotion =
-              appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(), action);
-
-          if (promotion != null && app != null && appDownloadModel != null) {
-            view.showAppcWalletPromotionView(promotion, promotionViewModel.getWalletApp(), action,
-                appDownloadModel);
-            if (!appViewManager.isAppcPromotionImpressionSent()) {
-              appViewAnalytics.sendPromotionImpression(promotion.getPromotionId());
-              appViewManager.setAppcPromotionImpressionSent();
-            }
-
-            if (promotionViewModel.getWalletApp()
-                .isInstalled() && appDownloadModel.getAction() == DownloadModel.Action.OPEN) {
-              appViewManager.scheduleNotification(String.valueOf(promotion.getAppc()),
-                  app.getIcon(), app.getPackageName(), app.getStore()
-                      .getName());
-            }
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(walletPromotionViewModel -> {
-        }, err -> crashReport.log(err));
   }
 
   private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
@@ -1076,21 +1075,6 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .name(), appModel.getEditorsChoice())))
         .toCompletable();
-  }
-
-  private void observeDownloadApp() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> appViewManager.onAppViewModelCached())
-        .flatMap(app -> appViewManager.observeAppViewModel()
-            .observeOn(viewScheduler)
-            .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
-                model.getAppCoinsViewModel())))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
   }
 
   private void handleAppBought() {

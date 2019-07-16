@@ -121,11 +121,6 @@ public class AppViewManager {
     return appViewModelManager.getAppModel();
   }
 
-  @Experimental
-  public Observable<Boolean> onAppViewModelCached() {
-    return appViewModelManager.onAppViewModelCached();
-  }
-
   public Single<ReviewsViewModel> loadReviewsViewModel(String storeName, String packageName,
       String languagesFilterSort) {
     return reviewsManager.loadReviews(storeName, packageName, 3, languagesFilterSort)
