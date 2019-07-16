@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
@@ -64,7 +65,7 @@ public class AppViewPresenterTest {
     MockitoAnnotations.initMocks(this);
     presenter =
         spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
-        appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
+            appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
             permissionManager, permissionService, promotionsNavigator));
 
     lifecycleEvent = PublishSubject.create();
@@ -124,9 +125,12 @@ public class AppViewPresenterTest {
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
     when(appViewManager.observeAppViewModel()).thenReturn(Observable.just(appViewModel));
     when(appViewManager.shouldLoadInterstitialAd()).thenReturn(Single.just(false));
+    when(appViewManager.loadAdsFromAppView()).thenReturn(Single.just(new SearchAdResult()));
+    when(appViewManager.shouldLoadBannerAd()).thenReturn(Single.just(false));
     when(appViewManager.loadPromotionViewModel()).thenReturn(
         Observable.just(new PromotionViewModel()));
 
+    //TestSubscriber testSubscriber =
     presenter.handleFirstLoad();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

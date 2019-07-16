@@ -142,7 +142,21 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            observeDownloadApp(), loadOtherAppViewComponents(appViewModel)));
+            loadTopDonations(appViewModel), observeDownloadApp(),
+            loadOtherAppViewComponents(appViewModel)));
+  }
+
+  private Observable<AppViewModel> loadTopDonations(AppViewModel appViewModel) {
+    return Observable.just(appViewModel.getAppModel())
+        .flatMapSingle(appModel -> {
+          if (appModel.hasDonations()) {
+            return appViewManager.getTopDonations(appModel.getPackageName())
+                .observeOn(viewScheduler)
+                .doOnSuccess(donations -> view.showDonations(donations))
+                .map(__ -> appViewModel);
+          }
+          return Single.just(appViewModel);
+        });
   }
 
   private void showAppView(AppViewModel appViewModel) {
@@ -184,6 +198,15 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
+    return Observable.merge(loadInterstitialAds(), loadOrganicAds(appViewModel), loadBannerAds())
+        .map(__ -> appViewModel)
+        .onErrorReturn(throwable -> {
+          crashReport.log(throwable);
+          return appViewModel;
+        });
+  }
+
+  private Observable<Boolean> loadInterstitialAds() {
     return appViewManager.shouldLoadInterstitialAd()
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
@@ -193,12 +216,38 @@ public class AppViewPresenter implements Presenter {
           }
           return Single.just(false);
         })
-        .map(__ -> appViewModel)
-        .toObservable()
-        .onErrorReturn(throwable -> {
-          crashReport.log(throwable);
-          return appViewModel;
-        });
+        .onErrorReturn(__ -> null)
+        .toObservable();
+  }
+
+  private Observable<Boolean> loadBannerAds() {
+    return appViewManager.shouldLoadBannerAd()
+        .observeOn(viewScheduler)
+        .doOnSuccess(shouldLoadBanner -> {
+          if (shouldLoadBanner) {
+            view.showBannerAd();
+          }
+        })
+        .onErrorReturn(__ -> null)
+        .toObservable();
+  }
+
+  private Observable<SearchAdResult> loadOrganicAds(AppViewModel appViewModel) {
+    return Single.just(appViewModel.getAppModel()
+        .getMinimalAd())
+        .flatMap(adResult -> {
+          if (adResult == null) {
+            return appViewManager.loadAdsFromAppView()
+                .doOnSuccess(ad -> {
+                  appViewManager.setSearchAdResult(ad);
+                  handleAdsLogic(appViewManager.getSearchAdResult());
+                })
+                .doOnError(throwable -> crashReport.log(throwable));
+          }
+          return Single.just(null);
+        })
+        .onErrorReturn(__ -> null)
+        .toObservable();
   }
 
   @VisibleForTesting
@@ -353,17 +402,6 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Completable showBannerAd() {
-    return appViewManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
-        .flatMapCompletable(shouldLoadBanner -> {
-          if (shouldLoadBanner) {
-            view.showBannerAd();
-          }
-          return Completable.complete();
-        });
-  }
-
   private void handleInterstitialAdClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -411,39 +449,10 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> loadAppView().flatMapSingle(appViewViewModel -> showBannerAd().andThen(
-            manageOrganicAds(appViewViewModel.getAppModel()
-                .getMinimalAd()).onErrorReturn(__1 -> null)
-                .map(__1 -> appViewViewModel)))
-            .flatMapSingle(app -> {
-              if (app.getAppModel()
-                  .hasDonations()) {
-                return appViewManager.getTopDonations(app.getAppModel()
-                    .getPackageName())
-                    .observeOn(viewScheduler)
-                    .doOnSuccess(donations -> view.showDonations(donations))
-                    .map(donations -> app);
-              } else {
-                return Single.just(app);
-              }
-            }))
+        .flatMap(__ -> loadAppView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          crashReport.log(throwable);
-        });
-  }
-
-  private Single<SearchAdResult> manageOrganicAds(SearchAdResult searchAdResult) {
-    if (searchAdResult == null) {
-      return appViewManager.loadAdsFromAppView()
-          .doOnSuccess(ad -> {
-            appViewManager.setSearchAdResult(ad);
-            handleAdsLogic(appViewManager.getSearchAdResult());
-          })
-          .doOnError(throwable -> crashReport.log(throwable));
-    }
-    return Single.just(null);
+        }, throwable -> crashReport.log(throwable));
   }
 
   private void handleOnScroll() {
