@@ -16,6 +16,7 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
   static final int STANDBY_UPDATE = 3;
   static final int ERROR_UPDATE = 4;
   static final int PAUSING_UPDATE = 5;
+  static final int PROMOTION_UPDATE = 6;
   private final PublishSubject<AppClick> appItemClicks;
   private List<App> listOfApps;
 
@@ -54,6 +55,10 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
         appViewHolder = new StandByUpdateAppViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.apps_standby_update_app_item, parent, false), appItemClicks, true);
         break;
+      case PROMOTION_UPDATE:
+        appViewHolder = new AppcPromotionAppViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.apps_appc_promotion_upgrade_app_item, parent, false), appItemClicks);
+        break;
       default:
         throw new IllegalStateException("Wrong cardType" + viewType);
     }
@@ -68,21 +73,25 @@ public class AppcAppsAdapter extends RecyclerView.Adapter<AppsViewHolder> {
 
   @Override public int getItemViewType(int position) {
     App item = listOfApps.get(position);
-    StateApp.Status status = ((UpdateApp) item).getStatus();
-    switch (status) {
-      case UPDATE:
-        return UPDATE;
-      case UPDATING:
-        return UPDATING;
-      case STANDBY:
-      case INSTALLING:
-        return STANDBY_UPDATE;
-      case ERROR:
-        return ERROR_UPDATE;
-      case PAUSING:
-        return PAUSING_UPDATE;
-      default:
-        throw new IllegalArgumentException("Wrong download status : " + status.name());
+    if (item instanceof AppcUpdateApp && ((AppcUpdateApp) item).hasPromotion()) {
+      return PROMOTION_UPDATE;
+    } else {
+      StateApp.Status status = ((UpdateApp) item).getStatus();
+      switch (status) {
+        case UPDATE:
+          return UPDATE;
+        case UPDATING:
+          return UPDATING;
+        case STANDBY:
+        case INSTALLING:
+          return STANDBY_UPDATE;
+        case ERROR:
+          return ERROR_UPDATE;
+        case PAUSING:
+          return PAUSING_UPDATE;
+        default:
+          throw new IllegalArgumentException("Wrong download status : " + status.name());
+      }
     }
   }
 

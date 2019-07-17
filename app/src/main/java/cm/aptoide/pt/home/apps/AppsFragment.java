@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -224,6 +227,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(appClick -> appClick.getApp());
   }
 
+  @Override public Observable<App> startDownloadInAppview() {
+    return appItemClicks.filter(
+        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)
+        .map(appClick -> appClick.getApp());
+  }
+
   @Override public Observable<AppClickEventWrapper> retryUpdate() {
     return appItemClicks.filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE
@@ -403,12 +412,17 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void showAppcUpgradesList(List<App> list) {
     Logger.getInstance()
         .d("Apps", "showing appc upgrades list");
+    for (App app : list) {
+      if (app instanceof AppcUpdateApp && ((AppcUpdateApp) app).hasPromotion()) {
+        showPromoHeaderMessage(((AppcUpdateApp) app).getAppcReward());
+      }
+    }
     if (list != null && !list.isEmpty()) {
       appcAppsAdapter.setAvailableUpgradesList(list);
     }
     showUpgrades = true;
     appcUpgradesSectionLoaded.onNext(null);
-    if (shouldShowAppsList()) {
+    if (shouldShowAppcAppsList()) {
       showAppsList();
     }
   }
@@ -424,6 +438,22 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<Void> onLoadUpdatesSection() {
     return updatesSectionLoaded;
+  }
+
+  private void showPromoHeaderMessage(float appcReward) {
+    ConstraintSet constraintSet = new ConstraintSet();
+    constraintSet.clone((ConstraintLayout) appcAppsLayout);
+    constraintSet.connect(R.id.appc_apps_recycler_view, ConstraintSet.TOP,
+        R.id.header_promo_message, ConstraintSet.BOTTOM);
+    constraintSet.applyTo((ConstraintLayout) appcAppsLayout);
+    ((TextView) appcAppsLayout.findViewById(R.id.header_promo_message)
+        .findViewById(R.id.message)).setText(
+        String.format(getResources().getString(R.string.promo_update2appc_message),
+            String.valueOf((Math.round(appcReward)))));
+    appcAppsLayout.findViewById(R.id.header_message)
+        .setVisibility(View.GONE);
+    appcAppsLayout.findViewById(R.id.header_promo_message)
+        .setVisibility(View.VISIBLE);
   }
 
   private void showAppsList() {
@@ -456,6 +486,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         && showInstalled
         && showUpgrades
         && recyclerView.getVisibility() != View.VISIBLE;
+  }
+
+  private boolean shouldShowAppcAppsList() {
+    return showDownloads && showUpdates && showInstalled && showUpgrades;
   }
 
   private void hideLoadingProgressBar() {

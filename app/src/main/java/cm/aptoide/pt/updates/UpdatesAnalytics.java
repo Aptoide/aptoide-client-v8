@@ -13,6 +13,7 @@ public class UpdatesAnalytics {
 
   public final static String UPDATE_EVENT = "Updates";
   public final static String OPEN_APP_VIEW = "Open App View";
+  public final static String OPEN_APP_VIEW_MIGRATIOM = "Open Migrated App View";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
 
