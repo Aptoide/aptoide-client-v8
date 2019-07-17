@@ -17,10 +17,12 @@ public class SeeMoreAppcPresenter implements Presenter {
   private final SeeMoreAppcManager seeMoreAppcManager;
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
+  private final SeeMoreAppcNavigator seeMoreAppcNavigator;
 
   public SeeMoreAppcPresenter(SeeMoreAppcView view, Scheduler viewScheduler, Scheduler ioScheduler,
       CrashReport crashReport, PermissionManager permissionManager,
-      PermissionService permissionService, SeeMoreAppcManager seeMoreAppcManager) {
+      PermissionService permissionService, SeeMoreAppcManager seeMoreAppcManager,
+      SeeMoreAppcNavigator seeMoreAppcNavigator) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.ioScheduler = ioScheduler;
@@ -28,6 +30,7 @@ public class SeeMoreAppcPresenter implements Presenter {
     this.seeMoreAppcManager = seeMoreAppcManager;
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
+    this.seeMoreAppcNavigator = seeMoreAppcNavigator;
   }
 
   @Override public void present() {
@@ -44,6 +47,24 @@ public class SeeMoreAppcPresenter implements Presenter {
     handleCancelAppcUpgradeClick();
 
     handleResumeAppcUpgradeClick();
+
+    handleNavigateToAppViewWithDownload();
+
+    handleUpdateCardClick();
+
+    handleUpdateCardLongClick();
+  }
+
+  private void handleNavigateToAppViewWithDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.startDownloadInAppview())
+        .doOnNext(
+            app -> seeMoreAppcNavigator.navigateToAppViewAndInstall(((UpdateApp) app).getAppId(),
+                ((UpdateApp) app).getPackageName()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleRefreshApps() {
@@ -72,7 +93,9 @@ public class SeeMoreAppcPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> seeMoreAppcManager.getAppcUpgradesList(false))
+        .flatMap(__ -> seeMoreAppcManager.migrationPromotionActive())
+        .flatMap(promotion -> seeMoreAppcManager.getAppcUpgradesList(false, promotion.first,
+            promotion.second))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -84,6 +107,8 @@ public class SeeMoreAppcPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
+        .flatMap(__ -> seeMoreAppcManager.migrationPromotionActive())
+        .filter(hasPromotion -> !hasPromotion.first)
         .flatMap(__ -> seeMoreAppcManager.getAppcUpgradeDownloadsList())
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesDownloadList(list))
@@ -141,6 +166,35 @@ public class SeeMoreAppcPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
+  }
+
+  private void handleUpdateCardClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.updateClick())
+        .doOnNext(app -> seeMoreAppcNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
+            ((UpdateApp) app).getPackageName()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
+  }
+
+  private void handleUpdateCardLongClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.updateLongClick())
+        .doOnNext(app -> view.showIgnoreUpdate())
+        .flatMap(app -> view.ignoreUpdate()
+            .observeOn(ioScheduler)
+            .flatMap(__ -> seeMoreAppcManager.excludeUpdate(app)))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          view.showUnknownErrorMessage();
+          crashReport.log(error);
+        });
   }
 
   private void handlePauseAppcUpgradeClick() {

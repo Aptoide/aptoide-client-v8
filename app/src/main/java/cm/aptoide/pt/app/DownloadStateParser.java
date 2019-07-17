@@ -94,7 +94,7 @@ public class DownloadStateParser {
         downloadAction = Download.ACTION_DOWNGRADE;
         break;
       default:
-        throw new IllegalArgumentException("Invalid action");
+        throw new IllegalArgumentException("Invalid action " + action.toString());
     }
     return downloadAction;
   }
