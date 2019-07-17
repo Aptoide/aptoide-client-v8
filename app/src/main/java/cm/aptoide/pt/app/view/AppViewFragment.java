@@ -47,8 +47,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener;
-import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -177,6 +175,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View genericRetryButton;
   private View noNetworkRetryButton;
   private View reviewsLayout;
+  private View downloadControlsLayout;
   private ImageView appIcon;
   private TextView appName;
   private View trustedLayout;
@@ -234,7 +233,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ProgressBar viewProgress;
   private View appview;
   private Button install;
-  private DownloadProgressView downloadProgressView;
+  private LinearLayout downloadInfoLayout;
+  private ProgressBar downloadProgressBar;
+  private TextView downloadProgressValue;
+  private ImageView cancelDownload;
+  private ImageView pauseDownload;
+  private ImageView resumeDownload;
   private DownloadModel.Action action;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private AdsRepository adsRepository;
@@ -257,6 +261,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private MoPubView bannerAd;
   private View flagThisAppSection;
   private View collapsingAppcBackground;
+  private TextView installStateText;
 
   //wallet promotions
   private View promotionView;
@@ -315,6 +320,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     genericRetryButton = genericErrorView.findViewById(R.id.retry);
     noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     reviewsLayout = view.findViewById(R.id.reviews_layout);
+    downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
     noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
     genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = view.findViewById(R.id.app_icon);
@@ -372,7 +378,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     donationsProgress = view.findViewById(R.id.donations_progress);
     donationsListLayout = view.findViewById(R.id.donations_list_layout);
     listDonateButton = view.findViewById(R.id.donate_button);
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext()) {
+      @Override public boolean canScrollVertically() {
+        return false;
+      }
+    };
     donationsList.setLayoutManager(linearLayoutManager);
 
     workingWellText = (TextView) view.findViewById(R.id.working_well_count);
@@ -399,13 +409,19 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
 
     install = ((Button) view.findViewById(R.id.appview_install_button));
-    downloadProgressView = view.findViewById(R.id.download_progress_view);
+    downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
+    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
+    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
+    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
+    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
+    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
+    installStateText = view.findViewById(R.id.appview_download_download_state);
 
     promotionView = view.findViewById(R.id.wallet_install_promotion);
     walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
     walletPromotionMessage = promotionView.findViewById(R.id.wallet_message);
     walletPromotionButtonsLayout = promotionView.findViewById(R.id.buttons_layout);
-    walletPromotionCancelButton = promotionView.findViewById(R.id.cancelButton);
+    walletPromotionCancelButton = promotionView.findViewById(R.id.cancel_button);
     walletPromotionDownloadButton = promotionView.findViewById(R.id.download_button);
     walletPromotionDownloadLayout = view.findViewById(R.id.wallet_download_info);
     downloadWalletProgressBar =
@@ -681,6 +697,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
+    downloadInfoLayout.setVisibility(View.GONE);
+    install.setVisibility(View.VISIBLE);
     install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
@@ -1109,7 +1127,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     install.setBackgroundDrawable(getContext().getResources()
         .getDrawable(R.drawable.appc_gradient_rounded));
-    downloadProgressView.setProgressDrawable(
+    downloadProgressBar.setProgressDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appc_progress));
     flagThisAppSection.setVisibility(View.GONE);
   }
@@ -1621,10 +1639,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return installClickSubject;
   }
 
-  @Override public Observable<DownloadEventListener.Action> downloadViewEvents() {
-    return downloadProgressView.events();
-  }
-
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
         getResources().getString(R.string.root_access_dialog))
@@ -1640,7 +1654,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
     if (downloadModel.isDownloadingOrInstalling()) {
       appcInfoView.hideInfo();
-      downloadProgressView.setVisibility(View.VISIBLE);
+      downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
@@ -1651,8 +1665,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         appcRewardView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
       }
-      downloadProgressView.reset();
-      downloadProgressView.setVisibility(View.GONE);
+      downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
       if (downloadModel.hasError()) {
@@ -1675,6 +1688,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showDowngradingMessage() {
     Snackbar.make(getView(), R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
         .show();
+  }
+
+  @Override public Observable<Void> pauseDownload() {
+    return RxView.clicks(pauseDownload);
+  }
+
+  @Override public Observable<Void> resumeDownload() {
+    return RxView.clicks(resumeDownload);
+  }
+
+  @Override public Observable<Void> cancelDownload() {
+    return RxView.clicks(cancelDownload);
   }
 
   @Override public Observable<Void> isAppViewReadyToDownload() {
@@ -1714,27 +1739,66 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
+
+    LinearLayout.LayoutParams pauseShowing =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 4f);
+    LinearLayout.LayoutParams pauseHidden =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT, 2f);
     switch (downloadState) {
       case ACTIVE:
-        downloadProgressView.startDownload();
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
-      case INSTALLING:
-        downloadProgressView.startInstallation();
+      case INDETERMINATE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case PAUSE:
-        downloadProgressView.pauseDownload();
+        downloadProgressBar.setIndeterminate(false);
+        downloadProgressBar.setProgress(progress);
+        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.VISIBLE);
+        resumeDownload.setVisibility(View.VISIBLE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
+        installStateText.setText(getString(R.string.appview_short_downloading));
+        break;
+      case COMPLETE:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.VISIBLE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseShowing);
+        installStateText.setText(getString(R.string.appview_short_downloading));
+        break;
+      case INSTALLING:
+        downloadProgressBar.setIndeterminate(true);
+        pauseDownload.setVisibility(View.GONE);
+        cancelDownload.setVisibility(View.GONE);
+        resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setLayoutParams(pauseHidden);
+        installStateText.setText(getString(R.string.appview_short_installing));
         break;
       case ERROR:
-        showErrorDialog("", getString(R.string.error_occured));
+        showErrorDialog("", getContext().getString(R.string.error_occured));
         break;
       case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getString(R.string.out_of_space_dialog_title),
-            getString(R.string.out_of_space_dialog_message));
-        break;
-      default:
+        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
+            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
-    downloadProgressView.setProgress(progress);
   }
 
   private void showErrorDialog(String title, String message) {

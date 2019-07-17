@@ -109,7 +109,9 @@ public class AppViewPresenter implements Presenter {
     handleOnSimilarAppsVisible();
 
     handleInstallButtonClick();
-    handleAppDownloadEvents();
+    pauseDownload();
+    resumeDownload();
+    cancelDownload();
     loadDownloadApp();
     handleAppBought();
     handleApkfyDialogPositiveClick();
@@ -923,31 +925,47 @@ public class AppViewPresenter implements Presenter {
         .toObservable();
   }
 
-  private void handleAppDownloadEvents() {
+  private void cancelDownload() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.downloadViewEvents()
-            .flatMap(action -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(create -> view.cancelDownload()
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadCancelEvent(app.getPackageName()))
+            .flatMapCompletable(
+                app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
+                    app.getVersionCode()))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
+  private void resumeDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.resumeDownload()
+            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
-                .flatMapCompletable(app -> {
-                  switch (action.getType()) {
-                    case CANCEL:
-                      appViewAnalytics.sendDownloadCancelEvent(app.getPackageName());
-                      return appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
-                          app.getVersionCode());
-                    case RESUME:
-                      return appViewManager.resumeDownload(app.getMd5(), app.getAppId());
-                    case PAUSE:
-                      appViewAnalytics.sendDownloadPauseEvent(app.getPackageName());
-                      return appViewManager.pauseDownload(app.getMd5());
-                    default:
-                      return Completable.error(
-                          new IllegalArgumentException("Invalid type of action"));
-                  }
-                })
+                .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
+                .flatMapCompletable(
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
                 .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
+  private void pauseDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(create -> view.pauseDownload()
+            .flatMapSingle(__ -> appViewManager.loadAppViewViewModel())
+            .doOnNext(app -> appViewAnalytics.sendDownloadPauseEvent(app.getPackageName()))
+            .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

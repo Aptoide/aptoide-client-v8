@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     >
 
   <Button
@@ -21,15 +19,124 @@
       style="@style/Aptoide.Button"
       />
 
-  <cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
+  <LinearLayout
+      android:id="@+id/appview_transfer_info"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="8dp"
-      android:layout_marginLeft="19dp"
-      android:layout_marginRight="8dp"
-      android:layout_marginStart="22dp"
-      android:layout_marginTop="9dp"
-      android:id="@+id/download_progress_view"/>
+      android:orientation="horizontal"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="18dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+
+      <FrameLayout
+          android:layout_width="fill_parent"
+          android:layout_height="4dp"
+          android:layout_marginBottom="4dp"
+          >
+
+        <ProgressBar
+            android:id="@+id/appview_download_progress_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            style="?android:attr/progressBarStyleHorizontal"
+            />
+      </FrameLayout>
+
+      <RelativeLayout
+          android:id="@+id/appview_download_info_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="5dp"
+          >
+
+        <TextView
+            android:id="@+id/appview_download_download_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/appview_short_downloading"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+
+        <TextView
+            android:id="@+id/appview_download_progress_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="start"
+            tools:text="80%"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
+            />
+      </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/install_controls_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/appview_download_progress_number"
+        android:layout_toRightOf="@+id/appview_download_progress_number"
+        android:layout_weight="4"
+        android:gravity="end"
+        android:orientation="horizontal"
+        >
+
+      <ImageView
+          android:id="@+id/appview_download_cancel_button"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="center"
+          android:src="@drawable/ic_clear_action_black"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/appview_download_resume_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_play_arrow_action_black"
+          android:visibility="gone"
+          />
+
+      <ImageView
+          android:id="@+id/appview_download_pause_download"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:contentDescription="@null"
+          android:padding="12dp"
+          android:scaleType="fitCenter"
+          android:src="@drawable/ic_pause_action_black"
+          />
+
+    </LinearLayout>
+
+  </LinearLayout>
 
 
 </LinearLayout>
