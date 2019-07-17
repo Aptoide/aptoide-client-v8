@@ -70,7 +70,6 @@ import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.promotions.CaptchaService;
 import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -352,8 +351,8 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
-      CaptchaService captchaService, PromotionsManager promotionsManager) {
-    return new ClaimPromotionsManager(promotionsManager, captchaService);
+      PromotionsManager promotionsManager) {
+    return new ClaimPromotionsManager(promotionsManager);
   }
 
   @ActivityScope @Provides ClaimPromotionsNavigator providesClaimPromotionsNavigator(

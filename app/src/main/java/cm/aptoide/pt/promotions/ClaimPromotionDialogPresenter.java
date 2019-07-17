@@ -39,12 +39,9 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleOnActivityResult();
     handleFindAddressClick();
     handleContinueClick();
-    handleRefreshCaptcha();
-    handleSubmitClick();
     handleOnEditTextChanged();
     handleDismissGenericError();
     handleWalletCancelClick();
-    handleCaptchaCancelClick();
     handleDismissGenericMessage();
   }
 
@@ -119,41 +116,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
-        .observeOn(viewScheduler)
-        .doOnNext(captcha -> {
-          claimPromotionsManager.saveCaptchaUrl(captcha);
-          view.showCaptchaView(captcha);
-        })
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
-  }
-
-  private void handleRefreshCaptcha() {
-    subscriptions.add(view.refreshCaptchaClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendRefreshCaptchaEvent(packageName);
-          view.showLoadingCaptcha();
-        })
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
-        .observeOn(viewScheduler)
-        .doOnNext(captcha -> view.hideLoadingCaptcha(captcha))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
-  }
-
-  private void handleSubmitClick() {
-    subscriptions.add(view.finishClick()
-        .doOnNext(wrapper -> {
-          promotionsAnalytics.sendClickOnCaptchaDialogClaim(wrapper.getPackageName());
-          view.showLoading();
-        })
         .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
-            wrapper.getCaptcha(), promotionId))
+            "CAPTCHA-CHANGE-REQUEST", promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()
@@ -164,10 +128,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
             return Single.just(handleErrors(response.getErrors()));
           }
         })
-        .filter(error -> error.equals("captcha"))
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
-        .observeOn(viewScheduler)
-        .doOnNext(captcha -> view.showInvalidCaptcha(captcha))
         .subscribe(__ -> {
         }, throwable -> {
           view.showGenericError();
@@ -199,18 +159,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .doOnNext(packageName -> {
           promotionsAnalytics.sendClickOnWalletDialogCancel(packageName);
           navigator.popDialogWithResult(packageName, Activity.RESULT_CANCELED);
-          view.dismissDialog();
-        })
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
-  }
-
-  private void handleCaptchaCancelClick() {
-    subscriptions.add(view.captchaCancelClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendClickOnCaptchaDialogCancel(packageName);
           view.dismissDialog();
         })
         .subscribe(__ -> {

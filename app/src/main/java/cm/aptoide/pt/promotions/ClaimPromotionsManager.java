@@ -5,16 +5,9 @@ import rx.Single;
 public class ClaimPromotionsManager {
 
   private PromotionsManager promotionsManager;
-  private CaptchaService captchaService;
 
-  public ClaimPromotionsManager(PromotionsManager promotionsManager,
-      CaptchaService captchaService) {
+  public ClaimPromotionsManager(PromotionsManager promotionsManager) {
     this.promotionsManager = promotionsManager;
-    this.captchaService = captchaService;
-  }
-
-  public Single<String> getCaptcha() {
-    return captchaService.getCaptcha();
   }
 
   public void saveWalletAddress(String walletAddress) {
@@ -25,13 +18,5 @@ public class ClaimPromotionsManager {
       String promotionId) {
     return promotionsManager.claimPromotion(promotionsManager.getWalletAddress(), packageName,
         captcha, promotionId);
-  }
-
-  public void saveCaptchaUrl(String captchaUrl) {
-    captchaService.saveCaptchaUrl(captchaUrl);
-  }
-
-  public String getCaptchaUrl() {
-    return captchaService.getCaptchaUrl();
   }
 }
