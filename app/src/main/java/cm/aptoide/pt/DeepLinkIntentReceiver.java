@@ -177,9 +177,10 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromPickApp();
     } else if ("promotions".equals(u.getQueryParameter("name"))) {
       return startFromPromotions();
-    } else if ("CURATION_1".equals(u.getQueryParameter("name"))
-        && u.getQueryParameter("id") != null) {
+    } else if ("CURATION_1".equals(u.getQueryParameter("name")) && u.getQueryParameter("id") != null) {
       return startFromEditorialCard(u.getQueryParameter("id"));
+    } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
+      return startAppcInfoView();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
@@ -250,11 +251,19 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     String utmSourceParameter = u.getQueryParameter("utm_source");
     String appSourceParameter = u.getQueryParameter("app_source");
-    if (utmSourceParameter != null && appSourceParameter != null && (utmSourceParameter.equals(
-        "myappcoins") || utmSourceParameter.equals("appcoinssdk"))) {
-      return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
+    if (utmSourceParameter != null
+        && isFromAppCoins(utmSourceParameter)
+        && "com.appcoins.wallet".equals(packageName)) {
+      deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
+      if (utmSourceParameter.equals("appcoinssdk")) {
+        return startWalletInstallIntent(packageName, utmSourceParameter, appSourceParameter);
+      }
     }
     return startFromPackageName(packageName);
+  }
+
+  private boolean isFromAppCoins(String utmSourceParameter) {
+    return utmSourceParameter.equals("myappcoins") || utmSourceParameter.equals("appcoinssdk");
   }
 
   private Intent dealWithAptoideXml(String uri) {
@@ -486,7 +495,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     intent.putExtra(DeepLinksKeys.WALLET_PACKAGE_NAME_KEY, packageName);
     intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, appPackageName);
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    deepLinkAnalytics.sendWalletDeepLinkEvent(utmSourceParameter);
     return intent;
   }
 
@@ -572,6 +580,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.GENERIC_DEEPLINK, true);
     intent.putExtra(DeepLinksKeys.URI, parse);
+    return intent;
+  }
+
+  private Intent startAppcInfoView() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APPC_INFO_VIEW, true);
     return intent;
   }
 
@@ -702,6 +716,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String PICK_APP_DEEPLINK = "pick_app_deeplink";
     public static final String PROMOTIONS_DEEPLINK = "promotions";
     public static final String EDITORIAL_DEEPLINK = "editorial";
+    public static final String APPC_INFO_VIEW = "appc_info_view";
   }
 
   public static class DeepLinksKeys {

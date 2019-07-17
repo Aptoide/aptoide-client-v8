@@ -26,6 +26,8 @@ public interface AppsFragmentView extends View {
 
   Observable<App> pauseDownload();
 
+  Observable<App> startDownloadInAppview();
+
   Observable<AppClickEventWrapper> retryUpdate();
 
   Observable<AppClickEventWrapper> updateApp();
@@ -56,7 +58,7 @@ public interface AppsFragmentView extends View {
 
   Observable<Void> moreAppcClick();
 
-  Observable<App> updateClick();
+  Observable<App> cardClick();
 
   void setUserImage(String userAvatarUrl);
 

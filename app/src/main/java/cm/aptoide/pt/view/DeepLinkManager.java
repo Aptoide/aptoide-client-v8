@@ -18,6 +18,7 @@ import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -150,6 +151,8 @@ public class DeepLinkManager {
       promotionsDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.EDITORIAL_DEEPLINK)) {
       editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_INFO_VIEW)) {
+      appcInfoDeepLink();
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -165,6 +168,10 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
+  }
+
+  private void appcInfoDeepLink() {
+    fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
   }
 
   private void editorialDeepLink(String cardId) {

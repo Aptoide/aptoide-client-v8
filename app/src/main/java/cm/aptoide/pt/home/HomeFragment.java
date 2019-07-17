@@ -321,11 +321,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     bundlesList.smoothScrollToPosition(0);
   }
 
-  @Override public boolean isAtTop() {
-    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
-    return layoutManager.findFirstVisibleItemPosition() == 0;
-  }
-
   @Override public void setUserImage(String userAvatarUrl) {
     ImageLoader.with(getContext())
         .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, userAvatar,
@@ -405,6 +400,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public boolean isAtTop() {
+    LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
+    return layoutManager.findFirstVisibleItemPosition() == 0;
   }
 
   private boolean isEndReached() {

@@ -47,6 +47,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -390,14 +391,20 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
       DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser) {
+      InstallAnalytics installAnalytics, DownloadStateParser downloadStateParser,
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new WalletInstallAnalytics(downloadAnalytics, notificationAnalytics, installAnalytics,
-        downloadStateParser);
+        downloadStateParser, analyticsManager, navigationTracker);
   }
 
   @ActivityScope @Provides WalletInstallConfiguration providesWalletInstallConfiguration() {
     return new WalletInstallConfiguration(
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
+  }
+
+  @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
+      AppNavigator appNavigator) {
+    return new SeeMoreAppcNavigator(appNavigator);
   }
 }

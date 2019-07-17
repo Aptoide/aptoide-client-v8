@@ -4,6 +4,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
+import cm.aptoide.pt.promotions.PromotionsModel;
 import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
@@ -23,20 +24,20 @@ public class Home {
   private final BannerRepository bannerRepository;
   private final MoPubAdsManager moPubAdsManager;
   private final BlacklistManager blacklistManager;
-  private final String promotionId;
+  private final String promotionType;
   private final ReactionsManager reactionsManager;
   private PromotionsPreferencesManager promotionsPreferencesManager;
 
   public Home(BundlesRepository bundlesRepository, PromotionsManager promotionsManager,
       BannerRepository bannerRepository, MoPubAdsManager moPubAdsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BlacklistManager blacklistManager,
-      String promotionId, ReactionsManager reactionsManager) {
+      String promotionType, ReactionsManager reactionsManager) {
     this.bundlesRepository = bundlesRepository;
     this.promotionsManager = promotionsManager;
     this.bannerRepository = bannerRepository;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsPreferencesManager = promotionsPreferencesManager;
-    this.promotionId = promotionId;
+    this.promotionType = promotionType;
     this.blacklistManager = blacklistManager;
     this.reactionsManager = reactionsManager;
   }
@@ -109,7 +110,7 @@ public class Home {
   }
 
   public Single<HomePromotionsWrapper> hasPromotionApps() {
-    return promotionsManager.getPromotionApps(promotionId)
+    return promotionsManager.getPromotionsModel(promotionType)
         .map(this::mapPromotions);
   }
 
@@ -117,23 +118,24 @@ public class Home {
     promotionsPreferencesManager.setPromotionsDialogShown();
   }
 
-  private HomePromotionsWrapper mapPromotions(List<PromotionApp> apps) {
-    int promotions = 0;
+  private HomePromotionsWrapper mapPromotions(PromotionsModel promotionsModel) {
+    int unclaimedPromotions = 0;
+    List<PromotionApp> apps = promotionsModel.getAppsList();
     float unclaimedAppcValue = 0;
-    float totalAppcValue = 0;
     if (apps.size() > 0) {
       for (PromotionApp app : apps) {
-        totalAppcValue += app.getAppcValue();
         if (!app.isClaimed()) {
-          promotions++;
+          unclaimedPromotions++;
           unclaimedAppcValue += app.getAppcValue();
         }
       }
     }
 
-    return new HomePromotionsWrapper(!apps.isEmpty(), promotions, unclaimedAppcValue,
+    return new HomePromotionsWrapper(promotionsModel.getTitle(),
+        promotionsModel.getFeatureGraphic(), !apps.isEmpty(), unclaimedPromotions,
+        unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
-        totalAppcValue);
+        promotionsModel.getTotalAppcValue());
   }
 
   public Single<Boolean> shouldLoadNativeAd() {

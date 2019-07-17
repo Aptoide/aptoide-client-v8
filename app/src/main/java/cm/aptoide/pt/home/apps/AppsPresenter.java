@@ -94,6 +94,20 @@ public class AppsPresenter implements Presenter {
     handleBottomNavigationEvents();
 
     handleRefreshApps();
+
+    handleNavigateToAppViewWithDownload();
+  }
+
+  private void handleNavigateToAppViewWithDownload() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.startDownloadInAppview())
+        .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((UpdateApp) app).getAppId(),
+            ((UpdateApp) app).getPackageName()))
+        .doOnNext(__ -> appsManager.setMigrationAppViewAnalyticsEvent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleRefreshApps() {
@@ -134,9 +148,14 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(__ -> view.updateClick())
-        .doOnNext(app -> appsNavigator.navigateToAppView(((UpdateApp) app).getAppId(),
-            ((UpdateApp) app).getPackageName()))
+        .flatMap(__ -> view.cardClick())
+        .doOnNext(app -> {
+          if (app.getType() == App.Type.DOWNLOAD) {
+            appsNavigator.navigateToAppView(((DownloadApp) app).getMd5());
+          } else {
+            appsNavigator.navigateToAppView(((UpdateApp) app).getMd5());
+          }
+        })
         .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -163,7 +182,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradesList(true))
+        .flatMap(__ -> appsManager.getExcludedAppcUpgradesList())
         .distinctUntilChanged()
         .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
         .observeOn(viewScheduler)
@@ -208,6 +227,8 @@ public class AppsPresenter implements Presenter {
   private void observeAppcUpgradesList() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> appsManager.migrationPromotionActive())
+        .filter(hasPromotion -> !hasPromotion.first)
         .flatMap(created -> view.onLoadAppcUpgradesSection())
         .observeOn(ioScheduler)
         .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
@@ -439,7 +460,9 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradesList(false))
+        .flatMap(__ -> appsManager.migrationPromotionActive())
+        .flatMap(
+            response -> appsManager.getAppcUpgradesList(false, response.first, response.second))
         .observeOn(viewScheduler)
         .doOnNext(list -> view.showAppcUpgradesList(list))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

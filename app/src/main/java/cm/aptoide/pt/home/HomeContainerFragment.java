@@ -171,18 +171,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     }
   }
 
-  @Override public void setPromotionsTickerWithValue(int promotions) {
-    promotionsTicker.setText(Integer.toString(promotions));
-    promotionsTicker.setVisibility(View.VISIBLE);
-  }
-
-  @Override public void setEllipsizedPromotionsTicker() {
-    promotionsTicker.setText("9+");
-    promotionsTicker.setVisibility(View.VISIBLE);
-  }
-
   @Override public void showPromotionsHomeDialog(HomePromotionsWrapper homePromotionsWrapper) {
-    promotionsHomeDialog.showDialog(getContext(), homePromotionsWrapper);
+    promotionsHomeDialog.showDialog(homePromotionsWrapper);
   }
 
   @Override public void hidePromotionsIcon() {
