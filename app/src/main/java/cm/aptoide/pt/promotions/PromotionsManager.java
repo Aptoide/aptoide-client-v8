@@ -186,8 +186,8 @@ public class PromotionsManager {
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
-      String captcha, String promotionId) {
-    return promotionsService.claimPromotion(walletAddress, packageName, captcha, promotionId);
+      String promotionId) {
+    return promotionsService.claimPromotion(walletAddress, packageName, promotionId);
   }
 
   public Observable<String> getPackageSignature(String packageName) {

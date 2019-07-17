@@ -116,8 +116,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
-            "CAPTCHA-CHANGE-REQUEST", promotionId))
+        .flatMapSingle(
+            wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(), promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()

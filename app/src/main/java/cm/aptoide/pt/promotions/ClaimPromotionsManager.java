@@ -14,9 +14,8 @@ public class ClaimPromotionsManager {
     promotionsManager.saveWalletAddress(walletAddress);
   }
 
-  public Single<ClaimStatusWrapper> claimPromotion(String packageName, String captcha,
-      String promotionId) {
+  public Single<ClaimStatusWrapper> claimPromotion(String packageName, String promotionId) {
     return promotionsManager.claimPromotion(promotionsManager.getWalletAddress(), packageName,
-        captcha, promotionId);
+        promotionId);
   }
 }
