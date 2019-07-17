@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="DownloadProgressView">
-    <attr format="reference" name="progressDrawable"/>
-    <attr format="boolean" name="isPausable"/>
-    <attr format="boolean" name="enableAnimations"/>
-  </declare-styleable>
-  <declare-styleable name="AnimatedImageView">
-    <attr format="reference" name="animation"/>
-    <attr format="reference" name="reverseAnimation"/>
-  </declare-styleable>
+
 </resources>
