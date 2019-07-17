@@ -65,6 +65,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
   private PublishSubject<Void> promotionOverDialogClick;
+  private TextView promotionTitle;
   private TextView promotionFirstMessage;
   private View walletActiveView;
   private View walletInactiveView;
@@ -104,6 +105,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     toolbarImage = view.findViewById(R.id.app_graphic);
     toolbarImagePlaceholder = view.findViewById(R.id.app_graphic_placeholder);
 
+    promotionTitle = view.findViewById(R.id.promotions_title);
     promotionFirstMessage = view.findViewById(R.id.promotions_message_1);
     walletActiveView = view.findViewById(R.id.promotion_wallet_active);
     walletInactiveView = view.findViewById(R.id.promotion_wallet_inactive);
@@ -139,7 +141,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         toolbar.setBackgroundDrawable(drawable);
 
         toolbarTitle.setTextColor(toolbarColor);
-        toolbarTitle.setText(getString(R.string.promotion_title_conquer));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           handleStatusBar(isCollapsed);
         }
@@ -336,6 +337,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<Void> promotionOverDialogClick() {
     return promotionOverDialogClick;
+  }
+
+  @Override public void showPromotionTitle(String title) {
+    promotionTitle.setText(title);
+    toolbarTitle.setText(title);
+  }
+
+  @Override public void showPromotionFeatureGraphic(String background) {
+    ImageLoader.with(getContext())
+        .load(background, toolbarImage);
   }
 
   private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {

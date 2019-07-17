@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.support.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -8,6 +9,7 @@ import cm.aptoide.pt.presenter.View;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
 
@@ -20,12 +22,13 @@ public class PromotionsPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final PromotionsNavigator promotionsNavigator;
   private final PromotionsAnalytics promotionsAnalytics;
-  private final String promotionId;
+  private final String promotionType;
+  private String promotionId;
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
       Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, String promotionId) {
+      PromotionsNavigator promotionsNavigator, String promotionType) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
@@ -33,7 +36,7 @@ public class PromotionsPresenter implements Presenter {
     this.viewScheduler = viewScheduler;
     this.promotionsAnalytics = promotionsAnalytics;
     this.promotionsNavigator = promotionsNavigator;
-    this.promotionId = promotionId;
+    this.promotionType = promotionType;
   }
 
   @Override public void present() {
@@ -54,13 +57,25 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(create -> view.claimAppClick()
             .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractClaimEvent(
                 promotionViewApp.getPackageName(), promotionViewApp.getAppcValue()))
-            .doOnNext(promotionViewApp -> promotionsNavigator.navigateToClaimDialog(
-                promotionViewApp.getPackageName(), promotionId))
+            .flatMapSingle(this::showClaimView)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
         });
+  }
+
+  @NonNull private Single<? extends String> showClaimView(PromotionViewApp promotionViewApp) {
+    if (promotionId != null) {
+      return Single.just(promotionId)
+          .doOnSuccess(promotionsModel -> promotionsNavigator.navigateToClaimDialog(
+              promotionViewApp.getPackageName(), promotionId));
+    } else {
+      return promotionsManager.getPromotionsModel(promotionType)
+          .map(PromotionsModel::getPromotionId)
+          .doOnSuccess(promotionsModel -> promotionsNavigator.navigateToClaimDialog(
+              promotionViewApp.getPackageName(), promotionId));
+    }
   }
 
   private void resumeDownload() {
@@ -163,25 +178,28 @@ public class PromotionsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
-        .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+        .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionType))
+        .doOnNext(promotionsModel -> promotionId = promotionsModel.getPromotionId())
         .doOnNext(__ -> promotionsAnalytics.sendOpenPromotionsFragmentEvent())
         .observeOn(viewScheduler)
-        .flatMap(appsModel -> {
-          if (appsModel.getAppsList()
-              .isEmpty()) {
-            view.showPromotionOverDialog();
-            return Observable.empty();
-          } else {
-            view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
-            return handlePromotionApps(appsModel);
-          }
-        })
+        .flatMap(this::showPromotions)
         .doOnError(__ -> view.showErrorView())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-          throwable.printStackTrace();
-        });
+        }, Throwable::printStackTrace);
+  }
+
+  private Observable<? extends PromotionsModel> showPromotions(PromotionsModel appsModel) {
+    if (appsModel.getAppsList()
+        .isEmpty()) {
+      view.showPromotionOverDialog();
+      return Observable.empty();
+    } else {
+      view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
+      view.showPromotionTitle(appsModel.getTitle());
+      view.showPromotionFeatureGraphic(appsModel.getFeatureGraphic());
+      return handlePromotionApps(appsModel);
+    }
   }
 
   private void handlePromotionClaimResult() {
@@ -202,24 +220,15 @@ public class PromotionsPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(event -> view.retryClicked()
             .doOnNext(__ -> view.showLoading())
-            .flatMap(__ -> promotionsManager.getPromotionsModel(promotionId))
+            .flatMapSingle(__ -> promotionsManager.getPromotionsModel(promotionType))
+            .doOnNext(promotionsModel -> promotionId = promotionsModel.getPromotionId())
             .observeOn(viewScheduler)
-            .flatMap(appsModel -> {
-              if (appsModel.getAppsList()
-                  .isEmpty()) {
-                view.showPromotionOverDialog();
-                return Observable.empty();
-              } else {
-                view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
-                return handlePromotionApps(appsModel);
-              }
-            })
+            .flatMap(this::showPromotions)
             .doOnError(__ -> view.showErrorView())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-        });
+        }, Throwable::printStackTrace);
   }
 
   private Observable<PromotionsModel> handlePromotionApps(PromotionsModel promotionsModel) {

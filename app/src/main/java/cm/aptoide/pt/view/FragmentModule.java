@@ -284,9 +284,9 @@ import rx.subscriptions.CompositeSubscription;
       PromotionsManager promotionsManager,
       PromotionsPreferencesManager promotionsPreferencesManager, BannerRepository bannerRepository,
       MoPubAdsManager moPubAdsManager, BlacklistManager blacklistManager,
-      @Named("homePromotionsId") String promotionsId, ReactionsManager reactionsManager) {
+      @Named("homePromotionsId") String promotionsType, ReactionsManager reactionsManager) {
     return new Home(bundlesRepository, promotionsManager, bannerRepository, moPubAdsManager,
-        promotionsPreferencesManager, blacklistManager, promotionsId, reactionsManager);
+        promotionsPreferencesManager, blacklistManager, promotionsType, reactionsManager);
   }
 
   @FragmentScope @Provides MyStoresPresenter providesMyStorePresenter(
@@ -422,11 +422,12 @@ import rx.subscriptions.CompositeSubscription;
       EditorialRepository editorialRepository, InstallManager installManager,
       DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
-      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager) {
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
+      MoPubAdsManager moPubAdsManager) {
     return new EditorialManager(editorialRepository,
         arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
         downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics,
-        reactionsManager);
+        reactionsManager, moPubAdsManager);
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(
@@ -444,10 +445,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsId) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsId);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(

@@ -1,6 +1,8 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.ads.MoPubAdsManager;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
@@ -30,13 +32,14 @@ public class EditorialManager {
   private final InstallAnalytics installAnalytics;
   private final EditorialAnalytics editorialAnalytics;
   private final ReactionsManager reactionsManager;
+  private final MoPubAdsManager moPubAdsManager;
   private DownloadStateParser downloadStateParser;
 
   public EditorialManager(EditorialRepository editorialRepository, String cardId,
       InstallManager installManager, DownloadFactory downloadFactory,
       DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
-      ReactionsManager reactionsManager) {
+      ReactionsManager reactionsManager, MoPubAdsManager moPubAdsManager) {
 
     this.editorialRepository = editorialRepository;
     this.cardId = cardId;
@@ -47,6 +50,7 @@ public class EditorialManager {
     this.installAnalytics = installAnalytics;
     this.editorialAnalytics = editorialAnalytics;
     this.reactionsManager = reactionsManager;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
@@ -69,18 +73,21 @@ public class EditorialManager {
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
         editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize()))
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(
-                __ -> setupDownloadEvents(download, editorialDownloadEvent.getPackageName(),
-                    editorialDownloadEvent.getAppId())))
+        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
+                editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
+                offerResponseStatus))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, String packageName, long appId) {
+  private void setupDownloadEvents(Download download, String packageName, long appId,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK);
+        AnalyticsManager.Action.CLICK, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
@@ -102,8 +109,11 @@ public class EditorialManager {
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
     return installManager.getDownload(md5)
-        .flatMapCompletable(download -> installManager.install(download)
-            .doOnSubscribe(__ -> setupDownloadEvents(download, packageName, appId)));
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
+                offerResponseStatus))
+            .map(__ -> download))
+        .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {

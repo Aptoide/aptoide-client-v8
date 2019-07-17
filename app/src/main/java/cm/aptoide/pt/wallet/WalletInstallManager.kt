@@ -54,7 +54,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
-                responseStatus)
+                responseStatus, walletApp.packageName, walletApp.developer)
           }.map {
             download
           }
@@ -65,10 +65,14 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         .toCompletable()
   }
 
-  private fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?,
+  private fun setupDownloadEvents(download: Download,
+                                  downloadAction: DownloadModel.Action?,
                                   appId: Long,
-                                  offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
+                                  offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
+                                  packageName: String,
+                                  developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
+    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer)
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
@@ -98,5 +102,9 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
         .map { installStatus ->
           InstallStatus.Status.CANCELED.equals(installStatus.status)
         }.filter { isCanceled -> isCanceled }
+  }
+
+  fun setupAnalyticsHistoryTracker() {
+    walletInstallAnalytics.setupHistoryTracker()
   }
 }

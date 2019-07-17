@@ -77,7 +77,7 @@ public class InstallEvents implements InstallerAnalytics {
     Map<String, Object> map = new HashMap<>();
     map.put(IS_ROOT, String.valueOf(isRoot));
     map.put(SETTING_ROOT, String.valueOf(isRootAllowed));
-    map.put(CONCAT, String.valueOf(isRootAllowed) + "_" + String.valueOf(isRoot));
+    map.put(CONCAT, isRootAllowed + "_" + isRoot);
     analyticsManager.logEvent(map, IS_INSTALLATION_TYPE_EVENT_NAME, AnalyticsManager.Action.ROOT,
         INSTALLFABRICCONTEXT);
   }
@@ -87,6 +87,10 @@ public class InstallEvents implements InstallerAnalytics {
         rootAvailabilityManager.isRootAvailable()
             .toBlocking()
             .value(), ManagerPreferences.allowRootInstallation(sharedPreferences));
+  }
+
+  @Override public void logInstallCancelEvent(String packageName, int versionCode) {
+    installAnalytics.logInstallCancelEvent(packageName, versionCode);
   }
 
   @Override public void sendMiuiInstallResultEvent(InstallStatus.Status status) {

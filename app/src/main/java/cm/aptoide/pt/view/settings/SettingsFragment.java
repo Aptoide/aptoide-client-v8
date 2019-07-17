@@ -9,7 +9,6 @@ import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -372,53 +371,41 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
 
-    hwSpecs.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-      @Override public boolean onPreferenceClick(Preference preference) {
+    hwSpecs.setOnPreferenceClickListener(preference -> {
+      AlertDialog.Builder alertDialogBuilder =
+          new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
+      alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
+      alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
+          .setMessage(getString(R.string.setting_sdk_version)
+              + ": "
+              + AptoideUtils.SystemU.getSdkVer()
+              + "\n"
+              + getString(R.string.setting_screen_size)
+              + ": "
+              + AptoideUtils.ScreenU.getScreenSize(getContext().getResources())
+              + "\n"
+              + getString(R.string.setting_esgl_version)
+              + ": "
+              + AptoideUtils.SystemU.getGlEsVer(
+              ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE)))
+              + "\n"
+              + getString(R.string.screenCode)
+              + ": "
+              + AptoideUtils.ScreenU.getNumericScreenSize(getContext().getResources())
+              + "/"
+              + AptoideUtils.ScreenU.getDensityDpi(
+              ((WindowManager) getContext().getSystemService(Service.WINDOW_SERVICE)))
+              + "\n"
+              + getString(R.string.cpuAbi)
+              + ": "
+              + AptoideUtils.SystemU.getAbis())
 
-        AlertDialog.Builder alertDialogBuilder =
-            new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
-        alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
-        alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
-            .setMessage(getString(R.string.setting_sdk_version)
-                    + ": "
-                    + AptoideUtils.SystemU.getSdkVer()
-                    + "\n"
-                    + getString(R.string.setting_screen_size)
-                    + ": "
-                    + AptoideUtils.ScreenU.getScreenSize(getContext().getResources())
-                    + "\n"
-                    + getString(R.string.setting_esgl_version)
-                    + ": "
-                    + AptoideUtils.SystemU.getGlEsVer(
-                ((ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE)))
-                    + "\n"
-                    + getString(R.string.screenCode)
-                    + ": "
-                    + AptoideUtils.ScreenU.getNumericScreenSize(getContext().getResources())
-                    + "/"
-                    + AptoideUtils.ScreenU.getDensityDpi(
-                ((WindowManager) getContext().getSystemService(Service.WINDOW_SERVICE)))
-                    + "\n"
-                    + getString(R.string.cpuAbi)
-                    + ": "
-                    + AptoideUtils.SystemU.getAbis()
-                //                            + (ApplicationAptoide.PARTNERID!=null ? "\nPartner ID:"
-                // + ApplicationAptoide.PARTNERID : "")
-            )
-
-            .setCancelable(false)
-            .setNeutralButton(getString(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int id) {
-                    //                                FlurryAgent.logEvent
-                    // ("Setting_Opened_Dialog_Hardware_Filters");
-                  }
-                });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-
-        return true;
-      }
+          .setCancelable(false)
+          .setNeutralButton(getString(android.R.string.ok), (dialog, id) -> {
+          });
+      AlertDialog alertDialog = alertDialogBuilder.create();
+      alertDialog.show();
+      return true;
     });
 
     EditTextPreference maxFileCache =

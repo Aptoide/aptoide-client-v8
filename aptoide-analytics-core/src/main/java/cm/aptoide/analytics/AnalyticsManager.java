@@ -37,11 +37,11 @@ public class AnalyticsManager {
    */
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
     analyticsLogger.logDebug(TAG, "logEvent() called with: "
-        + "data = ["
-        + data
-        + "], eventName = ["
+        + "eventName = ["
         + eventName
-        + "], action = ["
+        + "], data = ["
+        + data
+        + "],  action = ["
         + action
         + "], context = ["
         + context
@@ -104,9 +104,7 @@ public class AnalyticsManager {
   /**
    * <p>Possible actions, that were performed by the user, to log</p>
    */
-  public enum Action {
-    CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, PULL_REFRESH, DISMISS, ENDLESS_SCROLL
-  }
+  public enum Action {CLICK, SCROLL, INPUT, AUTO, ROOT, VIEW, INSTALL, OPEN, IMPRESSION, PULL_REFRESH, DISMISS, ENDLESS_SCROLL}
 
   /**
    * <p>Builds an AnalyticsManager with a list of EventLoggers, an HttpKnockEventLogger

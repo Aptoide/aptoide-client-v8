@@ -37,7 +37,7 @@ class UpdateAppViewHolder extends AppsViewHolder {
     appVersion.setText(((UpdateApp) app).getVersion());
 
     itemView.setOnClickListener(
-        __ -> updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_CLICK)));
+        __ -> updateApp.onNext(new AppClick(app, AppClick.ClickType.CARD_CLICK)));
 
     itemView.setOnLongClickListener(__ -> {
       updateApp.onNext(new AppClick(app, AppClick.ClickType.UPDATE_CARD_LONG_CLICK));

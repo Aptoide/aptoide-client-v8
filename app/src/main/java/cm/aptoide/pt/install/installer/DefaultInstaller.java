@@ -282,6 +282,12 @@ public class DefaultInstaller implements Installer {
                   }
                   return null;
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
+                .doOnNext(installStatus -> {
+                  if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
+                    installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
+                        installation.getVersionCode());
+                  }
+                })
                 .filter(installStatus -> installation.getPackageName()
                     .equalsIgnoreCase(installStatus.getPackageName()))
                 .distinctUntilChanged()
