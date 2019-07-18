@@ -198,7 +198,8 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.merge(loadInterstitialAds(), loadOrganicAds(appViewModel), loadBannerAds())
+    return Observable.mergeDelayError(loadInterstitialAds(), loadOrganicAds(appViewModel),
+        loadBannerAds())
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
