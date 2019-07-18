@@ -395,6 +395,10 @@ public class AppViewManager {
         download.hasAppc());
   }
 
+  private boolean isMigration(DownloadModel.Action downloadAction) {
+    return downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE);
+  }
+
   public void setupMigratorUninstallEvent(String packageName) {
     installAnalytics.uninstallStarted(packageName, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW);
@@ -415,12 +419,13 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, long appId) {
+  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(
-                offerResponseStatus -> setupDownloadEvents(download, appId, offerResponseStatus))
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
+                offerResponseStatus))
             .map(__ -> download))
+        .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
 

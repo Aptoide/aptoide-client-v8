@@ -689,7 +689,7 @@ public class AppViewManagerTest {
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     //Then the appViewManager should return a Complete when the request is done
-    appViewManager.resumeDownload("md5", 1)
+    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL)
         .test()
         .assertCompleted();
 
