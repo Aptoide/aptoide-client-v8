@@ -371,11 +371,6 @@ public class AppViewManager {
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
-  }
-
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
@@ -393,10 +388,6 @@ public class AppViewManager {
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc());
-  }
-
-  private boolean isMigration(DownloadModel.Action downloadAction) {
-    return downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
