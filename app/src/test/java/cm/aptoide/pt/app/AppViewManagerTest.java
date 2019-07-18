@@ -697,8 +697,8 @@ public class AppViewManagerTest {
     verify(installManager).getDownload("md5");
     verify(installManager).install(download);
     //And it should set the necessary analytics
-    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
-        AnalyticsManager.Action.CLICK, null, null,
+    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
+        DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, null, null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
