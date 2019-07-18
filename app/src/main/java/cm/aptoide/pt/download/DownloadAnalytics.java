@@ -32,7 +32,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String APPC = "appc";
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String FAIL = "FAIL";
-  private static final String FRAGMENT = "fragment";
   private static final String ERROR = "error";
   private static final String STATUS = "status";
   private static final String TYPE = "type";
@@ -46,6 +45,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String PACKAGE = "package";
   private static final String PACKAGENAME = "Package Name";
   private static final String PACKAGE_NAME = "package_name";
+  private static final String CONTEXT = "context";
   private static final String PATCH = "PATCH";
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String PREVIOUS_TAG = "previous_tag";
@@ -343,7 +343,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       String context, boolean areAdsBlockedByOffer, boolean isMigration, boolean hasAppc) {
     HashMap<String, Object> downloadMap =
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration, hasAppc);
+            isMigration, hasAppc, context);
     downloadMap.put(ADS_BLOCK_BY_OFFER, areAdsBlockedByOffer);
     DownloadEvent downloadEvent =
         new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, context, action);
@@ -355,23 +355,24 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       String context, boolean isMigration, Boolean hasAppc) {
     DownloadEvent downloadEvent = new DownloadEvent(DOWNLOAD_COMPLETE_EVENT,
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration, hasAppc), context, action);
+            isMigration, hasAppc, context), context, action);
     cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
   }
 
   @NonNull
   private HashMap<String, Object> createDownloadCompleteEventMap(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String trustedValue, boolean isMigration,
-      boolean hasAppc) {
+      boolean hasAppc, String context) {
     HashMap<String, Object> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGENAME, packageName);
+    downloadMap.put(CONTEXT, context);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
     downloadMap.put(APPC, hasAppc);
     downloadMap.put(MIGRATOR, isMigration);
     if (previousScreen != null) {
       downloadMap.put(TAG, currentScreen.getTag());
       if (previousScreen.getFragment() != null) {
-        downloadMap.put(FRAGMENT, previousScreen.getFragment());
+        downloadMap.put(PREVIOUS_CONTEXT, previousScreen.getFragment());
       }
       if (previousScreen.getStore() != null) {
         downloadMap.put(STORE, previousScreen.getStore());
@@ -400,7 +401,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     if (editorsBrickPosition != null && !editorsBrickPosition.isEmpty()) {
       HashMap<String, Object> map = new HashMap<>();
       map.put(PACKAGENAME, packageName);
-      map.put(FRAGMENT, previousScreen);
+      map.put(CONTEXT, context);
+      map.put(PREVIOUS_CONTEXT, previousScreen);
       map.put(POSITION, editorsBrickPosition);
       map.put(TYPE, installType.name());
       DownloadEvent downloadEvent =
