@@ -1690,8 +1690,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return RxView.clicks(pauseDownload);
   }
 
-  @Override public Observable<Void> resumeDownload() {
-    return RxView.clicks(resumeDownload);
+  @Override public Observable<DownloadModel.Action> resumeDownload() {
+    return RxView.clicks(resumeDownload)
+        .map(__ -> action);
   }
 
   @Override public Observable<Void> cancelDownload() {
