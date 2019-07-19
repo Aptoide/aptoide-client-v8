@@ -438,8 +438,8 @@ public class AppViewManager {
   }
 
   private boolean isAppcApp() {
-    return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
-        || cachedAppCoinsViewModel.hasBilling());
+    return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.getAdvertisingModel()
+        .getHasAdvertising() || cachedAppCoinsViewModel.hasBilling());
   }
 
   public Completable appBought(String path) {
@@ -475,12 +475,13 @@ public class AppViewManager {
       return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
           .flatMapCompletable(app -> {
             if (app.hasAdvertising()) {
-              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
-                  .map(hasAdvertising -> cachedAppCoinsViewModel =
-                      new AppCoinsViewModel(false, app.hasBilling(), hasAdvertising))
+              return appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode())
+                  .map(advertisingModel -> cachedAppCoinsViewModel =
+                      new AppCoinsViewModel(false, app.hasBilling(), advertisingModel))
                   .toCompletable();
             } else {
-              cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), false);
+              cachedAppCoinsViewModel =
+                  new AppCoinsViewModel(false, app.hasBilling(), new AppCoinsAdvertisingModel());
             }
             return Completable.complete();
           }));
@@ -508,7 +509,8 @@ public class AppViewManager {
         })
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 
@@ -520,7 +522,8 @@ public class AppViewManager {
     return moPubAdsManager.shouldLoadBannerAd()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 
@@ -528,7 +531,8 @@ public class AppViewManager {
     return moPubAdsManager.shouldLoadNativeAds()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 

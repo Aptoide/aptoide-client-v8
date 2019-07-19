@@ -767,7 +767,8 @@ public class AppViewPresenter implements Presenter {
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .doOnNext(model -> {
                   if (model.getAppCoinsViewModel()
-                      .hasAdvertising() || model.getAppCoinsViewModel()
+                      .getAdvertisingModel()
+                      .getHasAdvertising() || model.getAppCoinsViewModel()
                       .hasBilling()) {
                     view.setupAppcAppView();
                   }
