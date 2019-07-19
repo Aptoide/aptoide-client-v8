@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
@@ -26,12 +27,22 @@ public class AppCoinsService {
     this.converterFactory = converterFactory;
   }
 
-  public Single<Boolean> getValidCampaign(String packageName, int versionCode) {
+  public Single<AppCoinsAdvertisingModel> getValidCampaign(String packageName, int versionCode) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(packageName, versionCode), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, preferences).observe()
         .toSingle()
-        .map(listAppCoinsCampaigns -> !listAppCoinsCampaigns.getList()
-            .isEmpty());
+        .map(listAppCoinsCampaigns -> mapAdvertising(listAppCoinsCampaigns));
+  }
+
+  private AppCoinsAdvertisingModel mapAdvertising(ListAppCoinsCampaigns listAppCoinsCampaigns) {
+    if (listAppCoinsCampaigns.getList()
+        .isEmpty()) {
+      return new AppCoinsAdvertisingModel();
+    } else {
+      return new AppCoinsAdvertisingModel(listAppCoinsCampaigns.getList()
+          .get(0)
+          .getReward(), true);
+    }
   }
 }
