@@ -337,10 +337,11 @@ public class AppViewManager {
     adsManager.handleAdsLogic(searchAdResult);
   }
 
-  public Completable appBought() {
+  public Completable appBought(String path) {
     return getAppModel().doOnSuccess(appModel -> {
       appModel.getPay()
           .setPaid();
+      appModel.setPath(path);
     })
         .toCompletable();
   }

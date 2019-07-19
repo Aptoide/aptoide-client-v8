@@ -1101,8 +1101,9 @@ public class AppViewPresenter implements Presenter {
             .first()
             .observeOn(viewScheduler)
             .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .flatMapCompletable(appViewViewModel -> appViewManager.appBought()
-                    .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
+                .flatMapCompletable(
+                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
+                        .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
                 .toObservable())
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

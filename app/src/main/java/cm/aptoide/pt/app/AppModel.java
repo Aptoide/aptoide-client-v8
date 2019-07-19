@@ -51,7 +51,7 @@ public class AppModel {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private final String path;
+  private String path;
   private final String pathAlt;
   private final int versionCode;
   private final String versionName;
@@ -368,6 +368,10 @@ public class AppModel {
 
   public String getPath() {
     return path;
+  }
+
+  public void setPath(String path) {
+    this.path = path;
   }
 
   public String getPathAlt() {
