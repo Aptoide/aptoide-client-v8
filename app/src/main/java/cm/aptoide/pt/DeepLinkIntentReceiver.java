@@ -177,7 +177,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromPickApp();
     } else if ("promotions".equals(u.getQueryParameter("name"))) {
       return startFromPromotions();
-    } else if ("CURATION_1".equals(u.getQueryParameter("name")) && u.getQueryParameter("id") != null) {
+    } else if ("CURATION_1".equals(u.getQueryParameter("name"))
+        && u.getQueryParameter("id") != null) {
       return startFromEditorialCard(u.getQueryParameter("id"));
     } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
       return startAppcInfoView();

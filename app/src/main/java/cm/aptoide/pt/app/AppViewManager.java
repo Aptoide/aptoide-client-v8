@@ -31,7 +31,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.annotations.Experimental;
 
 /**
  * Created by D01 on 04/05/18.
@@ -273,11 +272,6 @@ public class AppViewManager {
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
-  }
-
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
@@ -317,11 +311,11 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, long appId) {
+  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(
-                offerResponseStatus -> setupDownloadEvents(download, appId, offerResponseStatus))
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
+                offerResponseStatus))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

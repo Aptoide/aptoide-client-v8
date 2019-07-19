@@ -943,9 +943,11 @@ public class AppViewPresenter implements Presenter {
             .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapSingle(__1 -> appViewManager.getAppModel())
-                .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
+                .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+                .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
+                    .getMd5(), app.getAppModel()
+                    .getAppId(), app.getDownloadModel()
+                    .getAction()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1192,7 +1194,9 @@ public class AppViewPresenter implements Presenter {
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId()))
+                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
+                        walletApp.getDownloadModel()
+                            .getAction()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

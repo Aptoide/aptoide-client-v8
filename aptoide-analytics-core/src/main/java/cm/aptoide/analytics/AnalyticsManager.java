@@ -36,8 +36,12 @@ public class AnalyticsManager {
    * @param context The context of where the event took place
    */
   public void logEvent(Map<String, Object> data, String eventName, Action action, String context) {
-    analyticsLogger.logDebug(TAG, "logEvent() called with: " + "eventName = ["
-        + eventName + "], data = [" + data + "],  action = ["
+    analyticsLogger.logDebug(TAG, "logEvent() called with: "
+        + "eventName = ["
+        + eventName
+        + "], data = ["
+        + data
+        + "],  action = ["
         + action
         + "], context = ["
         + context
