@@ -26,7 +26,7 @@ public class AppCoinsService {
     this.converterFactory = converterFactory;
   }
 
-  public Single<Boolean> isCampaignValid(String packageName, int versionCode) {
+  public Single<Boolean> getValidCampaign(String packageName, int versionCode) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(packageName, versionCode), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, preferences).observe()

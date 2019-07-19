@@ -475,7 +475,7 @@ public class AppViewManager {
       return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
           .flatMapCompletable(app -> {
             if (app.hasAdvertising()) {
-              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
+              return appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode())
                   .map(hasAdvertising -> cachedAppCoinsViewModel =
                       new AppCoinsViewModel(false, app.hasBilling(), hasAdvertising))
                   .toCompletable();
