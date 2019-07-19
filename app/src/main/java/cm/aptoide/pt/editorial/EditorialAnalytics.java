@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorial;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class EditorialAnalytics {
   private static final String WHERE = "where";
   private static final String ACTION = "action";
   private static final String CURATION_DETAIL = "curation_detail";
+  private static final String CONTEXT = "context";
   private final DownloadAnalytics downloadAnalytics;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -55,6 +57,7 @@ public class EditorialAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String type) {
+    String context = getViewName(true);
     String installEvent = CURATION_CARD_INSTALL;
     if (!fromHome) {
       installEvent = EDITORIAL_BN_CURATION_CARD_INSTALL;
@@ -62,7 +65,12 @@ public class EditorialAnalytics {
     HashMap<String, Object> map = new HashMap<>();
     map.put(APPLICATION_NAME, packageName);
     map.put(TYPE, type);
-    analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, getViewName(true));
+    map.put(CONTEXT, context);
+
+    analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, context);
+
+    analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+        context);
   }
 
   private String getViewName(boolean isCurrent) {

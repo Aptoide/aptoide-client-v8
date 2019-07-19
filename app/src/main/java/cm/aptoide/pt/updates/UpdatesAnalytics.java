@@ -46,4 +46,13 @@ public class UpdatesAnalytics {
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         context);
   }
+
+  public void sendUpdateAllClickEvent() {
+    String context = navigationTracker.getViewName(true);
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(TYPE, "update all");
+    map.put(CONTEXT, context);
+    analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+        context);
+  }
 }
