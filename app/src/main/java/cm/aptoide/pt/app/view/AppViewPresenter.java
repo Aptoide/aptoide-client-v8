@@ -1017,7 +1017,10 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(action, appViewViewModel));
+                          appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
+                              () -> appViewAnalytics.clickOnInstallButton(
+                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
+                                      .getName(), action.toString())));
                   break;
                 case PAY:
                   completable = appViewManager.loadAppViewViewModel()

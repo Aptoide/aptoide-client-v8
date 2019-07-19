@@ -221,6 +221,10 @@ public class AppsManager {
     }
   }
 
+  private void sendUpdateClickedEvent(String packageName) {
+    updatesAnalytics.sendUpdateClickedEvent(packageName);
+  }
+
   public Completable pauseDownload(App app) {
     return Completable.fromAction(
         () -> installManager.stopInstallation(((DownloadApp) app).getMd5()));
@@ -249,7 +253,10 @@ public class AppsManager {
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
+            .doOnSuccess(status -> {
+              sendUpdateClickedEvent(download.getPackageName());
+              setupUpdateEvents(download, Origin.UPDATE, status);
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
