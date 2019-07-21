@@ -199,9 +199,9 @@ public class AppsManager {
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean updateAll) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false, updateAll);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
@@ -249,7 +249,7 @@ public class AppsManager {
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
+            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status, false))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -273,7 +273,7 @@ public class AppsManager {
                 .flatMapIterable(updatesList -> updatesList)
                 .flatMap(update -> Observable.just(downloadFactory.create(update, false))
                     .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
-                        offerResponseStatus))
+                        offerResponseStatus, true))
                     .toList()
                     .flatMap(installManager::startInstalls))))
         .toCompletable();
