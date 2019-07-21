@@ -17,7 +17,7 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THRO
 
 public class InneractiveAdapterConfiguration extends BaseAdapterConfiguration {
 
-  private static final String MOPUB_NETWORK_NAME = "inneractive";
+  private static final String MOPUB_NETWORK_NAME = "Fyber";
 
   /**
    * 4-digit versioning scheme, of which the leftmost 3 digits correspond to the network SDK

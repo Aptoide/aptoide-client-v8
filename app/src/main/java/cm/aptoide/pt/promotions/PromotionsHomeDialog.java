@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cm.aptoide.analytics.implementation.CrashLogger;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.HomePromotionsWrapper;
+import cm.aptoide.pt.networking.image.ImageLoader;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -60,11 +62,17 @@ public class PromotionsHomeDialog {
     });
   }
 
-  public void showDialog(Context context, HomePromotionsWrapper wrapper) {
+  public void showDialog(HomePromotionsWrapper promotions) {
     dialog.show();
     TextView description = dialogView.findViewById(R.id.description);
-    description.setText(context.getString(R.string.holidayspromotion_message_popup,
-        String.valueOf(wrapper.getTotalAppcValue())));
+    description.setText(dialogView.getContext()
+        .getString(R.string.holidayspromotion_message_popup,
+            String.valueOf(promotions.getTotalAppcValue())));
+    TextView titleView = dialog.findViewById(R.id.promotion_title);
+    ImageView promotionGraphicView = dialog.findViewById(R.id.promotion_graphic);
+    titleView.setText(promotions.getTitle());
+    ImageLoader.with(dialog.getContext())
+        .load(promotions.getFeatureGraphic(), promotionGraphicView);
   }
 
   public void dismissDialog() {

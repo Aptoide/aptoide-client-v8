@@ -7,15 +7,14 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import rx.subjects.PublishSubject;
 
-public class AppcAppViewHolder extends AppsViewHolder {
-
+public class AppcPromotionAppViewHolder extends AppsViewHolder {
   private PublishSubject<AppClick> updateApp;
 
   private TextView appName;
   private ImageView appIcon;
   private ImageView updateAppButton;
 
-  public AppcAppViewHolder(View itemView, PublishSubject<AppClick> updateApp) {
+  public AppcPromotionAppViewHolder(View itemView, PublishSubject<AppClick> updateApp) {
     super(itemView);
     this.updateApp = updateApp;
     appName = itemView.findViewById(R.id.apps_updates_app_name);
@@ -28,7 +27,7 @@ public class AppcAppViewHolder extends AppsViewHolder {
     ImageLoader.with(itemView.getContext())
         .load(((UpdateApp) app).getIcon(), appIcon);
     updateAppButton.setOnClickListener(
-        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.APPC_UPGRADE_APP)));
+        install -> updateApp.onNext(new AppClick(app, AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)));
 
     itemView.setOnClickListener(
         __ -> updateApp.onNext(new AppClick(app, AppClick.ClickType.CARD_CLICK)));
@@ -39,4 +38,3 @@ public class AppcAppViewHolder extends AppsViewHolder {
     });
   }
 }
-
