@@ -1602,20 +1602,20 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private SpannableString formatAppCoinsRewardMessage() {
-    String appcValue = String.valueOf(getArguments().getFloat(BundleKeys.APPC.name(), -1));
+  private SpannableString formatAppCoinsRewardMessage(String rewardValue) {
     String reward = "AppCoins Credits";
     String tryAppMessage;
     SpannableString spannable;
 
-    if (!appcValue.equals("-1.0")) {
+    if (!rewardValue.equals("-1.0")) {
       tryAppMessage =
           getResources().getString(R.string.appc_message_appview_appcoins_reward_with_value,
-              appcValue, reward);
+              rewardValue, reward);
       spannable = new SpannableString(tryAppMessage);
       spannable.setSpan(
           new ForegroundColorSpan(getResources().getColor(R.color.default_orange_gradient_end)),
-          tryAppMessage.indexOf(appcValue), tryAppMessage.indexOf(appcValue) + appcValue.length(),
+          tryAppMessage.indexOf(rewardValue),
+          tryAppMessage.indexOf(rewardValue) + rewardValue.length(),
           Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     } else {
       tryAppMessage =
@@ -1655,8 +1655,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
       if (!action.equals(DownloadModel.Action.MIGRATE)) {
-        appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
-            formatAppCoinsRewardMessage());
+        appcInfoView.showInfo(appCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising(), appCoinsViewModel.hasBilling(), formatAppCoinsRewardMessage(
+            appCoinsViewModel.getAdvertisingModel()
+                .getReward()));
       } else {
         appcRewardView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
@@ -1690,8 +1692,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return RxView.clicks(pauseDownload);
   }
 
-  @Override public Observable<Void> resumeDownload() {
-    return RxView.clicks(resumeDownload);
+  @Override public Observable<DownloadModel.Action> resumeDownload() {
+    return RxView.clicks(resumeDownload)
+        .map(__ -> action);
   }
 
   @Override public Observable<Void> cancelDownload() {

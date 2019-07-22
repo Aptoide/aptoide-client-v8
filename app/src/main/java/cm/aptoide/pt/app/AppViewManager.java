@@ -371,11 +371,6 @@ public class AppViewManager {
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    setupDownloadEvents(download, null, appId, null, null, offerResponseStatus);
-  }
-
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
@@ -415,12 +410,13 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, long appId) {
+  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(
-                offerResponseStatus -> setupDownloadEvents(download, appId, offerResponseStatus))
+            .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
+                offerResponseStatus))
             .map(__ -> download))
+        .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
 
@@ -442,8 +438,8 @@ public class AppViewManager {
   }
 
   private boolean isAppcApp() {
-    return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.hasAdvertising()
-        || cachedAppCoinsViewModel.hasBilling());
+    return cachedAppCoinsViewModel != null && (cachedAppCoinsViewModel.getAdvertisingModel()
+        .getHasAdvertising() || cachedAppCoinsViewModel.hasBilling());
   }
 
   public Completable appBought(String path) {
@@ -479,12 +475,13 @@ public class AppViewManager {
       return Completable.fromObservable(Observable.fromCallable(() -> cachedApp)
           .flatMapCompletable(app -> {
             if (app.hasAdvertising()) {
-              return appCoinsManager.hasAdvertising(app.getPackageName(), app.getVersionCode())
-                  .map(hasAdvertising -> cachedAppCoinsViewModel =
-                      new AppCoinsViewModel(false, app.hasBilling(), hasAdvertising))
+              return appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode())
+                  .map(advertisingModel -> cachedAppCoinsViewModel =
+                      new AppCoinsViewModel(false, app.hasBilling(), advertisingModel))
                   .toCompletable();
             } else {
-              cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), false);
+              cachedAppCoinsViewModel =
+                  new AppCoinsViewModel(false, app.hasBilling(), new AppCoinsAdvertisingModel());
             }
             return Completable.complete();
           }));
@@ -512,7 +509,8 @@ public class AppViewManager {
         })
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 
@@ -524,7 +522,8 @@ public class AppViewManager {
     return moPubAdsManager.shouldLoadBannerAd()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 
@@ -532,7 +531,8 @@ public class AppViewManager {
     return moPubAdsManager.shouldLoadNativeAds()
         .flatMap(shouldLoadAd -> Single.just(shouldLoadAd
             && !cachedAppCoinsViewModel.hasBilling()
-            && !cachedAppCoinsViewModel.hasAdvertising()
+            && !cachedAppCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising()
             && !cachedApp.isMature()));
   }
 
