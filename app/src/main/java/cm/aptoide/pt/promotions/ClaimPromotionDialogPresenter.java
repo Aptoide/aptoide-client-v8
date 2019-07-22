@@ -2,7 +2,6 @@ package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
 import android.content.Intent;
-import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
@@ -69,29 +68,27 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private void handleWalletPermissionsResult() {
     view.getActivityResults()
         .filter(result -> result.getRequestCode() == WALLET_PERMISSIONS_INTENT_REQUEST_CODE)
-        .doOnNext(this::handleWalletPermissionsResult)
+        .doOnNext(result -> {
+          if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent resultIntent = result.getData();
+            if (resultIntent != null && resultIntent.getExtras() != null) {
+              view.updateWalletText(resultIntent.getExtras()
+                  .getString(WALLET_ADDRESS));
+            } else {
+              shouldSendIntent = false;
+              view.sendWalletIntent();
+            }
+          } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
+            shouldSendIntent = false;
+            view.sendWalletIntent();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
           shouldSendIntent = false;
           view.sendWalletIntent();
         });
-  }
-
-  private void handleWalletPermissionsResult(Result result) {
-    if (result.getResultCode() == Activity.RESULT_OK) {
-      Intent resultIntent = result.getData();
-      if (resultIntent != null && resultIntent.getExtras() != null) {
-        view.updateWalletText(resultIntent.getExtras()
-            .getString(WALLET_ADDRESS));
-      } else {
-        shouldSendIntent = false;
-        view.sendWalletIntent();
-      }
-    } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
-      shouldSendIntent = false;
-      view.sendWalletIntent();
-    }
   }
 
   private void handleFindAddressClick() {
