@@ -39,7 +39,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   @Override public void present() {
     handleOnResumeEvent();
-    handleOnActivityResult();
+    handleWalletPermissionsResult();
     handleFindAddressClick();
     handleContinueClick();
     handleOnEditTextChanged();
@@ -66,14 +66,10 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         });
   }
 
-  private void handleOnActivityResult() {
+  private void handleWalletPermissionsResult() {
     view.getActivityResults()
-        .doOnNext(result -> {
-          if (result.getRequestCode() != 123) return;
-          if (result.getRequestCode() == WALLET_PERMISSIONS_INTENT_REQUEST_CODE) {
-            handleWalletPermissionsResult(result);
-          }
-        })
+        .filter(result -> result.getRequestCode() == WALLET_PERMISSIONS_INTENT_REQUEST_CODE)
+        .doOnNext(this::handleWalletPermissionsResult)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> {
