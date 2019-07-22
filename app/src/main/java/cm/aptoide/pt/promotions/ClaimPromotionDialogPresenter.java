@@ -2,12 +2,15 @@ package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
 import android.content.Intent;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Scheduler;
 import rx.Single;
 import rx.subscriptions.CompositeSubscription;
+
+import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_PERMISSIONS_INTENT_REQUEST_CODE;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
@@ -67,18 +70,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     view.getActivityResults()
         .doOnNext(result -> {
           if (result.getRequestCode() != 123) return;
-          if (result.getResultCode() == Activity.RESULT_OK) {
-            Intent resultIntent = result.getData();
-            if (resultIntent != null && resultIntent.getExtras() != null) {
-              view.updateWalletText(resultIntent.getExtras()
-                  .getString(WALLET_ADDRESS));
-            } else {
-              shouldSendIntent = false;
-              view.sendWalletIntent();
-            }
-          } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
-            shouldSendIntent = false;
-            view.sendWalletIntent();
+          if (result.getRequestCode() == WALLET_PERMISSIONS_INTENT_REQUEST_CODE) {
+            handleWalletPermissionsResult(result);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -87,6 +80,22 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           shouldSendIntent = false;
           view.sendWalletIntent();
         });
+  }
+
+  private void handleWalletPermissionsResult(Result result) {
+    if (result.getResultCode() == Activity.RESULT_OK) {
+      Intent resultIntent = result.getData();
+      if (resultIntent != null && resultIntent.getExtras() != null) {
+        view.updateWalletText(resultIntent.getExtras()
+            .getString(WALLET_ADDRESS));
+      } else {
+        shouldSendIntent = false;
+        view.sendWalletIntent();
+      }
+    } else if (result.getResultCode() != Activity.RESULT_CANCELED) {
+      shouldSendIntent = false;
+      view.sendWalletIntent();
+    }
   }
 
   private void handleFindAddressClick() {
@@ -185,6 +194,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
       view.showInvalidWalletAddress();
     } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_CAPTCHA)) {
       return "captcha";
+    } else if (errors.contains(ClaimStatusWrapper.Error.WALLET_NOT_VERIFIED)) {
+      view.verifyWallet();
     } else {
       view.showGenericError();
     }
