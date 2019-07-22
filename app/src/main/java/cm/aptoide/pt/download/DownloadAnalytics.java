@@ -194,10 +194,13 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       event.put(ORIGIN, getOrigin(download, updateAll));
     }
     event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
-    event.put(PREVIOUS_TAG, screenTagHistory.getTag());
+    event.put(TAG, navigationTracker.getCurrentScreen()
+        .getTag());
+
     event.put(STORE, navigationTracker.getPreviousScreen()
         .getStore());
     event.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
+    event.put(MIGRATOR, isMigration);
 
     if (campaignId > 0) {
       event.put(CAMPAIGN_ID, campaignId);
