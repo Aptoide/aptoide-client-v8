@@ -317,6 +317,7 @@ public class AppViewManager {
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
                 offerResponseStatus))
             .map(__ -> download))
+        .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
 

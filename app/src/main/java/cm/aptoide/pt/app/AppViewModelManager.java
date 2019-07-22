@@ -95,13 +95,15 @@ public class AppViewModelManager {
   private Observable<AppCoinsViewModel> getAppCoinsViewModel(AppModel app) {
     if (cachedAppCoinsViewModel == null) {
       if (app.hasAdvertising()) {
-        return appCoinsManager.hasActiveCampaign(app.getPackageName(), app.getVersionCode())
-            .flatMapObservable(hasCampaign -> {
-              cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), hasCampaign);
+        return appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode())
+            .flatMapObservable(advertisingModel -> {
+              cachedAppCoinsViewModel =
+                  new AppCoinsViewModel(false, app.hasBilling(), advertisingModel);
               return Observable.just(cachedAppCoinsViewModel);
             });
       } else {
-        cachedAppCoinsViewModel = new AppCoinsViewModel(false, app.hasBilling(), false);
+        cachedAppCoinsViewModel =
+            new AppCoinsViewModel(false, app.hasBilling(), new AppCoinsAdvertisingModel());
       }
     }
     return Observable.just(cachedAppCoinsViewModel);

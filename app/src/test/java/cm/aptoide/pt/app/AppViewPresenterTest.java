@@ -94,13 +94,13 @@ public class AppViewPresenterTest {
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
 
-    appViewModel =
-        new AppViewModel(appModel, downloadModel, new AppCoinsViewModel(false, false, false),
-            new MigrationModel(false));
+    appViewModel = new AppViewModel(appModel, downloadModel,
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
+        new MigrationModel(false));
 
-    errorAppViewModel =
-        new AppViewModel(errorAppModel, downloadModel, new AppCoinsViewModel(false, false, false),
-            new MigrationModel(false));
+    errorAppViewModel = new AppViewModel(errorAppModel, downloadModel,
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
+        new MigrationModel(false));
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -212,7 +212,8 @@ public class AppViewPresenterTest {
             null);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
-            new AppCoinsViewModel(false, false, false), new MigrationModel(false));
+            new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
+            new MigrationModel(false));
 
     //Given an initialized presenter
     presenter.handleFirstLoad();
@@ -252,9 +253,9 @@ public class AppViewPresenterTest {
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
-    AppViewModel appViewModel =
-        new AppViewModel(appModel, downloadModel, new AppCoinsViewModel(false, false, false),
-            new MigrationModel(false));
+    AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
+        new MigrationModel(false));
 
     Promotion promotion = new Promotion(false, 10f, "cm.aptoide.pt", "install_prom",
         Collections.singletonList(Promotion.ClaimAction.INSTALL));

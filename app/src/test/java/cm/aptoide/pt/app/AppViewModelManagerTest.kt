@@ -280,7 +280,8 @@ class AppViewModelManagerTest {
         Observable.just(
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
                 false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
-    `when`(appCoinsManager.hasActiveCampaign("packageName", 1)).thenReturn(Single.just(true))
+    `when`(appCoinsManager.getAdvertising("packageName", 1)).thenReturn(
+        Single.just(AppCoinsAdvertisingModel("1", true)))
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
 
@@ -291,11 +292,12 @@ class AppViewModelManagerTest {
 
     // Test our DownloadModel
     Assert.assertEquals(DownloadModel.Action.INSTALL, appViewModel.downloadModel.action)
-    Assert.assertEquals(DownloadModel.DownloadState.INDETERMINATE, appViewModel.downloadModel.downloadState)
+    Assert.assertEquals(DownloadModel.DownloadState.INDETERMINATE,
+        appViewModel.downloadModel.downloadState)
     Assert.assertEquals(0, appViewModel.downloadModel.progress)
 
     // Test our AppCoinsModel
-    verify(appCoinsManager).hasActiveCampaign("packageName", 1)
+    verify(appCoinsManager).getAdvertising("packageName", 1)
     Assert.assertEquals(true, appViewModel.appCoinsViewModel.hasAdvertising())
 
     // Test our MigrationModel
@@ -310,7 +312,8 @@ class AppViewModelManagerTest {
     Assert.assertEquals(-1, appViewModel.appModel.appId)
     Assert.assertEquals("packageName", appViewModel.appModel.packageName)
     Assert.assertEquals(DownloadModel.Action.INSTALL, appViewModel.downloadModel.action)
-    Assert.assertEquals(DownloadModel.DownloadState.INDETERMINATE, appViewModel.downloadModel.downloadState)
+    Assert.assertEquals(DownloadModel.DownloadState.INDETERMINATE,
+        appViewModel.downloadModel.downloadState)
     Assert.assertEquals(0, appViewModel.downloadModel.progress)
     Assert.assertEquals(true, appViewModel.appCoinsViewModel.hasAdvertising())
     Assert.assertEquals(false, appViewModel.migrationModel.isMigrated)
