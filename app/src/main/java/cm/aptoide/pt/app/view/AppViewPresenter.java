@@ -353,7 +353,8 @@ public class AppViewPresenter implements Presenter {
           })
           .doOnError(throwable -> crashReport.log(throwable));
     }
-    return Single.just(null);
+    return Single.just(searchAdResult)
+        .doOnSuccess(__ -> handleAdsLogic(searchAdResult));
   }
 
   private void handleOnScroll() {
