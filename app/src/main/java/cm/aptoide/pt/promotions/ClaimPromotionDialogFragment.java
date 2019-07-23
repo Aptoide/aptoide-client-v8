@@ -36,12 +36,15 @@ import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 public class ClaimPromotionDialogFragment extends BaseDialogView
     implements ClaimPromotionDialogView {
 
-  private static final String WALLET_INTENT_URI_ACTION = "appcoins://wallet/permissions/1";
-  private static final int WALLET_INTENT_REQUEST_CODE = 123;
-  private static final String WALLET_INTENT_EXTRA_KEY = "PERMISSION_NAME_KEY";
-  private static final String WALLET_INTENT_EXTRA_VALUE = "WALLET_ADDRESS";
+  protected static final int WALLET_PERMISSIONS_INTENT_REQUEST_CODE = 123;
+  protected static final int WALLET_VERIFICATION_INTENT_REQUEST_CODE = 124;
+  private static final String WALLET_PERMISSIONS_INTENT_URI_ACTION =
+      "appcoins://wallet/permissions/1";
+  private static final String WALLET_PERMISSIONS_INTENT_EXTRA_KEY = "PERMISSION_NAME_KEY";
+  private static final String WALLET_PERMISSIONS_INTENT_EXTRA_VALUE = "WALLET_ADDRESS";
   private static final String WALLET_PACKAGE = "com.appcoins.wallet";
-
+  private static final String WALLET_VERIFICATION_INTENT_URI_ACTION =
+      "appcoins://wallet/validation/1";
   private static final String VIEW = "view";
   private static final String WALLET = "wallet";
   private static final String CLAIMED = "claimed";
@@ -264,8 +267,9 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
 
   @Override public void fetchWalletAddressByIntent() {
     if (walletErrorView.getVisibility() != View.VISIBLE) {
-      navigator.fetchWalletAddressByIntent(WALLET_INTENT_URI_ACTION, WALLET_INTENT_REQUEST_CODE,
-          WALLET_INTENT_EXTRA_KEY, WALLET_INTENT_EXTRA_VALUE);
+      navigator.fetchWalletAddressByIntent(WALLET_PERMISSIONS_INTENT_URI_ACTION,
+          WALLET_PERMISSIONS_INTENT_REQUEST_CODE, WALLET_PERMISSIONS_INTENT_EXTRA_KEY,
+          WALLET_PERMISSIONS_INTENT_EXTRA_VALUE);
     }
   }
 
@@ -287,6 +291,13 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
       String address = item.getText()
           .toString();
       updateWalletText(address);
+    }
+  }
+
+  @Override public void verifyWallet() {
+    if (walletErrorView.getVisibility() != View.VISIBLE) {
+      navigator.validateWallet(WALLET_VERIFICATION_INTENT_URI_ACTION,
+          WALLET_VERIFICATION_INTENT_REQUEST_CODE);
     }
   }
 

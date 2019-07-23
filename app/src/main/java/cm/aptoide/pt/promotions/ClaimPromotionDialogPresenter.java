@@ -2,14 +2,17 @@ package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
 import android.content.Intent;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
 import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_PERMISSIONS_INTENT_REQUEST_CODE;
+import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_VERIFICATION_INTENT_REQUEST_CODE;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
@@ -45,6 +48,33 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleDismissGenericError();
     handleWalletCancelClick();
     handleDismissGenericMessage();
+    handleWalletVerificationResult();
+  }
+
+  private void handleWalletVerificationResult() {
+    view.getActivityResults()
+        .filter(result -> result.getRequestCode() == WALLET_VERIFICATION_INTENT_REQUEST_CODE)
+        .map(Result::getResultCode)
+        .flatMap(result -> {
+          if (result == 0) { //result ok
+            return Observable.just(result)
+                .doOnNext(__ -> view.showLoading())
+                .flatMapSingle(
+                    __ -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
+                        promotionId));
+          } else if (result == 1) { //canceled
+            return Observable.just(result)
+                .doOnNext(__ -> view.showGenericError());
+          } else if (result == 2) { //failed
+            return Observable.just(result)
+                .doOnNext(__ -> view.showGenericError());
+          }
+          throw new IllegalStateException("Invalid result code response: " + result.toString());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+        });
   }
 
   public void dispose() {
@@ -119,7 +149,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           view.showLoading();
         })
         .flatMapSingle(
-            wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(), promotionId))
+            wrapper -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
+                promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()

@@ -43,4 +43,6 @@ public interface ClaimPromotionDialogView extends View {
   void updateWalletText(String walletAddress);
 
   void fetchWalletAddressByClipboard();
+
+  void verifyWallet();
 }

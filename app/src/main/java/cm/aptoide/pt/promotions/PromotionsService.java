@@ -25,6 +25,7 @@ public class PromotionsService {
   private static final String WRONG_CAPTCHA = "PROMOTION-1";
   private static final String WRONG_ADDRESS = "PROMOTION-2";
   private static final String ALREADY_CLAIMED = "PROMOTION-3";
+  private static final String WALLET_NOT_VERIFIED = "PROMOTION-5";
 
   private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private final OkHttpClient okHttpClient;
@@ -96,6 +97,9 @@ public class PromotionsService {
         } else if (error.getCode()
             .equals(ALREADY_CLAIMED)) {
           result.add(ClaimStatusWrapper.Error.PROMOTION_CLAIMED);
+        } else if (error.getCode()
+            .equals(WALLET_NOT_VERIFIED)) {
+          result.add(ClaimStatusWrapper.Error.WALLET_NOT_VERIFIED);
         } else {
           result.add(ClaimStatusWrapper.Error.GENERIC);
         }

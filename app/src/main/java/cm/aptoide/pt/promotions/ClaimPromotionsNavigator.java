@@ -26,4 +26,9 @@ public class ClaimPromotionsNavigator {
     activityResultNavigator.navigateForResult(Intent.ACTION_VIEW, Uri.parse(uriAction), requestCode,
         extraKey, extraValue);
   }
+
+  public void validateWallet(String uriAction, int requestCode) {
+    activityResultNavigator.navigateForResult(Intent.ACTION_VIEW, Uri.parse(uriAction),
+        requestCode);
+  }
 }
