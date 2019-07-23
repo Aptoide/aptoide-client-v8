@@ -6,7 +6,6 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
-import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.subscriptions.CompositeSubscription;
@@ -15,6 +14,9 @@ import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_PERMI
 import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_VERIFICATION_INTENT_REQUEST_CODE;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
+  private static final int WALLET_VERIFICATION_RESULT_OK = 0;
+  private static final int WALLET_VERIFICATION_RESULT_CANCELED = 1;
+  private static final int WALLET_VERIFICATION_RESULT_FAILED = 2;
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
   private final String promotionId;
   private CompositeSubscription subscriptions;
@@ -55,26 +57,22 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     view.getActivityResults()
         .filter(result -> result.getRequestCode() == WALLET_VERIFICATION_INTENT_REQUEST_CODE)
         .map(Result::getResultCode)
-        .flatMap(result -> {
-          if (result == 0) { //result ok
-            return Observable.just(result)
-                .doOnNext(__ -> view.showLoading())
-                .flatMapSingle(
-                    __ -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
-                        promotionId));
-          } else if (result == 1) { //canceled
-            return Observable.just(result)
-                .doOnNext(__ -> view.showCanceledVerificationError());
-          } else if (result == 2) { //failed
-            return Observable.just(result)
-                .doOnNext(__ -> view.showGenericError());
-          }
-          throw new IllegalStateException("Invalid result code response: " + result.toString());
-        })
+        .doOnNext(this::handleWalletVerificationErrors)
+        .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
+        .doOnNext(__ -> view.showLoading())
+        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
+            promotionId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, throwable -> {
-        });
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleWalletVerificationErrors(Integer result) {
+    if (result == WALLET_VERIFICATION_RESULT_CANCELED) {
+      view.showCanceledVerificationError();
+    } else if (result.equals(WALLET_VERIFICATION_RESULT_FAILED)) {
+      view.showGenericError();
+    }
   }
 
   public void dispose() {
