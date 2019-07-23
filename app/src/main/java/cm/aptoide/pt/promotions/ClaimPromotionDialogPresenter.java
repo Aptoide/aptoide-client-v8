@@ -64,7 +64,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
                         promotionId));
           } else if (result == 1) { //canceled
             return Observable.just(result)
-                .doOnNext(__ -> view.showGenericError());
+                .doOnNext(__ -> view.showCanceledVerificationError());
           } else if (result == 2) { //failed
             return Observable.just(result)
                 .doOnNext(__ -> view.showGenericError());

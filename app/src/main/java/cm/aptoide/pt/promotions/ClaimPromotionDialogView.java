@@ -45,4 +45,6 @@ public interface ClaimPromotionDialogView extends View {
   void fetchWalletAddressByClipboard();
 
   void verifyWallet();
+
+  void showCanceledVerificationError();
 }

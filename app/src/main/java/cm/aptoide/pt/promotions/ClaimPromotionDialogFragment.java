@@ -301,6 +301,11 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     }
   }
 
+  @Override public void showCanceledVerificationError() {
+    // TODO: 2019-07-23 change this dialog to a dialog with the missing string related with the canceled state
+    showGenericError();
+  }
+
   private boolean validateAddress(String address) {
     if (address != null) {
       return address.matches("(^(0x))([0-9a-f]{40})$");
