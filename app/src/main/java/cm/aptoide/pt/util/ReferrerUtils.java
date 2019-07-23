@@ -113,7 +113,12 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         Future<Void> future;
 
         @Override public boolean shouldOverrideUrlLoading(WebView view, String clickUrl) {
-
+          if (future == null) {
+            Logger.getInstance()
+                .d("ExtractReferrer", "onPageStarted potentially not called : " + clickUrl);
+            future = postponeReferrerExtraction(searchAdResult, DELAY, retries, httpClient,
+                converterFactory, qManager);
+          }
           Logger.getInstance()
               .d("ExtractReferrer", "ClickUrl redirect: " + clickUrl);
 
@@ -135,8 +140,9 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                         .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
                 storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, referrer));
               }
-
-              future.cancel(false);
+              if (future != null) {
+                future.cancel(false);
+              }
               postponeReferrerExtraction(searchAdResult, 0, true, httpClient, converterFactory,
                   qManager);
             }
