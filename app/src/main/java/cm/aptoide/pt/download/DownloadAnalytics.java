@@ -168,21 +168,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,
       AppContext context, Boolean isMigration) {
-    downloadStartEvent(download, 0, null, context, action, isMigration, false);
+    downloadStartEvent(download, 0, null, context, action, isMigration, getOrigin(download));
   }
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,
-      AppContext context, Boolean isMigration, boolean updateAll) {
-    downloadStartEvent(download, 0, null, context, action, isMigration, updateAll);
+      AppContext context, Boolean isMigration, Origin origin) {
+    downloadStartEvent(download, 0, null, context, action, isMigration, origin);
   }
 
   public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action, boolean isMigration) {
-    downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration, false);
+    downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
+        getOrigin(download));
   }
 
   public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
-      AppContext context, AnalyticsManager.Action action, boolean isMigration, boolean updateAll) {
+      AppContext context, AnalyticsManager.Action action, boolean isMigration, Origin origin) {
     Map<String, Object> event = new HashMap<>();
     ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     event.put(APP, createAppData(download));
@@ -191,7 +192,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     if (isMigration) {
       event.put(ORIGIN, UPDATE_TO_APPC);
     } else {
-      event.put(ORIGIN, getOrigin(download, updateAll));
+      event.put(ORIGIN, origin);
     }
     event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
     event.put(TAG, navigationTracker.getCurrentScreen()
@@ -218,9 +219,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     return app;
   }
 
-  public Origin getOrigin(Download download, boolean updateAll) {
-    if(updateAll) return Origin.UPDATE_ALL;
-
+  public Origin getOrigin(Download download) {
     Origin origin;
     switch (download.getAction()) {
       case Download.ACTION_INSTALL:
@@ -456,10 +455,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public enum AppContext {
     TIMELINE, APPVIEW, UPDATE_TAB, APPS_FRAGMENT, APPS_MIGRATOR_SEE_MORE, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS, WALLET_INSTALL_ACTIVITY
-  }
-
-  public enum Origin {
-    INSTALL, UPDATE, DOWNGRADE, UPDATE_ALL
   }
 
   public static class DownloadEvent {
