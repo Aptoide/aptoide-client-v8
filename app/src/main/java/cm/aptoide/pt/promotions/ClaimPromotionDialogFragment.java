@@ -73,6 +73,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private View insertWalletView;
   private View genericMessageView;
   private View genericErrorView;
+  private TextView genericErrorViewMessage;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -139,6 +140,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     insertWalletView = view.findViewById(R.id.insert_address_view);
     genericMessageView = view.findViewById(R.id.generic_message_view);
     genericErrorView = view.findViewById(R.id.generic_error);
+    genericErrorViewMessage = view.findViewById(R.id.generic_error_message);
 
     attachPresenter(presenter);
 
@@ -185,10 +187,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   }
 
   @Override public void showGenericError() {
-    loading.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.VISIBLE);
-    insertWalletView.setVisibility(View.GONE);
-    genericMessageView.setVisibility(View.GONE);
+    showErrorView(getString(R.string.error_occured));
   }
 
   @Override public void showLoading() {
@@ -302,8 +301,15 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   }
 
   @Override public void showCanceledVerificationError() {
-    // TODO: 2019-07-23 change this dialog to a dialog with the missing string related with the canceled state
-    showGenericError();
+    showErrorView(getString(R.string.appc_verification_cancelled_by_user_message));
+  }
+
+  private void showErrorView(String errorMessage) {
+    loading.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.VISIBLE);
+    insertWalletView.setVisibility(View.GONE);
+    genericMessageView.setVisibility(View.GONE);
+    genericErrorViewMessage.setText(errorMessage);
   }
 
   private boolean validateAddress(String address) {
