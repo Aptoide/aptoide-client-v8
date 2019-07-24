@@ -32,7 +32,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String APPC = "appc";
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String FAIL = "FAIL";
-  private static final String FRAGMENT = "fragment";
   private static final String ERROR = "error";
   private static final String STATUS = "status";
   private static final String TYPE = "type";
@@ -46,6 +45,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
   private static final String PACKAGE = "package";
   private static final String PACKAGENAME = "Package Name";
   private static final String PACKAGE_NAME = "package_name";
+  private static final String CONTEXT = "context";
   private static final String PATCH = "PATCH";
   private static final String PREVIOUS_CONTEXT = "previous_context";
   private static final String PREVIOUS_TAG = "previous_tag";
@@ -168,11 +168,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public void downloadStartEvent(Download download, AnalyticsManager.Action action,
       AppContext context, Boolean isMigration) {
-    downloadStartEvent(download, 0, null, context, action, isMigration);
+    downloadStartEvent(download, 0, null, context, action, isMigration, getOrigin(download));
+  }
+
+  public void downloadStartEvent(Download download, AnalyticsManager.Action action,
+      AppContext context, Boolean isMigration, Origin origin) {
+    downloadStartEvent(download, 0, null, context, action, isMigration, origin);
   }
 
   public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action, boolean isMigration) {
+    downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
+        getOrigin(download));
+  }
+
+  public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
+      AppContext context, AnalyticsManager.Action action, boolean isMigration, Origin origin) {
     Map<String, Object> event = new HashMap<>();
     ScreenTagHistory screenTagHistory = navigationTracker.getPreviousScreen();
     event.put(APP, createAppData(download));
@@ -181,13 +192,16 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     if (isMigration) {
       event.put(ORIGIN, UPDATE_TO_APPC);
     } else {
-      event.put(ORIGIN, getOrigin(download));
+      event.put(ORIGIN, origin);
     }
     event.put(PREVIOUS_CONTEXT, screenTagHistory.getFragment());
-    event.put(PREVIOUS_TAG, screenTagHistory.getTag());
+    event.put(TAG, navigationTracker.getCurrentScreen()
+        .getTag());
+
     event.put(STORE, navigationTracker.getPreviousScreen()
         .getStore());
     event.put(TELECO, AptoideUtils.SystemU.getCarrierName(telephonyManager));
+    event.put(MIGRATOR, isMigration);
 
     if (campaignId > 0) {
       event.put(CAMPAIGN_ID, campaignId);
@@ -343,7 +357,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       String context, boolean areAdsBlockedByOffer, boolean isMigration, boolean hasAppc) {
     HashMap<String, Object> downloadMap =
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration, hasAppc);
+            isMigration, hasAppc, context);
     downloadMap.put(ADS_BLOCK_BY_OFFER, areAdsBlockedByOffer);
     DownloadEvent downloadEvent =
         new DownloadEvent(DOWNLOAD_COMPLETE_EVENT, downloadMap, context, action);
@@ -355,23 +369,24 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       String context, boolean isMigration, Boolean hasAppc) {
     DownloadEvent downloadEvent = new DownloadEvent(DOWNLOAD_COMPLETE_EVENT,
         createDownloadCompleteEventMap(previousScreen, currentScreen, packageName, trustedValue,
-            isMigration, hasAppc), context, action);
+            isMigration, hasAppc, context), context, action);
     cache.put(id + DOWNLOAD_COMPLETE_EVENT, downloadEvent);
   }
 
   @NonNull
   private HashMap<String, Object> createDownloadCompleteEventMap(ScreenTagHistory previousScreen,
       ScreenTagHistory currentScreen, String packageName, String trustedValue, boolean isMigration,
-      boolean hasAppc) {
+      boolean hasAppc, String context) {
     HashMap<String, Object> downloadMap = new HashMap<>();
     downloadMap.put(PACKAGENAME, packageName);
+    downloadMap.put(CONTEXT, context);
     downloadMap.put(TRUSTED_BADGE, trustedValue);
     downloadMap.put(APPC, hasAppc);
     downloadMap.put(MIGRATOR, isMigration);
     if (previousScreen != null) {
       downloadMap.put(TAG, currentScreen.getTag());
       if (previousScreen.getFragment() != null) {
-        downloadMap.put(FRAGMENT, previousScreen.getFragment());
+        downloadMap.put(PREVIOUS_CONTEXT, previousScreen.getFragment());
       }
       if (previousScreen.getStore() != null) {
         downloadMap.put(STORE, previousScreen.getStore());
@@ -400,7 +415,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     if (editorsBrickPosition != null && !editorsBrickPosition.isEmpty()) {
       HashMap<String, Object> map = new HashMap<>();
       map.put(PACKAGENAME, packageName);
-      map.put(FRAGMENT, previousScreen);
+      map.put(CONTEXT, context);
+      map.put(PREVIOUS_CONTEXT, previousScreen);
       map.put(POSITION, editorsBrickPosition);
       map.put(TYPE, installType.name());
       DownloadEvent downloadEvent =
@@ -439,10 +455,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   public enum AppContext {
     TIMELINE, APPVIEW, UPDATE_TAB, APPS_FRAGMENT, APPS_MIGRATOR_SEE_MORE, AUTO_UPDATE, DOWNLOADS, EDITORIAL, PROMOTIONS, WALLET_INSTALL_ACTIVITY
-  }
-
-  public enum Origin {
-    INSTALL, UPDATE, DOWNGRADE, UPDATE_ALL
   }
 
   public static class DownloadEvent {
