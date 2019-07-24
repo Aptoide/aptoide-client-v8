@@ -186,6 +186,10 @@
 -keep public class com.smaato.soma.internal.connector.OrmmaBridge {
 public *;
 }
+-dontwarn com.smaato.soma.SomaUnityPlugin*
+-dontwarn com.millennialmedia**
+-dontwarn com.facebook.**
+
 -keepattributes *Annotation*
 
 #skip the Picasso library classes
