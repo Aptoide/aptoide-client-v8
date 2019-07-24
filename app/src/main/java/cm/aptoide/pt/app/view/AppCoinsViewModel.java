@@ -31,4 +31,11 @@ public class AppCoinsViewModel {
   public AppCoinsAdvertisingModel getAdvertisingModel() {
     return advertisingModel;
   }
+
+  public boolean hasAdvertising() {
+    if (advertisingModel != null) {
+      return advertisingModel.getHasAdvertising();
+    }
+    return false;
+  }
 }

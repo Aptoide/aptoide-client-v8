@@ -82,6 +82,7 @@ ext {
   TRELLO_RX_LIFECYCLE_VERSION = '1.0'
   RX_RELAY = '1.2.0'
   Rx_lint_version = '1.2'
+  RX_REPLAYING_SHARE_VERSION = '1.0.1'
 
   // Retrofit
   RETROFIT_VERSION = '2.1.0'
