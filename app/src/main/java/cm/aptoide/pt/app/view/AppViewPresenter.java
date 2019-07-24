@@ -767,7 +767,8 @@ public class AppViewPresenter implements Presenter {
                 .doOnNext(downloadAppViewModel -> view.readyToDownload())
                 .doOnNext(model -> {
                   if (model.getAppCoinsViewModel()
-                      .hasAdvertising() || model.getAppCoinsViewModel()
+                      .getAdvertisingModel()
+                      .getHasAdvertising() || model.getAppCoinsViewModel()
                       .hasBilling()) {
                     view.setupAppcAppView();
                   }
@@ -947,13 +948,14 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+            .flatMap(downloadAction -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapSingle(__1 -> appViewManager.loadAppViewViewModel())
                 .flatMapCompletable(
-                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId()))
-                .retry()))
+                    app -> appViewManager.resumeDownload(app.getMd5(), app.getAppId(),
+                        downloadAction)))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1017,7 +1019,10 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.loadAppViewViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(action, appViewViewModel));
+                          appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
+                              () -> appViewAnalytics.clickOnInstallButton(
+                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
+                                      .getName(), action.toString())));
                   break;
                 case PAY:
                   completable = appViewManager.loadAppViewViewModel()
@@ -1221,7 +1226,9 @@ public class AppViewPresenter implements Presenter {
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId()))
+                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
+                        walletApp.getDownloadModel()
+                            .getAction()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

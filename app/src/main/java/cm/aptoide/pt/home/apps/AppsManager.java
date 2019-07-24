@@ -249,7 +249,10 @@ public class AppsManager {
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
+            .doOnSuccess(status -> {
+              updatesAnalytics.sendUpdateClickedEvent(packageName);
+              setupUpdateEvents(download, Origin.UPDATE, status);
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -268,6 +271,7 @@ public class AppsManager {
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
         .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(__ -> updatesAnalytics.sendUpdateAllClickEvent())
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
