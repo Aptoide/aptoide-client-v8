@@ -18,7 +18,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   private static final int WALLET_VERIFICATION_RESULT_CANCELED = 1;
   private static final int WALLET_VERIFICATION_RESULT_FAILED = 2;
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
-  private final String promotionId;
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
@@ -30,14 +29,13 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator, String promotionId) {
+      ClaimPromotionsNavigator navigator) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
     this.navigator = navigator;
-    this.promotionId = promotionId;
     this.shouldSendIntent = true;
   }
 
@@ -60,7 +58,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .doOnNext(this::handleWalletVerificationErrors)
         .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
         .doOnNext(__ -> view.showLoading())
-        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion(promotionId))
+        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -145,7 +143,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(promotionId))
+        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion())
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()
