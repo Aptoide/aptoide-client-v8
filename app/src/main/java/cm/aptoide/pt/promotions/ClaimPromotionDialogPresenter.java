@@ -58,7 +58,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .doOnNext(this::handleWalletVerificationErrors)
         .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
         .doOnNext(__ -> view.showLoading())
-        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion())
+        .flatMapSingle(__ -> claimPromotion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -143,9 +143,15 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion())
+        .flatMapSingle(__ -> claimPromotion())
+        .subscribe(__ -> {
+        }, throwable -> view.showGenericError()));
+  }
+
+  private Single<String> claimPromotion() {
+    return claimPromotionsManager.claimPromotion()
         .observeOn(viewScheduler)
-        .flatMapSingle(response -> {
+        .flatMap(response -> {
           if (response.getStatus()
               .equals(ClaimStatusWrapper.Status.OK)) {
             view.showClaimSuccess();
@@ -153,11 +159,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           } else {
             return Single.just(handleErrors(response.getErrors()));
           }
-        })
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
+        });
   }
 
   private void handleOnEditTextChanged() {
