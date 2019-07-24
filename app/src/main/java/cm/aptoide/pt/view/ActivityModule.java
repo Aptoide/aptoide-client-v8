@@ -70,9 +70,7 @@ import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
-import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
@@ -348,11 +346,6 @@ import static android.content.Context.WINDOW_SERVICE;
     } catch (PackageManager.NameNotFoundException e) {
       return -1;
     }
-  }
-
-  @ActivityScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
-      PromotionsManager promotionsManager) {
-    return new ClaimPromotionsManager(promotionsManager);
   }
 
   @ActivityScope @Provides ClaimPromotionsNavigator providesClaimPromotionsNavigator(

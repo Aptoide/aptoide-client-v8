@@ -465,6 +465,12 @@ import rx.subscriptions.CompositeSubscription;
         promotionsAnalytics, navigator, arguments.getString("promotion_id", "default"));
   }
 
+  @FragmentScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
+      PromotionsManager promotionsManager) {
+    return new ClaimPromotionsManager(promotionsManager,
+        arguments.getString("package_name", "default"));
+  }
+
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
       EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
       EditorialListNavigator editorialListNavigator,

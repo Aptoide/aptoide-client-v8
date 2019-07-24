@@ -60,8 +60,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .doOnNext(this::handleWalletVerificationErrors)
         .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
         .doOnNext(__ -> view.showLoading())
-        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
-            promotionId))
+        .flatMapSingle(__ -> claimPromotionsManager.claimPromotion(promotionId))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -146,9 +145,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(
-            wrapper -> claimPromotionsManager.claimPromotion("com.qumaron.janescasino.slots",
-                promotionId))
+        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(promotionId))
         .observeOn(viewScheduler)
         .flatMapSingle(response -> {
           if (response.getStatus()
