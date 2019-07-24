@@ -245,7 +245,8 @@ public class AppViewPresenter implements Presenter {
                 })
                 .doOnError(throwable -> crashReport.log(throwable));
           }
-          return Single.just(null);
+          return Single.just(adResult)
+              .doOnSuccess(__ -> handleAdsLogic(adResult));
         })
         .onErrorReturn(__ -> null)
         .toObservable();
@@ -1010,7 +1011,10 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.getAppModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(action, appViewViewModel));
+                          appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
+                              () -> appViewAnalytics.clickOnInstallButton(
+                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
+                                      .getName(), action.toString())));
                   break;
                 case PAY:
                   completable = appViewManager.getAppModel()

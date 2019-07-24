@@ -38,6 +38,7 @@ public class AppViewAnalytics {
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
   private static final String APP_SHORTCUT = "App_Shortcut";
+  private static final String CONTEXT = "context";
   private static final String TYPE = "type";
   private static final String NETWORK = "network";
   private static final String IS_AD = "Is_ad";
@@ -281,11 +282,13 @@ public class AppViewAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String developerName, String type) {
+    String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
     map.put(APPLICATION_NAME, packageName);
     map.put(APPLICATION_PUBLISHER, developerName);
-    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, getViewName(true));
+    map.put(CONTEXT, context);
+    analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
   private Map<String, Object> createMapData(String key, String value) {

@@ -2,7 +2,7 @@
 
 
   <!--errors-->
-  <string name="error_occured">An error occurred. Please try again</string>
+  <string name="error_occured">Oops, something went wrong. Please try again!</string>
   <string name="ws_error_invalid_grant">Invalid username and password combination</string>
   <string name="edit_store_social_link_invalid_url_text">Invalid Url</string>
   <string name="edit_store_page_doesnt_exist_error_short">This page doesn\'t exist</string>
