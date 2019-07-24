@@ -211,8 +211,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
       view.showPromotionAlreadyClaimed();
     } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_ADDRESS)) {
       view.showInvalidWalletAddress();
-    } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_CAPTCHA)) {
-      return "captcha";
     } else if (errors.contains(ClaimStatusWrapper.Error.WALLET_NOT_VERIFIED)) {
       view.verifyWallet();
     } else {

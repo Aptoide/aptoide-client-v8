@@ -89,9 +89,6 @@ public class PromotionsService {
     if (errors != null) {
       for (BaseV7Response.Error error : errors) {
         if (error.getCode()
-            .equals(WRONG_CAPTCHA)) {
-          result.add(ClaimStatusWrapper.Error.WRONG_CAPTCHA);
-        } else if (error.getCode()
             .equals(WRONG_ADDRESS)) {
           result.add(ClaimStatusWrapper.Error.WRONG_ADDRESS);
         } else if (error.getCode()
