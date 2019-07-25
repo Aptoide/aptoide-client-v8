@@ -13,7 +13,6 @@ public class MarketResourceFormatter {
 
   public String formatString(Context context, int id, String... optParamaters) {
     switch (id) {
-      case R.string.my_account_product_card_section_title:
       case R.string.reviewappview_highlighted_reviews_explanation_4:
       case R.string.update_self_msg:
       case R.string.hello_follow_me_on_aptoide:

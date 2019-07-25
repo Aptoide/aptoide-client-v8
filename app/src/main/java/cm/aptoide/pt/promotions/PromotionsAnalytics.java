@@ -3,9 +3,11 @@ package cm.aptoide.pt.promotions;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.Origin;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,8 @@ public class PromotionsAnalytics {
   private static final String PACKAGE = "package";
   private static final String RELOAD = "reload";
   private static final String VIEW = "view";
+  private static final String APPLICATION_NAME = "Application Name";
+  private static final String CONTEXT = "context";
   private final String NEXT = "next";
   private final String CANCEL = "cancel";
   private final String OPEN_WALLET = "open wallet";
@@ -41,10 +45,10 @@ public class PromotionsAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      Origin origin) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action, false);
+        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
         action, offerResponseStatus);
   }
@@ -130,12 +134,25 @@ public class PromotionsAnalytics {
 
   public void sendPromotionsAppInteractInstallEvent(String packageName, float appcValue,
       DownloadModel.Action action) {
+    String context = getViewName(true);
+    String downloadAction = null;
+
     if (action == DownloadModel.Action.INSTALL) {
-      analyticsManager.logEvent(createPromotionsInteractMap(ACTION_INSTALL, packageName, appcValue),
-          PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
+      downloadAction = ACTION_INSTALL;
     } else if (action == DownloadModel.Action.UPDATE) {
-      analyticsManager.logEvent(createPromotionsInteractMap(ACTION_UPDATE, packageName, appcValue),
-          PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
+      downloadAction = ACTION_UPDATE;
+    }
+
+    HashMap<String, Object> map = new HashMap<>();
+    map.put(APPLICATION_NAME, packageName);
+    map.put(CONTEXT, context);
+    map.put(ACTION, downloadAction);
+
+    if (downloadAction != null) {
+      analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
+          PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
+      analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
+          context);
     }
   }
 

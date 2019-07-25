@@ -99,6 +99,7 @@
   <string name="myaccount_edit_store_button">Edit</string>
   <string name="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
+  <string name="my_account_product_card_section_title">Aptoide Products</string>
   <string name="twitch">Twitch</string>
   <string name="youtube">Youtube</string>
   <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
