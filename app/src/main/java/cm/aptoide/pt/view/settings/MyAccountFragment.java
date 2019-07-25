@@ -116,8 +116,7 @@ public class MyAccountFragment extends BackButtonFragment
     notificationHistory = view.findViewById(R.id.notifications_history);
     settings = view.findViewById(R.id.settings);
     myAccountProductCardTitle = view.findViewById(R.id.my_account_product_card_title);
-    myAccountProductCardTitle.setText(
-        marketFormatter.formatString(getContext(), R.string.my_account_product_card_section_title));
+    myAccountProductCardTitle.setText(getString(R.string.my_account_product_card_section_title));
 
     setAccountViews(view);
     setupToolbar();
