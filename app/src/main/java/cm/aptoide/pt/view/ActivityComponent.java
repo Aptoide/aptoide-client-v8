@@ -17,6 +17,8 @@ public interface ActivityComponent {
 
   void inject(MainActivity activity);
 
+  void inject(ThemedActivityView activity);
+
   void inject(WalletInstallActivity activity);
 
   void inject(ActivityResultNavigator activityResultNavigator);
