@@ -36,7 +36,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -61,7 +60,6 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject AccountAnalytics accountAnalytics;
   @Inject MyAccountManager myAccountManager;
   @Inject @Named("marketName") String marketName;
-  @Inject MarketResourceFormatter marketFormatter;
   @Inject @Named("aptoide-theme") String theme;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
