@@ -89,37 +89,6 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    loading = view.findViewById(R.id.loading);
-    walletAddressEdit = view.findViewById(R.id.wallet_edit);
-    getWalletAddressButton = view.findViewById(R.id.get_wallet_button);
-    walletNextButton = view.findViewById(R.id.wallet_continue_button);
-    walletCancelButton = view.findViewById(R.id.wallet_cancel_button);
-    walletMessageIcon = view.findViewById(R.id.wallet_message_icon);
-    walletErrorView = view.findViewById(R.id.wallet_error_view);
-    captcha = view.findViewById(R.id.captcha_container);
-    captchaEdit = view.findViewById(R.id.captcha_edit);
-    refreshCaptchaButton = view.findViewById(R.id.captcha_refresh);
-    captchaLoading = view.findViewById(R.id.captcha_progress);
-    captchaNextButton = view.findViewById(R.id.captcha_continue_button);
-    captchaCancelButton = view.findViewById(R.id.captcha_cancel_button);
-    captchaErrorView = view.findViewById(R.id.captcha_error_view);
-    genericMessageTitle = view.findViewById(R.id.generic_message_title);
-    genericMessageBody = view.findViewById(R.id.generic_message_body);
-    genericMessageButton = view.findViewById(R.id.generic_message_button);
-    genericErrorOkButton = view.findViewById(R.id.error_ok_button);
-
-    insertWalletView = view.findViewById(R.id.insert_address_view);
-    captchaView = view.findViewById(R.id.captcha_view);
-    genericMessageView = view.findViewById(R.id.generic_message_view);
-    genericErrorView = view.findViewById(R.id.generic_error);
-
-    attachPresenter(presenter);
-
-    handleRestoreViewState(savedInstanceState);
-  }
-
   public void onResume() {
     super.onResume();
 

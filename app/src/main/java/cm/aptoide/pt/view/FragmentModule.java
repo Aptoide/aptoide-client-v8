@@ -36,13 +36,13 @@ import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.AppViewManager;
+import cm.aptoide.pt.app.AppViewModelManager;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewFragment.BundleKeys;
@@ -99,11 +99,11 @@ import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.home.apps.AppsPresenter;
 import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
 import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
+import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -325,26 +325,33 @@ import rx.subscriptions.CompositeSubscription;
     return new FlagService(bodyInterceptorV3, okHttpClient, tokenInvalidator, sharedPreferences);
   }
 
-  @FragmentScope @Provides AppViewManager providesAppViewManager(InstallManager installManager,
+  @FragmentScope @Provides AppViewManager providesAppViewManager(
+      AppViewModelManager appViewModelManager, InstallManager installManager,
       DownloadFactory downloadFactory, AppCenter appCenter, ReviewsManager reviewsManager,
-      AdsManager adsManager, StoreManager storeManager, FlagManager flagManager,
-      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager,
-      AppViewConfiguration appViewConfiguration, DownloadStateParser downloadStateParser,
+      AdsManager adsManager, FlagManager flagManager, StoreUtilsProxy storeUtilsProxy,
+      AptoideAccountManager aptoideAccountManager, DownloadStateParser downloadStateParser,
       AppViewAnalytics appViewAnalytics, NotificationAnalytics notificationAnalytics,
       InstallAnalytics installAnalytics, Resources resources, WindowManager windowManager,
       @Named("marketName") String marketName, AppCoinsManager appCoinsManager,
       MoPubAdsManager moPubAdsManager, PromotionsManager promotionsManager,
-      InstalledRepository installedRepository, AppcMigrationManager appcMigrationManager,
+      AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
-      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider,
-      AppcMigrationService appcMigrationService) {
-    return new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager,
-        adsManager, storeManager, flagManager, storeUtilsProxy, aptoideAccountManager,
-        appViewConfiguration, moPubAdsManager, downloadStateParser, appViewAnalytics,
-        notificationAnalytics, installAnalytics,
-        (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6), Schedulers.io(),
-        marketName, appCoinsManager, promotionsManager, installedRepository, appcMigrationManager,
+      AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
+    return new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
+        reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
+        moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
+        installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
+        Schedulers.io(), marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider);
+  }
+
+  @FragmentScope @Provides AppViewModelManager providesAppViewModelManager(
+      AppViewConfiguration appViewConfiguration, StoreManager storeManager,
+      @Named("marketName") String marketName, AppCenter appCenter,
+      DownloadStateParser downloadStateParser, InstallManager installManager,
+      AppcMigrationManager appcMigrationManager, AppCoinsManager appCoinsManager) {
+    return new AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
+        downloadStateParser, installManager, appcMigrationManager, appCoinsManager);
   }
 
   @FragmentScope @Provides AppViewPresenter providesAppViewPresenter(
@@ -525,10 +532,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides AppsManager providesAppsManager(UpdatesManager updatesManager,
       InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
-      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
+      PromotionsManager promotionsManager) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
-        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager);
+        .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
+        promotionsManager);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,
@@ -541,16 +550,18 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides SeeMoreAppcManager providesSeeMoreManager(UpdatesManager updatesManager,
       InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
-      InstallAnalytics installAnalytics, DownloadFactory downloadFactory) {
+      InstallAnalytics installAnalytics, DownloadFactory downloadFactory,
+      PromotionsManager promotionsManager) {
     return new SeeMoreAppcManager(updatesManager, installManager, appMapper, downloadFactory,
-        downloadAnalytics, installAnalytics);
+        downloadAnalytics, installAnalytics, promotionsManager);
   }
 
   @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(
-      SeeMoreAppcManager seeMoreAppcManager) {
+      SeeMoreAppcManager seeMoreAppcManager, SeeMoreAppcNavigator seeMoreAppcNavigator) {
     return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment),
         AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager);
+        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager,
+        seeMoreAppcNavigator);
   }
 
   @FragmentScope @Provides

@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.Collections;
@@ -30,6 +32,8 @@ import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
 public class AppsManager {
 
+  private static final String MIGRATION_PROMOTION = "BONUS_MIGRATION_19";
+
   private final UpdatesManager updatesManager;
   private final InstallManager installManager;
   private final AppMapper appMapper;
@@ -40,11 +44,13 @@ public class AppsManager {
   private final Context context;
   private final DownloadFactory downloadFactory;
   private final MoPubAdsManager moPubAdsManager;
+  private final PromotionsManager promotionsManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
-      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager) {
+      DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
+      PromotionsManager promotionsManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -55,6 +61,7 @@ public class AppsManager {
     this.context = context;
     this.downloadFactory = downloadFactory;
     this.moPubAdsManager = moPubAdsManager;
+    this.promotionsManager = promotionsManager;
   }
 
   public Observable<List<App>> getUpdatesList(boolean isExcluded) {
@@ -63,10 +70,15 @@ public class AppsManager {
         .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
   }
 
-  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded) {
+  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded, boolean hasPromotion,
+      float appcValue) {
     return updatesManager.getAppcUpgradesList(isExcluded)
         .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
+        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, hasPromotion, appcValue));
+  }
+
+  public Observable<List<App>> getExcludedAppcUpgradesList() {
+    return getAppcUpgradesList(true, false, 0);
   }
 
   public Observable<List<App>> getUpdateDownloadsList() {
@@ -100,6 +112,14 @@ public class AppsManager {
               .toList()
               .map(updatesList -> appMapper.getUpdatesList(updatesList));
         });
+  }
+
+  public Observable<Pair<Boolean, Float>> migrationPromotionActive() {
+    return promotionsManager.getPromotionApps(MIGRATION_PROMOTION)
+        .map(promotions -> new Pair<>(!promotions.isEmpty(),
+            !promotions.isEmpty() ? promotions.get(0)
+                .getAppcValue() : 0))
+        .toObservable();
   }
 
   public Observable<List<App>> getInstalledApps() {
@@ -181,7 +201,7 @@ public class AppsManager {
   private void setupUpdateEvents(Download download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
@@ -229,7 +249,10 @@ public class AppsManager {
           return Observable.just(value);
         })
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupUpdateEvents(download, Origin.UPDATE, status))
+            .doOnSuccess(status -> {
+              updatesAnalytics.sendUpdateClickedEvent(packageName);
+              setupUpdateEvents(download, Origin.UPDATE, status);
+            })
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -248,6 +271,7 @@ public class AppsManager {
         .first()
         .filter(updatesList -> !updatesList.isEmpty())
         .flatMap(updates -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(__ -> updatesAnalytics.sendUpdateAllClickEvent())
             .flatMapObservable(offerResponseStatus -> Observable.just(offerResponseStatus)
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
@@ -265,6 +289,10 @@ public class AppsManager {
 
   public void setAppViewAnalyticsEvent() {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW);
+  }
+
+  public void setMigrationAppViewAnalyticsEvent() {
+    updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW_MIGRATIOM);
   }
 
   public Observable<List<App>> getInstalledDownloads() {

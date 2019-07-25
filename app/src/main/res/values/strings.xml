@@ -572,6 +572,7 @@
   <string name="appc_message_appcoins_benefit_4">No credit card needed</string>
   <string name="appc_title_settings_appcoins_wallet">AppCoins Wallet</string>
   <string name="appc_title_bundle">AppCoins Apps</string>
+  <string name="appc_verification_cancelled_by_user_message">You need to verify your wallet to receive rewards. It\'ll only take you a few seconds!</string>
 
   <!--Editorial Content-->
   <string name="editorial_card_views_short">%s views</string>
