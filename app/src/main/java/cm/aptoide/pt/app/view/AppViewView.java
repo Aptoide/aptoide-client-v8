@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.util.Pair;
 import android.view.MenuItem;
+import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.DownloadModel;
@@ -172,11 +173,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Pair<Promotion, WalletApp>> installWalletButtonClick();
 
-  Observable<WalletApp> pausePromotionDownload();
-
-  Observable<WalletApp> cancelPromotionDownload();
-
-  Observable<WalletApp> resumePromotionDownload();
+  Observable<DownloadEventListener.Action> promotionDownloadViewEvents();
 
   Observable<Promotion> claimAppClick();
 

@@ -122,9 +122,6 @@ public class AppViewPresenter implements Presenter {
 
     claimApp();
     handlePromotionClaimResult();
-    resumeWalletDownload();
-    cancelPromotionDownload();
-    pauseWalletDownload();
     showInterstitial();
 
     handleDownloadingSimilarApp();
@@ -297,7 +294,7 @@ public class AppViewPresenter implements Presenter {
   @VisibleForTesting public Observable<AppViewModel> loadAppcPromotion(AppViewModel appViewModel) {
     return Observable.just(appViewModel.getAppModel())
         .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
-        .flatMap(__ -> appViewManager.loadPromotionViewModel())
+        .flatMap(__ -> appViewManager.observePromotionViewModel())
         .observeOn(viewScheduler)
         .doOnNext(promotionViewModel -> {
           if (promotionViewModel.getAppViewModel() == null) return;
@@ -1174,50 +1171,35 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private void resumeWalletDownload() {
+  private void handleWalletDownloadEvents() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(create -> view.promotionDownloadViewEvents()
+            .flatMap(action -> permissionManager.requestDownloadAccess(permissionService)
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
-                .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
-                        walletApp.getDownloadModel()
-                            .getAction()))
+                .flatMapSingle(__ -> appViewManager.getPromotionViewModel())
+                .flatMapCompletable(promotionViewModel -> {
+                  WalletApp walletApp = promotionViewModel.getWalletApp();
+                  switch (action.getType()) {
+                    case CANCEL:
+                      return appViewManager.cancelDownload(walletApp.getMd5sum(),
+                          walletApp.getPackageName(), walletApp.getVersionCode());
+                    case RESUME:
+                      return appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
+                          walletApp.getDownloadModel()
+                              .getAction());
+                    case PAUSE:
+                      return appViewManager.pauseDownload(walletApp.getMd5sum());
+                    default:
+                      return Completable.error(
+                          new IllegalArgumentException("Invalid type of action"));
+                  }
+                })
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
-        });
-  }
-
-  private void cancelPromotionDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(create -> view.cancelPromotionDownload()
-            .flatMapCompletable(walletApp -> {
-              return appViewManager.cancelDownload(walletApp.getMd5sum(),
-                  walletApp.getPackageName(), walletApp.getVersionCode());
-            })
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
-  }
-
-  private void pauseWalletDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.pausePromotionDownload()
-            .flatMapCompletable(walletApp -> appViewManager.pauseDownload(walletApp.getMd5sum()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new IllegalStateException(error);
         });
   }
 

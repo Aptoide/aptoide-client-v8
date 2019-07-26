@@ -127,7 +127,7 @@ public class AppViewPresenterTest {
     when(appViewManager.shouldLoadInterstitialAd()).thenReturn(Single.just(false));
     when(appViewManager.loadAdsFromAppView()).thenReturn(Single.just(new SearchAdResult()));
     when(appViewManager.shouldLoadBannerAd()).thenReturn(Single.just(false));
-    when(appViewManager.loadPromotionViewModel()).thenReturn(
+    when(appViewManager.observePromotionViewModel()).thenReturn(
         Observable.just(new PromotionViewModel()));
 
     //TestSubscriber testSubscriber =
@@ -263,7 +263,8 @@ public class AppViewPresenterTest {
     promotionViewModel.setPromotions(Collections.singletonList(promotion));
     promotionViewModel.setAppViewModel(appViewModel);
     when(appViewManager.getAppModel()).thenReturn(Single.just(appModel));
-    when(appViewManager.loadPromotionViewModel()).thenReturn(Observable.just(promotionViewModel));
+    when(appViewManager.observePromotionViewModel()).thenReturn(
+        Observable.just(promotionViewModel));
     when(appViewManager.isAppcPromotionImpressionSent()).thenReturn(false);
     when(appViewManager.getClaimablePromotion(promotionViewModel.getPromotions(),
         Promotion.ClaimAction.INSTALL)).thenReturn(promotion);

@@ -410,7 +410,7 @@ public class AppViewManager {
         .flatMap(this::shouldLoadAds);
   }
 
-  public Observable<PromotionViewModel> loadPromotionViewModel() {
+  public Observable<PromotionViewModel> observePromotionViewModel() {
     Observable<PromotionViewModel> promoViewModelObs = Observable.just(new PromotionViewModel());
     if (cachedPromotionViewModel != null) {
       Observable<PromotionViewModel> cachedViewModel = Observable.just(cachedPromotionViewModel);
@@ -431,6 +431,11 @@ public class AppViewManager {
     }
   }
 
+  public Single<PromotionViewModel> getPromotionViewModel() {
+    return observePromotionViewModel().first()
+        .toSingle();
+  }
+
   private Observable<List<Promotion>> getPromotions() {
     return appViewModelManager.getAppModel()
         .flatMapObservable(
@@ -439,7 +444,8 @@ public class AppViewManager {
 
   /**
    * If the user clicks before cachedPromotionViewModel is set, this will return false, even though
-   * it might be true later. We could call loadPromotionViewModel(), but in this case it will do a
+   * it might be true later. We could call observePromotionViewModel(), but in this case it will do
+   * a
    * lot of work twice. I think it's acceptable to assume it's false if the promotion wasn't shown
    * yet.
    */
