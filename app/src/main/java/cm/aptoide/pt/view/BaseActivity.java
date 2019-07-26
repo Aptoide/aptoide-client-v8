@@ -7,8 +7,6 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FlavourActivityModule;
 import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 public abstract class BaseActivity extends RxAppCompatActivity {
 
