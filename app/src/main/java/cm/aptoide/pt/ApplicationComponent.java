@@ -3,7 +3,6 @@ package cm.aptoide.pt;
 import cm.aptoide.pt.install.InstallService;
 import cm.aptoide.pt.install.InstalledIntentService;
 import cm.aptoide.pt.notification.PullingContentService;
-import cm.aptoide.pt.toolbox.ToolboxContentProvider;
 import cm.aptoide.pt.view.ActivityComponent;
 import cm.aptoide.pt.view.ActivityModule;
 import dagger.Component;
@@ -18,8 +17,6 @@ public interface ApplicationComponent {
   void inject(AptoideApplication application);
 
   void inject(NotificationApplicationView notificationApplicationView);
-
-  void inject(ToolboxContentProvider toolboxContentProvider);
 
   void inject(InstallService installService);
 

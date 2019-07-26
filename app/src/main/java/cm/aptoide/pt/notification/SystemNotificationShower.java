@@ -73,7 +73,7 @@ public class SystemNotificationShower implements Presenter {
     setNotificationPressSubscribe();
     setNotificationDismissSubscribe();
     setNotificationBootCompletedSubscribe();
-    showNewNotification();
+    //showNewNotification();
   }
 
   private void showNewNotification() {

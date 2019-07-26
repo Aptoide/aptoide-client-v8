@@ -27,9 +27,9 @@ import rx.Observable;
 public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
     implements ActivityNavigator {
 
-  @Inject AccountNavigator accountNavigator;
-  @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
+  //@Inject AccountNavigator accountNavigator;
+  //@Inject @Named("marketName") String marketName;
+  //@Inject @Named("aptoide-theme") String theme;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -53,7 +53,7 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
     // else getFragmentNavigator and getActivityNavigator will return null.
     super.onCreate(savedInstanceState);
     resultRelay = PublishRelay.create();
-    getActivityComponent().inject(this);
+    //getActivityComponent().inject(this);
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -157,19 +157,19 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   }
 
   public AccountNavigator getAccountNavigator() {
-    return accountNavigator;
+    return null;
   }
 
   public BillingNavigator getBillingNavigator() {
-    if (billingNavigator == null) {
-      int toolbarColor = StoreTheme.get(theme)
-          .getPrimaryColor();
-      billingNavigator = new BillingNavigator(
-          ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
-          getActivityNavigator(), getFragmentNavigator(), marketName, this,
-          ContextCompat.getColor(this, toolbarColor));
-    }
-    return billingNavigator;
+    //if (billingNavigator == null) {
+    //  int toolbarColor = StoreTheme.get(theme)
+    //      .getPrimaryColor();
+    //  billingNavigator = new BillingNavigator(
+    //      ((AptoideApplication) getApplicationContext()).getPurchaseBundleMapper(),
+    //      getActivityNavigator(), getFragmentNavigator(), marketName, this,
+    //      ContextCompat.getColor(this, toolbarColor));
+    //}
+    return null;
   }
 
   public ScreenOrientationManager getScreenOrientationManager() {

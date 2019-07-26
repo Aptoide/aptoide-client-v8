@@ -41,9 +41,9 @@ import rx.subjects.PublishSubject;
 public class MainActivity extends BottomNavigationActivity
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
-  @Inject Presenter presenter;
-  @Inject Resources resources;
-  @Inject MarketResourceFormatter marketResourceFormatter;
+  //@Inject Presenter presenter;
+  //@Inject Resources resources;
+  //@Inject MarketResourceFormatter marketResourceFormatter;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -55,18 +55,18 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getActivityComponent().inject(this);
-    final AptoideApplication application = (AptoideApplication) getApplicationContext();
-    MoPub.onCreate(this);
-    installManager = application.getInstallManager();
-    snackBarLayout = findViewById(R.id.snackbar_layout);
-    installErrorsDismissEvent = PublishRelay.create();
-    autoUpdateDialogSubject = PublishSubject.create();
-
-    initializeAdsMediation();
-    setupUpdatesNotification();
-
-    attachPresenter(presenter);
+    //getActivityComponent().inject(this);
+    //final AptoideApplication application = (AptoideApplication) getApplicationContext();
+    //MoPub.onCreate(this);
+    //installManager = application.getInstallManager();
+    //snackBarLayout = findViewById(R.id.snackbar_layout);
+    //installErrorsDismissEvent = PublishRelay.create();
+    //autoUpdateDialogSubject = PublishSubject.create();
+    //
+    //initializeAdsMediation();
+    //setupUpdatesNotification();
+    //
+    //attachPresenter(presenter);
   }
 
   @Override protected void onDestroy() {
@@ -87,29 +87,29 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStart() {
     super.onStart();
-    MoPub.onStart(this);
+    //MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
-    MoPub.onResume(this);
-    IronSource.onResume(this);
+    //MoPub.onResume(this);
+    //IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    MoPub.onPause(this);
-    IronSource.onPause(this);
+    //MoPub.onPause(this);
+    //IronSource.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
-    MoPub.onStop(this);
+    //MoPub.onStop(this);
   }
 
   @Override protected void onRestart() {
     super.onRestart();
-    MoPub.onRestart(this);
+    //MoPub.onRestart(this);
   }
 
   private void setupUpdatesNotification() {
@@ -187,8 +187,8 @@ public class MainActivity extends BottomNavigationActivity
     final AlertDialog updateSelfDialog = dialogBuilder.create();
     updateSelfDialog.setTitle(getText(R.string.update_self_title));
     updateSelfDialog.setIcon(R.mipmap.ic_launcher);
-    updateSelfDialog.setMessage(
-        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
+    //updateSelfDialog.setMessage(
+    //marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
     updateSelfDialog.setCancelable(false);
     updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
         (arg0, arg1) -> {

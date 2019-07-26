@@ -26,8 +26,8 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   protected static final int LAYOUT = R.layout.frame_layout;
   private final String ITEMS_LIST_KEY = "BN_ITEMS";
   protected BottomNavigationView bottomNavigationView;
-  @Inject BottomNavigationMapper bottomNavigationMapper;
-  @Inject BottomNavigationNavigator bottomNavigationNavigator;
+  //@Inject BottomNavigationMapper bottomNavigationMapper;
+  //@Inject BottomNavigationNavigator bottomNavigationNavigator;
   private PublishSubject<Integer> navigationSubject;
   private Animation animationup;
   private Animation animationdown;
@@ -38,10 +38,10 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     navigationSubject = PublishSubject.create();
     bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
     super.onCreate(savedInstanceState);
-    getActivityComponent().inject(this);
+    //getActivityComponent().inject(this);
     if (savedInstanceState != null) {
-      bottomNavigationNavigator.setBottomNavigationItems(
-          savedInstanceState.getIntegerArrayList(ITEMS_LIST_KEY));
+      //bottomNavigationNavigator.setBottomNavigationItems(
+      //    savedInstanceState.getIntegerArrayList(ITEMS_LIST_KEY));
     }
     BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -54,8 +54,8 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   }
 
   @Override protected void onDestroy() {
-    bottomNavigationMapper = null;
-    bottomNavigationNavigator = null;
+    //bottomNavigationMapper = null;
+    //bottomNavigationNavigator = null;
     navigationSubject = null;
     bottomNavigationView = null;
     animationdown = null;
@@ -68,8 +68,8 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   }
 
   @Override public void showFragment(Integer menuItemId) {
-    int bottomNavigationPosition = bottomNavigationMapper.mapToBottomNavigationPosition(menuItemId);
-    bottomNavigationNavigator.navigateToBottomNavigationItem(bottomNavigationPosition);
+    //int bottomNavigationPosition = bottomNavigationMapper.mapToBottomNavigationPosition(menuItemId);
+    //bottomNavigationNavigator.navigateToBottomNavigationItem(bottomNavigationPosition);
   }
 
   @Override public void toggleBottomNavigation() {
@@ -94,24 +94,24 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
   }
 
   @Override public void requestFocus(BottomNavigationItem bottomNavigationItem) {
-    int bottomNavigationPosition =
-        bottomNavigationMapper.mapToBottomNavigationPosition(bottomNavigationItem);
-    bottomNavigationView.getMenu()
-        .getItem(bottomNavigationPosition)
-        .setChecked(true);
+    //int bottomNavigationPosition =
+    //    bottomNavigationMapper.mapToBottomNavigationPosition(bottomNavigationItem);
+    //bottomNavigationView.getMenu()
+    //    .getItem(bottomNavigationPosition)
+    //    .setChecked(true);
   }
 
   @Override public void onBackPressed() {
-    if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
-      bottomNavigationNavigator.navigateBack();
-    } else {
+    //if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
+    //  bottomNavigationNavigator.navigateBack();
+    //} else {
       super.onBackPressed();
-    }
+    //}
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putIntegerArrayList(ITEMS_LIST_KEY,
-        bottomNavigationNavigator.getBottomNavigationItems());
+    //outState.putIntegerArrayList(ITEMS_LIST_KEY,
+    //    bottomNavigationNavigator.getBottomNavigationItems());
   }
 }

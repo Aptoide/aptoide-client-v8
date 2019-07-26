@@ -18,7 +18,7 @@ public class MockAptoideApplication extends VanillaApplication {
   @Override public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(new MockApplicationModule(this, getAptoideMd5sum()))
+          .applicationModule(new MockApplicationModule(this, "aa"))
           .build();
     }
     return applicationComponent;

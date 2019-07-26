@@ -16,7 +16,7 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
   }
 
   public Observable<Update> get(String packageName) {
-    return database.get(Update.class, Update.PACKAGE_NAME, packageName);
+    return Observable.just(null);
   }
 
   public Observable<Update> get(String packageName, boolean isExcluded) {

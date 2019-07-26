@@ -93,17 +93,17 @@ public class InstalledIntentService extends IntentService {
         return;
       }
 
-      switch (action) {
-        case Intent.ACTION_PACKAGE_ADDED:
-          onPackageAdded(packageName);
-          break;
-        case Intent.ACTION_PACKAGE_REPLACED:
-          onPackageReplaced(packageName);
-          break;
-        case Intent.ACTION_PACKAGE_REMOVED:
-          onPackageRemoved(packageName);
-          break;
-      }
+      //switch (action) {
+      //  case Intent.ACTION_PACKAGE_ADDED:
+      //    onPackageAdded(packageName);
+      //    break;
+      //  case Intent.ACTION_PACKAGE_REPLACED:
+      //    onPackageReplaced(packageName);
+      //    break;
+      //  case Intent.ACTION_PACKAGE_REMOVED:
+      //    onPackageRemoved(packageName);
+      //    break;
+      //}
     }
   }
 

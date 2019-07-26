@@ -49,18 +49,19 @@ public class VanillaApplication extends NotificationApplicationView {
   }
 
   @Override public NotificationSyncScheduler getNotificationSyncScheduler() {
-    if (notificationSyncScheduler == null) {
-      notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
-          new NotificationSyncFactory(new NotificationService(BuildConfig.APPLICATION_ID,
-              new OkHttpClient.Builder().readTimeout(45, TimeUnit.SECONDS)
-                  .writeTimeout(45, TimeUnit.SECONDS)
-                  .addInterceptor(new Pnp1AuthorizationInterceptor(getAuthenticationPersistence(),
-                      getTokenInvalidator()))
-                  .build(), WebService.getDefaultConverter(), getIdsRepository(),
-              BuildConfig.VERSION_NAME, getExtraId(), getDefaultSharedPreferences(), getResources(),
-              getAccountManager()), getNotificationProvider()));
-    }
-    return notificationSyncScheduler;
+    //if (notificationSyncScheduler == null) {
+    //  notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
+    //      new NotificationSyncFactory(new NotificationService(BuildConfig.APPLICATION_ID,
+    //          new OkHttpClient.Builder().readTimeout(45, TimeUnit.SECONDS)
+    //              .writeTimeout(45, TimeUnit.SECONDS)
+    //              .addInterceptor(new Pnp1AuthorizationInterceptor(getAuthenticationPersistence(),
+    //                  getTokenInvalidator()))
+    //              .build(), WebService.getDefaultConverter(), getIdsRepository(),
+    //          BuildConfig.VERSION_NAME, getExtraId(), getDefaultSharedPreferences(), getResources(),
+    //          getAccountManager()), getNotificationProvider()));
+    //}
+    //return notificationSyncScheduler;
+    return null;
   }
 
   @Override public FragmentProvider createFragmentProvider() {

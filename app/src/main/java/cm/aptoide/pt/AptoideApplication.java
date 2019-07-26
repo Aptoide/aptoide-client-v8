@@ -140,47 +140,46 @@ public abstract class AptoideApplication extends Application {
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
-  @Inject Database database;
-  @Inject AptoideDownloadManager aptoideDownloadManager;
-  @Inject CacheHelper cacheHelper;
-  @Inject AptoideAccountManager accountManager;
-  @Inject Preferences preferences;
-  @Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
-  @Inject AdultContent adultContent;
-  @Inject IdsRepository idsRepository;
-  @Inject @Named("default") OkHttpClient defaultClient;
-  @Inject RootAvailabilityManager rootAvailabilityManager;
-  @Inject AuthenticationPersistence authenticationPersistence;
-  @Inject Crashlytics crashlytics;
-  @Inject SyncScheduler alarmSyncScheduler;
-  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
-  @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
-  @Inject @Named("defaultInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
-      bodyInterceptorV3;
-  @Inject L2Cache httpClientCache;
-  @Inject QManager qManager;
-  @Inject TokenInvalidator tokenInvalidator;
-  @Inject PackageRepository packageRepository;
-  @Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
-  @Inject AdsRepository adsRepository;
-  @Inject SyncStorage syncStorage;
-  @Inject NavigationTracker navigationTracker;
-  @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
-  @Inject TrendingManager trendingManager;
-  @Inject AdultContentAnalytics adultContentAnalytics;
-  @Inject NotificationAnalytics notificationAnalytics;
-  @Inject SearchSuggestionManager searchSuggestionManager;
-  @Inject AnalyticsManager analyticsManager;
-  @Inject FirstLaunchAnalytics firstLaunchAnalytics;
-  @Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
-  @Inject RootInstallationRetryHandler rootInstallationRetryHandler;
-  @Inject AptoideShortcutManager shortcutManager;
-  @Inject SettingsManager settingsManager;
-  @Inject InstallManager installManager;
-  @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
-  @Inject AdsUserPropertyManager adsUserPropertyManager;
+  //@Inject Database database;
+  //@Inject CacheHelper cacheHelper;
+  //@Inject AptoideAccountManager accountManager;
+  //@Inject Preferences preferences;
+  //@Inject @Named("secure") cm.aptoide.pt.preferences.SecurePreferences securePreferences;
+  //@Inject AdultContent adultContent;
+  //@Inject IdsRepository idsRepository;
+  //@Inject @Named("default") OkHttpClient defaultClient;
+  //@Inject RootAvailabilityManager rootAvailabilityManager;
+  //@Inject AuthenticationPersistence authenticationPersistence;
+  //@Inject Crashlytics crashlytics;
+  //@Inject SyncScheduler alarmSyncScheduler;
+  //@Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
+  //@Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
+  //@Inject @Named("defaultInterceptorV3") BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody>
+  //    bodyInterceptorV3;
+  //@Inject L2Cache httpClientCache;
+  //@Inject QManager qManager;
+  //@Inject TokenInvalidator tokenInvalidator;
+  //@Inject PackageRepository packageRepository;
+  //@Inject AdsApplicationVersionCodeProvider applicationVersionCodeProvider;
+  //@Inject AdsRepository adsRepository;
+  //@Inject SyncStorage syncStorage;
+  //@Inject NavigationTracker navigationTracker;
+  //@Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  //@Inject TrendingManager trendingManager;
+  //@Inject AdultContentAnalytics adultContentAnalytics;
+  //@Inject NotificationAnalytics notificationAnalytics;
+  //@Inject SearchSuggestionManager searchSuggestionManager;
+  //@Inject AnalyticsManager analyticsManager;
+  //@Inject FirstLaunchAnalytics firstLaunchAnalytics;
+  //@Inject InvalidRefreshTokenLogoutManager invalidRefreshTokenLogoutManager;
+  //@Inject RootInstallationRetryHandler rootInstallationRetryHandler;
+  //@Inject AptoideShortcutManager shortcutManager;
+  //@Inject SettingsManager settingsManager;
+  //@Inject InstallManager installManager;
+  //@Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
+  //@Inject AdsUserPropertyManager adsUserPropertyManager;
   private LeakTool leakTool;
-  private String aptoideMd5sum;
+  //private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
   private ExternalBillingSerializer inAppBillingSerialzer;
   private PurchaseBundleMapper purchaseBundleMapper;
@@ -228,25 +227,25 @@ public abstract class AptoideApplication extends Application {
 
   @Override public void onCreate() {
 
-    getApplicationComponent().inject(this);
-    CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(crashlytics))
-        .addLogger(new ConsoleLogger());
-    Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
+    //getApplicationComponent().inject(this);
+    //CrashReport.getInstance()
+    //    .addLogger(new CrashlyticsCrashLogger(crashlytics))
+    //    .addLogger(new ConsoleLogger());
+    //Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
-    try {
-      PRNGFixes.apply();
-    } catch (Exception e) {
-      CrashReport.getInstance()
-          .log(e);
-    }
+    //try {
+    //  PRNGFixes.apply();
+    //} catch (Exception e) {
+    //  CrashReport.getInstance()
+    //      .log(e);
+    //}
 
     //
     // call super
     //
     super.onCreate();
 
-    initializeMoPub();
+    //initializeMoPub();
 
     //
     // execute custom Application onCreate code with time metric
@@ -282,28 +281,28 @@ public abstract class AptoideApplication extends Application {
      * TODO change this class in order to accept that there's no test
      * AN-1838
      */
-    checkAppSecurity().andThen(generateAptoideUuid())
-        .observeOn(Schedulers.computation())
-        .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
-          // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance()
-              .log(err);
-          return true;
-        }))
-        .andThen(discoverAndSaveInstalledApps())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
-            .log(error));
+    //checkAppSecurity().andThen(generateAptoideUuid())
+    //    .observeOn(Schedulers.computation())
+    //    .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
+    //      // in case we have an error preparing the app, log that error and continue
+    //      CrashReport.getInstance()
+    //          .log(err);
+    //      return true;
+    //    }))
+    //    .andThen(discoverAndSaveInstalledApps())
+    //    .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
+    //        .log(error));
 
     //
     // app synchronous initialization
     //
 
-    sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())))
-        .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
+    //sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
+    //    SecurePreferencesImplementation.getInstance(getApplicationContext(),
+    //        getDefaultSharedPreferences())))
+    //    .subscribe(() -> {
+    //    }, throwable -> CrashReport.getInstance()
+    //        .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -313,31 +312,30 @@ public abstract class AptoideApplication extends Application {
     // this will trigger the migration if needed
     //
 
-    SQLiteDatabaseHelper dbHelper = new SQLiteDatabaseHelper(this);
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    if (db.isOpen()) {
-      db.close();
-    }
+    //SQLiteDatabaseHelper dbHelper = new SQLiteDatabaseHelper(this);
+    //SQLiteDatabase db = dbHelper.getWritableDatabase();
+    //if (db.isOpen()) {
+    //  db.close();
+    //}
 
     startNotificationCenter();
     startNotificationCleaner();
-    rootInstallationRetryHandler.start();
+    //rootInstallationRetryHandler.start();
     AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
     aptoideApplicationAnalytics.setPackageDimension(getPackageName());
     aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
-    accountManager.accountStatus()
-        .map(account -> account.isLoggedIn())
-        .distinctUntilChanged()
-        .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
+    //accountManager.accountStatus()
+    //    .map(account -> account.isLoggedIn())
+    //    .distinctUntilChanged()
+    //    .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.getInstance()
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
-    analyticsManager.setup();
-    invalidRefreshTokenLogoutManager.start();
-    aptoideDownloadManager.start();
-
-    adsUserPropertyManager.start();
+    //analyticsManager.setup();
+    //invalidRefreshTokenLogoutManager.start();
+    //
+    //adsUserPropertyManager.start();
   }
 
   public void initializeMoPub() {
@@ -387,7 +385,7 @@ public abstract class AptoideApplication extends Application {
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .applicationModule(new ApplicationModule(this, "aa"))
           .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
@@ -425,31 +423,31 @@ public abstract class AptoideApplication extends Application {
   }
 
   public TokenInvalidator getTokenInvalidator() {
-    return tokenInvalidator;
+    return null;
   }
 
   private void startNotificationCenter() {
-    getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
-        .first()
-        .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
-            throwable -> CrashReport.getInstance()
-                .log(throwable));
+    //getPreferences().getBoolean(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY, true)
+    //    .first()
+    //    .subscribe(enabled -> getNotificationSyncScheduler().setEnabled(enabled),
+    //        throwable -> CrashReport.getInstance()
+    //            .log(throwable));
 
-    getNotificationCenter().setup();
+    //getNotificationCenter().setup();
   }
 
   private void startNotificationCleaner() {
-    getNotificationCleaner().setup();
+    //getNotificationCleaner().setup();
   }
 
   private NotificationsCleaner getNotificationCleaner() {
-    if (notificationsCleaner == null) {
-      notificationsCleaner =
-          new NotificationsCleaner(AccessorFactory.getAccessorFor(database, Notification.class),
-              Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
-              getNotificationProvider(), CrashReport.getInstance());
-    }
-    return notificationsCleaner;
+    //if (notificationsCleaner == null) {
+    //  notificationsCleaner =
+    //      new NotificationsCleaner(AccessorFactory.getAccessorFor(database, Notification.class),
+    //          Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
+    //          getNotificationProvider(), CrashReport.getInstance());
+    //}
+    return null;
   }
 
   public abstract String getCachePath();
@@ -474,24 +472,24 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NotificationCenter getNotificationCenter() {
-    if (notificationCenter == null) {
-      final NotificationProvider notificationProvider = getNotificationProvider();
-      notificationCenter =
-          new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
-              new NotificationPolicyFactory(notificationProvider),
-              new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
-                  navigationTracker));
-    }
-    return notificationCenter;
+    //if (notificationCenter == null) {
+    //  final NotificationProvider notificationProvider = getNotificationProvider();
+    //  notificationCenter =
+    //      new NotificationCenter(notificationProvider, getNotificationSyncScheduler(),
+    //          new NotificationPolicyFactory(notificationProvider),
+    //          new NotificationAnalytics(new AptoideInstallParser(), analyticsManager,
+    //              navigationTracker));
+    //}
+    return null;
   }
 
   public NotificationProvider getNotificationProvider() {
-    if (notificationProvider == null) {
-      notificationProvider =
-          new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
-              Schedulers.io());
-    }
-    return notificationProvider;
+    //if (notificationProvider == null) {
+    //  notificationProvider =
+    //      new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
+    //          Schedulers.io());
+    //}
+    return null;
   }
 
   public abstract NotificationSyncScheduler getNotificationSyncScheduler();
@@ -501,46 +499,46 @@ public abstract class AptoideApplication extends Application {
   }
 
   public OkHttpClient getDefaultClient() {
-    return defaultClient;
+    return null;
   }
 
   public AptoideDownloadManager getDownloadManager() {
-    return aptoideDownloadManager;
+    return null;
   }
 
   public InstallManager getInstallManager() {
-    return installManager;
+    return null;
   }
 
   public QManager getQManager() {
-    return qManager;
+    return null;
   }
 
   public EntryPointChooser getEntryPointChooser() {
-    if (entryPointChooser == null) {
-      entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
-    }
-    return entryPointChooser;
+    //if (entryPointChooser == null) {
+    //  entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
+    //}
+    return null;
   }
 
   public AptoideAccountManager getAccountManager() {
-    return accountManager;
+    return null;
   }
 
   public AuthenticationPersistence getAuthenticationPersistence() {
-    return authenticationPersistence;
+    return null;
   }
 
   public Preferences getPreferences() {
-    return preferences;
+    return null;
   }
 
   public BillingAnalytics getBillingAnalytics() {
-    if (billingAnalytics == null) {
-      billingAnalytics =
-          new BillingAnalytics(getAptoidePackage(), analyticsManager, navigationTracker);
-    }
-    return billingAnalytics;
+    //if (billingAnalytics == null) {
+    //  billingAnalytics =
+    //      new BillingAnalytics(getAptoidePackage(), analyticsManager, navigationTracker);
+    //}
+    return null;
   }
 
   public Billing getBilling(String merchantName) {
@@ -548,16 +546,16 @@ public abstract class AptoideApplication extends Application {
   }
 
   public BillingPool getBillingPool() {
-    if (billingPool == null) {
-      billingPool = new BillingPool(getDefaultSharedPreferences(), bodyInterceptorV3, defaultClient,
-          accountManager, database, getResources(), packageRepository, tokenInvalidator,
-          new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-          getInAppBillingSerializer(), bodyInterceptorPoolV7, accountSettingsBodyInterceptorPoolV7,
-          new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
-          getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
-          getAuthenticationPersistence(), getPreferences());
-    }
-    return billingPool;
+    //if (billingPool == null) {
+    //  billingPool = new BillingPool(getDefaultSharedPreferences(), bodyInterceptorV3, defaultClient,
+    //      accountManager, database, getResources(), packageRepository, tokenInvalidator,
+    //      new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
+    //      getInAppBillingSerializer(), bodyInterceptorPoolV7, accountSettingsBodyInterceptorPoolV7,
+    //      new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
+    //      getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
+    //      getAuthenticationPersistence(), getPreferences());
+    //}
+    return null;
   }
 
   public Adyen getAdyen() {
@@ -572,11 +570,11 @@ public abstract class AptoideApplication extends Application {
   }
 
   public Database getDatabase() {
-    return database;
+    return null;
   }
 
   public PackageRepository getPackageRepository() {
-    return packageRepository;
+    return null;
   }
 
   public PaymentThrowableCodeMapper getPaymentThrowableCodeMapper() {
@@ -602,20 +600,20 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void clearFileCache() {
-    getFileManager().purgeCache()
-        .subscribe(cleanedSize -> Logger.getInstance()
-                .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
-            err -> CrashReport.getInstance()
-                .log(err));
+    //getFileManager().purgeCache()
+    //    .subscribe(cleanedSize -> Logger.getInstance()
+    //            .d(TAG, "cleaned size: " + AptoideUtils.StringU.formatBytes(cleanedSize, false)),
+    //        err -> CrashReport.getInstance()
+    //            .log(err));
   }
 
   public FileManager getFileManager() {
-    if (fileManager == null) {
-      fileManager = new FileManager(cacheHelper, new FileUtils(), new String[] {
-          getApplicationContext().getCacheDir().getPath(), getCachePath()
-      }, aptoideDownloadManager, httpClientCache);
-    }
-    return fileManager;
+    //if (fileManager == null) {
+    //  fileManager = new FileManager(cacheHelper, new FileUtils(), new String[] {
+    //      getApplicationContext().getCacheDir().getPath(), getCachePath()
+    //  }, null, httpClientCache);
+    //}
+    return null;
   }
 
   private void initializeFlurry(Context context, String flurryKey) {
@@ -623,11 +621,11 @@ public abstract class AptoideApplication extends Application {
         .build(context, flurryKey);
   }
 
-  private Completable sendAppStartToAnalytics() {
-    return firstLaunchAnalytics.sendAppStart(this,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()));
-  }
+  //private Completable sendAppStartToAnalytics() {
+  //  return firstLaunchAnalytics.sendAppStart(this,
+  //      SecurePreferencesImplementation.getInstance(getApplicationContext(),
+  //          getDefaultSharedPreferences()));
+  //}
 
   private Completable checkAppSecurity() {
     return Completable.fromAction(() -> {
@@ -652,29 +650,29 @@ public abstract class AptoideApplication extends Application {
     return DisplayableWidgetMapping.getInstance();
   }
 
-  private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
-        .subscribeOn(Schedulers.newThread());
-  }
+  //private Completable generateAptoideUuid() {
+  //  return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
+  //      .subscribeOn(Schedulers.newThread());
+  //}
 
-  private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun(
-              SecurePreferencesImplementation.getInstance(getApplicationContext(),
-                  getDefaultSharedPreferences()))) {
-
-            setSharedPreferencesValues();
-
-            return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
-                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-          }
-
-          return Completable.complete();
-        });
-  }
+  //private Completable prepareApp(AptoideAccountManager accountManager) {
+  //  return accountManager.accountStatus()
+  //      .first()
+  //      .toSingle()
+  //      .flatMapCompletable(account -> {
+  //        if (SecurePreferences.isFirstRun(
+  //            SecurePreferencesImplementation.getInstance(getApplicationContext(),
+  //                getDefaultSharedPreferences()))) {
+  //
+  //          setSharedPreferencesValues();
+  //
+  //          return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
+  //              .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
+  //        }
+  //
+  //        return Completable.complete();
+  //      });
+  //}
 
   private void setSharedPreferencesValues() {
     PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
@@ -693,84 +691,84 @@ public abstract class AptoideApplication extends Application {
   }
 
   // todo re-factor all this code to proper Rx
-  private Completable setupFirstRun() {
-    return Completable.defer(() -> {
+  //private Completable setupFirstRun() {
+  //  return Completable.defer(() -> {
+  //
+  //    final StoreCredentialsProviderImpl storeCredentials =
+  //        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
+  //
+  //    //StoreUtilsProxy proxy =
+  //    //    new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
+  //    //        storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),
+  //    //        defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
+  //    //        getDefaultSharedPreferences());
+  //
+  //    return generateAptoideUuid().andThen(
+  //        setDefaultFollowedStores(storeCredentials, proxy).andThen(refreshUpdates())
+  //            .doOnError(err -> CrashReport.getInstance()
+  //                .log(err)));
+  //  });
+  //}
 
-      final StoreCredentialsProviderImpl storeCredentials =
-          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
-
-      StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
-              storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),
-              defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-              getDefaultSharedPreferences());
-
-      return generateAptoideUuid().andThen(
-          setDefaultFollowedStores(storeCredentials, proxy).andThen(refreshUpdates())
-              .doOnError(err -> CrashReport.getInstance()
-                  .log(err)));
-    });
-  }
-
-  private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
-      StoreUtilsProxy proxy) {
-
-    return Observable.from(defaultFollowedStores)
-        .flatMapCompletable(followedStoreName -> {
-          BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-              storeCredentials.get(followedStoreName);
-
-          return proxy.addDefaultStore(
-              GetStoreMetaRequest.of(defaultStoreCredentials, accountSettingsBodyInterceptorPoolV7,
-                  defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-                  getDefaultSharedPreferences()), accountManager, defaultStoreCredentials);
-        })
-        .toCompletable();
-  }
+  //private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
+  //    StoreUtilsProxy proxy) {
+  //
+  //  return Observable.from(defaultFollowedStores)
+  //      .flatMapCompletable(followedStoreName -> {
+  //        BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
+  //            storeCredentials.get(followedStoreName);
+  //
+  //        return proxy.addDefaultStore(
+  //            GetStoreMetaRequest.of(defaultStoreCredentials, accountSettingsBodyInterceptorPoolV7,
+  //                defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
+  //                getDefaultSharedPreferences()), accountManager, defaultStoreCredentials);
+  //      })
+  //      .toCompletable();
+  //}
 
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
    */
   public BodyInterceptor<BaseBody> getBodyInterceptorPoolV7() {
-    return bodyInterceptorPoolV7;
+    return null;
   }
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorPoolV7() {
-    return accountSettingsBodyInterceptorPoolV7;
+    return null;
   }
 
   public BodyInterceptor<BaseBody> getAccountSettingsBodyInterceptorWebV7() {
-    if (accountSettingsBodyInterceptorWebV7 == null) {
-      accountSettingsBodyInterceptorWebV7 =
-          new MatureBodyInterceptorV7(bodyInterceptorWebV7, adultContent);
-    }
-    return accountSettingsBodyInterceptorWebV7;
+    //if (accountSettingsBodyInterceptorWebV7 == null) {
+    //  accountSettingsBodyInterceptorWebV7 =
+    //      new MatureBodyInterceptorV7(bodyInterceptorWebV7, adultContent);
+    //}
+    return null;
   }
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
-    return bodyInterceptorV3;
-  }
-
-  public String getAptoideMd5sum() {
-    if (aptoideMd5sum == null) {
-      synchronized (this) {
-        if (aptoideMd5sum == null) {
-          aptoideMd5sum = calculateMd5Sum();
-        }
-      }
-    }
-    return aptoideMd5sum;
-  }
-
-  private String calculateMd5Sum() {
-    try {
-      return AptoideUtils.AlgorithmU.computeMd5(
-          getPackageManager().getPackageInfo(getAptoidePackage(), 0));
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
     return null;
   }
+
+  //public String getAptoideMd5sum() {
+  //  if (aptoideMd5sum == null) {
+  //    synchronized (this) {
+  //      if (aptoideMd5sum == null) {
+  //        aptoideMd5sum = calculateMd5Sum();
+  //      }
+  //    }
+  //  }
+  //  return aptoideMd5sum;
+  //}
+
+  //private String calculateMd5Sum() {
+  //  try {
+  //    return AptoideUtils.AlgorithmU.computeMd5(
+  //        getPackageManager().getPackageInfo(getAptoidePackage(), 0));
+  //  } catch (PackageManager.NameNotFoundException e) {
+  //    e.printStackTrace();
+  //  }
+  //  return null;
+  //}
 
   protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
@@ -778,45 +776,42 @@ public abstract class AptoideApplication extends Application {
 
   public Completable createShortcut() {
     return Completable.defer(() -> {
-      if (shortcutManager.shouldCreateShortcut()) {
-        createAppShortcut();
-      }
       return null;
     });
   }
 
-  private Completable discoverAndSaveInstalledApps() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(database, Installed.class);
-    return Observable.fromCallable(() -> {
-      // remove the current installed apps
-      //AccessorFactory.getAccessorFor(Installed.class).removeAll();
-
-      // get the installed apps
-      List<PackageInfo> installedApps =
-          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.getInstance()
-          .v(TAG, "Found " + installedApps.size() + " user installed apps.");
-
-      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-      Collections.sort(installedApps,
-          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
-
-      // return sorted installed apps
-      return installedApps;
-    })  // transform installation package into Installed table entry and save all the data
-        .flatMapIterable(list -> list)
-        .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
-        .toList()
-        .flatMap(appsInstalled -> installedAccessor.getAll()
-            .first()
-            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(Installed.STATUS_UNINSTALLED))))
-        .doOnNext(list -> {
-          installedAccessor.removeAll();
-          installedAccessor.insertAll(list);
-        })
-        .toCompletable();
-  }
+  //private Completable discoverAndSaveInstalledApps() {
+  //  InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(database, Installed.class);
+  //  return Observable.fromCallable(() -> {
+  //    // remove the current installed apps
+  //    //AccessorFactory.getAccessorFor(Installed.class).removeAll();
+  //
+  //    // get the installed apps
+  //    List<PackageInfo> installedApps =
+  //        AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
+  //    Logger.getInstance()
+  //        .v(TAG, "Found " + installedApps.size() + " user installed apps.");
+  //
+  //    // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+  //    Collections.sort(installedApps,
+  //        (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+  //
+  //    // return sorted installed apps
+  //    return installedApps;
+  //  })  // transform installation package into Installed table entry and save all the data
+  //      .flatMapIterable(list -> list)
+  //      .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
+  //      .toList()
+  //      .flatMap(appsInstalled -> installedAccessor.getAll()
+  //          .first()
+  //          .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
+  //              installed -> installed.setStatus(Installed.STATUS_UNINSTALLED))))
+  //      .doOnNext(list -> {
+  //        installedAccessor.removeAll();
+  //        installedAccessor.insertAll(list);
+  //      })
+  //      .toCompletable();
+  //}
 
   public <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
     List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
@@ -851,19 +846,19 @@ public abstract class AptoideApplication extends Application {
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {
-    return rootAvailabilityManager;
+    return null;
   }
 
   public AdsApplicationVersionCodeProvider getVersionCodeProvider() {
-    return applicationVersionCodeProvider;
+    return null;
   }
 
   public AdsRepository getAdsRepository() {
-    return adsRepository;
+    return null;
   }
 
   public SyncStorage getSyncStorage() {
-    return syncStorage;
+    return null;
   }
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
@@ -881,7 +876,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   public NavigationTracker getNavigationTracker() {
-    return navigationTracker;
+    return null;
   }
 
   public abstract FragmentProvider createFragmentProvider();
@@ -907,35 +902,35 @@ public abstract class AptoideApplication extends Application {
   }
 
   public SyncScheduler getAlarmSyncScheduler() {
-    return alarmSyncScheduler;
+    return null;
   }
 
   public TrendingManager getTrendingManager() {
-    return trendingManager;
+    return null;
   }
 
   public NotificationAnalytics getNotificationAnalytics() {
-    return notificationAnalytics;
+    return null;
   }
 
   public IdsRepository getIdsRepository() {
-    return idsRepository;
+    return null;
   }
 
   public SearchSuggestionManager getSearchSuggestionManager() {
-    return searchSuggestionManager;
+    return null;
   }
 
   public AnalyticsManager getAnalyticsManager() {
-    return analyticsManager;
+    return null;
   }
 
   public AdultContentAnalytics getAdultContentAnalytics() {
-    return adultContentAnalytics;
+    return null;
   }
 
   public SettingsManager getSettingsManager() {
-    return settingsManager;
+    return null;
   }
 }
 
