@@ -1223,7 +1223,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
     walletPromotionClaimButton.setOnClickListener(__ -> promotionAppClick.onNext(
-        new PromotionEvent(promotion, walletApp, getClickType(getState(walletApp)))));
+        new PromotionEvent(promotion, walletApp, PromotionEvent.ClickType.CLAIM)));
     walletPromotionIcon.setVisibility(View.VISIBLE);
   }
 
@@ -1232,56 +1232,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         String.valueOf(promotion.getAppc())));
     walletPromotionMessage.setText(
         String.format(getString(walletMessageStringId), String.valueOf(promotion.getAppc())));
-  }
-
-  private int getState(WalletApp walletApp) {
-    int state;
-    DownloadModel downloadModel = walletApp.getDownloadModel();
-    if (downloadModel.isDownloading()) {
-      return DOWNLOADING;
-    } else {
-      switch (downloadModel.getAction()) {
-        case DOWNGRADE:
-          state = DOWNGRADE;
-          break;
-        case INSTALL:
-          state = INSTALL;
-          break;
-        case OPEN:
-          state = CLAIM;
-          break;
-        case UPDATE:
-          state = UPDATE;
-          break;
-        default:
-          throw new IllegalArgumentException("Invalid type of download action");
-      }
-      return state;
-    }
-  }
-
-  private PromotionEvent.ClickType getClickType(int appState) {
-    PromotionEvent.ClickType clickType;
-    switch (appState) {
-      case DOWNGRADE:
-        clickType = PromotionEvent.ClickType.DOWNGRADE;
-        break;
-      case UPDATE:
-        clickType = PromotionEvent.ClickType.UPDATE;
-        break;
-      case DOWNLOAD:
-        clickType = PromotionEvent.ClickType.DOWNLOAD;
-        break;
-      case INSTALL:
-        clickType = PromotionEvent.ClickType.INSTALL_APP;
-        break;
-      case CLAIM:
-        clickType = PromotionEvent.ClickType.CLAIM;
-        break;
-      default:
-        throw new IllegalArgumentException("Wrong view type of promotions app");
-    }
-    return clickType;
   }
 
   private int getPromotionMessage(DownloadModel appDownloadModel) {
