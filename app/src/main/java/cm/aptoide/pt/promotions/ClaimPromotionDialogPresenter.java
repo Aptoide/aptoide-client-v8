@@ -10,9 +10,6 @@ import rx.Scheduler;
 import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_PERMISSIONS_INTENT_REQUEST_CODE;
-import static cm.aptoide.pt.promotions.ClaimPromotionDialogFragment.WALLET_VERIFICATION_INTENT_REQUEST_CODE;
-
 public class ClaimPromotionDialogPresenter implements Presenter {
   private static final int WALLET_VERIFICATION_RESULT_OK = 0;
   private static final int WALLET_VERIFICATION_RESULT_CANCELED = 1;
@@ -53,7 +50,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleWalletVerificationResult() {
     view.getActivityResults()
-        .filter(result -> result.getRequestCode() == WALLET_VERIFICATION_INTENT_REQUEST_CODE)
+        .filter(result -> result.getRequestCode()
+            == ClaimPromotionDialogFragment.WALLET_VERIFICATION_INTENT_REQUEST_CODE)
         .map(Result::getResultCode)
         .doOnNext(this::handleWalletVerificationErrors)
         .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
@@ -92,7 +90,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
 
   private void handleWalletPermissionsResult() {
     view.getActivityResults()
-        .filter(result -> result.getRequestCode() == WALLET_PERMISSIONS_INTENT_REQUEST_CODE)
+        .filter(result -> result.getRequestCode()
+            == ClaimPromotionDialogFragment.WALLET_PERMISSIONS_INTENT_REQUEST_CODE)
         .doOnNext(result -> {
           if (result.getResultCode() == Activity.RESULT_OK) {
             Intent resultIntent = result.getData();
