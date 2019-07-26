@@ -7,6 +7,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.Origin;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,10 +45,10 @@ public class PromotionsAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      Origin origin) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action, false);
+        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
         action, offerResponseStatus);
   }

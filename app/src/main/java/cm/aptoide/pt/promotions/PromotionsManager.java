@@ -152,7 +152,8 @@ public class PromotionsManager {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     promotionsAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK, offerResponseStatus);
+        AnalyticsManager.Action.CLICK, offerResponseStatus,
+        downloadStateParser.getOrigin(download.getAction()));
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,

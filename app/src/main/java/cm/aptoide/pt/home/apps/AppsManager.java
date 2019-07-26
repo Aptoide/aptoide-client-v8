@@ -201,7 +201,7 @@ public class AppsManager {
   private void setupUpdateEvents(Download download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
-        DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
+        DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),

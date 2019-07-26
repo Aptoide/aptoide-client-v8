@@ -373,6 +373,7 @@ dependencies {
 
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
+  implementation "com.jakewharton.rx:replaying-share:${RX_REPLAYING_SHARE_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
   androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
@@ -479,9 +480,6 @@ dependencies {
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
-  //Smaato
-  //implementation (name:'SOMAAndroid-9.1.5-release', ext:'aar')
-
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
@@ -501,7 +499,7 @@ dependencies {
   }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
