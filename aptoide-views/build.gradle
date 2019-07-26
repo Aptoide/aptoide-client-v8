@@ -19,15 +19,10 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  flavorDimensions "product", "mode"
+  flavorDimensions "mode"
   productFlavors {
-    cobrand { dimension "product" }
-    vanilla { dimension "product" }
-    internal { dimension "mode" }
     dev { dimension "mode" }
     prod { dimension "mode" }
-    leak { dimension "mode" }
-    monetisation { dimension "mode" }
   }
 
   buildTypes {
@@ -45,49 +40,8 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-    exclude 'META-INF/DEPENDENCIES.txt'
-    exclude 'META-INF/DEPENDENCIES'
-    exclude 'META-INF/LICENSE.txt'
-    exclude 'META-INF/LICENSE'
-    exclude 'META-INF/NOTICE.txt'
-    exclude 'META-INF/NOTICE'
-    exclude 'META-INF/MANIFEST.MF'
-    exclude 'META-INF/LGPL2.1'
-  }
-
   lintOptions {
     abortOnError false
-  }
-
-  sourceSets {
-    main {
-      res.srcDirs += ["${project(':app').projectDir}/src/main/res"]
-      res.srcDirs += ["${project(':dataprovider').projectDir}/src/main/res"]
-      res.srcDirs += ["${project(':app').projectDir}/src/vanillaDev/res"]
-    }
-    cobrand {
-      res.srcDirs += ["${project(':app').projectDir}/src/cobrand/res"]
-    }
-    vanilla {
-      res.srcDirs += ["${project(':app').projectDir}/src/vanilla/res"]
-    }
-    internal {
-      res.srcDirs += ["${project(':app').projectDir}/src/internal/res"]
-    }
-    dev {
-      res.srcDirs += ["${project(':app').projectDir}/src/dev/res"]
-    }
-    prod {
-      res.srcDirs += ["${project(':app').projectDir}/src/prod/res"]
-    }
-    leak {
-      res.srcDirs += ["${project(':app').projectDir}/src/leak/res"]
-    }
-    monetisation {
-      res.srcDirs += ["${project(':app').projectDir}/src/monetisation/res"]
-    }
   }
 }
 
@@ -100,7 +54,7 @@ dependencies {
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
   androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
