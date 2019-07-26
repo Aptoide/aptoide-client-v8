@@ -106,7 +106,7 @@ dependencies {
   androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation "org.mockito:mockito-android:2.28.2"
+  androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
 
 
   // These are just for styling compatibility when we run instrumentation tests.
