@@ -11,17 +11,15 @@ public class MoPubAdsManager {
   private final MoPubBannerAdExperiment moPubBannerAdExperiment;
   private final MoPubNativeAdExperiment moPubNativeAdExperiment;
   private final WalletAdsOfferManager walletAdsOfferManager;
-  private final MoPubConsentDialogManager moPubConsentDialogManager;
 
   public MoPubAdsManager(MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
       MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
-      MoPubConsentDialogManager moPubConsentDialogManager) {
+      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager
+      ) {
     this.moPubInterstitialAdExperiment = moPubInterstitialAdExperiment;
     this.moPubBannerAdExperiment = moPubBannerAdExperiment;
     this.moPubNativeAdExperiment = moPubNativeAdExperiment;
     this.walletAdsOfferManager = walletAdsOfferManager;
-    this.moPubConsentDialogManager = moPubConsentDialogManager;
   }
 
   public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
@@ -80,7 +78,4 @@ public class MoPubAdsManager {
     return walletAdsOfferManager.shouldRequestMoPubAd();
   }
 
-  public Single<Boolean> shouldShowConsentDialog() {
-    return moPubConsentDialogManager.shouldShowConsentDialog();
-  }
 }

@@ -43,26 +43,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
   }
 
   fun downloadApp(walletApp: WalletApp): Completable {
-    return Observable.just(
-        downloadFactory.create(
-            downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
-            walletApp.appName,
-            walletApp.packageName,
-            walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
-            walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size))
-        .flatMapSingle { download ->
-          moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
-            setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
-                responseStatus, walletApp.packageName, walletApp.developer)
-          }.map {
-            download
-          }
-        }
-        .flatMapCompletable { download ->
-          installManager.splitInstall(download)
-        }
-        .toCompletable()
+    return Observable.just(null).toCompletable();
   }
 
   private fun setupDownloadEvents(download: Download,

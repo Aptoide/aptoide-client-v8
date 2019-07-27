@@ -16,7 +16,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     firstCreated = savedInstanceState == null;
-    getActivityComponent().inject(this);
+    //getActivityComponent().inject(this);
   }
 
   @Override protected void onDestroy() {
@@ -25,13 +25,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
   }
 
   public ActivityComponent getActivityComponent() {
-    if (activityComponent == null) {
-      AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
-      activityComponent = aptoideApplication.getApplicationComponent()
-          .plus(aptoideApplication.getActivityModule(this, getIntent(),
-              aptoideApplication.getNotificationSyncScheduler(), (View) this, firstCreated,
-              BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
-    }
+    //if (activityComponent == null) {
+    //  AptoideApplication aptoideApplication = ((AptoideApplication) getApplication());
+    //  activityComponent = aptoideApplication.getApplicationComponent()
+    //      .plus(aptoideApplication.getActivityModule(this, getIntent(),
+    //          aptoideApplication.getNotificationSyncScheduler(), (View) this, firstCreated,
+    //          BuildConfig.APPLICATION_ID + ".provider"), new FlavourActivityModule());
+    //}
     return activityComponent;
   }
 }

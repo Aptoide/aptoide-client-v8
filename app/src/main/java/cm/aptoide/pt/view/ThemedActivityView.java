@@ -5,12 +5,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public abstract class ThemedActivityView extends ActivityView {
-  @Inject @Named("aptoide-theme") String theme;
+  //@Inject @Named("aptoide-theme") String theme;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getActivityComponent().inject(this);
-    ThemeUtils.setStatusBarThemeColor(this, theme);
-    ThemeUtils.setAptoideTheme(this, theme);
+    //getActivityComponent().inject(this);
+    ThemeUtils.setStatusBarThemeColor(this, null);
+    ThemeUtils.setAptoideTheme(this, null);
   }
 }

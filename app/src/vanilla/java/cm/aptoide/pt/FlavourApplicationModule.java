@@ -8,9 +8,6 @@ import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.MoPubAnalytics;
-import cm.aptoide.pt.ads.MoPubConsentDialogManager;
-import cm.aptoide.pt.ads.MoPubConsentDialogView;
-import cm.aptoide.pt.ads.MoPubConsentManager;
 import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
@@ -86,18 +83,4 @@ import javax.inject.Singleton;
     return new WalletAdsOfferCardManager(blacklistManager, packageRepository);
   }
 
-  @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {
-    return new MoPubConsentManager();
-  }
-
-  @Singleton @Provides @Named("mopub-consent-dialog-view")
-  MoPubConsentDialogView providesMoPubConsentDialogView(MoPubConsentManager moPubConsentManager) {
-    return moPubConsentManager;
-  }
-
-  @Singleton @Provides @Named("mopub-consent-dialog-manager")
-  MoPubConsentDialogManager providesMoPubConsentDialogManager(
-      MoPubConsentManager moPubConsentManager) {
-    return moPubConsentManager;
-  }
 }

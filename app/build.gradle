@@ -36,7 +36,6 @@ android {
   defaultConfig {
     minSdkVersion project.MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
-    multiDexEnabled true
     applicationId "cm.aptoide.pt"
     versionCode project.VERSION_CODE_VANILLA_PROD.toInteger()
     versionName project.VERSION_NAME_VANILLA
@@ -123,9 +122,9 @@ android {
       testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
       ext.enableCrashlytics = false
-      zipAlignEnabled false
-      minifyEnabled false
-      shrinkResources false
+      zipAlignEnabled true
+      minifyEnabled true
+      shrinkResources true
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
       matchingFallbacks = ['release']
     }
@@ -237,10 +236,6 @@ android {
         "\"" + project.HOME_PROMOTION_ID + "\""
     variant.buildConfigField "String", "COBRAND_APPLICATION_ID_SUFFIX",
         "\"" + project.COBRAND_APPLICATION_ID_SUFFIX + "\""
-    variant.buildConfigField "String", "APPLOVIN_SDK_VERSION",
-        "\"" + APPLOVIN_SDK_VERSION + "\""
-    variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
-        "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
@@ -366,9 +361,7 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+
   androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
@@ -376,13 +369,6 @@ dependencies {
   implementation "com.jakewharton.rx:replaying-share:${RX_REPLAYING_SHARE_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
-
-  implementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
@@ -392,9 +378,6 @@ dependencies {
     exclude group: "com.android.support", module: "support-annotations"
   }
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
   //dependencies needed for UITests
   androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
@@ -442,44 +425,6 @@ dependencies {
   implementation "com.google.code.gson:gson:${GSON_VERSION}"
 
 
-  // Mopub
-  implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar") {
-    transitive = true
-    exclude module: 'moat-mobile-app-kit'
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-
-  // AppLovin
-  implementation "com.applovin:applovin-sdk:${APPLOVIN_SDK_VERSION}"
-  implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
-
-  // Google (AdMob)
-  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
-
-  // ironSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
-  implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
-
-  // Vungle
-  implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
-    transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
-  }
-  implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
-
-  // UnityAds, Chartboost & One by AOL
-  implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
-  implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
-  implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
-
-  //Inmobi
-  implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
-  implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
-
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
@@ -507,11 +452,11 @@ dependencies {
 
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
-  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
-  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
+//  implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
+//  implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-auth:${PLAY_SERVICES_AUTH_VERSION}"
-  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_ADS_VERSION}"
+//  implementation "com.google.android.gms:play-services-ads:${PLAY_SERVICES_ADS_VERSION}"
   implementation "com.google.android.gms:play-services-safetynet:${PLAY_SERVICES_SAFETYNET_VERSION}"
 
 

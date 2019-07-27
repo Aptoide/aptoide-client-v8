@@ -143,7 +143,7 @@ public class Home {
   }
 
   public Single<Boolean> shouldShowConsentDialog() {
-    return moPubAdsManager.shouldShowConsentDialog();
+    return Single.just(false);
   }
 
   public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {

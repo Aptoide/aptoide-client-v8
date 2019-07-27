@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -104,13 +103,6 @@ import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
-import com.mopub.common.logging.MoPubLog;
-import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
-import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
-import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
-import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -251,17 +243,17 @@ public abstract class AptoideApplication extends Application {
     // execute custom Application onCreate code with time metric
     //
 
-    long initialTimestamp = System.currentTimeMillis();
+    //long initialTimestamp = System.currentTimeMillis();
 
-    getLeakTool().setup(this);
+    //getLeakTool().setup(this);
 
     //
     // hack to set the debug flag active in case of Debug
     //
 
-    fragmentProvider = createFragmentProvider();
-    activityProvider = createActivityProvider();
-    displayableWidgetMapping = createDisplayableWidgetMapping();
+    //fragmentProvider = createFragmentProvider();
+    //activityProvider = createActivityProvider();
+    //displayableWidgetMapping = createDisplayableWidgetMapping();
 
     //
     // do not erase this code. it is useful to figure out when someone forgot to attach an error handler when subscribing and the app
@@ -304,9 +296,9 @@ public abstract class AptoideApplication extends Application {
     //    }, throwable -> CrashReport.getInstance()
     //        .log(throwable));
 
-    initializeFlurry(this, BuildConfig.FLURRY_KEY);
-
-    clearFileCache();
+    //initializeFlurry(this, BuildConfig.FLURRY_KEY);
+    //
+    //clearFileCache();
 
     //
     // this will trigger the migration if needed
@@ -318,20 +310,20 @@ public abstract class AptoideApplication extends Application {
     //  db.close();
     //}
 
-    startNotificationCenter();
-    startNotificationCleaner();
+    //startNotificationCenter();
+    //startNotificationCleaner();
     //rootInstallationRetryHandler.start();
-    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
-    aptoideApplicationAnalytics.setPackageDimension(getPackageName());
-    aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+    //AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    //aptoideApplicationAnalytics.setPackageDimension(getPackageName());
+    //aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
     //accountManager.accountStatus()
     //    .map(account -> account.isLoggedIn())
     //    .distinctUntilChanged()
     //    .subscribe(isLoggedIn -> aptoideApplicationAnalytics.updateDimension(isLoggedIn));
 
-    long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
-    Logger.getInstance()
-        .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
+    //long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
+    //Logger.getInstance()
+    //    .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     //analyticsManager.setup();
     //invalidRefreshTokenLogoutManager.start();
     //
@@ -339,26 +331,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   public void initializeMoPub() {
-    SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(
-        BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID).withAdditionalNetwork(
-        AppLovinBaseAdapterConfiguration.class.toString())
-        .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(InMobiBaseAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
-            getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
-        .withAdditionalNetwork(InneractiveAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(InneractiveAdapterConfiguration.class.getName(),
-            getMediatedNetworkConfigurationWithAppIdMap(
-                BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
-                BuildConfig.MOPUB_FYBER_APPLICATION_ID))
-        .withAdditionalNetwork(GooglePlayServicesAdapterConfiguration.class.getName())
-        .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
-            getAdMobAdsPreferencesMap())
-        .withLogLevel(MoPubLog.LogLevel.DEBUG)
-        .build();
 
-    MoPub.initializeSdk(this, sdkConfiguration, null);
   }
 
   @NonNull private Map<String, String> getMediatedNetworkConfigurationBaseMap(
@@ -419,7 +392,7 @@ public abstract class AptoideApplication extends Application {
 
   @Override protected void attachBaseContext(Context base) {
     super.attachBaseContext(base);
-    MultiDex.install(this);
+    //MultiDex.install(this);
   }
 
   public TokenInvalidator getTokenInvalidator() {

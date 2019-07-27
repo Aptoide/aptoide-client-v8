@@ -31,14 +31,12 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.ironsource.mediationsdk.IronSource;
 import com.jakewharton.rxrelay.PublishRelay;
-import com.mopub.common.MoPub;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public class MainActivity extends BottomNavigationActivity
+public class MainActivity extends ThemedActivityView
     implements MainView, DeepLinkManager.DeepLinkMessages {
 
   //@Inject Presenter presenter;
@@ -78,11 +76,9 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = null;
     snackbar = null;
     super.onDestroy();
-    MoPub.onDestroy(this);
   }
 
   private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
   }
 
   @Override protected void onStart() {
@@ -113,16 +109,16 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   private void setupUpdatesNotification() {
-    BottomNavigationMenuView appsView =
-        (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-    BottomNavigationItemView appsItemView =
-        (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
+    //BottomNavigationMenuView appsView =
+    //    (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+    //BottomNavigationItemView appsItemView =
+    //    (BottomNavigationItemView) appsView.getChildAt(BottomNavigationMapper.APPS_POSITION);
 
-    updatesBadge = LayoutInflater.from(this)
-        .inflate(R.layout.updates_badge, appsView, false);
-    updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
-    appsItemView.addView(updatesBadge);
-    appsItemView.setVisibility(View.VISIBLE);
+    //updatesBadge = LayoutInflater.from(this)
+    //    .inflate(R.layout.updates_badge, appsView, false);
+    //updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
+    //appsItemView.addView(updatesBadge);
+    //appsItemView.setVisibility(View.VISIBLE);
   }
 
   @Override public void showInstallationError(int numberOfErrors) {

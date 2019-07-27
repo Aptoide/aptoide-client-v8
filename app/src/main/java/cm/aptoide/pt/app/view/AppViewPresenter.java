@@ -373,9 +373,6 @@ public class AppViewPresenter implements Presenter {
         .flatMap(__ -> view.installAppClick())
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(appModel -> !appModel.isAppCoinApp())
-        .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
-            (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
-                downloadAppViewModel)))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showInterstitialAd())
         .doOnNext(__ -> appViewAnalytics.installInterstitialImpression())
@@ -407,7 +404,6 @@ public class AppViewPresenter implements Presenter {
   private void handleInterstitialAdClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.InterstitialAdClicked())
         .doOnNext(__ -> appViewAnalytics.installInterstitialClick())
         .observeOn(Schedulers.io())
         .flatMapSingle(__ -> appViewManager.recordInterstitialClick())

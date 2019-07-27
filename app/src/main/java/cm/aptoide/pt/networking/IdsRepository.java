@@ -13,7 +13,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
-import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
 
@@ -95,8 +94,7 @@ public class IdsRepository {
 
     if (AdNetworkUtils.isGooglePlayServicesAvailable(context)) {
       try {
-        googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context)
-            .getId();
+
       } catch (Exception e) {
         CrashReport.getInstance()
             .log(e);

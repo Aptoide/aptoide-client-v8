@@ -507,6 +507,6 @@ public class AppViewManager {
   }
 
   public Single<Boolean> shouldShowConsentDialog() {
-    return moPubAdsManager.shouldShowConsentDialog();
+    return Single.just(false);
   }
 }

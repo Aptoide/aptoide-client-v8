@@ -1,21 +1,14 @@
 package cm.aptoide.pt.home;
 
-import android.app.Activity;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
-import com.mopub.nativeads.InMobiNativeAdRenderer;
-import com.mopub.nativeads.MoPubRecyclerAdapter;
-import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
-import com.mopub.nativeads.ViewBinder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +22,6 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
   private final String marketName;
-  private final MoPubRecyclerAdapter moPubRecyclerAdapter;
   private boolean hasAdLoaded;
 
   public AdsWithMoPubBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
@@ -56,20 +48,6 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
 
-    moPubRecyclerAdapter =
-        new MoPubRecyclerAdapter((Activity) view.getContext(), appsInBundleAdapter);
-    ViewBinder moPubViewBinder =
-        new ViewBinder.Builder(R.layout.displayable_grid_ad).titleId(R.id.name)
-            .iconImageId(R.id.icon)
-            .mainImageId(R.id.native_main_image)
-            .addExtra("primary_ad_view_layout", R.id.primary_ad_view_layout)
-            .build();
-
-    moPubRecyclerAdapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(moPubViewBinder));
-    InMobiNativeAdRenderer inMobiNativeAdRenderer = new InMobiNativeAdRenderer(moPubViewBinder);
-    moPubRecyclerAdapter.registerAdRenderer(inMobiNativeAdRenderer);
-    moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
-    appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);
   }
 
@@ -99,7 +77,6 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
 
     if (!hasAdLoaded) {
       hasAdLoaded = true;
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
     }
   }
 }

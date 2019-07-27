@@ -29,7 +29,6 @@ allprojects {
     google()
     jcenter()
     maven { url 'https://maven.google.com' }
-    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
     flatDir {
       dirs 'libs'
     }
@@ -122,22 +121,6 @@ ext {
   CRASHLYTICS_VERSION = '2.10.0'
 
 
-  //MOPUB ADS
-  MOPUB_SDK_VERSION = '5.7.1'
-  APPLOVIN_SDK_VERSION = '8.1.4'
-  MOPUB_MEDIATION_APPLOVIN_VERSION = '8.1.4.3'
-  MOPUB_MEDIATION_ADMOB_VERSION = '17.0.0.2'
-  FLURRY_ADS_VERSION = '11.6.0'
-  MOPUB_MEDIATION_FLURRY_VERSION = '11.6.0.0'
-  IRONSOURCE_MEDIATION_SDK_VERSION = '6.8.3'
-  MOPUB_MEDIATION_IRONSOURCE_VERSION = '6.8.3.0'
-  VUNGLE_SDK_VERSION = '6.3.24'
-  MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.2'
-  UNITY_ADS_SDK_VERSION = '3.0.1'
-  MOPUB_MEDIATION_UNITYADS_VERSION = '3.0.1.0'
-  INMOBI_SDK_VERSION = '7.2.7'
-  AD_MOB_SDK_VERSION = '17.2.0.0'
-
   PICASSO_VERSION = '2.5.2'
 
   OKHTTP_VERSION = '3.14.2'
@@ -150,7 +133,7 @@ ext {
   ADYEN_VERSION = '1.10.0'
   CARD_FORM_VERSION = '3.0.6'
 
-  DAGGER_VERSION = '2.12'
+  DAGGER_VERSION = '2.24'
 
   FABRIC_VERSION = '1.29.0'
 

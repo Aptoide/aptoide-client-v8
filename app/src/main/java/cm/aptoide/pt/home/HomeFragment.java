@@ -20,7 +20,6 @@ import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -60,7 +59,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomePresenter presenter;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
@@ -168,7 +166,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
       promotionsHomeDialog.destroyDialog();
       promotionsHomeDialog = null;
     }
-    consentDialogView = null;
     super.onDestroyView();
   }
 
@@ -360,7 +357,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showConsentDialog() {
-    consentDialogView.showConsentDialog();
   }
 
   @Override public Observable<ReactionsHomeEvent> reactionClicked() {
