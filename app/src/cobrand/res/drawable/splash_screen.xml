@@ -1,14 +1,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
   <item android:drawable="@color/white"/>
-  <item>
+  <item android:top="140dp">
     <bitmap
-        android:gravity="center"
+        android:gravity="top|center_horizontal"
         android:src="@drawable/ic_splashscreen_market_logo"/>
   </item>
   <item android:bottom="50dp">
     <bitmap
         android:gravity="bottom"
-        android:src="@drawable/app_logo_colourful"/>
+        android:src="@drawable/powered_aptoide"/>
   </item>
 </layer-list>
