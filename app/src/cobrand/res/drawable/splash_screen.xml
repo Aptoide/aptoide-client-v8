@@ -1,0 +1,15 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+  <item android:drawable="@color/white"/>
+  <item android:top="140dp">
+    <bitmap
+        android:gravity="top|center_horizontal"
+        android:src="@drawable/ic_splashscreen_market_logo"/>
+  </item>
+  <item
+      android:bottom="50dp"
+      android:drawable="@drawable/ic_powered_aptoide"
+      android:gravity="bottom|center_horizontal"
+      >
+  </item>
+</layer-list>

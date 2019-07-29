@@ -354,9 +354,6 @@
   <!-- Add stores dialog -->
   <string name="add_store_dialog_title">Find exclusive and tailored content in different stores</string>
 
-  <!-- Splashscreen -->
-  <string name="splashscreen_powered_by">POWERED BY</string>
-
   <!-- Login -->
 
   <!--??-->
@@ -704,7 +701,9 @@
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
 
   <string name="wallet_verification_message_update_wallet_to_claim">You need the latest version of the AppCoins Wallet to receive this reward!</string>
-  <string name="wallet_verification_button_update_wallet">Update Wallet</string>
+  <string name="wallet_verification_title_update_wallet">Update Wallet</string>
+  <string name="wallet_verification_button_cancel_update">No, thanks</string>
+  <string name="wallet_verification_button_update">Update now</string>
 
 </resources>
 
