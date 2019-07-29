@@ -13,5 +13,6 @@ include 'app',
     ':downloadmanager',
     ':aptoide-analytics-core',
     ':aptoide-analytics-default-implementation',
+    ':aptoide-views',
     ':packageinstaller'
 

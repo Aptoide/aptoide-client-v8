@@ -356,6 +356,7 @@ dependencies {
   implementation project(path: ':dataprovider')
   implementation project(path: ':utils')
   implementation project(path: ':packageinstaller')
+  implementation project(path: ':aptoide-views')
 
   // Testing-only dependencies
   testImplementation "junit:junit:${JUNIT_VERSION}"
@@ -456,7 +457,7 @@ dependencies {
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
+  implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"

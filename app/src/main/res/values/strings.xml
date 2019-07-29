@@ -675,7 +675,7 @@
   <string name="promo_center_title">Promotions</string>
   <string name="promo_center_wizard_1_title">Earn %s AppCoins Credits</string>
   <string name="promo_center_wizard_1_body">You need the AppCoins Wallet to get your rewards. Install it now!</string>
-  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus everytime!</string>
+  <string name="promo_center_wizard_2_body">Use AppCoins Credits to buy items in your favorite games&#8230; and get a bonus every time!</string>
   <string name="promo_center_wizard_3_body">Once you install the AppCoins Wallet you won\'t see ads in Aptoide anymore!</string>
   <string name="promo_center_offerwall_tab_title">OFFERS</string>
   <string name="promo_center_offerwall_card_title">Get %s APPC Credits now!</string>
@@ -702,6 +702,9 @@
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
+
+  <string name="wallet_verification_message_update_wallet_to_claim">You need the latest version of the AppCoins Wallet to receive this reward!</string>
+  <string name="wallet_verification_button_update_wallet">Update Wallet</string>
 
 </resources>
 
