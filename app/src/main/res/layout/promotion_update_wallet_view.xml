@@ -44,7 +44,7 @@
       android:id="@+id/update_wallet_button"
       android:layout_width="95dp"
       android:layout_height="56dp"
-      android:text="@string/wallet_verification_button_update_wallet"
+      android:text="@string/wallet_verification_title_update_wallet"
       app:layout_constraintBottom_toBottomOf="@id/cancel_wallet_update_button"
       app:layout_constraintLeft_toRightOf="@id/cancel_wallet_update_button"
       app:layout_constraintRight_toRightOf="parent"
