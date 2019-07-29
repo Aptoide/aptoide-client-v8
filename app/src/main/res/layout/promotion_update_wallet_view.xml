@@ -38,7 +38,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toLeftOf="@id/update_wallet_button"
       app:layout_constraintTop_toBottomOf="@id/update_wallet_message"
-      style="@style/Aptoide.Button.Flat"
+      style="@style/Aptoide.Button.Flat.GreyMedium"
       />
   <Button
       android:id="@+id/update_wallet_button"
