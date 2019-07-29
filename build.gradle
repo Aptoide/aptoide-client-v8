@@ -165,6 +165,8 @@ ext {
   APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
 
   LOTTIE_VERSION = '2.7.0'
+
+  JMDNS_VERSION = '3.5.1'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html
