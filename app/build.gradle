@@ -356,6 +356,7 @@ dependencies {
   implementation project(path: ':dataprovider')
   implementation project(path: ':utils')
   implementation project(path: ':packageinstaller')
+  implementation project(path: ':aptoide-views')
 
   // Testing-only dependencies
   testImplementation "junit:junit:${JUNIT_VERSION}"
