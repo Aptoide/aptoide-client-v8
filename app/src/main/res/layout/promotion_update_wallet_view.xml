@@ -19,7 +19,7 @@
       android:layout_marginStart="12dp"
       android:layout_marginTop="25dp"
       android:gravity="center"
-      android:text="@string/appview_message_donations_nowallet"
+      android:text="@string/wallet_verification_message_update_wallet_to_claim"
       app:layout_constraintBottom_toTopOf="@+id/cancel_wallet_update_button"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
@@ -42,7 +42,7 @@
   <Button
       android:id="@+id/update_wallet_button"
       android:layout_width="95dp"
-      android:text="@string/yes"
+      android:text="@string/wallet_verification_button_update_wallet"
       app:layout_constraintBottom_toBottomOf="@id/cancel_wallet_update_button"
       app:layout_constraintLeft_toRightOf="@id/cancel_wallet_update_button"
       app:layout_constraintRight_toRightOf="parent"
