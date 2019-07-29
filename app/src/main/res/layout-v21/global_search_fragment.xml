@@ -31,6 +31,14 @@
       tools:visibility="gone"
       />
 
+  <include
+      layout="@layout/partial_view_incl_no_network"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="?attr/actionBarSize"
+      tools:visibility="gone"
+      />
+
   <android.support.v7.widget.RecyclerView
       android:id="@+id/suggestions_list"
       android:layout_width="match_parent"

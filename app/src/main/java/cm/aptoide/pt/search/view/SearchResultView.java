@@ -23,6 +23,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<String> clickNoResultsSearchButton();
 
+  Observable<Void> retryClicked();
+
   void showNoResultsView();
 
   void showResultsView();
@@ -106,6 +108,8 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<Boolean> showingSearchResultsView();
 
   void showNativeAds(String query);
+
+  void showNoNetworkView();
 
   interface Model {
 
