@@ -47,4 +47,6 @@ public interface ClaimPromotionDialogView extends View {
   void verifyWallet();
 
   void showCanceledVerificationError();
+
+  void showUpdateWalletDialog();
 }

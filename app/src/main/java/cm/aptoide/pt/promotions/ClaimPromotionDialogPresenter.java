@@ -1,6 +1,7 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
@@ -59,7 +60,12 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .flatMapSingle(__ -> claimPromotion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, Throwable::printStackTrace);
+        }, throwable -> {
+          if (throwable instanceof ActivityNotFoundException) {
+            view.showUpdateWalletDialog();
+          }
+          throwable.printStackTrace();
+        });
   }
 
   private void handleWalletVerificationErrors(Integer result) {
