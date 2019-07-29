@@ -1,24 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 22/06/2016.
-  -->
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/no_network_connection"
-    android:layout_width="match_parent"
+    android:id="@+id/generic_error"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:fillViewport="true"
-    android:orientation="vertical"
-    android:scrollbars="none"
     android:visibility="gone"
     tools:visibility="visible"
     >
 
-
   <LinearLayout
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:orientation="vertical"
       >
@@ -27,37 +20,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="34dp"
-        android:src="@drawable/no_connection_error"
+        android:layout_marginTop="33dp"
+        android:src="@drawable/generic_error"
         />
 
     <TextView
+        android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="14dp"
         android:gravity="center_horizontal"
-        android:text="@string/could_not_connect_internet"
+        android:padding="10dp"
+        android:text="@string/error503"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-        android:textSize="14sp"
         />
 
-    <android.support.v7.widget.AppCompatButton
+
+    <TextView
         android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
         android:focusable="true"
         android:gravity="center"
-        android:text="@string/retry_connection"
         android:paddingBottom="16dp"
         android:paddingEnd="25dp"
         android:paddingStart="25dp"
         android:paddingTop="16dp"
+        android:text="@string/retry_connection"
         style="@style/Aptoide.Button.Ghost"
         />
-
 
   </LinearLayout>
 

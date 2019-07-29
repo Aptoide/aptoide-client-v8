@@ -43,6 +43,11 @@ android {
   lintOptions {
     abortOnError false
   }
+  sourceSets {
+    main {
+      res.srcDirs += ["${project(':app').projectDir}/src/main/res"]
+    }
+  }
 }
 
 dependencies {
