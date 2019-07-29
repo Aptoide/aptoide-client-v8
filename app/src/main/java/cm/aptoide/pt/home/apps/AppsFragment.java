@@ -2,14 +2,6 @@ package cm.aptoide.pt.home.apps;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -27,6 +26,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
@@ -141,12 +141,12 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private void setupRecyclerView() {
     recyclerView.setAdapter(adapter);
     recyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
     recyclerView.setItemAnimator(null);
 
     appcAppsRecyclerView.setAdapter(appcAppsAdapter);
     appcAppsRecyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
     appcAppsRecyclerView.setItemAnimator(null);
   }
 

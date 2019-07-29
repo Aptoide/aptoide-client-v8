@@ -7,7 +7,7 @@
     android:orientation="vertical"
     >
 
-  <android.support.v7.widget.Toolbar
+  <androidx.appcompat.widget.Toolbar
       android:id="@+id/toolbar"
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
@@ -85,8 +85,8 @@
           tools:visibility="visible"
           />
     </RelativeLayout>
-  </android.support.v7.widget.Toolbar>
-  <android.support.design.widget.CoordinatorLayout
+  </androidx.appcompat.widget.Toolbar>
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
@@ -102,5 +102,5 @@
         tools:background="@color/white"
         >
     </FrameLayout>
-  </android.support.design.widget.CoordinatorLayout>
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

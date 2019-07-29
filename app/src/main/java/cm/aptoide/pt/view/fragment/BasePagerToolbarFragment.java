@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.fragment;
 
-import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import androidx.viewpager.widget.PagerAdapter;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 

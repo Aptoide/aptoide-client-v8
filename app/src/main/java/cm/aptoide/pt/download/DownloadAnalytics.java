@@ -1,8 +1,8 @@
 package cm.aptoide.pt.download;
 
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
+import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -176,7 +176,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     downloadStartEvent(download, 0, null, context, action, isMigration, origin);
   }
 
-  public void downloadStartEvent(Download download, int campaignId, String abTestGroup, AppContext context, AnalyticsManager.Action action, boolean isMigration) {
+  public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
+      AppContext context, AnalyticsManager.Action action, boolean isMigration) {
     downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
         getOrigin(download));
   }

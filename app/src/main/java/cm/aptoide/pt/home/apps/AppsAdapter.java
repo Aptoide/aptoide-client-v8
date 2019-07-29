@@ -1,8 +1,8 @@
 package cm.aptoide.pt.home.apps;
 
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

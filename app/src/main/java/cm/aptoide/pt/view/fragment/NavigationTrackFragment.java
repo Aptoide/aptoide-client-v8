@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
+import androidx.annotation.Nullable;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;

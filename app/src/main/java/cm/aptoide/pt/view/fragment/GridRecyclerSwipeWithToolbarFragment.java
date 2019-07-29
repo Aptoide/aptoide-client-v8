@@ -1,11 +1,11 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.Translator;

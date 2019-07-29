@@ -1,6 +1,6 @@
 package cm.aptoide.pt.notification;
 
-import android.support.annotation.IntDef;
+import androidx.annotation.IntDef;
 import cm.aptoide.pt.database.realm.Notification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,17 +1,17 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import android.os.Bundle;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -43,7 +43,6 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
       bottomNavigationNavigator.setBottomNavigationItems(
           savedInstanceState.getIntegerArrayList(ITEMS_LIST_KEY));
     }
-    BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
     bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
       navigationSubject.onNext(item.getItemId());
       return true;

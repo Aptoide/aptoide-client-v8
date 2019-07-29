@@ -7,13 +7,13 @@
   <PreferenceCategory
       android:title="@string/setting_general"
       >
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="hwspecsChkBox"
         android:summary="@string/setting_appfiltersum"
         android:title="@string/setting_appfiltertitle"
         />
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="downloadwifionly"
         android:title="@string/setting_mobile"
@@ -22,12 +22,12 @@
   <PreferenceCategory
       android:title="@string/updates"
       >
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="updatesFilterAlphaBetaKey"
         android:summary="@string/settings_updates_filter_summary"
         android:title="@string/settings_updates_filter_setting_title"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="updatesSystemAppsKey"
         android:summary="@string/settings_include_system_apps_summary"
@@ -38,17 +38,17 @@
   </PreferenceCategory>
 
   <PreferenceCategory android:title="@string/setting_notifications">
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="notification_campaign_and_social"
         android:summary="@string/setting_notifications_sub_sub_section_2"
         android:title="@string/setting_notifications_sub_section_2"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="notificationaptoide"
         android:summary="@string/setting_notifications_sub_sub_section_1"
         android:title="@string/setting_notifications_sub_section_1"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="checkautoupdate"
         android:title="@string/setting_category_autoupdate_title"/>
@@ -72,12 +72,12 @@
   <PreferenceCategory
       android:key="adultContent"
       android:title="@string/order_popup_title3">
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="matureChkBox"
         android:persistent="false"
         android:title="@string/setting_dont_show_mature_content"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="matureChkBoxWithPin"
         android:persistent="false"
@@ -101,10 +101,10 @@
   <PreferenceCategory
       android:key="rootCategory"
       android:title="@string/settings_root">
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:key="allowRoot"
         android:title="@string/settings_allow_root"/>
-    <android.support.v7.preference.SwitchPreferenceCompat
+    <androidx.preference.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="auto_update"
         android:summary="@string/setting_auto_update_sum"

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.search;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;

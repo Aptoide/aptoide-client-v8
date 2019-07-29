@@ -10,7 +10,7 @@ import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

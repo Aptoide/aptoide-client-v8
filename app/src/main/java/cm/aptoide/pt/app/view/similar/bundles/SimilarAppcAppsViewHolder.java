@@ -1,9 +1,9 @@
 package cm.aptoide.pt.app.view.similar.bundles;
 
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -42,7 +42,7 @@ public class SimilarAppcAppsViewHolder extends SimilarBundleViewHolder {
     similarAppcApps.addItemDecoration(similarAppcHeaderItemDecoration);
 
     LinearLayoutManager similarAppcLayout =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
 
     similarAppcApps.setLayoutManager(similarAppcLayout);
     SnapHelper similarSnap = new SnapToStartHelper();

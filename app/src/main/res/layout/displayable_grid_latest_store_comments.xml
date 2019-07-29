@@ -6,7 +6,7 @@
     android:background="@drawable/dialog_bg_2"
     android:orientation="vertical"
     >
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/comments"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

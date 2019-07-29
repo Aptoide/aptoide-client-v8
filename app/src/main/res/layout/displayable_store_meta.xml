@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -174,7 +174,7 @@
       app:layout_constraintStart_toEndOf="@+id/apps_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
       tools:layout_editor_absoluteX="127dp"
-      tools:text="@string/following"
+      tools:text="17"
       />
   <TextView
       android:id="@+id/followers_text_view"
@@ -191,7 +191,7 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/following_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
-      tools:text="@string/subscribers"
+      tools:text="100"
       />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

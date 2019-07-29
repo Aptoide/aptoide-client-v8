@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.view.BackButtonActivity;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import rx.Observable;

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.navigator;
 
 import android.content.Intent;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public class Result {
 

@@ -7,8 +7,8 @@ package cm.aptoide.pt.view.recycler;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.WindowManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.widget.WidgetFactory;

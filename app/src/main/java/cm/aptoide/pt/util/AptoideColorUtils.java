@@ -1,6 +1,6 @@
 package cm.aptoide.pt.util;
 
-import android.support.v4.graphics.ColorUtils;
+import androidx.core.graphics.ColorUtils;
 
 /**
  * Created by D01 on 27/09/2018.

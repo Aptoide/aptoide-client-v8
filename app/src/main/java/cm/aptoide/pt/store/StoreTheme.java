@@ -9,11 +9,11 @@ import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StyleRes;
 import android.text.TextUtils;
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StyleRes;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import java.util.LinkedList;
@@ -367,5 +367,4 @@ public enum StoreTheme {
 
   public int getDatePickerStyle() {
     return datePickerStyle;
-  }
-}
+  }}

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view.fragment;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.LifecycleTransformer;

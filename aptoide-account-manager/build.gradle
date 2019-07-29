@@ -75,7 +75,7 @@ dependencies {
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
 
   implementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"

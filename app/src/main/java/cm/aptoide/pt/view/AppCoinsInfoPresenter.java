@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;

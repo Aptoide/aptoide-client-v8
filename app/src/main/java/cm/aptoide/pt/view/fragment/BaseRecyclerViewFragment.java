@@ -1,10 +1,10 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.BaseAdapter;

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.database.realm;
 
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
+import androidx.annotation.IntDef;
 import cm.aptoide.pt.utils.IdUtils;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

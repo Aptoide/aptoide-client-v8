@@ -1,9 +1,6 @@
 package cm.aptoide.pt.editorial;
 
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -15,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
@@ -104,8 +104,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
-    layoutManager =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+    layoutManager = new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
 
     SnapHelper mediaSnap = new SnapToStartHelper();
     mediaSnap.attachToRecyclerView(mediaList);

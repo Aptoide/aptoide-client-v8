@@ -2,9 +2,9 @@ package cm.aptoide.pt.view.splashscreen;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
+import androidx.annotation.Nullable;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheet;

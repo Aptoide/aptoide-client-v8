@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
@@ -23,14 +23,14 @@
         android:orientation="vertical"
         >
 
-      <android.support.design.widget.AppBarLayout
+      <com.google.android.material.appbar.AppBarLayout
           android:id="@+id/appbar"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:visibility="gone"
           >
         <include layout="@layout/toolbar"/>
-      </android.support.design.widget.AppBarLayout>
+      </com.google.android.material.appbar.AppBarLayout>
 
       <ImageView
           android:layout_width="200dp"
@@ -52,7 +52,7 @@
       android:visibility="visible"
       app:behavior_hideable="false"
       app:behavior_peekHeight="270dp"
-      app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

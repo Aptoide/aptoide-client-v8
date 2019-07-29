@@ -1,7 +1,7 @@
 package cm.aptoide.pt.search.view.item;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class SearchResultItemView<T> extends RecyclerView.ViewHolder {
 

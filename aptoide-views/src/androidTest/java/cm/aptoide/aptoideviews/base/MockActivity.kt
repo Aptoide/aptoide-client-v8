@@ -1,7 +1,7 @@
 package cm.aptoide.aptoideviews.base
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import cm.aptoide.aptoideviews.R
 
 class MockActivity : AppCompatActivity() {

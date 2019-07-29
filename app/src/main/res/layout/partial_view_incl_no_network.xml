@@ -35,26 +35,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="14dp"
+        android:layout_marginTop="16dp"
         android:gravity="center_horizontal"
         android:text="@string/could_not_connect_internet"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:textSize="14sp"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:focusable="true"
         android:gravity="center"
-        android:text="@string/retry_connection"
         android:paddingBottom="16dp"
         android:paddingEnd="25dp"
         android:paddingStart="25dp"
         android:paddingTop="16dp"
+        android:text="@string/retry_connection"
         style="@style/Aptoide.Button.Ghost"
         />
 

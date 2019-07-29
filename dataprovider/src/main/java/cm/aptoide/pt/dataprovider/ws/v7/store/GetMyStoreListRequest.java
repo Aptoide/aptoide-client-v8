@@ -2,9 +2,9 @@ package cm.aptoide.pt.dataprovider.ws.v7.store;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.WindowManager;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;

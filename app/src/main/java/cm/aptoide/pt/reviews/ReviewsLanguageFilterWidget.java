@@ -1,8 +1,8 @@
 package cm.aptoide.pt.reviews;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Spinner;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 

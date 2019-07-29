@@ -1,9 +1,9 @@
 package cm.aptoide.pt.view.recycler;
 
 import android.content.Context;
-import android.support.annotation.CallSuper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.annotation.CallSuper;
+import androidx.recyclerview.widget.RecyclerView;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 

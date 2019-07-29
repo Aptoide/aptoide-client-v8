@@ -2,9 +2,9 @@ package cm.aptoide.pt.view.recycler.displayable;
 
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.view.WindowManager;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LifecycleSchim;

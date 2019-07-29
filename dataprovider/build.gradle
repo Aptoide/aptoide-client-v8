@@ -115,10 +115,9 @@ dependencies {
   testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  testImplementation "com.android.support.test:testing-support-lib:0.1"
 
   //noinspection GradleDependency
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_BASEMENT_VERSION}"
 

@@ -3,10 +3,6 @@ package cm.aptoide.pt.view;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -15,7 +11,11 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import cm.aptoide.pt.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class CustomTextInputLayout extends TextInputLayout {
 
@@ -69,7 +69,37 @@ public class CustomTextInputLayout extends TextInputLayout {
     }
   }
 
-  private void setHelperText(CharSequence helperText) {
+  public void setHelperTextEnabled(boolean enabled) {
+    if (helperTextEnabled == enabled) {
+      return;
+    }
+    if (enabled && errorEnabled) {
+      setErrorEnabled(false);
+    }
+    if (this.helperTextEnabled != enabled) {
+      if (enabled) {
+        this.helperView = new TextView(this.getContext());
+        this.helperView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        this.helperView.setTextAppearance(this.getContext(), this.helperTextAppearance);
+        if (helperTextColor != null) {
+          this.helperView.setTextColor(helperTextColor);
+        }
+        this.helperView.setText(helperText);
+        this.helperView.setVisibility(VISIBLE);
+        this.addView(this.helperView);
+        if (this.helperView != null) {
+          ViewCompat.setPaddingRelative(this.helperView, ViewCompat.getPaddingStart(getEditText()),
+              0, ViewCompat.getPaddingEnd(getEditText()), getEditText().getPaddingBottom());
+        }
+      } else {
+        this.removeView(this.helperView);
+        this.helperView = null;
+      }
+      this.helperTextEnabled = enabled;
+    }
+  }
+
+  public void setHelperText(CharSequence helperText) {
     this.helperText = helperText;
     if (!this.helperTextEnabled) {
       if (TextUtils.isEmpty(helperText)) {
@@ -104,46 +134,16 @@ public class CustomTextInputLayout extends TextInputLayout {
     this.sendAccessibilityEvent(2048);
   }
 
+  public void setHelperTextColor(ColorStateList helperTextColor) {
+    this.helperTextColor = helperTextColor;
+  }
+
   public int getHelperTextAppearance() {
     return helperTextAppearance;
   }
 
   public void setHelperTextAppearance(int helperTextAppearance) {
     this.helperTextAppearance = helperTextAppearance;
-  }
-
-  public void setHelperTextColor(ColorStateList helperTextColor) {
-    this.helperTextColor = helperTextColor;
-  }
-
-  public void setHelperTextEnabled(boolean enabled) {
-    if (helperTextEnabled == enabled) {
-      return;
-    }
-    if (enabled && errorEnabled) {
-      setErrorEnabled(false);
-    }
-    if (this.helperTextEnabled != enabled) {
-      if (enabled) {
-        this.helperView = new TextView(this.getContext());
-        this.helperView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        this.helperView.setTextAppearance(this.getContext(), this.helperTextAppearance);
-        if (helperTextColor != null) {
-          this.helperView.setTextColor(helperTextColor);
-        }
-        this.helperView.setText(helperText);
-        this.helperView.setVisibility(VISIBLE);
-        this.addView(this.helperView);
-        if (this.helperView != null) {
-          ViewCompat.setPaddingRelative(this.helperView, ViewCompat.getPaddingStart(getEditText()),
-              0, ViewCompat.getPaddingEnd(getEditText()), getEditText().getPaddingBottom());
-        }
-      } else {
-        this.removeView(this.helperView);
-        this.helperView = null;
-      }
-      this.helperTextEnabled = enabled;
-    }
   }
 
   public void setHelperTextVisibility(boolean visible) {

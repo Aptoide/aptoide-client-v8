@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view.similar;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.similar.bundles.SimilarAppcAppsViewHolder;
 import cm.aptoide.pt.app.view.similar.bundles.SimilarAppsViewHolder;

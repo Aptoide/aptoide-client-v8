@@ -1,13 +1,12 @@
 package cm.aptoide.pt.comments.view;
 
 import android.os.Build;
-import android.support.annotation.ColorRes;
-import android.support.annotation.Dimension;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.ColorRes;
+import androidx.annotation.Dimension;
+import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.comments.ComplexComment;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -15,6 +14,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Comment;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
 
 /**

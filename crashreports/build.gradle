@@ -1,14 +1,12 @@
 apply plugin: 'com.android.library'
 
-
-
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
   defaultConfig {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   buildTypes {
@@ -42,7 +40,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   implementation project(path: ':utils')
   api project(path: ':aptoide-analytics-default-implementation')
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
   testImplementation "junit:junit:4.12"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"

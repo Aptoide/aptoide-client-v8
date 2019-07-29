@@ -1,7 +1,7 @@
 package cm.aptoide.pt.search.view;
 
-import android.support.v4.util.Pair;
 import android.view.MenuItem;
+import androidx.core.util.Pair;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;

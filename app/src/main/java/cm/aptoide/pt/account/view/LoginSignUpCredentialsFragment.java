@@ -6,10 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.CompoundButtonCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -22,6 +18,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.core.widget.CompoundButtonCompat;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
@@ -32,6 +30,8 @@ import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -324,6 +324,59 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     orientationManager.unlock();
   }
 
+  @Override public void setCobrandText() {
+    buttonSignUp.setText(String.format(getString(R.string.join_company),
+        getResources().getString(R.string.app_name)));
+    signUpSelectionButton.setText(String.format(getString(R.string.join_company),
+        getResources().getString(R.string.app_name)));
+  }
+
+  public void hideTCandPP() {
+    termsConditionCheckBox.setVisibility(View.GONE);
+    termsAndConditions.setVisibility(View.GONE);
+  }
+
+  public void showTCandPP() {
+    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
+    termsConditionCheckBox.setVisibility(View.VISIBLE);
+
+    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (termsAndConditionsSubject != null) {
+          termsAndConditionsSubject.onNext(null);
+        }
+      }
+    };
+
+    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
+      @Override public void onClick(View view) {
+        if (privacyPolicySubject != null) {
+          privacyPolicySubject.onNext(null);
+        }
+      }
+    };
+
+    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
+    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
+    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
+    String privacyAndTerms =
+        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
+
+    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
+    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
+        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
+            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
+        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    termsAndConditions.setText(privacyAndTermsSpan);
+    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
+    termsAndConditions.setVisibility(View.VISIBLE);
+  }
+
   private AptoideCredentials getCredentials() {
     return new AptoideCredentials(aptoideEmailEditText.getText()
         .toString(), aptoidePasswordEditText.getText()
@@ -356,13 +409,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       float newHeight = 280 * getResources().getDisplayMetrics().density;
       bottomSheetBehavior.setPeekHeight((int) newHeight);
     }
-  }
-
-  @Override public void setCobrandText() {
-    buttonSignUp.setText(String.format(getString(R.string.join_company),
-        getResources().getString(R.string.app_name)));
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company),
-        getResources().getString(R.string.app_name)));
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -413,52 +459,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     originalHeight = bottomSheetBehavior.getPeekHeight();
     attachPresenter(presenter);
     registerClickHandler(presenter);
-  }
-
-  public void hideTCandPP() {
-    termsConditionCheckBox.setVisibility(View.GONE);
-    termsAndConditions.setVisibility(View.GONE);
-  }
-
-  public void showTCandPP() {
-    checkboxDrawable = CompoundButtonCompat.getButtonDrawable(termsConditionCheckBox);
-    termsConditionCheckBox.setVisibility(View.VISIBLE);
-
-    ClickableSpan termsAndConditionsClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (termsAndConditionsSubject != null) {
-          termsAndConditionsSubject.onNext(null);
-        }
-      }
-    };
-
-    ClickableSpan privacyPolicyClickListener = new ClickableSpan() {
-      @Override public void onClick(View view) {
-        if (privacyPolicySubject != null) {
-          privacyPolicySubject.onNext(null);
-        }
-      }
-    };
-
-    String baseString = getString(R.string.terms_and_conditions_privacy_sign_up_message);
-    String termsAndConditionsPlaceHolder = getString(R.string.settings_terms_conditions);
-    String privacyPolicyPlaceHolder = getString(R.string.settings_privacy_policy);
-    String privacyAndTerms =
-        String.format(baseString, termsAndConditionsPlaceHolder, privacyPolicyPlaceHolder);
-
-    SpannableString privacyAndTermsSpan = new SpannableString(privacyAndTerms);
-    privacyAndTermsSpan.setSpan(termsAndConditionsClickListener,
-        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder),
-        privacyAndTerms.indexOf(termsAndConditionsPlaceHolder)
-            + termsAndConditionsPlaceHolder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-    privacyAndTermsSpan.setSpan(privacyPolicyClickListener,
-        privacyAndTerms.indexOf(privacyPolicyPlaceHolder),
-        privacyAndTerms.indexOf(privacyPolicyPlaceHolder) + privacyPolicyPlaceHolder.length(),
-        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-    termsAndConditions.setText(privacyAndTermsSpan);
-    termsAndConditions.setMovementMethod(LinkMovementMethod.getInstance());
-    termsAndConditions.setVisibility(View.VISIBLE);
   }
 
   @Override public void onDestroyView() {

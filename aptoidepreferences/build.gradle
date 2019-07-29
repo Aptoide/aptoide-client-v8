@@ -51,5 +51,5 @@ dependencies {
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
 
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
 }

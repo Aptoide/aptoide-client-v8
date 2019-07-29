@@ -2,7 +2,7 @@ package cm.aptoide.pt.billing.payment;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.adyen.core.PaymentRequest;
 import com.adyen.core.interfaces.PaymentDataCallback;
 import com.adyen.core.interfaces.PaymentDetailsCallback;

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.navigation;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;

@@ -10,7 +10,7 @@ android {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables.useSupportLibrary = true
   }
 
@@ -49,29 +49,29 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
-  androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestImplementation 'androidx.test:runner:1.1.0'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+  androidTestImplementation 'androidx.test:rules:1.1.0'
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
 
 
   // These are just for styling compatibility when we run instrumentation tests.
   // This essentially means that we are directly dependent on these libraries for resources.
   androidTestImplementation project(path: ':utils')
-  androidTestImplementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation 'androidx.preference:preference:1.0.0'
   androidTestImplementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
+  androidTestImplementation('androidx.multidex:multidex:2.0.0') {
+    exclude group: "com.androidx", module: "support-annotations"
   }
 }

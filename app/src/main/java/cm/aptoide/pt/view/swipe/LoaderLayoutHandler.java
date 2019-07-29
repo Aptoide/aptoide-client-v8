@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.view.swipe;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
+import androidx.annotation.CallSuper;
+import androidx.annotation.UiThread;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;

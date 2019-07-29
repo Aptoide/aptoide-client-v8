@@ -1,8 +1,8 @@
 package cm.aptoide.pt.editorial;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import java.util.List;
 import rx.subjects.PublishSubject;

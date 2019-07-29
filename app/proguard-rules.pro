@@ -17,8 +17,8 @@
 #}
 
 -keep class cm.aptoide.** {*;}
--keep class android.support.v7.appcompat.** { *; }
--keep class android.support.v7.widget.SearchView { *; }
+-keep class androidx.v7.appcompat.** { *; }
+-keep class androidx.v7.widget.SearchView { *; }
 
 # Retrofit 2.X
 ## https://square.github.io/retrofit/ ##
@@ -77,7 +77,7 @@
 -dontwarn com.adyen.ui.**
 
 ### disable shift animation bottom navigation ###
--keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
+-keepclassmembers class com.google.android.material.bottomnavigation.BottomNavigationMenuView {
     boolean mShiftingMode;
 }
 

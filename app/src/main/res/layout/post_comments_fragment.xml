@@ -3,21 +3,21 @@
   ~ Modified by Neurophobic Animal on 02/06/2016.
   -->
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbal_swipe_recycler_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <android.support.v4.widget.SwipeRefreshLayout
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
       android:id="@+id/swipe_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
@@ -30,10 +30,10 @@
         />
 
 
-  </android.support.v4.widget.SwipeRefreshLayout>
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
-  <android.support.design.widget.FloatingActionButton
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
       android:id="@+id/fabAdd"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -63,6 +63,6 @@
 
   <include layout="@layout/partial_view_progress_bar"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

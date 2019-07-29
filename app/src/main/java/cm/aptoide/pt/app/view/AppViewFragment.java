@@ -9,24 +9,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
-import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -46,6 +28,21 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -99,6 +96,9 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.view.RxView;
@@ -343,7 +343,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
     screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
     screenshots.setLayoutManager(
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false));
     screenshots.setNestedScrollingEnabled(false);
 
     descriptionText = (TextView) view.findViewById(R.id.description_text);
@@ -442,11 +442,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     screenshots.setAdapter(screenshotsAdapter);
 
     LinearLayoutManagerWithSmoothScroller layoutManager =
-        new LinearLayoutManagerWithSmoothScroller(getContext(), LinearLayoutManager.HORIZONTAL,
-            false);
+        new LinearLayoutManagerWithSmoothScroller(getContext(), RecyclerView.HORIZONTAL, false);
 
     LinearLayoutManager similarBundlesLayout =
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
 
     similarListRecyclerView.setLayoutManager(similarBundlesLayout);
     similarListRecyclerView.setNestedScrollingEnabled(false);

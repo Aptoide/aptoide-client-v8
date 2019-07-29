@@ -1,8 +1,8 @@
 package cm.aptoide.pt.account.view.user;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.UriToPathResolver;

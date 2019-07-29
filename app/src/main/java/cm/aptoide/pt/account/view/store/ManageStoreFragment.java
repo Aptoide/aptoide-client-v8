@@ -5,15 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -26,6 +17,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
@@ -45,6 +44,7 @@ import cm.aptoide.pt.view.CustomTextInputLayout;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.dialog.ImagePickerDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -426,7 +426,7 @@ public class ManageStoreFragment extends BackButtonFragment
   public void setupThemeSelector() {
 
     themeSelectorView.setLayoutManager(
-        new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
     PublishRelay<StoreTheme> storeThemePublishRelay = PublishRelay.create();
     themeSelectorAdapter =
         new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8));

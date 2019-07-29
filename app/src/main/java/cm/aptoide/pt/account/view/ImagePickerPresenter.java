@@ -4,7 +4,7 @@ import android.content.ContentResolver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;

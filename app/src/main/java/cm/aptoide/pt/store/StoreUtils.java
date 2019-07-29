@@ -1,6 +1,6 @@
 package cm.aptoide.pt.store;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;

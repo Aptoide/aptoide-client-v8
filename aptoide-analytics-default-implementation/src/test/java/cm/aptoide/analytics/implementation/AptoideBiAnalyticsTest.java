@@ -1,7 +1,7 @@
 package cm.aptoide.analytics.implementation;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.data.Event;

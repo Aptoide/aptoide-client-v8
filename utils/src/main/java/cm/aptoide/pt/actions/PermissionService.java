@@ -2,8 +2,8 @@ package cm.aptoide.pt.actions;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import rx.functions.Action0;
 
 public interface PermissionService {
