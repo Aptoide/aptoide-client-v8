@@ -111,6 +111,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showNoNetworkView();
 
+  void showGenericErrorView();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();

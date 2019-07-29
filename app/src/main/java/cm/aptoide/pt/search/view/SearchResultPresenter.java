@@ -433,9 +433,10 @@ import rx.exceptions.OnErrorNotImplementedException;
             .flatMap(searchResultPair -> {
               int count = 0;
               if (searchResultPair.first instanceof SearchResult.Error) {
-                if (((SearchResult.Error) searchResultPair.first).getError()
-                    == SearchResultError.NO_NETWORK) {
+                if (((SearchResult.Error) searchResultPair.first).getError() == SearchResultError.NO_NETWORK) {
                   view.showNoNetworkView();
+                } else {
+                  view.showGenericErrorView();
                 }
               } else {
                 count = getResultsCount(searchResultPair);
