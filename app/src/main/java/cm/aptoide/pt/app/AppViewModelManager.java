@@ -10,7 +10,6 @@ import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
-import com.jakewharton.rx.transformer.ReplayingShare;
 import rx.Observable;
 import rx.Single;
 
@@ -29,8 +28,6 @@ public class AppViewModelManager {
   private AppModel cachedApp;
   private AppCoinsViewModel cachedAppCoinsViewModel;
 
-  private Observable<AppViewModel> observeAppViewModel;
-
   public AppViewModelManager(AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       String marketName, AppCenter appCenter, DownloadStateParser downloadStateParser,
       InstallManager installManager, AppcMigrationManager appcMigrationManager,
@@ -46,21 +43,17 @@ public class AppViewModelManager {
   }
 
   public Observable<AppViewModel> observeAppViewModel() {
-    if (observeAppViewModel == null) {
-      observeAppViewModel = getAppModel().toObservable()
-          .flatMap(appModel -> {
-            Observable<DownloadModel> downloadModelObservable = getDownloadModel(appModel);
-            Observable<AppCoinsViewModel> appCoinsViewModelObservable =
-                getAppCoinsViewModel(appModel);
-            Observable<MigrationModel> migrationModelObservable = getMigrationModel(appModel);
-            return Observable.combineLatest(downloadModelObservable, appCoinsViewModelObservable,
-                migrationModelObservable,
-                (downloadModel, appCoinsModel, migrationModel) -> mergeToAppViewModel(appModel,
-                    downloadModel, appCoinsModel, migrationModel));
-          })
-          .compose(ReplayingShare.instance());
-    }
-    return observeAppViewModel;
+    return getAppModel().toObservable()
+        .flatMap(appModel -> {
+          Observable<DownloadModel> downloadModelObservable = getDownloadModel(appModel);
+          Observable<AppCoinsViewModel> appCoinsViewModelObservable =
+              getAppCoinsViewModel(appModel);
+          Observable<MigrationModel> migrationModelObservable = getMigrationModel(appModel);
+          return Observable.combineLatest(downloadModelObservable, appCoinsViewModelObservable,
+              migrationModelObservable,
+              (downloadModel, appCoinsModel, migrationModel) -> mergeToAppViewModel(appModel,
+                  downloadModel, appCoinsModel, migrationModel));
+        });
   }
 
   /**
