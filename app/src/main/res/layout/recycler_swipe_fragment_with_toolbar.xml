@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <android.support.v4.widget.SwipeRefreshLayout
@@ -45,20 +46,13 @@
 
   <include layout="@layout/app_bar_layout"/>
 
-  <include
-      layout="@layout/partial_view_incl_no_network"
-      android:layout_width="wrap_content"
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="?attr/actionBarSize"
-      />
-
-  <include
-      layout="@layout/partial_view_error"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize"
+      tools:visibility="gone"
       />
 
   <include layout="@layout/partial_view_progress_bar"/>

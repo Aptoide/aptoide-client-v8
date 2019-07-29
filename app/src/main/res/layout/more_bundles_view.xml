@@ -26,9 +26,12 @@
           android:clipChildren="false"
           />
     </android.support.v4.widget.SwipeRefreshLayout>
-    <include layout="@layout/partial_view_incl_no_network"/>
 
-    <include layout="@layout/partial_view_error"/>
+    <cm.aptoide.aptoideviews.errors.ErrorView
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
     <include layout="@layout/partial_view_progress_bar"/>
   </FrameLayout>

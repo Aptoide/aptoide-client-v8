@@ -45,13 +45,10 @@
           android:visibility="gone"
           />
 
-      <include
-          layout="@layout/partial_view_incl_no_network"
-          tools:visibility="gone"
-          />
-
-      <include
-          layout="@layout/partial_view_error"
+      <cm.aptoide.aptoideviews.errors.ErrorView
+          android:id="@+id/error_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
           tools:visibility="gone"
           />
 
