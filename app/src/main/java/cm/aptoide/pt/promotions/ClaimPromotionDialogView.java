@@ -49,4 +49,6 @@ public interface ClaimPromotionDialogView extends View {
   void showCanceledVerificationError();
 
   void showUpdateWalletDialog();
+
+  Observable<Void> onCancelWalletUpdate();
 }

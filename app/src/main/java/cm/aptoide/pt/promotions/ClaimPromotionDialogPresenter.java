@@ -47,6 +47,18 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleWalletCancelClick();
     handleDismissGenericMessage();
     handleWalletVerificationResult();
+    handleUpdateWalletCancelClick();
+  }
+
+  private void handleUpdateWalletCancelClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.onCancelWalletUpdate())
+        .doOnNext(__ -> view.dismissDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> throwable.printStackTrace());
   }
 
   private void handleWalletVerificationResult() {
