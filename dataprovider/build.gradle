@@ -117,7 +117,7 @@ dependencies {
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
   //noinspection GradleDependency
-  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPAT_VERSION}"
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_BASEMENT_VERSION}"
 

@@ -413,7 +413,7 @@ dependencies {
 
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
   //noinspection GradleDependency
-  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPAT_VERSION}"
   //noinspection GradleDependency
   // Cannot update or settings will crash :/
   implementation 'androidx.preference:preference:1.0.0'

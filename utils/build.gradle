@@ -52,7 +52,7 @@ dependencies {
 
   //noinspection GradleDependency
   implementation 'com.google.android.material:material:1.0.0'
-  implementation 'androidx.appcompat:appcompat:1.0.0'
+  implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPAT_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
