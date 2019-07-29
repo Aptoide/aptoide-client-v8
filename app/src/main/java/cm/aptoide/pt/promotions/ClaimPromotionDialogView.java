@@ -51,4 +51,6 @@ public interface ClaimPromotionDialogView extends View {
   void showUpdateWalletDialog();
 
   Observable<Void> onCancelWalletUpdate();
+
+  Observable<Void> onUpdateWalletClick();
 }

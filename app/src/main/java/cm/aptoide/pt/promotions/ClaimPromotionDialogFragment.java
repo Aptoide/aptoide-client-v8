@@ -76,6 +76,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private TextView genericErrorViewMessage;
   private View updateWalletView;
   private Button cancelUpdateWalletButton;
+  private Button updateWalletButton;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -97,6 +98,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     genericErrorViewMessage = view.findViewById(R.id.generic_error_message);
     updateWalletView = view.findViewById(R.id.update_wallet_view);
     cancelUpdateWalletButton = view.findViewById(R.id.cancel_wallet_update_button);
+    updateWalletButton = view.findViewById(R.id.update_wallet_button);
 
     attachPresenter(presenter);
 
@@ -144,6 +146,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     genericErrorView = null;
     updateWalletView = null;
     cancelUpdateWalletButton = null;
+    updateWalletButton = null;
 
     presenter.dispose();
     presenter = null;
@@ -321,6 +324,10 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
 
   @Override public Observable<Void> onCancelWalletUpdate() {
     return RxView.clicks(cancelUpdateWalletButton);
+  }
+
+  @Override public Observable<Void> onUpdateWalletClick() {
+    return RxView.clicks(updateWalletButton);
   }
 
   private void showErrorView(String errorMessage) {
