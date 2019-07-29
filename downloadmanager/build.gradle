@@ -49,7 +49,7 @@ dependencies {
   testImplementation "junit:junit:${JUNIT_VERSION}"
 
   //noinspection GradleDependency
-  implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPAT_VERSION}"
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
 
   api "com.liulishuo.filedownloader:library:${FILE_DOWNLOADER_VERSION}"
   implementation "cn.dreamtobe.filedownloader:filedownloader-okhttp3-connection:${FILE_DOWNLOADER_OKHTTP_IMP_VERSION}"
