@@ -61,6 +61,8 @@ public class InstallAnalytics {
   private static final String TELECO = "teleco";
   private static final String TYPE = "type";
   private static final String URL = "url";
+  private static final String EDITORIAL_FRAGMENT = "EditorialFragment";
+  private static final String PROMOTIONS_FRAGMENT = "PromotionsFragment";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -159,7 +161,7 @@ public class InstallAnalytics {
       String abTestingGroup, List<String> fragmentNameList, boolean isMigration, boolean hasAppc) {
     Map<String, Object> data =
         getApplicationInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc,
-            context.name());
+            navigationTracker.getViewName(true));
     data.put(MIGRATOR, isMigration);
     data.put(ORIGIN, origin);
 

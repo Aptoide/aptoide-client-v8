@@ -89,7 +89,7 @@ public class EditorialManager {
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
         AnalyticsManager.Action.CLICK, offerResponseStatus);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.EditorialFragment,
+        AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc());
   }
