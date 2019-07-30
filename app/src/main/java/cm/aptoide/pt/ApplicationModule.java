@@ -209,7 +209,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecureCoderDecoder;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
-import cm.aptoide.pt.promotions.CaptchaService;
 import cm.aptoide.pt.promotions.PromotionViewAppMapper;
 import cm.aptoide.pt.promotions.PromotionsAnalytics;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -1343,22 +1342,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ReactionsRemoteService(reactionServiceV8, Schedulers.io());
   }
 
-  @Singleton @Provides CaptchaService.ServiceInterface providesCaptchaServiceInterface(
-      @Named("retrofit-apichain-bds") Retrofit retrofit) {
-    return retrofit.create(CaptchaService.ServiceInterface.class);
-  }
-
   @Singleton @Provides PromotionsService providesPromotionsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
     return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         converterFactory, sharedPreferences);
-  }
-
-  @Singleton @Provides CaptchaService providesCaptchaService(
-      CaptchaService.ServiceInterface service, IdsRepository idsRepository) {
-    return new CaptchaService(service, idsRepository);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
