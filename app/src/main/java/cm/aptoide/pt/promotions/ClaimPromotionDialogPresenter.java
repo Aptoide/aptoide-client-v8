@@ -175,7 +175,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         })
         .flatMapSingle(__ -> claimPromotion())
         .subscribe(__ -> {
-        }, throwable -> view.showGenericError()));
+        }, throwable -> {
+        }));
   }
 
   private Single<String> claimPromotion() {
