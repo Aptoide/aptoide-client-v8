@@ -83,7 +83,7 @@
 
     <activity
         android:name=".view.entry.EntryActivity"
-        android:theme="@style/Theme.AppCompat.Translucent"
+        android:theme="@style/AppBaseTheme.Splash"
         >
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -124,11 +124,12 @@
 
     <activity
         android:name=".view.OpenGLES20Activity"
-        android:theme="@style/Theme.AppCompat.Translucent"></activity>
+        android:theme="@style/AppBaseTheme.Splash"
+        />
 
     <activity
         android:name=".view.MainActivity"
-        android:windowSoftInputMode="adjustPan"></activity>
+        android:windowSoftInputMode="adjustPan"/>
 
     <activity
         android:name=".wallet.WalletInstallActivity"
