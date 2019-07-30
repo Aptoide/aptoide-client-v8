@@ -700,7 +700,7 @@
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
 
-  <string name="wallet_verification_message_update_wallet_to_claim">You need the latest version of the AppCoins Wallet to receive this reward!</string>
+  <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
   <string name="wallet_verification_button_cancel_update">No, thanks</string>
   <string name="wallet_verification_button_update">Update now</string>
