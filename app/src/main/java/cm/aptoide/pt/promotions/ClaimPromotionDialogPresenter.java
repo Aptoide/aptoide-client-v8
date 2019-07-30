@@ -48,7 +48,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleDismissGenericMessage();
     handleWalletVerificationResult();
     handleUpdateWalletCancelClick();
-
     handleUpdateWallet();
   }
 
@@ -58,6 +57,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onUpdateWalletClick())
         .doOnNext(__ -> navigator.navigateToWalletAppView())
+        .doOnNext(__ -> view.dismissDialog())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
