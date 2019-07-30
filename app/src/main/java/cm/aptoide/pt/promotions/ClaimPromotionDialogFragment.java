@@ -74,6 +74,9 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private View genericMessageView;
   private View genericErrorView;
   private TextView genericErrorViewMessage;
+  private View updateWalletView;
+  private Button cancelUpdateWalletButton;
+  private Button updateWalletButton;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -93,6 +96,9 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     genericMessageView = view.findViewById(R.id.generic_message_view);
     genericErrorView = view.findViewById(R.id.generic_error);
     genericErrorViewMessage = view.findViewById(R.id.generic_error_message);
+    updateWalletView = view.findViewById(R.id.update_wallet_view);
+    cancelUpdateWalletButton = view.findViewById(R.id.cancel_wallet_update_button);
+    updateWalletButton = view.findViewById(R.id.update_wallet_button);
 
     attachPresenter(presenter);
 
@@ -138,6 +144,9 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     insertWalletView = null;
     genericMessageView = null;
     genericErrorView = null;
+    updateWalletView = null;
+    cancelUpdateWalletButton = null;
+    updateWalletButton = null;
 
     presenter.dispose();
     presenter = null;
@@ -194,6 +203,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     loading.setVisibility(View.VISIBLE);
     insertWalletView.setVisibility(View.GONE);
     genericMessageView.setVisibility(View.GONE);
+    updateWalletView.setVisibility(View.GONE);
   }
 
   @Override public void showInvalidWalletAddress() {
@@ -304,10 +314,27 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     showErrorView(getString(R.string.appc_verification_cancelled_by_user_message));
   }
 
+  @Override public void showUpdateWalletDialog() {
+    loading.setVisibility(View.GONE);
+    genericErrorView.setVisibility(View.GONE);
+    insertWalletView.setVisibility(View.GONE);
+    genericMessageView.setVisibility(View.GONE);
+    updateWalletView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public Observable<Void> onCancelWalletUpdate() {
+    return RxView.clicks(cancelUpdateWalletButton);
+  }
+
+  @Override public Observable<Void> onUpdateWalletClick() {
+    return RxView.clicks(updateWalletButton);
+  }
+
   private void showErrorView(String errorMessage) {
     loading.setVisibility(View.GONE);
     genericErrorView.setVisibility(View.VISIBLE);
     insertWalletView.setVisibility(View.GONE);
+    updateWalletView.setVisibility(View.GONE);
     genericMessageView.setVisibility(View.GONE);
     genericErrorViewMessage.setText(errorMessage);
   }
@@ -357,12 +384,14 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     loading.setVisibility(View.GONE);
     genericMessageView.setVisibility(View.GONE);
     insertWalletView.setVisibility(View.VISIBLE);
+    updateWalletView.setVisibility(View.GONE);
   }
 
   private void showGenericMessageView(String title, String body) {
     walletErrorView.setVisibility(View.GONE);
     loading.setVisibility(View.GONE);
     insertWalletView.setVisibility(View.GONE);
+    updateWalletView.setVisibility(View.GONE);
     genericMessageTitle.setText(title);
     genericMessageBody.setText(body);
     genericMessageView.setVisibility(View.VISIBLE);

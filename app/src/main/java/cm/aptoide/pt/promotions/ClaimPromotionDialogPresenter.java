@@ -1,6 +1,7 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
@@ -46,6 +47,31 @@ public class ClaimPromotionDialogPresenter implements Presenter {
     handleWalletCancelClick();
     handleDismissGenericMessage();
     handleWalletVerificationResult();
+    handleUpdateWalletCancelClick();
+    handleUpdateWallet();
+  }
+
+  private void handleUpdateWallet() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.onUpdateWalletClick())
+        .doOnNext(__ -> navigator.navigateToWalletAppView())
+        .doOnNext(__ -> view.dismissDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleUpdateWalletCancelClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.onCancelWalletUpdate())
+        .doOnNext(__ -> view.dismissDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   private void handleWalletVerificationResult() {
@@ -59,7 +85,12 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         .flatMapSingle(__ -> claimPromotion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, Throwable::printStackTrace);
+        }, throwable -> {
+          if (throwable instanceof ActivityNotFoundException) {
+            view.showUpdateWalletDialog();
+          }
+          throwable.printStackTrace();
+        });
   }
 
   private void handleWalletVerificationErrors(Integer result) {
@@ -144,7 +175,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         })
         .flatMapSingle(__ -> claimPromotion())
         .subscribe(__ -> {
-        }, throwable -> view.showGenericError()));
+        }, throwable -> {
+        }));
   }
 
   private Single<String> claimPromotion() {

@@ -62,7 +62,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return adsBundlesViewHolderFactory.createViewHolder(parent);
       case INFO:
         return new InfoBundleViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
+            .inflate(R.layout.info_action_item_card, parent, false), uiEventsListener);
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener,
@@ -75,7 +75,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             .inflate(R.layout.ads_small_banner, parent, false));
       case WALLET_ADS_OFFER:
         return new WalletAdsOfferViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.info_action_item, parent, false), uiEventsListener);
+            .inflate(R.layout.info_action_item_card, parent, false), uiEventsListener);
       case TOP:
         return new TopBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener,

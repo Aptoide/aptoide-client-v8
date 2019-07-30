@@ -336,8 +336,10 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides ClaimPromotionsNavigator providesClaimPromotionsNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new ClaimPromotionsNavigator(fragmentNavigator, (ActivityResultNavigator) activity);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AppNavigator appNavigator) {
+    return new ClaimPromotionsNavigator(fragmentNavigator, (ActivityResultNavigator) activity,
+        appNavigator);
   }
 
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
