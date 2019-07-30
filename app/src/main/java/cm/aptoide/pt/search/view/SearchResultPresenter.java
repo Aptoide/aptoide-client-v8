@@ -2,7 +2,7 @@ package cm.aptoide.pt.search.view;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import android.util.Pair;
+import android.support.v4.util.Pair;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -343,8 +343,7 @@ import rx.exceptions.OnErrorNotImplementedException;
     // search every store. followed and not followed
     return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
         loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
-        (followedStoresCount, nonFollowedStoresCount) -> new Pair<>(followedStoresCount,
-            nonFollowedStoresCount));
+        (followedStores, nonFollowedStores) -> new Pair<>(followedStores, nonFollowedStores));
   }
 
   @NonNull
@@ -433,7 +432,8 @@ import rx.exceptions.OnErrorNotImplementedException;
             .flatMap(searchResultPair -> {
               int count = 0;
               if (searchResultPair.first instanceof SearchResult.Error) {
-                if (((SearchResult.Error) searchResultPair.first).getError() == SearchResultError.NO_NETWORK) {
+                if (((SearchResult.Error) searchResultPair.first).getError()
+                    == SearchResultError.NO_NETWORK) {
                   view.showNoNetworkView();
                 } else {
                   view.showGenericErrorView();
