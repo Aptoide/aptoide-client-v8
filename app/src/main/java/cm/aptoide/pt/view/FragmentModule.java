@@ -460,7 +460,14 @@ import rx.subscriptions.CompositeSubscription;
       ClaimPromotionsNavigator navigator) {
     return new ClaimPromotionDialogPresenter((ClaimPromotionDialogView) fragment,
         new CompositeSubscription(), AndroidSchedulers.mainThread(), claimPromotionsManager,
-        promotionsAnalytics, navigator, arguments.getString("promotion_id", "default"));
+        promotionsAnalytics, navigator);
+  }
+
+  @FragmentScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
+      PromotionsManager promotionsManager) {
+    return new ClaimPromotionsManager(promotionsManager,
+        arguments.getString("package_name", "default"),
+        arguments.getString("promotion_id", "default"));
   }
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
