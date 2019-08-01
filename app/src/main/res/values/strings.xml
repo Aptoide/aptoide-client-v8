@@ -699,12 +699,33 @@
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
-
   <string name="wallet_verification_message_update_wallet_to_claim">Update the AppCoins Wallet to receive this reward!</string>
   <string name="wallet_verification_title_update_wallet">Update Wallet</string>
   <string name="wallet_verification_button_cancel_update">No, thanks</string>
   <string name="wallet_verification_button_update">Update now</string>
   <string name="wallet_verification_button_update_wallet">Update Wallet</string>
 
-</resources>
+  <!--POA exposure-->
+  <string name="poa_app_card_short">EARN %s</string>
+  <string name="poa_home_card_title">Earn AppCoins Credits</string>
+  <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
+  <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
+  <string name="poa_app_view_card_body_2">$1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_APPCC_left_body">Hurry up! We only have %s AppCoins left to give away.</string>
+  <string name="poa_time_left_days">DAYS</string>
+  <string name="poa_time_left_hours">HOURS</string>
+  <string name="poa_time_left_minutes">MINUTES</string>
+  <string name="poa_earn_view_title">Earn AppCoins Credits</string>
+  <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
 
+  <!--APPC Info View-->
+  <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
+  <string name="appc_info_view_body_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>30% bonus in all purchases!</b></string>
+  <string name="appc_info_view_title_2">First Things First</string>
+  <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it'll do everything for you!</string>
+  <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
+  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle "Earn AppCoins Credits" in Aptoide home!</string>
+  <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
+  <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+
+</resources>
