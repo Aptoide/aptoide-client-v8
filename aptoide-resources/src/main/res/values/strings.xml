@@ -93,6 +93,7 @@
   <string name="appview_field_donations_dialogue">Nickname</string>
   <string name="appview_message_donations_completed">Thanks for donating and enjoy the app!</string>
   <string name="appview_title_donations_leaderboard_unknown">Mysterious Donor</string>
+  <string name="appview_dialog_donations_install_wallet_yes">Yes</string>
 
   <!-- AppView developer area-->
   <string name="dialog_version_size">Version: %1$s | Size: %2$s</string>
@@ -498,6 +499,7 @@
   <string name="buy">buy</string>
   <string name="cancel">Cancel</string>
   <string name="no_payments_available">No payments available.</string>
+  <string name="remember_card_hint">Remember card</string>
 
   <string name="iab_title_payment_methods">Payment methods</string>
   <string name="iab_title_add_payment_method">Add payment method</string>

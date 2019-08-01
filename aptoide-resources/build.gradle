@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+
+android {
+  compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
+  buildToolsVersion BUILD_TOOLS_VERSION
+
+  defaultConfig {
+    minSdkVersion project.LIB_MINIMUM_SDK_VERSION
+    targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  flavorDimensions "product", "mode"
+  productFlavors {
+    cobrand { dimension "product" }
+    vanilla { dimension "product" }
+    internal { dimension "mode" }
+    dev { dimension "mode" }
+    prod { dimension "mode" }
+    leak { dimension "mode" }
+    monetisation { dimension "mode" }
+  }
+
+  buildTypes {
+    debug {
+      resValue "string", "authenticator_account_type", "compat"
+      minifyEnabled true
+    }
+    release {
+      minifyEnabled true
+    }
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+}

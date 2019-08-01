@@ -154,7 +154,7 @@
       <Button
           android:id="@+id/no_wallet_continue_button"
           android:layout_width="95dp"
-          android:text="@string/yes"
+          android:text="@string/appview_dialog_donations_install_wallet_yes"
           style="@style/Aptoide.Button.Flat"
           />
     </LinearLayout>

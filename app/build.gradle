@@ -346,6 +346,7 @@ android {
 
 dependencies {
 
+  implementation project(path: ':aptoide-resources')
   implementation project(path: ':crashreports')
   implementation project(path: ':downloadmanager')
   implementation project(path: ':aptoide-database')

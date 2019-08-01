@@ -19,16 +19,21 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
-  flavorDimensions "mode"
+  flavorDimensions "product", "mode"
   productFlavors {
+    cobrand { dimension "product" }
+    vanilla { dimension "product" }
+    internal { dimension "mode" }
     dev { dimension "mode" }
     prod { dimension "mode" }
+    leak { dimension "mode" }
+    monetisation { dimension "mode" }
   }
 
   buildTypes {
     debug {
-      resValue "string", "authenticator_account_type", "compat"
-      minifyEnabled true
+      minifyEnabled false
+      shrinkResources false
     }
     release {
       minifyEnabled true
@@ -43,18 +48,15 @@ android {
   lintOptions {
     abortOnError false
   }
-  sourceSets {
-    main {
-      res.srcDirs += ["${project(':app').projectDir}/src/main/res"]
-    }
-  }
 }
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
+  implementation project(path: ':aptoide-resources')
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
   implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
@@ -72,7 +74,9 @@ dependencies {
   androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
-
+  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
+    exclude group: "com.android.support", module: "support-annotations"
+  }
 
   // These are just for styling compatibility when we run instrumentation tests.
   // This essentially means that we are directly dependent on these libraries for resources.
@@ -81,8 +85,4 @@ dependencies {
   androidTestImplementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-  androidTestImplementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
 }

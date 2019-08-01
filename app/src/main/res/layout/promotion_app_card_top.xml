@@ -20,7 +20,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:src="@color/colorPrimary"
+        android:src="?attr/colorPrimary"
         />
 
     <LinearLayout
