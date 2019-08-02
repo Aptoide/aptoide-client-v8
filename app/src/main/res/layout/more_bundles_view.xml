@@ -31,6 +31,7 @@
         android:id="@+id/error_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         />
 
     <include layout="@layout/partial_view_progress_bar"/>
