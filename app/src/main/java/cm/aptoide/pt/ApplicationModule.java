@@ -203,6 +203,7 @@ import cm.aptoide.pt.notification.RealmLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RealmLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.SecurePreferences;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -316,11 +317,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   private static final String DONATIONS_URL = "https://api.blockchainds.com/";
 
   private final AptoideApplication application;
-  private final String aptoideMd5sum;
 
-  public ApplicationModule(AptoideApplication application, String aptoideMd5sum) {
+  public ApplicationModule(AptoideApplication application) {
     this.application = application;
-    this.aptoideMd5sum = aptoideMd5sum;
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
@@ -567,13 +566,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("user-agent-v8") Interceptor provideUserAgentInterceptorV8(
       IdsRepository idsRepository, @Named("aptoidePackage") String aptoidePackage,
-      AuthenticationPersistence authenticationPersistence) {
+      AuthenticationPersistence authenticationPersistence, AptoideMd5Manager aptoideMd5Manager) {
     return new UserAgentInterceptorV8(idsRepository, AptoideUtils.SystemU.getRelease(),
         Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
-            .replace("aptoide-", ""), aptoidePackage, aptoideMd5sum, BuildConfig.VERSION_CODE,
-        authenticationPersistence);
+            .replace("aptoide-", ""), aptoidePackage, aptoideMd5Manager.getAptoideMd5(),
+        BuildConfig.VERSION_CODE, authenticationPersistence);
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -910,8 +909,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("no-authentication-v3")
   BodyInterceptor<BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository,
-      @Named("aptoidePackage") String aptoidePackage) {
-    return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage);
+      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
+    return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5Manager.getAptoideMd5(),
+        aptoidePackage);
   }
 
   @Singleton @Provides @Named("mature-pool-v7")
@@ -925,9 +925,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorPoolV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
-      @Named("aptoidePackage") String aptoidePackage) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
-        aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
+      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
+        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
+        resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("multipart") MultipartBodyInterceptor provideMultipartBodyInterceptor(
@@ -948,18 +949,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> provideBodyInterceptorWebV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
-      @Named("aptoidePackage") String aptoidePackage) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
-        aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
+      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
+        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
+        resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("analytics-interceptor")
   AnalyticsBodyInterceptorV7 provideAnalyticsBodyInterceptorV7(
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
-      @Named("aptoidePackage") String aptoidePackage) {
-    return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5sum,
-        aptoidePackage, resources, BuildConfig.VERSION_CODE, qManager, sharedPreferences);
+      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
+    return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence,
+        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, resources, BuildConfig.VERSION_CODE,
+        qManager, sharedPreferences);
   }
 
   @Singleton @Provides QManager provideQManager(
@@ -1104,10 +1107,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences,
       NetworkOperatorManager networkOperatorManager,
       AuthenticationPersistence authenticationPersistence,
-      @Named("aptoidePackage") String aptoidePackage) {
-    return new BodyInterceptorV3(idsRepository, aptoideMd5sum, aptoidePackage, qManager,
-        defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
-        networkOperatorManager, authenticationPersistence);
+      @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
+    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager.getAptoideMd5(), aptoidePackage,
+        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
+        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
   }
 
   @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(
@@ -1934,5 +1937,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
     return new CaptionBackgroundPainter(getApplicationContext().getResources());
+  }
+
+  @Singleton @Provides AptoideMd5Manager providesAptoideMd5Manager(
+      PreferencesPersister preferencesPersister) {
+    return new AptoideMd5Manager(preferencesPersister, application.getPackageManager(),
+        application.getPackageName(), BuildConfig.VERSION_CODE);
   }
 }
