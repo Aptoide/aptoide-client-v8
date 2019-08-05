@@ -115,6 +115,7 @@ public class LoaderLayoutHandler {
   }
 
   @CallSuper public void unbindViews() {
-
+    errorView = null;
+    progressBar = null;
   }
 }
