@@ -52,9 +52,7 @@ public class AptoideMd5Manager {
 
   private String calculateMd5Sum() {
     try {
-      String md5 =
-          AptoideUtils.AlgorithmU.computeMd5(packageManager.getPackageInfo(packageName, 0));
-      return md5;
+      return AptoideUtils.AlgorithmU.computeMd5(packageManager.getPackageInfo(packageName, 0));
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }
