@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.q.QManager;
@@ -15,7 +16,7 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
 
   public static final String RESPONSE_MODE_JSON = "json";
 
-  private final String aptoideMd5sum;
+  private final AptoideMd5Manager aptoideMd5Manager;
   private final String aptoidePackage;
   private final IdsRepository idsRepository;
   private final AuthenticationPersistence authenticationPersistence;
@@ -25,12 +26,12 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   private final int androidVersion;
   private final NetworkOperatorManager operatorManager;
 
-  public BodyInterceptorV3(IdsRepository idsRepository, String aptoideMd5sum, String aptoidePackage,
+  public BodyInterceptorV3(IdsRepository idsRepository, AptoideMd5Manager aptoideMd5Manager, String aptoidePackage,
       QManager qManager, SharedPreferences sharedPreferences, String responseMode,
       int androidVersion, NetworkOperatorManager operatorManager,
       AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
-    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoideMd5Manager = aptoideMd5Manager;
     this.aptoidePackage = aptoidePackage;
     this.authenticationPersistence = authenticationPersistence;
     this.qManager = qManager;
@@ -44,7 +45,7 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
     return authenticationPersistence.getAuthentication()
         .map(authentication -> {
           body.setAndroidVersion(androidVersion);
-          body.setAptoideMd5sum(aptoideMd5sum);
+          body.setAptoideMd5sum(aptoideMd5Manager.getAptoideMd5());
           body.setAptoidePackage(aptoidePackage);
           body.setAptoideUid(idsRepository.getUniqueIdentifier());
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
