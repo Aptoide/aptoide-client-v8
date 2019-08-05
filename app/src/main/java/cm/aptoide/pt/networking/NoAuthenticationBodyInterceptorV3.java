@@ -12,8 +12,8 @@ public class NoAuthenticationBodyInterceptorV3 implements BodyInterceptor<BaseBo
   private final String aptoidePackage;
   private final IdsRepository idsRepository;
 
-  public NoAuthenticationBodyInterceptorV3(IdsRepository idsRepository, AptoideMd5Manager aptoideMd5Manager,
-      String aptoidePackage) {
+  public NoAuthenticationBodyInterceptorV3(IdsRepository idsRepository,
+      AptoideMd5Manager aptoideMd5Manager, String aptoidePackage) {
     this.aptoideMd5Manager = aptoideMd5Manager;
     this.aptoidePackage = aptoidePackage;
     this.idsRepository = idsRepository;
@@ -21,7 +21,8 @@ public class NoAuthenticationBodyInterceptorV3 implements BodyInterceptor<BaseBo
 
   public Single<BaseBody> intercept(BaseBody body) {
     return Single.fromCallable(() -> {
-      body.setAptoideMd5sum(aptoideMd5Manager.getAptoideMd5());
+      String md5 = aptoideMd5Manager.getAptoideMd5();
+      if (!md5.equals("")) body.setAptoideMd5sum(md5);
       body.setAptoidePackage(aptoidePackage);
       body.setAptoideUid(idsRepository.getUniqueIdentifier());
       return body;

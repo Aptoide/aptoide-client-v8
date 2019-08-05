@@ -26,9 +26,9 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
   private final int androidVersion;
   private final NetworkOperatorManager operatorManager;
 
-  public BodyInterceptorV3(IdsRepository idsRepository, AptoideMd5Manager aptoideMd5Manager, String aptoidePackage,
-      QManager qManager, SharedPreferences sharedPreferences, String responseMode,
-      int androidVersion, NetworkOperatorManager operatorManager,
+  public BodyInterceptorV3(IdsRepository idsRepository, AptoideMd5Manager aptoideMd5Manager,
+      String aptoidePackage, QManager qManager, SharedPreferences sharedPreferences,
+      String responseMode, int androidVersion, NetworkOperatorManager operatorManager,
       AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
     this.aptoideMd5Manager = aptoideMd5Manager;
@@ -45,7 +45,8 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
     return authenticationPersistence.getAuthentication()
         .map(authentication -> {
           body.setAndroidVersion(androidVersion);
-          body.setAptoideMd5sum(aptoideMd5Manager.getAptoideMd5());
+          String md5 = aptoideMd5Manager.getAptoideMd5();
+          if (!md5.equals("")) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
           body.setAptoideUid(idsRepository.getUniqueIdentifier());
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));

@@ -41,18 +41,16 @@ public class AptoideMd5Manager {
     if (cachedMd5 != null) return cachedMd5;
 
     String savedMd5 = parseMd5(preferencesPersister.get(APTOIDE_MD5, ""), vercode);
-    if (!savedMd5.isEmpty()) {
-      cachedMd5 = savedMd5;
-    } else {
-      cachedMd5 = calculateMd5Sum();
-      persistAptoideMd5(vercode, cachedMd5);
-    }
-    return cachedMd5;
+
+    return savedMd5;
   }
 
-  private String calculateMd5Sum() {
+  public Void calculateMd5Sum() {
+    if (cachedMd5 != null) return null;
+    if (!parseMd5(preferencesPersister.get(APTOIDE_MD5, ""), vercode).isEmpty()) return null;
     try {
-      return AptoideUtils.AlgorithmU.computeMd5(packageManager.getPackageInfo(packageName, 0));
+      cachedMd5 = AptoideUtils.AlgorithmU.computeMd5(packageManager.getPackageInfo(packageName, 0));
+      persistAptoideMd5(vercode, cachedMd5);
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }

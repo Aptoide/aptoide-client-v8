@@ -61,7 +61,8 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
           if (!TextUtils.isEmpty(forceCountry)) {
             body.setCountry(forceCountry);
           }
-          body.setAptoideMd5sum(aptoideMd5Manager.getAptoideMd5());
+          String md5 = aptoideMd5Manager.getAptoideMd5();
+          if (!md5.equals("")) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
 
           return body;

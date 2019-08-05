@@ -48,7 +48,8 @@ public class AnalyticsBodyInterceptorV7 implements AnalyticsBodyInterceptor<Anal
           body.setAptoideVercode(aptoideVersionCode);
           body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
-          body.setAptoideMd5sum(aptoideMd5Manager.getAptoideMd5());
+          String md5 = aptoideMd5Manager.getAptoideMd5();
+          if (!md5.equals("")) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
 
           return body;
