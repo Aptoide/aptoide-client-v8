@@ -76,11 +76,6 @@
 ### Adyen ###
 -dontwarn com.adyen.ui.**
 
-### disable shift animation bottom navigation ###
--keepclassmembers class com.google.android.material.bottomnavigation.BottomNavigationMenuView {
-    boolean mShiftingMode;
-}
-
 -keepclassmembers class com.ironsource.sdk.controller.IronSourceWebView$JSInterface {
     public *;
 }
