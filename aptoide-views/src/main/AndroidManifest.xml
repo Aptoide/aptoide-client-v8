@@ -3,8 +3,7 @@
 
 
   <application
-      android:allowBackup="false"
-      android:testOnly="true">
+      android:allowBackup="false">
     <activity android:name="cm.aptoide.aptoideviews.base.MockActivity"></activity>
   </application>
 </manifest>

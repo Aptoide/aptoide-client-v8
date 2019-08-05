@@ -180,7 +180,6 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   private LeakTool leakTool;
-  private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
   private ExternalBillingSerializer inAppBillingSerialzer;
   private PurchaseBundleMapper purchaseBundleMapper;
@@ -387,7 +386,7 @@ public abstract class AptoideApplication extends Application {
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .applicationModule(new ApplicationModule(this))
           .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
@@ -749,27 +748,6 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
     return bodyInterceptorV3;
-  }
-
-  public String getAptoideMd5sum() {
-    if (aptoideMd5sum == null) {
-      synchronized (this) {
-        if (aptoideMd5sum == null) {
-          aptoideMd5sum = calculateMd5Sum();
-        }
-      }
-    }
-    return aptoideMd5sum;
-  }
-
-  private String calculateMd5Sum() {
-    try {
-      return AptoideUtils.AlgorithmU.computeMd5(
-          getPackageManager().getPackageInfo(getAptoidePackage(), 0));
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
-    return null;
   }
 
   protected String getAptoidePackage() {

@@ -25,6 +25,7 @@ public class PromotionsService {
   private static final String WRONG_CAPTCHA = "PROMOTION-1";
   private static final String WRONG_ADDRESS = "PROMOTION-2";
   private static final String ALREADY_CLAIMED = "PROMOTION-3";
+  private static final String WALLET_NOT_VERIFIED = "PROMOTION-5";
 
   private final BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   private final OkHttpClient okHttpClient;
@@ -47,9 +48,9 @@ public class PromotionsService {
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
-      String captcha, String promotionId) {
-    return ClaimPromotionRequest.of(walletAddress, packageName, captcha, promotionId,
-        bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences)
+      String promotionId) {
+    return ClaimPromotionRequest.of(walletAddress, packageName, promotionId, bodyInterceptorPoolV7,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
         .map(this::mapClaim)
         .onErrorReturn(throwable -> {
@@ -88,14 +89,14 @@ public class PromotionsService {
     if (errors != null) {
       for (BaseV7Response.Error error : errors) {
         if (error.getCode()
-            .equals(WRONG_CAPTCHA)) {
-          result.add(ClaimStatusWrapper.Error.WRONG_CAPTCHA);
-        } else if (error.getCode()
             .equals(WRONG_ADDRESS)) {
           result.add(ClaimStatusWrapper.Error.WRONG_ADDRESS);
         } else if (error.getCode()
             .equals(ALREADY_CLAIMED)) {
           result.add(ClaimStatusWrapper.Error.PROMOTION_CLAIMED);
+        } else if (error.getCode()
+            .equals(WALLET_NOT_VERIFIED)) {
+          result.add(ClaimStatusWrapper.Error.WALLET_NOT_VERIFIED);
         } else {
           result.add(ClaimStatusWrapper.Error.GENERIC);
         }

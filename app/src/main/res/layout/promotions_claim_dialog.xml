@@ -28,10 +28,11 @@
           />
 
       <include
-          layout="@layout/claim_promotion_captcha_view"
-          android:id="@+id/captcha_view"
+          layout="@layout/promotion_update_wallet_view"
+          android:id="@+id/update_wallet_view"
           android:visibility="gone"
           />
+
       <include
           layout="@layout/promotions_dialog_generic_message_view"
           android:id="@+id/generic_message_view"

@@ -360,7 +360,6 @@ dependencies {
 
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
-  implementation "com.jakewharton.rx:replaying-share:${RX_REPLAYING_SHARE_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
   implementation("androidx.multidex:multidex:${MULTIDEX_VERSION}") {
