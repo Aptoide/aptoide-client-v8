@@ -239,7 +239,10 @@ public abstract class AptoideApplication extends Application {
 
     Single.fromCallable(() -> aptoideMd5Manager.calculateMd5Sum())
         .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread());
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(__ -> {
+        }, error -> CrashReport.getInstance()
+            .log(error));
 
     try {
       PRNGFixes.apply();
