@@ -73,7 +73,7 @@ import rx.Single;
     return searchAppInStores(query, onlyTrustedApps, offset, true);
   }
 
-  public Single<SearchResult> searchAppInStores(String query, boolean onlyTrustedApps, int offset,
+  private Single<SearchResult> searchAppInStores(String query, boolean onlyTrustedApps, int offset,
       boolean onlyFollowedStores) {
     return accountManager.enabled()
         .first()
@@ -83,22 +83,8 @@ import rx.Single;
                     AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled)
                 .observe(true))
-        .filter(listSearchApps -> hasResults(listSearchApps))
-        .map(data -> data.getDataList()
-            .getList())
-        .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp))
-        .toList()
-        .first()
-        .map(list -> (SearchResult) new SearchResult.Success(list))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof NoNetworkConnectionException
-              || throwable instanceof UnknownHostException) {
-            return Observable.just(
-                (SearchResult) new SearchResult.Error(SearchResultError.NO_NETWORK));
-          }
-          return Observable.just((SearchResult) new SearchResult.Error(SearchResultError.GENERIC));
-        })
+        .flatMap(results -> handleSearchResults(results))
+        .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .toSingle();
   }
 
@@ -106,6 +92,14 @@ import rx.Single;
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
+        .flatMap(results -> handleSearchResults(results))
+        .onErrorResumeNext(throwable -> handleSearchError(throwable))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .toSingle();
+  }
+
+  private Observable<SearchResult> handleSearchResults(ListSearchApps results) {
+    return Observable.just(results)
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -113,15 +107,15 @@ import rx.Single;
         .map(searchApp -> new SearchAppResult(searchApp))
         .toList()
         .first()
-        .map(list -> (SearchResult) new SearchResult.Success(list))
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof UnknownHostException) {
-            return Observable.just(
-                (SearchResult) new SearchResult.Error(SearchResultError.NO_NETWORK));
-          }
-          return Observable.just((SearchResult) new SearchResult.Error(SearchResultError.GENERIC));
-        })
-        .toSingle();
+        .map(list -> new SearchResult.Success(list));
+  }
+
+  private Observable<SearchResult> handleSearchError(Throwable throwable) {
+    if (throwable instanceof UnknownHostException
+        || throwable instanceof NoNetworkConnectionException) {
+      return Observable.just(new SearchResult.Error(SearchResultError.NO_NETWORK));
+    }
+    return Observable.just(new SearchResult.Error(SearchResultError.GENERIC));
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {
