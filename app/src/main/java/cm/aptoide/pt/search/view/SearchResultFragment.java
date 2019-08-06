@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -124,12 +125,14 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean focusInSearchBar;
   private ActionBar actionBar;
   private boolean noResults;
+  private boolean networkError;
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAd;
   private PublishSubject<Boolean> showingSearchResultsView;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
+  private ErrorView errorView;
 
   public static SearchResultFragment newInstance(String currentQuery) {
     return newInstance(currentQuery, false);
@@ -194,6 +197,7 @@ public class SearchResultFragment extends BackButtonFragment
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
     bannerAd = view.findViewById(R.id.mopub_banner);
+    errorView = view.findViewById(R.id.error_view);
   }
 
   @Override public void showFollowedStoresResult() {
@@ -270,6 +274,10 @@ public class SearchResultFragment extends BackButtonFragment
             .toString());
   }
 
+  @Override public Observable<Void> retryClicked() {
+    return errorView.retryClick();
+  }
+
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
@@ -284,6 +292,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void showResultsView() {
     noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
@@ -293,6 +302,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void showLoading() {
     progressBar.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     bannerAd.setVisibility(View.GONE);
   }
@@ -462,8 +472,8 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public boolean shouldHideUpNavigation() {
     return (allStoresResultAdapter.getItemCount() == 0
-        || followedStoresResultAdapter.getItemCount() == 0)
-        && noSearchLayout.getVisibility() != VISIBLE;
+        || followedStoresResultAdapter.getItemCount() == 0) && (noSearchLayout.getVisibility()
+        != VISIBLE || errorView.getVisibility() != VISIBLE);
   }
 
   @Override public void setUnsubmittedQuery(String query) {
@@ -508,17 +518,49 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
+  @Override public void showNoNetworkView() {
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    networkError = true;
+    noResults = true;
+    bannerAd.setVisibility(View.GONE);
+  }
+
+  @Override public void showGenericErrorView() {
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
+    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
+    followedStoresResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    suggestionsResultList.setVisibility(View.GONE);
+    trendingResultList.setVisibility(View.GONE);
+    networkError = true;
+    noResults = true;
+    bannerAd.setVisibility(View.GONE);
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
         .isEmpty()) {
       noSearchLayout.setVisibility(View.GONE);
+      errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
       bannerAd.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
+      errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
@@ -528,6 +570,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void forceSuggestions() {
     noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
@@ -619,6 +662,7 @@ public class SearchResultFragment extends BackButtonFragment
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
     noResults = false;
+    networkError = false;
 
     onItemViewClickRelay = PublishRelay.create();
     onAdClickRelay = PublishRelay.create();
@@ -782,6 +826,8 @@ public class SearchResultFragment extends BackButtonFragment
           @Override public boolean onMenuItemActionCollapse(MenuItem menuItem) {
             if (hasSearchResults()) {
               showResultsView();
+            } else if (networkError) {
+              showNoNetworkView();
             } else if (noResults) {
               showNoResultsView();
             } else {
