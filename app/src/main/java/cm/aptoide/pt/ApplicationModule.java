@@ -925,8 +925,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager, aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
+        aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
         resources, BuildConfig.VERSION_CODE);
   }
 
@@ -949,8 +949,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager, aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
+        aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
         resources, BuildConfig.VERSION_CODE);
   }
 
@@ -1073,12 +1073,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager) {
+      ConnectivityManager connectivityManager, OemidProvider oemidProvider) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper());
+        oemidProvider.getOemid(), new MinimalAdMapper());
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
@@ -1539,13 +1539,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PackageRepository packageRepository, Database database, IdsRepository idsRepository,
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
+      OemidProvider oemidProvider) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
         idsRepository.getUniqueIdentifier(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
-        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10);

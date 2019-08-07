@@ -11,6 +11,7 @@ import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,6 +52,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
+import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
@@ -63,14 +65,18 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.networking.Pnp1AuthorizationInterceptor;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
 import cm.aptoide.pt.notification.NotificationPolicyFactory;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
+import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
+import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
@@ -98,6 +104,8 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
+import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.entry.EntryActivity;
 import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -121,6 +129,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
@@ -182,6 +191,7 @@ public abstract class AptoideApplication extends Application {
   @Inject InstallManager installManager;
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
   @Inject AdsUserPropertyManager adsUserPropertyManager;
+  @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
   private BillingAnalytics billingAnalytics;
@@ -201,6 +211,7 @@ public abstract class AptoideApplication extends Application {
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
+  private NotificationSyncScheduler notificationSyncScheduler;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -462,17 +473,26 @@ public abstract class AptoideApplication extends Application {
     return notificationsCleaner;
   }
 
-  public abstract String getCachePath();
+  public String getCachePath() {
+    return Environment.getExternalStorageDirectory()
+        .getAbsolutePath() + "/.aptoide/";
+  }
 
-  public abstract String getFeedbackEmail();
+  public String getFeedbackEmail() {
+    return "support@aptoide.com";
+  }
 
-  public abstract String getAccountType();
+  public String getAccountType() {
+    return BuildConfig.APPLICATION_ID;
+  }
 
-  public abstract String getPartnerId();
+  public String getExtraId() {
+    return null;
+  }
 
-  public abstract String getExtraId();
-
-  public abstract boolean isCreateStoreUserPrivacyEnabled();
+  public boolean isCreateStoreUserPrivacyEnabled() {
+    return true;
+  }
 
   @NonNull protected abstract SystemNotificationShower getSystemNotificationShower();
 
@@ -504,7 +524,20 @@ public abstract class AptoideApplication extends Application {
     return notificationProvider;
   }
 
-  public abstract NotificationSyncScheduler getNotificationSyncScheduler();
+  public NotificationSyncScheduler getNotificationSyncScheduler() {
+    if (notificationSyncScheduler == null) {
+      notificationSyncScheduler = new NotificationSyncManager(getAlarmSyncScheduler(), true,
+          new NotificationSyncFactory(new NotificationService(BuildConfig.APPLICATION_ID,
+              new OkHttpClient.Builder().readTimeout(45, TimeUnit.SECONDS)
+                  .writeTimeout(45, TimeUnit.SECONDS)
+                  .addInterceptor(new Pnp1AuthorizationInterceptor(getAuthenticationPersistence(),
+                      getTokenInvalidator()))
+                  .build(), WebService.getDefaultConverter(), getIdsRepository(),
+              BuildConfig.VERSION_NAME, getExtraId(), getDefaultSharedPreferences(), getResources(),
+              getAccountManager()), getNotificationProvider()));
+    }
+    return notificationSyncScheduler;
+  }
 
   public SharedPreferences getDefaultSharedPreferences() {
     return PreferenceManager.getDefaultSharedPreferences(this);
@@ -873,9 +906,13 @@ public abstract class AptoideApplication extends Application {
     return navigationTracker;
   }
 
-  public abstract FragmentProvider createFragmentProvider();
+  public FragmentProvider createFragmentProvider() {
+    return new VanillaFragmentProvider();
+  }
 
-  public abstract ActivityProvider createActivityProvider();
+  public ActivityProvider createActivityProvider() {
+    return new VanillaActivityProvider();
+  }
 
   public PurchaseFactory getPurchaseFactory() {
     if (purchaseFactory == null) {
@@ -893,6 +930,10 @@ public abstract class AptoideApplication extends Application {
 
     }
     return version;
+  }
+
+  public String getPartnerId() {
+    return oemidProvider.getOemid();
   }
 
   public SyncScheduler getAlarmSyncScheduler() {

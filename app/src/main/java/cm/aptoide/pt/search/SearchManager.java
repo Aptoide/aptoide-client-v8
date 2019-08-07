@@ -63,8 +63,7 @@ import rx.Single;
         .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps,
-      int offset) {
+  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps, int offset) {
     return searchAppInStores(query, onlyTrustedApps, offset, false);
   }
 
