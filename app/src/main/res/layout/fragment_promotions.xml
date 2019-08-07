@@ -251,6 +251,12 @@
         android:visibility="gone"
         tools:visibility="gone"
         />
+
+    <include
+        layout="@layout/partial_view_progress_bar"
+        tools:visibility="gone"
+        />
+
   </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
