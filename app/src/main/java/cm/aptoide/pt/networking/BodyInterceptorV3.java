@@ -46,7 +46,7 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
         .map(authentication -> {
           body.setAndroidVersion(androidVersion);
           String md5 = aptoideMd5Manager.getAptoideMd5();
-          if (!md5.equals("")) body.setAptoideMd5sum(md5);
+          if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
           body.setAptoideUid(idsRepository.getUniqueIdentifier());
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));

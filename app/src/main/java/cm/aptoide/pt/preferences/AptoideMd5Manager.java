@@ -47,7 +47,11 @@ public class AptoideMd5Manager {
 
   public Void calculateMd5Sum() {
     if (cachedMd5 != null) return null;
-    if (!parseMd5(preferencesPersister.get(APTOIDE_MD5, ""), vercode).isEmpty()) return null;
+    String savedMd5 = parseMd5(preferencesPersister.get(APTOIDE_MD5, ""), vercode);
+    if (!savedMd5.isEmpty()) {
+      cachedMd5 = savedMd5;
+      return null;
+    }
     try {
       cachedMd5 = AptoideUtils.AlgorithmU.computeMd5(packageManager.getPackageInfo(packageName, 0));
       persistAptoideMd5(vercode, cachedMd5);
