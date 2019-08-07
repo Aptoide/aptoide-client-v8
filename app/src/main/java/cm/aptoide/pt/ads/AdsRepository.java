@@ -34,7 +34,7 @@ public class AdsRepository {
   private final IdsRepository idsRepository;
   private final AptoideAccountManager accountManager;
   private final GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker;
-  private final PartnerIdProvider partnerIdProvider;
+  private final String partnerId;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final QManager qManager;
@@ -50,13 +50,13 @@ public class AdsRepository {
       SharedPreferences sharedPreferences, Context applicationContext,
       ConnectivityManager connectivityManager, Resources resources,
       AdsApplicationVersionCodeProvider versionCodeProvider,
-      GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker,
-      PartnerIdProvider partnerIdProvider, MinimalAdMapper adMapper) {
+      GooglePlayServicesAvailabilityChecker googlePlayServicesAvailabilityChecker, String partnerId,
+      MinimalAdMapper adMapper) {
     this.idsRepository = idsRepository;
     this.accountManager = accountManager;
     this.versionCodeProvider = versionCodeProvider;
     this.googlePlayServicesAvailabilityChecker = googlePlayServicesAvailabilityChecker;
-    this.partnerIdProvider = partnerIdProvider;
+    this.partnerId = partnerId;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.qManager = qManager;
@@ -87,9 +87,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
             idsRepository.getUniqueIdentifier(),
-            googlePlayServicesAvailabilityChecker.isAvailable(context),
-            partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-            converterFactory,
+            googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+            account.isAdultContentEnabled(), httpClient, converterFactory,
             qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
             sharedPreferences, connectivityManager, resources, versionCodeProvider)
             .observe()));
@@ -112,9 +111,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAds(
             GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context),
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe(refresh)));
@@ -144,9 +142,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAds(
             GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context), packageName,
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), packageName, partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()).subscribeOn(Schedulers.io()));
@@ -157,9 +154,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context),
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
@@ -170,9 +166,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context),
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
@@ -183,9 +178,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapToMinimalAd(
             GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context),
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
@@ -196,9 +190,8 @@ public class AdsRepository {
         .first()
         .flatMap(account -> mapRandomAd(
             GetAdsRequest.of(Location.homepage, "__NULL__", 10, idsRepository.getUniqueIdentifier(),
-                googlePlayServicesAvailabilityChecker.isAvailable(context),
-                partnerIdProvider.getPartnerId(), account.isAdultContentEnabled(), httpClient,
-                converterFactory,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
                 .observe()));
