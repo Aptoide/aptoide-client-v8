@@ -9,6 +9,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.UiThread;
 import android.view.View;
 import android.widget.ProgressBar;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.ErrorUtils;
@@ -30,10 +31,7 @@ public class LoaderLayoutHandler {
   private final List<Integer> viewsToShowAfterLoadingId = new ArrayList<>();
   protected ProgressBar progressBar;
   private List<View> viewsToShowAfterLoading = new ArrayList<>();
-  private View genericErrorView;
-  private View noNetworkConnectionView;
-  private View retryErrorView;
-  private View retryNoNetworkView;
+  private ErrorView errorView;
 
   public LoaderLayoutHandler(LoadInterface loadInterface, int viewToShowAfterLoadingId) {
     this.viewsToShowAfterLoadingId.add(viewToShowAfterLoadingId);
@@ -54,10 +52,7 @@ public class LoaderLayoutHandler {
     hideViewsToShowAfterLoading();
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     progressBar.setVisibility(View.VISIBLE);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkConnectionView = view.findViewById(R.id.no_network_connection);
-    retryErrorView = genericErrorView.findViewById(R.id.retry);
-    retryNoNetworkView = noNetworkConnectionView.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
   }
 
   private void hideViewsToShowAfterLoading() {
@@ -78,25 +73,20 @@ public class LoaderLayoutHandler {
     hideViewsToShowAfterLoading();
 
     if (ErrorUtils.isNoNetworkConnection(throwable)) {
-      genericErrorView.setVisibility(View.GONE);
-      noNetworkConnectionView.setVisibility(View.VISIBLE);
-      retryNoNetworkView.setOnClickListener(view -> {
-        restoreState();
-        loadInterface.load(true, false, null);
-      });
+      errorView.setError(ErrorView.Error.NO_NETWORK);
     } else {
-      noNetworkConnectionView.setVisibility(View.GONE);
-      genericErrorView.setVisibility(View.VISIBLE);
-      retryErrorView.setOnClickListener(view -> {
-        restoreState();
-        loadInterface.load(true, false, null);
-      });
+      errorView.setError(ErrorView.Error.GENERIC);
     }
+    errorView.setVisibility(View.VISIBLE);
+    errorView.setRetryAction(() -> {
+      restoreState();
+      loadInterface.load(true, false, null);
+      return null;
+    });
   }
 
   protected void restoreState() {
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkConnectionView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
@@ -125,6 +115,7 @@ public class LoaderLayoutHandler {
   }
 
   @CallSuper public void unbindViews() {
-
+    errorView = null;
+    progressBar = null;
   }
 }

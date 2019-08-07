@@ -43,6 +43,11 @@ android {
   lintOptions {
     abortOnError false
   }
+  sourceSets {
+    main {
+      res.srcDirs += ["${project(':app').projectDir}/src/main/res"]
+    }
+  }
 }
 
 dependencies {
@@ -53,6 +58,12 @@ dependencies {
   implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
+
+  implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
+  implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

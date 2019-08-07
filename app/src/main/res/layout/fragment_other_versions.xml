@@ -18,16 +18,13 @@
       android:layout_marginTop="@dimen/other_versions_header_height"
       >
 
-    <include
-        layout="@layout/partial_view_incl_no_network"
+    <cm.aptoide.aptoideviews.errors.ErrorView
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         tools:visibility="gone"
         />
-
-    <include
-        layout="@layout/partial_view_error"
-        tools:visibility="gone"
-        />
-
 
     <!-- is this necessary ?? -->
     <RelativeLayout

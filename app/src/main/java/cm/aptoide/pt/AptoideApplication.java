@@ -77,6 +77,7 @@ import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
@@ -135,6 +136,8 @@ import okhttp3.OkHttpClient;
 import org.xmlpull.v1.XmlPullParserException;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -189,6 +192,7 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
+  @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
   private BillingAnalytics billingAnalytics;
   private ExternalBillingSerializer inAppBillingSerialzer;
@@ -243,6 +247,13 @@ public abstract class AptoideApplication extends Application {
         .addLogger(new CrashlyticsCrashLogger(crashlytics))
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
+
+    Single.fromCallable(() -> aptoideMd5Manager.calculateMd5Sum())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(__ -> {
+        }, error -> CrashReport.getInstance()
+            .log(error));
 
     try {
       PRNGFixes.apply();

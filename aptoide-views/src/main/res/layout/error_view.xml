@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 22/06/2016.
-  -->
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/generic_error"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:visibility="gone"
-    tools:visibility="visible"
     >
 
   <LinearLayout
@@ -22,11 +14,12 @@
       >
 
     <ImageView
+        android:id="@+id/error_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="33dp"
-        android:src="@drawable/error1"
+        android:src="@drawable/generic_error"
         />
 
     <TextView
@@ -39,7 +32,6 @@
         android:text="@string/error503"
         style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
-
 
 
     <TextView

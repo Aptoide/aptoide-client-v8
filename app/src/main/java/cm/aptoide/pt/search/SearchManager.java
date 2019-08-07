@@ -7,6 +7,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
@@ -17,7 +18,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchResult;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.store.StoreUtils;
+import java.net.UnknownHostException;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -59,48 +63,42 @@ import rx.Single;
         .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Single<List<SearchAppResult>> searchInNonFollowedStores(String query,
-      boolean onlyTrustedApps, int offset) {
-    return accountManager.enabled()
-        .first()
-        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, false, onlyTrustedApps,
-            StoreUtils.getSubscribedStoresIds(
-                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, enabled)
-            .observe(true))
-        .filter(listSearchApps -> hasResults(listSearchApps))
-        .map(data -> data.getDataList()
-            .getList())
-        .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp))
-        .toList()
-        .first()
-        .toSingle();
+  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps, int offset) {
+    return searchAppInStores(query, onlyTrustedApps, offset, false);
   }
 
-  public Single<List<SearchAppResult>> searchInFollowedStores(String query, boolean onlyTrustedApps,
+  public Single<SearchResult> searchInFollowedStores(String query, boolean onlyTrustedApps,
       int offset) {
+    return searchAppInStores(query, onlyTrustedApps, offset, true);
+  }
+
+  private Single<SearchResult> searchAppInStores(String query, boolean onlyTrustedApps, int offset,
+      boolean onlyFollowedStores) {
     return accountManager.enabled()
         .first()
-        .flatMap(enabled -> ListSearchAppsRequest.of(query, offset, true, onlyTrustedApps,
-            StoreUtils.getSubscribedStoresIds(
-                AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, enabled)
-            .observe(true))
-        .filter(listSearchApps -> hasResults(listSearchApps))
-        .map(data -> data.getDataList()
-            .getList())
-        .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp))
-        .toList()
-        .first()
+        .flatMap(
+            enabled -> ListSearchAppsRequest.of(query, offset, onlyFollowedStores, onlyTrustedApps,
+                StoreUtils.getSubscribedStoresIds(
+                    AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
+                httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled)
+                .observe(true))
+        .flatMap(results -> handleSearchResults(results))
+        .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .toSingle();
   }
 
-  public Single<List<SearchAppResult>> searchInStore(String query, String storeName, int offset) {
+  public Single<SearchResult> searchInStore(String query, String storeName, int offset) {
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe(true)
+        .flatMap(results -> handleSearchResults(results))
+        .onErrorResumeNext(throwable -> handleSearchError(throwable))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .toSingle();
+  }
+
+  private Observable<SearchResult> handleSearchResults(ListSearchApps results) {
+    return Observable.just(results)
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
             .getList())
@@ -108,7 +106,15 @@ import rx.Single;
         .map(searchApp -> new SearchAppResult(searchApp))
         .toList()
         .first()
-        .toSingle();
+        .map(list -> new SearchResult.Success(list));
+  }
+
+  private Observable<SearchResult> handleSearchError(Throwable throwable) {
+    if (throwable instanceof UnknownHostException
+        || throwable instanceof NoNetworkConnectionException) {
+      return Observable.just(new SearchResult.Error(SearchResultError.NO_NETWORK));
+    }
+    return Observable.just(new SearchResult.Error(SearchResultError.GENERIC));
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {
