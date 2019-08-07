@@ -47,6 +47,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -159,8 +160,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
   private PublishSubject<Integer> reviewsAutoScroll;
-  private PublishSubject<Void> noNetworkRetryClick;
-  private PublishSubject<Void> genericRetryClick;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
@@ -168,10 +167,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
   //Views
-  private View noNetworkErrorView;
-  private View genericErrorView;
-  private View genericRetryButton;
-  private View noNetworkRetryButton;
+  private ErrorView errorView;
   private View reviewsLayout;
   private View downloadControlsLayout;
   private ImageView appIcon;
@@ -290,8 +286,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
-    noNetworkRetryClick = PublishSubject.create();
-    genericRetryClick = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
     appBought = PublishSubject.create();
@@ -312,14 +306,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    genericRetryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
     reviewsLayout = view.findViewById(R.id.reviews_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
-    noNetworkRetryButton.setOnClickListener(click -> noNetworkRetryClick.onNext(null));
-    genericRetryButton.setOnClickListener(click -> genericRetryClick.onNext(null));
     appIcon = view.findViewById(R.id.app_icon);
     trustedBadge = view.findViewById(R.id.trusted_badge);
     appName = view.findViewById(R.id.app_name);
@@ -508,8 +497,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     loginSnackClick = null;
     similarAppClick = null;
     reviewsAutoScroll = null;
-    noNetworkRetryClick = null;
-    genericRetryClick = null;
     dialogUtils = null;
     presenter = null;
     similarAppsVisibilitySubject = null;
@@ -532,10 +519,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void onDestroyView() {
     super.onDestroyView();
     scrollViewY = scrollView.getScrollY();
-    noNetworkErrorView = null;
-    genericErrorView = null;
-    genericRetryButton = null;
-    noNetworkRetryButton = null;
+    errorView = null;
     appIcon = null;
     trustedBadge = null;
     appName = null;
@@ -605,8 +589,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showLoading() {
     viewProgress.setVisibility(View.VISIBLE);
     appview.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
   }
 
   @Override public void showAppView(AppModel model) {
@@ -696,10 +679,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     viewProgress.setVisibility(View.GONE);
     switch (error) {
       case NETWORK:
-        noNetworkErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.NO_NETWORK);
+        errorView.setVisibility(View.VISIBLE);
         break;
       case GENERIC:
-        genericErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.GENERIC);
+        errorView.setVisibility(View.VISIBLE);
         break;
     }
   }
@@ -852,12 +837,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return RxToolbar.itemClicks(toolbar);
   }
 
-  @Override public Observable<Void> clickNoNetworkRetry() {
-    return noNetworkRetryClick;
-  }
-
-  @Override public Observable<Void> clickGenericRetry() {
-    return genericRetryClick;
+  @Override public Observable<Void> clickErrorRetry() {
+    return errorView.retryClick();
   }
 
   @Override public Observable<Void> clickTopDonorsDonateButton() {
@@ -1362,8 +1343,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private void showAppViewLayout() {
     appview.setVisibility(View.VISIBLE);
     viewProgress.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
   }
 
   private void setTrustedBadge(Malware malware) {

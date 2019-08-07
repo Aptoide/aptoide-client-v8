@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
@@ -69,16 +70,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
-  private View genericErrorView;
-  private View noNetworkErrorView;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
-  private View noNetworkRetryButton;
-  private View retryButton;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
   private PromotionsHomeDialog promotionsHomeDialog;
+  private ErrorView errorView;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -121,10 +119,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     bundlesList = view.findViewById(R.id.bundles_list);
     bundlesList.getItemAnimator()
         .setChangeDuration(0);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
-    retryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -161,8 +156,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     adapter = null;
     layoutManager = null;
     swipeRefreshLayout = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
+    errorView = null;
     progressBar = null;
     if (promotionsHomeDialog != null) {
       promotionsHomeDialog.destroyDialog();
@@ -188,26 +182,24 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public void showLoading() {
     bundlesList.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     bundlesList.setVisibility(View.VISIBLE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
-    this.genericErrorView.setVisibility(View.VISIBLE);
-    this.noNetworkErrorView.setVisibility(View.GONE);
-    this.bundlesList.setVisibility(View.GONE);
-    this.progressBar.setVisibility(View.GONE);
-    if (this.swipeRefreshLayout.isRefreshing()) {
-      this.swipeRefreshLayout.setRefreshing(false);
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
+    bundlesList.setVisibility(View.GONE);
+    progressBar.setVisibility(View.GONE);
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
     }
   }
 
@@ -258,8 +250,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showNetworkError() {
-    this.noNetworkErrorView.setVisibility(View.VISIBLE);
-    this.genericErrorView.setVisibility(View.GONE);
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
     this.bundlesList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -268,7 +260,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<HomeEvent> bundleScrolled() {
