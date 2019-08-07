@@ -124,7 +124,7 @@ public final class AppInstaller {
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void addApkToInstallSession(File file, PackageInstaller.Session session) {
     try {
-      OutputStream packageInSession = session.openWrite("apk-id", 0, file.length());
+      OutputStream packageInSession = session.openWrite(file.getName(), 0, file.length());
       InputStream is = new FileInputStream(file);
       byte[] buffer = new byte[16384];
       int n;
