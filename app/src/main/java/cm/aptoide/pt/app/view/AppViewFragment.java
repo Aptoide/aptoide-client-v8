@@ -57,9 +57,8 @@ import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
 import cm.aptoide.pt.app.AppBoughtReceiver;
+import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
-import cm.aptoide.pt.app.AppViewViewModel;
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
@@ -162,7 +161,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Integer> reviewsAutoScroll;
   private PublishSubject<Void> noNetworkRetryClick;
   private PublishSubject<Void> genericRetryClick;
-  private PublishSubject<Void> ready;
   private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
@@ -291,7 +289,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = PublishSubject.create();
     loginSnackClick = PublishSubject.create();
     similarAppClick = PublishSubject.create();
-    ready = PublishSubject.create();
     reviewsAutoScroll = PublishSubject.create();
     noNetworkRetryClick = PublishSubject.create();
     genericRetryClick = PublishSubject.create();
@@ -510,7 +507,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     readMoreClick = null;
     loginSnackClick = null;
     similarAppClick = null;
-    ready = null;
     reviewsAutoScroll = null;
     noNetworkRetryClick = null;
     genericRetryClick = null;
@@ -613,7 +609,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     noNetworkErrorView.setVisibility(View.GONE);
   }
 
-  @Override public void showAppView(AppViewViewModel model) {
+  @Override public void showAppView(AppModel model) {
     collapsingToolbarLayout.setTitle(model.getAppName());
 
     appName.setText(model.getAppName());
@@ -693,8 +689,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
-    downloadInfoLayout.setVisibility(View.GONE);
-    install.setVisibility(View.VISIBLE);
     install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
@@ -718,7 +712,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return readMoreClick;
   }
 
-  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppViewViewModel app) {
+  @Override public void populateReviews(ReviewsViewModel reviewsModel, AppModel app) {
     List<AppReview> reviews = reviewsModel.getReviewsList();
 
     if (reviews != null && !reviews.isEmpty()) {
@@ -878,13 +872,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return reviewsAutoScroll;
   }
 
-  @Override public void navigateToDeveloperWebsite(AppViewViewModel app) {
+  @Override public void navigateToDeveloperWebsite(AppModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getWebsite()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperEmail(AppViewViewModel app) {
+  @Override public void navigateToDeveloperEmail(AppModel app) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     Uri data = Uri.parse("mailto:" + app.getDeveloper()
         .getEmail() + "?subject=" + "Feedback" + "&body=" + "");
@@ -892,13 +886,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     getContext().startActivity(intent);
   }
 
-  @Override public void navigateToDeveloperPrivacy(AppViewViewModel app) {
+  @Override public void navigateToDeveloperPrivacy(AppModel app) {
     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(app.getDeveloper()
         .getPrivacy()));
     getContext().startActivity(browserIntent);
   }
 
-  @Override public void navigateToDeveloperPermissions(AppViewViewModel app) {
+  @Override public void navigateToDeveloperPermissions(AppModel app) {
     DialogPermissions dialogPermissions =
         DialogPermissions.newInstance(app.getAppName(), app.getVersionName(), app.getIcon(),
             AptoideUtils.StringU.formatBytes(AppUtils.sumFileSizes(app.getFileSize(), app.getObb()),
@@ -910,7 +904,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (!isFollowing) storeFollow.setText(R.string.followed);
   }
 
-  @Override public void showTrustedDialog(AppViewViewModel app) {
+  @Override public void showTrustedDialog(AppModel app) {
     DialogBadgeV7.newInstance(marketName, app.getMalware(), app.getAppName(), app.getMalware()
         .getRank())
         .show(getFragmentManager(), BADGE_DIALOG_TAG);
@@ -1047,19 +1041,19 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     });
   }
 
-  @Override
-  public Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName) {
+  @Override public Observable<Void> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
         getContext().getString(R.string.installapp_alrt, appName))
         .filter(response -> response.equals(YES))
-        .map(__ -> action);
+        .map(__ -> null);
   }
 
-  @Override public Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title,
-      String appName, double appc, float rating, String icon, int downloads) {
+  @Override
+  public Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
+      float rating, String icon, int downloads) {
     return createCustomDialogForApkfy(appName, appc, rating, icon, downloads).filter(
         response -> response.equals(YES))
-        .map(__ -> action);
+        .map(__ -> null);
   }
 
   @Override public void showApkfyElement(String appName) {
@@ -1229,7 +1223,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     walletPromotionButtonsLayout.setVisibility(View.GONE);
     walletPromotionClaimLayout.setVisibility(View.VISIBLE);
     walletPromotionClaimButton.setOnClickListener(__ -> promotionAppClick.onNext(
-        new PromotionEvent(promotion, walletApp, getClickType(getState(walletApp)))));
+        new PromotionEvent(promotion, walletApp, PromotionEvent.ClickType.CLAIM)));
     walletPromotionIcon.setVisibility(View.VISIBLE);
   }
 
@@ -1238,56 +1232,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         String.valueOf(promotion.getAppc())));
     walletPromotionMessage.setText(
         String.format(getString(walletMessageStringId), String.valueOf(promotion.getAppc())));
-  }
-
-  private int getState(WalletApp walletApp) {
-    int state;
-    DownloadModel downloadModel = walletApp.getDownloadModel();
-    if (downloadModel.isDownloading()) {
-      return DOWNLOADING;
-    } else {
-      switch (downloadModel.getAction()) {
-        case DOWNGRADE:
-          state = DOWNGRADE;
-          break;
-        case INSTALL:
-          state = INSTALL;
-          break;
-        case OPEN:
-          state = CLAIM;
-          break;
-        case UPDATE:
-          state = UPDATE;
-          break;
-        default:
-          throw new IllegalArgumentException("Invalid type of download action");
-      }
-      return state;
-    }
-  }
-
-  private PromotionEvent.ClickType getClickType(int appState) {
-    PromotionEvent.ClickType clickType;
-    switch (appState) {
-      case DOWNGRADE:
-        clickType = PromotionEvent.ClickType.DOWNGRADE;
-        break;
-      case UPDATE:
-        clickType = PromotionEvent.ClickType.UPDATE;
-        break;
-      case DOWNLOAD:
-        clickType = PromotionEvent.ClickType.DOWNLOAD;
-        break;
-      case INSTALL:
-        clickType = PromotionEvent.ClickType.INSTALL_APP;
-        break;
-      case CLAIM:
-        clickType = PromotionEvent.ClickType.CLAIM;
-        break;
-      default:
-        throw new IllegalArgumentException("Wrong view type of promotions app");
-    }
-    return clickType;
   }
 
   private int getPromotionMessage(DownloadModel appDownloadModel) {
@@ -1602,20 +1546,20 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private SpannableString formatAppCoinsRewardMessage() {
-    String appcValue = String.valueOf(getArguments().getFloat(BundleKeys.APPC.name(), -1));
+  private SpannableString formatAppCoinsRewardMessage(String rewardValue) {
     String reward = "AppCoins Credits";
     String tryAppMessage;
     SpannableString spannable;
 
-    if (!appcValue.equals("-1.0")) {
+    if (!rewardValue.equals("-1.0")) {
       tryAppMessage =
           getResources().getString(R.string.appc_message_appview_appcoins_reward_with_value,
-              appcValue, reward);
+              rewardValue, reward);
       spannable = new SpannableString(tryAppMessage);
       spannable.setSpan(
           new ForegroundColorSpan(getResources().getColor(R.color.default_orange_gradient_end)),
-          tryAppMessage.indexOf(appcValue), tryAppMessage.indexOf(appcValue) + appcValue.length(),
+          tryAppMessage.indexOf(rewardValue),
+          tryAppMessage.indexOf(rewardValue) + rewardValue.length(),
           Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     } else {
       tryAppMessage =
@@ -1641,9 +1585,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(response -> (response.equals(YES)));
   }
 
-  @Override public void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations) {
-    DownloadModel downloadModel = model.getDownloadModel();
-    AppCoinsViewModel appCoinsViewModel = model.getAppCoinsViewModel();
+  @Override public void showDownloadAppModel(DownloadModel downloadModel,
+      AppCoinsViewModel appCoinsViewModel) {
     this.action = downloadModel.getAction();
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
@@ -1655,8 +1598,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
       if (!action.equals(DownloadModel.Action.MIGRATE)) {
-        appcInfoView.showInfo(appCoinsViewModel.hasAdvertising(), appCoinsViewModel.hasBilling(),
-            formatAppCoinsRewardMessage());
+        appcInfoView.showInfo(appCoinsViewModel.getAdvertisingModel()
+            .getHasAdvertising(), appCoinsViewModel.hasBilling(), formatAppCoinsRewardMessage(
+            appCoinsViewModel.getAdvertisingModel()
+                .getReward()));
       } else {
         appcRewardView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
@@ -1690,20 +1635,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return RxView.clicks(pauseDownload);
   }
 
-  @Override public Observable<Void> resumeDownload() {
-    return RxView.clicks(resumeDownload);
+  @Override public Observable<DownloadModel.Action> resumeDownload() {
+    return RxView.clicks(resumeDownload)
+        .map(__ -> action);
   }
 
   @Override public Observable<Void> cancelDownload() {
     return RxView.clicks(cancelDownload);
-  }
-
-  @Override public Observable<Void> isAppViewReadyToDownload() {
-    return ready;
-  }
-
-  @Override public void readyToDownload() {
-    ready.onNext(null);
   }
 
   @Override public Observable<AppBoughClickEvent> appBought() {

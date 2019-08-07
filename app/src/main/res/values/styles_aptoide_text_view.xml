@@ -147,6 +147,11 @@
     <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.Grey_900">
+    <item name="android:textColor">@color/grey_900</item>
+  </style>
+
+
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>

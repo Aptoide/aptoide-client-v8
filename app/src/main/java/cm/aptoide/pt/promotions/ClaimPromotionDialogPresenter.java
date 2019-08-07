@@ -1,7 +1,9 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
@@ -10,8 +12,10 @@ import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
 public class ClaimPromotionDialogPresenter implements Presenter {
+  private static final int WALLET_VERIFICATION_RESULT_OK = 0;
+  private static final int WALLET_VERIFICATION_RESULT_CANCELED = 1;
+  private static final int WALLET_VERIFICATION_RESULT_FAILED = 2;
   private static final String WALLET_ADDRESS = "WALLET_ADDRESS";
-  private final String promotionId;
   private CompositeSubscription subscriptions;
   private Scheduler viewScheduler;
   private ClaimPromotionsManager claimPromotionsManager;
@@ -23,29 +27,78 @@ public class ClaimPromotionDialogPresenter implements Presenter {
   public ClaimPromotionDialogPresenter(ClaimPromotionDialogView view,
       CompositeSubscription subscriptions, Scheduler viewScheduler,
       ClaimPromotionsManager claimPromotionsManager, PromotionsAnalytics promotionsAnalytics,
-      ClaimPromotionsNavigator navigator, String promotionId) {
+      ClaimPromotionsNavigator navigator) {
     this.view = view;
     this.subscriptions = subscriptions;
     this.viewScheduler = viewScheduler;
     this.claimPromotionsManager = claimPromotionsManager;
     this.promotionsAnalytics = promotionsAnalytics;
     this.navigator = navigator;
-    this.promotionId = promotionId;
     this.shouldSendIntent = true;
   }
 
   @Override public void present() {
     handleOnResumeEvent();
-    handleOnActivityResult();
+    handleWalletPermissionsResult();
     handleFindAddressClick();
     handleContinueClick();
-    handleRefreshCaptcha();
-    handleSubmitClick();
     handleOnEditTextChanged();
     handleDismissGenericError();
     handleWalletCancelClick();
-    handleCaptchaCancelClick();
     handleDismissGenericMessage();
+    handleWalletVerificationResult();
+    handleUpdateWalletCancelClick();
+    handleUpdateWallet();
+  }
+
+  private void handleUpdateWallet() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.onUpdateWalletClick())
+        .doOnNext(__ -> navigator.navigateToWalletAppView())
+        .doOnNext(__ -> view.dismissDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleUpdateWalletCancelClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.onCancelWalletUpdate())
+        .doOnNext(__ -> view.dismissDialog())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private void handleWalletVerificationResult() {
+    view.getActivityResults()
+        .filter(result -> result.getRequestCode()
+            == ClaimPromotionDialogFragment.WALLET_VERIFICATION_INTENT_REQUEST_CODE)
+        .map(Result::getResultCode)
+        .doOnNext(this::handleWalletVerificationErrors)
+        .filter(code -> code == WALLET_VERIFICATION_RESULT_OK)
+        .doOnNext(__ -> view.showLoading())
+        .flatMapSingle(__ -> claimPromotion())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> {
+          if (throwable instanceof ActivityNotFoundException) {
+            view.showUpdateWalletDialog();
+          }
+          throwable.printStackTrace();
+        });
+  }
+
+  private void handleWalletVerificationErrors(Integer result) {
+    if (result == WALLET_VERIFICATION_RESULT_CANCELED) {
+      view.showCanceledVerificationError();
+    } else if (result.equals(WALLET_VERIFICATION_RESULT_FAILED)) {
+      view.showGenericError();
+    }
   }
 
   public void dispose() {
@@ -66,10 +119,11 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         });
   }
 
-  private void handleOnActivityResult() {
+  private void handleWalletPermissionsResult() {
     view.getActivityResults()
+        .filter(result -> result.getRequestCode()
+            == ClaimPromotionDialogFragment.WALLET_PERMISSIONS_INTENT_REQUEST_CODE)
         .doOnNext(result -> {
-          if (result.getRequestCode() != 123) return;
           if (result.getResultCode() == Activity.RESULT_OK) {
             Intent resultIntent = result.getData();
             if (resultIntent != null && resultIntent.getExtras() != null) {
@@ -119,43 +173,16 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           claimPromotionsManager.saveWalletAddress(wrapper.getWalletAddress());
           view.showLoading();
         })
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
-        .observeOn(viewScheduler)
-        .doOnNext(captcha -> {
-          claimPromotionsManager.saveCaptchaUrl(captcha);
-          view.showCaptchaView(captcha);
-        })
+        .flatMapSingle(__ -> claimPromotion())
         .subscribe(__ -> {
         }, throwable -> {
-          view.showGenericError();
         }));
   }
 
-  private void handleRefreshCaptcha() {
-    subscriptions.add(view.refreshCaptchaClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendRefreshCaptchaEvent(packageName);
-          view.showLoadingCaptcha();
-        })
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
+  private Single<String> claimPromotion() {
+    return claimPromotionsManager.claimPromotion()
         .observeOn(viewScheduler)
-        .doOnNext(captcha -> view.hideLoadingCaptcha(captcha))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
-  }
-
-  private void handleSubmitClick() {
-    subscriptions.add(view.finishClick()
-        .doOnNext(wrapper -> {
-          promotionsAnalytics.sendClickOnCaptchaDialogClaim(wrapper.getPackageName());
-          view.showLoading();
-        })
-        .flatMapSingle(wrapper -> claimPromotionsManager.claimPromotion(wrapper.getPackageName(),
-            wrapper.getCaptcha(), promotionId))
-        .observeOn(viewScheduler)
-        .flatMapSingle(response -> {
+        .flatMap(response -> {
           if (response.getStatus()
               .equals(ClaimStatusWrapper.Status.OK)) {
             view.showClaimSuccess();
@@ -163,15 +190,7 @@ public class ClaimPromotionDialogPresenter implements Presenter {
           } else {
             return Single.just(handleErrors(response.getErrors()));
           }
-        })
-        .filter(error -> error.equals("captcha"))
-        .flatMapSingle(__ -> claimPromotionsManager.getCaptcha())
-        .observeOn(viewScheduler)
-        .doOnNext(captcha -> view.showInvalidCaptcha(captcha))
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
+        });
   }
 
   private void handleOnEditTextChanged() {
@@ -207,18 +226,6 @@ public class ClaimPromotionDialogPresenter implements Presenter {
         }));
   }
 
-  private void handleCaptchaCancelClick() {
-    subscriptions.add(view.captchaCancelClick()
-        .doOnNext(packageName -> {
-          promotionsAnalytics.sendClickOnCaptchaDialogCancel(packageName);
-          view.dismissDialog();
-        })
-        .subscribe(__ -> {
-        }, throwable -> {
-          view.showGenericError();
-        }));
-  }
-
   private void handleDismissGenericMessage() {
     subscriptions.add(view.dismissGenericMessage()
         .doOnNext(message -> {
@@ -235,8 +242,8 @@ public class ClaimPromotionDialogPresenter implements Presenter {
       view.showPromotionAlreadyClaimed();
     } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_ADDRESS)) {
       view.showInvalidWalletAddress();
-    } else if (errors.contains(ClaimStatusWrapper.Error.WRONG_CAPTCHA)) {
-      return "captcha";
+    } else if (errors.contains(ClaimStatusWrapper.Error.WALLET_NOT_VERIFIED)) {
+      view.verifyWallet();
     } else {
       view.showGenericError();
     }

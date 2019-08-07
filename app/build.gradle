@@ -356,6 +356,7 @@ dependencies {
   implementation project(path: ':dataprovider')
   implementation project(path: ':utils')
   implementation project(path: ':packageinstaller')
+  implementation project(path: ':aptoide-views')
 
   // Testing-only dependencies
   testImplementation "junit:junit:${JUNIT_VERSION}"
@@ -455,7 +456,7 @@ dependencies {
   implementation "com.mopub.mediation:applovin:${MOPUB_MEDIATION_APPLOVIN_VERSION}"
 
   // Google (AdMob)
-  implementation "com.mopub.mediation:admob:${AD_MOB_SDK_VERSION}"
+  implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
 
   // ironSource
   implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
@@ -479,9 +480,6 @@ dependencies {
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
-  //Smaato
-  //implementation (name:'SOMAAndroid-9.1.5-release', ext:'aar')
-
   // paypal SDK
   implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
     exclude group: 'io.card'
@@ -501,7 +499,7 @@ dependencies {
   }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"

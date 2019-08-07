@@ -47,6 +47,7 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
+import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -69,16 +70,11 @@ import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.promotions.CaptchaService;
-import cm.aptoide.pt.promotions.ClaimPromotionsManager;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
-import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.splashscreen.SplashScreenManager;
-import cm.aptoide.pt.splashscreen.SplashScreenNavigator;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
@@ -186,25 +182,14 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
-      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      SplashScreenManager splashScreenManager, SplashScreenNavigator splashScreenNavigator) {
+      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, splashScreenManager, splashScreenNavigator);
-  }
-
-  @ActivityScope @Provides SplashScreenManager provideSplashScreenManager() {
-    return new SplashScreenManager();
-  }
-
-  @ActivityScope @Provides SplashScreenNavigator provideSplashScreenNavigator(
-      BottomNavigationNavigator bottomNavigationNavigator,
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new SplashScreenNavigator(bottomNavigationNavigator, fragmentNavigator);
+        autoUpdateManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -350,14 +335,11 @@ import static android.content.Context.WINDOW_SERVICE;
     }
   }
 
-  @ActivityScope @Provides ClaimPromotionsManager providesClaimPromotionsManager(
-      CaptchaService captchaService, PromotionsManager promotionsManager) {
-    return new ClaimPromotionsManager(promotionsManager, captchaService);
-  }
-
   @ActivityScope @Provides ClaimPromotionsNavigator providesClaimPromotionsNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new ClaimPromotionsNavigator(fragmentNavigator, (ActivityResultNavigator) activity);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AppNavigator appNavigator) {
+    return new ClaimPromotionsNavigator(fragmentNavigator, (ActivityResultNavigator) activity,
+        appNavigator);
   }
 
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
@@ -400,5 +382,10 @@ import static android.content.Context.WINDOW_SERVICE;
     return new WalletInstallConfiguration(
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
+  }
+
+  @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
+      AppNavigator appNavigator) {
+    return new SeeMoreAppcNavigator(appNavigator);
   }
 }

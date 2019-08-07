@@ -143,6 +143,10 @@
     <item name="android:windowNoTitle">true</item>
   </style>
 
+  <style name="AppBaseTheme.Splash">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
+
   <style name="AppBaseTheme.NoTitle.Transparent">
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowBackground">@android:color/transparent</item>

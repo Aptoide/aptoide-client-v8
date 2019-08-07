@@ -180,7 +180,6 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("default-followed-stores") List<String> defaultFollowedStores;
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   private LeakTool leakTool;
-  private String aptoideMd5sum;
   private BillingAnalytics billingAnalytics;
   private ExternalBillingSerializer inAppBillingSerialzer;
   private PurchaseBundleMapper purchaseBundleMapper;
@@ -346,12 +345,15 @@ public abstract class AptoideApplication extends Application {
         AppLovinBaseAdapterConfiguration.class.toString())
         .withMediatedNetworkConfiguration(AppLovinBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withAdditionalNetwork(InMobiBaseAdapterConfiguration.class.getName())
         .withMediatedNetworkConfiguration(InMobiBaseAdapterConfiguration.class.toString(),
             getMediatedNetworkConfigurationBaseMap(BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID))
+        .withAdditionalNetwork(InneractiveAdapterConfiguration.class.getName())
         .withMediatedNetworkConfiguration(InneractiveAdapterConfiguration.class.getName(),
             getMediatedNetworkConfigurationWithAppIdMap(
                 BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
                 BuildConfig.MOPUB_FYBER_APPLICATION_ID))
+        .withAdditionalNetwork(GooglePlayServicesAdapterConfiguration.class.getName())
         .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
             getAdMobAdsPreferencesMap())
         .withLogLevel(MoPubLog.LogLevel.DEBUG)
@@ -384,7 +386,7 @@ public abstract class AptoideApplication extends Application {
   public ApplicationComponent getApplicationComponent() {
     if (applicationComponent == null) {
       applicationComponent = DaggerApplicationComponent.builder()
-          .applicationModule(new ApplicationModule(this, getAptoideMd5sum()))
+          .applicationModule(new ApplicationModule(this))
           .flavourApplicationModule(new FlavourApplicationModule(this))
           .build();
     }
@@ -746,27 +748,6 @@ public abstract class AptoideApplication extends Application {
 
   public BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> getBodyInterceptorV3() {
     return bodyInterceptorV3;
-  }
-
-  public String getAptoideMd5sum() {
-    if (aptoideMd5sum == null) {
-      synchronized (this) {
-        if (aptoideMd5sum == null) {
-          aptoideMd5sum = calculateMd5Sum();
-        }
-      }
-    }
-    return aptoideMd5sum;
-  }
-
-  private String calculateMd5Sum() {
-    try {
-      return AptoideUtils.AlgorithmU.computeMd5(
-          getPackageManager().getPackageInfo(getAptoidePackage(), 0));
-    } catch (PackageManager.NameNotFoundException e) {
-      e.printStackTrace();
-    }
-    return null;
   }
 
   protected String getAptoidePackage() {

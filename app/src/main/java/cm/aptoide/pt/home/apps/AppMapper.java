@@ -74,6 +74,17 @@ public class AppMapper {
     return updatesList;
   }
 
+  public List<App> mapUpdateToUpdateAppcAppList(List<Update> updates, boolean hasPromotion,
+      float appcValue) {
+    List<App> updatesList = new ArrayList<>();
+    for (Update update : updates) {
+      updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
+          update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
+          StateApp.Status.UPDATE, update.getAppId(), hasPromotion, appcValue));
+    }
+    return updatesList;
+  }
+
   public List<App> getUpdatesList(List<Install> installs) {
     List<App> updatesList = new ArrayList<>();
     for (Install install : installs) {

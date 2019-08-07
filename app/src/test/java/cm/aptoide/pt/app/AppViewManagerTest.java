@@ -2,35 +2,33 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
+import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppDeveloper;
+import cm.aptoide.pt.view.app.AppFlags;
+import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
 import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
-import cm.aptoide.pt.view.app.DetailedApp;
-import cm.aptoide.pt.view.app.DetailedAppRequestResult;
 import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,9 +43,7 @@ import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -61,25 +57,22 @@ public class AppViewManagerTest {
   @Mock private AppCenter appCenter;
   @Mock private ReviewsManager reviewsManager;
   @Mock private AdsManager adsManager;
-  @Mock private StoreManager storeManager;
   @Mock private FlagManager flagManager;
   @Mock private StoreUtilsProxy storeUtilsProxy;
   @Mock private AptoideAccountManager aptoideAccountManager;
   @Mock private InstallAnalytics installAnalytics;
   @Mock private AppViewAnalytics appViewAnalytics;
   @Mock private NotificationAnalytics notificationAnalytics;
-  @Mock private Store store;
   @Mock private GenericResponseV2 genericResponseV2;
   @Mock private Download download;
   @Mock private DownloadFactory downloadFactory;
   @Mock private AppCoinsManager appCoinsManager;
   @Mock private MoPubAdsManager moPubAdsManager;
   @Mock private PromotionsManager promotionsManager;
-  @Mock private InstalledRepository installedRepository;
   @Mock private AppcMigrationManager migrationManager;
   @Mock private LocalNotificationSyncManager localNotificationSyncManager;
   @Mock private AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider;
-  @Mock private AppcMigrationService appcMigrationService;
+  @Mock private AppViewModelManager appViewModelManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
   private AppStats appStats;
@@ -87,304 +80,56 @@ public class AppViewManagerTest {
   @Before public void setupAppViewManagerTest() {
     MockitoAnnotations.initMocks(this);
     downloadStateParser = new DownloadStateParser();
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
     AppRating appRating = new AppRating(1, 1, Collections.emptyList());
     appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+        new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
+            reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
+            promotionsManager, migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
   }
 
-  @Test public void loadAppViewViewModelTestWithAppIdTest() {
+  @Test public void loadAppViewModelTest() {
     List<String> bdsFlags = new ArrayList<>();
-
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
-
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App and the AppView was initialized with an AppId
-    //And a result is returned
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
-        Single.just(detailedAppRequestResult));
-    when(store.getId()).thenReturn((long) 1);
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
-
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-
-    //Then the correct loadDetailedApp should be called
-    verify(appCenter).loadDetailedApp((long) 1, "anyString", "anyString");
-
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Since there's a cached app there should not be any interactions with the appCenter
-    verifyZeroInteractions(appCenter);
-  }
-
-  @Test public void loadAppViewModelTestWithMd5Test() {
-    List<String> bdsFlags = new ArrayList<>();
-
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "md5", "",
-            0.0, "", "", "");
+    Malware malware = new Malware();
+    malware.setRank(Malware.Rank.CRITICAL);
+    AppModel appModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            new AppRating(0, 100, Collections.emptyList()),
+            new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
+            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
+            "weburls", false, false, "paid path", "no", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false);
+    AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+        new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
+            reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
+            promotionsManager, migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
-    //When the presenter ask for an App and the AppView was initialized with a Md5
-    //And a result is returned
-    when(appCenter.loadDetailedAppFromMd5("md5")).thenReturn(Single.just(detailedAppRequestResult));
-    when(store.getId()).thenReturn((long) 1);
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
+    when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
 
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
+    AppViewModel appViewModel = appViewManager.getAppViewModel()
         .toBlocking()
         .value();
 
-    //Then the correct loadDetailedApp should be called
-    verify(appCenter).loadDetailedAppFromMd5("md5");
+    //Then the correct AppViewModelManager method should be called
+    verify(appViewModelManager).getAppViewModel();
 
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Since there's a cached app there should not be any interactions with the appCenter
-    verifyZeroInteractions(appCenter);
-  }
-
-  @Test public void loadAppViewViewModelWithUniqueNameTest() {
-    List<String> bdsFlags = new ArrayList<>();
-
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "any", (long) 1, "any", "any", "any", "any", true, null,
-            null, null, null, null, (long) 1, "any", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false,
-            "");
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) -1, "anyString", "anyString", "", null, null, "",
-            "uniqueName", 0.0, "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App and the AppView was initialized with a uniqueName
-    //And a result is returned with success
-    when(appCenter.loadDetailedAppFromUniqueName("uniqueName")).thenReturn(
-        Single.just(detailedAppRequestResult));
-    when(store.getId()).thenReturn((long) 1);
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
-
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-
-    //Then the correct loadDetailedApp should be called
-    verify(appCenter).loadDetailedAppFromUniqueName("uniqueName");
-
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Test if app is cached
-    appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Since there's a cached app there should not be any interactions with the appCenter
-    verifyZeroInteractions(appCenter);
-  }
-
-  @Test public void loadAppViewViewModelDefaultTest() {
-    List<String> bdsFlags = new ArrayList<>();
-
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "", (long) 1, "any", "any", "any", "any", true, null, null,
-            null, null, null, (long) 1, "any", null, null, 1, null, null, store, null, appStats,
-            null, null, null, true, true, "uniqueName", false, false, bdsFlags, false, "");
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) -1, "", "", "", null, null, "", "", 0.0, "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App and the AppView was initialized with arguments other than appId, md5 or uniqueName
-    //And a result is returned with success
-    when(appCenter.loadDetailedApp("", "")).thenReturn(Single.just(detailedAppRequestResult));
-    when(store.getId()).thenReturn((long) 1);
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
-
-    AppViewViewModel appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-
-    //Then the correct loadDetailedApp should be called
-    verify(appCenter).loadDetailedApp("", "");
-    //And a AppViewViewModel should be returned with a not null app, with no loading and no errors
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Test if app is cached
-    when(store.getName()).thenReturn("");
-    appViewViewModel = appViewManager.loadAppViewViewModel()
-        .toBlocking()
-        .value();
-    Assert.assertNotNull(appViewViewModel.getAppId());
-    Assert.assertEquals(false, appViewViewModel.isLoading());
-    Assert.assertEquals(false, appViewViewModel.hasError());
-
-    //Since there's a cached app there should not be any interactions with the appCenter
-    verifyZeroInteractions(appCenter);
-  }
-
-  @Test public void loadAppViewViewModelWithLoadingStateTest() {
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(true);
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App
-    //And a result is returned
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
-        Single.just(detailedAppRequestResult));
-
-    //Then an AppViewViewModel should be returned with a null app, with loading and no errors
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::isLoading)
-        .test()
-        .assertValue(true);
-  }
-
-  @Test public void loadAppViewViewModelWithErrorTest() {
-    DetailedAppRequestResult detailedAppRequestResult =
-        new DetailedAppRequestResult(DetailedAppRequestResult.Error.NETWORK);
-
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App
-    //And a result is returned
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
-        Single.just(detailedAppRequestResult));
-
-    //Then an AppViewViewModel should be returned with a null app, with no loading and an error
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::getError)
-        .test()
-        .assertValue(DetailedAppRequestResult.Error.NETWORK);
-  }
-
-  @Test public void loadAppViewViewModelWithDefaultErrorTest() {
-    DetailedAppRequestResult detailedAppRequestResult =
-        new DetailedAppRequestResult(DetailedAppRequestResult.Error.GENERIC);
-
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
-
-    appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
-            moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
-            appcPromotionNotificationStringProvider);
-
-    //When the presenter ask for an App
-    //And a result is returned
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
-        Single.just(detailedAppRequestResult));
-
-    //Then an AppViewViewModel should be returned with a null app, with no loading and with a generic error
-    appViewManager.loadAppViewViewModel()
-        .map(AppViewViewModel::getError)
-        .test()
-        .assertValue(DetailedAppRequestResult.Error.GENERIC);
+    //And a AppViewModel should be the same
+    Assert.assertNotNull(appViewModel);
+    Assert.assertEquals(appViewModel, exampleAppViewModel);
   }
 
   @Test public void loadReviewsViewModelTest() {
@@ -465,40 +210,39 @@ public class AppViewManagerTest {
 
   @Test public void loadAdsFromAppViewTest() {
     List<String> bdsFlags = new ArrayList<>();
-
+    Malware malware = new Malware();
+    malware.setRank(Malware.Rank.CRITICAL);
     //Cache App (Test preparation)
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "anyString", (long) 1, "any", "any", "any", "any", true,
-            null, null, null, null, null, (long) 1, null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "");
+    AppModel appModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            new AppRating(0, 100, Collections.emptyList()),
+            new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
+            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
+            "weburls", false, false, "paid path", "no", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false);
+
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
             (long) 1);
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
 
     appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+        new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
+            reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "marketName", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
+            promotionsManager, migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "anyString")).thenReturn(
-        Single.just(detailedAppRequestResult));
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
-
-    appViewManager.loadAppViewViewModel()
-        .subscribe();
-
+    when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
     //Test loadAdsFromAppView
     //When the presenters asks for an Ad
-    when(store.getName()).thenReturn("anyString");
-    when(adsManager.loadAds("anyString", "anyString")).thenReturn(Single.just(minimalAd));
+    when(adsManager.loadAds("cm.aptoide.pt", null)).thenReturn(Single.just(minimalAd));
 
     //Then the Ad from the SearchAdResult should be the same as the one in the request
     appViewManager.loadAdsFromAppView()
@@ -507,7 +251,7 @@ public class AppViewManagerTest {
         .assertValue(minimalAd.getAdId());
 
     //And it should request the adsManager an Ad
-    verify(adsManager).loadAds("anyString", "anyString");
+    verify(adsManager).loadAds("cm.aptoide.pt", null);
   }
 
   @Test public void flagApkTestSuccess() {
@@ -575,47 +319,49 @@ public class AppViewManagerTest {
 
   @Test public void downloadAppTest() {
     List<String> bdsFlags = new ArrayList<>();
-
+    Malware malware = new Malware();
+    malware.setRank(Malware.Rank.CRITICAL);
     //Cache App (Test preparation)
-    DetailedApp detailedApp =
-        new DetailedApp((long) 1, "any", "packageName", (long) 1, "any", "any", "any", "any", true,
-            null, null, null, null, null, (long) 1, "", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "", false, false, bdsFlags, false, "");
-
-    DetailedAppRequestResult detailedAppRequestResult = new DetailedAppRequestResult(detailedApp);
-
-    AppViewConfiguration appViewConfiguration =
-        new AppViewConfiguration((long) 1, "packageName", "anyString", "", null, null, "", "", 0.0,
-            "", "", "");
+    AppModel appModel =
+        new AppModel(11, "aptoide", new cm.aptoide.pt.dataprovider.model.v7.store.Store(), "", true,
+            malware, new AppFlags("", Collections.emptyList()), Collections.<String>emptyList(),
+            Collections.<String>emptyList(), Collections.<String>emptyList(), 121312312,
+            "md5dajskdjas", "mypath", "myAltPath", 12311, "9.0.0", "cm.aptoide.pt", 12311,
+            100210312, new AppRating(0, 100, Collections.emptyList()), 1231231,
+            new AppRating(0, 100, Collections.emptyList()),
+            new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
+            "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
+            "weburls", false, false, "paid path", "no", true, "aptoide",
+            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
+            "marketName", false, false, bdsFlags, "", "", false);
 
     appViewManager =
-        new AppViewManager(installManager, downloadFactory, appCenter, reviewsManager, adsManager,
-            storeManager, flagManager, storeUtilsProxy, aptoideAccountManager, appViewConfiguration,
+        new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
+            reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
             installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, installedRepository, migrationManager, localNotificationSyncManager,
+            promotionsManager, migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
-    when(appCenter.loadDetailedApp((long) 1, "anyString", "packageName")).thenReturn(
-        Single.just(detailedAppRequestResult));
-    when(store.getId()).thenReturn((long) 1);
-    when(storeManager.isSubscribed(anyLong())).thenReturn(Observable.just(true));
+    when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
+
     when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
-    appViewManager.loadAppViewViewModel()
+    appViewManager.getAppModel()
         .subscribe();
 
     //DownloadApp Test
 
     //When the presenter asks to download an App
     int action = downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL);
-    when(downloadFactory.create(action, detailedApp.getName(), detailedApp.getPackageName(),
-        detailedApp.getMd5(), detailedApp.getIcon(), detailedApp.getVersionName(),
-        detailedApp.getVersionCode(), detailedApp.getPath(), detailedApp.getPathAlt(),
-        detailedApp.getObb(), false, detailedApp.getSize())).thenReturn(download);
+    when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
+        appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
+        appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false,
+        appModel.getSize())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
@@ -689,7 +435,7 @@ public class AppViewManagerTest {
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     //Then the appViewManager should return a Complete when the request is done
-    appViewManager.resumeDownload("md5", 1)
+    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL)
         .test()
         .assertCompleted();
 
@@ -697,8 +443,8 @@ public class AppViewManagerTest {
     verify(installManager).getDownload("md5");
     verify(installManager).install(download);
     //And it should set the necessary analytics
-    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString", null,
-        AnalyticsManager.Action.CLICK, null, null,
+    verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
+        DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, null, null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
