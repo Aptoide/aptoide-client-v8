@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.BackButtonFragment;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -51,10 +51,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   private ProgressBar startingLoadingLayout;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
-  private View noNetworkErrorLayout;
-  private View genericErrorLayout;
-  private View retryButton;
-  private View noNetworkRetryButton;
+  private ErrorView errorView;
 
   public static Fragment newInstance(long storeId) {
     Bundle args = new Bundle();
@@ -84,10 +81,7 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
     recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
     recyclerView.setVisibility(View.GONE);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-    genericErrorLayout = view.findViewById(R.id.generic_error);
-    noNetworkErrorLayout = view.findViewById(R.id.no_network_connection);
-    retryButton = genericErrorLayout.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorLayout.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
     swipeRefreshLayout.setOnRefreshListener(() -> refreshEvent.onNext(null));
     setupToolbar(view);
     adapter = new ListStoreAppsAdapter(new ArrayList<>(), appClicks);
@@ -196,35 +190,33 @@ public class ListStoreAppsFragment extends BackButtonFragment implements ListSto
   }
 
   @Override public void showNetworkError() {
-    noNetworkErrorLayout.setVisibility(View.VISIBLE);
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
     startingLoadingLayout.setVisibility(View.GONE);
     recyclerView.setVisibility(View.GONE);
-    genericErrorLayout.setVisibility(View.GONE);
   }
 
   @Override public void showGenericError() {
-    genericErrorLayout.setVisibility(View.VISIBLE);
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
     startingLoadingLayout.setVisibility(View.GONE);
     recyclerView.setVisibility(View.GONE);
-    noNetworkErrorLayout.setVisibility(View.GONE);
   }
 
   @Override public Observable<Void> getRetryEvent() {
-    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public void showStartingLoading() {
     startingLoadingLayout.setVisibility(View.VISIBLE);
     recyclerView.setVisibility(View.GONE);
-    genericErrorLayout.setVisibility(View.GONE);
-    noNetworkErrorLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
   }
 
   private void showApps() {
     recyclerView.setVisibility(View.VISIBLE);
     startingLoadingLayout.setVisibility(View.GONE);
-    genericErrorLayout.setVisibility(View.GONE);
-    noNetworkErrorLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
   }
 
   private boolean isEndReached() {

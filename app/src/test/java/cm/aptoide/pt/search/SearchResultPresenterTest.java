@@ -13,6 +13,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -197,9 +198,9 @@ public class SearchResultPresenterTest {
 
     //And search in both followed and non-followed stores
     when(searchManager.searchInFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(searchAppResultList));
+        Single.just(new SearchResult.Success(searchAppResultList)));
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(searchAppResultList));
+        Single.just(new SearchResult.Success(searchAppResultList)));
     when(searchResultModel.isAllStoresSelected()).thenReturn(true);
     when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
 
@@ -236,7 +237,7 @@ public class SearchResultPresenterTest {
 
     //And search in that specific store
     when(searchManager.searchInStore(anyString(), anyString(), anyInt())).thenReturn(
-        Single.just(searchAppResultList));
+        Single.just(new SearchResult.Success(searchAppResultList)));
     when(searchResultModel.isAllStoresSelected()).thenReturn(true);
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -369,7 +370,7 @@ public class SearchResultPresenterTest {
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
     searchAppResultList.add(searchAppResult);
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(searchAppResultList));
+        Single.just(new SearchResult.Success(searchAppResultList)));
     when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -395,7 +396,7 @@ public class SearchResultPresenterTest {
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
     searchAppResultList.add(searchAppResult);
     when(searchManager.searchInFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(searchAppResultList));
+        Single.just(new SearchResult.Success(searchAppResultList)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

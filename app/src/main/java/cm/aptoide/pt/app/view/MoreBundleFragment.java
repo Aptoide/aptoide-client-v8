@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
@@ -34,7 +35,6 @@ import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
-import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,13 +68,10 @@ public class MoreBundleFragment extends NavigationTrackFragment
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
-  private View genericErrorView;
-  private View noNetworkErrorView;
+  private ErrorView errorView;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
-  private View noNetworkRetryButton;
-  private View retryButton;
   private Toolbar toolbar;
   private View toolbarElement;
   private PublishSubject<Boolean> notifyItemsAdded;
@@ -99,11 +96,8 @@ public class MoreBundleFragment extends NavigationTrackFragment
     }
     bundlesList = (RecyclerView) view.findViewById(R.id.more_bundles_list);
     toolbarElement = view.findViewById(R.id.action_bar);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    retryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.more_refresh_layout);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -154,8 +148,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
     adapter = null;
     layoutManager = null;
     swipeRefreshLayout = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
+    errorView = null;
     progressBar = null;
     toolbar = null;
     super.onDestroyView();
@@ -192,25 +185,23 @@ public class MoreBundleFragment extends NavigationTrackFragment
 
   @Override public void showLoading() {
     bundlesList.setVisibility(GONE);
-    genericErrorView.setVisibility(GONE);
-    noNetworkErrorView.setVisibility(GONE);
+    errorView.setVisibility(GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     bundlesList.setVisibility(View.VISIBLE);
-    genericErrorView.setVisibility(GONE);
-    noNetworkErrorView.setVisibility(GONE);
+    errorView.setVisibility(GONE);
     progressBar.setVisibility(GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
-    this.genericErrorView.setVisibility(View.VISIBLE);
-    this.noNetworkErrorView.setVisibility(GONE);
-    this.bundlesList.setVisibility(GONE);
-    this.progressBar.setVisibility(GONE);
-    if (this.swipeRefreshLayout.isRefreshing()) {
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
+    bundlesList.setVisibility(GONE);
+    progressBar.setVisibility(GONE);
+    if (swipeRefreshLayout.isRefreshing()) {
       this.swipeRefreshLayout.setRefreshing(false);
     }
   }
@@ -263,8 +254,8 @@ public class MoreBundleFragment extends NavigationTrackFragment
   }
 
   @Override public void showNetworkError() {
-    this.noNetworkErrorView.setVisibility(View.VISIBLE);
-    this.genericErrorView.setVisibility(GONE);
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
     this.bundlesList.setVisibility(GONE);
     this.progressBar.setVisibility(GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -273,7 +264,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<HomeEvent> bundleScrolled() {

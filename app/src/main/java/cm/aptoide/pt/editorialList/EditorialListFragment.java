@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
@@ -53,12 +54,9 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private PublishSubject<Void> snackListener;
   private ScrollControlLinearLayoutManager layoutManager;
   private SwipeRefreshLayout swipeRefreshLayout;
-  //Error views
-  private View genericErrorView;
-  private View noNetworkErrorView;
+
+  private ErrorView errorView;
   private ProgressBar progressBar;
-  private View noNetworkRetryButton;
-  private View retryButton;
   private ImageView userAvatar;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,11 +85,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
 
-    //Error views
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
-    retryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
     attachPresenter(presenter);
   }
@@ -134,21 +128,19 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public void showLoading() {
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
-    genericErrorView.setVisibility(View.VISIBLE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
     editorialList.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -157,8 +149,8 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public void showNetworkError() {
-    this.noNetworkErrorView.setVisibility(View.VISIBLE);
-    this.genericErrorView.setVisibility(View.GONE);
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
     this.editorialList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -167,7 +159,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<Void> refreshes() {
@@ -323,11 +315,8 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     editorialList = null;
     adapter = null;
     layoutManager = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
     progressBar = null;
-    noNetworkRetryButton = null;
-    retryButton = null;
+    errorView = null;
     userAvatar = null;
     swipeRefreshLayout = null;
     super.onDestroyView();

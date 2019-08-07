@@ -33,26 +33,15 @@
         />
   </com.google.android.material.appbar.AppBarLayout>
 
-  <include
-      layout="@layout/partial_view_incl_no_network"
-      android:layout_width="wrap_content"
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@id/app_bar_layout"
       android:layout_gravity="center_horizontal"
       android:visibility="gone"
       tools:visibility="gone"
       />
-
-  <include
-      layout="@layout/partial_view_error"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_below="@id/app_bar_layout"
-      android:layout_gravity="center_horizontal"
-      android:visibility="gone"
-      tools:visibility="gone"
-      />
-
   <!-- is this necessary ?? -->
   <RelativeLayout
       android:layout_width="match_parent"

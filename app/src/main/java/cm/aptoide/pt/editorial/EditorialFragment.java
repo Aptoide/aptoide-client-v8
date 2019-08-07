@@ -30,6 +30,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -84,11 +85,8 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView appImage;
   private TextView itemName;
   private View appCardView;
-  private View genericErrorView;
-  private View noNetworkErrorView;
+  private ErrorView errorView;
   private ProgressBar progressBar;
-  private View genericRetryButton;
-  private View noNetworkRetryButton;
   private RecyclerView editorialItems;
   private EditorialItemsAdapter adapter;
   private ImageView appCardImage;
@@ -168,11 +166,8 @@ public class EditorialFragment extends NavigationTrackFragment
     actionItemCard = view.findViewById(R.id.action_item_card);
     editorialItemsCard = view.findViewById(R.id.card_info_layout);
     editorialItems = (RecyclerView) view.findViewById(R.id.editorial_items);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    genericRetryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(RecyclerView.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener,
@@ -286,11 +281,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
     editorialItemsCard = null;
     editorialItems = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
+    errorView = null;
     progressBar = null;
-    genericRetryButton = null;
-    noNetworkRetryButton = null;
     collapsingToolbarLayout = null;
     appBarLayout = null;
     adapter = null;
@@ -323,8 +315,7 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
@@ -333,13 +324,12 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(genericRetryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<EditorialEvent> appCardClicked(EditorialViewModel model) {
@@ -364,10 +354,12 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showError(EditorialViewModel.Error error) {
     switch (error) {
       case NETWORK:
-        noNetworkErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.NO_NETWORK);
+        errorView.setVisibility(View.VISIBLE);
         break;
       case GENERIC:
-        genericErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.GENERIC);
+        errorView.setVisibility(View.VISIBLE);
         break;
     }
   }

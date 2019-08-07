@@ -820,7 +820,7 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnRetry() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry())
+        .flatMap(__ -> view.clickErrorRetry()
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())

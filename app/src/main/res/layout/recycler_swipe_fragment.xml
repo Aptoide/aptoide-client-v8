@@ -5,13 +5,20 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/partial_view_incl_no_network"/>
-
-  <include layout="@layout/partial_view_error"/>
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      tools:visibility="gone"
+      />
 
   <include layout="@layout/partial_view_progress_bar"/>
 

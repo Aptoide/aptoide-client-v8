@@ -31,6 +31,15 @@
       tools:visibility="gone"
       />
 
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      tools:visibility="gone"
+      />
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/suggestions_list"
       android:layout_width="match_parent"
