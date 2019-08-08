@@ -357,10 +357,7 @@ public class AppViewManager {
   }
 
   public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
-    if (isFirstLoad) {
-      appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
-      isFirstLoad = false;
-    }
+    appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
   }
 
   public String getMarketName() {
