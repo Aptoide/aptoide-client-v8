@@ -21,8 +21,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 20/11/17.
  */
 
-public abstract class NotificationApplicationView extends AptoideApplication
-    implements NotificationView {
+public class NotificationApplicationView extends AptoideApplication implements NotificationView {
 
   private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;

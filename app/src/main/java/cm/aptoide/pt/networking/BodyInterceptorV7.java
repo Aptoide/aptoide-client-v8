@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -16,7 +17,7 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   private final IdsRepository idsRepository;
   private final AuthenticationPersistence authenticationPersistence;
-  private final String aptoideMd5sum;
+  private final AptoideMd5Manager aptoideMd5Manager;
   private final String aptoidePackage;
   private final QManager qManager;
   private final Cdn cdn;
@@ -25,12 +26,12 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
   private final int aptoideVersionCode;
 
   public BodyInterceptorV7(IdsRepository idsRepository,
-      AuthenticationPersistence authenticationPersistence, String aptoideMd5sum,
+      AuthenticationPersistence authenticationPersistence, AptoideMd5Manager aptoideMd5Manager,
       String aptoidePackage, QManager qManager, Cdn cdn, SharedPreferences sharedPreferences,
       Resources resources, int aptoideVersionCode) {
     this.idsRepository = idsRepository;
     this.authenticationPersistence = authenticationPersistence;
-    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoideMd5Manager = aptoideMd5Manager;
     this.aptoidePackage = aptoidePackage;
     this.qManager = qManager;
     this.cdn = cdn;
@@ -60,7 +61,8 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
           if (!TextUtils.isEmpty(forceCountry)) {
             body.setCountry(forceCountry);
           }
-          body.setAptoideMd5sum(aptoideMd5sum);
+          String md5 = aptoideMd5Manager.getAptoideMd5();
+          if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
 
           return body;

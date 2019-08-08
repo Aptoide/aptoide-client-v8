@@ -27,6 +27,7 @@ import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.packageinstaller.AppInstall;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -265,8 +266,12 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
+      AppInstall appInstall = AppInstall.builder()
+          .setPackageName(installation.getPackageName())
+          .setBaseApk(installation.getFile())
+          .build();
       if (shouldSetPackageInstaller) {
-        appInstaller.install(installation.getFile(), installation.getPackageName());
+        appInstaller.install(appInstall);
       } else {
         startInstallIntent(context, installation.getFile());
       }
