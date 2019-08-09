@@ -6,6 +6,16 @@ android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
+  configurations.all {
+    resolutionStrategy{
+      force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    }
+  }
+
   defaultConfig {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
@@ -72,7 +82,6 @@ dependencies {
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
 
-
   // These are just for styling compatibility when we run instrumentation tests.
   // This essentially means that we are directly dependent on these libraries for resources.
   androidTestImplementation project(path: ':utils')
@@ -81,7 +90,5 @@ dependencies {
   androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}")
 }
