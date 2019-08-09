@@ -3,7 +3,6 @@ import com.android.builder.model.ProductFlavor
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
