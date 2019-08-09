@@ -19,15 +19,15 @@
         app:key="downloadwifionly"
         app:title="@string/setting_mobile"
         />
+    <SwitchPreferenceCompat
+        app:defaultValue="false"
+        app:key="updatesFilterAlphaBetaKey"
+        app:summary="@string/settings_beta_filter_summary"
+        app:title="@string/settings_beta_filter_setting_title"/>
   </PreferenceCategory>
   <PreferenceCategory
       app:title="@string/updates"
       >
-    <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="updatesFilterAlphaBetaKey"
-        app:summary="@string/settings_updates_filter_summary"
-        app:title="@string/settings_updates_filter_setting_title"/>
     <SwitchPreferenceCompat
         app:defaultValue="false"
         app:key="updatesSystemAppsKey"

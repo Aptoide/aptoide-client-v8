@@ -156,7 +156,13 @@ public class AppsPresenter implements Presenter {
             appsNavigator.navigateToAppView(((UpdateApp) app).getMd5());
           }
         })
-        .doOnNext(__ -> appsManager.setAppViewAnalyticsEvent())
+        .doOnNext(app -> {
+          if (app instanceof AppcUpdateApp) {
+            appsManager.setMigrationAppViewAnalyticsEvent();
+          } else {
+            appsManager.setAppViewAnalyticsEvent();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

@@ -161,7 +161,11 @@ public class InstallAnalytics {
         getApplicationInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc,
             navigationTracker.getViewName(true));
     data.put(MIGRATOR, isMigration);
-    data.put(ORIGIN, origin);
+    if (isMigration) {
+      data.put(ORIGIN, Origin.UPDATE_TO_APPC);
+    } else {
+      data.put(ORIGIN, origin);
+    }
 
     String applicationInstallEventName = "";
     ScreenTagHistory previousScreen = navigationTracker.getPreviousScreen();
