@@ -24,7 +24,13 @@ buildscript {
 android {
 
   configurations.all {
-    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    resolutionStrategy{
+      force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
+      force "com.android.support:design:${SUPPORT_LIB_VERSION}"
+    }
   }
   // Websockets
   useLibrary 'org.apache.http.legacy'
@@ -131,7 +137,6 @@ android {
     }
 
     release {
-      testCoverageEnabled = true
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
       zipAlignEnabled true
       minifyEnabled true
@@ -363,38 +368,26 @@ dependencies {
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}")
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}")
   androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
 
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}")
 
-  implementation("com.android.support:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  implementation("com.android.support:multidex:${MULTIDEX_VERSION}")
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}")
   androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.android.support", module: "support-annotations"
-  }
+  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}")
   //dependencies needed for UITests
   androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
   androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
@@ -447,8 +440,6 @@ dependencies {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
     exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
   }
 
   // AppLovin
@@ -465,9 +456,6 @@ dependencies {
   // Vungle
   implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
     transitive = true
-    exclude group: "com.android.support"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
   }
   implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
@@ -526,9 +514,7 @@ dependencies {
   //Color Palette
   implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
 
-  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}") {
-    exclude group: "com.android.support"
-  }
+  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}")
 
   annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
