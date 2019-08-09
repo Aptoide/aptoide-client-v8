@@ -9,7 +9,6 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:3.4.2'
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
