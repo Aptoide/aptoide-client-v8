@@ -3,7 +3,6 @@ import com.android.builder.model.ProductFlavor
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
-apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
@@ -23,9 +22,6 @@ buildscript {
 
 android {
 
-  configurations.all {
-    resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
-  }
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
@@ -131,7 +127,6 @@ android {
     }
 
     release {
-      testCoverageEnabled = true
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "false"
       zipAlignEnabled true
       minifyEnabled true
@@ -362,20 +357,15 @@ dependencies {
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
-  implementation("androidx.multidex:multidex:${MULTIDEX_VERSION}") {
-    exclude group: "com.androidx", module: "support-annotations"
-  }
-  androidTestImplementation("androidx.multidex:multidex-instrumentation:${MULTIDEX_VERSION}") {
-    exclude group: "com.androidx", module: "support-annotations"
-  }
+  implementation "androidx.multidex:multidex:${MULTIDEX_VERSION}"
+
+  androidTestImplementation "androidx.multidex:multidex-instrumentation:${MULTIDEX_VERSION}"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-  androidTestImplementation("androidx.test:runner:${RUNNER_VERSION}") {
-    exclude group: "com.androidx", module: "support-annotations"
-  }
+  androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
   androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
 
   //dependencies needed for UITests
@@ -432,8 +422,6 @@ dependencies {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
     exclude group: "com.androidx"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
   }
 
   // AppLovin
@@ -450,9 +438,6 @@ dependencies {
   // Vungle
   implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
     transitive = true
-    exclude group: "com.androidx"
-    exclude module: "support-annotations"
-    exclude module: "support-v4"
   }
   implementation "com.mopub.mediation:vungle:${MOPUB_MEDIATION_VUNGLE_VERSION}"
 
@@ -507,9 +492,7 @@ dependencies {
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
 
-  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}") {
-    exclude group: "com.androidx"
-  }
+  implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}")
 
   annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
