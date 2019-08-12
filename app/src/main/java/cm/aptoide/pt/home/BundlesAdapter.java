@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
-import cm.aptoide.pt.logger.Logger;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -87,7 +86,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
             oneDecimalFormatter, marketName);
       case LOAD_MORE_ERROR:
         return new LoadingMoreErrorViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.load_more_error, parent, false));
+            .inflate(R.layout.load_more_error, parent, false), uiEventsListener);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -210,9 +209,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   public void showLoadMoreError() {
-    Logger.getInstance()
-        .d("lol", "adding new load more error");
     bundles.add(errorBundle);
     notifyItemInserted(bundles.size());
+  }
+
+  public void removeLoadMoreError() {
+    bundles.remove(errorBundle);
+    notifyItemRemoved(bundles.size());
   }
 }

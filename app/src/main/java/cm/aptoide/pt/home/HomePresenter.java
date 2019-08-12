@@ -81,6 +81,19 @@ public class HomePresenter implements Presenter {
     handleSnackLogInClick();
 
     handleMoPubConsentDialog();
+
+    handleLoadMoreErrorRetry();
+  }
+
+  private void handleLoadMoreErrorRetry() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.onLoadMoreRetryClicked())
+        .doOnNext(__ -> view.removeLoadMoreError())
+        .flatMap(__ -> loadNextBundlesAndReactions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleMoPubConsentDialog() {

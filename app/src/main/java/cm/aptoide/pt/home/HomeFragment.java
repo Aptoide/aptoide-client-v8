@@ -398,6 +398,15 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     adapter.showLoadMoreError();
   }
 
+  @Override public void removeLoadMoreError() {
+    adapter.removeLoadMoreError();
+  }
+
+  @Override public Observable<HomeEvent> onLoadMoreRetryClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.LOAD_MORE_RETRY));
+  }
+
   @Override public boolean isAtTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     return layoutManager.findFirstVisibleItemPosition() == 0;
