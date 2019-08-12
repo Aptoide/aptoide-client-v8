@@ -333,10 +333,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void setAdsTest(boolean showNatives) {
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, marketName,
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
+        oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives), captionBackgroundPainter);
+            marketName, showNatives), captionBackgroundPainter, marketName);
     bundlesList.setAdapter(adapter);
   }
 
@@ -392,6 +392,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void showLoadMoreError() {
+    adapter.showLoadMoreError();
   }
 
   @Override public boolean isAtTop() {

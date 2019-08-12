@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
+import cm.aptoide.pt.logger.Logger;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -24,6 +25,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int SMALL_BANNER = 8;
   private static final int WALLET_ADS_OFFER = 9;
   private static final int TOP = 10;
+  private static final int LOAD_MORE_ERROR = 11;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -31,13 +33,16 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final AdsBundlesViewHolderFactory adsBundlesViewHolderFactory;
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<HomeBundle> bundles;
+  private ErrorHomeBundle errorBundle;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
-      PublishSubject<HomeEvent> uiEventsListener, DecimalFormat oneDecimalFormatter,
-      String marketName, AdsBundlesViewHolderFactory adsBundlesViewHolderFactory,
-      CaptionBackgroundPainter captionBackgroundPainter) {
+      ErrorHomeBundle errorBundle, DecimalFormat oneDecimalFormatter,
+      PublishSubject<HomeEvent> uiEventsListener,
+      AdsBundlesViewHolderFactory adsBundlesViewHolderFactory,
+      CaptionBackgroundPainter captionBackgroundPainter, String marketName) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
+    this.errorBundle = errorBundle;
     this.uiEventsListener = uiEventsListener;
     this.oneDecimalFormatter = oneDecimalFormatter;
     this.marketName = marketName;
@@ -80,6 +85,9 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new TopBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.top_bundle_item, parent, false), uiEventsListener,
             oneDecimalFormatter, marketName);
+      case LOAD_MORE_ERROR:
+        return new LoadingMoreErrorViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.load_more_error, parent, false));
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -113,6 +121,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return WALLET_ADS_OFFER;
       case TOP:
         return TOP;
+      case LOAD_MORE_ERROR:
+        return LOAD_MORE_ERROR;
       default:
         throw new IllegalStateException(
             "Bundle type not supported by the adapter: " + bundles.get(position)
@@ -197,5 +207,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         notifyItemChanged(i);
       }
     }
+  }
+
+  public void showLoadMoreError() {
+    Logger.getInstance()
+        .d("lol", "adding new load more error");
+    bundles.add(errorBundle);
+    notifyItemInserted(bundles.size());
   }
 }

@@ -495,7 +495,7 @@ public class HomePresenter implements Presenter {
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
-            handleError(bundlesModel.getError());
+            handleLoadMoreError();
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
@@ -504,6 +504,10 @@ public class HomePresenter implements Presenter {
           }
           view.hideShowMore();
         });
+  }
+
+  private void handleLoadMoreError() {
+    view.showLoadMoreError();
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
