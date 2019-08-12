@@ -555,6 +555,7 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendAppcInfoInteractEvent();
           appViewNavigator.navigateToAppCoinsInfo();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
