@@ -139,13 +139,11 @@ public class AppViewPresenterTest {
     verify(view).showAppView(appModel);
 
     // Verify analytics
-    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+    verify(appViewManager).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
         appModel.getDeveloper()
             .getName(), appModel.getMalware()
             .getRank()
-            .name(), appModel.hasBilling(), appModel.hasAdvertising());
-    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
-        appModel.getEditorsChoice());
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
 
     // Verify our init streams
     verify(presenter).loadAds(appViewModel);
@@ -178,15 +176,12 @@ public class AppViewPresenterTest {
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //Then editors choice click event should not be sent
-    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
-        appModel.getEditorsChoice());
-    //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+    //Then editors choice click event should be sent
+    verify(appViewManager).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
         appModel.getDeveloper()
             .getName(), appModel.getMalware()
             .getRank()
-            .name(), appModel.hasBilling(), appModel.hasAdvertising());
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
   }
 
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
@@ -222,10 +217,14 @@ public class AppViewPresenterTest {
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
-    verify(appViewManager, never()).sendEditorsChoiceClickEvent(
-        emptyEditorsChoiceAppModel.getPackageName(), emptyEditorsChoiceAppModel.getEditorsChoice());
+    verify(appViewManager, never()).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
+        appModel.getDeveloper()
+            .getName(), appModel.getMalware()
+            .getRank()
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(),
+        emptyEditorsChoiceAppModel.getEditorsChoice());
     //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(emptyEditorsChoiceAppModel.getPackageName(),
+    verify(appViewManager).sendAppOpenAnalytics(emptyEditorsChoiceAppModel.getPackageName(),
         emptyEditorsChoiceAppModel.getDeveloper()
             .getName(), emptyEditorsChoiceAppModel.getMalware()
             .getRank()
