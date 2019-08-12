@@ -347,7 +347,7 @@ public class AppViewManager {
         .toCompletable();
   }
 
-  public void sendAppViewOpenedFromEvent(String packageName, String publisher, String badge,
+  public void sendAppOpenAnalytics(String packageName, String publisher, String badge,
       boolean hasBilling, boolean hasAdvertising) {
     if (isFirstLoad) {
       appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, hasBilling,
@@ -356,8 +356,14 @@ public class AppViewManager {
     }
   }
 
-  public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
-    appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
+  public void sendEditorsAppOpenAnalytics(String packageName, String publisher, String badge,
+      boolean hasBilling, boolean hasAdvertising, String editorsBrickPosition) {
+    if (isFirstLoad) {
+      appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, hasBilling,
+          hasAdvertising);
+      appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
+      isFirstLoad = false;
+    }
   }
 
   public String getMarketName() {
