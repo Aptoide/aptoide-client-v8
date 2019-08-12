@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:layout_marginTop="20dp"
     >
 
   <ImageView
@@ -26,8 +28,10 @@
       android:id="@+id/load_more_error_message"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_marginBottom="4dp"
       android:layout_marginEnd="8dp"
       android:layout_marginRight="8dp"
+      android:layout_marginTop="4dp"
       android:ellipsize="end"
       android:maxLines="2"
       android:text="@string/error_no_internet_body"
@@ -46,7 +50,6 @@
       android:layout_height="wrap_content"
       android:layout_marginEnd="8dp"
       android:layout_marginRight="8dp"
-      android:layout_marginTop="20dp"
       android:text="@string/download_retry"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toRightOf="@id/load_more_error_message"
