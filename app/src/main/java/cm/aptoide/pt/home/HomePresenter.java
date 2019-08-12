@@ -90,6 +90,7 @@ public class HomePresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.onLoadMoreRetryClicked())
         .doOnNext(__ -> view.removeLoadMoreError())
+        .doOnNext(__ -> view.showLoadMore())
         .flatMap(__ -> loadNextBundlesAndReactions())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
