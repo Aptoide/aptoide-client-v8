@@ -81,6 +81,20 @@ public class HomePresenter implements Presenter {
     handleSnackLogInClick();
 
     handleMoPubConsentDialog();
+
+    handleLoadMoreErrorRetry();
+  }
+
+  private void handleLoadMoreErrorRetry() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.onLoadMoreRetryClicked())
+        .doOnNext(__ -> view.removeLoadMoreError())
+        .doOnNext(__ -> view.showLoadMore())
+        .flatMap(__ -> loadNextBundlesAndReactions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleMoPubConsentDialog() {
@@ -495,7 +509,7 @@ public class HomePresenter implements Presenter {
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
-            handleError(bundlesModel.getError());
+            handleLoadMoreError();
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
@@ -504,6 +518,10 @@ public class HomePresenter implements Presenter {
           }
           view.hideShowMore();
         });
+  }
+
+  private void handleLoadMoreError() {
+    view.showLoadMoreError();
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
