@@ -23,6 +23,9 @@ import java.security.MessageDigest;
  * Created by marcelobenites on 7/26/16.
  */
 public class ShadowCircleTransformation extends BitmapTransformation {
+  private static final String ID = "cm.aptoide.pt.networking.image.ShadowCircleTransformation";
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
   @ColorInt private final int shadowColor;
   private final float strokeSize;
   private final float spaceBetween;
@@ -121,6 +124,10 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   }
 
   @Override public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
+  }
 
+  @Override public int hashCode() {
+    return ID.hashCode();
   }
 }
