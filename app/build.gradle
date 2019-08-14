@@ -23,7 +23,7 @@ buildscript {
 android {
 
   configurations.all {
-    resolutionStrategy{
+    resolutionStrategy {
       force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
       force "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
       force "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
@@ -288,8 +288,6 @@ android {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
-    variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
-        "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
@@ -447,10 +445,6 @@ dependencies {
 
   // Google (AdMob)
   implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
-
-  // ironSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
-  implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
 
   // Vungle
   implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {
