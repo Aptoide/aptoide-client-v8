@@ -23,7 +23,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       "Aptoide_Push_Notification_Download_Complete";
   public static final String DOWNLOAD_COMPLETE_EVENT = "Download Complete";
   public static final String EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME =
-      "Editors Choice_Download_Complete";
+      "Editors_Choice_Download_Complete";
   public static final String DOWNLOAD_INTERACT = "Download_Interact";
   private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
   private static final String AB_TEST_GROUP = "ab_test_group";
@@ -274,6 +274,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     updateDownloadEventWithHasProgress(
         download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
     updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+    updateDownloadEventWithHasProgress(
+        download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
   }
 
   private void updateDownloadEventWithHasProgress(String key) {

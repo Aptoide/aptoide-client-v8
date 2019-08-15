@@ -26,6 +26,7 @@ import cm.aptoide.pt.home.AdHomeEvent;
 import cm.aptoide.pt.home.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.BundlesAdapter;
+import cm.aptoide.pt.home.ErrorHomeBundle;
 import cm.aptoide.pt.home.HomeBundle;
 import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.ProgressBundle;
@@ -102,10 +103,10 @@ public class MoreBundleFragment extends NavigationTrackFragment
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
         R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, marketName,
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
+        oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, false), captionBackgroundPainter);
+            marketName, false), captionBackgroundPainter, marketName);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

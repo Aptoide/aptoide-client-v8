@@ -47,4 +47,10 @@ public interface HomeView extends BundleView {
   void showGenericErrorToast();
 
   void showNetworkErrorToast();
+
+  void showLoadMoreError();
+
+  void removeLoadMoreError();
+
+  Observable<HomeEvent> onLoadMoreRetryClicked();
 }
