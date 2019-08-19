@@ -241,14 +241,16 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
     snackbar.show();
 
-    Drawable replacementDrawable = checkboxDrawable.getConstantState()
-        .newDrawable()
-        .mutate();
+    Drawable.ConstantState constantState = checkboxDrawable.getConstantState();
 
-    replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
-        PorterDuff.Mode.SRC_ATOP);
+    if (constantState != null) {
+      Drawable replacementDrawable = constantState.newDrawable()
+          .mutate();
+      replacementDrawable.setColorFilter(getResources().getColor(R.color.red),
+          PorterDuff.Mode.SRC_ATOP);
+      termsConditionCheckBox.setButtonDrawable(replacementDrawable);
+    }
 
-    termsConditionCheckBox.setButtonDrawable(replacementDrawable);
     termsConditionCheckBox.setOnCheckedChangeListener(
         (buttonView, isChecked) -> termsConditionCheckBox.setButtonDrawable(checkboxDrawable));
   }
