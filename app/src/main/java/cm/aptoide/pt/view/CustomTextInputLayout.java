@@ -7,9 +7,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
@@ -41,15 +39,6 @@ public class CustomTextInputLayout extends TextInputLayout {
       helperText = a.getText(R.styleable.CustomTextInputLayout_helperText);
     } finally {
       a.recycle();
-    }
-  }
-
-  @Override public void addView(View child, int index, ViewGroup.LayoutParams params) {
-    super.addView(child, index, params);
-    if (child instanceof EditText) {
-      if (!TextUtils.isEmpty(helperText)) {
-        setHelperText(helperText);
-      }
     }
   }
 
@@ -87,7 +76,7 @@ public class CustomTextInputLayout extends TextInputLayout {
         this.helperView.setText(helperText);
         this.helperView.setVisibility(VISIBLE);
         this.addView(this.helperView);
-        if (this.helperView != null) {
+        if (this.helperView != null && getEditText() != null) {
           ViewCompat.setPaddingRelative(this.helperView, ViewCompat.getPaddingStart(getEditText()),
               0, ViewCompat.getPaddingEnd(getEditText()), getEditText().getPaddingBottom());
         }
@@ -136,19 +125,5 @@ public class CustomTextInputLayout extends TextInputLayout {
 
   public void setHelperTextColor(ColorStateList helperTextColor) {
     this.helperTextColor = helperTextColor;
-  }
-
-  public int getHelperTextAppearance() {
-    return helperTextAppearance;
-  }
-
-  public void setHelperTextAppearance(int helperTextAppearance) {
-    this.helperTextAppearance = helperTextAppearance;
-  }
-
-  public void setHelperTextVisibility(boolean visible) {
-    if (!visible) {
-      helperView.setVisibility(View.GONE);
-    }
   }
 }
