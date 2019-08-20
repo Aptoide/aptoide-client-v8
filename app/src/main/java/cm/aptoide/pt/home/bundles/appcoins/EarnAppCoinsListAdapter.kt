@@ -35,7 +35,7 @@ class EarnAppCoinsListAdapter(private val decimalFormatter: DecimalFormat,
 
   fun updateBundle(bundle: AppBundle, position: Int) {
     if (bundle.type != HomeBundle.BundleType.APPCOINS_ADS)
-      throw IllegalArgumentException("Wrong bundle type")
+      throw java.lang.IllegalArgumentException("Wrong bundle type")
 
     appBundle = bundle
     bundlePosition = position

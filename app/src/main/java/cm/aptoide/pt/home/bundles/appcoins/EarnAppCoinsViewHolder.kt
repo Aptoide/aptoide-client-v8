@@ -28,7 +28,8 @@ class EarnAppCoinsViewHolder(val view: View,
       override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
                                   state: RecyclerView.State?) {
         val margin = AptoideUtils.ScreenU.getPixelsForDip(8, view.resources)
-        outRect.set(margin, margin, 0, margin)
+        val marginBottom = AptoideUtils.ScreenU.getPixelsForDip(4, view.resources)
+        outRect.set(margin, margin, 0, marginBottom)
       }
     })
     itemView.apps_list.layoutManager = layoutManager
