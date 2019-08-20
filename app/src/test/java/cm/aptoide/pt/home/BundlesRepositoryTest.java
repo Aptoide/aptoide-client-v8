@@ -1,6 +1,11 @@
 package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.home.bundles.BundleDataSource;
+import cm.aptoide.pt.home.bundles.BundlesRepository;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
