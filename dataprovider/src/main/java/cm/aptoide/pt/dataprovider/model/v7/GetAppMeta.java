@@ -78,6 +78,7 @@ public class GetAppMeta extends BaseV7Response {
     private Obb obb;
     private Pay pay;
     private AppCoinsInfo appcoins;
+    private Aab aab;
 
     public App() {
     }
@@ -264,26 +265,6 @@ public class GetAppMeta extends BaseV7Response {
       return result;
     }
 
-    protected boolean canEqual(Object other) {
-      return other instanceof App;
-    }
-
-    public boolean hasBilling() {
-      return appcoins != null && appcoins.hasBilling();
-    }
-
-    public void setAppcoins(AppCoinsInfo appcoins) {
-      this.appcoins = appcoins;
-    }
-
-    public boolean hasAdvertising() {
-      return appcoins != null && appcoins.hasAdvertising();
-    }
-
-    public List<String> getBdsFlags() {
-      return appcoins.getFlags();
-    }
-
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof App)) return false;
@@ -380,6 +361,38 @@ public class GetAppMeta extends BaseV7Response {
           + ", pay="
           + this.getPay()
           + ")";
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof App;
+    }
+
+    public boolean hasBilling() {
+      return appcoins != null && appcoins.hasBilling();
+    }
+
+    public void setAppcoins(AppCoinsInfo appcoins) {
+      this.appcoins = appcoins;
+    }
+
+    public boolean hasAdvertising() {
+      return appcoins != null && appcoins.hasAdvertising();
+    }
+
+    public List<String> getBdsFlags() {
+      return appcoins.getFlags();
+    }
+
+    public Aab getAab() {
+      return aab;
+    }
+
+    public void setAab(Aab aab) {
+      this.aab = aab;
+    }
+
+    public boolean hasSplits() {
+      return aab != null;
     }
   }
 
@@ -479,6 +492,20 @@ public class GetAppMeta extends BaseV7Response {
       return other instanceof Pay;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final long $price = Double.doubleToLongBits(this.getPrice());
+      result = result * PRIME + (int) ($price >>> 32 ^ $price);
+      final Object $symbol = this.getSymbol();
+      result = result * PRIME + ($symbol == null ? 43 : $symbol.hashCode());
+      final Object $currency = this.getCurrency();
+      result = result * PRIME + ($currency == null ? 43 : $currency.hashCode());
+      final Object $status = this.getStatus();
+      result = result * PRIME + ($status == null ? 43 : $status.hashCode());
+      return result;
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Pay)) return false;
@@ -501,20 +528,6 @@ public class GetAppMeta extends BaseV7Response {
         return false;
       }
       return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final long $price = Double.doubleToLongBits(this.getPrice());
-      result = result * PRIME + (int) ($price >>> 32 ^ $price);
-      final Object $symbol = this.getSymbol();
-      result = result * PRIME + ($symbol == null ? 43 : $symbol.hashCode());
-      final Object $currency = this.getCurrency();
-      result = result * PRIME + ($currency == null ? 43 : $currency.hashCode());
-      final Object $status = this.getStatus();
-      result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-      return result;
     }
 
     public String toString() {
@@ -576,6 +589,20 @@ public class GetAppMeta extends BaseV7Response {
       return other instanceof Developer;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $name = this.getName();
+      result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+      final Object $website = this.getWebsite();
+      result = result * PRIME + ($website == null ? 43 : $website.hashCode());
+      final Object $email = this.getEmail();
+      result = result * PRIME + ($email == null ? 43 : $email.hashCode());
+      final Object $privacy = this.getPrivacy();
+      result = result * PRIME + ($privacy == null ? 43 : $privacy.hashCode());
+      return result;
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Developer)) return false;
@@ -598,20 +625,6 @@ public class GetAppMeta extends BaseV7Response {
         return false;
       }
       return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $name = this.getName();
-      result = result * PRIME + ($name == null ? 43 : $name.hashCode());
-      final Object $website = this.getWebsite();
-      result = result * PRIME + ($website == null ? 43 : $website.hashCode());
-      final Object $email = this.getEmail();
-      result = result * PRIME + ($email == null ? 43 : $email.hashCode());
-      final Object $privacy = this.getPrivacy();
-      result = result * PRIME + ($privacy == null ? 43 : $privacy.hashCode());
-      return result;
     }
 
     public String toString() {
@@ -815,6 +828,16 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Signature;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $sha1 = this.getSha1();
+        result = result * PRIME + ($sha1 == null ? 43 : $sha1.hashCode());
+        final Object $owner = this.getOwner();
+        result = result * PRIME + ($owner == null ? 43 : $owner.hashCode());
+        return result;
+      }
+
       public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Signature)) return false;
@@ -829,16 +852,6 @@ public class GetAppMeta extends BaseV7Response {
           return false;
         }
         return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $sha1 = this.getSha1();
-        result = result * PRIME + ($sha1 == null ? 43 : $sha1.hashCode());
-        final Object $owner = this.getOwner();
-        result = result * PRIME + ($owner == null ? 43 : $owner.hashCode());
-        return result;
       }
 
       public String toString() {
@@ -910,6 +923,20 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Hardware;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        result = result * PRIME + this.getSdk();
+        final Object $screen = this.getScreen();
+        result = result * PRIME + ($screen == null ? 43 : $screen.hashCode());
+        result = result * PRIME + this.getGles();
+        final Object $cpus = this.getCpus();
+        result = result * PRIME + ($cpus == null ? 43 : $cpus.hashCode());
+        final Object $densities = this.getDensities();
+        result = result * PRIME + ($densities == null ? 43 : $densities.hashCode());
+        return result;
+      }
+
       public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Hardware)) return false;
@@ -932,20 +959,6 @@ public class GetAppMeta extends BaseV7Response {
           return false;
         }
         return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = result * PRIME + this.getSdk();
-        final Object $screen = this.getScreen();
-        result = result * PRIME + ($screen == null ? 43 : $screen.hashCode());
-        result = result * PRIME + this.getGles();
-        final Object $cpus = this.getCpus();
-        result = result * PRIME + ($cpus == null ? 43 : $cpus.hashCode());
-        final Object $densities = this.getDensities();
-        result = result * PRIME + ($densities == null ? 43 : $densities.hashCode());
-        return result;
       }
 
       public String toString() {
@@ -997,6 +1010,42 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Flags;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $review = this.getReview();
+        result = result * PRIME + ($review == null ? 43 : $review.hashCode());
+        final Object $votes = this.getVotes();
+        result = result * PRIME + ($votes == null ? 43 : $votes.hashCode());
+        return result;
+      }
+
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Flags)) return false;
+        final Flags other = (Flags) o;
+        if (!other.canEqual((Object) this)) return false;
+        final Object this$review = this.getReview();
+        final Object other$review = other.getReview();
+        if (this$review == null ? other$review != null : !this$review.equals(other$review)) {
+          return false;
+        }
+        final Object this$votes = this.getVotes();
+        final Object other$votes = other.getVotes();
+        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
+          return false;
+        }
+        return true;
+      }
+
+      public String toString() {
+        return "GetAppMeta.GetAppMetaFile.Flags(review="
+            + this.getReview()
+            + ", votes="
+            + this.getVotes()
+            + ")";
+      }
+
       public static class Vote {
 
         /**
@@ -1030,8 +1079,13 @@ public class GetAppMeta extends BaseV7Response {
           return other instanceof Vote;
         }
 
-        public enum Type {
-          FAKE, FREEZE, GOOD, LICENSE, VIRUS
+        public int hashCode() {
+          final int PRIME = 59;
+          int result = 1;
+          final Object $type = this.getType();
+          result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+          result = result * PRIME + this.getCount();
+          return result;
         }
 
         public boolean equals(Object o) {
@@ -1046,15 +1100,6 @@ public class GetAppMeta extends BaseV7Response {
           return true;
         }
 
-        public int hashCode() {
-          final int PRIME = 59;
-          int result = 1;
-          final Object $type = this.getType();
-          result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-          result = result * PRIME + this.getCount();
-          return result;
-        }
-
         public String toString() {
           return "GetAppMeta.GetAppMetaFile.Flags.Vote(type="
               + this.getType()
@@ -1062,42 +1107,10 @@ public class GetAppMeta extends BaseV7Response {
               + this.getCount()
               + ")";
         }
-      }
 
-      public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Flags)) return false;
-        final Flags other = (Flags) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$review = this.getReview();
-        final Object other$review = other.getReview();
-        if (this$review == null ? other$review != null : !this$review.equals(other$review)) {
-          return false;
+        public enum Type {
+          FAKE, FREEZE, GOOD, LICENSE, VIRUS
         }
-        final Object this$votes = this.getVotes();
-        final Object other$votes = other.getVotes();
-        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
-          return false;
-        }
-        return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $review = this.getReview();
-        result = result * PRIME + ($review == null ? 43 : $review.hashCode());
-        final Object $votes = this.getVotes();
-        result = result * PRIME + ($votes == null ? 43 : $votes.hashCode());
-        return result;
-      }
-
-      public String toString() {
-        return "GetAppMeta.GetAppMetaFile.Flags(review="
-            + this.getReview()
-            + ", votes="
-            + this.getVotes()
-            + ")";
       }
     }
   }
@@ -1157,6 +1170,69 @@ public class GetAppMeta extends BaseV7Response {
       return other instanceof Media;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $keywords = this.getKeywords();
+      result = result * PRIME + ($keywords == null ? 43 : $keywords.hashCode());
+      final Object $description = this.getDescription();
+      result = result * PRIME + ($description == null ? 43 : $description.hashCode());
+      final Object $news = this.getNews();
+      result = result * PRIME + ($news == null ? 43 : $news.hashCode());
+      final Object $screenshots = this.getScreenshots();
+      result = result * PRIME + ($screenshots == null ? 43 : $screenshots.hashCode());
+      final Object $videos = this.getVideos();
+      result = result * PRIME + ($videos == null ? 43 : $videos.hashCode());
+      return result;
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Media)) return false;
+      final Media other = (Media) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$keywords = this.getKeywords();
+      final Object other$keywords = other.getKeywords();
+      if (this$keywords == null ? other$keywords != null : !this$keywords.equals(other$keywords)) {
+        return false;
+      }
+      final Object this$description = this.getDescription();
+      final Object other$description = other.getDescription();
+      if (this$description == null ? other$description != null
+          : !this$description.equals(other$description)) {
+        return false;
+      }
+      final Object this$news = this.getNews();
+      final Object other$news = other.getNews();
+      if (this$news == null ? other$news != null : !this$news.equals(other$news)) return false;
+      final Object this$screenshots = this.getScreenshots();
+      final Object other$screenshots = other.getScreenshots();
+      if (this$screenshots == null ? other$screenshots != null
+          : !this$screenshots.equals(other$screenshots)) {
+        return false;
+      }
+      final Object this$videos = this.getVideos();
+      final Object other$videos = other.getVideos();
+      if (this$videos == null ? other$videos != null : !this$videos.equals(other$videos)) {
+        return false;
+      }
+      return true;
+    }
+
+    public String toString() {
+      return "GetAppMeta.Media(keywords="
+          + this.getKeywords()
+          + ", description="
+          + this.getDescription()
+          + ", news="
+          + this.getNews()
+          + ", screenshots="
+          + this.getScreenshots()
+          + ", videos="
+          + this.getVideos()
+          + ")";
+    }
+
     public static class Video {
 
       private String type;
@@ -1194,6 +1270,18 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Video;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $type = this.getType();
+        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+        final Object $url = this.getUrl();
+        result = result * PRIME + ($url == null ? 43 : $url.hashCode());
+        final Object $thumbnail = this.getThumbnail();
+        result = result * PRIME + ($thumbnail == null ? 43 : $thumbnail.hashCode());
+        return result;
+      }
+
       public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Video)) return false;
@@ -1212,18 +1300,6 @@ public class GetAppMeta extends BaseV7Response {
           return false;
         }
         return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $type = this.getType();
-        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-        final Object $url = this.getUrl();
-        result = result * PRIME + ($url == null ? 43 : $url.hashCode());
-        final Object $thumbnail = this.getThumbnail();
-        result = result * PRIME + ($thumbnail == null ? 43 : $thumbnail.hashCode());
-        return result;
       }
 
       public String toString() {
@@ -1278,6 +1354,16 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Screenshot;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        final Object $url = this.getUrl();
+        result = result * PRIME + ($url == null ? 43 : $url.hashCode());
+        result = result * PRIME + this.getHeight();
+        result = result * PRIME + this.getWidth();
+        return result;
+      }
+
       public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Screenshot)) return false;
@@ -1291,16 +1377,6 @@ public class GetAppMeta extends BaseV7Response {
         return true;
       }
 
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $url = this.getUrl();
-        result = result * PRIME + ($url == null ? 43 : $url.hashCode());
-        result = result * PRIME + this.getHeight();
-        result = result * PRIME + this.getWidth();
-        return result;
-      }
-
       public String toString() {
         return "GetAppMeta.Media.Screenshot(url="
             + this.getUrl()
@@ -1310,69 +1386,6 @@ public class GetAppMeta extends BaseV7Response {
             + this.getWidth()
             + ")";
       }
-    }
-
-    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Media)) return false;
-      final Media other = (Media) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$keywords = this.getKeywords();
-      final Object other$keywords = other.getKeywords();
-      if (this$keywords == null ? other$keywords != null : !this$keywords.equals(other$keywords)) {
-        return false;
-      }
-      final Object this$description = this.getDescription();
-      final Object other$description = other.getDescription();
-      if (this$description == null ? other$description != null
-          : !this$description.equals(other$description)) {
-        return false;
-      }
-      final Object this$news = this.getNews();
-      final Object other$news = other.getNews();
-      if (this$news == null ? other$news != null : !this$news.equals(other$news)) return false;
-      final Object this$screenshots = this.getScreenshots();
-      final Object other$screenshots = other.getScreenshots();
-      if (this$screenshots == null ? other$screenshots != null
-          : !this$screenshots.equals(other$screenshots)) {
-        return false;
-      }
-      final Object this$videos = this.getVideos();
-      final Object other$videos = other.getVideos();
-      if (this$videos == null ? other$videos != null : !this$videos.equals(other$videos)) {
-        return false;
-      }
-      return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $keywords = this.getKeywords();
-      result = result * PRIME + ($keywords == null ? 43 : $keywords.hashCode());
-      final Object $description = this.getDescription();
-      result = result * PRIME + ($description == null ? 43 : $description.hashCode());
-      final Object $news = this.getNews();
-      result = result * PRIME + ($news == null ? 43 : $news.hashCode());
-      final Object $screenshots = this.getScreenshots();
-      result = result * PRIME + ($screenshots == null ? 43 : $screenshots.hashCode());
-      final Object $videos = this.getVideos();
-      result = result * PRIME + ($videos == null ? 43 : $videos.hashCode());
-      return result;
-    }
-
-    public String toString() {
-      return "GetAppMeta.Media(keywords="
-          + this.getKeywords()
-          + ", description="
-          + this.getDescription()
-          + ", news="
-          + this.getNews()
-          + ", screenshots="
-          + this.getScreenshots()
-          + ", videos="
-          + this.getVideos()
-          + ")";
     }
   }
 
@@ -1404,6 +1417,16 @@ public class GetAppMeta extends BaseV7Response {
       return other instanceof Urls;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $w = this.getW();
+      result = result * PRIME + ($w == null ? 43 : $w.hashCode());
+      final Object $m = this.getM();
+      result = result * PRIME + ($m == null ? 43 : $m.hashCode());
+      return result;
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Urls)) return false;
@@ -1416,16 +1439,6 @@ public class GetAppMeta extends BaseV7Response {
       final Object other$m = other.getM();
       if (this$m == null ? other$m != null : !this$m.equals(other$m)) return false;
       return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $w = this.getW();
-      result = result * PRIME + ($w == null ? 43 : $w.hashCode());
-      final Object $m = this.getM();
-      result = result * PRIME + ($m == null ? 43 : $m.hashCode());
-      return result;
     }
 
     public String toString() {
@@ -1479,6 +1492,51 @@ public class GetAppMeta extends BaseV7Response {
       return other instanceof Stats;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final Object $rating = this.getRating();
+      result = result * PRIME + ($rating == null ? 43 : $rating.hashCode());
+      final Object $globalRating = this.getGlobalRating();
+      result = result * PRIME + ($globalRating == null ? 43 : $globalRating.hashCode());
+      result = result * PRIME + this.getDownloads();
+      result = result * PRIME + this.getPdownloads();
+      return result;
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Stats)) return false;
+      final Stats other = (Stats) o;
+      if (!other.canEqual((Object) this)) return false;
+      final Object this$rating = this.getRating();
+      final Object other$rating = other.getRating();
+      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
+        return false;
+      }
+      final Object this$globalRating = this.getGlobalRating();
+      final Object other$globalRating = other.getGlobalRating();
+      if (this$globalRating == null ? other$globalRating != null
+          : !this$globalRating.equals(other$globalRating)) {
+        return false;
+      }
+      if (this.getDownloads() != other.getDownloads()) return false;
+      if (this.getPdownloads() != other.getPdownloads()) return false;
+      return true;
+    }
+
+    public String toString() {
+      return "GetAppMeta.Stats(rating="
+          + this.getRating()
+          + ", globalRating="
+          + this.getGlobalRating()
+          + ", downloads="
+          + this.getDownloads()
+          + ", pdownloads="
+          + this.getPdownloads()
+          + ")";
+    }
+
     public static class Rating {
 
       private float avg;
@@ -1516,6 +1574,41 @@ public class GetAppMeta extends BaseV7Response {
         return other instanceof Rating;
       }
 
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        result = result * PRIME + Float.floatToIntBits(this.getAvg());
+        result = result * PRIME + this.getTotal();
+        final Object $votes = this.getVotes();
+        result = result * PRIME + ($votes == null ? 43 : $votes.hashCode());
+        return result;
+      }
+
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Rating)) return false;
+        final Rating other = (Rating) o;
+        if (!other.canEqual((Object) this)) return false;
+        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
+        if (this.getTotal() != other.getTotal()) return false;
+        final Object this$votes = this.getVotes();
+        final Object other$votes = other.getVotes();
+        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
+          return false;
+        }
+        return true;
+      }
+
+      public String toString() {
+        return "GetAppMeta.Stats.Rating(avg="
+            + this.getAvg()
+            + ", total="
+            + this.getTotal()
+            + ", votes="
+            + this.getVotes()
+            + ")";
+      }
+
       public static class Vote {
 
         private int value;
@@ -1544,6 +1637,14 @@ public class GetAppMeta extends BaseV7Response {
           return other instanceof Vote;
         }
 
+        public int hashCode() {
+          final int PRIME = 59;
+          int result = 1;
+          result = result * PRIME + this.getValue();
+          result = result * PRIME + this.getCount();
+          return result;
+        }
+
         public boolean equals(Object o) {
           if (o == this) return true;
           if (!(o instanceof Vote)) return false;
@@ -1554,14 +1655,6 @@ public class GetAppMeta extends BaseV7Response {
           return true;
         }
 
-        public int hashCode() {
-          final int PRIME = 59;
-          int result = 1;
-          result = result * PRIME + this.getValue();
-          result = result * PRIME + this.getCount();
-          return result;
-        }
-
         public String toString() {
           return "GetAppMeta.Stats.Rating.Vote(value="
               + this.getValue()
@@ -1570,86 +1663,6 @@ public class GetAppMeta extends BaseV7Response {
               + ")";
         }
       }
-
-      public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Rating)) return false;
-        final Rating other = (Rating) o;
-        if (!other.canEqual((Object) this)) return false;
-        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
-        if (this.getTotal() != other.getTotal()) return false;
-        final Object this$votes = this.getVotes();
-        final Object other$votes = other.getVotes();
-        if (this$votes == null ? other$votes != null : !this$votes.equals(other$votes)) {
-          return false;
-        }
-        return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = result * PRIME + Float.floatToIntBits(this.getAvg());
-        result = result * PRIME + this.getTotal();
-        final Object $votes = this.getVotes();
-        result = result * PRIME + ($votes == null ? 43 : $votes.hashCode());
-        return result;
-      }
-
-      public String toString() {
-        return "GetAppMeta.Stats.Rating(avg="
-            + this.getAvg()
-            + ", total="
-            + this.getTotal()
-            + ", votes="
-            + this.getVotes()
-            + ")";
-      }
-    }
-
-    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Stats)) return false;
-      final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
-      final Object this$rating = this.getRating();
-      final Object other$rating = other.getRating();
-      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
-        return false;
-      }
-      final Object this$globalRating = this.getGlobalRating();
-      final Object other$globalRating = other.getGlobalRating();
-      if (this$globalRating == null ? other$globalRating != null
-          : !this$globalRating.equals(other$globalRating)) {
-        return false;
-      }
-      if (this.getDownloads() != other.getDownloads()) return false;
-      if (this.getPdownloads() != other.getPdownloads()) return false;
-      return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final Object $rating = this.getRating();
-      result = result * PRIME + ($rating == null ? 43 : $rating.hashCode());
-      final Object $globalRating = this.getGlobalRating();
-      result = result * PRIME + ($globalRating == null ? 43 : $globalRating.hashCode());
-      result = result * PRIME + this.getDownloads();
-      result = result * PRIME + this.getPdownloads();
-      return result;
-    }
-
-    public String toString() {
-      return "GetAppMeta.Stats(rating="
-          + this.getRating()
-          + ", globalRating="
-          + this.getGlobalRating()
-          + ", downloads="
-          + this.getDownloads()
-          + ", pdownloads="
-          + this.getPdownloads()
-          + ")";
     }
   }
 }

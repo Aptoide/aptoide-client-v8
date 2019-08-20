@@ -107,7 +107,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false);
+            "marketName", false, false, bdsFlags, "", "", false, null);
     AppViewModel exampleAppViewModel = new AppViewModel(appModel, null, null, null);
 
     appViewManager =
@@ -225,7 +225,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false);
+            "marketName", false, false, bdsFlags, "", "", false, null);
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
@@ -334,7 +334,7 @@ public class AppViewManagerTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false);
+            "marketName", false, false, bdsFlags, "", "", false, null);
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -360,8 +360,8 @@ public class AppViewManagerTest {
     int action = downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL);
     when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
         appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
-        appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false,
-        appModel.getSize())).thenReturn(download);
+        appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false, appModel.getSize(),
+        null)).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");

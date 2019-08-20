@@ -6,11 +6,13 @@
 package cm.aptoide.pt.download;
 
 import androidx.annotation.Nullable;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import io.realm.RealmList;
+import java.util.List;
 
 /**
  * Created by marcelobenites on 6/29/16.
@@ -139,7 +141,7 @@ public class DownloadFactory {
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc, long size) {
+      boolean hasAppc, long size, List<Split> splits) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);

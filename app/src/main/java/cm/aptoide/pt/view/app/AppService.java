@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.app;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
@@ -249,11 +250,24 @@ public class AppService {
               app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
-              .getSha1());
+              .getSha1(), app.hasSplits() ? map(app.getAab()
+              .getSplits()) : null);
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
+  }
+
+  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    List<Split> splitsMapResult = new ArrayList<>();
+
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsMapResult.add(
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
+              split.getMd5sum()));
+    }
+
+    return splitsMapResult;
   }
 
   private Observable<PaidApp> getPaidApp(long appId) {

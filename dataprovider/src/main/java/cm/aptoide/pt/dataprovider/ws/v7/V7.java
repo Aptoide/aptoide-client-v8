@@ -266,7 +266,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
   public interface Interfaces {
 
     @POST("getApp") Observable<GetApp> getApp(@Body GetAppRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listApps{url}") Observable<ListApps> listApps(
         @Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body body,

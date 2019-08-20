@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
@@ -43,6 +44,7 @@ public class DetailedApp {
   private final String paymentStatus;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
+  private final List<Split> splits;
   private String path;
   private long id;
   private boolean hasBilling;
@@ -59,7 +61,6 @@ public class DetailedApp {
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
       boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature) {
-
     this.id = id;
     this.name = name;
     this.packageName = packageName;
@@ -98,6 +99,7 @@ public class DetailedApp {
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
     this.signature = signature;
+    this.splits = null;
   }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -107,8 +109,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
       String uniqueName, boolean hasBilling, boolean hasAdvertising, List<String> bdsFlags,
-      boolean isMature, String signature) {
-
+      boolean isMature, String signature, List<Split> splits) {
     this.id = id;
     this.name = name;
     this.packageName = packageName;
@@ -141,6 +142,7 @@ public class DetailedApp {
     this.hasAdvertising = hasAdvertising;
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
+    this.splits = splits;
     this.wasPaid = false;
     this.paidAppPath = "";
     this.paymentStatus = "";
@@ -311,5 +313,9 @@ public class DetailedApp {
 
   public String getSignature() {
     return signature;
+  }
+
+  public List<Split> getSplits() {
+    return this.splits;
   }
 }

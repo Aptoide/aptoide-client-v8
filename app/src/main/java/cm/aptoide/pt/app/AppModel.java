@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import android.os.Build;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.view.AppViewFragment.OpenType;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -51,7 +52,6 @@ public class AppModel {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private String path;
   private final String pathAlt;
   private final int versionCode;
   private final String versionName;
@@ -68,6 +68,8 @@ public class AppModel {
   private final DetailedAppRequestResult.Error error;
   private final String marketName;
   private final boolean isMature;
+  private final List<Split> splits;
+  private String path;
   private boolean hasBilling;
   private boolean hasAdvertising;
   private List<String> bdsFlags;
@@ -84,7 +86,8 @@ public class AppModel {
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
-      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature) {
+      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
+      List<Split> splits) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -135,6 +138,7 @@ public class AppModel {
     this.campaignUrl = campaignUrl;
     this.signature = signature;
     this.isMature = isMature;
+    this.splits = splits;
     this.loading = false;
     this.error = null;
   }
@@ -192,6 +196,7 @@ public class AppModel {
     this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
+    this.splits = null;
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -248,6 +253,7 @@ public class AppModel {
     this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
+    this.splits = null;
   }
 
   public boolean isMature() {
@@ -479,5 +485,9 @@ public class AppModel {
 
   public String getSignature() {
     return signature;
+  }
+
+  public List<Split> getSplits() {
+    return splits;
   }
 }

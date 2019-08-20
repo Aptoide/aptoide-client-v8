@@ -237,7 +237,8 @@ public class AppViewManager {
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
             app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
-            app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize())))
+            app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(),
+            app.getSplits())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
@@ -262,7 +263,7 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize()))
+        false, walletApp.getSize(), null))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()

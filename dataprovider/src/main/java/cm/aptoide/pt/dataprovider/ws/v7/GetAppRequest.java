@@ -91,7 +91,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApp(body, bypassCache);
+    return interfaces.getApp(body, bypassCache, true);
   }
 
   public static class Body extends BaseBodyWithApp {
