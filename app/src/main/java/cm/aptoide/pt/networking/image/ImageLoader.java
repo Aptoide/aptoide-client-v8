@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -310,6 +311,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().placeholder(new ColorDrawable(colorInt)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");

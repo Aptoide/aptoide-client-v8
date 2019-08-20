@@ -40,9 +40,6 @@ class EarnAppCoinsItemViewHolder(val view: View,
             object : RequestListener<Drawable> {
               override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
                                         isFirstResource: Boolean): Boolean {
-                ImageLoader.with(itemView.context)
-                    .loadWithColorPlaceholder(app.featureGraphic, Color.WHITE,
-                        itemView.app_feature_graphic)
                 return false
               }
 
