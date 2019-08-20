@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -301,6 +303,20 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<Drawable> loadWithColorPlaceholder(String url, @ColorInt int colorInt,
+      ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .apply(getRequestOptions().placeholder(new ColorDrawable(colorInt)))
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   public Target<Drawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
@@ -427,6 +443,21 @@ public class ImageLoader {
               .transforms(new CenterCrop(), new RoundedCorners(radius)))
           .into(previewImage);
     }
+  }
+
+  public Target<Drawable> loadWithRoundCorners(String image, int radius, ImageView previewImage,
+      @DrawableRes int placeHolderDrawableId, RequestListener<Drawable> requestListener) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(image)
+          .apply(getRequestOptions().centerCrop()
+              .placeholder(placeHolderDrawableId)
+              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+          .listener(requestListener)
+          .into(previewImage);
+    }
+    return null;
   }
 
   public void loadIntoTarget(String imageUrl, SimpleTarget<Drawable> simpleTarget) {
