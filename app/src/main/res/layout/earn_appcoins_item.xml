@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="57dp"
         android:scaleType="centerCrop"
-        android:tint="#40000000"
         app:layout_constraintTop_toTopOf="parent"
         />
     <ImageView
