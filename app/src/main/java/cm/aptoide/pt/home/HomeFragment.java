@@ -305,7 +305,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.KNOW_MORE));
+        .equals(HomeEvent.Type.APPC_KNOW_MORE));
   }
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {

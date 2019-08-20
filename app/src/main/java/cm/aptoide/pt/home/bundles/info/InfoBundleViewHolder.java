@@ -42,7 +42,7 @@ public class InfoBundleViewHolder extends AppBundleViewHolder {
     title.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
     message.setText(Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
     knowMoreButton.setOnClickListener(view -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.KNOW_MORE)));
+        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.APPC_KNOW_MORE)));
     dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
         new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.DISMISS_BUNDLE)));
   }

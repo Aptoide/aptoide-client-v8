@@ -301,7 +301,7 @@ public class HomePresenterTest {
     presenter.handleKnowMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
-    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.KNOW_MORE));
+    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should navigate to the AppCoins wallet information view.
     verify(homeNavigator).navigateToAppCoinsInformationView();
   }
@@ -315,7 +315,8 @@ public class HomePresenterTest {
     ActionBundle bundle = getFakeActionBundle();
     when(home.remove(bundle)).thenReturn(Completable.complete());
     //When an user clicks on the dismiss button in the information bundle
-    dismissEvent.onNext(new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.KNOW_MORE));
+    dismissEvent.onNext(
+        new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should remove the bundle from the cache and view.
     verify(home).remove(bundle);
     verify(view).hideBundle(bundlePositionToBeRemoved);
@@ -327,7 +328,7 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And an action bundle
     ActionBundle bundle = getFakeActionBundle();
-    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.KNOW_MORE);
+    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.APPC_KNOW_MORE);
     when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());
     //When the bundle is visible to the user
     visibleBundleEvent.onNext(event);
