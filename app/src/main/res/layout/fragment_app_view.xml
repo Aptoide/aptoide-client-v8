@@ -200,13 +200,18 @@
             tools:visibility="visible"
             >
 
-          <include
+          <!--<include
               layout="@layout/install_app_view"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              />-->
+
+          <ViewStub
+              android:id="@+id/appview_install_element"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginBottom="11dp"
               />
-
 
           <include
               layout="@layout/appview_apkfy_layout_element"
@@ -233,11 +238,13 @@
                 android:animateLayoutChanges="true"
                 >
               <include
-                  layout="@layout/appview_appc_reward"
-                  android:id="@+id/appc_layout"
-                  android:layout_width="wrap_content"
+                  layout="@layout/appview_poa_layout"
+                  android:id="@+id/poa_appc_layout"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center_horizontal"
+                  android:layout_marginEnd="32dp"
+                  android:layout_marginStart="32dp"
                   android:visibility="gone"
                   tools:visibility="visible"
                   />
