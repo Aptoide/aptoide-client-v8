@@ -40,9 +40,10 @@ public class AppCoinsService {
         .isEmpty()) {
       return new AppCoinsAdvertisingModel();
     } else {
-      return new AppCoinsAdvertisingModel(listAppCoinsCampaigns.getList()
+      return new AppCoinsAdvertisingModel(String.valueOf(listAppCoinsCampaigns.getList()
           .get(0)
-          .getReward(), true);
+          .getReward()
+          .getAppc()), true);
     }
   }
 }

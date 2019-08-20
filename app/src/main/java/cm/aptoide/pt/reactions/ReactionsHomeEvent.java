@@ -1,7 +1,7 @@
 package cm.aptoide.pt.reactions;
 
-import cm.aptoide.pt.home.EditorialHomeEvent;
-import cm.aptoide.pt.home.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 
 public class ReactionsHomeEvent extends EditorialHomeEvent {
   private final String reaction;

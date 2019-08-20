@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="377dp"
+    android:layout_marginTop="13dp"
+    >
+  <ImageView
+      android:id="@+id/header_image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:elevation="4dp"
+      app:layout_constraintBottom_toTopOf="@+id/bg_view"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="@+id/bg_view"
+      app:srcCompat="@drawable/ic_earn_appcoins"
+      />
+
+  <android.support.v7.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="20dp"
+      >
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+      <View
+          android:id="@+id/bg_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@drawable/earn_appcoins_bg"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          />
+
+      <TextView
+          android:id="@+id/title"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="50dp"
+          android:text="@string/appc_home_bundle_poa"
+          app:layout_constraintEnd_toEndOf="@+id/bg_view"
+          app:layout_constraintStart_toStartOf="@+id/bg_view"
+          app:layout_constraintTop_toTopOf="parent"
+          style="@style/Aptoide.TextView.Medium.M.White"
+          />
+
+      <TextView
+          android:id="@+id/header_sub_text"
+          android:layout_width="280dp"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="2dp"
+          android:gravity="center"
+          android:text="@string/poa_home_card_body"
+          app:layout_constraintEnd_toEndOf="@+id/bg_view"
+          app:layout_constraintStart_toStartOf="@+id/bg_view"
+          app:layout_constraintTop_toBottomOf="@+id/title"
+          style="@style/Aptoide.TextView.Regular.XS.White"
+          />
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/apps_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:orientation="horizontal"
+          app:layout_constraintBottom_toTopOf="@+id/see_more_btn"
+          app:layout_constraintTop_toBottomOf="@+id/header_sub_text"
+          />
+
+      <Button
+          android:id="@+id/see_more_btn"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/see_more"
+          android:visibility="visible"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/apps_list"
+          style="@style/Aptoide.Button.Flat.White"
+          />
+
+    </android.support.constraint.ConstraintLayout>
+
+  </android.support.v7.widget.CardView>
+</FrameLayout>
+
