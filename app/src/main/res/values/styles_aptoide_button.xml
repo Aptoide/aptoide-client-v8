@@ -136,6 +136,10 @@
     <item name="android:textColor">@color/grey_medium</item>
   </style>
 
+  <style name="Aptoide.Button.Flat.White">
+    <item name="android:textColor">@color/white</item>
+  </style>
+
   <style name="Aptoide.Button.Flat.DefaultOrangeGradientEnd" parent="Widget.AppCompat.Button.Borderless.Colored">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">@dimen/button_height</item>

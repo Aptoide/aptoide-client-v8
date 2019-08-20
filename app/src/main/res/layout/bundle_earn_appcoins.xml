@@ -33,8 +33,9 @@
       <View
           android:id="@+id/bg_view"
           android:layout_width="match_parent"
-          android:layout_height="170dp"
+          android:layout_height="match_parent"
           android:background="@drawable/earn_appcoins_bg"
+          app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
@@ -85,7 +86,7 @@
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toRightOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/apps_list"
-          style="@style/Aptoide.Button.Flat"
+          style="@style/Aptoide.Button.Flat.White"
           />
 
     </android.support.constraint.ConstraintLayout>
