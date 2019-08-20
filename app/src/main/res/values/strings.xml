@@ -26,6 +26,7 @@
   <string name="install">Install</string>
   <string name="open">Open</string>
   <string name="all_title_ad">Ad</string>
+  <string name="not_now_button">NOT NOW</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -717,6 +718,7 @@
   <string name="poa_time_left_minutes">MINUTES</string>
   <string name="poa_earn_view_title">Earn AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
+  <string name="poa_bundle_title">Earn AppCoins</string>
 
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
@@ -727,5 +729,20 @@
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle "Earn AppCoins Credits" in Aptoide home!</string>
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
   <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+
+  <!--Updates Notification-->
+  <string name="updates_notification_title">Don\'t get left behind!</string>
+  <plurals name="updates_notification_body">
+    <item quantity="one">You\'ve got %d update ready to install</item>
+    <item quantity="two">You\'ve got %d updates ready to install</item>
+    <item quantity="few">You\'ve got %d updates ready to install</item>
+    <item quantity="many">You\'ve got %d updates ready to install</item>
+    <item quantity="other">You\'ve got %d updates ready to install</item>
+  </plurals>
+  <string name="updates_notification_dismiss_button">DISMISS</string>
+  <string name="updates_notification_update_button">UPDATE</string>
+  
+  <string name="auto_update_popup_title">Update Aptoide!</string>
+  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute!</string>
 
 </resources>

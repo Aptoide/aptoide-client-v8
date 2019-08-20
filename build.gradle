@@ -9,7 +9,6 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:3.4.2'
     classpath 'me.tatarka:gradle-retrolambda:3.7.0'
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
     classpath 'io.realm:realm-gradle-plugin:3.5.0'
     classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -23,8 +22,6 @@ allprojects {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
-    maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk" }
-    maven { url "https://dl.bintray.com/ironsource-mobile/android-adapters" }
 
     google()
     jcenter()
@@ -127,8 +124,6 @@ ext {
   MOPUB_MEDIATION_APPLOVIN_VERSION = '8.1.4.3'
   FLURRY_ADS_VERSION = '11.6.0'
   MOPUB_MEDIATION_FLURRY_VERSION = '11.6.0.0'
-  IRONSOURCE_MEDIATION_SDK_VERSION = '6.8.3'
-  MOPUB_MEDIATION_IRONSOURCE_VERSION = '6.8.3.0'
   VUNGLE_SDK_VERSION = '6.3.24'
   MOPUB_MEDIATION_VUNGLE_VERSION = '6.3.24.2'
   UNITY_ADS_SDK_VERSION = '3.0.1'
@@ -138,7 +133,7 @@ ext {
 
   PICASSO_VERSION = '2.5.2'
 
-  OKHTTP_VERSION = '3.14.2'
+  OKHTTP_VERSION = '3.12.3'
 
   CONSTRAINT_LAYOUT_VERSION = '1.1.3'
 

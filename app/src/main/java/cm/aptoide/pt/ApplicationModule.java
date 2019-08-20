@@ -571,8 +571,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         Build.VERSION.SDK_INT, AptoideUtils.SystemU.getModel(), AptoideUtils.SystemU.getProduct(),
         System.getProperty("os.arch"), new DisplayMetrics(),
         AptoideUtils.Core.getDefaultVername(application)
-            .replace("aptoide-", ""), aptoidePackage, aptoideMd5Manager.getAptoideMd5(),
-        BuildConfig.VERSION_CODE, authenticationPersistence);
+            .replace("aptoide-", ""), aptoidePackage, aptoideMd5Manager, BuildConfig.VERSION_CODE,
+        authenticationPersistence);
   }
 
   @Singleton @Provides @Named("retrofit-log") Interceptor provideRetrofitLogInterceptor() {
@@ -910,8 +910,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("no-authentication-v3")
   BodyInterceptor<BaseBody> provideNoAuthenticationBodyInterceptorV3(IdsRepository idsRepository,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5Manager.getAptoideMd5(),
-        aptoidePackage);
+    return new NoAuthenticationBodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage);
   }
 
   @Singleton @Provides @Named("mature-pool-v7")
@@ -926,8 +925,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
+        aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
         resources, BuildConfig.VERSION_CODE);
   }
 
@@ -950,8 +949,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence, IdsRepository idsRepository,
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
+    return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
+        aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
         resources, BuildConfig.VERSION_CODE);
   }
 
@@ -961,7 +960,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager.getAptoideMd5(), aptoidePackage, resources, BuildConfig.VERSION_CODE,
+        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE,
         qManager, sharedPreferences);
   }
 
@@ -1074,12 +1073,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AptoideAccountManager accountManager, @Named("default") OkHttpClient okHttpClient,
       QManager qManager, @Named("default") SharedPreferences defaultSharedPreferences,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      ConnectivityManager connectivityManager) {
+      ConnectivityManager connectivityManager, OemidProvider oemidProvider) {
     return new AdsRepository(idsRepository, accountManager, okHttpClient,
         WebService.getDefaultConverter(), qManager, defaultSharedPreferences,
         application.getApplicationContext(), connectivityManager, application.getResources(),
         adsApplicationVersionCodeProvider, AdNetworkUtils::isGooglePlayServicesAvailable,
-        application::getPartnerId, new MinimalAdMapper());
+        oemidProvider.getOemid(), new MinimalAdMapper());
   }
 
   @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
@@ -1108,7 +1107,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NetworkOperatorManager networkOperatorManager,
       AuthenticationPersistence authenticationPersistence,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager.getAptoideMd5(), aptoidePackage,
+    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage,
         qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
         Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
   }
@@ -1540,13 +1539,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PackageRepository packageRepository, Database database, IdsRepository idsRepository,
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider) {
+      AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
+      OemidProvider oemidProvider) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
         idsRepository.getUniqueIdentifier(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
-        ((AptoideApplication) getApplicationContext()).getPartnerId(), accountManager,
+        oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10);

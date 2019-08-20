@@ -228,11 +228,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
 
   public void showLoadMoreError() {
     bundles.add(errorBundle);
-    notifyItemInserted(bundles.size());
+    notifyItemInserted(bundles.indexOf(errorBundle));
   }
 
   public void removeLoadMoreError() {
-    bundles.remove(errorBundle);
-    notifyItemRemoved(bundles.size());
+    remove(bundles.indexOf(errorBundle));
   }
 }

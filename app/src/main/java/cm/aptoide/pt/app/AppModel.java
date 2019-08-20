@@ -422,6 +422,10 @@ public class AppModel {
     return editorsChoice;
   }
 
+  public boolean isFromEditorsChoice() {
+    return !editorsChoice.isEmpty();
+  }
+
   public String getOriginTag() {
     return originTag;
   }
