@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view;
 
-import cm.aptoide.pt.home.BundlesRepository;
-import cm.aptoide.pt.home.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.BundlesRepository;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
 import rx.Single;
 
 /**

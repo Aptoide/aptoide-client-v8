@@ -7,24 +7,24 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.home.ActionBundle;
-import cm.aptoide.pt.home.ActionItem;
-import cm.aptoide.pt.home.AdBundle;
-import cm.aptoide.pt.home.AdClick;
-import cm.aptoide.pt.home.AdHomeEvent;
-import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AdsTagWrapper;
-import cm.aptoide.pt.home.AppHomeEvent;
-import cm.aptoide.pt.home.EditorialHomeEvent;
-import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
-import cm.aptoide.pt.home.HomeBundle;
-import cm.aptoide.pt.home.HomeBundlesModel;
-import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
+import cm.aptoide.pt.home.bundles.FakeBundleDataSource;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdBundle;
+import cm.aptoide.pt.home.bundles.ads.AdClick;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.ActionItem;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
@@ -301,7 +301,7 @@ public class HomePresenterTest {
     presenter.handleKnowMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
-    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.KNOW_MORE));
+    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should navigate to the AppCoins wallet information view.
     verify(homeNavigator).navigateToAppCoinsInformationView();
   }
@@ -315,7 +315,8 @@ public class HomePresenterTest {
     ActionBundle bundle = getFakeActionBundle();
     when(home.remove(bundle)).thenReturn(Completable.complete());
     //When an user clicks on the dismiss button in the information bundle
-    dismissEvent.onNext(new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.KNOW_MORE));
+    dismissEvent.onNext(
+        new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should remove the bundle from the cache and view.
     verify(home).remove(bundle);
     verify(view).hideBundle(bundlePositionToBeRemoved);
@@ -327,7 +328,7 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And an action bundle
     ActionBundle bundle = getFakeActionBundle();
-    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.KNOW_MORE);
+    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.APPC_KNOW_MORE);
     when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());
     //When the bundle is visible to the user
     visibleBundleEvent.onNext(event);
