@@ -93,6 +93,7 @@
           android:layout_height="wrap_content"
           android:background="#f7f7f7"
           android:visibility="gone"
+          tools:visibility="visible"
           >
         <ImageView
             android:layout_width="34dp"

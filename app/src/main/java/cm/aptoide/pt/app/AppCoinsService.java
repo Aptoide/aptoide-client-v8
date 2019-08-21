@@ -40,10 +40,10 @@ public class AppCoinsService {
         .isEmpty()) {
       return new AppCoinsAdvertisingModel();
     } else {
-      return new AppCoinsAdvertisingModel(String.valueOf(listAppCoinsCampaigns.getList()
+      return new AppCoinsAdvertisingModel(listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
-          .getAppc()), true, listAppCoinsCampaigns.getList()
+          .getAppc(), true, listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
           .getFiat()
@@ -51,7 +51,12 @@ public class AppCoinsService {
           .get(0)
           .getReward()
           .getFiat()
-          .getSymbol());
+          .getSymbol(), listAppCoinsCampaigns.getList()
+          .get(0)
+          .getBudget() != null ? listAppCoinsCampaigns.getList()
+          .get(0)
+          .getBudget()
+          .getAppc() : -1.0);
     }
   }
 }
