@@ -38,6 +38,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -164,6 +165,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
+  private PublishSubject<Void> cancelClickSubject;
+  private PublishSubject<DownloadModel.Action> resumeClickSubject;
+  private PublishSubject<Void> pauseClickSubject;
   private PublishSubject<MoPubInterstitialAdClickType> interstitialClick;
 
   //Views
@@ -178,9 +182,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView downloadsTop;
   private TextView sizeInfo;
   private TextView ratingInfo;
-  private View appcRewardView;
   private View appcMigrationWarningMessage;
-  private TextView appcRewardValue;
   private View versionsLayout;
   private TextView latestVersionTitle;
   private TextView latestVersion;
@@ -243,7 +245,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private Subscription errorMessageSubscription;
   private NestedScrollView scrollView;
   private int scrollViewY;
-  private AppViewAppcInfoViewHolder appcInfoView;
+  private ViewStub appviewInstall;
+  private ViewStub poaInstall;
+  private View otherVersionsTopSeparator;
+  private View appcInfoView;
+  private ImageView poaCoinsIcon;
+  private View poaIabInfo;
+  private TextView poaOfferValue;
+  private View iabInfo;
   private View apkfyElement;
   private View donationsElement;
   private RecyclerView donationsList;
@@ -277,6 +286,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView resumeWalletDownload;
   private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
+  private DecimalFormat poaFiatDecimalFormat;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -290,8 +300,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     similarAppsVisibilitySubject = PublishSubject.create();
     appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
+    resumeClickSubject = PublishSubject.create();
+    cancelClickSubject = PublishSubject.create();
+    pauseClickSubject = PublishSubject.create();
     interstitialClick = PublishSubject.create();
     promotionAppClick = PublishSubject.create();
+    poaFiatDecimalFormat = new DecimalFormat("0.00");
 
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
@@ -305,10 +319,34 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    ViewStub.OnInflateListener installInflateListener = (viewStub, view1) -> {
+      install = ((Button) view1.findViewById(R.id.appview_install_button));
+      downloadInfoLayout = ((LinearLayout) view1.findViewById(R.id.appview_transfer_info));
+      downloadProgressBar = ((ProgressBar) view1.findViewById(R.id.appview_download_progress_bar));
+      downloadProgressValue = (TextView) view1.findViewById(R.id.appview_download_progress_number);
+      cancelDownload = ((ImageView) view1.findViewById(R.id.appview_download_cancel_button));
+      resumeDownload = ((ImageView) view1.findViewById(R.id.appview_download_resume_download));
+      pauseDownload = ((ImageView) view1.findViewById(R.id.appview_download_pause_download));
+      installStateText = view1.findViewById(R.id.appview_download_download_state);
+      downloadControlsLayout = view1.findViewById(R.id.install_controls_layout);
+
+      install.setOnClickListener(click -> installClickSubject.onNext(null));
+      resumeDownload.setOnClickListener(click -> resumeClickSubject.onNext(null));
+      cancelDownload.setOnClickListener(click -> cancelClickSubject.onNext(null));
+      pauseDownload.setOnClickListener(click -> pauseClickSubject.onNext(null));
+    };
+
+    appviewInstall = view.findViewById(R.id.appview_install_element);
+    appviewInstall.setLayoutResource(R.layout.install_app_view);
+    appviewInstall.setOnInflateListener(installInflateListener);
+    poaInstall = view.findViewById(R.id.poa_install_element);
+    poaInstall.setLayoutResource(R.layout.install_app_view);
+    poaInstall.setOnInflateListener(installInflateListener);
+
     scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
     errorView = view.findViewById(R.id.error_view);
     reviewsLayout = view.findViewById(R.id.reviews_layout);
-    downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
     appIcon = view.findViewById(R.id.app_icon);
     trustedBadge = view.findViewById(R.id.trusted_badge);
     appName = view.findViewById(R.id.app_name);
@@ -317,13 +355,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadsTop = view.findViewById(R.id.header_downloads);
     sizeInfo = view.findViewById(R.id.header_size);
     ratingInfo = view.findViewById(R.id.header_rating);
-    appcRewardView = view.findViewById(R.id.appc_layout);
     appcMigrationWarningMessage = view.findViewById(R.id.migration_warning);
-    appcRewardValue = view.findViewById(R.id.appcoins_reward_message);
-    appcInfoView =
-        new AppViewAppcInfoViewHolder((LinearLayout) view.findViewById(R.id.iap_appc_label),
-            appcRewardView, appcRewardValue,
-            (TextView) appcRewardView.findViewById(R.id.appc_billing_text_secondary));
+    otherVersionsTopSeparator = view.findViewById(R.id.other_versions_top_separator);
+    appcInfoView = view.findViewById(R.id.poa_appc_layout);
+    poaCoinsIcon = view.findViewById(R.id.coins_icon);
+    poaIabInfo = view.findViewById(R.id.inapp_purchases);
+    poaOfferValue = view.findViewById(R.id.offer_value);
+    iabInfo = view.findViewById(R.id.iap_appc_label);
     versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
     latestVersion = versionsLayout.findViewById(R.id.latest_version);
@@ -389,15 +427,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     appview = view.findViewById(R.id.appview_full);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
     collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
-
-    install = ((Button) view.findViewById(R.id.appview_install_button));
-    downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
-    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
-    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
-    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
-    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
-    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
-    installStateText = view.findViewById(R.id.appview_download_download_state);
 
     promotionView = view.findViewById(R.id.wallet_install_promotion);
     walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
@@ -519,6 +548,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void onDestroyView() {
     super.onDestroyView();
     scrollViewY = scrollView.getScrollY();
+    appviewInstall = null;
+    poaInstall = null;
+    appcInfoView = null;
+    poaIabInfo = null;
+    poaOfferValue = null;
+    iabInfo = null;
     errorView = null;
     appIcon = null;
     trustedBadge = null;
@@ -528,8 +563,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     downloadsTop = null;
     sizeInfo = null;
     ratingInfo = null;
-    appcRewardView = null;
-    appcRewardValue = null;
     latestVersion = null;
     otherVersions = null;
     screenshots = null;
@@ -672,7 +705,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
-    install.setOnClickListener(click -> installClickSubject.onNext(action));
   }
 
   @Override public void handleError(DetailedAppRequestResult.Error error) {
@@ -743,7 +775,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<Void> clickGetAppcInfo() {
-    return RxView.clicks(appcRewardView);
+    return RxView.clicks(poaCoinsIcon);
   }
 
   @Override public void displayNotLoggedInSnack() {
@@ -1177,6 +1209,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     consentDialogView.showConsentDialog();
   }
 
+  @Override public void setInstallButton(AppCoinsViewModel appCoinsViewModel) {
+    if (appCoinsViewModel.hasAdvertising()) {
+      poaInstall.inflate();
+      otherVersionsTopSeparator.setVisibility(View.INVISIBLE);
+    } else {
+      appviewInstall.inflate();
+    }
+  }
+
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
     int stringId = R.string.wallet_promotion_wallet_installed_message;
     if (appDownloadModel.getAction() == DownloadModel.Action.MIGRATE
@@ -1556,7 +1597,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<DownloadModel.Action> installAppClick() {
-    return installClickSubject;
+    return installClickSubject.map(__ -> action);
   }
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
@@ -1568,22 +1609,27 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showDownloadAppModel(DownloadModel downloadModel,
       AppCoinsViewModel appCoinsViewModel) {
     this.action = downloadModel.getAction();
+
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
+
+    if (!action.equals(DownloadModel.Action.MIGRATE)) {
+      showAppcInfo(appCoinsViewModel.getAdvertisingModel()
+              .getHasAdvertising(), appCoinsViewModel.hasBilling(),
+          appCoinsViewModel.getAdvertisingModel()
+              .getAppcReward(), appCoinsViewModel.getAdvertisingModel()
+              .getFiatReward(), appCoinsViewModel.getAdvertisingModel()
+              .getFiatCurrency());
+    }
+
     if (downloadModel.isDownloadingOrInstalling()) {
-      appcInfoView.hideInfo();
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      if (!action.equals(DownloadModel.Action.MIGRATE)) {
-        appcInfoView.showInfo(appCoinsViewModel.getAdvertisingModel()
-            .getHasAdvertising(), appCoinsViewModel.hasBilling(), formatAppCoinsRewardMessage(
-            appCoinsViewModel.getAdvertisingModel()
-                .getReward()));
-      } else {
-        appcRewardView.setVisibility(View.GONE);
+      if (action.equals(DownloadModel.Action.MIGRATE)) {
+        appcInfoView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
       }
       downloadInfoLayout.setVisibility(View.GONE);
@@ -1612,20 +1658,33 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<Void> pauseDownload() {
-    return RxView.clicks(pauseDownload);
+    return pauseClickSubject;
   }
 
   @Override public Observable<DownloadModel.Action> resumeDownload() {
-    return RxView.clicks(resumeDownload)
-        .map(__ -> action);
+    return resumeClickSubject.map(__ -> action);
   }
 
   @Override public Observable<Void> cancelDownload() {
-    return RxView.clicks(cancelDownload);
+    return cancelClickSubject;
   }
 
   @Override public Observable<AppBoughClickEvent> appBought() {
     return appBought;
+  }
+
+  private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, String appcReward,
+      double fiatReward, String fiatCurrency) {
+    if (hasAdvertising) {
+      String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
+      appcInfoView.setVisibility(View.VISIBLE);
+      poaOfferValue.setText(
+          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward,
+              formatedFiatCurrency));
+      if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
+    } else {
+      if (hasBilling) iabInfo.setVisibility(View.VISIBLE);
+    }
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
