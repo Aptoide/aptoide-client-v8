@@ -43,7 +43,15 @@ public class AppCoinsService {
       return new AppCoinsAdvertisingModel(String.valueOf(listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
-          .getAppc()), true);
+          .getAppc()), true, listAppCoinsCampaigns.getList()
+          .get(0)
+          .getReward()
+          .getFiat()
+          .getAmount(), listAppCoinsCampaigns.getList()
+          .get(0)
+          .getReward()
+          .getFiat()
+          .getSymbol());
     }
   }
 }

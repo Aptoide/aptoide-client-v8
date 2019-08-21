@@ -181,4 +181,6 @@ public interface AppViewView extends InstallAppView {
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 
   void showConsentDialog();
+
+  void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 }

@@ -270,6 +270,10 @@
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.M.AppcColor">
+    <item name="android:textColor">#ff7867</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.S.Theme">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
