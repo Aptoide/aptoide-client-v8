@@ -248,6 +248,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ViewStub appviewInstall;
   private ViewStub poaInstall;
   private ViewStub.OnInflateListener installInflateListener;
+  private View otherVersionsTopSeparator;
   private View appcInfoView;
   private View poaIabInfo;
   private TextView poaOfferValue;
@@ -357,6 +358,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     sizeInfo = view.findViewById(R.id.header_size);
     ratingInfo = view.findViewById(R.id.header_rating);
     appcMigrationWarningMessage = view.findViewById(R.id.migration_warning);
+    otherVersionsTopSeparator = view.findViewById(R.id.other_versions_top_separator);
     appcInfoView = view.findViewById(R.id.poa_appc_layout);
     poaIabInfo = view.findViewById(R.id.inapp_purchases);
     poaOfferValue = view.findViewById(R.id.offer_value);
@@ -552,6 +554,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     installInflateListener = null;
     appviewInstall = null;
     poaInstall = null;
+    appcInfoView = null;
+    poaIabInfo = null;
+    poaOfferValue = null;
+    iabInfo = null;
     errorView = null;
     appIcon = null;
     trustedBadge = null;
@@ -1210,6 +1216,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void setInstallButton(AppCoinsViewModel appCoinsViewModel) {
     if (appCoinsViewModel.hasAdvertising()) {
       poaInstall.inflate();
+      otherVersionsTopSeparator.setVisibility(View.INVISIBLE);
     } else {
       appviewInstall.inflate();
     }
@@ -1610,20 +1617,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (downloadModel.getAction() == DownloadModel.Action.PAY) {
       registerPaymentResult();
     }
+
+    if (!action.equals(DownloadModel.Action.MIGRATE)) {
+      showAppcInfo(appCoinsViewModel.getAdvertisingModel()
+              .getHasAdvertising(), appCoinsViewModel.hasBilling(),
+          appCoinsViewModel.getAdvertisingModel()
+              .getAppcReward(), appCoinsViewModel.getAdvertisingModel()
+              .getFiatReward(), appCoinsViewModel.getAdvertisingModel()
+              .getFiatCurrency(),  appCoinsViewModel.getAdvertisingModel()
+              .getAppcBudget());
+    }
+
     if (downloadModel.isDownloadingOrInstalling()) {
       downloadInfoLayout.setVisibility(View.VISIBLE);
       install.setVisibility(View.GONE);
       setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
     } else {
-      if (!action.equals(DownloadModel.Action.MIGRATE)) {
-        showAppcInfo(appCoinsViewModel.getAdvertisingModel()
-                .getHasAdvertising(), appCoinsViewModel.hasBilling(),
-            appCoinsViewModel.getAdvertisingModel()
-                .getAppcReward(), appCoinsViewModel.getAdvertisingModel()
-                .getFiatReward(), appCoinsViewModel.getAdvertisingModel()
-                .getFiatCurrency(), appCoinsViewModel.getAdvertisingModel()
-                .getAppcBudget());
-      } else {
+      if (action.equals(DownloadModel.Action.MIGRATE)) {
         appcInfoView.setVisibility(View.GONE);
         appcMigrationWarningMessage.setVisibility(View.VISIBLE);
       }

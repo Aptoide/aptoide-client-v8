@@ -712,7 +712,7 @@
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
-  <string name="poa_APPCC_left_body">Hurry up! We only have %s AppCoins left to give away.</string>
+  <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
   <string name="poa_time_left_days">DAYS</string>
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
