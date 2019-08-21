@@ -250,6 +250,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ViewStub.OnInflateListener installInflateListener;
   private View otherVersionsTopSeparator;
   private View appcInfoView;
+  private ImageView poaCoinsIcon;
   private View poaIabInfo;
   private TextView poaOfferValue;
   private View iabInfo;
@@ -358,6 +359,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     appcMigrationWarningMessage = view.findViewById(R.id.migration_warning);
     otherVersionsTopSeparator = view.findViewById(R.id.other_versions_top_separator);
     appcInfoView = view.findViewById(R.id.poa_appc_layout);
+    poaCoinsIcon = view.findViewById(R.id.coins_icon);
     poaIabInfo = view.findViewById(R.id.inapp_purchases);
     poaOfferValue = view.findViewById(R.id.offer_value);
     iabInfo = view.findViewById(R.id.iap_appc_label);
@@ -775,7 +777,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public Observable<Void> clickGetAppcInfo() {
-    return null;
+    return RxView.clicks(poaCoinsIcon);
   }
 
   @Override public void displayNotLoggedInSnack() {
