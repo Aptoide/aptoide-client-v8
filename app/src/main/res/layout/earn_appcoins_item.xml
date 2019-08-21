@@ -67,7 +67,7 @@
         app:layout_constraintStart_toEndOf="@+id/earn_bg"
         app:layout_constraintStart_toStartOf="@+id/earn_bg"
         app:layout_constraintTop_toTopOf="@+id/earn_bg"
-        app:srcCompat="@drawable/ic_earn_appcoins"
+        app:srcCompat="@drawable/ic_poa_coins"
         />
     <TextView
         android:id="@+id/reward_textview"

@@ -13,7 +13,7 @@
       android:layout_marginBottom="8dp"
       android:elevation="3dp"
       android:outlineProvider="none"
-      android:src="@drawable/poa_coins_icon"
+      android:src="@drawable/ic_poa_coins"
       app:layout_constraintBottom_toTopOf="@+id/card_info_layout"
       app:layout_constraintLeft_toLeftOf="@+id/card_info_layout"
       app:layout_constraintRight_toRightOf="@+id/card_info_layout"
@@ -100,7 +100,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
-            android:src="@drawable/poa_clock_icon"
+            android:src="@drawable/ic_poa_clock"
             />
         <TextView
             android:id="@+id/budget_left_message"

@@ -17,7 +17,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="@+id/bg_view"
-      app:srcCompat="@drawable/ic_earn_appcoins"
+      app:srcCompat="@drawable/ic_poa_coins"
       />
 
   <android.support.v7.widget.CardView
