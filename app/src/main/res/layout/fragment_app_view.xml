@@ -285,6 +285,7 @@
 
         </LinearLayout>
         <include
+            android:id="@+id/other_versions_top_separator"
             layout="@layout/separator_horizontal"
             android:layout_width="match_parent"
             android:layout_height="1dp"
