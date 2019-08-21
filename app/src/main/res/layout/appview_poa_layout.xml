@@ -23,7 +23,7 @@
         android:layout_height="63dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/poa_coins_icon"
+        android:src="@drawable/ic_poa_coins"
         />
 
     <TextView
@@ -91,7 +91,7 @@
           android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
           android:layout_marginTop="5dp"
-          android:src="@drawable/poa_clock_icon"
+          android:src="@drawable/ic_poa_clock"
           />
       <TextView
           android:id="@+id/budget_left_message"
