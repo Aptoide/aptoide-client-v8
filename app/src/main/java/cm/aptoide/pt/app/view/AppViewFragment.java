@@ -247,7 +247,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private int scrollViewY;
   private ViewStub appviewInstall;
   private ViewStub poaInstall;
-  private ViewStub.OnInflateListener installInflateListener;
   private View otherVersionsTopSeparator;
   private View appcInfoView;
   private ImageView poaCoinsIcon;
@@ -321,7 +320,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    installInflateListener = (viewStub, view1) -> {
+    ViewStub.OnInflateListener installInflateListener = (viewStub, view1) -> {
       install = ((Button) view1.findViewById(R.id.appview_install_button));
       downloadInfoLayout = ((LinearLayout) view1.findViewById(R.id.appview_transfer_info));
       downloadProgressBar = ((ProgressBar) view1.findViewById(R.id.appview_download_progress_bar));
@@ -549,7 +548,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void onDestroyView() {
     super.onDestroyView();
     scrollViewY = scrollView.getScrollY();
-    installInflateListener = null;
     appviewInstall = null;
     poaInstall = null;
     appcInfoView = null;

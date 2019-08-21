@@ -200,12 +200,6 @@
             tools:visibility="visible"
             >
 
-          <!--<include
-              layout="@layout/install_app_view"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              />-->
-
           <ViewStub
               android:id="@+id/appview_install_element"
               android:layout_width="match_parent"
