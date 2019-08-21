@@ -9,8 +9,8 @@
     >
   <ImageView
       android:id="@+id/header_image"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="74dp"
+      android:layout_height="63dp"
       android:layout_gravity="center_horizontal"
       android:elevation="4dp"
       app:layout_constraintBottom_toTopOf="@+id/bg_view"
