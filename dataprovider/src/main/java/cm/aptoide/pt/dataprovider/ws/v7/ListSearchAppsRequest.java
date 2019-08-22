@@ -91,7 +91,7 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listSearchApps(body, bypassCache);
+    return interfaces.listSearchApps(body, bypassCache, true);
   }
 
   public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {

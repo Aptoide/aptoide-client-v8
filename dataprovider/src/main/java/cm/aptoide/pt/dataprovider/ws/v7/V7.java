@@ -326,11 +326,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
         @Body ListSearchAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listReviews") Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
