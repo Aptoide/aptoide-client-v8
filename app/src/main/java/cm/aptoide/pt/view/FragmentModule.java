@@ -102,6 +102,8 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.more.EarnAppCoinsListAppsFragment;
+import cm.aptoide.pt.home.more.EarnAppCoinsListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -128,6 +130,7 @@ import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -568,5 +571,11 @@ import rx.subscriptions.CompositeSubscription;
     return new AppcPromotionNotificationStringProvider(fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_body));
+  }
+
+  @FragmentScope @Provides EarnAppCoinsListPresenter provideEarnAppCoinsListPresenter(
+      CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository) {
+    return new EarnAppCoinsListPresenter((EarnAppCoinsListAppsFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository);
   }
 }

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.bundles.appcoins
+package cm.aptoide.pt.home.more
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.bundles.base.AppHomeEvent
 import cm.aptoide.pt.home.bundles.base.HomeBundle
-import cm.aptoide.pt.home.bundles.base.HomeEvent
 import cm.aptoide.pt.networking.image.ImageLoader
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -20,13 +18,12 @@ import kotlinx.android.synthetic.main.earn_appcoins_item.view.*
 import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 
-class EarnAppCoinsItemViewHolder(val view: View,
-                                 val appClicks: PublishSubject<HomeEvent>,
-                                 val decimalFormatter: DecimalFormat) :
+class EarnAppCoinsListAppViewHolder(val view: View,
+                                    val appClicks: PublishSubject<ListAppsEvent>,
+                                    val decimalFormatter: DecimalFormat) :
     RecyclerView.ViewHolder(view) {
 
-  fun setApp(app: RewardApp, homeBundle: HomeBundle?,
-             bundlePosition: Int) {
+  fun setApp(app: RewardApp) {
 
     val fiat = app.reward?.fiat
     itemView.reward_textview.text =
@@ -59,8 +56,7 @@ class EarnAppCoinsItemViewHolder(val view: View,
               }
             })
     itemView.setOnClickListener {
-      appClicks.onNext(
-          AppHomeEvent(app, adapterPosition, homeBundle, bundlePosition, HomeEvent.Type.APP))
+      appClicks.onNext(ListAppsEvent(app, adapterPosition))
     }
   }
 
