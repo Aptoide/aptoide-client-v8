@@ -12,6 +12,7 @@ import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import io.realm.RealmList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,9 +85,12 @@ public class DownloadFactory {
               FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
-    for (Split split : splits) {
-      downloads.add(FileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
-          split.getName(), FileToDownload.SPLIT, packageName, versionCode, versionName, cachePath));
+    if (splits != null) {
+      for (Split split : splits) {
+        downloads.add(FileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
+            split.getName(), FileToDownload.SPLIT, packageName, versionCode, versionName,
+            cachePath));
+      }
     }
 
     return downloads;
@@ -116,12 +120,23 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName(), null));
+              update.getPatchObbName(), map(update.getSplits())));
       download.setSize(update.getSize());
       return download;
     } else {
       throw new IllegalArgumentException(validationResult.getMessage());
     }
+  }
+
+  private List<Split> map(RealmList<cm.aptoide.pt.database.realm.Split> splits) {
+    ArrayList<Split> splitsResult = new ArrayList<>();
+    if (splits == null) return splitsResult;
+    for (cm.aptoide.pt.database.realm.Split split : splits) {
+      splitsResult.add(
+          new Split(split.getName(), split.getType(), split.getLink(), split.getFileSize(),
+              split.getMd5()));
+    }
+    return splitsResult;
   }
 
   public Download create(String md5, int versionCode, String packageName, String uri,

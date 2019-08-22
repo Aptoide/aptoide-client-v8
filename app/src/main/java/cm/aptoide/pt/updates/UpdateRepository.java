@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.Split;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
+import io.realm.RealmList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -179,7 +181,20 @@ public class UpdateRepository {
         .getMalware()
         .getRank()
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling());
+        patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling(),
+        map(app.hasSplits() ? app.getAab()
+            .getSplits() : null));
+  }
+
+  private RealmList<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    RealmList<Split> splitsResult = new RealmList<>();
+    if (splits == null) return splitsResult;
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsResult.add(
+          new Split(split.getMd5sum(), split.getPath(), split.getType(), split.getName(),
+              split.getFilesize()));
+    }
+    return splitsResult;
   }
 
   public Completable removeAll(List<Update> updates) {

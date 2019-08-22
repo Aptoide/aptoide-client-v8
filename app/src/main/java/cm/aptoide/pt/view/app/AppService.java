@@ -261,6 +261,8 @@ public class AppService {
   private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
     List<Split> splitsMapResult = new ArrayList<>();
 
+    if (splits == null) return splitsMapResult;
+
     for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
       splitsMapResult.add(
           new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),

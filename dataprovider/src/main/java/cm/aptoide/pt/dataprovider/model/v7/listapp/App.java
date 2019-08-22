@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.dataprovider.model.v7.listapp;
 
+import cm.aptoide.pt.dataprovider.model.v7.Aab;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -31,6 +32,7 @@ public class App {
   private Stats stats;
   private Obb obb;
   private AppCoinsInfo appcoins;
+  private Aab aab;
 
   public App() {
   }
@@ -181,176 +183,6 @@ public class App {
     return result;
   }
 
-  protected boolean canEqual(Object other) {
-    return other instanceof App;
-  }
-
-  public AppCoinsInfo getAppcoins() {
-    return appcoins;
-  }
-
-  public void setAppcoinsInfo(AppCoinsInfo appcoins) {
-    this.appcoins = appcoins;
-  }
-
-  public boolean hasBilling() {
-    return getAppcoins() != null && getAppcoins().hasBilling();
-  }
-
-  public boolean hasAdvertising() {
-    return getAppcoins() != null && getAppcoins().hasAdvertising();
-  }
-
-  public static class Stats {
-
-    private int apps;         // used on Store items
-    private int subscribers;  // used both on App items and Store items
-    private int downloads;    // used on listApps, Store items and listAppsVersions
-    private int pdownloads;    // used on listApps, Store items and listAppsVersions
-    private Rating rating;       // used on App items and listAppsVersions
-
-    public Stats() {
-    }
-
-    public int getApps() {
-      return this.apps;
-    }
-
-    public void setApps(int apps) {
-      this.apps = apps;
-    }
-
-    public int getSubscribers() {
-      return this.subscribers;
-    }
-
-    public void setSubscribers(int subscribers) {
-      this.subscribers = subscribers;
-    }
-
-    public int getDownloads() {
-      return this.downloads;
-    }
-
-    public void setDownloads(int downloads) {
-      this.downloads = downloads;
-    }
-
-    public int getPdownloads() {
-      return this.pdownloads;
-    }
-
-    public void setPdownloads(int pdownloads) {
-      this.pdownloads = pdownloads;
-    }
-
-    public Rating getRating() {
-      return this.rating;
-    }
-
-    public void setRating(Rating rating) {
-      this.rating = rating;
-    }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof Stats;
-    }
-
-    public static class Rating {
-
-      private float avg;
-      private int total;
-
-      public Rating() {
-      }
-
-      public float getAvg() {
-        return this.avg;
-      }
-
-      public void setAvg(float avg) {
-        this.avg = avg;
-      }
-
-      public int getTotal() {
-        return this.total;
-      }
-
-      public void setTotal(int total) {
-        this.total = total;
-      }
-
-      protected boolean canEqual(Object other) {
-        return other instanceof Rating;
-      }
-
-      public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Rating)) return false;
-        final Rating other = (Rating) o;
-        if (!other.canEqual((Object) this)) return false;
-        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
-        if (this.getTotal() != other.getTotal()) return false;
-        return true;
-      }
-
-      public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = result * PRIME + Float.floatToIntBits(this.getAvg());
-        result = result * PRIME + this.getTotal();
-        return result;
-      }
-
-      public String toString() {
-        return "App.Stats.Rating(avg=" + this.getAvg() + ", total=" + this.getTotal() + ")";
-      }
-    }
-
-    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Stats)) return false;
-      final Stats other = (Stats) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (this.getApps() != other.getApps()) return false;
-      if (this.getSubscribers() != other.getSubscribers()) return false;
-      if (this.getDownloads() != other.getDownloads()) return false;
-      if (this.getPdownloads() != other.getPdownloads()) return false;
-      final Object this$rating = this.getRating();
-      final Object other$rating = other.getRating();
-      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
-        return false;
-      }
-      return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      result = result * PRIME + this.getApps();
-      result = result * PRIME + this.getSubscribers();
-      result = result * PRIME + this.getDownloads();
-      result = result * PRIME + this.getPdownloads();
-      final Object $rating = this.getRating();
-      result = result * PRIME + ($rating == null ? 43 : $rating.hashCode());
-      return result;
-    }
-
-    public String toString() {
-      return "App.Stats(apps="
-          + this.getApps()
-          + ", subscribers="
-          + this.getSubscribers()
-          + ", downloads="
-          + this.getDownloads()
-          + ", pdownloads="
-          + this.getPdownloads()
-          + ", rating="
-          + this.getRating()
-          + ")";
-    }
-  }
-
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof App)) return false;
@@ -438,5 +270,188 @@ public class App {
         + ", obb="
         + this.getObb()
         + ")";
+  }
+
+  protected boolean canEqual(Object other) {
+    return other instanceof App;
+  }
+
+  public AppCoinsInfo getAppcoins() {
+    return appcoins;
+  }
+
+  public void setAppcoinsInfo(AppCoinsInfo appcoins) {
+    this.appcoins = appcoins;
+  }
+
+  public boolean hasBilling() {
+    return getAppcoins() != null && getAppcoins().hasBilling();
+  }
+
+  public boolean hasAdvertising() {
+    return getAppcoins() != null && getAppcoins().hasAdvertising();
+  }
+
+  public Aab getAab() {
+    return this.aab;
+  }
+
+  public void setSplits(Aab aab) {
+    this.aab = aab;
+  }
+
+  public boolean hasSplits() {
+    return aab != null && !aab.getSplits()
+        .isEmpty();
+  }
+
+  public static class Stats {
+
+    private int apps;         // used on Store items
+    private int subscribers;  // used both on App items and Store items
+    private int downloads;    // used on listApps, Store items and listAppsVersions
+    private int pdownloads;    // used on listApps, Store items and listAppsVersions
+    private Rating rating;       // used on App items and listAppsVersions
+
+    public Stats() {
+    }
+
+    public int getApps() {
+      return this.apps;
+    }
+
+    public void setApps(int apps) {
+      this.apps = apps;
+    }
+
+    public int getSubscribers() {
+      return this.subscribers;
+    }
+
+    public void setSubscribers(int subscribers) {
+      this.subscribers = subscribers;
+    }
+
+    public int getDownloads() {
+      return this.downloads;
+    }
+
+    public void setDownloads(int downloads) {
+      this.downloads = downloads;
+    }
+
+    public int getPdownloads() {
+      return this.pdownloads;
+    }
+
+    public void setPdownloads(int pdownloads) {
+      this.pdownloads = pdownloads;
+    }
+
+    public Rating getRating() {
+      return this.rating;
+    }
+
+    public void setRating(Rating rating) {
+      this.rating = rating;
+    }
+
+    protected boolean canEqual(Object other) {
+      return other instanceof Stats;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      result = result * PRIME + this.getApps();
+      result = result * PRIME + this.getSubscribers();
+      result = result * PRIME + this.getDownloads();
+      result = result * PRIME + this.getPdownloads();
+      final Object $rating = this.getRating();
+      result = result * PRIME + ($rating == null ? 43 : $rating.hashCode());
+      return result;
+    }
+
+    public boolean equals(Object o) {
+      if (o == this) return true;
+      if (!(o instanceof Stats)) return false;
+      final Stats other = (Stats) o;
+      if (!other.canEqual((Object) this)) return false;
+      if (this.getApps() != other.getApps()) return false;
+      if (this.getSubscribers() != other.getSubscribers()) return false;
+      if (this.getDownloads() != other.getDownloads()) return false;
+      if (this.getPdownloads() != other.getPdownloads()) return false;
+      final Object this$rating = this.getRating();
+      final Object other$rating = other.getRating();
+      if (this$rating == null ? other$rating != null : !this$rating.equals(other$rating)) {
+        return false;
+      }
+      return true;
+    }
+
+    public String toString() {
+      return "App.Stats(apps="
+          + this.getApps()
+          + ", subscribers="
+          + this.getSubscribers()
+          + ", downloads="
+          + this.getDownloads()
+          + ", pdownloads="
+          + this.getPdownloads()
+          + ", rating="
+          + this.getRating()
+          + ")";
+    }
+
+    public static class Rating {
+
+      private float avg;
+      private int total;
+
+      public Rating() {
+      }
+
+      public float getAvg() {
+        return this.avg;
+      }
+
+      public void setAvg(float avg) {
+        this.avg = avg;
+      }
+
+      public int getTotal() {
+        return this.total;
+      }
+
+      public void setTotal(int total) {
+        this.total = total;
+      }
+
+      protected boolean canEqual(Object other) {
+        return other instanceof Rating;
+      }
+
+      public int hashCode() {
+        final int PRIME = 59;
+        int result = 1;
+        result = result * PRIME + Float.floatToIntBits(this.getAvg());
+        result = result * PRIME + this.getTotal();
+        return result;
+      }
+
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Rating)) return false;
+        final Rating other = (Rating) o;
+        if (!other.canEqual((Object) this)) return false;
+        if (Float.compare(this.getAvg(), other.getAvg()) != 0) return false;
+        if (this.getTotal() != other.getTotal()) return false;
+        return true;
+      }
+
+      public String toString() {
+        return "App.Stats.Rating(avg=" + this.getAvg() + ", total=" + this.getTotal() + ")";
+      }
+    }
   }
 }
