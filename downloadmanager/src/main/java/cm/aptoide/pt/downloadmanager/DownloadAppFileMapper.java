@@ -8,6 +8,7 @@ import java.util.List;
 import static cm.aptoide.pt.database.realm.FileToDownload.APK;
 import static cm.aptoide.pt.database.realm.FileToDownload.GENERIC;
 import static cm.aptoide.pt.database.realm.FileToDownload.OBB;
+import static cm.aptoide.pt.database.realm.FileToDownload.SPLIT;
 
 /**
  * Created by filipegoncalves on 9/12/18.
@@ -38,6 +39,9 @@ public class DownloadAppFileMapper {
         break;
       case GENERIC:
         type = DownloadAppFile.FileType.GENERIC;
+        break;
+      case SPLIT:
+        type = DownloadAppFile.FileType.SPLIT;
         break;
       default:
         throw new IllegalStateException("Invalid file type");

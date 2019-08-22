@@ -34,7 +34,7 @@ public class DownloadFactory {
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
       String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
-      String versionName) {
+      String versionName, List<Split> splits) {
 
     String mainObbPath = null;
     String mainObbMd5 = null;
@@ -60,13 +60,14 @@ public class DownloadFactory {
     }
 
     return createFileList(md5, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
-        mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName);
+        mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName,
+        splits);
   }
 
   private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
       @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
       String patchObbPath, String patchObbMd5, int versionCode, String versionName,
-      String mainObbName, String patchObbName) {
+      String mainObbName, String patchObbName, List<Split> splits) {
 
     final RealmList<FileToDownload> downloads = new RealmList<>();
     downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
@@ -81,6 +82,11 @@ public class DownloadFactory {
       downloads.add(
           FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
               FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
+    }
+
+    for (Split split : splits) {
+      downloads.add(FileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
+          split.getName(), FileToDownload.SPLIT, packageName, versionCode, versionName, cachePath));
     }
 
     return downloads;
@@ -110,7 +116,7 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName()));
+              update.getPatchObbName(), null));
       download.setSize(update.getSize());
       return download;
     } else {
@@ -135,7 +141,7 @@ public class DownloadFactory {
     download.setSize(0);
     download.setFilesToDownload(
         createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
-            versionName));
+            versionName, null));
     return download;
   }
 
@@ -163,7 +169,7 @@ public class DownloadFactory {
       download.setSize(size);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
-              downloadPaths.getAltPath(), versionCode, versionName));
+              downloadPaths.getAltPath(), versionCode, versionName, splits));
 
       return download;
     } else {

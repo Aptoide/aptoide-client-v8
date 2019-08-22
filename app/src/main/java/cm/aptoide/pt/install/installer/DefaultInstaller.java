@@ -39,6 +39,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -266,11 +267,9 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
     return Observable.<Void>fromCallable(() -> {
-      AppInstall appInstall = AppInstall.builder()
-          .setPackageName(installation.getPackageName())
-          .setBaseApk(installation.getFile())
-          .build();
-      if (shouldSetPackageInstaller) {
+      AppInstall appInstall = map(installation);
+      if (shouldSetPackageInstaller || !appInstall.getSplitApks()
+          .isEmpty()) {
         appInstaller.install(appInstall);
       } else {
         startInstallIntent(context, installation.getFile());
@@ -316,6 +315,18 @@ public class DefaultInstaller implements Installer {
         .startWith(updateInstallation(installation,
             shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                 : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  @NotNull private AppInstall map(Installation installation) {
+    AppInstall.InstallBuilder installBuilder = AppInstall.builder()
+        .setPackageName(installation.getPackageName())
+        .setBaseApk(installation.getFile());
+    for (FileToDownload file : installation.getFiles()) {
+      if (FileToDownload.SPLIT == file.getFileType()) {
+        installBuilder.addApkSplit(new File(file.getFilePath()));
+      }
+    }
+    return installBuilder.build();
   }
 
   private boolean isDeviceMIUI() {

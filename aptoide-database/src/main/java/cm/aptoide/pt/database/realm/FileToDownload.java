@@ -16,11 +16,11 @@ public class FileToDownload extends RealmObject {
   public static final int APK = 0;
   public static final int OBB = 1;
   public static final int GENERIC = 2;
+  public static final int SPLIT = 3;
 
   @PrimaryKey private String md5;
-  private int downloadId;
-  //private long appId;
 
+  private int downloadId;
   private String altLink;
   private String link;
   private String packageName;
@@ -44,7 +44,7 @@ public class FileToDownload extends RealmObject {
     fileToDownload.setFileType(fileType);
     fileToDownload.setPath(cachePath);
     if (!TextUtils.isEmpty(fileName)) {
-      if (fileType == APK) {
+      if (fileType == APK || fileType == SPLIT) {
         fileToDownload.setFileName(fileName + ".apk");
       } else {
         fileToDownload.setFileName(fileName);
@@ -199,7 +199,8 @@ public class FileToDownload extends RealmObject {
     this.md5 = md5;
   }
 
-  @IntDef({ APK, OBB, GENERIC }) @Retention(RetentionPolicy.SOURCE) public @interface FileType {
+  @IntDef({ APK, OBB, GENERIC, SPLIT }) @Retention(RetentionPolicy.SOURCE)
+  public @interface FileType {
 
   }
 }

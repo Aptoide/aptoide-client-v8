@@ -46,7 +46,8 @@ public class DownloadAppFile {
   }
 
   public int getFileType() {
-    return fileType.getType();
+    return fileType.
+        getType();
   }
 
   public String getFileName() {
@@ -54,7 +55,7 @@ public class DownloadAppFile {
   }
 
   public enum FileType {
-    APK(0), OBB(1), GENERIC(2);
+    APK(0), OBB(1), GENERIC(2), SPLIT(3);
 
     private final int type;
 
