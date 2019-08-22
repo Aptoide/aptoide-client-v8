@@ -280,10 +280,15 @@ android {
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     }
 
+    //flurry
     def type = variant.variantData.variantConfiguration.buildType.name
 
     if (flavors[1].name.contains('prod') && type == 'release') {
-      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      if (flavors[0].name.contains('cobrand')) {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_CO_BRAND_KEY + "\""
+      } else {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      }
     } else {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
