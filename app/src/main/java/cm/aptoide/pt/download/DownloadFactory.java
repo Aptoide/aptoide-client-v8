@@ -88,8 +88,8 @@ public class DownloadFactory {
     if (splits != null) {
       for (Split split : splits) {
         downloads.add(FileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
-            split.getName(), FileToDownload.SPLIT, packageName, versionCode, versionName,
-            cachePath));
+            split.getMd5sum() + "." + split.getName(), FileToDownload.SPLIT, packageName,
+            versionCode, versionName, cachePath));
       }
     }
 
