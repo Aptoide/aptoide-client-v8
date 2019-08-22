@@ -40,23 +40,31 @@ public class AppCoinsService {
         .isEmpty()) {
       return new AppCoinsAdvertisingModel();
     } else {
-      return new AppCoinsAdvertisingModel(listAppCoinsCampaigns.getList()
+      double appcReward = listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
-          .getAppc(), true, listAppCoinsCampaigns.getList()
+          .getAppc();
+
+      double fiatReward = listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
           .getFiat()
-          .getAmount(), listAppCoinsCampaigns.getList()
+          .getAmount();
+
+      String fiatCurrency = listAppCoinsCampaigns.getList()
           .get(0)
           .getReward()
           .getFiat()
-          .getSymbol(), listAppCoinsCampaigns.getList()
+          .getSymbol();
+
+      double appcBudget = listAppCoinsCampaigns.getList()
           .get(0)
           .getBudget() != null ? listAppCoinsCampaigns.getList()
           .get(0)
           .getBudget()
-          .getAppc() : -1.0);
+          .getAppc() : -1.0;
+
+      return new AppCoinsAdvertisingModel(appcReward, true, fiatReward, fiatCurrency, appcBudget);
     }
   }
 }
