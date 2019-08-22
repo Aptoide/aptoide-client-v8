@@ -252,6 +252,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView poaCoinsIcon;
   private View poaIabInfo;
   private TextView poaOfferValue;
+  private View poaBudgetElement;
+  private TextView poaBudgetMessage;
   private View iabInfo;
   private View apkfyElement;
   private View donationsElement;
@@ -361,6 +363,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     poaCoinsIcon = view.findViewById(R.id.coins_icon);
     poaIabInfo = view.findViewById(R.id.inapp_purchases);
     poaOfferValue = view.findViewById(R.id.offer_value);
+    poaBudgetElement = view.findViewById(R.id.budget_element);
+    poaBudgetMessage = view.findViewById(R.id.budget_left_message);
     iabInfo = view.findViewById(R.id.iap_appc_label);
     versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
@@ -1620,7 +1624,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           appCoinsViewModel.getAdvertisingModel()
               .getAppcReward(), appCoinsViewModel.getAdvertisingModel()
               .getFiatReward(), appCoinsViewModel.getAdvertisingModel()
-              .getFiatCurrency());
+              .getFiatCurrency(),  appCoinsViewModel.getAdvertisingModel()
+              .getAppcBudget());
     }
 
     if (downloadModel.isDownloadingOrInstalling()) {
@@ -1673,14 +1678,21 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return appBought;
   }
 
-  private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, String appcReward,
-      double fiatReward, String fiatCurrency) {
+  private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, double appcReward,
+      double fiatReward, String fiatCurrency, double appcBudget) {
     if (hasAdvertising) {
       String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
       appcInfoView.setVisibility(View.VISIBLE);
       poaOfferValue.setText(
-          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward,
-              formatedFiatCurrency));
+          String.format(getResources().getString(R.string.poa_app_view_card_body_2),
+              String.valueOf(appcReward), formatedFiatCurrency));
+      if (appcBudget != -1.0) {
+        int transactionsLeft = (int) (appcBudget / appcReward);
+        poaBudgetElement.setVisibility(View.VISIBLE);
+        poaBudgetMessage.setText(
+            String.format(getResources().getString(R.string.poa_APPCC_left_body),
+                String.valueOf(transactionsLeft)));
+      }
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
     } else {
       if (hasBilling) iabInfo.setVisibility(View.VISIBLE);

@@ -93,6 +93,7 @@
           android:layout_height="wrap_content"
           android:background="#f7f7f7"
           android:visibility="gone"
+          tools:visibility="visible"
           >
         <ImageView
             android:layout_width="34dp"
@@ -108,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
             android:textStyle="bold"
             tools:text="Hurry up! We only have 190 AppCoins to give away."
             style="@style/Aptoide.TextView.Regular.XS"
