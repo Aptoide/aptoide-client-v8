@@ -59,7 +59,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url != null ? url : "", body, bypassCache);
+    return interfaces.listApps(url != null ? url : "", body, bypassCache, true);
   }
 
   public enum Sort {
