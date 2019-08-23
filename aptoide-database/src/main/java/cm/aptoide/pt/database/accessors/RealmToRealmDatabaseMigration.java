@@ -470,5 +470,19 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
               FieldAttribute.REQUIRED);
       oldVersion++;
     }
+
+    if (oldVersion == 8102) {
+      RealmObjectSchema update = schema.get("Update");
+      if (!update.hasField("splits")) {
+        RealmObjectSchema splitsSchema = schema.create("Split")
+            .addPrimaryKey("md5")
+            .addField("link", String.class)
+            .addField("type", String.class)
+            .addField("name", String.class)
+            .addField("fileSize", long.class);
+
+        update.addRealmListField("splits", splitsSchema);
+      }
+    }
   }
 }
