@@ -156,7 +156,7 @@ public class DownloadFactory {
     download.setSize(0);
     download.setFilesToDownload(
         createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
-            versionName, null));
+            versionName, null)); // no splits : auto-update
     return download;
   }
 
