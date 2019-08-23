@@ -6,20 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.more.ListAppsEvent
 import cm.aptoide.pt.home.more.ListAppsFragment
-import rx.Observable
-import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class EarnAppCoinsFragment : ListAppsFragment<RewardApp, EarnAppCoinsListAppViewHolder>(),
-    EarnAppCoinsListAppsView {
+class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>(),
+    EarnAppcListView {
 
   @Inject
-  lateinit var presenter: EarnAppCoinsListPresenter
-
-  private val uiEventsListener = PublishSubject.create<ListAppsEvent<RewardApp>>()
+  lateinit var presenter: EarnAppcListPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -35,15 +30,11 @@ class EarnAppCoinsFragment : ListAppsFragment<RewardApp, EarnAppCoinsListAppView
     return 2
   }
 
-  override fun appClicked(): Observable<ListAppsEvent<RewardApp>> {
-    return uiEventsListener
-  }
-
-  override fun buildViewHolder(): (ViewGroup, Int) -> EarnAppCoinsListAppViewHolder {
+  override fun createViewHolder(): (ViewGroup, Int) -> EarnAppcListViewHolder {
     return { parent, viewType ->
-      EarnAppCoinsListAppViewHolder(
+      EarnAppcListViewHolder(
           LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_more_item, parent,
-              false), uiEventsListener, DecimalFormat("0.00"))
+              false), DecimalFormat("0.00"))
     }
   }
 

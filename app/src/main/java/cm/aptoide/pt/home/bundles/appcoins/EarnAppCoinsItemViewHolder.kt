@@ -47,14 +47,10 @@ class EarnAppCoinsItemViewHolder(val view: View,
                                            target: Target<Drawable>?,
                                            dataSource: DataSource?,
                                            isFirstResource: Boolean): Boolean {
-                Palette.from((resource as BitmapDrawable).bitmap).maximumColorCount(6)
-                    .generate { palette ->
-                      itemView.app_feature_graphic.setColorFilter(0x40000000)
-                      ImageLoader.with(itemView.context)
-                          .loadWithColorPlaceholder(app.featureGraphic, palette.getDominantColor(
-                              Color.WHITE), itemView.app_feature_graphic)
-
-                    }
+                itemView.app_feature_graphic.setColorFilter(0x40000000)
+                ImageLoader.with(itemView.context)
+                    .loadWithPalettePlaceholder(app.featureGraphic, resource as BitmapDrawable,
+                        Color.WHITE, itemView.app_feature_graphic)
                 return false
               }
             })

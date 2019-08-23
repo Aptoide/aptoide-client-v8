@@ -3,12 +3,9 @@ package cm.aptoide.pt.home.more.appcoins
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.more.ListAppsEvent
 import cm.aptoide.pt.home.more.ListAppsViewHolder
 import cm.aptoide.pt.networking.image.ImageLoader
 import com.bumptech.glide.load.DataSource
@@ -16,12 +13,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.earn_appcoins_item.view.*
-import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 
-class EarnAppCoinsListAppViewHolder(val view: View,
-                                    val appClicks: PublishSubject<ListAppsEvent<RewardApp>>,
-                                    val decimalFormatter: DecimalFormat) :
+class EarnAppcListViewHolder(val view: View,
+                             private val decimalFormatter: DecimalFormat) :
     ListAppsViewHolder<RewardApp>(view) {
 
   override fun bindApp(app: RewardApp) {
@@ -44,20 +39,13 @@ class EarnAppCoinsListAppViewHolder(val view: View,
                                            target: Target<Drawable>?,
                                            dataSource: DataSource?,
                                            isFirstResource: Boolean): Boolean {
-                Palette.from((resource as BitmapDrawable).bitmap).maximumColorCount(6)
-                    .generate { palette ->
-                      itemView.app_feature_graphic.setColorFilter(0x40000000)
-                      ImageLoader.with(itemView.context)
-                          .loadWithColorPlaceholder(app.featureGraphic, palette.getDominantColor(
-                              Color.WHITE), itemView.app_feature_graphic)
-
-                    }
+                itemView.app_feature_graphic.setColorFilter(0x40000000)
+                ImageLoader.with(itemView.context)
+                    .loadWithPalettePlaceholder(app.featureGraphic, resource as BitmapDrawable,
+                        Color.WHITE, itemView.app_feature_graphic)
                 return false
               }
             })
-    itemView.setOnClickListener {
-      appClicks.onNext(ListAppsEvent(app, adapterPosition))
-    }
   }
 
 }

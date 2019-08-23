@@ -102,9 +102,9 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
-import cm.aptoide.pt.home.more.ListAppsConfiguration;
-import cm.aptoide.pt.home.more.appcoins.EarnAppCoinsFragment;
-import cm.aptoide.pt.home.more.appcoins.EarnAppCoinsListPresenter;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -574,17 +574,17 @@ import rx.subscriptions.CompositeSubscription;
         .getString(R.string.promo_update2appc_claim_notification_body));
   }
 
-  @FragmentScope @Provides EarnAppCoinsListPresenter provideEarnAppCoinsListPresenter(
+  @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
-      ListAppsConfiguration listAppsConfiguration) {
-    return new EarnAppCoinsListPresenter((EarnAppCoinsFragment) fragment,
+      EarnAppcListConfiguration earnAppcListConfiguration) {
+    return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
-        appNavigator, listAppsConfiguration);
+        appNavigator, earnAppcListConfiguration);
   }
 
-  @FragmentScope @Provides ListAppsConfiguration providesListAppsConfiguration() {
-    return new ListAppsConfiguration(arguments.getString(BundleCons.TITLE),
+  @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
+    return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.TAG));
   }
 }

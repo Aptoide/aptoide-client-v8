@@ -27,6 +27,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+
+
+    <View
+        android:id="@+id/earn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/grey_fog_lighter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
     <ImageView
         android:id="@+id/coins_image"
         android:layout_width="20dp"
@@ -75,13 +85,6 @@
         app:layout_constraintTop_toTopOf="@+id/earn_bg"
         tools:text="EARN €0.78"
         style="@style/Aptoide.TextView.Medium.XS"
-        />
-    <View
-        android:id="@+id/earn_bg"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/grey_fog_lighter"
-        app:layout_constraintBottom_toBottomOf="parent"
         />
 
   </android.support.constraint.ConstraintLayout>
