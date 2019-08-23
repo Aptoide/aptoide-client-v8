@@ -33,6 +33,9 @@ import rx.subjects.PublishSubject
  * You can also customize how the items are laid out in the grid, as well as spacing by overriding
  * [getSpanCount], [getItemSpacingDp], [getContainerPaddingDp]
  *
+ * Note: If you're intending to use a Presenter, you can also extend [ListAppsPresenter] to help you
+ * avoid implementing common functionalities.
+ *
  * @param <T: Application> The type of application that represents an item, see [Application]
  * @param <V: ListAppsViewHolder<T>> The ViewHolder that represents the item, see [ListAppsViewHolder]
  */
