@@ -4,8 +4,8 @@ import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.app.AppNavigator
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.more.ListAppsClickEvent
-import cm.aptoide.pt.home.more.ListAppsPresenter
+import cm.aptoide.pt.home.more.base.ListAppsClickEvent
+import cm.aptoide.pt.home.more.base.ListAppsPresenter
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository
 import rx.Observable
 import rx.Scheduler

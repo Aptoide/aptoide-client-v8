@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.more.ListAppsFragment
+import cm.aptoide.pt.home.more.base.ListAppsFragment
 import java.text.DecimalFormat
 import javax.inject.Inject
 

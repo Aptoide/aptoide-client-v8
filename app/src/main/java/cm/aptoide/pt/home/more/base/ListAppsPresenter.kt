@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.more
+package cm.aptoide.pt.home.more.base
 
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.dataprovider.util.ErrorUtils

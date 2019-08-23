@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.more
+package cm.aptoide.pt.home.more.base
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.more.ListAppsViewHolder
+import cm.aptoide.pt.home.more.base.ListAppsViewHolder
 import cm.aptoide.pt.networking.image.ImageLoader
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException

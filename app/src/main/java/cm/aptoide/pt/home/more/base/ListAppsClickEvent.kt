@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.more
+package cm.aptoide.pt.home.more.base
 
 import cm.aptoide.pt.view.app.Application
 

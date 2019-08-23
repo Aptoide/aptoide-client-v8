@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.more
+package cm.aptoide.pt.home.more.base
 
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
@@ -14,7 +14,9 @@ class ListAppsAdapter<T : Application, V : ListAppsViewHolder<T>>(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): V {
     val vh = viewHolderBuilder(parent, viewType)
     vh.itemView.setOnClickListener {
-      clickListener.onNext(ListAppsClickEvent(appList[vh.adapterPosition], vh.adapterPosition))
+      clickListener.onNext(
+          ListAppsClickEvent(appList[vh.adapterPosition],
+              vh.adapterPosition))
     }
     return vh
   }
