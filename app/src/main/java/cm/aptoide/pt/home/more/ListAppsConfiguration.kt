@@ -1,5 +1,3 @@
 package cm.aptoide.pt.home.more
 
-sealed class ListAppsConfiguration {
-  object EarnAppCoins : ListAppsConfiguration()
-}
+data class ListAppsConfiguration(val title: String?, val tag: String?)

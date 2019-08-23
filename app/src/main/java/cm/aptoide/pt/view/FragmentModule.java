@@ -102,8 +102,9 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
-import cm.aptoide.pt.home.more.EarnAppCoinsListAppsFragment;
-import cm.aptoide.pt.home.more.EarnAppCoinsListPresenter;
+import cm.aptoide.pt.home.more.ListAppsConfiguration;
+import cm.aptoide.pt.home.more.appcoins.EarnAppCoinsFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppCoinsListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -574,8 +575,16 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EarnAppCoinsListPresenter provideEarnAppCoinsListPresenter(
-      CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository) {
-    return new EarnAppCoinsListPresenter((EarnAppCoinsListAppsFragment) fragment,
-        AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository);
+      CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
+      AnalyticsManager analyticsManager, AppNavigator appNavigator,
+      ListAppsConfiguration listAppsConfiguration) {
+    return new EarnAppCoinsListPresenter((EarnAppCoinsFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
+        appNavigator, listAppsConfiguration);
+  }
+
+  @FragmentScope @Provides ListAppsConfiguration providesListAppsConfiguration() {
+    return new ListAppsConfiguration(arguments.getString(BundleCons.TITLE),
+        arguments.getString(BundleCons.TAG));
   }
 }

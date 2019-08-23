@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.more
+package cm.aptoide.pt.home.more.appcoins
 
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
-import cm.aptoide.pt.home.bundles.base.HomeBundle
+import cm.aptoide.pt.home.more.ListAppsEvent
 import cm.aptoide.pt.networking.image.ImageLoader
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -19,7 +19,7 @@ import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 
 class EarnAppCoinsListAppViewHolder(val view: View,
-                                    val appClicks: PublishSubject<ListAppsEvent>,
+                                    val appClicks: PublishSubject<ListAppsEvent<RewardApp>>,
                                     val decimalFormatter: DecimalFormat) :
     RecyclerView.ViewHolder(view) {
 
