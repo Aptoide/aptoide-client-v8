@@ -1,7 +1,10 @@
 package cm.aptoide.pt.home.more.appcoins
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
 import cm.aptoide.pt.home.more.ListAppsEvent
 import cm.aptoide.pt.home.more.ListAppsFragment
@@ -17,10 +20,6 @@ class EarnAppCoinsFragment : ListAppsFragment<RewardApp, EarnAppCoinsListAppView
   lateinit var presenter: EarnAppCoinsListPresenter
 
   private val uiEventsListener = PublishSubject.create<ListAppsEvent<RewardApp>>()
-
-  init {
-    adapter = EarnAppCoinsListAppsAdapter(DecimalFormat("0.00"), uiEventsListener)
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -39,4 +38,13 @@ class EarnAppCoinsFragment : ListAppsFragment<RewardApp, EarnAppCoinsListAppView
   override fun appClicked(): Observable<ListAppsEvent<RewardApp>> {
     return uiEventsListener
   }
+
+  override fun buildViewHolder(): (ViewGroup, Int) -> EarnAppCoinsListAppViewHolder {
+    return { parent, viewType ->
+      EarnAppCoinsListAppViewHolder(
+          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_more_item, parent,
+              false), uiEventsListener, DecimalFormat("0.00"))
+    }
+  }
+
 }

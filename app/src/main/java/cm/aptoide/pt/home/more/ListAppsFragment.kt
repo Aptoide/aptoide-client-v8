@@ -12,19 +12,22 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
 import cm.aptoide.pt.utils.AptoideUtils
 import cm.aptoide.pt.view.Translator
+import cm.aptoide.pt.view.app.Application
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment
 import kotlinx.android.synthetic.main.fragment_list_apps.*
 import kotlinx.android.synthetic.main.partial_view_progress_bar.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-abstract class ListAppsFragment<T, V : RecyclerView.ViewHolder> : NavigationTrackFragment(),
+abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
+    NavigationTrackFragment(),
     ListAppsView<T> {
 
-  protected var adapter: ListAppsAdapter<T, V>? = null
+  protected lateinit var adapter: ListAppsAdapter<T, V>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
+    adapter = ListAppsAdapter(buildViewHolder())
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -127,6 +130,8 @@ abstract class ListAppsFragment<T, V : RecyclerView.ViewHolder> : NavigationTrac
   protected open fun getContainerPaddingDp(): Rect {
     return Rect(8, 8, 8, 8)
   }
+
+  abstract fun buildViewHolder(): (ViewGroup, Int) -> V
 
   private fun getPixels(dp: Int): Int {
     return AptoideUtils.ScreenU.getPixelsForDip(dp, view?.resources)
