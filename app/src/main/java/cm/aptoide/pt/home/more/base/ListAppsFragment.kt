@@ -81,6 +81,9 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     val padding = getPixels(getContainerPaddingDp())
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
 
+    adapter.setItemFillWidth(shouldItemFillWidth())
+    adapter.setItemRatioSize(getItemSizeRatio())
+
     setupToolbar()
   }
 
@@ -118,6 +121,31 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   }
 
   /**
+   * Specifies what is the desired ratio size of the item viewholder (width:height). The ratio must
+   * be bigger than 0, or it will be ignored.
+   *
+   * This only has any effect if [shouldItemFillWidth] is set to true.
+   *
+   * By default this is set to 0, which means there's no ratio applied. You may override this.
+   */
+  protected open fun getItemSizeRatio(): Double {
+    return 0.0
+  }
+
+  /**
+   * Specifies that the item viewholder should fill the available space width wise.
+   * This is especially useful to make sure the margins are consistent independently of the screen
+   * size.
+   *
+   * Note that this will cause the original viewholder size to be disregarded.
+   *
+   * By default this is set to false. You may override this
+   */
+  protected open fun shouldItemFillWidth(): Boolean {
+    return false
+  }
+
+  /**
    * Specifies how the viewholder for this list is built
    */
   abstract fun createViewHolder(): (ViewGroup, Int) -> V
@@ -150,6 +178,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   override fun showApps(apps: List<T>) {
     showResultsVisibility()
     adapter.setData(apps)
+    apps_list.scheduleLayoutAnimation()
   }
 
   override fun addApps(apps: List<T>) {

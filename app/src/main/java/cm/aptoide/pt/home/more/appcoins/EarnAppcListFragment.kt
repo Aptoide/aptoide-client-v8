@@ -30,10 +30,18 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
     return 2
   }
 
+  override fun shouldItemFillWidth(): Boolean {
+    return true
+  }
+
+  override fun getItemSizeRatio(): Double {
+    return 168.0 / 158.0
+  }
+
   override fun createViewHolder(): (ViewGroup, Int) -> EarnAppcListViewHolder {
     return { parent, viewType ->
       EarnAppcListViewHolder(
-          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_more_item, parent,
+          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_item, parent,
               false), DecimalFormat("0.00"))
     }
   }
