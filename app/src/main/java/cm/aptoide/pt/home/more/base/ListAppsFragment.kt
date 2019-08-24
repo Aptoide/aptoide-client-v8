@@ -23,7 +23,8 @@ import rx.Observable
 import rx.subjects.PublishSubject
 
 /**
- * This fragment is responsible for drawing a grid list of apps.
+ * This fragment is responsible for drawing a grid list of apps. It's the equivalent of the old
+ * ListAppsFragment but with the current architecture.
  *
  * You can implement it by extending this class ([ListAppsFragment]) and specifying how the
  * viewholder(s) is(are) built on [createViewHolder]. The ViewHolder(s) must extend
