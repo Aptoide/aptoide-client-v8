@@ -28,7 +28,7 @@ import rx.subjects.PublishSubject
  *
  * You can implement it by extending this class ([ListAppsFragment]) and specifying how the
  * viewholder(s) is(are) built on [createViewHolder]. The ViewHolder(s) must extend
- * [ListAppsViewHolder]. You can interact with this class by implementing the [ListAppsView]
+ * [ListAppsViewHolder]. You can interact with this fragment by implementing the [ListAppsView]
  * interface.
  *
  * You can also customize how the items are laid out in the grid, as well as spacing by overriding
