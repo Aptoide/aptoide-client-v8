@@ -392,7 +392,8 @@ public class GetAppMeta extends BaseV7Response {
     }
 
     public boolean hasSplits() {
-      return aab != null;
+      return aab != null && !aab.getRequiredSplits()
+          .isEmpty();
     }
   }
 

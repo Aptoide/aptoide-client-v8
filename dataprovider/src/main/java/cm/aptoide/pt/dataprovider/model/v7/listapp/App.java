@@ -301,7 +301,7 @@ public class App {
   }
 
   public boolean hasSplits() {
-    return aab != null && !aab.getSplits()
+    return aab != null && !aab.getRequiredSplits()
         .isEmpty();
   }
 

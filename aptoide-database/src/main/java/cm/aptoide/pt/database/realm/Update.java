@@ -59,6 +59,7 @@ public class Update extends RealmObject {
 
   // Splits
   private RealmList<Split> splits;
+  private RealmList<RealmString> requiredSplits;
 
   //appc
   private boolean hasAppc;
@@ -70,7 +71,7 @@ public class Update extends RealmObject {
       long size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
       String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc,
-      RealmList<Split> splits) {
+      RealmList<Split> splits, RealmList<RealmString> requiredSplits) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -91,6 +92,7 @@ public class Update extends RealmObject {
     this.hasAppc = hasAppc;
     this.appcUpgrade = appcUpgrade;
     this.splits = splits;
+    this.requiredSplits = requiredSplits;
   }
 
   public long getAppId() {
@@ -271,5 +273,13 @@ public class Update extends RealmObject {
 
   public void setSplits(RealmList<Split> splits) {
     this.splits = splits;
+  }
+
+  public RealmList<RealmString> getRequiredSplits() {
+    return requiredSplits;
+  }
+
+  public void setRequiredSplits(RealmList<RealmString> requiredSplits) {
+    this.requiredSplits = requiredSplits;
   }
 }

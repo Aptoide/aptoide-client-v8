@@ -45,6 +45,7 @@ public class DetailedApp {
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final List<Split> splits;
+  private final List<String> requiredSplits;
   private String path;
   private long id;
   private boolean hasBilling;
@@ -99,7 +100,9 @@ public class DetailedApp {
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
     this.signature = signature;
+    //paid apps not supported anymore
     this.splits = null;
+    this.requiredSplits = null;
   }
 
   public DetailedApp(long id, String name, String packageName, long size, String icon,
@@ -109,7 +112,7 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean isLatestTrustedVersion,
       String uniqueName, boolean hasBilling, boolean hasAdvertising, List<String> bdsFlags,
-      boolean isMature, String signature, List<Split> splits) {
+      boolean isMature, String signature, List<Split> splits, List<String> requiredSplits) {
     this.id = id;
     this.name = name;
     this.packageName = packageName;
@@ -143,6 +146,7 @@ public class DetailedApp {
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
     this.splits = splits;
+    this.requiredSplits = requiredSplits;
     this.wasPaid = false;
     this.paidAppPath = "";
     this.paymentStatus = "";
@@ -317,5 +321,9 @@ public class DetailedApp {
 
   public List<Split> getSplits() {
     return this.splits;
+  }
+
+  public List<String> getRequiredSplits() {
+    return this.requiredSplits;
   }
 }

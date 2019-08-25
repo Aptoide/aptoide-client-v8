@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import io.realm.RealmList;
@@ -97,9 +98,11 @@ public class DownloadFactory {
   }
 
   public Download create(Update update, boolean isAppcUpgrade) {
+    List<Split> splits = map(update.getSplits());
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
-            update.getApkPath(), update.getAlternativeApkPath());
+            update.getApkPath(), update.getAlternativeApkPath(), splits,
+            mapRequiredSplits(update.getRequiredSplits()));
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
       ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
@@ -120,12 +123,21 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName(), map(update.getSplits())));
+              update.getPatchObbName(), splits));
       download.setSize(update.getSize());
       return download;
     } else {
       throw new IllegalArgumentException(validationResult.getMessage());
     }
+  }
+
+  private List<String> mapRequiredSplits(RealmList<RealmString> requiredSplits) {
+    ArrayList<String> requiredSplitsResult = new ArrayList<>();
+    if (requiredSplits == null) return requiredSplitsResult;
+    for (RealmString split : requiredSplits) {
+      requiredSplitsResult.add(split.getString());
+    }
+    return requiredSplitsResult;
   }
 
   private List<Split> map(RealmList<cm.aptoide.pt.database.realm.Split> splits) {
@@ -162,10 +174,11 @@ public class DownloadFactory {
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc, long size, List<Split> splits) {
+      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits) {
 
     AppValidator.AppValidationResult validationResult =
-        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt);
+        appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
+            requiredSplits);
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
 

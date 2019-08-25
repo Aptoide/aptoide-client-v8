@@ -72,7 +72,7 @@ public class EditorialManager {
         editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
-        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(), null))
+        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(), null, null))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),

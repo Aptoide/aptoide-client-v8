@@ -69,6 +69,7 @@ public class AppModel {
   private final String marketName;
   private final boolean isMature;
   private final List<Split> splits;
+  private final List<String> requiredSplits;
   private String path;
   private boolean hasBilling;
   private boolean hasAdvertising;
@@ -87,7 +88,7 @@ public class AppModel {
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
-      List<Split> splits) {
+      List<Split> splits, List<String> requiredSplits) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -139,6 +140,7 @@ public class AppModel {
     this.signature = signature;
     this.isMature = isMature;
     this.splits = splits;
+    this.requiredSplits = requiredSplits;
     this.loading = false;
     this.error = null;
   }
@@ -197,6 +199,7 @@ public class AppModel {
     this.bdsFlags = null;
     this.campaignUrl = "";
     this.splits = null;
+    this.requiredSplits = null;
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -254,6 +257,7 @@ public class AppModel {
     this.bdsFlags = null;
     this.campaignUrl = "";
     this.splits = null;
+    this.requiredSplits = null;
   }
 
   public boolean isMature() {
@@ -489,5 +493,9 @@ public class AppModel {
 
   public List<Split> getSplits() {
     return splits;
+  }
+
+  public List<String> getRequiredSplits() {
+    return requiredSplits;
   }
 }

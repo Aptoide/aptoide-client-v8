@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
+import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.database.realm.Split;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -183,7 +184,18 @@ public class UpdateRepository {
         .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
         patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling(),
         map(app.hasSplits() ? app.getAab()
-            .getSplits() : null));
+            .getSplits() : Collections.emptyList()), mapRequiredSplits(
+        app.hasSplits() ? app.getAab()
+            .getRequiredSplits() : Collections.emptyList()));
+  }
+
+  private RealmList<RealmString> mapRequiredSplits(List<String> requiredSplits) {
+    RealmList<RealmString> requiredSplitsResult = new RealmList<>();
+    if (requiredSplits == null) return requiredSplitsResult;
+    for (String required : requiredSplits) {
+      requiredSplitsResult.add(new RealmString(required));
+    }
+    return requiredSplitsResult;
   }
 
   private RealmList<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {

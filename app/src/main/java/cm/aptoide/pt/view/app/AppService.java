@@ -25,6 +25,7 @@ import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -251,7 +252,8 @@ public class AppService {
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
               .getSha1(), app.hasSplits() ? map(app.getAab()
-              .getSplits()) : null);
+              .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
+              .getRequiredSplits() : Collections.emptyList());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

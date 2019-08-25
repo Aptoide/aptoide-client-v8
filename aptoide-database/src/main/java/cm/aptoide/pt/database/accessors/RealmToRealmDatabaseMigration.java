@@ -481,7 +481,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
             .addField("name", String.class)
             .addField("fileSize", long.class);
 
+        RealmObjectSchema stringSchema = schema.create("RealmString")
+            .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+            .addField("string", String.class);
+
         update.addRealmListField("splits", splitsSchema);
+        update.addRealmListField("requiredSplits", stringSchema);
       }
     }
   }

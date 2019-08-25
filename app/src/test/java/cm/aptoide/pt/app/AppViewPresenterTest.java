@@ -86,7 +86,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false, null);
+            "marketName", false, false, bdsFlags, "", "", false, null, null);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
@@ -201,7 +201,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags, "", "", false, null);
+            false, bdsFlags, "", "", false, null, null);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
@@ -248,7 +248,7 @@ public class AppViewPresenterTest {
             Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
             "weburls", false, false, "paid path", "no", true, "aptoide",
             AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
-            true, bdsFlags, "", "", false, null);
+            true, bdsFlags, "", "", false, null, null);
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
             null);
