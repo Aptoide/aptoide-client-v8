@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.more.base
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.support.annotation.Dimension
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.*
@@ -105,11 +106,13 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   /**
    * Specifies what is the target width of the item viewholder
    */
+  @Dimension(unit = Dimension.DP)
   abstract fun getItemSizeWidth(): Int
 
   /**
    * Specifies what is the target height of the item viewholder
    */
+  @Dimension(unit = Dimension.DP)
   abstract fun getItemSizeHeight(): Int
 
   /**
