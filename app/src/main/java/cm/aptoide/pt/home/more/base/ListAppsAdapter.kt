@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.more.base
 
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import cm.aptoide.pt.view.app.Application
@@ -22,31 +23,34 @@ class ListAppsAdapter<T : Application, V : ListAppsViewHolder<T>>(
           ListAppsClickEvent(appList[vh.adapterPosition],
               vh.adapterPosition))
     }
-    if (itemFillWidth) {
-      itemSizeRatio?.also { ratio ->
-        vh.itemView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
-        vh.itemView.viewTreeObserver.addOnGlobalLayoutListener(object :
-            ViewTreeObserver.OnGlobalLayoutListener {
-          override fun onGlobalLayout() {
-            val layoutParams = vh.itemView.layoutParams
-            layoutParams.height = (vh.itemView.width * (1.0 / ratio)).toInt()
-            vh.itemView.layoutParams = layoutParams
-            vh.itemView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-          }
-        })
-      } ?: vh.itemView.viewTreeObserver.addOnGlobalLayoutListener(object :
-          ViewTreeObserver.OnGlobalLayoutListener {
-        override fun onGlobalLayout() {
-          val layoutParams = vh.itemView.layoutParams
-          layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
-          vh.itemView.layoutParams = layoutParams
-          vh.itemView.viewTreeObserver.removeOnGlobalLayoutListener(this)
-        }
-      })
-    }
-
+//    setupItemSize(vh.itemView)
     return vh
+  }
+
+  private fun setupItemSize(view: View) {
+//    if (itemFillWidth) {
+//      itemSizeRatio?.also { ratio ->
+//        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT)
+//        view.addOnLayoutChangeListener(object : View.OnLayoutChangeListener{
+//          override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int,
+//                                      oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+//            view.removeOnLayoutChangeListener(this)
+//            val layoutParams = view.layoutParams
+//            layoutParams.height = (view.width * (1.0 / ratio)).toInt()
+//            view.layoutParams = layoutParams
+//          }
+//        })
+//      } ?: view.addOnLayoutChangeListener(object : View.OnLayoutChangeListener{
+//        override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int,
+//                                    oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+//          view.removeOnLayoutChangeListener(this)
+//          val layoutParams = view.layoutParams
+//          layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+//          view.layoutParams = layoutParams
+//        }
+//      })
+//    }
   }
 
   override fun onBindViewHolder(holder: V, position: Int) {
@@ -59,7 +63,6 @@ class ListAppsAdapter<T : Application, V : ListAppsViewHolder<T>>(
 
   fun setData(objs: List<T>) {
     appList = ArrayList(objs)
-    // Ideally this would use DiffUtil instead
     notifyDataSetChanged()
   }
 

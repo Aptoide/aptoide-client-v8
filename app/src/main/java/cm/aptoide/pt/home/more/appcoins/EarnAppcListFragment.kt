@@ -26,16 +26,13 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
     presenter.present()
   }
 
-  override fun getSpanCount(): Int {
-    return 2
+
+  override fun getItemSizeWidth(): Int {
+    return 168
   }
 
-  override fun shouldItemFillWidth(): Boolean {
-    return true
-  }
-
-  override fun getItemSizeRatio(): Double {
-    return 168.0 / 158.0
+  override fun getItemSizeHeight(): Int {
+    return 158
   }
 
   override fun createViewHolder(): (ViewGroup, Int) -> EarnAppcListViewHolder {

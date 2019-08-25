@@ -11,7 +11,7 @@
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
-    <cm.aptoide.aptoideviews.errors.GridRecyclerView
+    <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
         android:id="@+id/apps_list"
         android:layoutAnimation="@anim/grid_list_apps_anim"
         android:layout_width="match_parent"

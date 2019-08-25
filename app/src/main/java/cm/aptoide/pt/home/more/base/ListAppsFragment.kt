@@ -4,10 +4,10 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.aptoideviews.errors.ErrorView
+import cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
@@ -27,12 +27,16 @@ import rx.subjects.PublishSubject
  * ListAppsFragment but with the current architecture.
  *
  * You can implement it by extending this class ([ListAppsFragment]) and specifying how the
- * viewholder(s) is(are) built on [createViewHolder]. The ViewHolder(s) must extend
+ * ViewHolder(s) is(are) built on [createViewHolder]. The ViewHolder(s) must extend
  * [ListAppsViewHolder]. You can interact with this fragment by implementing the [ListAppsView]
  * interface.
  *
- * You can also customize how the items are laid out in the grid, as well as spacing by overriding
- * [getSpanCount], [getItemSpacingDp], [getContainerPaddingDp]
+ * This fragment uses [GridRecyclerView] with an adaptive grid layout. This means that it will
+ * adjust the number of items per row, padding and item size automatically. However, you still need
+ * to specify the target ViewHolder size with [getItemSizeWidth] and [getItemSizeHeight]. You can
+ * also customize preferential padding and item spacing by overriding [getItemSpacingDp] and
+ * [getContainerPaddingDp]. Also note that this adaptive grid layout only supports ViewHolders of
+ * the same size.
  *
  * Note: If you're intending to use a Presenter, you can also extend [ListAppsPresenter] to help you
  * avoid implementing common functionalities.
@@ -59,30 +63,16 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    apps_list.addItemDecoration(object : RecyclerView.ItemDecoration() {
-      override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                                  state: RecyclerView.State?) {
-        val marginBetweenItems = getPixels(getItemSpacingDp())
-
-        val position = parent.getChildAdapterPosition(view)
-        val row: Int = position / getSpanCount()
-
-        val marginLeft = if (position % getSpanCount() != 0) marginBetweenItems else 0
-        val marginTop = if (row != 0) marginBetweenItems else 0
-
-        outRect.set(marginLeft, marginTop, 0, 0)
-      }
-    })
-    apps_list.layoutManager = GridLayoutManager(view.context, getSpanCount())
-    apps_list.adapter = adapter
-    swipe_container.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color)
-
+    apps_list.layoutManager = GridLayoutManager(view.context, 3)
+    apps_list.setAdaptiveLayout(getItemSizeWidth(), getItemSizeHeight(),
+        GridRecyclerView.AdaptStrategy.SCALE_WIDTH_ONLY)
+    apps_list.setIntendedItemSpacing(getItemSpacingDp())
     val padding = getPixels(getContainerPaddingDp())
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
+    apps_list.adapter = adapter
 
-    adapter.setItemFillWidth(shouldItemFillWidth())
-    adapter.setItemRatioSize(getItemSizeRatio())
+    swipe_container.setColorSchemeResources(R.color.default_progress_bar_color,
+        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color)
 
     setupToolbar()
   }
@@ -92,14 +82,6 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     inflater.inflate(R.menu.menu_empty, menu)
   }
 
-  /**
-   * Specifies what is the span (column) count of the list
-   *
-   * By default the span count is 3. You may override this.
-   */
-  protected open fun getSpanCount(): Int {
-    return 3
-  }
 
   /**
    * Specifies what the spacing between items is.
@@ -121,29 +103,14 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   }
 
   /**
-   * Specifies what is the desired ratio size of the item viewholder (width:height). The ratio must
-   * be bigger than 0, or it will be ignored.
-   *
-   * This only has any effect if [shouldItemFillWidth] is set to true.
-   *
-   * By default this is set to 0, which means there's no ratio applied. You may override this.
+   * Specifies what is the target width of the item viewholder
    */
-  protected open fun getItemSizeRatio(): Double {
-    return 0.0
-  }
+  abstract fun getItemSizeWidth(): Int
 
   /**
-   * Specifies that the item viewholder should fill the available space width wise.
-   * This is especially useful to make sure the margins are consistent independently of the screen
-   * size.
-   *
-   * Note that this will cause the original viewholder size to be disregarded.
-   *
-   * By default this is set to false. You may override this
+   * Specifies what is the target height of the item viewholder
    */
-  protected open fun shouldItemFillWidth(): Boolean {
-    return false
-  }
+  abstract fun getItemSizeHeight(): Int
 
   /**
    * Specifies how the viewholder for this list is built
