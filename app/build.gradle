@@ -271,16 +271,19 @@ android {
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     }
 
+    //flurry
     def type = variant.variantData.variantConfiguration.buildType.name
 
     if (flavors[1].name.contains('prod') && type == 'release') {
-      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      if (flavors[0].name.contains('cobrand')) {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_CO_BRAND_KEY + "\""
+      } else {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      }
     } else {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
 
-    variant.buildConfigField "String", "MOPUB_IRONSOURCE_APPLICATION_ID",
-        "\"" + project.MOPUB_IRONSOURCE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_VUNGLE_APPLICATION_ID",
         "\"" + project.MOPUB_VUNGLE_APPLICATION_ID + "\""
     variant.buildConfigField "String", "MOPUB_UNITYADS_GAME_ID",
@@ -430,10 +433,6 @@ dependencies {
 
   // Google (AdMob)
   implementation "com.mopub.mediation:admob:${MOPUB_MEDIATION_AD_MOB_SDK_VERSION}"
-
-  // ironSource
-  implementation "com.ironsource.sdk:mediationsdk:${IRONSOURCE_MEDIATION_SDK_VERSION}@jar"
-  implementation "com.mopub.mediation:ironsource:${MOPUB_MEDIATION_IRONSOURCE_VERSION}"
 
   // Vungle
   implementation("com.github.vungle:vungle-android-sdk:${VUNGLE_SDK_VERSION}") {

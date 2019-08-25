@@ -26,6 +26,7 @@
   <string name="install">Install</string>
   <string name="open">Open</string>
   <string name="all_title_ad">Ad</string>
+  <string name="not_now_button">NOT NOW</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -80,7 +81,7 @@
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-
+  <string name="apkfy_install_message">Do you want to install this app?</string>
 
   <!-- AppView Donations-->
   <string name="appview_title_donations_leaderboard">Top Donations</string>
@@ -711,10 +712,11 @@
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
   <string name="poa_app_view_card_body_2">$1$s AppCoins Credits (%2$s)</string>
-  <string name="poa_APPCC_left_body">Hurry up! We only have %s AppCoins left to give away.</string>
+  <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
   <string name="poa_time_left_days">DAYS</string>
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
+  <string name="poa_time_left_seconds">SECONDS</string>
   <string name="poa_earn_view_title">Earn AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <string name="poa_bundle_title">Earn AppCoins</string>
@@ -740,5 +742,8 @@
   </plurals>
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">UPDATE</string>
+
+  <string name="auto_update_popup_title">Update Aptoide!</string>
+  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
 
 </resources>

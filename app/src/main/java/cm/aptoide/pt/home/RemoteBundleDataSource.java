@@ -58,6 +58,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final int randomPackagesCount;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
+  private Map<String, Boolean> error;
 
   public RemoteBundleDataSource(int limit, Map<String, Integer> initialTotal,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient okHttpClient,
@@ -92,6 +93,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.latestPackagesCount = latestPackagesCount;
     this.randomPackagesCount = randomPackagesCount;
     loading = new HashMap<>();
+    error = new HashMap<>();
   }
 
   private Single<HomeBundlesModel> getHomeBundles(int offset, int limit,
@@ -112,12 +114,18 @@ public class RemoteBundleDataSource implements BundleDataSource {
             partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
             versionCodeProvider, packageNames)
             .observe(invalidateHttpCache, false)
-            .doOnSubscribe(() -> loading.put(key, true))
+            .doOnSubscribe(() -> {
+              loading.put(key, true);
+              error.put(key, false);
+            })
             .doOnUnsubscribe(() -> loading.put(key, false))
             .doOnTerminate(() -> loading.put(key, false))
             .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
             .toSingle()
-            .onErrorReturn(this::createErrorAppsList));
+            .onErrorReturn(throwable -> {
+              error.put(key, true);
+              return createErrorAppsList(throwable);
+            }));
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
@@ -178,7 +186,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   }
 
   @Override public boolean hasMore(Integer offset, String key) {
-    return offset < getTotal(key) && !isLoading(key);
+    return offset < getTotal(key) && !isLoading(key) && !isError(key);
   }
 
   @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
@@ -191,6 +199,10 @@ public class RemoteBundleDataSource implements BundleDataSource {
     return getEventBundles(url, false, key, offset, limit);
   }
 
+  private boolean isError(String key) {
+    return (error.containsKey(key) && error.get(key));
+  }
+
   private Single<HomeBundlesModel> getEventBundles(String url, boolean invalidateHttpCache,
       String key, int offset, int limit) {
     if (isLoading(key)) {
@@ -198,12 +210,18 @@ public class RemoteBundleDataSource implements BundleDataSource {
     }
     String newUrl = url.replace(V7.getHost(sharedPreferences), "");
     return getMoreBundlesRequest(newUrl, offset, limit).observe(invalidateHttpCache, false)
-        .doOnSubscribe(() -> loading.put(key, true))
+        .doOnSubscribe(() -> {
+          loading.put(key, true);
+          error.put(key, false);
+        })
         .doOnUnsubscribe(() -> loading.put(key, false))
         .doOnTerminate(() -> loading.put(key, false))
         .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
         .toSingle()
-        .onErrorReturn(this::createErrorAppsList);
+        .onErrorReturn(throwable -> {
+          error.put(key, true);
+          return createErrorAppsList(throwable);
+        });
   }
 
   private boolean isLoading(String key) {

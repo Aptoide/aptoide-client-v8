@@ -179,16 +179,17 @@ public class AppViewPresenter implements Presenter {
 
   private void sendAppViewLoadAnalytics(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
-    if (!appModel.getEditorsChoice()
-        .isEmpty()) {
-      appViewManager.sendEditorsChoiceClickEvent(appModel.getPackageName(),
-          appModel.getEditorsChoice());
+    if (appModel.isFromEditorsChoice()) {
+      appViewManager.sendEditorsAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
+    } else {
+      appViewManager.sendAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising());
     }
-    appViewManager.sendAppViewOpenedFromEvent(appModel.getPackageName(), appModel.getDeveloper()
-        .getName(), appModel.getMalware()
-        .getRank()
-        .name(), appModel.hasBilling(), appModel.hasAdvertising());
-
     if (appViewModel.getDownloadModel()
         .getAction()
         .equals(DownloadModel.Action.MIGRATE) && !appViewManager.isMigrationImpressionSent()) {
@@ -555,6 +556,7 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendAppcInfoInteractEvent();
           appViewNavigator.navigateToAppCoinsInfo();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
