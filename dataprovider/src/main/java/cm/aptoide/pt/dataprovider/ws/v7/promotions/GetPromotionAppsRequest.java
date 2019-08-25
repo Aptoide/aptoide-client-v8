@@ -30,7 +30,7 @@ public class GetPromotionAppsRequest
   @Override
   protected Observable<GetPromotionAppsResponse> loadDataFromNetwork(V7.Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getPromotionApps(30, body, bypassCache);
+    return interfaces.getPromotionApps(30, true, body, bypassCache);
   }
 
   public static class Body extends BaseBody {

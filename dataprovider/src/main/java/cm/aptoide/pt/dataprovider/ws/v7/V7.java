@@ -538,9 +538,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body ClaimPromotionRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/promotions/promotion/get/limit={limit}")
+    @POST("appcoins/promotions/promotion/get/limit={limit}/aab={aab}")
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
-        @Body GetPromotionAppsRequest.Body body,
+        @Path(value = "aab") boolean aab, @Body GetPromotionAppsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("appcoins/promotions/packages/getPromotions")
