@@ -123,6 +123,10 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
         .subscribe({}, { e -> crashReporter.log(e) })
   }
 
+  /**
+   * We don't display any loading nor error on endless grid RV's.
+   * This is the common behavior in these types of RV's
+   */
   private fun handleBottomReached() {
     view.lifecycleEvent
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
