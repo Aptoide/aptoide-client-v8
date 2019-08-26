@@ -14,6 +14,12 @@
       android:background="@drawable/background_with_shadow"
       android:orientation="vertical"
       >
+    <include
+        layout="@layout/wallet_install_cardview"
+        android:id="@+id/app_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="78dp"
+        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="32dp"
@@ -22,12 +28,6 @@
         android:text="You need the AppCoins Wallet to get your AppCoins Credits"
         tools:text="You need the AppCoins Wallet to get your AppCoins Credits"
         style="@style/Aptoide.TextView.Medium.XXS.White"
-        />
-    <include
-        layout="@layout/wallet_install_cardview"
-        android:id="@+id/app_cardview"
-        android:layout_width="match_parent"
-        android:layout_height="78dp"
         />
   </LinearLayout>
 </RelativeLayout>
