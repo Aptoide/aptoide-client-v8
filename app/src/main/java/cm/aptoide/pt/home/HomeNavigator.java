@@ -76,14 +76,6 @@ public class HomeNavigator {
         .getTitle(), "default", tag, StoreContext.home), true);
   }
 
-  public void navigateToMoreFragment(HomeEvent click) {
-    String actionTag = ((AppBundle) click.getBundle()).getActionTag();
-
-    fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
-        .getEvent(), click.getType(), click.getBundle()
-        .getTitle(), "default", actionTag, StoreContext.home), true);
-  }
-
   public void navigateToAppView(AbstractMap.SimpleEntry<String, SearchAdResult> entry) {
     appNavigator.navigateWithAdAndTag(entry.getValue(), entry.getKey());
   }
