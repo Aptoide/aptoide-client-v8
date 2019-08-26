@@ -74,16 +74,18 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
     app_cardview_layout.startAnimation(animation)
   }
 
-  override fun showDownloadState(downloadModel: DownloadModel) {
-    if (downloadModel.isDownloadingOrInstalling) {
-      appview_transfer_info.visibility = View.VISIBLE
-      install_group.visibility = View.GONE
-      setDownloadState(downloadModel.progress, downloadModel.downloadState)
-    } else {
-      appview_transfer_info.visibility = View.GONE
-      install_group.visibility = View.VISIBLE
-      if (downloadModel.hasError()) {
-        handleDownloadError(downloadModel.downloadState)
+  override fun updateState(walletApp: WalletApp) {
+    walletApp.downloadModel?.also { downloadModel ->
+      if (downloadModel.isDownloadingOrInstalling) {
+        appview_transfer_info.visibility = View.VISIBLE
+        install_group.visibility = View.GONE
+        setDownloadState(downloadModel.progress, downloadModel.downloadState)
+      } else if (!walletApp.isInstalled) {
+        appview_transfer_info.visibility = View.GONE
+        install_group.visibility = View.VISIBLE
+        if (downloadModel.hasError()) {
+          handleDownloadError(downloadModel.downloadState)
+        }
       }
     }
   }

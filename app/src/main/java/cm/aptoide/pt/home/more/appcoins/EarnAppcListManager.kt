@@ -19,6 +19,10 @@ class EarnAppcListManager(private val walletAppProvider: WalletAppProvider,
         .doOnNext { walletApp -> cachedWalletApp = walletApp }
   }
 
+  fun observeWalletApp(): Observable<WalletApp> {
+    return walletAppProvider.getWalletApp()
+  }
+
   fun shouldShowRootInstallWarningPopup(): Boolean {
     return walletInstallManager.shouldShowRootInstallWarningPopup()
   }
