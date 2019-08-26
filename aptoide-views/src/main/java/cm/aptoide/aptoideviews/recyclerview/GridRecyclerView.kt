@@ -110,7 +110,19 @@ class GridRecyclerView : RecyclerView {
   }
 
   enum class AdaptStrategy {
-    SCALE_WIDTH_ONLY, SCALE_KEEP_ASPECT_RATIO, ADJUST_PADDING
+    /**
+     * Scales items width to fit the screen only
+     */
+    SCALE_WIDTH_ONLY,
+    /**
+     * Scales items width and height (according to their aspect ratio) to fit the screen
+     */
+    SCALE_KEEP_ASPECT_RATIO,
+    /**
+     * Does not scale items but rather adjusts outer padding (left and right)
+     * while maintaining the original spacing to fit the screen
+     */
+    ADJUST_PADDING
   }
 
   fun setIntendedItemSpacing(@Dimension(unit = Dimension.DP) spacing: Int) {
