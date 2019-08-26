@@ -23,6 +23,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
     handleAppClick()
     handleRetryClick()
     handleRefreshSwipe()
+    handleBottomReached()
   }
 
   /**
@@ -30,6 +31,15 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
    * Do not handle errors in this stream, as they are handled internally
    */
   abstract fun getApps(refresh: Boolean): Observable<List<T>>
+
+  /**
+   * Responsible for retrieving more apps when the RV bottom has been reached
+   *
+   * By default it does nothing. You may override this.
+   */
+  open fun loadMoreApps(): Observable<List<T>> {
+    return Observable.just(null)
+  }
 
   /**
    * Retrieves the title of the screen to be displayed on the Toolbar
@@ -107,6 +117,19 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
         .flatMap {
           view.getItemClickEvents()
               .doOnNext { e -> handleAppClick(e) }
+              .retry()
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> crashReporter.log(e) })
+  }
+
+  private fun handleBottomReached() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
+        .flatMap {
+          view.onBottomReached()
+              .flatMap { loadMoreApps() }
+              .doOnNext { apps -> if (apps != null && apps.isNotEmpty()) view.addApps(apps) }
               .retry()
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

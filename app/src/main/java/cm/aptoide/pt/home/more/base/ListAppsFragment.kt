@@ -17,6 +17,7 @@ import cm.aptoide.pt.view.Translator
 import cm.aptoide.pt.view.app.Application
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView
 import kotlinx.android.synthetic.main.fragment_list_apps.*
 import kotlinx.android.synthetic.main.partial_view_progress_bar.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -190,6 +191,13 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
   override fun getItemClickEvents(): PublishSubject<ListAppsClickEvent<T>> {
     return adapter.getClickListener()
+  }
+
+  override fun onBottomReached(): Observable<Void> {
+    return RxRecyclerView.scrollEvents(apps_list)
+        .map { apps_list.isEndReached(2) }
+        .distinctUntilChanged()
+        .filter { isEnd -> isEnd }.map { null }
   }
 
   private fun getPixels(dp: Int): Int {

@@ -122,6 +122,15 @@ class GridRecyclerView : RecyclerView {
     }
   }
 
+  /**
+   * Returns true if the user has scrolled to the start of the [thresholdRow]-last row.
+   * E.g. if [thresholdRow] is set to 3, it returns true if the user has reached the third-last row.
+   */
+  fun isEndReached(thresholdRow: Int): Boolean {
+    val lManager = layoutManager as GridLayoutManager
+    return (layoutManager.itemCount - (lManager.spanCount * thresholdRow)) <= lManager.findLastCompletelyVisibleItemPosition()
+  }
+
   @Px
   private fun getItemMeasuredWidth(): Int {
     val spanCount = (layoutManager as GridLayoutManager).spanCount
