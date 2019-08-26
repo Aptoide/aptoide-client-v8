@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -157,7 +159,10 @@ public class EditorialService {
           .getRating()
           .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
-          file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position);
+          file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position,
+          map(app.hasSplits() ? app.getAab()
+              .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
+          .getRequiredSplits() : Collections.emptyList());
     }
     if (app != null) {
       Store store = app.getStore();
@@ -167,7 +172,9 @@ public class EditorialService {
           .getRating()
           .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
-          file.getPathAlt(), file.getMd5sum(), position);
+          file.getPathAlt(), file.getMd5sum(), position, map(app.hasSplits() ? app.getAab()
+          .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
+          .getRequiredSplits() : Collections.emptyList());
     }
     if (action != null) {
       return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
@@ -175,6 +182,20 @@ public class EditorialService {
     }
     return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
         content.getType(), position);
+  }
+
+  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    List<Split> splitsMapResult = new ArrayList<>();
+
+    if (splits == null) return splitsMapResult;
+
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsMapResult.add(
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
+              split.getMd5sum()));
+    }
+
+    return splitsMapResult;
   }
 
   private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
@@ -191,7 +212,9 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getMd5sum(), bottomCardPlaceHolderContent.getVerCode(),
           bottomCardPlaceHolderContent.getVerName(), bottomCardPlaceHolderContent.getPath(),
           bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
-          cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor);
+          cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor,
+          bottomCardPlaceHolderContent.getSplits(),
+          bottomCardPlaceHolderContent.getRequiredSplits());
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,
