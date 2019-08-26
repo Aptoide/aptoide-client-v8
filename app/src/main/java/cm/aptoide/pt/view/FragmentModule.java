@@ -104,6 +104,7 @@ import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -148,6 +149,8 @@ import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletInstallManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
@@ -577,10 +580,17 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
-      EarnAppcListConfiguration earnAppcListConfiguration) {
+      EarnAppcListConfiguration earnAppcListConfiguration,
+      EarnAppcListManager earnAppcListManager) {
     return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
-        appNavigator, earnAppcListConfiguration);
+        appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
+        ((PermissionService) fragment.getContext()));
+  }
+
+  @FragmentScope @Provides EarnAppcListManager provideEarnAppcListManager(
+      WalletAppProvider walletAppProvider, WalletInstallManager walletInstallManager) {
+    return new EarnAppcListManager(walletAppProvider, walletInstallManager);
   }
 
   @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
