@@ -74,11 +74,13 @@ public class FakeBundleDataSource implements BundleDataSource {
     appsForEditorsList.add(facebookFeatureGraphic);
     AppBundle appBundle =
         new AppBundle("As escolhas do filipe", appsForEditorsList, AppBundle.BundleType.EDITORS,
-            null, "");
+            null, "", "As escolhas do filipe-more");
     AppBundle appBundle1 =
-        new AppBundle("piores apps locais", appsList, AppBundle.BundleType.APPS, null, "");
+        new AppBundle("piores apps locais", appsList, AppBundle.BundleType.APPS, null, "",
+            "piores apps locais-more");
     AppBundle appBundle2 =
-        new AppBundle("um pouco melhor apps", appsList, AppBundle.BundleType.APPS, null, "");
+        new AppBundle("um pouco melhor apps", appsList, AppBundle.BundleType.APPS, null, "",
+            "um pouco melhor apps-more");
 
     List<HomeBundle> appBundles = new ArrayList<>();
     appBundles.add(appBundle);

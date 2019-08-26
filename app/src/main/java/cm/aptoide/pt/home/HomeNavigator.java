@@ -65,10 +65,23 @@ public class HomeNavigator {
 
   public void navigateWithAction(HomeEvent click) {
 
+    String tag = click.getBundle()
+        .getTag();
+    if (click.getBundle() instanceof AppBundle) {
+      tag = ((AppBundle) click.getBundle()).getActionTag();
+    }
+
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getType(), click.getBundle()
-        .getTitle(), "default", click.getBundle()
-        .getTag(), StoreContext.home), true);
+        .getTitle(), "default", tag, StoreContext.home), true);
+  }
+
+  public void navigateToMoreFragment(HomeEvent click) {
+    String actionTag = ((AppBundle) click.getBundle()).getActionTag();
+
+    fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
+        .getEvent(), click.getType(), click.getBundle()
+        .getTitle(), "default", actionTag, StoreContext.home), true);
   }
 
   public void navigateToAppView(AbstractMap.SimpleEntry<String, SearchAdResult> entry) {
