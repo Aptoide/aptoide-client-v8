@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -302,6 +304,14 @@ public class ImageLoader {
       Log.e(TAG, "::load() Context is null");
     }
     return null;
+  }
+
+  public void loadWithPalettePlaceholder(String url, BitmapDrawable paletteSrcImage,
+      @ColorInt int defaultColor, ImageView targetImageView) {
+    Palette.from(paletteSrcImage.getBitmap())
+        .maximumColorCount(6)
+        .generate(palette -> loadWithColorPlaceholder(url, palette.getDominantColor(defaultColor),
+            targetImageView));
   }
 
   public Target<Drawable> loadWithColorPlaceholder(String url, @ColorInt int colorInt,

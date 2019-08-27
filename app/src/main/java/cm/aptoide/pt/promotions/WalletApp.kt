@@ -17,8 +17,8 @@ data class WalletApp(
     val pathAlt: String? = null,
     val obb: Obb? = null,
     val size: Long = 0,
-    val developer: String = ""
-
+    val developer: String = "",
+    val rating: Float = -1f
 ) {
   fun exists(): Boolean {
     return id != -1L

@@ -102,6 +102,10 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -128,6 +132,7 @@ import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -144,6 +149,8 @@ import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletInstallManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
@@ -568,5 +575,26 @@ import rx.subscriptions.CompositeSubscription;
     return new AppcPromotionNotificationStringProvider(fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_body));
+  }
+
+  @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
+      CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
+      AnalyticsManager analyticsManager, AppNavigator appNavigator,
+      EarnAppcListConfiguration earnAppcListConfiguration,
+      EarnAppcListManager earnAppcListManager) {
+    return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
+        appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
+        ((PermissionService) fragment.getContext()));
+  }
+
+  @FragmentScope @Provides EarnAppcListManager provideEarnAppcListManager(
+      WalletAppProvider walletAppProvider, WalletInstallManager walletInstallManager) {
+    return new EarnAppcListManager(walletAppProvider, walletInstallManager);
+  }
+
+  @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
+    return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
+        arguments.getString(BundleCons.TAG));
   }
 }
