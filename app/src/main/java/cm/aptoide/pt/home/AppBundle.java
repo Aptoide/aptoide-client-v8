@@ -15,13 +15,16 @@ public class AppBundle implements HomeBundle {
   private final BundleType type;
   private final Event event;
   private final String tag;
+  private final String actionTag;
 
-  public AppBundle(String title, List<Application> apps, BundleType type, Event event, String tag) {
+  public AppBundle(String title, List<Application> apps, BundleType type, Event event, String tag,
+      String actionTag) {
     this.title = title;
     this.apps = apps;
     this.type = type;
     this.event = event;
     this.tag = tag;
+    this.actionTag = actionTag;
   }
 
   public String getTitle() {
@@ -46,5 +49,9 @@ public class AppBundle implements HomeBundle {
 
   public List<Application> getApps() {
     return apps;
+  }
+
+  public String getActionTag() {
+    return actionTag;
   }
 }

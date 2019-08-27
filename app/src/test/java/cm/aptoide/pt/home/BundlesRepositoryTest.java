@@ -41,7 +41,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadHomeBundlesWithCacheTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -57,7 +58,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadFreshHomeBundlesTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -65,7 +67,8 @@ public class BundlesRepositoryTest {
     bundlesRepository = new BundlesRepository(bundleDataSource, cachedBundles, new HashMap<>(), 5);
 
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
@@ -85,7 +88,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadNextHomeBundlesNoCacheTest() {
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
@@ -105,7 +109,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadNextHomeBundlesWithCacheTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -113,7 +118,8 @@ public class BundlesRepositoryTest {
     bundlesRepository = new BundlesRepository(bundleDataSource, cachedBundles, new HashMap<>(), 5);
 
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
@@ -158,7 +164,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadBundlesWithCacheTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -174,7 +181,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadNextBundlesForEventNoCacheTest() {
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
@@ -194,7 +202,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadNextBundlesForEventWithCacheTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -202,7 +211,8 @@ public class BundlesRepositoryTest {
     bundlesRepository = new BundlesRepository(bundleDataSource, cachedBundles, new HashMap<>(), 5);
 
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
@@ -223,7 +233,8 @@ public class BundlesRepositoryTest {
 
   @Test public void loadFreshBundlesTest() {
     HomeBundle homeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> bundles = new ArrayList<>();
     bundles.add(homeBundle);
     Map<String, List<HomeBundle>> cachedBundles = new HashMap<>();
@@ -231,7 +242,8 @@ public class BundlesRepositoryTest {
     bundlesRepository = new BundlesRepository(bundleDataSource, cachedBundles, new HashMap<>(), 5);
 
     HomeBundle freshHomeBundle =
-        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag");
+        new AppBundle("title", Collections.emptyList(), HomeBundle.BundleType.APPS, event, "tag",
+            "tag-more");
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
