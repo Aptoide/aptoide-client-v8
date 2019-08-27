@@ -57,6 +57,7 @@ public class BundlesResponseMapper {
         Event event = getEvent(widget);
 
         String widgetTag = widget.getTag();
+        String widgetActionTag = getWidgetActionTag(widget);
 
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
@@ -68,11 +69,9 @@ public class BundlesResponseMapper {
             || type.equals(HomeBundle.BundleType.EDITORS)
             || type.equals(HomeBundle.BundleType.TOP)) {
 
-          String widgetActionTag = getWidgetActionTag(widget);
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
               .getList(), type, widgetTag), type, event, widgetTag, widgetActionTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-          String widgetActionTag = getWidgetActionTag(widget);
 
           List<Application> applicationList =
               map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
