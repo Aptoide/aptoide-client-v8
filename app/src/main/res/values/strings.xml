@@ -716,6 +716,7 @@
   <string name="poa_time_left_days">DAYS</string>
   <string name="poa_time_left_hours">HOURS</string>
   <string name="poa_time_left_minutes">MINUTES</string>
+  <string name="poa_time_left_seconds">SECONDS</string>
   <string name="poa_earn_view_title">Earn AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
   <string name="poa_bundle_title">Earn AppCoins</string>
@@ -741,7 +742,7 @@
   </plurals>
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">UPDATE</string>
-  
+
   <string name="auto_update_popup_title">Update Aptoide!</string>
   <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute!</string>
 

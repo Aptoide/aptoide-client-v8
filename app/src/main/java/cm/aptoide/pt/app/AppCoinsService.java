@@ -64,7 +64,14 @@ public class AppCoinsService {
           .getBudget()
           .getAppc() : -1.0;
 
-      return new AppCoinsAdvertisingModel(appcReward, true, fiatReward, fiatCurrency, appcBudget);
+      String endDate = listAppCoinsCampaigns.getList()
+          .get(0)
+          .getEndDate() != null ? listAppCoinsCampaigns.getList()
+          .get(0)
+          .getEndDate() : "";
+
+      return new AppCoinsAdvertisingModel(appcReward, true, fiatReward, fiatCurrency, appcBudget,
+          endDate);
     }
   }
 }
