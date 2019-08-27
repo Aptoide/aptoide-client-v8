@@ -77,7 +77,7 @@ public class EditorialPresenterTest {
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
         Collections.emptyList(), editorialContent, false, "1", "CURATION_1", "");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
-        DownloadModel.DownloadState.ACTIVE, null, 1);
+        DownloadModel.DownloadState.ACTIVE, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
     loadingEditorialViewModel = new EditorialViewModel(true);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -218,9 +218,8 @@ public class EditorialPresenterTest {
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 
     //And request and load the downloadModel for each one
-    when(editorialManager.loadDownloadModel("md5", "packageName", 0, false, null,
-        editorialContent.get(0)
-            .getPosition())).thenReturn(Observable.just(downloadModel));
+    when(editorialManager.loadDownloadModel("md5", "packageName", 0, editorialContent.get(0)
+        .getPosition())).thenReturn(Observable.just(downloadModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

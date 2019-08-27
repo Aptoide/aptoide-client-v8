@@ -112,7 +112,6 @@ public class AppViewPresenter implements Presenter {
     pauseDownload();
     resumeDownload();
     cancelDownload();
-    handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
@@ -1018,11 +1017,6 @@ public class AppViewPresenter implements Presenter {
                                   appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
                                       .getName(), action.toString())));
                   break;
-                case PAY:
-                  completable = appViewManager.getAppModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
-                  break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
                       .observeOn(viewScheduler)
@@ -1049,13 +1043,6 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
-  }
-
-  private Completable payApp(long appId) {
-    return Completable.fromAction(() -> {
-      appViewAnalytics.sendPaymentViewShowEvent();
-      appViewNavigator.buyApp(appId);
-    });
   }
 
   private Completable downgradeApp(DownloadModel.Action action, AppModel appModel) {
@@ -1093,30 +1080,6 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .name(), appModel.getEditorsChoice())))
         .toCompletable();
-  }
-
-  private void handleAppBought() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.appBought()
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .toObservable()
-                .filter(appViewViewModel -> appViewViewModel.getAppId()
-                    == appBoughClickEvent.getAppId())
-                .map(__2 -> appBoughClickEvent))
-            .first()
-            .observeOn(viewScheduler)
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .flatMapCompletable(
-                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
-                .toObservable())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
   }
 
   private void handleApkfyDialogPositiveClick() {

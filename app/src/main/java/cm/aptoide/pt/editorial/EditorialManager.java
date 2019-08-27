@@ -5,7 +5,6 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -95,12 +94,11 @@ public class EditorialManager {
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, int position) {
+      int versionCode, int position) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new EditorialDownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), false), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay, position));
+            downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
+            downloadStateParser.parseDownloadState(install.getState()), position));
   }
 
   public Completable pauseDownload(String md5) {

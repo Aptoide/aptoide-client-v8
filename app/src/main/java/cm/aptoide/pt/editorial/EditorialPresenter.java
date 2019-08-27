@@ -256,7 +256,7 @@ public class EditorialPresenter implements Presenter {
         .flatMapIterable(editorialViewModel -> editorialViewModel.getPlaceHolderContent())
         .flatMap(
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
-                editorialContent.getPackageName(), editorialContent.getVerCode(), false, null,
+                editorialContent.getPackageName(), editorialContent.getVerCode(),
                 editorialContent.getPosition()))
         .observeOn(viewScheduler)
         .doOnNext(view::showDownloadModel)

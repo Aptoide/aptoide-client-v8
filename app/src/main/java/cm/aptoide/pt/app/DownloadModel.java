@@ -1,7 +1,5 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-
 import static cm.aptoide.pt.app.DownloadModel.Action.DOWNGRADE;
 import static cm.aptoide.pt.app.DownloadModel.Action.INSTALL;
 import static cm.aptoide.pt.app.DownloadModel.Action.PAY;
@@ -16,14 +14,11 @@ public class DownloadModel {
   private final Action action;
   private final int progress;
   private final DownloadState downloadState;
-  private final GetAppMeta.Pay pay;
 
-  public DownloadModel(Action action, int progress, DownloadState downloadState,
-      GetAppMeta.Pay pay) {
+  public DownloadModel(Action action, int progress, DownloadState downloadState) {
     this.action = action;
     this.progress = progress;
     this.downloadState = downloadState;
-    this.pay = pay;
   }
 
   public Action getAction() {
@@ -46,10 +41,6 @@ public class DownloadModel {
 
   public boolean isDownloadingOrInstalling() {
     return isDownloading() || downloadState.equals(DownloadState.INSTALLING);
-  }
-
-  public GetAppMeta.Pay getPay() {
-    return pay;
   }
 
   public boolean hasError() {

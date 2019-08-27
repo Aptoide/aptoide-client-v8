@@ -59,13 +59,6 @@ public class AppViewNavigator {
     fragmentNavigator.navigateTo(fragment, true);
   }
 
-  public void buyApp(long appId) {
-    Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((AppViewFragment) fragment).buyApp(appId);
-    }
-  }
-
   public void navigateToStore(Store store) {
     fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
         .newStoreFragment(store.getName(), store.getAppearance()

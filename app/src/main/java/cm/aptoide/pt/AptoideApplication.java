@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -25,15 +24,6 @@ import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
-import cm.aptoide.pt.billing.Billing;
-import cm.aptoide.pt.billing.BillingAnalytics;
-import cm.aptoide.pt.billing.BillingIdManager;
-import cm.aptoide.pt.billing.BillingPool;
-import cm.aptoide.pt.billing.external.ExternalBillingSerializer;
-import cm.aptoide.pt.billing.payment.Adyen;
-import cm.aptoide.pt.billing.purchase.PurchaseFactory;
-import cm.aptoide.pt.billing.view.PaymentThrowableCodeMapper;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
@@ -92,7 +82,6 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
-import cm.aptoide.pt.sync.rx.RxSyncScheduler;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -121,7 +110,6 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -194,20 +182,13 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
-  private BillingAnalytics billingAnalytics;
-  private ExternalBillingSerializer inAppBillingSerialzer;
-  private PurchaseBundleMapper purchaseBundleMapper;
-  private PaymentThrowableCodeMapper paymentThrowableCodeMapper;
   private NotificationCenter notificationCenter;
   private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResulMap;
-  private BillingPool billingPool;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
-  private Adyen adyen;
-  private PurchaseFactory purchaseFactory;
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
@@ -578,70 +559,12 @@ public abstract class AptoideApplication extends Application {
     return preferences;
   }
 
-  public BillingAnalytics getBillingAnalytics() {
-    if (billingAnalytics == null) {
-      billingAnalytics =
-          new BillingAnalytics(getAptoidePackage(), analyticsManager, navigationTracker);
-    }
-    return billingAnalytics;
-  }
-
-  public Billing getBilling(String merchantName) {
-    return getBillingPool().get(merchantName);
-  }
-
-  public BillingPool getBillingPool() {
-    if (billingPool == null) {
-      billingPool = new BillingPool(getDefaultSharedPreferences(), bodyInterceptorV3, defaultClient,
-          accountManager, database, getResources(), packageRepository, tokenInvalidator,
-          new RxSyncScheduler(new HashMap<>(), CrashReport.getInstance()),
-          getInAppBillingSerializer(), bodyInterceptorPoolV7, accountSettingsBodyInterceptorPoolV7,
-          new HashMap<>(), WebService.getDefaultConverter(), CrashReport.getInstance(), getAdyen(),
-          getPurchaseFactory(), Build.VERSION_CODES.JELLY_BEAN, Build.VERSION_CODES.JELLY_BEAN,
-          getAuthenticationPersistence(), getPreferences());
-    }
-    return billingPool;
-  }
-
-  public Adyen getAdyen() {
-    if (adyen == null) {
-      adyen = new Adyen(this, Charset.forName("UTF-8"), Schedulers.io(), PublishRelay.create());
-    }
-    return adyen;
-  }
-
-  public BillingIdManager getIdResolver(String merchantName) {
-    return getBillingPool().getIdResolver(merchantName);
-  }
-
   public Database getDatabase() {
     return database;
   }
 
   public PackageRepository getPackageRepository() {
     return packageRepository;
-  }
-
-  public PaymentThrowableCodeMapper getPaymentThrowableCodeMapper() {
-    if (paymentThrowableCodeMapper == null) {
-      paymentThrowableCodeMapper = new PaymentThrowableCodeMapper();
-    }
-    return paymentThrowableCodeMapper;
-  }
-
-  public PurchaseBundleMapper getPurchaseBundleMapper() {
-    if (purchaseBundleMapper == null) {
-      purchaseBundleMapper =
-          new PurchaseBundleMapper(getPaymentThrowableCodeMapper(), getPurchaseFactory());
-    }
-    return purchaseBundleMapper;
-  }
-
-  public ExternalBillingSerializer getInAppBillingSerializer() {
-    if (inAppBillingSerialzer == null) {
-      inAppBillingSerialzer = new ExternalBillingSerializer();
-    }
-    return inAppBillingSerialzer;
   }
 
   private void clearFileCache() {
@@ -912,13 +835,6 @@ public abstract class AptoideApplication extends Application {
 
   public ActivityProvider createActivityProvider() {
     return new VanillaActivityProvider();
-  }
-
-  public PurchaseFactory getPurchaseFactory() {
-    if (purchaseFactory == null) {
-      purchaseFactory = new PurchaseFactory();
-    }
-    return purchaseFactory;
   }
 
   public String getVersionCode() {

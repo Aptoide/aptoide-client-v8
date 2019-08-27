@@ -470,5 +470,10 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
               FieldAttribute.REQUIRED);
       oldVersion++;
     }
+
+    if (oldVersion == 8102) {
+      realm.delete("RealmAuthorization");
+      oldVersion++;
+    }
   }
 }

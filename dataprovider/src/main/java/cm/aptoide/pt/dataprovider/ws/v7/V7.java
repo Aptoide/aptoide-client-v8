@@ -37,16 +37,6 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.RefreshBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchaseRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
@@ -88,14 +78,12 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -462,55 +450,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/getPackage") Observable<GetMerchantRequest.ResponseBody> getBillingMerchant(
-        @Body GetMerchantRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/products/get") Observable<GetProductsRequest.ResponseBody> getBillingProducts(
-        @Body GetProductsRequest.RequestBody requestBody,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
-        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchases/get")
-    Observable<Response<GetPurchasesRequest.ResponseBody>> getBillingPurchases(
-        @Body GetPurchasesRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchase/getMeta")
-    Observable<Response<GetPurchaseRequest.ResponseBody>> getBillingPurchase(
-        @Body GetPurchaseRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("inapp/bank/transaction/getMeta")
-    Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
-        @Query("product_id") long productId, @Header("Authorization") String authorization,
-        @Query("user_id") String customerId);
-
-    @POST("inapp/bank/transaction/set")
-    Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
-        @Body CreateTransactionRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/product/getMeta") Observable<GetProductsRequest.ResponseBody> getBillingProduct(
-        @Body GetProductsRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchase/consume") Observable<BaseV7Response> deleteBillingPurchase(
-        @Body DeletePurchaseRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/bank/authorization/set")
-    Observable<UpdateAuthorizationRequest.ResponseBody> updateBillingAuthorization(
-        @Body UpdateAuthorizationRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("inapp/bank/authorization/getMeta")
-    Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
-        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization,
-        @Query("user_id") String customerId);
 
     @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
         @Body PostDeleteRequest.Body body,

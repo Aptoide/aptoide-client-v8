@@ -92,8 +92,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
   fun loadDownloadModel(walletApp: WalletApp): Observable<DownloadModel> {
     return installManager.getInstall(walletApp.md5sum, walletApp.packageName, walletApp.versionCode)
         .map { install ->
-          DownloadModel(downloadStateParser.parseDownloadType(install.type, false, false, false),
-              install.progress, downloadStateParser.parseDownloadState(install.state), null)
+          DownloadModel(downloadStateParser.parseDownloadType(install.type, false),
+              install.progress, downloadStateParser.parseDownloadState(install.state))
         }
   }
 
