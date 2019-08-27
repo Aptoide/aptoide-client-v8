@@ -45,6 +45,17 @@
         style="@style/Aptoide.TextView.Regular.M.AppcColor"
         />
 
+    <include
+        layout="@layout/appview_poa_countdown_element"
+        android:id="@+id/countdown_element"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        />
+
     <ViewStub
         android:id="@+id/poa_install_element"
         android:layout_width="match_parent"

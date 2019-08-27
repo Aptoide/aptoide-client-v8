@@ -10,6 +10,7 @@ public class AppCoinsCampaign {
   private Reward reward;
   private CampaignApp app;
   private Budget budget;
+  private String endDate;
 
   public AppCoinsCampaign() {
   }
@@ -36,6 +37,14 @@ public class AppCoinsCampaign {
 
   public void setBudget(Budget budget) {
     this.budget = budget;
+  }
+
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
   }
 
   public static class Reward {

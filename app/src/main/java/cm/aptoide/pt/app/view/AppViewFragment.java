@@ -9,6 +9,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -111,7 +112,10 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -254,6 +258,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView poaOfferValue;
   private View poaBudgetElement;
   private TextView poaBudgetMessage;
+  private View poaCountdownMessage;
+  private TextView poaCountdownHours;
+  private TextView poaCountdownMinutes;
+  private TextView poaCountdownSeconds;
   private View iabInfo;
   private View apkfyElement;
   private View donationsElement;
@@ -289,6 +297,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
   private DecimalFormat poaFiatDecimalFormat;
+  private CountDownTimer poaCountdownTimer;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -365,6 +374,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     poaOfferValue = view.findViewById(R.id.offer_value);
     poaBudgetElement = view.findViewById(R.id.budget_element);
     poaBudgetMessage = view.findViewById(R.id.budget_left_message);
+    poaCountdownMessage = view.findViewById(R.id.countdown_element);
+    poaCountdownHours = view.findViewById(R.id.hours);
+    poaCountdownMinutes = view.findViewById(R.id.minutes);
+    poaCountdownSeconds = view.findViewById(R.id.seconds);
     iabInfo = view.findViewById(R.id.iap_appc_label);
     versionsLayout = view.findViewById(R.id.versions_layout);
     latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
@@ -620,6 +633,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     if (bannerAd != null) {
       bannerAd.destroy();
       bannerAd = null;
+    }
+    if (poaCountdownTimer != null) {
+      poaCountdownTimer.cancel();
+      poaCountdownTimer = null;
     }
   }
 
@@ -1624,8 +1641,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           appCoinsViewModel.getAdvertisingModel()
               .getAppcReward(), appCoinsViewModel.getAdvertisingModel()
               .getFiatReward(), appCoinsViewModel.getAdvertisingModel()
-              .getFiatCurrency(),  appCoinsViewModel.getAdvertisingModel()
-              .getAppcBudget());
+              .getFiatCurrency(), appCoinsViewModel.getAdvertisingModel()
+              .getAppcBudget(), appCoinsViewModel.getAdvertisingModel()
+              .getEndDate());
     }
 
     if (downloadModel.isDownloadingOrInstalling()) {
@@ -1679,14 +1697,17 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, double appcReward,
-      double fiatReward, String fiatCurrency, double appcBudget) {
+      double fiatReward, String fiatCurrency, double appcBudget, String date) {
     if (hasAdvertising) {
       String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
       appcInfoView.setVisibility(View.VISIBLE);
       poaOfferValue.setText(
           String.format(getResources().getString(R.string.poa_app_view_card_body_2),
               String.valueOf(appcReward), formatedFiatCurrency));
-      if (appcBudget != -1.0) {
+      if (!date.equals("")) {
+        poaCountdownMessage.setVisibility(View.VISIBLE);
+        setCountdownTimer(date);
+      } else if (appcBudget != -1.0) {
         int transactionsLeft = (int) (appcBudget / appcReward);
         poaBudgetElement.setVisibility(View.VISIBLE);
         poaBudgetMessage.setText(
@@ -1696,6 +1717,45 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
     } else {
       if (hasBilling) iabInfo.setVisibility(View.VISIBLE);
+    }
+  }
+
+  private void setCountdownTimer(String date) {
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    DecimalFormat countdownNumberFormat = new DecimalFormat("00");
+    dateFormatter.setLenient(false);
+    final long now = System.currentTimeMillis();
+    long dateMillis = 0;
+    Date endDate;
+    try {
+      endDate = dateFormatter.parse(date);
+      dateMillis = endDate.getTime();
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    long timeToDisplay = dateMillis - now;
+
+    poaCountdownHours.setText(countdownNumberFormat.format(0));
+    poaCountdownMinutes.setText(countdownNumberFormat.format(0));
+    poaCountdownSeconds.setText(countdownNumberFormat.format(0));
+
+    if (timeToDisplay >= 0) {
+      poaCountdownTimer = new CountDownTimer(timeToDisplay, 1000) {
+        @Override public void onTick(long millisUntilFinished) {
+          String hoursLeft = countdownNumberFormat.format(millisUntilFinished / 3600000);
+          poaCountdownHours.setText(hoursLeft);
+          String minutesLeft =
+              countdownNumberFormat.format((millisUntilFinished % 3600000) / 60000);
+          poaCountdownMinutes.setText(minutesLeft);
+          String secondsLeft =
+              countdownNumberFormat.format(((millisUntilFinished % 360000) % 60000) / 1000);
+          poaCountdownSeconds.setText(secondsLeft);
+        }
+
+        @Override public void onFinish() {
+        }
+      }.start();
     }
   }
 
