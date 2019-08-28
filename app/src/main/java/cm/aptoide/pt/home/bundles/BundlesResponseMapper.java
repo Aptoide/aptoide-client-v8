@@ -64,6 +64,8 @@ public class BundlesResponseMapper {
         Event event = getEvent(widget);
 
         String widgetTag = widget.getTag();
+        String widgetActionTag = getWidgetActionTag(widget);
+
         Object viewObject = widget.getViewObject();
         String title = widget.getTitle();
         if (event != null && event.getName()
@@ -73,14 +75,16 @@ public class BundlesResponseMapper {
         if (type.equals(HomeBundle.BundleType.APPS)
             || type.equals(HomeBundle.BundleType.EDITORS)
             || type.equals(HomeBundle.BundleType.TOP)) {
+
           appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
-              .getList(), type, widgetTag), type, event, widgetTag));
+              .getList(), type, widgetTag), type, event, widgetTag, widgetActionTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
+
           List<Application> applicationList =
               map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
           if (!applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
-                new Event().setName(Event.Name.getAppCoinsAds), widgetTag));
+                new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
           appBundles.add(new AdBundle(title,
@@ -110,6 +114,16 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
+  }
+
+  private String getWidgetActionTag(GetStoreWidgets.WSWidget widget) {
+    String widgetActionTag = "";
+    if (widget.hasActions()) {
+      widgetActionTag = widget.getActions()
+          .get(0)
+          .getTag();
+    }
+    return widgetActionTag;
   }
 
   private ActionItem map(ActionItemResponse viewObject) {

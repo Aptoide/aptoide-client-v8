@@ -1,9 +1,9 @@
 package cm.aptoide.aptoideviews.matchers
 
-import android.support.annotation.CheckResult
-import android.support.test.espresso.matcher.BoundedMatcher
 import android.view.View
 import android.widget.ProgressBar
+import androidx.annotation.CheckResult
+import androidx.test.espresso.matcher.BoundedMatcher
 import org.hamcrest.Description
 
 class ProgressIndeterminate(private val isIndeterminate: Boolean) :

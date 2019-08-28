@@ -1,6 +1,6 @@
 package cm.aptoide.pt.util.schedulers;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

@@ -2,8 +2,6 @@ package cm.aptoide.pt.store.view.my;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.v4.app.FragmentActivity;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -11,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
+import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;

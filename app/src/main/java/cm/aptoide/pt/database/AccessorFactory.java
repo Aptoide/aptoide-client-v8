@@ -1,6 +1,6 @@
 package cm.aptoide.pt.database;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;

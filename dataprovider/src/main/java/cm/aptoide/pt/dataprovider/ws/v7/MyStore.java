@@ -1,6 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 

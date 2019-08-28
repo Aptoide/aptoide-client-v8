@@ -1,8 +1,8 @@
 package cm.aptoide.pt.install;
 
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
+import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;

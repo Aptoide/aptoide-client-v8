@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;

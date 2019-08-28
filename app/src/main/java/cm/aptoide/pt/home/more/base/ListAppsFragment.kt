@@ -2,10 +2,10 @@ package cm.aptoide.pt.home.more.base
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.support.annotation.Dimension
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
 import android.view.*
+import androidx.annotation.Dimension
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.aptoideviews.errors.ErrorView
 import cm.aptoide.aptoideviews.recyclerview.GridRecyclerView

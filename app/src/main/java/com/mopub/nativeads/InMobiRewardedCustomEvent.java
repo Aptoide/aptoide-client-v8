@@ -1,9 +1,9 @@
 package com.mopub.nativeads;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiAdRequestStatus.StatusCode;
 import com.inmobi.ads.InMobiInterstitial;

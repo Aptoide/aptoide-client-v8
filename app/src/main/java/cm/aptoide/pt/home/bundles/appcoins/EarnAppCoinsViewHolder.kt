@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home.bundles.appcoins
 
 import android.graphics.Rect
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.pt.home.bundles.base.AppBundle
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder
 import cm.aptoide.pt.home.bundles.base.HomeBundle
@@ -25,8 +25,9 @@ class EarnAppCoinsViewHolder(val view: View,
 
     val layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
     itemView.apps_list.addItemDecoration(object : RecyclerView.ItemDecoration() {
+
       override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView,
-                                  state: RecyclerView.State?) {
+                                  state: RecyclerView.State) {
         val margin = AptoideUtils.ScreenU.getPixelsForDip(8, view.resources)
         val marginBottom = AptoideUtils.ScreenU.getPixelsForDip(4, view.resources)
         outRect.set(margin, margin, 0, marginBottom)
@@ -45,7 +46,7 @@ class EarnAppCoinsViewHolder(val view: View,
     }
     adapter.updateBundle(homeBundle, position)
     itemView.apps_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-      override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+      override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         if (dx > 0) {
           uiEventsListener.onNext(

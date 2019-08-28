@@ -1,6 +1,6 @@
 package cm.aptoide.pt.notification.policies;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.Policy;

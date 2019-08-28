@@ -1,27 +1,27 @@
 package cm.aptoide.pt.home.apps;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     appcAppsAdapter = new AppcAppsAdapter(new ArrayList<>(), appItemClicks);
     appcAppsRecyclerView.setAdapter(appcAppsAdapter);
     appcAppsRecyclerView.setLayoutManager(
-        new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
     appcAppsRecyclerView.setItemAnimator(null);
 
     swipeRefreshLayout = view.findViewById(R.id.fragment_apps_swipe_container);

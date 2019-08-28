@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home.bundles.editorschoice;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;

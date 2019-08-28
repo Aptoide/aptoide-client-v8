@@ -1,16 +1,16 @@
 package cm.aptoide.aptoideviews.recyclerview
 
 import android.content.Context
-import android.support.annotation.Dimension
-import android.support.annotation.Px
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.animation.GridLayoutAnimationController
+import androidx.annotation.Dimension
+import androidx.annotation.Px
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * An extension of a RecyclerView to make sure that grid animations work correctly and to
@@ -140,7 +140,7 @@ class GridRecyclerView : RecyclerView {
    */
   fun isEndReached(thresholdRow: Int): Boolean {
     val lManager = layoutManager as GridLayoutManager
-    return (layoutManager.itemCount - (lManager.spanCount * thresholdRow)) <= lManager.findLastCompletelyVisibleItemPosition()
+    return (lManager.itemCount - (lManager.spanCount * thresholdRow)) <= lManager.findLastCompletelyVisibleItemPosition()
   }
 
   @Px

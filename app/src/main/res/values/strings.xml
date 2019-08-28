@@ -81,7 +81,7 @@
   <string name="appview_title_apkfy">Keep Aptoide installed to get</string>
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
-
+  <string name="apkfy_install_message">Do you want to install this app?</string>
 
   <!-- AppView Donations-->
   <string name="appview_title_donations_leaderboard">Top Donations</string>
@@ -744,6 +744,6 @@
   <string name="updates_notification_update_button">UPDATE</string>
 
   <string name="auto_update_popup_title">Update Aptoide!</string>
-  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute!</string>
+  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
 
 </resources>

@@ -22,15 +22,6 @@ buildscript {
 
 android {
 
-  configurations.all {
-    resolutionStrategy {
-      force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    }
-  }
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
@@ -280,10 +271,15 @@ android {
       variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     }
 
+    //flurry
     def type = variant.variantData.variantConfiguration.buildType.name
 
     if (flavors[1].name.contains('prod') && type == 'release') {
-      buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      if (flavors[0].name.contains('cobrand')) {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_CO_BRAND_KEY + "\""
+      } else {
+        buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_KEY + "\""
+      }
     } else {
       buildConfigField "String", "FLURRY_KEY", "\"" + project.FLURRY_DEBUG_KEY + "\""
     }
@@ -360,37 +356,27 @@ dependencies {
   implementation project(path: ':packageinstaller')
   implementation project(path: ':aptoide-views')
 
-  // Testing-only dependencies
-  testImplementation "junit:junit:${JUNIT_VERSION}"
-  testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-
-  // Force usage of support annotations in the test app, since it is internally used by the runner module.
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}")
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}")
-  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-
   androidTestImplementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
 
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}")
+  implementation "androidx.multidex:multidex:${MULTIDEX_VERSION}"
 
-  implementation("com.android.support:multidex:${MULTIDEX_VERSION}")
+  androidTestImplementation "androidx.multidex:multidex-instrumentation:${MULTIDEX_VERSION}"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
   // Force usage of support annotations in the test app, since it is internally used by the runner module.
   androidTestImplementation "junit:junit:${JUNIT_VERSION}"
-  androidTestImplementation("com.android.support.test:runner:${RUNNER_VERSION}")
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
-  androidTestImplementation("com.android.support:multidex-instrumentation:${MULTIDEX_VERSION}")
+  androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
+  androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
+
   //dependencies needed for UITests
-  androidTestImplementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "androidx.annotation:annotation:${ANDROIDX_ANNOTATION_VERSION}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestImplementation "androidx.test.espresso:espresso-contrib:${ESPRESSO_VERSION}"
+  androidTestImplementation "androidx.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+  androidTestImplementation "androidx.recyclerview:recyclerview:${RECYCLER_VIEW_VERSION}"
   androidTestImplementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
   androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
@@ -398,22 +384,24 @@ dependencies {
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  implementation "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
+  implementation "androidx.annotation:annotation:${ANDROIDX_ANNOTATION_VERSION}"
 
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  // Cannot update or settings will crash :/
-  implementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:recyclerview-v7:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:support-v13:${SUPPORT_LIB_VERSION}"
-  //noinspection GradleDependency
-  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:customtabs:${SUPPORT_LIB_VERSION}"
+
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "androidx.recyclerview:recyclerview:${RECYCLER_VIEW_VERSION}"
+  implementation "androidx.legacy:legacy-support-v13:${LEGACY_SUPPORT_VERSION}"
+  implementation "androidx.cardview:cardview:${CARD_VIEW_VERSION}"
+  implementation "androidx.browser:browser:${BROWSER_VERSION}"
+
+  //Color Palette
+  implementation "androidx.palette:palette:${PALETTE_VERSION}"
+
+  implementation "androidx.preference:preference:${PREFERENCES_VERSION}"
+
+  implementation "androidx.constraintlayout:constraintlayout:${CONSTRAINT_LAYOUT_VERSION}"
+
+  implementation "com.google.android.material:material:${MATERIAL_VERSION}"
 
   implementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
 
@@ -436,7 +424,7 @@ dependencies {
   implementation("com.mopub:mopub-sdk:${MOPUB_SDK_VERSION}@aar") {
     transitive = true
     exclude module: 'moat-mobile-app-kit'
-    exclude group: "com.android.support"
+    exclude group: "com.androidx"
   }
 
   // AppLovin
@@ -472,7 +460,7 @@ dependencies {
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
   implementation 'org.slf4j:slf4j-api:1.7.21'
-  implementation 'org.jmdns:jmdns:3.5.1'
+  implementation "org.jmdns:jmdns:${JMDNS_VERSION}"
 
   // Fabric
   implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
@@ -486,7 +474,6 @@ dependencies {
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
   annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
 
-  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
   implementation "com.google.android.gms:play-services-location:${PLAY_SERVICES_LOCATION_VERSION}"
@@ -503,9 +490,6 @@ dependencies {
   implementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
 
   leakImplementation "com.squareup.leakcanary:leakcanary-android:${LEAK_CANARY_VERSION}"
-
-  //Color Palette
-  implementation "com.android.support:palette-v7:${SUPPORT_LIB_VERSION}"
 
   implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}")
 

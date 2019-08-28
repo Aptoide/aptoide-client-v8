@@ -1,8 +1,6 @@
 package cm.aptoide.pt.store.view;
 
 import android.content.res.Resources;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -33,6 +31,7 @@ import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
+import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
@@ -314,8 +313,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private void showFollowStoreError() {
     followStoreButton.setText(R.string.follow);
     followStoreButton.setEnabled(true);
-    Snackbar.make(itemView, R.string.storetab_short_follow_error,
-        BaseTransientBottomBar.LENGTH_LONG)
+    Snackbar.make(itemView, R.string.storetab_short_follow_error, Snackbar.LENGTH_LONG)
         .show();
   }
 
@@ -483,8 +481,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     /**
      * the order must be corrected(NONE<TIN<BRONZE<SILVER<GOLD<PLATINUM)
      */
-    enum Badge {
-      NONE, TIN, BRONZE, SILVER, GOLD, PLATINUM
-    }
+    enum Badge {NONE, TIN, BRONZE, SILVER, GOLD, PLATINUM}
   }
 }

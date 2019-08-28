@@ -2,10 +2,10 @@ package cm.aptoide.pt.app.view.widget;
 
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.DrawableRes;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;

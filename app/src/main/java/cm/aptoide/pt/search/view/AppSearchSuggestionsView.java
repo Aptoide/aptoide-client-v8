@@ -1,9 +1,9 @@
 package cm.aptoide.pt.search.view;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
@@ -72,8 +72,8 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
       }
     });
 
-    AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) searchView.findViewById(
-        android.support.v7.appcompat.R.id.search_src_text);
+    AutoCompleteTextView autoCompleteTextView =
+        (AutoCompleteTextView) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)

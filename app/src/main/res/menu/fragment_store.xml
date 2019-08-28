@@ -8,7 +8,7 @@
       android:orderInCategory="1"
       android:title="@string/menu_title_search"
       app:actionLayout="@layout/search_input_text"
-      app:actionViewClass="android.support.v7.widget.SearchView"
+    app:actionViewClass="androidx.appcompat.widget.SearchView"
       app:showAsAction="always|collapseActionView"/>
 
   <item

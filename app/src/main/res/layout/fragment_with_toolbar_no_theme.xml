@@ -13,7 +13,7 @@
     android:orientation="vertical"
     >
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="?android:actionBarSize"
@@ -21,7 +21,7 @@
       app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       >
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -31,7 +31,7 @@
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         />
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <cm.aptoide.aptoideviews.errors.ErrorView
       android:id="@+id/error_view"
@@ -72,7 +72,7 @@
       tools:visibility="gone"
       />
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/recycler_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

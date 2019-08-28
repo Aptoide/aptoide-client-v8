@@ -1,10 +1,10 @@
 package cm.aptoide.aptoideviews.recyclerview
 
 import android.graphics.Rect
-import android.support.annotation.Px
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.annotation.Px
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class GridItemSpacingDecorator(@Px var spacingPx: Int = 0) : RecyclerView.ItemDecoration() {
 

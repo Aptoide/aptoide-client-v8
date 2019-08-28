@@ -3,9 +3,8 @@ package cm.aptoide.pt.home.bundles.appcoins
 import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.support.v7.graphics.Palette
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.bundles.apps.RewardApp
 import cm.aptoide.pt.home.bundles.base.AppHomeEvent

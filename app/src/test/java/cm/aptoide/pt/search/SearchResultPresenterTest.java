@@ -1,7 +1,7 @@
 package cm.aptoide.pt.search;
 
-import android.support.v4.util.Pair;
-import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.util.Pair;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;

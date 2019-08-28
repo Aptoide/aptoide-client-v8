@@ -1,11 +1,10 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
@@ -19,6 +18,7 @@ import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.TopReactionsPreview;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
+import com.google.android.material.snackbar.Snackbar;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

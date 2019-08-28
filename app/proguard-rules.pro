@@ -17,8 +17,8 @@
 #}
 
 -keep class cm.aptoide.** {*;}
--keep class android.support.v7.appcompat.** { *; }
--keep class android.support.v7.widget.SearchView { *; }
+-keep class androidx.v7.appcompat.** { *; }
+-keep class androidx.v7.widget.SearchView { *; }
 
 # Retrofit 2.X
 ## https://square.github.io/retrofit/ ##
@@ -75,12 +75,6 @@
 
 ### Adyen ###
 -dontwarn com.adyen.ui.**
-
-### disable shift animation bottom navigation ###
--keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
-    boolean mShiftingMode;
-}
-
 
 -keepclassmembers class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;

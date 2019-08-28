@@ -1,8 +1,8 @@
 package cm.aptoide.pt;
 
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
-import android.support.test.runner.AndroidJUnitRunner;
+import androidx.multidex.MultiDex;
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class MultidexAndroidJunitRunner extends AndroidJUnitRunner {
 

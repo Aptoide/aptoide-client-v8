@@ -40,7 +40,7 @@
       tools:visibility="gone"
       />
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/suggestions_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
       android:visibility="gone"
       />
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/trending_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
       tools:visibility="visible"
       >
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -104,7 +104,7 @@
             />
 
       </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <com.mopub.mobileads.MoPubView
         android:id="@+id/mopub_banner"
@@ -118,7 +118,7 @@
         tools:visibility="gone"
         />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_followed_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -127,7 +127,7 @@
         android:visibility="invisible"
         />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -138,14 +138,15 @@
 
   </RelativeLayout>
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?attr/toolbarBackground"
       app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       >
-    <android.support.v7.widget.Toolbar
+
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -154,7 +155,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         >
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 </FrameLayout>

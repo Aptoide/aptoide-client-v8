@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.custom;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import cm.aptoide.pt.R;
 
 public class HorizontalDividerItemDecoration extends DrawableItemDecoration {

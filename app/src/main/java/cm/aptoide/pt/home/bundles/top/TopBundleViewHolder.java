@@ -1,11 +1,11 @@
 package cm.aptoide.pt.home.bundles.top;
 
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
@@ -39,7 +39,7 @@ public class TopBundleViewHolder extends AppBundleViewHolder {
     topBundleAdapter =
         new TopBundleAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener);
     LinearLayoutManager layoutManager =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
+        new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false);
     topList.addItemDecoration(new RecyclerView.ItemDecoration() {
       @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
           RecyclerView.State state) {

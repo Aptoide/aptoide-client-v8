@@ -5,9 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.SearchView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.DialogFragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -47,6 +46,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.BaseDialogFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
@@ -265,7 +265,7 @@ public class AddStoreDialog extends BaseDialogFragment {
     searchViewLayout = (RelativeLayout) view.findViewById(R.id.search_box_layout);
     errorMessage = (TextView) view.findViewById(R.id.error_message);
     EditText searchEditText =
-        (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        (EditText) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
     searchEditText.setHintTextColor(getResources().getColor(R.color.grey));
   }
@@ -286,8 +286,7 @@ public class AddStoreDialog extends BaseDialogFragment {
     searchView.setSuggestionsAdapter(suggestionCursorAdapter);
 
     final AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(
-            android.support.v7.appcompat.R.id.search_src_text);
+        (AutoCompleteTextView) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     handleEmptyQuery(suggestionCursorAdapter);

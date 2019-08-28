@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.analytics.view.AnalyticsActivity;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;

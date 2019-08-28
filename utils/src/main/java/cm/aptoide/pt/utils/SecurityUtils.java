@@ -10,9 +10,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.support.annotation.StringDef;
 import android.text.TextUtils;
 import android.util.Base64;
+import androidx.annotation.StringDef;
 import cm.aptoide.pt.logger.Logger;
 import java.security.MessageDigest;
 

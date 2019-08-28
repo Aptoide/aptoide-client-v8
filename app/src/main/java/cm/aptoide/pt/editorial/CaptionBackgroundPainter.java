@@ -2,7 +2,7 @@ package cm.aptoide.pt.editorial;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
+import androidx.cardview.widget.CardView;
 import cm.aptoide.pt.R;
 
 public class CaptionBackgroundPainter {

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.store.view.home;
 
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import androidx.appcompat.widget.SwitchCompat;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;

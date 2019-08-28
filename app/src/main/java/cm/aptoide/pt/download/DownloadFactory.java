@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.download;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Update;

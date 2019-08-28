@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.view.recycler;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessResponse;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.install;
 
-import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
+import androidx.annotation.IntRange;
+import androidx.annotation.Nullable;
 
 /**
  * Created by trinkes on 10/04/2017.

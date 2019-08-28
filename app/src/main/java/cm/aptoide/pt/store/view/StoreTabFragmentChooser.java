@@ -1,6 +1,6 @@
 package cm.aptoide.pt.store.view;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;

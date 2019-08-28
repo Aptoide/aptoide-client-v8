@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;

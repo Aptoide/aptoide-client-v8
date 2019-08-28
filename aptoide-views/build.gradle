@@ -6,21 +6,11 @@ android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
   buildToolsVersion BUILD_TOOLS_VERSION
 
-  configurations.all {
-    resolutionStrategy {
-      force "com.android.support:support-annotations:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:support-v4:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:animated-vector-drawable:${SUPPORT_LIB_VERSION}"
-      force "com.android.support:design:${SUPPORT_LIB_VERSION}"
-    }
-  }
-
   defaultConfig {
     minSdkVersion project.LIB_MINIMUM_SDK_VERSION
     targetSdkVersion Integer.parseInt(project.TARGET_SDK_VERSION)
     multiDexEnabled true
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
   compileOptions {
@@ -63,11 +53,8 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
-
-  implementation "com.android.support.constraint:constraint-layout:${CONSTRAINT_LAYOUT_VERSION}"
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "androidx.constraintlayout:constraintlayout:${CONSTRAINT_LAYOUT_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
 
@@ -76,23 +63,22 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
-  implementation "com.android.support:cardview-v7:${SUPPORT_LIB_VERSION}"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
 
-  androidTestImplementation "com.android.support.test:runner:${RUNNER_VERSION}"
-  androidTestImplementation "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
-  androidTestImplementation "com.android.support.test:rules:${RULES_VERSION}"
+  androidTestImplementation "androidx.test:runner:${RUNNER_VERSION}"
+  androidTestImplementation "androidx.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+  androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
 
   // These are just for styling compatibility when we run instrumentation tests.
   // This essentially means that we are directly dependent on these libraries for resources.
   androidTestImplementation project(path: ':utils')
-  androidTestImplementation "com.android.support:preference-v7:${SUPPORT_LIB_VERSION}"
+  androidTestImplementation "androidx.preference:preference:${PREFERENCES_VERSION}"
   androidTestImplementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  androidTestImplementation("com.android.support:multidex:${MULTIDEX_VERSION}")
+  androidTestImplementation("androidx.multidex:multidex:${MULTIDEX_VERSION}")
 }

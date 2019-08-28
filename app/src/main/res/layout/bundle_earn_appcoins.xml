@@ -20,12 +20,13 @@
       app:srcCompat="@drawable/ic_poa_coins"
       />
 
-  <android.support.v7.widget.CardView
+  <androidx.cardview.widget.CardView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="20dp"
       >
-    <android.support.constraint.ConstraintLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -66,7 +67,7 @@
           style="@style/Aptoide.TextView.Regular.XS.White"
           />
 
-      <android.support.v7.widget.RecyclerView
+      <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/apps_list"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -89,8 +90,8 @@
           style="@style/Aptoide.Button.Flat.White"
           />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-  </android.support.v7.widget.CardView>
+  </androidx.cardview.widget.CardView>
 </FrameLayout>
 

@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.util;
 
-import android.support.design.widget.AppBarLayout;
+import com.google.android.material.appbar.AppBarLayout;
 
 /**
  * Created on 05/07/16.

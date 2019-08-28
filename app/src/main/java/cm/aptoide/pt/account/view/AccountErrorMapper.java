@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account.view;
 
 import android.content.Context;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.pt.R;

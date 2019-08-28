@@ -2,13 +2,13 @@ package cm.aptoide.pt.store.view;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;

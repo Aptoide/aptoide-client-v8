@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by filipegoncalves on 3/8/18.

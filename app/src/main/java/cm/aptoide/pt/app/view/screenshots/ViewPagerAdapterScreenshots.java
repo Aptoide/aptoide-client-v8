@@ -7,11 +7,11 @@ package cm.aptoide.pt.app.view.screenshots;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.viewpager.widget.PagerAdapter;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import java.util.ArrayList;
