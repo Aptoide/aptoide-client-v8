@@ -52,7 +52,7 @@
       android:visibility="visible"
       app:behavior_hideable="false"
       app:behavior_peekHeight="270dp"
-      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

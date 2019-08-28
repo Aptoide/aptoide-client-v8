@@ -281,7 +281,7 @@ class AppViewModelManagerTest {
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
                 false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
     `when`(appCoinsManager.getAdvertising("packageName", 1)).thenReturn(
-        Single.just(AppCoinsAdvertisingModel("1", true)))
+        Single.just(AppCoinsAdvertisingModel(1.0, true)))
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
 

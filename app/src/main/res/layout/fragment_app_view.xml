@@ -22,6 +22,7 @@
       app:layout_anchorGravity="bottom|center"
       tools:src="@mipmap/ic_launcher"
       />
+
   <androidx.core.widget.NestedScrollView
       android:id="@+id/scroll_view_app"
       android:layout_width="match_parent"
@@ -200,13 +201,12 @@
             tools:visibility="visible"
             >
 
-          <include
-              layout="@layout/install_app_view"
+          <ViewStub
+              android:id="@+id/appview_install_element"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginBottom="11dp"
               />
-
 
           <include
               layout="@layout/appview_apkfy_layout_element"
@@ -233,11 +233,13 @@
                 android:animateLayoutChanges="true"
                 >
               <include
-                  layout="@layout/appview_appc_reward"
-                  android:id="@+id/appc_layout"
-                  android:layout_width="wrap_content"
+                  layout="@layout/appview_poa_layout"
+                  android:id="@+id/poa_appc_layout"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center_horizontal"
+                  android:layout_marginEnd="32dp"
+                  android:layout_marginStart="32dp"
                   android:visibility="gone"
                   tools:visibility="visible"
                   />
@@ -278,6 +280,7 @@
 
         </LinearLayout>
         <include
+            android:id="@+id/other_versions_top_separator"
             layout="@layout/separator_horizontal"
             android:layout_width="match_parent"
             android:layout_height="1dp"

@@ -11,7 +11,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="16dp"
-      android:text="Do you want to install:"
+      android:text="@string/apkfy_install_message"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
   <RelativeLayout

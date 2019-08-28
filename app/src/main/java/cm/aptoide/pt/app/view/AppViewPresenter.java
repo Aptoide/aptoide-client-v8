@@ -164,6 +164,7 @@ public class AppViewPresenter implements Presenter {
       view.handleError(appViewModel.getAppModel()
           .getError());
     } else {
+      view.setInstallButton(appViewModel.getAppCoinsViewModel());
       view.showAppView(appViewModel.getAppModel());
       view.showDownloadAppModel(appViewModel.getDownloadModel(),
           appViewModel.getAppCoinsViewModel());

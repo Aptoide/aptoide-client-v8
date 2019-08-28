@@ -174,7 +174,7 @@
       app:layout_constraintStart_toEndOf="@+id/apps_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
       tools:layout_editor_absoluteX="127dp"
-      tools:text="17"
+    tools:text="17"
       />
   <TextView
       android:id="@+id/followers_text_view"
@@ -191,7 +191,7 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/following_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
-      tools:text="100"
+    tools:text="100"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

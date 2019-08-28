@@ -59,8 +59,7 @@
           app:iconifiedByDefault="false"
           app:queryBackground="@color/transparent"
           app:searchIcon="@null"
-          >
-      </androidx.appcompat.widget.SearchView>
+          ></androidx.appcompat.widget.SearchView>
 
       <Button
           android:id="@+id/button_dialog_add_store"

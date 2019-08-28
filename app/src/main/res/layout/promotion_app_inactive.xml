@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
-        android:layout_marginTop="16dp"
+      android:layout_marginTop="16dp"
         style="@style/Aptoide.Button.Install"
         />
   </LinearLayout>

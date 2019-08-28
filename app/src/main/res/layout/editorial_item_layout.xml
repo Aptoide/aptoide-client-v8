@@ -108,6 +108,7 @@
           android:src="@drawable/btn_movie_play_normal"
           />
     </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/editoral_image_list"
         android:layout_width="match_parent"
@@ -115,8 +116,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible"
-        >
-    </androidx.recyclerview.widget.RecyclerView>
+        ></androidx.recyclerview.widget.RecyclerView>
   </FrameLayout>
 
   <TextSwitcher

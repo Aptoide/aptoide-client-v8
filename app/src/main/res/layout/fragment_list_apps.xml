@@ -1,0 +1,41 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:id="@+id/swipe_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
+
+    <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
+        android:id="@+id/apps_list"
+        android:layoutAnimation="@anim/grid_list_apps_anim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        />
+
+
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      />
+
+  <include
+      layout="@layout/app_bar_layout"
+      android:id="@+id/action_bar"
+      />
+
+  <include layout="@layout/partial_view_progress_bar" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

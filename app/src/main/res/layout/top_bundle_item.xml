@@ -26,6 +26,7 @@
       tools:text="random bundle"
       style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/top_list"
       android:layout_width="match_parent"

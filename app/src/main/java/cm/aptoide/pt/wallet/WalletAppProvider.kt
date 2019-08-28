@@ -50,6 +50,6 @@ class WalletAppProvider(val appCenter: AppCenter, val installedRepository: Insta
     val app = result.detailedApp
     return WalletApp(null, false, app.name, app.icon, app.id,
         app.packageName, app.md5, app.versionCode, app.versionName,
-        app.path, app.pathAlt, app.obb, app.size, app.developer.name)
+        app.path, app.pathAlt, app.obb, app.size, app.developer.name, app.stats.rating.average)
   }
 }

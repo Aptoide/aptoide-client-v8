@@ -73,6 +73,7 @@
       android:layout_height="@dimen/other_versions_header_height"
       android:fitsSystemWindows="true"
       >
+
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar"
         android:layout_width="match_parent"

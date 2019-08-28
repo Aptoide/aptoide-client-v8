@@ -43,8 +43,7 @@
         android:minHeight="112dp"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        >
-    </androidx.appcompat.widget.Toolbar>
+        ></androidx.appcompat.widget.Toolbar>
     <cm.aptoide.pt.app.view.ToolbarArcBackground
         android:id="@+id/toolbar_background_arc"
         android:layout_width="match_parent"

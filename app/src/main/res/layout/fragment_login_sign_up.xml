@@ -34,6 +34,7 @@ android:fitsSystemWindows="true"
           app:elevation="0dp"
           app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
           >
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -85,7 +86,7 @@ android:fitsSystemWindows="true"
       android:visibility="visible"
       app:behavior_hideable="false"
       app:behavior_peekHeight="270dp"
-      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
