@@ -9,7 +9,6 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
-import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -93,8 +92,6 @@ public interface FragmentComponent {
   void inject(MoreBundleFragment moreBundleFragment);
 
   void inject(WizardFragment wizardFragment);
-
-  void inject(PaymentLoginFragment paymentLoginFragment);
 
   void inject(AppCoinsInfoFragment appCoinsInfoFragment);
 

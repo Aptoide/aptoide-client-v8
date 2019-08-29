@@ -73,9 +73,6 @@
 -dontwarn com.bumptech.glide.manager.RequestManagerRetriever
 -dontwarn com.bumptech.glide.util.Util$1
 
-### Adyen ###
--dontwarn com.adyen.ui.**
-
 -keepclassmembers class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }

@@ -2,7 +2,6 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -41,7 +40,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
@@ -56,7 +54,6 @@ import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.ads.MoPubInterstitialAdListener;
-import cm.aptoide.pt.app.AppBoughtReceiver;
 import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.DownloadModel;
@@ -68,10 +65,6 @@ import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundleAdapter;
-import cm.aptoide.pt.billing.exception.BillingException;
-import cm.aptoide.pt.billing.purchase.PaidAppPurchase;
-import cm.aptoide.pt.billing.view.BillingActivity;
-import cm.aptoide.pt.billing.view.PurchaseBundleMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -145,7 +138,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
-  private static final int PAY_APP_REQUEST_CODE = 12;
   private static final int APPC_TRANSITION_MS = 1000;
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
@@ -165,7 +157,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<Void> loginSnackClick;
   private PublishSubject<SimilarAppClickEvent> similarAppClick;
   private PublishSubject<Integer> reviewsAutoScroll;
-  private PublishSubject<AppBoughClickEvent> appBought;
   private PublishSubject<String> apkfyDialogConfirmSubject;
   private PublishSubject<Boolean> similarAppsVisibilitySubject;
   private PublishSubject<DownloadModel.Action> installClickSubject;
@@ -245,7 +236,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private QManager qManager;
-  private PurchaseBundleMapper purchaseBundleMapper;
   private Subscription errorMessageSubscription;
   private NestedScrollView scrollView;
   private int scrollViewY;
@@ -309,7 +299,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     reviewsAutoScroll = PublishSubject.create();
     apkfyDialogConfirmSubject = PublishSubject.create();
     similarAppsVisibilitySubject = PublishSubject.create();
-    appBought = PublishSubject.create();
     installClickSubject = PublishSubject.create();
     resumeClickSubject = PublishSubject.create();
     cancelClickSubject = PublishSubject.create();
@@ -323,7 +312,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     qManager = application.getQManager();
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
-    purchaseBundleMapper = application.getPurchaseBundleMapper();
     adsRepository = application.getAdsRepository();
     setHasOptionsMenu(true);
   }
@@ -1630,10 +1618,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       AppCoinsViewModel appCoinsViewModel) {
     this.action = downloadModel.getAction();
 
-    if (downloadModel.getAction() == DownloadModel.Action.PAY) {
-      registerPaymentResult();
-    }
-
     if (!action.equals(DownloadModel.Action.MIGRATE)) {
       showAppcInfo(appCoinsViewModel.getAdvertisingModel()
               .getHasAdvertising(), appCoinsViewModel.hasBilling(),
@@ -1689,10 +1673,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> cancelDownload() {
     return cancelClickSubject;
-  }
-
-  @Override public Observable<AppBoughClickEvent> appBought() {
-    return appBought;
   }
 
   private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, double appcReward,
@@ -1770,16 +1750,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       default:
         throw new IllegalStateException("Invalid Download State " + downloadState);
     }
-  }
-
-  private void registerPaymentResult() {
-    AppBoughtReceiver appBoughtReceiver = new AppBoughtReceiver() {
-      @Override public void appBought(long appId, String path) {
-        appBought.onNext(new AppBoughClickEvent(path, appId));
-      }
-    };
-    getContext().registerReceiver(appBoughtReceiver,
-        new IntentFilter(AppBoughtReceiver.APP_BOUGHT));
   }
 
   private void setDownloadState(int progress, DownloadModel.DownloadState downloadState) {
@@ -1867,45 +1837,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       case DOWNGRADE:
         install.setText(getResources().getString(R.string.appview_button_downgrade));
         break;
-      case PAY:
-        install.setText(
-            String.format("%s (%s %s)", getContext().getString(R.string.appview_button_buy),
-                model.getPay()
-                    .getSymbol(), model.getPay()
-                    .getPrice()));
-        break;
       case MIGRATE:
         install.setText(getResources().getString(R.string.promo_update2appc_appview_update_button));
-    }
-  }
-
-  public void buyApp(long appId) {
-    startActivityForResult(
-        BillingActivity.getIntent(getActivity(), appId, BuildConfig.APPLICATION_ID),
-        PAY_APP_REQUEST_CODE);
-  }
-
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    if (requestCode == PAY_APP_REQUEST_CODE) {
-      try {
-        final Bundle data = (intent != null) ? intent.getExtras() : null;
-        final PaidAppPurchase purchase =
-            (PaidAppPurchase) purchaseBundleMapper.map(resultCode, data);
-
-        FragmentActivity fragmentActivity = getActivity();
-        Intent installApp = new Intent(AppBoughtReceiver.APP_BOUGHT);
-        installApp.putExtra(AppBoughtReceiver.APP_ID, purchase.getProductId());
-        installApp.putExtra(AppBoughtReceiver.APP_PATH, purchase.getApkPath());
-        fragmentActivity.sendBroadcast(installApp);
-      } catch (Throwable throwable) {
-        if (throwable instanceof BillingException) {
-          Snackbar.make(getView(), R.string.user_cancelled, Snackbar.LENGTH_SHORT);
-        } else {
-          Snackbar.make(getView(), R.string.unknown_error, Snackbar.LENGTH_SHORT);
-        }
-      }
-    } else {
-      super.onActivityResult(requestCode, resultCode, intent);
     }
   }
 

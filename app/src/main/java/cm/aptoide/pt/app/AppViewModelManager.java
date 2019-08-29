@@ -3,7 +3,6 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -108,8 +107,8 @@ public class AppViewModelManager {
   }
 
   private Observable<DownloadModel> getDownloadModel(AppModel app) {
-    return loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(), app.isPaid(),
-        app.getPay(), app.getSignature(), app.getStore()
+    return loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(),
+        app.getSignature(), app.getStore()
             .getId(), app.hasAdvertising() || app.hasBilling());
   }
 
@@ -119,14 +118,12 @@ public class AppViewModelManager {
   }
 
   private Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
-      boolean hasAppc) {
+      int versionCode, String signature, long storeId, boolean hasAppc) {
     return combineLatest(installManager.getInstall(md5, packageName, versionCode),
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), isMigration), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+            downloadStateParser.parseDownloadType(install.getType(), isMigration),
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
   }
 
   private Single<AppModel> loadAppModel(long appId, String storeName, String packageName) {
@@ -189,9 +186,8 @@ public class AppViewModelManager {
             app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
             stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
             app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
-            app.getAdded(), app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(),
-            app.wasPaid(), app.getPaidAppPath(), app.getPaymentStatus(),
-            app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
+            app.getAdded(), app.getObb(), app.getWebUrls(), app.isLatestTrustedVersion(),
+            app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),

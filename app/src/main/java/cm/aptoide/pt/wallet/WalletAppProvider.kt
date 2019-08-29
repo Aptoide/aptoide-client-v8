@@ -41,8 +41,8 @@ class WalletAppProvider(val appCenter: AppCenter, val installedRepository: Insta
 
   private fun mapToDownloadModel(type: Install.InstallationType, progress: Int,
                                  state: Install.InstallationStatus): DownloadModel {
-    return DownloadModel(downloadStateParser.parseDownloadType(type, false, false, false),
-        progress, downloadStateParser.parseDownloadState(state), null)
+    return DownloadModel(downloadStateParser.parseDownloadType(type, false),
+        progress, downloadStateParser.parseDownloadState(state))
   }
 
   private fun mapToWalletApp(result: DetailedAppRequestResult): WalletApp {

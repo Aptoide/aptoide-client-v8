@@ -52,8 +52,6 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
-import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -116,7 +114,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
@@ -403,17 +400,6 @@ import rx.subscriptions.CompositeSubscription;
       AccountAnalytics accountAnalytics) {
     return new WizardPresenter((WizardView) fragment, aptoideAccountManager, crashReport,
         accountAnalytics);
-  }
-
-  @FragmentScope @Provides PaymentLoginFlavorPresenter providesPaymentLoginPresenter(
-      AccountNavigator accountNavigator, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountErrorMapper accountErrorMapper,
-      ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
-    return new PaymentLoginFlavorPresenter((PaymentLoginView) fragment,
-        arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
-        Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
-        accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
-        screenOrientationManager, accountAnalytics);
   }
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(

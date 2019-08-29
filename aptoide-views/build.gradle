@@ -79,6 +79,5 @@ dependencies {
   androidTestImplementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
   androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-  androidTestImplementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
   androidTestImplementation("androidx.multidex:multidex:${MULTIDEX_VERSION}")
 }

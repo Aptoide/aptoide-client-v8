@@ -83,16 +83,14 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null,
+            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
 
     appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
@@ -198,13 +196,11 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
+            false, "marketName", false, false, bdsFlags, "", "", false);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
             new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
@@ -245,13 +241,11 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
-            true, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
+            false, "marketName", true, true, bdsFlags, "", "", false);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
         new MigrationModel(false));

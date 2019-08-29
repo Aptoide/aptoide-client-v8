@@ -1,8 +1,6 @@
 package cm.aptoide.pt.home.more.base
 
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.pt.view.app.Application
 import rx.subjects.PublishSubject
