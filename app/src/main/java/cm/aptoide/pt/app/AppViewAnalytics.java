@@ -327,7 +327,6 @@ public class AppViewAnalytics {
       case UPDATE:
         installType = InstallType.UPDATE;
         break;
-      case PAY:
       case MIGRATE:
       case OPEN:
         throw new IllegalStateException(

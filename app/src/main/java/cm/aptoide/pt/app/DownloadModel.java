@@ -2,7 +2,6 @@ package cm.aptoide.pt.app;
 
 import static cm.aptoide.pt.app.DownloadModel.Action.DOWNGRADE;
 import static cm.aptoide.pt.app.DownloadModel.Action.INSTALL;
-import static cm.aptoide.pt.app.DownloadModel.Action.PAY;
 import static cm.aptoide.pt.app.DownloadModel.Action.UPDATE;
 
 /**
@@ -51,8 +50,7 @@ public class DownloadModel {
   public boolean isDownloadable() {
     return action.equals(INSTALL)
         || action.equals(UPDATE)
-        || action.equals(DOWNGRADE)
-        || action.equals(PAY);
+        || action.equals(DOWNGRADE);
   }
 
   public enum Error {
@@ -60,7 +58,7 @@ public class DownloadModel {
   }
 
   public enum Action {
-    UPDATE, INSTALL, DOWNGRADE, OPEN, PAY, MIGRATE
+    UPDATE, INSTALL, DOWNGRADE, OPEN, MIGRATE
   }
 
   public enum DownloadState {
