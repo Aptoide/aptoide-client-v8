@@ -182,6 +182,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromEditorialCard(u.getQueryParameter("id"));
     } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
       return startAppcInfoView();
+    } else if ("appcoins_ads".equals(u.getQueryParameter("name"))) {
+      return startFromAppcAds();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
@@ -632,6 +634,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
+  private Intent startFromAppcAds() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APPC_ADS, true);
+    return intent;
+  }
+
   private Intent startFromEditorialCard(String cardId) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
@@ -718,6 +726,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String PROMOTIONS_DEEPLINK = "promotions";
     public static final String EDITORIAL_DEEPLINK = "editorial";
     public static final String APPC_INFO_VIEW = "appc_info_view";
+    public static final String APPC_ADS = "appc_ads";
   }
 
   public static class DeepLinksKeys {
