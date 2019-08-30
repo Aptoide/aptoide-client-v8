@@ -75,20 +75,27 @@ public class BundlesResponseMapper {
         if (type.equals(HomeBundle.BundleType.APPS)
             || type.equals(HomeBundle.BundleType.EDITORS)
             || type.equals(HomeBundle.BundleType.TOP)) {
-
-          appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
-              .getList(), type, widgetTag), type, event, widgetTag, widgetActionTag));
+          List<Application> apps = null;
+          if (viewObject != null) {
+            apps = map(((ListApps) viewObject).getDataList()
+                .getList(), type, widgetTag);
+          }
+          appBundles.add(new AppBundle(title, apps, type, event, widgetTag, widgetActionTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-
-          List<Application> applicationList =
-              map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
-          if (!applicationList.isEmpty()) {
+          List<Application> applicationList = null;
+          if (viewObject != null) {
+            applicationList = map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
+          }
+          if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
-          appBundles.add(new AdBundle(title,
-              new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
+          List<GetAdsResponse.Ad> adsList = null;
+          if (viewObject != null) {
+            adsList = ((GetAdsResponse) viewObject).getAds();
+          }
+          appBundles.add(new AdBundle(title, new AdsTagWrapper(adsList, widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
           appBundles.add(new ActionBundle(title, type, event, widgetTag,
@@ -114,6 +121,22 @@ public class BundlesResponseMapper {
     }
 
     return appBundles;
+  }
+
+  private List<AppBundle.BundleType> fromWidgetsToBundleType(
+      List<GetStoreWidgets.WSWidget> widgetBundles) {
+    List<AppBundle.BundleType> appBundlesTypes = new ArrayList<>();
+    for (GetStoreWidgets.WSWidget widget : widgetBundles) {
+      AppBundle.BundleType type;
+      if (widget.getType()
+          .equals(Type.ACTION_ITEM)) {
+        type = actionItemTypeMapper(widget.getViewObject());
+      } else {
+        type = bundleTypeMapper(widget.getType(), widget.getData());
+      }
+      appBundlesTypes.add(type);
+    }
+    return appBundlesTypes;
   }
 
   private String getWidgetActionTag(GetStoreWidgets.WSWidget widget) {

@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -20,7 +19,6 @@ import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -83,24 +81,6 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
         filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames);
   }
 
-  private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
-      GetStoreWidgets getStoreWidgets, boolean bypassCache) {
-    return Observable.from(getStoreWidgets.getDataList()
-        .getList())
-        .observeOn(Schedulers.io())
-        .flatMap(wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentials, bypassCache,
-            clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-            ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
-            filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
-            connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
-        .toList()
-        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
-            .getList())
-        .toList()
-        .first();
-  }
-
   @Override
   public Observable<GetStoreWidgets> observe(boolean bypassCache, boolean bypassServerCache) {
     this.bypassServerCache = bypassServerCache;
@@ -109,9 +89,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getHomeBundles(body, bypassCache)
-        .flatMap(getStoreWidgets -> loadAppsInBundles(getStoreWidgets, bypassCache).map(
-            wsWidgets -> getStoreWidgets));
+    return Observable.just(null)
+        .flatMap(__ -> interfaces.getHomeBundles(body, bypassCache));
   }
 
   public static class Body extends BaseBody implements Endless {

@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -30,6 +31,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -115,6 +117,9 @@ public class RemoteBundleDataSource implements BundleDataSource {
             partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
             versionCodeProvider, packageNames)
             .observe(invalidateHttpCache, false)
+            .flatMap(widgets -> Observable.merge(Observable.just(widgets),
+                loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames, widgets,
+                    false)))
             .doOnSubscribe(() -> {
               loading.put(key, true);
               error.put(key, false);
@@ -127,6 +132,27 @@ public class RemoteBundleDataSource implements BundleDataSource {
               error.put(key, true);
               return createErrorAppsList(throwable);
             }));
+  }
+
+  private Observable<GetStoreWidgets> loadAppsInBundles(boolean adultContentEnabled,
+      boolean invalidateHttpCache, List<String> packageNames, GetStoreWidgets getStoreWidgets,
+      boolean bypassCache) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
+        .observeOn(Schedulers.io())
+        .flatMap(
+            wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentialsProvider.fromUrl(""),
+                invalidateHttpCache, clientUniqueId, isGooglePlayServicesAvailable, partnerId,
+                adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
+                tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
+                versionCodeProvider, bypassCache,
+                Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
+        .toList()
+        .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
+            .getList())
+        .toList()
+        .first()
+        .map(__ -> getStoreWidgets);
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {

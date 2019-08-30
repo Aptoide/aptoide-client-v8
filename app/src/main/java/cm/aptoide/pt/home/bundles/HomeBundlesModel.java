@@ -13,19 +13,22 @@ public class HomeBundlesModel {
   private final boolean loading;
   private final Error error;
   private final int offset;
+  private final boolean complete;
 
   public HomeBundlesModel(Error error) {
     this.error = error;
     this.loading = false;
     list = Collections.emptyList();
     offset = -1;
+    complete = true;
   }
 
-  public HomeBundlesModel(List<HomeBundle> list, boolean loading, int offset) {
+  public HomeBundlesModel(List<HomeBundle> list, boolean loading, int offset, boolean complete) {
     this.list = list;
     this.loading = loading;
     this.offset = offset;
     error = null;
+    this.complete = complete;
   }
 
   public HomeBundlesModel(boolean loading) {
@@ -33,6 +36,7 @@ public class HomeBundlesModel {
     list = Collections.emptyList();
     error = null;
     offset = -1;
+    complete = false;
   }
 
   public int getOffset() {

@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home.bundles;
 
+import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**

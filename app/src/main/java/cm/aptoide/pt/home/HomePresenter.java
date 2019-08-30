@@ -176,6 +176,20 @@ public class HomePresenter implements Presenter {
             .getType()));
   }
 
+  private Observable<List<HomeBundle>> firstLoadHomeBundles() {
+    return home.loadStoreWigetsList()
+        .doOnNext(widgets -> view.showBundlesSkeleton(widgets))
+        .flatMap(widgets -> home.loadBundles(widgets))
+        .toObservable()
+        .flatMapIterable(HomeBundlesModel::getList)
+        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+        .filter(homeBundle -> homeBundle instanceof ActionBundle)
+        .cast(ActionBundle.class)
+        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+            .getCardId(), actionBundle.getActionItem()
+            .getType()));
+  }
+
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
     return loadFreshBundles().toObservable()
         .flatMapIterable(HomeBundlesModel::getList)
@@ -344,13 +358,10 @@ public class HomePresenter implements Presenter {
   }
 
   private Single<HomeBundlesModel> loadHome() {
-    return Single.zip(showNativeAds(), loadBundles(), (aBoolean, bundlesModel) -> bundlesModel)
+    return Single.zip(showNativeAds(), home.loadHomeBundles(),
+        (aBoolean, bundlesModel) -> bundlesModel)
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> handleBundlesResult(bundlesModel));
-  }
-
-  @NonNull private Single<HomeBundlesModel> loadBundles() {
-    return home.loadHomeBundles();
   }
 
   private void handleBundlesResult(HomeBundlesModel bundlesModel) {
