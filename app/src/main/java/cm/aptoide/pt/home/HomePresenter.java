@@ -166,22 +166,7 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
-    return loadHome().toObservable()
-        .flatMapIterable(HomeBundlesModel::getList)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
-        .cast(ActionBundle.class)
-        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
-            .getCardId(), actionBundle.getActionItem()
-            .getType()));
-  }
-
-  private Observable<List<HomeBundle>> firstLoadHomeBundles() {
-    return home.loadStoreWigetsList()
-        .doOnNext(widgets -> view.showBundlesSkeleton(widgets))
-        .flatMap(widgets -> home.loadBundles(widgets))
-        .toObservable()
-        .flatMapIterable(HomeBundlesModel::getList)
+    return loadHome().flatMapIterable(HomeBundlesModel::getList)
         .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
         .cast(ActionBundle.class)
@@ -191,7 +176,7 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
-    return loadFreshBundles().toObservable()
+    return loadFreshBundles().first()
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
@@ -351,17 +336,21 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<Boolean> showNativeAds() {
+  private Observable<Boolean> showNativeAds() {
     return home.shouldLoadNativeAd()
+        .toObservable()
         .observeOn(viewScheduler)
-        .doOnSuccess(showNatives -> view.setAdsTest(showNatives));
+        .doOnNext(showNatives -> view.setAdsTest(showNatives));
   }
 
-  private Single<HomeBundlesModel> loadHome() {
-    return Single.zip(showNativeAds(), home.loadHomeBundles(),
+  private Observable<HomeBundlesModel> loadHome() {
+    return Observable.combineLatest(showNativeAds(), home.loadHomeBundles(),
         (aBoolean, bundlesModel) -> bundlesModel)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> handleBundlesResult(bundlesModel));
+        .doOnNext(view::showBundlesSkeleton)
+        .filter(HomeBundlesModel::isComplete)
+        .observeOn(viewScheduler)
+        .doOnNext(bundlesModel -> handleBundlesResult(bundlesModel));
   }
 
   private void handleBundlesResult(HomeBundlesModel bundlesModel) {
@@ -524,6 +513,8 @@ public class HomePresenter implements Presenter {
 
   @NonNull private Single<HomeBundlesModel> loadNextBundles() {
     return home.loadNextHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
+        .toSingle()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
@@ -557,10 +548,11 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @NonNull private Single<HomeBundlesModel> loadFreshBundles() {
+  @NonNull private Observable<HomeBundlesModel> loadFreshBundles() {
     return home.loadFreshHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> {
+        .doOnNext(bundlesModel -> {
           view.hideRefresh();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());

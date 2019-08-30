@@ -39,6 +39,10 @@ public class HomeBundlesModel {
     complete = false;
   }
 
+  public boolean isComplete() {
+    return complete;
+  }
+
   public int getOffset() {
     return offset;
   }

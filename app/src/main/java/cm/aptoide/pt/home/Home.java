@@ -17,6 +17,7 @@ import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
 import java.util.List;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -48,34 +49,36 @@ public class Home {
     this.reactionsManager = reactionsManager;
   }
 
-  public Single<HomeBundlesModel> loadHomeBundles() {
+  public Observable<HomeBundlesModel> loadHomeBundles() {
     return bundlesRepository.loadHomeBundles()
         .flatMap(bundlesModel -> {
           if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
-            return Single.just(bundlesModel);
+            return Observable.just(bundlesModel);
           }
           return addAdBundle(bundlesModel);
         });
   }
 
-  public Single<HomeBundlesModel> loadFreshHomeBundles() {
+  public Observable<HomeBundlesModel> loadFreshHomeBundles() {
     return bundlesRepository.loadFreshHomeBundles()
         .flatMap(bundlesModel -> {
           if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
-            return Single.just(bundlesModel);
+            return Observable.just(bundlesModel);
           }
           return addAdBundle(bundlesModel);
         });
   }
 
-  private Single<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
+  private Observable<HomeBundlesModel> addAdBundle(HomeBundlesModel bundlesModel) {
     return moPubAdsManager.shouldLoadBannerAd()
+        .toObservable()
         .flatMap(shouldLoadBanner -> {
           if (shouldLoadBanner) {
             return bannerRepository.getBannerBundle()
-                .map(banner -> addBannerToHomeBundleModel(bundlesModel, banner));
+                .map(banner -> addBannerToHomeBundleModel(bundlesModel, banner))
+                .toObservable();
           } else {
-            return Single.just(bundlesModel);
+            return Observable.just(bundlesModel);
           }
         });
   }
@@ -90,11 +93,12 @@ public class Home {
 
       List<HomeBundle> bundleList = bundlesModel.getList();
       bundleList.add(1, banner);
-      return new HomeBundlesModel(bundleList, bundlesModel.isLoading(), bundlesModel.getOffset());
+      return new HomeBundlesModel(bundleList, bundlesModel.isLoading(), bundlesModel.getOffset(),
+          bundlesModel.isComplete());
     }
   }
 
-  public Single<HomeBundlesModel> loadNextHomeBundles() {
+  public Observable<HomeBundlesModel> loadNextHomeBundles() {
     return bundlesRepository.loadNextHomeBundles();
   }
 
@@ -155,6 +159,7 @@ public class Home {
   public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
         .flatMap(loadReactionModel -> bundlesRepository.loadHomeBundles()
+            .toSingle()
             .flatMap(
                 homeBundlesModel -> getUpdatedCards(homeBundlesModel, loadReactionModel, cardId)));
   }

@@ -27,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.BundlesAdapter;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
 import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
@@ -415,6 +416,12 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Override public Observable<HomeEvent> onLoadMoreRetryClicked() {
     return uiEventsListener.filter(homeEvent -> homeEvent.getType()
         .equals(HomeEvent.Type.LOAD_MORE_RETRY));
+  }
+
+  @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
+    //hideLoading();
+    progressBar.setVisibility(View.GONE);
+    Log.i("TEST_SKELETON", "SHOW SKELETON MAN");
   }
 
   @Override public boolean isAtTop() {

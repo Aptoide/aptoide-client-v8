@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home.bundles;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +27,23 @@ public class BundlesRepository {
     this.limit = limit;
   }
 
-  public Single<HomeBundlesModel> loadHomeBundles() {
+  public Observable<HomeBundlesModel> loadHomeBundles() {
     if (!cachedBundles.containsKey(HOME_BUNDLE_KEY)) {
       return loadNextHomeBundles();
     } else {
-      return Single.just(new HomeBundlesModel(
+      return Observable.just(new HomeBundlesModel(
           cachedBundles.put(HOME_BUNDLE_KEY, new ArrayList<>(cachedBundles.get(HOME_BUNDLE_KEY))),
-          false, getOffset(HOME_BUNDLE_KEY)));
+          false, getOffset(HOME_BUNDLE_KEY), true));
     }
   }
 
-  public Single<HomeBundlesModel> loadFreshHomeBundles() {
+  public Observable<HomeBundlesModel> loadFreshHomeBundles() {
     return remoteBundleDataSource.loadFreshHomeBundles(HOME_BUNDLE_KEY)
-        .doOnSuccess(homeBundlesModel -> updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY))
+        .doOnNext(homeBundlesModel -> {
+          if (homeBundlesModel.isComplete()) {
+            updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY);
+          }
+        })
         .map(this::cloneList);
   }
 
@@ -49,13 +52,17 @@ public class BundlesRepository {
       return homeBundlesModel;
     }
     return new HomeBundlesModel(new ArrayList<>(homeBundlesModel.getList()),
-        homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
+        homeBundlesModel.isLoading(), homeBundlesModel.getOffset(), homeBundlesModel.isComplete());
   }
 
-  public Single<HomeBundlesModel> loadNextHomeBundles() {
+  public Observable<HomeBundlesModel> loadNextHomeBundles() {
     return remoteBundleDataSource.loadNextHomeBundles(getOffset(HOME_BUNDLE_KEY), limit,
         HOME_BUNDLE_KEY)
-        .doOnSuccess(homeBundlesModel -> updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY))
+        .doOnNext(homeBundlesModel -> {
+          if (homeBundlesModel.isComplete()) {
+            updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY);
+          }
+        })
         .map(this::cloneList);
   }
 
@@ -86,7 +93,7 @@ public class BundlesRepository {
     } else {
       return Single.just(
           new HomeBundlesModel(cachedBundles.put(title, new ArrayList<>(cachedBundles.get(title))),
-              false, getOffset(title)));
+              false, getOffset(title), true));
     }
   }
 
