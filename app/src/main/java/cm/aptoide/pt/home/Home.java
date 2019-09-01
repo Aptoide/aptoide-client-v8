@@ -85,12 +85,9 @@ public class Home {
 
   private HomeBundlesModel addBannerToHomeBundleModel(HomeBundlesModel bundlesModel,
       HomeBundle banner) {
-    if (bundlesModel.isLoading()) {
-      return bundlesModel;
-    } else if (bundlesModel.hasErrors()) {
+    if (bundlesModel.isLoading() || bundlesModel.hasErrors() || !bundlesModel.isComplete()) {
       return bundlesModel;
     } else {
-
       List<HomeBundle> bundleList = bundlesModel.getList();
       bundleList.add(1, banner);
       return new HomeBundlesModel(bundleList, bundlesModel.isLoading(), bundlesModel.getOffset(),
