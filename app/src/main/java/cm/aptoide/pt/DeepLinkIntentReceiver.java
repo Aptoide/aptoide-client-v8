@@ -753,7 +753,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
     public static final String SLUG = "slug";
-    public static final String OPEN_MODE = "openMode";
 
     //deep link query parameters
     public static final String ACTION = "action";
