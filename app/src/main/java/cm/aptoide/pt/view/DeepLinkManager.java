@@ -151,7 +151,13 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK)) {
       promotionsDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.EDITORIAL_DEEPLINK)) {
-      editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
+      String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+      String slug = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.SLUG);
+      if (cardId != null) {
+        editorialDeepLinkFromCardId(cardId);
+      } else if (slug != null) {
+        editorialDeepLinkFromSlug(slug);
+      }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_INFO_VIEW)) {
       appcInfoDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_ADS)) {
@@ -173,6 +179,15 @@ public class DeepLinkManager {
     return true;
   }
 
+  private void editorialDeepLinkFromSlug(String slug) {
+    Bundle bundle = new Bundle();
+    bundle.putString(EditorialFragment.SLUG, slug);
+
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
+  }
+
   private void appcInfoDeepLink() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
   }
@@ -182,7 +197,7 @@ public class DeepLinkManager {
         EarnAppcListFragment.Companion.newInstance("Earn AppCoins Credits", "appcoins-ads"), true);
   }
 
-  private void editorialDeepLink(String cardId) {
+  private void editorialDeepLinkFromCardId(String cardId) {
     Bundle bundle = new Bundle();
     bundle.putString(EditorialFragment.CARD_ID, cardId);
 
