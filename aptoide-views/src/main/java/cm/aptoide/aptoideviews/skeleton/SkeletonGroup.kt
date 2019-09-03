@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
+import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.aptoideviews.R
 import cm.aptoide.aptoideviews.childViews
 import cm.aptoide.aptoideviews.skeleton.mask.*
@@ -78,6 +79,8 @@ class SkeletonGroup : FrameLayout {
                                     masks: ArrayList<SkeletonMask>) {
     (view as? ViewGroup)?.let { viewGroup ->
       viewGroup.childViews().forEach { v ->
+        if(v is RecyclerView) return@forEach //TODO
+
         if(v !is SkeletonGroup){
           processViewGroupMasks(v, getViewPreferences(v, viewPreferences), offsetLeft, offsetTop, masks)
         } else {
@@ -91,6 +94,8 @@ class SkeletonGroup : FrameLayout {
                           offsetLeft: Float,
                           offsetTop: Float,
                           masks: ArrayList<SkeletonMask>) {
+    if(view is RecyclerView) return
+
     val mask = SkeletonMask(view, offsetLeft, offsetTop, getViewPreferences(view, defaultPrefs))
     mask.mask()
     masks.add(mask)
@@ -213,9 +218,9 @@ class SkeletonGroup : FrameLayout {
       if (t.getValue(R.styleable.SkeletonGroup_layout_skeleton_height, heightValue)) {
         if (heightValue.type == TypedValue.TYPE_DIMENSION) {
           heightDimension =
-              SizeDimension.SpecificValue(widthValue.getDimension(context.resources.displayMetrics))
+              SizeDimension.SpecificValue(heightValue.getDimension(context.resources.displayMetrics))
         } else if (heightValue.type == TypedValue.TYPE_FRACTION) {
-          heightDimension = SizeDimension.PercentValue(widthValue.getFraction(1f, 1f))
+          heightDimension = SizeDimension.PercentValue(heightValue.getFraction(1f, 1f))
         }
       }
       return Size(widthDimension, heightDimension)

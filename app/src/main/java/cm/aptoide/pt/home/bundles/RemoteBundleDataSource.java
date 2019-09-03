@@ -275,10 +275,9 @@ public class RemoteBundleDataSource implements BundleDataSource {
     List<HomeBundle> newHomeBundleList = new ArrayList<>();
     for (HomeBundle homeBundle : homeBundles) {
       // If content is null, it means it hasn't been loaded yet, so don't remove anything
-      if (homeBundle.getContent() == null) continue;
-      if (homeBundle.getType()
+      if (homeBundle.getContent() == null || (homeBundle.getType()
           .isApp() && !homeBundle.getContent()
-          .isEmpty()) {
+          .isEmpty())) {
         newHomeBundleList.add(homeBundle);
       } else if (!homeBundle.getType()
           .isApp()) {

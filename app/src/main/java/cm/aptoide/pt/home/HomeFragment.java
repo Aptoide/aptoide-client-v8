@@ -419,9 +419,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
-    //hideLoading();
-    progressBar.setVisibility(View.GONE);
-    Log.i("TEST_SKELETON", "SHOW SKELETON MAN");
+    hideLoading();
+    adapter.update(homeBundles.getList());
   }
 
   @Override public boolean isAtTop() {
@@ -431,7 +430,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
-        <= VISIBLE_THRESHOLD;
+        <= VISIBLE_THRESHOLD && adapter.isLoaded();
   }
 
   private EditorialBundleViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {

@@ -344,8 +344,9 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<HomeBundlesModel> loadHome() {
-    return Observable.combineLatest(showNativeAds(), home.loadHomeBundles(),
-        (aBoolean, bundlesModel) -> bundlesModel)
+    return Observable.mergeDelayError(showNativeAds(), home.loadHomeBundles())
+        .filter(obj -> obj instanceof HomeBundlesModel)
+        .cast(HomeBundlesModel.class)
         .observeOn(viewScheduler)
         .doOnNext(view::showBundlesSkeleton)
         .filter(HomeBundlesModel::isComplete)

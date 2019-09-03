@@ -60,20 +60,24 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    bundleTitle.setText(
-        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
-    appsInBundleAdapter.updateBundle(homeBundle, position);
-    appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
-    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+    if(homeBundle.getContent() == null){
+      //TODO
+    } else {
+      bundleTitle.setText(
+          Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
+      appsInBundleAdapter.updateBundle(homeBundle, position);
+      appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
+      appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
-      }
-    });
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+      });
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+    }
   }
 }

@@ -161,10 +161,7 @@ public class BundlesResponseMapper {
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
-    if (!(actionItemData instanceof ActionItemResponse)
-        || ((ActionItemResponse) actionItemData).getDataList()
-        .getList()
-        .isEmpty()) {
+    if (!(actionItemData instanceof ActionItemResponse)) {
       return HomeBundle.BundleType.UNKNOWN;
     }
     String layout = ((ActionItemResponse) actionItemData).getDataList()

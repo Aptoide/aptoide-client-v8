@@ -65,6 +65,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
+    if(homeBundle.getContent() == null) return; // TODO
+
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
 

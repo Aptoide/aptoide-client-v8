@@ -60,6 +60,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
+    if(homeBundle.getContent() == null) return; // TODO
+
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 

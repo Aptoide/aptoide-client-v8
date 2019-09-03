@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeleton.SkeletonGroup;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
@@ -24,6 +25,7 @@ import rx.subjects.PublishSubject;
  */
 
 public class EditorsBundleViewHolder extends AppBundleViewHolder {
+  private final SkeletonGroup skeletonGroup;
   private final TextView bundleTitle;
   private final Button moreButton;
   private final EditorsAppsAdapter graphicAppsAdapter;
@@ -36,6 +38,7 @@ public class EditorsBundleViewHolder extends AppBundleViewHolder {
     super(view);
     this.marketName = marketName;
     this.uiEventsListener = uiEventsListener;
+    skeletonGroup = view.findViewById(R.id.skeleton_group);
     bundleTitle = (TextView) view.findViewById(R.id.bundle_title);
     moreButton = (Button) view.findViewById(R.id.bundle_more);
     graphicsList = (RecyclerView) view.findViewById(R.id.featured_graphic_list);
@@ -60,20 +63,25 @@ public class EditorsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    bundleTitle.setText(
-        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
-    graphicAppsAdapter.updateBundle(homeBundle, position);
-    graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
-    graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+    if(homeBundle.getContent() == null){
+      skeletonGroup.showSkeleton();
+    } else {
+      bundleTitle.setText(
+          Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
+      graphicAppsAdapter.updateBundle(homeBundle, position);
+      graphicAppsAdapter.update((List<Application>) homeBundle.getContent());
+      graphicsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
-      }
-    });
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+      });
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+    }
+
   }
 }

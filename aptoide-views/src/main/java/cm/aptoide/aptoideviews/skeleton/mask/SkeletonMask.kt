@@ -24,34 +24,60 @@ internal class SkeletonMask(val view: View, val offsetLeft: Float, val offsetTop
     isAntiAlias = preferences.border.size > 0 || preferences.shape is Shape.Circle
   }
 
-  private val bitmap: Bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.RGB_565)
-  private val bitmapCanvas: Canvas = Canvas(bitmap)
+  private val bitmap: Bitmap? by lazy(LazyThreadSafetyMode.NONE){
+    val width = getDimension(view.width, preferences.size.width)
+    val height = getDimension(view.height, preferences.size.height)
+    if(width > 0 && height > 0)
+      Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+    else
+      null
+  }
+
+  private fun getDimension(viewDimension: Int, preferencesDimension: SizeDimension): Int {
+    return when(preferencesDimension){
+      is SizeDimension.OriginalValue -> viewDimension
+      is SizeDimension.PercentValue -> (viewDimension * preferencesDimension.fraction).toInt()
+      is SizeDimension.SpecificValue -> preferencesDimension.value.toInt()
+    }
+  }
+
+
+  private val bitmapCanvas: Canvas? by lazy(LazyThreadSafetyMode.NONE){
+    bitmap?.let { Canvas(it) }
+  }
 
   fun draw(canvas: Canvas) {
-    canvas.drawBitmap(bitmap, view.left + offsetLeft, view.top + offsetTop, null)
+    bitmap?.let { mask ->
+      canvas.drawBitmap(mask, view.left + offsetLeft, view.top + offsetTop, null)
+    }
   }
 
   fun mask() {
-    val rect = RectF(0f, 0f, view.width.toFloat(), view.height.toFloat())
-    drawShape(rect, preferences.shape, paint)
-    if(preferences.border.size > 0)
-      drawShape(rect, preferences.shape, borderPaint)
+    bitmap?.let { bm ->
+      val rect = RectF(0f, 0f, bm.width.toFloat(), bm.height.toFloat())
+      drawShape(rect, preferences.shape, paint)
+      if(preferences.border.size > 0)
+        drawShape(rect, preferences.shape, borderPaint)
+    }
+
   }
 
   private fun drawShape(bounds: RectF, shape: Shape, paint: Paint) {
-    when (shape) {
-      is Shape.Rect -> {
-        if (shape.cornerRadius > 0) {
-          bitmapCanvas.drawRoundRect(bounds, shape.cornerRadius.toFloat(),
-              shape.cornerRadius.toFloat(), paint)
-        } else {
-          bitmapCanvas.drawRect(bounds, paint)
+    bitmapCanvas?.let { canvas ->
+      when (shape) {
+        is Shape.Rect -> {
+          if (shape.cornerRadius > 0) {
+            canvas.drawRoundRect(bounds, shape.cornerRadius.toFloat(),
+                shape.cornerRadius.toFloat(), paint)
+          } else {
+            canvas.drawRect(bounds, paint)
+          }
         }
-      }
-      is Shape.Circle -> {
-        val cx = (bounds.right - bounds.left) / 2.0f
-        val cy = (bounds.bottom - bounds.top) / 2.0f
-        bitmapCanvas.drawCircle(cx, cy, min(cx, cy), paint)
+        is Shape.Circle -> {
+          val cx = (bounds.right - bounds.left) / 2.0f
+          val cy = (bounds.bottom - bounds.top) / 2.0f
+          canvas.drawCircle(cx, cy, min(cx, cy), paint)
+        }
       }
     }
   }
