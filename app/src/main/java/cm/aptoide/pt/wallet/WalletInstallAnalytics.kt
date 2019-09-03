@@ -21,6 +21,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val navigationTracker: NavigationTracker) {
 
   private var shouldRegister: Boolean = true
+  private val APP_BUNDLE = "app_bundle"
   private val TYPE = "type"
   private val APPLICATION_NAME = "Application Name"
   private val APPLICATION_PUBLISHER = "Application Publisher"
@@ -59,11 +60,13 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
 
   }
 
-  fun sendClickOnInstallButtonEvent(packageName: String, applicationPublisher: String) {
+  fun sendClickOnInstallButtonEvent(packageName: String, applicationPublisher: String,
+                                    hasSplits: Boolean) {
     val map = HashMap<String, Any>()
     map[TYPE] = "Install"
     map[APPLICATION_NAME] = packageName
     map[APPLICATION_PUBLISHER] = applicationPublisher
+    map[APP_BUNDLE] = hasSplits
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         VIEW_CONTEXT)
   }

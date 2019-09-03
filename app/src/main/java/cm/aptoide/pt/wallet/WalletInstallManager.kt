@@ -72,7 +72,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                                   packageName: String,
                                   developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
-    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer)
+    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer,
+        download.hasSplits())
   }
 
   fun onWalletInstalled(): Observable<Boolean> {

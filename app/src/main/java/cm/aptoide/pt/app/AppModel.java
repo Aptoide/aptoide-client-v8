@@ -495,6 +495,10 @@ public class AppModel {
     return splits;
   }
 
+  public boolean hasSplits() {
+    return splits != null && !splits.isEmpty();
+  }
+
   public List<String> getRequiredSplits() {
     return requiredSplits;
   }

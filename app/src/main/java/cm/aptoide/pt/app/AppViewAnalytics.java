@@ -8,7 +8,6 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
@@ -46,6 +45,7 @@ public class AppViewAnalytics {
   private static final String PACKAGE_NAME = "Package_name";
   private static final String IMPRESSION = "impression";
   private static final String TAP_ON_APP = "tap_on_app";
+  private static final String APP_BUNDLE = "app_bundle";
   private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
@@ -266,27 +266,14 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  public void clickOnInstallButton(GetAppMeta.App app) {
-    try {
-      HashMap<String, Object> map = new HashMap<>();
-
-      map.put(APPLICATION_NAME, app.getPackageName());
-      map.put(APPLICATION_PUBLISHER, app.getDeveloper()
-          .getName());
-
-      analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
-          getViewName(true));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void clickOnInstallButton(String packageName, String developerName, String type) {
+  public void clickOnInstallButton(String packageName, String developerName, String type,
+      boolean hasSplits) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
     map.put(APPLICATION_NAME, packageName);
     map.put(APPLICATION_PUBLISHER, developerName);
+    map.put(APP_BUNDLE, hasSplits);
     map.put(CONTEXT, context);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
