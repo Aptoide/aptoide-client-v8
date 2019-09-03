@@ -23,6 +23,17 @@
     <item name="android:stateListAnimator">@null</item>
   </style>
 
+  <style name="Aptoide.Button.GhostPlayServices">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">@dimen/button_height</item>
+    <item name="android:fontFamily">?attr/buttonTextFont</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:background">@drawable/btn_ghost_theme_playservices</item>
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
+    <item name="android:stateListAnimator">@null</item>
+  </style>
+
+
   <!-- Flat Button-->
   <style name="Aptoide.Button.Flat" parent="Widget.AppCompat.Button.Borderless.Colored">
     <item name="android:layout_width">wrap_content</item>

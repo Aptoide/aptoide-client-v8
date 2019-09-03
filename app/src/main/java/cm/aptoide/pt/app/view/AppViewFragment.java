@@ -99,6 +99,7 @@ import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
@@ -1776,6 +1777,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       super.onActivityResult(requestCode, resultCode, intent);
     }
+  }
+
+  @Override public void showGooglePlayServicesDialog() {
+    BottomSheetDialog dialog =
+        new BottomSheetDialog(requireContext(), R.style.Aptoide_BottomSheetTheme);
+    dialog.setContentView(R.layout.appview_google_services_dialog);
+    dialog.show();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

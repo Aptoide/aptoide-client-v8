@@ -174,6 +174,7 @@ public class AppViewPresenter implements Presenter {
         view.setupAppcAppView();
       }
       view.recoverScrollViewState();
+      view.showGooglePlayServicesDialog();
     }
   }
 

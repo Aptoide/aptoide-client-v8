@@ -50,6 +50,14 @@
     <item name="android:windowCloseOnTouchOutside">true</item>
   </style>
 
+  <style name="Aptoide.BottomSheetTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:colorBackground">@android:color/transparent</item>
+    <item name="android:windowFrame">@null</item>
+    <item name="android:windowIsFloating">true</item>
+  </style>
+
 
   <style name="Widget.Aptoide.Card" parent="">
     <item name="cardCornerRadius">8.3dp</item>

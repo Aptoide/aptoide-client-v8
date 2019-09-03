@@ -746,4 +746,6 @@
   <string name="auto_update_popup_title">Update Aptoide!</string>
   <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
 
+
+  <string name="google_play_services_installation_message">This app requires Google Play Services which are external to Aptoide. Do you want to install Google Play Services?</string>
 </resources>
