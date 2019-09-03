@@ -926,8 +926,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
-        aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
-        resources, BuildConfig.VERSION_CODE);
+        aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("multipart") MultipartBodyInterceptor provideMultipartBodyInterceptor(
@@ -950,8 +949,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
-        aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
-        resources, BuildConfig.VERSION_CODE);
+        aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("analytics-interceptor")
@@ -960,8 +958,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE,
-        qManager, sharedPreferences);
+        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE, qManager,
+        sharedPreferences);
   }
 
   @Singleton @Provides QManager provideQManager(
@@ -1107,9 +1105,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NetworkOperatorManager networkOperatorManager,
       AuthenticationPersistence authenticationPersistence,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage,
-        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
-        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
+    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage, qManager,
+        defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
+        networkOperatorManager, authenticationPersistence);
   }
 
   @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(
@@ -1748,8 +1746,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("cachePath") String provideCachePath() {
-    return Environment.getExternalStorageDirectory()
-        .getAbsolutePath() + "/.aptoide/";
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      return application.getFilesDir()
+          .getPath() + "/.aptoide/";
+    } else {
+      return Environment.getExternalStorageDirectory()
+          .getAbsolutePath() + "/.aptoide/";
+    }
   }
 
   @Singleton @Provides @Named("imageCachePath") String provideImageCachePatch(
