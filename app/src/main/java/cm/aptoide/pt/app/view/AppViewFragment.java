@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesBottomSheetFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -1780,10 +1781,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void showGooglePlayServicesDialog() {
-    BottomSheetDialog dialog =
-        new BottomSheetDialog(requireContext(), R.style.Aptoide_BottomSheetTheme);
-    dialog.setContentView(R.layout.appview_google_services_dialog);
-    dialog.show();
+    PlayServicesBottomSheetFragment fragment = new PlayServicesBottomSheetFragment();
+    fragment.show(getFragmentManager(), "play_services_bottom_sheet_fragment");
+
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
