@@ -1,142 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:key="root"
-    app:title="@string/settings_title_settings">
+    android:key="root"
+    android:title="@string/settings_title_settings">
 
   <PreferenceCategory
-      app:title="@string/setting_general"
+      android:title="@string/setting_general"
       >
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="hwspecsChkBox"
-        app:summary="@string/setting_appfiltersum"
-        app:title="@string/setting_appfiltertitle"
+        android:defaultValue="true"
+        android:key="hwspecsChkBox"
+        android:summary="@string/setting_appfiltersum"
+        android:title="@string/setting_appfiltertitle"
         />
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="downloadwifionly"
-        app:title="@string/setting_mobile"
+        android:defaultValue="true"
+        android:key="downloadwifionly"
+        android:title="@string/setting_mobile"
         />
     <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="updatesFilterAlphaBetaKey"
-        app:summary="@string/settings_beta_filter_summary"
-        app:title="@string/settings_beta_filter_setting_title"/>
+        android:defaultValue="false"
+        android:key="updatesFilterAlphaBetaKey"
+        android:summary="@string/settings_beta_filter_summary"
+        android:title="@string/settings_beta_filter_setting_title"/>
   </PreferenceCategory>
   <PreferenceCategory
-      app:title="@string/updates"
+      android:title="@string/updates"
       >
     <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="updatesSystemAppsKey"
-        app:summary="@string/settings_include_system_apps_summary"
-        app:title="@string/settings_include_system_apps_title"/>
+        android:defaultValue="false"
+        android:key="updatesSystemAppsKey"
+        android:summary="@string/settings_include_system_apps_summary"
+        android:title="@string/settings_include_system_apps_title"/>
     <Preference
-        app:key="excludedUpdates"
-        app:title="@string/excluded_updates"/>
+        android:key="excludedUpdates"
+        android:title="@string/excluded_updates"/>
   </PreferenceCategory>
 
   <PreferenceCategory
-      app:title="@string/setting_notifications">
+      android:title="@string/setting_notifications">
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="notification_campaign_and_social"
-        app:summary="@string/setting_notifications_sub_sub_section_2"
-        app:title="@string/setting_notifications_sub_section_2"/>
+        android:defaultValue="true"
+        android:key="notification_campaign_and_social"
+        android:summary="@string/setting_notifications_sub_sub_section_2"
+        android:title="@string/setting_notifications_sub_section_2"/>
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="notificationaptoide"
-        app:summary="@string/setting_notifications_sub_sub_section_1"
-        app:title="@string/setting_notifications_sub_section_1"/>
+        android:defaultValue="true"
+        android:key="notificationaptoide"
+        android:summary="@string/setting_notifications_sub_sub_section_1"
+        android:title="@string/setting_notifications_sub_section_1"/>
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="checkautoupdate"
-        app:title="@string/setting_category_autoupdate_title"/>
+        android:defaultValue="true"
+        android:key="checkautoupdate"
+        android:title="@string/setting_category_autoupdate_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory
-      app:title="@string/setting_clear_memory">
+      android:title="@string/setting_clear_memory">
     <Preference
-        app:key="clearcache"
-        app:summary="@string/settings_clear_cache_summary"
-        app:title="@string/settings_clearcache_title"/>
+        android:key="clearcache"
+        android:summary="@string/settings_clear_cache_summary"
+        android:title="@string/settings_clearcache_title"/>
 
     <androidx.preference.EditTextPreference
         android:inputType="number"
         android:maxLength="3"
         android:numeric="integer"
-        app:key="maxFileCache"
-        app:summary="@string/settings_maxFileCache_sum"
-        app:title="@string/settings_maxFileCache_title"/>
+        android:key="maxFileCache"
+        android:summary="@string/settings_maxFileCache_sum"
+        android:title="@string/settings_maxFileCache_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory
-      app:key="adultContent"
-      app:title="@string/order_popup_title3">
+      android:key="adultContent"
+      android:title="@string/order_popup_title3">
     <SwitchPreferenceCompat
-        app:defaultValue="true"
-        app:key="matureChkBox"
-        app:persistent="false"
-        app:title="@string/setting_dont_show_mature_content"/>
+        android:defaultValue="true"
+        android:key="matureChkBox"
+        android:persistent="false"
+        android:title="@string/setting_dont_show_mature_content"/>
     <SwitchPreferenceCompat
         android:visible="false"
-        app:defaultValue="true"
-        app:key="matureChkBoxWithPin"
-        app:persistent="false"
-        app:title="@string/setting_dont_show_mature_content"/>
+        android:defaultValue="true"
+        android:key="matureChkBoxWithPin"
+        android:persistent="false"
+        android:title="@string/setting_dont_show_mature_content"/>
     <Preference
         android:inputType="number"
-        app:key="Maturepin"
-        app:persistent="false"
-        app:summary="@string/set_mature_pin_summary"
-        app:title="@string/set_mature_pin_title"/>
+        android:key="Maturepin"
+        android:persistent="false"
+        android:summary="@string/set_mature_pin_summary"
+        android:title="@string/set_mature_pin_title"/>
     <Preference
         android:inputType="number"
         android:visible="false"
-        app:key="removeMaturepin"
-        app:persistent="false"
-        app:summary="@string/remove_mature_pin_summary"
-        app:title="@string/remove_mature_pin_title"/>
+        android:key="removeMaturepin"
+        android:persistent="false"
+        android:summary="@string/remove_mature_pin_summary"
+        android:title="@string/remove_mature_pin_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory
-      app:key="rootCategory"
-      app:title="@string/settings_root">
+      android:key="rootCategory"
+      android:title="@string/settings_root">
     <SwitchPreferenceCompat
-        app:key="allowRoot"
-        app:title="@string/settings_allow_root"/>
+        android:key="allowRoot"
+        android:title="@string/settings_allow_root"/>
     <SwitchPreferenceCompat
-        app:defaultValue="false"
-        app:key="auto_update"
-        app:summary="@string/setting_auto_update_sum"
-        app:title="@string/setting_auto_update_title"/>
+        android:defaultValue="false"
+        android:key="auto_update"
+        android:summary="@string/setting_auto_update_sum"
+        android:title="@string/setting_auto_update_title"/>
   </PreferenceCategory>
 
   <PreferenceCategory
-      app:key="about"
-      app:title="@string/settings_support">
+      android:key="about"
+      android:title="@string/settings_support">
     <Preference
-        app:key="sendFeedback"
-        app:title="@string/settings_send_feedback"/>
+        android:key="sendFeedback"
+        android:title="@string/settings_send_feedback"/>
     <Preference
-        app:key="aboutDialog"
-        app:title="@string/settings_about_us"/>
+        android:key="aboutDialog"
+        android:title="@string/settings_about_us"/>
     <Preference
-        app:key="termsConditions"
-        app:title="@string/settings_terms_conditions"/>
+        android:key="termsConditions"
+        android:title="@string/settings_terms_conditions"/>
     <Preference
-        app:key="privacyPolicy"
-        app:title="@string/settings_privacy_policy"/>
+        android:key="privacyPolicy"
+        android:title="@string/settings_privacy_policy"/>
 
     <Preference
-        app:key="hwspecs"
-        app:summary="@string/setting_hwspecssum"
-        app:title="@string/setting_hwspecstitle"/>
+        android:key="hwspecs"
+        android:summary="@string/setting_hwspecssum"
+        android:title="@string/setting_hwspecstitle"/>
     <Preference
-        app:key="deleteAccount"
-        app:title="@string/settings_delete_account"/>
+        android:key="deleteAccount"
+        android:title="@string/settings_delete_account"/>
 
   </PreferenceCategory>
 </PreferenceScreen>
