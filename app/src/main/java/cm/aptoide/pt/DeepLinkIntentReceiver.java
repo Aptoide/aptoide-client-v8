@@ -303,7 +303,17 @@ public class DeepLinkIntentReceiver extends ActivityView {
       Logger.getInstance()
           .v(TAG, "aptoide thank you: app id: " + appId);
       if (TextUtils.isEmpty(appId)) {
-        return null;
+        String uname = u.getQueryParameter("package_uname");
+        if (!TextUtils.isEmpty(uname)) {
+          return parseAptoideInstallUri("uname=" + uname);
+        } else {
+          String packageName = u.getQueryParameter("package");
+          if (!TextUtils.isEmpty(packageName)) {
+            return parseAptoideInstallUri("package=" + packageName);
+          } else {
+            return null;
+          }
+        }
       } else {
         return parseAptoideInstallUri(appId);
       }
@@ -573,6 +583,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
     AptoideInstall aptoideInstall = parser.parse(host);
     if (aptoideInstall.getAppId() > 0) {
       return startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(), false);
+    } else if (!TextUtils.isEmpty(aptoideInstall.getUname())) {
+      return startAppView(aptoideInstall.getUname());
     } else {
       return startFromAppview(aptoideInstall.getStoreName(), aptoideInstall.getPackageName(),
           aptoideInstall.shouldShowPopup());
