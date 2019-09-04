@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view.googleplayservices;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,9 @@ public class PlayServicesBottomSheetFragment extends BottomSheetDialogFragment {
     return inflater.inflate(R.layout.appview_google_services_dialog, container, false);
   }
 
-  @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-    super.onActivityCreated(savedInstanceState);
-    ((View) getView().getParent()).setBackgroundColor(Color.TRANSPARENT);
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.Aptoide_BottomSheetTheme);
   }
+
 }

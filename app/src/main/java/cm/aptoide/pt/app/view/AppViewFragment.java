@@ -1783,7 +1783,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public void showGooglePlayServicesDialog() {
     PlayServicesBottomSheetFragment fragment = new PlayServicesBottomSheetFragment();
     fragment.show(getFragmentManager(), "play_services_bottom_sheet_fragment");
-
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
