@@ -975,7 +975,8 @@ public class GetAppMeta extends BaseV7Response {
         private String type;
         private String level;
 
-        public Dependency(){}
+        public Dependency() {
+        }
 
         public String getType() {
           return type;
@@ -1132,7 +1133,6 @@ public class GetAppMeta extends BaseV7Response {
             + ")";
       }
     }
-
   }
 
   public static class Media {

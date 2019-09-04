@@ -25,6 +25,7 @@ import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
+import cm.aptoide.pt.app.view.googleplayservices.BaseBottomSheetDialogFragment;
 import cm.aptoide.pt.billing.Billing;
 import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.billing.BillingIdManager;
@@ -436,6 +437,13 @@ public abstract class AptoideApplication extends Application {
    */
   public FragmentModule getFragmentModule(BaseFragment baseFragment, Bundle savedInstanceState,
       Bundle arguments, boolean createStoreUserPrivacyEnabled, String packageName) {
+    return new FragmentModule(baseFragment, savedInstanceState, arguments,
+        createStoreUserPrivacyEnabled, packageName);
+  }
+
+  public FragmentModule getFragmentModule(BaseBottomSheetDialogFragment baseFragment,
+      Bundle savedInstanceState, Bundle arguments, boolean createStoreUserPrivacyEnabled,
+      String packageName) {
     return new FragmentModule(baseFragment, savedInstanceState, arguments,
         createStoreUserPrivacyEnabled, packageName);
   }

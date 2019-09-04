@@ -59,7 +59,8 @@ public class DetailedApp {
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
-      boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature, boolean gms) {
+      boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature,
+      boolean gms) {
 
     this.id = id;
     this.name = name;

@@ -61,6 +61,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesBottomSheetFragment;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -1187,7 +1188,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public int needsGoogleServices() {
     GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
     return apiAvailability.isGooglePlayServicesAvailable(getContext());
-
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
