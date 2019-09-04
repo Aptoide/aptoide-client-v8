@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 public class PlayServicesBottomSheetFragment extends BaseBottomSheetDialogFragment
     implements PlayServicesView {
@@ -20,6 +21,7 @@ public class PlayServicesBottomSheetFragment extends BaseBottomSheetDialogFragme
 
   private Button laterButton;
   private Button installButton;
+  private PublishSubject<Boolean> resumeInstall;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,5 +58,11 @@ public class PlayServicesBottomSheetFragment extends BaseBottomSheetDialogFragme
 
   @Override public void dismissView() {
     this.dismiss();
+    resumeInstall.onNext(true);
   }
+
+ @Override public void setResumeInstallInstallSubject(
+     PublishSubject<Boolean> resumeInstallInstallSubject){
+    resumeInstall = resumeInstallInstallSubject;
+ }
 }

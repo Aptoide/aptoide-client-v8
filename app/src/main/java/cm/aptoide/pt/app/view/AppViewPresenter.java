@@ -30,7 +30,6 @@ import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import com.google.android.gms.common.ConnectionResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,6 +62,8 @@ public class AppViewPresenter implements Presenter {
   private AptoideAccountManager accountManager;
   private Scheduler viewScheduler;
   private CrashReport crashReport;
+
+  private DownloadModel.Action action;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
@@ -110,6 +111,7 @@ public class AppViewPresenter implements Presenter {
     handleOnSimilarAppsVisible();
 
     handleInstallButtonClick();
+    handleResumeInstall();
     pauseDownload();
     resumeDownload();
     cancelDownload();
@@ -973,6 +975,80 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  private void handleResumeInstall() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.getResumeInstallSubject())
+        .filter(result -> result)
+        .flatMapCompletable(__ -> {
+          Completable completable = null;
+          switch (action) {
+            case INSTALL:
+            case UPDATE:
+              completable = appViewManager.getAppModel()
+                  .flatMapCompletable(
+                      appModel -> downloadApp(action, appModel).observeOn(viewScheduler)
+                          .doOnCompleted(() -> {
+                            String conversionUrl = appModel.getCampaignUrl();
+                            if (!conversionUrl.isEmpty()) {
+                              campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
+                                  appModel.getPackageName(), appModel.getVersionCode());
+                            }
+                            appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+                                appModel.getDeveloper()
+                                    .getName(), action.toString());
+
+                            if (appViewManager.hasClaimablePromotion(
+                                Promotion.ClaimAction.INSTALL)) {
+                              appViewAnalytics.sendInstallPromotionApp();
+                            }
+                          }));
+              break;
+            case OPEN:
+              completable = appViewManager.getAppModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(
+                      appViewViewModel -> openInstalledApp(appViewViewModel.getPackageName()));
+              break;
+            case DOWNGRADE:
+              completable = appViewManager.getAppModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(
+                      appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
+                          () -> appViewAnalytics.clickOnInstallButton(
+                              appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
+                                  .getName(), action.toString())));
+              break;
+            case PAY:
+              completable = appViewManager.getAppModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
+              break;
+            case MIGRATE:
+              completable = appViewManager.getAppModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(appViewViewModel -> {
+                    if (appViewManager.hasClaimablePromotion(Promotion.ClaimAction.MIGRATE)) {
+                      appViewAnalytics.sendAppcMigrationUpdateClick();
+                    }
+                    appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
+                        appViewViewModel.getDeveloper()
+                            .getName(), "UPDATE TO APPC");
+                    return migrateApp(action, appViewViewModel);
+                  });
+              break;
+            default:
+              completable =
+                  Completable.error(new IllegalArgumentException("Invalid type of action"));
+          }
+          return completable;
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+        });
+  }
+
   private void handleInstallButtonClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
@@ -982,16 +1058,18 @@ public class AppViewPresenter implements Presenter {
         .flatMap(account -> view.installAppClick()
             .flatMapSingle(action -> appViewManager.getAppModel()
                 .flatMapObservable(appModel -> {
+                  this.action = action;
                   if (appModel.needsGms()) {
-                    int needsPlayServices = view.needsGoogleServices();
-                    if (needsPlayServices == ConnectionResult.SERVICE_MISSING
-                        || needsPlayServices == ConnectionResult.SERVICE_INVALID
-                        || needsPlayServices == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED
-                        || needsPlayServices == ConnectionResult.SERVICE_DISABLED) {
-                      return view.showGmsDialog();
-                    }
+                    //int needsPlayServices = view.needsGoogleServices();
+                    //if (needsPlayServices == ConnectionResult.SERVICE_MISSING
+                    //    || needsPlayServices == ConnectionResult.SERVICE_INVALID
+                    //    || needsPlayServices == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED
+                    //    || needsPlayServices == ConnectionResult.SERVICE_DISABLED) {
+                    view.showGmsDialog();
+                    return Observable.just(false);
                   }
                   return Observable.just(true);
+                  // }
                 })
                 .filter(result -> result)
                 .toSingle()

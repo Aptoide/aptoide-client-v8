@@ -20,6 +20,7 @@ import cm.aptoide.pt.view.app.FlagsVote;
 import com.jakewharton.rxbinding.view.ViewScrollChangeEvent;
 import java.util.List;
 import rx.Observable;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by franciscocalado on 08/05/18.
@@ -182,7 +183,9 @@ public interface AppViewView extends InstallAppView {
 
   void showConsentDialog();
 
-  Observable<Boolean> showGmsDialog();
+  void showGmsDialog();
 
   int needsGoogleServices();
+
+  PublishSubject<Boolean> getResumeInstallSubject();
 }

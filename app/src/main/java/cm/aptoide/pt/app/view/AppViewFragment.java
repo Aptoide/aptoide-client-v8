@@ -127,7 +127,6 @@ import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
-import static cm.aptoide.pt.utils.GenericDialogs.EResponse.NO;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -280,6 +279,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private ImageView resumeWalletDownload;
   private View walletDownloadControlsLayout;
   private PublishSubject<PromotionEvent> promotionAppClick;
+  private PublishSubject<Boolean> resumeInstallSubject = PublishSubject.create();
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -1179,15 +1179,19 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     consentDialogView.showConsentDialog();
   }
 
-  @Override public Observable<Boolean> showGmsDialog() {
-    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        "testing gms stuff")
-        .map(response -> (response.equals(NO)));
+  @Override public void showGmsDialog() {
+    PlayServicesBottomSheetFragment dialog = new PlayServicesBottomSheetFragment();
+    dialog.setResumeInstallInstallSubject(resumeInstallSubject);
+    dialog.show(getFragmentManager(), "play_services_bottom_sheet_fragment");
   }
 
   @Override public int needsGoogleServices() {
     GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
     return apiAvailability.isGooglePlayServicesAvailable(getContext());
+  }
+
+  @Override public PublishSubject<Boolean> getResumeInstallSubject() {
+    return resumeInstallSubject;
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
