@@ -1,7 +1,5 @@
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.install.RootCommandTimeoutException;
-import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import rx.Observable;
@@ -11,20 +9,66 @@ public class RootPermissionGranter {
 
   private static final String TAG = "RootPermissionGranter";
   private static String ROOT_COMMAND_GRANT_PERMISSION = "pm grant ";
-  private String packageName;
   private ArrayList<String> googlePlayServicesPermissions;
+  private ArrayList<String> googleContactsPermissions;
+  private ArrayList<String> googleCalendarPermissions;
+  private ArrayList<String> googleServicesFrameworkPermissions;
+  private ArrayList<String> googlePlayStorePermissions;
 
-  public RootPermissionGranter(String packageName) {
-    this.packageName = packageName;
+  public RootPermissionGranter() {
     buildPermissionsLists();
   }
 
   private void buildPermissionsLists() {
     this.googlePlayServicesPermissions = getGooglePlayServicesPermissions();
+    this.googleContactsPermissions = getGoogleContactsPermissions();
+    this.googleCalendarPermissions = getGoogleCalendarPermissions();
+    this.googleServicesFrameworkPermissions = getGoogleFrameworkPermissions();
+    this.googlePlayStorePermissions = getGooglePlayStorePermissions();
+  }
+
+  private ArrayList<String> getGooglePlayStorePermissions() {
+    String[] playStore = {
+        "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS",
+        "android.permission.GET_ACCOUNTS", "android.permission.READ_PHONE_STATE",
+        "android.permission.CALL_PHONE", "android.permission.READ_CALL_LOG",
+        "android.permission.WRITE_CALL_LOG", "com.android.voicemail.permission.ADD_VOICEMAIL",
+        "android.permission.USE_SIP", "android.permission.PROCESS_OUTGOING_CALLS",
+        "android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.SEND_SMS", "android.permission.RECEIVE_SMS",
+        "android.permission.READ_SMS", "android.permission.RECEIVE_WAP_PUSH",
+        "android.permission.RECEIVE_MMS", "android.permission.READ_CELL_BROADCASTS",
+        "android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"
+    };
+    return new ArrayList<>(Arrays.asList(playStore));
+  }
+
+  private ArrayList<String> getGoogleFrameworkPermissions() {
+    String[] framework = {
+        "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS",
+        "android.permission.GET_ACCOUNTS", "android.permission.READ_PHONE_STATE",
+        "android.permission.CALL_PHONE", "android.permission.READ_CALL_LOG",
+        "android.permission.WRITE_CALL_LOG", "com.android.voicemail.permission.ADD_VOICEMAIL",
+        "android.permission.USE_SIP", "android.permission.PROCESS_OUTGOING_CALLS"
+    };
+    return new ArrayList<>(Arrays.asList(framework));
+  }
+
+  private ArrayList<String> getGoogleCalendarPermissions() {
+    String[] calendar = { "android.permission.READ_CALENDAR", "android.permission.WRITE_CALENDAR" };
+    return new ArrayList<>(Arrays.asList(calendar));
+  }
+
+  private ArrayList<String> getGoogleContactsPermissions() {
+    String[] contacts = {
+        "android.permission.READ_CONTACTS", "android.permission.WRITE_CONTACTS",
+        "android.permission.GET_ACCOUNTS"
+    };
+    return new ArrayList<>(Arrays.asList(contacts));
   }
 
   private ArrayList<String> getGooglePlayServicesPermissions() {
-    String[] playServicePermissionSingle = { "android.permission.READ_EXTERNAL_STORAGE" };
+    String[] playServicePermissionSingletest = { "android.permission.READ_EXTERNAL_STORAGE" };
 
     String[] playServicesPermissions = {
         "android.permission.ACCESS_BACKGROUND_LOCATION",
@@ -173,27 +217,47 @@ public class RootPermissionGranter {
         "com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
     };
 
-    googlePlayServicesPermissions = new ArrayList<>(Arrays.asList(playServicePermissionSingle));
+    googlePlayServicesPermissions = new ArrayList<>(Arrays.asList(playServicesPermissions));
 
     return googlePlayServicesPermissions;
   }
 
-  public Observable<String> grantPermissions() {
+  public Observable<String> grantMultiplePermissions(String packageName) {
+
+    return Observable.from(getPermissionsListForPackage(packageName))
+        .flatMap(permission -> grantPermission(permission, packageName))
+        .doOnError(throwable -> throwable.printStackTrace());
+  }
+
+  private Observable<String> grantPermission(String permission, String packageName) {
     return Observable.create(new RootCommandPermissionOnSubscribe(packageName,
-        ROOT_COMMAND_GRANT_PERMISSION
-            + packageName
-            + " "
-            + "android.permission.READ_EXTERNAL_STORAGE"))
+        ROOT_COMMAND_GRANT_PERMISSION + packageName + " " + permission))
         .subscribeOn(Schedulers.computation())
-        .map(__ -> "lol")
-        .onErrorResumeNext(throwable -> {
-          if (throwable instanceof RootCommandTimeoutException) {
-            Logger.getInstance()
-                .d(TAG, "error while granting permissions");
-            return Observable.empty();
-          } else {
-            return Observable.error(throwable);
-          }
-        });
+        .map(__ -> "teste");
+  }
+
+  private ArrayList<String> getPermissionsListForPackage(String packageName) {
+    ArrayList<String> listOfPermissions;
+    switch (packageName) {
+      case "com.google.android.syncadapters.contacts":
+        listOfPermissions = googleContactsPermissions;
+        break;
+      case "com.google.android.syncadapters.calendar":
+        listOfPermissions = googleCalendarPermissions;
+        break;
+      case "com.google.android.gsf":
+        listOfPermissions = googleServicesFrameworkPermissions;
+        break;
+      case "com.google.android.gms":
+        listOfPermissions = googlePlayServicesPermissions;
+        break;
+      case "com.android.vending":
+        listOfPermissions = googlePlayStorePermissions;
+        break;
+      default:
+        listOfPermissions = googlePlayServicesPermissions;
+        break;
+    }
+    return listOfPermissions;
   }
 }

@@ -271,7 +271,7 @@ public abstract class AptoideApplication extends Application {
 
     initializeMoPub();
 
-    rootPermissionGranter = new RootPermissionGranter("com.android.deskclock");
+    rootPermissionGranter = new RootPermissionGranter();
     grantPermissionTo3rdParty();
     //
     // execute custom Application onCreate code with time metric
@@ -366,7 +366,13 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void grantPermissionTo3rdParty() {
-    rootPermissionGranter.grantPermissions()
+    String[] packageNamesList = {
+        "com.google.android.syncadapters.contacts", "com.google.android.syncadapters.calendar",
+        "com.google.android.gsf", "com.google.android.gms", "com.android.vending"
+    };
+
+    Observable.from(packageNamesList)
+        .flatMap(packageName -> rootPermissionGranter.grantMultiplePermissions(packageName))
         .subscribe(__ -> Logger.getInstance()
             .d("lol", "deu bem"), throwable -> throwable.printStackTrace());
   }

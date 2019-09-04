@@ -1,13 +1,11 @@
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.root.RootShell;
 import cm.aptoide.pt.root.exceptions.RootDeniedException;
 import cm.aptoide.pt.root.execution.Command;
 import cm.aptoide.pt.root.execution.Shell;
-import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import rx.Observable;
 import rx.Subscriber;
@@ -50,6 +48,7 @@ public class RootCommandPermissionOnSubscribe implements Observable.OnSubscribe<
               .equals(SUCCESS_OUTPUT_CONFIRMATION)) {
             success = true;
           }
+          success = true;
           super.commandOutput(id, line);
         }
 
@@ -59,10 +58,10 @@ public class RootCommandPermissionOnSubscribe implements Observable.OnSubscribe<
           super.commandTerminated(id, reason);
           if (packageHashcode == id) {
             if (reason.equals(TIMEOUT_EXCEPTION)) {
-              subscriber.onError(new RootCommandTimeoutException());
+              // subscriber.onError(new RootCommandTimeoutException());
             } else if (!subscriber.isUnsubscribed()) {
-              IllegalStateException e = new IllegalStateException(reason);
-              subscriber.onError(e);
+              //IllegalStateException e = new IllegalStateException(reason);
+              //  subscriber.onError(e);
             }
           }
         }
@@ -74,9 +73,9 @@ public class RootCommandPermissionOnSubscribe implements Observable.OnSubscribe<
             if (success || exitcode == 0) {
               subscriber.onCompleted();
             } else {
-              IllegalStateException e = new IllegalStateException(
-                  "success message wasn't received. Exit code: " + exitcode);
-              subscriber.onError(e);
+              //IllegalStateException e = new IllegalStateException(
+              //  "success message wasn't received. Exit code: " + exitcode);
+              // subscriber.onError(e);
             }
           }
           super.commandCompleted(id, exitcode);
@@ -84,22 +83,24 @@ public class RootCommandPermissionOnSubscribe implements Observable.OnSubscribe<
       };
 
       subscriber.add(Subscriptions.create(() -> {
-        try {
-          shell.close();
-        } catch (IOException e) {
+        // try {
+        //shell.close();
+        Logger.getInstance()
+            .d(TAG, "I was going to close shell");
+        /*} catch (IOException e) {
           e.printStackTrace();
-        }
+        }*/
       }));
       shell.add(installCommand);
-    } catch (IOException | TimeoutException | RootDeniedException e) {
+    } catch (Exception e) {
       if (e instanceof RootDeniedException) {
-        subscriber.onError(new InstallationException("User didn't accept root permissions"));
+        //  subscriber.onError(new InstallationException("User didn't accept root permissions"));
       } else if (e instanceof TimeoutException) {
-        subscriber.onError(new RootCommandTimeoutException());
+        //subscriber.onError(new RootCommandTimeoutException());
         Logger.getInstance()
             .d(TAG, "call: timeout reached");
       } else {
-        subscriber.onError(e);
+        //subscriber.onError(e);
       }
     }
   }
