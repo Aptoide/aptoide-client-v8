@@ -30,6 +30,7 @@ import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import com.google.android.gms.common.ConnectionResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -174,7 +175,6 @@ public class AppViewPresenter implements Presenter {
         view.setupAppcAppView();
       }
       view.recoverScrollViewState();
-      view.showGooglePlayServicesDialog();
     }
   }
 
@@ -980,6 +980,22 @@ public class AppViewPresenter implements Presenter {
         .first()
         .observeOn(viewScheduler)
         .flatMap(account -> view.installAppClick()
+            .flatMapSingle(action -> appViewManager.getAppModel()
+                .flatMapObservable(appModel -> {
+                  if (appModel.needsGms()) {
+                    int needsPlayServices = view.needsGoogleServices();
+                    if (needsPlayServices == ConnectionResult.SERVICE_MISSING
+                        || needsPlayServices == ConnectionResult.SERVICE_INVALID
+                        || needsPlayServices == ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED
+                        || needsPlayServices == ConnectionResult.SERVICE_DISABLED) {
+                      return view.showGmsDialog();
+                    }
+                  }
+                  return Observable.just(true);
+                })
+                .filter(result -> result)
+                .toSingle()
+                .map(__ -> action))
             .flatMapCompletable(action -> {
               Completable completable = null;
               switch (action) {

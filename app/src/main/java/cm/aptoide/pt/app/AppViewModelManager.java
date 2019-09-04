@@ -195,7 +195,8 @@ public class AppViewModelManager {
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature()));
+            appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
+            app.needsGms()));
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

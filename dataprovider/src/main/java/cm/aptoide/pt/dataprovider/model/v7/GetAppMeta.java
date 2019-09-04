@@ -862,6 +862,7 @@ public class GetAppMeta extends BaseV7Response {
        * density
        */
       private List<List<Integer>> densities;
+      private List<Dependency> dependencies;
 
       public Hardware() {
       }
@@ -960,6 +961,38 @@ public class GetAppMeta extends BaseV7Response {
             + ", densities="
             + this.getDensities()
             + ")";
+      }
+
+      public List<Dependency> getDependencies() {
+        return dependencies;
+      }
+
+      public void setDependencies(List<Dependency> dependencies) {
+        this.dependencies = dependencies;
+      }
+
+      public static class Dependency {
+        private String type;
+        private String level;
+
+        public Dependency() {
+        }
+
+        public String getType() {
+          return type;
+        }
+
+        public void setType(String type) {
+          this.type = type;
+        }
+
+        public String getLevel() {
+          return level;
+        }
+
+        public void setLevel(String level) {
+          this.level = level;
+        }
       }
     }
 

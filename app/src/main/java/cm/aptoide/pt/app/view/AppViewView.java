@@ -182,5 +182,7 @@ public interface AppViewView extends InstallAppView {
 
   void showConsentDialog();
 
-  void showGooglePlayServicesDialog();
+  Observable<Boolean> showGmsDialog();
+
+  int needsGoogleServices();
 }

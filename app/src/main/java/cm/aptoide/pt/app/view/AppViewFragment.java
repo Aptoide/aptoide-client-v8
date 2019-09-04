@@ -98,9 +98,9 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
@@ -127,6 +127,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.NO;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -1178,6 +1179,17 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     consentDialogView.showConsentDialog();
   }
 
+  @Override public Observable<Boolean> showGmsDialog() {
+    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
+        "testing gms stuff")
+        .map(response -> (response.equals(NO)));
+  }
+
+  @Override public int needsGoogleServices() {
+    GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+    return apiAvailability.isGooglePlayServicesAvailable(getContext());
+  }
+
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
     int stringId = R.string.wallet_promotion_wallet_installed_message;
     if (appDownloadModel.getAction() == DownloadModel.Action.MIGRATE
@@ -1778,11 +1790,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       super.onActivityResult(requestCode, resultCode, intent);
     }
-  }
-
-  @Override public void showGooglePlayServicesDialog() {
-    PlayServicesBottomSheetFragment fragment = new PlayServicesBottomSheetFragment();
-    fragment.show(getFragmentManager(), "play_services_bottom_sheet_fragment");
   }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

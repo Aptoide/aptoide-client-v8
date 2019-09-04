@@ -105,6 +105,7 @@ public class RootCommandOnSubscribe implements Observable.OnSubscribe<Void> {
         analytics.rootInstallCancelled();
         subscriber.onError(new InstallationException("User didn't accept root permissions"));
       } else if (e instanceof TimeoutException) {
+        ((TimeoutException) e).printStackTrace();
         subscriber.onError(new RootCommandTimeoutException());
         analytics.rootInstallTimeout();
         Logger.getInstance()
