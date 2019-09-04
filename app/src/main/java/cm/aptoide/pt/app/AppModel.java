@@ -73,6 +73,7 @@ public class AppModel {
   private List<String> bdsFlags;
   private String campaignUrl;
   private String signature;
+  private boolean gms;
 
   public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
       Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
@@ -84,7 +85,7 @@ public class AppModel {
       String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
-      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature) {
+      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature, boolean gms) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -135,6 +136,7 @@ public class AppModel {
     this.campaignUrl = campaignUrl;
     this.signature = signature;
     this.isMature = isMature;
+    this.gms = gms;
     this.loading = false;
     this.error = null;
   }
@@ -479,5 +481,9 @@ public class AppModel {
 
   public String getSignature() {
     return signature;
+  }
+
+  public boolean needsGms() {
+    return gms;
   }
 }

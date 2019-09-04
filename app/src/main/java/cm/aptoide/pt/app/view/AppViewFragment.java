@@ -97,6 +97,7 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -125,6 +126,7 @@ import rx.exceptions.OnErrorNotImplementedException;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.Subscriptions;
 
+import static cm.aptoide.pt.utils.GenericDialogs.EResponse.NO;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 /**
@@ -1174,6 +1176,18 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public void showConsentDialog() {
     consentDialogView.showConsentDialog();
+  }
+
+  @Override public Observable<Boolean> showGmsDialog() {
+    return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
+        "testing gms stuff")
+        .map(response -> (response.equals(NO)));
+  }
+
+  @Override public int needsGoogleServices() {
+    GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+    return apiAvailability.isGooglePlayServicesAvailable(getContext());
+
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
