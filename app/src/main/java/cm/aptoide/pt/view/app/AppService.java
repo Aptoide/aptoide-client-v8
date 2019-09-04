@@ -234,7 +234,9 @@ public class AppService {
                   app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
                   .getRating() == MATURE_APP_RATING, app.getFile()
                   .getSignature()
-                  .getSha1()));
+                  .getSha1(), needsGms(app.getFile()
+                  .getHardware()
+                  .getDependencies())));
         });
       }
 
@@ -249,7 +251,9 @@ public class AppService {
               app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
-              .getSha1());
+              .getSha1(), needsGms(app.getFile()
+              .getHardware()
+              .getDependencies()));
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
@@ -387,5 +391,15 @@ public class AppService {
         .flatMap(appsList -> mapListApps(appsList))
         .toSingle()
         .onErrorReturn(throwable -> createErrorAppsList(throwable));
+  }
+
+  private boolean needsGms(List<GetAppMeta.GetAppMetaFile.Hardware.Dependency> dependencies) {
+    for (GetAppMeta.GetAppMetaFile.Hardware.Dependency dependency : dependencies) {
+      if (dependency.getType()
+          .equals("GMS")) {
+        return true;
+      }
+    }
+    return false;
   }
 }

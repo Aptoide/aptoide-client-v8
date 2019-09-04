@@ -181,4 +181,8 @@ public interface AppViewView extends InstallAppView {
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 
   void showConsentDialog();
+
+  Observable<Boolean> showGmsDialog();
+
+  int needsGoogleServices();
 }
