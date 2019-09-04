@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesBottomSheetFragment;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -122,4 +123,6 @@ public interface FragmentComponent {
   void inject(EditorialListFragment editorialListFragment);
 
   void inject(SeeMoreAppcFragment seeMoreAppcFragment);
+
+  void inject(PlayServicesBottomSheetFragment playServicesBottomSheetFragment);
 }

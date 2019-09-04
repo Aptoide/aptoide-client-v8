@@ -52,6 +52,10 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesAppsProvider;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesBottomSheetFragment;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesManager;
+import cm.aptoide.pt.app.view.googleplayservices.PlayServicesPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
 import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
@@ -104,6 +108,7 @@ import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
@@ -568,5 +573,27 @@ import rx.subscriptions.CompositeSubscription;
     return new AppcPromotionNotificationStringProvider(fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_body));
+  }
+
+  @FragmentScope @Provides PlayServicesPresenter providesPlayServicesPresenter(
+      CrashReport crashReport, PlayServicesManager playServicesManager,
+      PlayServicesAppsProvider playServicesAppsProvider) {
+    return new PlayServicesPresenter((PlayServicesBottomSheetFragment) fragment, crashReport,
+        playServicesManager, playServicesAppsProvider);
+  }
+
+  @FragmentScope @Provides PlayServicesManager providesPlayServicesManager(
+      InstallManager installManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, InstalledRepository installedRepository,
+      DownloadAnalytics downloadAnalytics, NotificationAnalytics notificationAnalytics,
+      InstallAnalytics installAnalytics) {
+    return new PlayServicesManager(installManager, downloadFactory, downloadStateParser,
+        installedRepository, downloadAnalytics, notificationAnalytics, installAnalytics);
+  }
+
+  @FragmentScope @Provides PlayServicesAppsProvider providesPlayServicesAppsProvider(
+      InstalledRepository installedRepository, InstallManager installManager,
+      DownloadStateParser downloadStateParser) {
+    return new PlayServicesAppsProvider(installedRepository, installManager, downloadStateParser);
   }
 }
