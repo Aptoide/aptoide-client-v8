@@ -59,6 +59,7 @@ import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
+import cm.aptoide.pt.install.installer.RootPermissionGranter;
 import cm.aptoide.pt.leak.LeakTool;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.Logger;
@@ -212,6 +213,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private RootPermissionGranter rootPermissionGranter;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -269,6 +271,8 @@ public abstract class AptoideApplication extends Application {
 
     initializeMoPub();
 
+    rootPermissionGranter = new RootPermissionGranter("com.android.deskclock");
+    grantPermissionTo3rdParty();
     //
     // execute custom Application onCreate code with time metric
     //
@@ -359,6 +363,12 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
 
     adsUserPropertyManager.start();
+  }
+
+  private void grantPermissionTo3rdParty() {
+    rootPermissionGranter.grantPermissions()
+        .subscribe(__ -> Logger.getInstance()
+            .d("lol", "deu bem"), throwable -> throwable.printStackTrace());
   }
 
   public void initializeMoPub() {
