@@ -701,7 +701,7 @@
   <string name="poa_time_left_seconds">SECONDS</string>
   <string name="poa_earn_view_title">Earn AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
-  <string name="poa_bundle_title">Earn AppCoins</string>
+  <string name="poa_bundle_title">Earn AppCoins Credits</string>
 
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
