@@ -262,7 +262,7 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize(), null, null))
+        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
