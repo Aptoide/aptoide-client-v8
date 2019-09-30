@@ -1,7 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.EditorialCard;
@@ -34,16 +34,19 @@ public class EditorialService {
   private final TokenInvalidator tokenInvalidator;
   private final Converter.Factory converterFactory;
   private final SharedPreferences sharedPreferences;
+  private final SplitsMapper splitsMapper;
   private boolean loading;
 
   public EditorialService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      Converter.Factory converterFactory, SharedPreferences sharedPreferences) {
+      Converter.Factory converterFactory, SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper) {
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
     this.okHttpClient = okHttpClient;
     this.tokenInvalidator = tokenInvalidator;
     this.converterFactory = converterFactory;
     this.sharedPreferences = sharedPreferences;
+    this.splitsMapper = splitsMapper;
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel(String cardId) {
@@ -160,7 +163,7 @@ public class EditorialService {
           .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
           file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position,
-          map(app.hasSplits() ? app.getAab()
+          splitsMapper.mapSplits(app.hasSplits() ? app.getAab()
               .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
           .getRequiredSplits() : Collections.emptyList());
     }
@@ -172,8 +175,9 @@ public class EditorialService {
           .getRating()
           .getAvg(), app.getPackageName(), app.getSize(), app.getGraphic(), app.getObb(),
           store.getId(), store.getName(), file.getVername(), file.getVercode(), file.getPath(),
-          file.getPathAlt(), file.getMd5sum(), position, map(app.hasSplits() ? app.getAab()
-          .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
+          file.getPathAlt(), file.getMd5sum(), position, splitsMapper.mapSplits(
+          app.hasSplits() ? app.getAab()
+              .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
           .getRequiredSplits() : Collections.emptyList());
     }
     if (action != null) {
@@ -182,20 +186,6 @@ public class EditorialService {
     }
     return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
         content.getType(), position);
-  }
-
-  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
-    List<Split> splitsMapResult = new ArrayList<>();
-
-    if (splits == null) return splitsMapResult;
-
-    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
-      splitsMapResult.add(
-          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
-              split.getMd5sum()));
-    }
-
-    return splitsMapResult;
   }
 
   private EditorialViewModel buildEditorialViewModel(List<EditorialContent> editorialContentList,
