@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
-import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.store.view.top.TopAppListDisplayable;

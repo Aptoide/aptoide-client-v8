@@ -6,7 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
-import cm.aptoide.pt.home.RewardApp;
+import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.install.InstallManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +60,15 @@ public class RewardAppCoinsAppsRepository {
                 .getClicks()
                 .getClick(), app.getAppcoins()
             .getClicks()
-            .getDownload(), Float.parseFloat(campaign.getReward())));
+            .getInstall(), mapReward(campaign.getReward()), app.getGraphic()));
       }
     }
     return Observable.just(rewardAppsList);
+  }
+
+  private RewardApp.Reward mapReward(AppCoinsCampaign.Reward reward) {
+    AppCoinsCampaign.Fiat fiat = reward.getFiat();
+    return new RewardApp.Reward(reward.getAppc(),
+        new RewardApp.Fiat(fiat.getAmount(), fiat.getCurrency(), fiat.getSymbol()));
   }
 }

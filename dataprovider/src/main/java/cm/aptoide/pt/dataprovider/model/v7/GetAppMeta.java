@@ -76,7 +76,6 @@ public class GetAppMeta extends BaseV7Response {
     private Urls urls;
     private Stats stats;
     private Obb obb;
-    private Pay pay;
     private AppCoinsInfo appcoins;
     private Aab aab;
 
@@ -89,10 +88,6 @@ public class GetAppMeta extends BaseV7Response {
 
     public void setAge(Age age) {
       this.age = age;
-    }
-
-    public boolean isPaid() {
-      return (pay != null && pay.getPrice() > 0.0f);
     }
 
     public String getMd5() {
@@ -219,14 +214,6 @@ public class GetAppMeta extends BaseV7Response {
       this.obb = obb;
     }
 
-    public Pay getPay() {
-      return this.pay;
-    }
-
-    public void setPay(Pay pay) {
-      this.pay = pay;
-    }
-
     public int hashCode() {
       final int PRIME = 59;
       int result = 1;
@@ -260,8 +247,6 @@ public class GetAppMeta extends BaseV7Response {
       result = result * PRIME + ($stats == null ? 43 : $stats.hashCode());
       final Object $obb = this.getObb();
       result = result * PRIME + ($obb == null ? 43 : $obb.hashCode());
-      final Object $pay = this.getPay();
-      result = result * PRIME + ($pay == null ? 43 : $pay.hashCode());
       return result;
     }
 
@@ -321,9 +306,6 @@ public class GetAppMeta extends BaseV7Response {
       final Object this$obb = this.getObb();
       final Object other$obb = other.getObb();
       if (this$obb == null ? other$obb != null : !this$obb.equals(other$obb)) return false;
-      final Object this$pay = this.getPay();
-      final Object other$pay = other.getPay();
-      if (this$pay == null ? other$pay != null : !this$pay.equals(other$pay)) return false;
       return true;
     }
 
@@ -358,8 +340,6 @@ public class GetAppMeta extends BaseV7Response {
           + this.getStats()
           + ", obb="
           + this.getObb()
-          + ", pay="
-          + this.getPay()
           + ")";
     }
 
@@ -436,111 +416,6 @@ public class GetAppMeta extends BaseV7Response {
 
     public void setRating(int rating) {
       this.rating = rating;
-    }
-  }
-
-  public static class Pay {
-
-    private double price;
-    private String symbol;
-    private String currency;
-    private String status;
-
-    public Pay() {
-    }
-
-    public boolean isPaid() {
-      return "OK".equalsIgnoreCase(status);
-    }
-
-    public void setPaid() {
-      status = "OK";
-    }
-
-    public double getPrice() {
-      return this.price;
-    }
-
-    public void setPrice(double price) {
-      this.price = price;
-    }
-
-    public String getSymbol() {
-      return this.symbol;
-    }
-
-    public void setSymbol(String symbol) {
-      this.symbol = symbol;
-    }
-
-    public String getCurrency() {
-      return this.currency;
-    }
-
-    public void setCurrency(String currency) {
-      this.currency = currency;
-    }
-
-    public String getStatus() {
-      return this.status;
-    }
-
-    public void setStatus(String status) {
-      this.status = status;
-    }
-
-    protected boolean canEqual(Object other) {
-      return other instanceof Pay;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final long $price = Double.doubleToLongBits(this.getPrice());
-      result = result * PRIME + (int) ($price >>> 32 ^ $price);
-      final Object $symbol = this.getSymbol();
-      result = result * PRIME + ($symbol == null ? 43 : $symbol.hashCode());
-      final Object $currency = this.getCurrency();
-      result = result * PRIME + ($currency == null ? 43 : $currency.hashCode());
-      final Object $status = this.getStatus();
-      result = result * PRIME + ($status == null ? 43 : $status.hashCode());
-      return result;
-    }
-
-    public boolean equals(Object o) {
-      if (o == this) return true;
-      if (!(o instanceof Pay)) return false;
-      final Pay other = (Pay) o;
-      if (!other.canEqual((Object) this)) return false;
-      if (Double.compare(this.getPrice(), other.getPrice()) != 0) return false;
-      final Object this$symbol = this.getSymbol();
-      final Object other$symbol = other.getSymbol();
-      if (this$symbol == null ? other$symbol != null : !this$symbol.equals(other$symbol)) {
-        return false;
-      }
-      final Object this$currency = this.getCurrency();
-      final Object other$currency = other.getCurrency();
-      if (this$currency == null ? other$currency != null : !this$currency.equals(other$currency)) {
-        return false;
-      }
-      final Object this$status = this.getStatus();
-      final Object other$status = other.getStatus();
-      if (this$status == null ? other$status != null : !this$status.equals(other$status)) {
-        return false;
-      }
-      return true;
-    }
-
-    public String toString() {
-      return "GetAppMeta.Pay(price="
-          + this.getPrice()
-          + ", symbol="
-          + this.getSymbol()
-          + ", currency="
-          + this.getCurrency()
-          + ", status="
-          + this.getStatus()
-          + ")";
     }
   }
 

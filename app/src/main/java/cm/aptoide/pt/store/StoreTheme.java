@@ -367,4 +367,5 @@ public enum StoreTheme {
 
   public int getDatePickerStyle() {
     return datePickerStyle;
-  }}
+  }
+}

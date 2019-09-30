@@ -30,6 +30,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -153,6 +154,8 @@ public class DeepLinkManager {
       editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_INFO_VIEW)) {
       appcInfoDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_ADS)) {
+      appcAdsDeepLink();
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -172,6 +175,11 @@ public class DeepLinkManager {
 
   private void appcInfoDeepLink() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
+  }
+
+  private void appcAdsDeepLink() {
+    fragmentNavigator.navigateTo(
+        EarnAppcListFragment.Companion.newInstance("Earn AppCoins Credits", "appcoins-ads"), true);
   }
 
   private void editorialDeepLink(String cardId) {

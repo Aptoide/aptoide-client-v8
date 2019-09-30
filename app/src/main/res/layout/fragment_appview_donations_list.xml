@@ -26,6 +26,7 @@
         android:layout_gravity="center"
         android:visibility="visible"
         />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/donations_list"
         android:layout_width="match_parent"

@@ -6,7 +6,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
-import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -51,16 +50,13 @@ public class AppViewAnalytics {
   private final DownloadAnalytics downloadAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
-  private BillingAnalytics billingAnalytics;
   private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
-      StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-    this.billingAnalytics = billingAnalytics;
     this.storeAnalytics = storeAnalytics;
   }
 
@@ -331,7 +327,6 @@ public class AppViewAnalytics {
       case UPDATE:
         installType = InstallType.UPDATE;
         break;
-      case PAY:
       case MIGRATE:
       case OPEN:
         throw new IllegalStateException(
@@ -346,10 +341,6 @@ public class AppViewAnalytics {
 
   public void sendDownloadCancelEvent(String packageName) {
     downloadAnalytics.downloadInteractEvent(packageName, "cancel");
-  }
-
-  public void sendPaymentViewShowEvent() {
-    billingAnalytics.sendPaymentViewShowEvent();
   }
 
   public void sendStoreOpenEvent(Store store) {

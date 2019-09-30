@@ -9,7 +9,6 @@ import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -298,14 +297,12 @@ public class AppViewManager {
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
-      boolean hasAppc) {
+      int versionCode, String signature, long storeId, boolean hasAppc) {
     return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), isMigration), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+            downloadStateParser.parseDownloadType(install.getType(), isMigration),
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
   }
 
   public Completable pauseDownload(String md5) {
@@ -337,15 +334,6 @@ public class AppViewManager {
 
   public void handleAdsLogic(SearchAdResult searchAdResult) {
     adsManager.handleAdsLogic(searchAdResult);
-  }
-
-  public Completable appBought(String path) {
-    return getAppModel().doOnSuccess(appModel -> {
-      appModel.getPay()
-          .setPaid();
-      appModel.setPath(path);
-    })
-        .toCompletable();
   }
 
   public void sendAppOpenAnalytics(String packageName, String publisher, String badge,

@@ -53,7 +53,7 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "", null,
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
             null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
@@ -104,7 +104,7 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "", null,
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
             null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
@@ -156,7 +156,7 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false, "",
+            appStats, null, null, true, "uniqueName", false, false, bdsFlags, false, "",
             null,
             null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
@@ -209,7 +209,7 @@ class AppViewModelManagerTest {
         DetailedApp((-1).toLong(), "anyString", "packageName", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "", null,
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
             null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
@@ -261,7 +261,7 @@ class AppViewModelManagerTest {
         DetailedApp((-1).toLong(), "anyString", "packageName", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), "anyString", null, null, 1, null, null, store, null,
-            appStats, null, null, null, false, true, null, false, true, bdsFlags, false, "", null,
+            appStats, null, null, true, null, false, true, bdsFlags, false, "", null,
             null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
@@ -287,7 +287,7 @@ class AppViewModelManagerTest {
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
                 false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
     `when`(appCoinsManager.getAdvertising("packageName", 1)).thenReturn(
-        Single.just(AppCoinsAdvertisingModel("1", true)))
+        Single.just(AppCoinsAdvertisingModel(1.0, true)))
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
 

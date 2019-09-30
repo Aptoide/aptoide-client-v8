@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -15,13 +14,11 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
@@ -216,39 +213,15 @@ public class AppService {
       AppMedia appMedia = new AppMedia(media.getDescription(), media.getKeywords(), media.getNews(),
           mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
 
-      if (app.isPaid()) {
-        return getPaidApp(app.getId()).map(paidApp -> {
-          app.getPay()
-              .setStatus(paidApp.getPayment()
-                  .getStatus());
-          return new DetailedAppRequestResult(
-              new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-                  app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
-                  file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
-                  file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(),
-                  app.getMd5(), file.getPath(), file.getPathAlt(), file.getVercode(),
-                  file.getVername(), appDeveloper, app.getStore(), appMedia, appStats, app.getObb(),
-                  app.getPay(), app.getUrls()
-                  .getW(), app.isPaid(), paidApp.getPayment()
-                  .isPaid(), paidApp.getPath()
-                  .getStringPath(), paidApp.getPayment()
-                  .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-                  app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
-                  .getRating() == MATURE_APP_RATING, app.getFile()
-                  .getSignature()
-                  .getSha1()));
-        });
-      }
-
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
-              appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-              app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
+              appMedia, appStats, app.getObb(), app.getUrls()
+              .getW(), isLatestTrustedVersion(listAppVersions, file), uniqueName, app.hasBilling(),
+              app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
               .getSha1(), app.hasSplits() ? map(app.getAab()
@@ -272,20 +245,6 @@ public class AppService {
     }
 
     return splitsMapResult;
-  }
-
-  private Observable<PaidApp> getPaidApp(long appId) {
-    return GetApkInfoRequest.of(appId, bodyInterceptorV3, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, resources)
-        .observe(true)
-        .flatMap(response -> {
-          if (response != null && response.isOk() && response.isPaid()) {
-            return Observable.just(response);
-          } else {
-            return Observable.error(
-                new RepositoryItemNotFoundException("No paid app found for app id " + appId));
-          }
-        });
   }
 
   private boolean isLatestTrustedVersion(ListAppVersions listAppVersions, File file) {

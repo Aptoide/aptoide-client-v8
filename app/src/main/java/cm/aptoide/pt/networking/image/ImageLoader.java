@@ -5,6 +5,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -17,6 +19,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.palette.graphics.Palette;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -24,7 +27,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.NotificationTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -301,6 +306,29 @@ public class ImageLoader {
     return null;
   }
 
+  public void loadWithPalettePlaceholder(String url, BitmapDrawable paletteSrcImage,
+      @ColorInt int defaultColor, ImageView targetImageView) {
+    Palette.from(paletteSrcImage.getBitmap())
+        .maximumColorCount(6)
+        .generate(palette -> loadWithColorPlaceholder(url, palette.getDominantColor(defaultColor),
+            targetImageView));
+  }
+
+  public Target<Drawable> loadWithColorPlaceholder(String url, @ColorInt int colorInt,
+      ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .apply(getRequestOptions().placeholder(new ColorDrawable(colorInt)))
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   public Target<Drawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
@@ -427,6 +455,21 @@ public class ImageLoader {
               .transforms(new CenterCrop(), new RoundedCorners(radius)))
           .into(previewImage);
     }
+  }
+
+  public Target<Drawable> loadWithRoundCorners(String image, int radius, ImageView previewImage,
+      @DrawableRes int placeHolderDrawableId, RequestListener<Drawable> requestListener) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(image)
+          .apply(getRequestOptions().centerCrop()
+              .placeholder(placeHolderDrawableId)
+              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+          .listener(requestListener)
+          .into(previewImage);
+    }
+    return null;
   }
 
   public void loadIntoTarget(String imageUrl, SimpleTarget<Drawable> simpleTarget) {

@@ -7,11 +7,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt">
 
-  <permission
-      android:name="${applicationId}.permission.BILLING"
-      android:label="Make internal payments"
-      android:protectionLevel="normal" />
-
   <uses-feature
       android:name="android.hardware.camera"
       android:required="false" />
@@ -36,8 +31,7 @@
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-  <uses-sdk tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments,
-      com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy,
+  <uses-sdk tools:overrideLibrary="com.asf.appcoins.sdk.contractproxy,
       com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial,
       com.mopub.mobileads.native_video, com.mopub.mobileads.native_static,
@@ -195,37 +189,9 @@
           android:resource="@xml/file_paths" />
     </provider>
 
-    <service
-        android:name="cm.aptoide.pt.iab.InAppBillingService"
-        android:exported="true"
-        android:permission="${applicationId}.permission.BILLING">
-
-      <intent-filter>
-        <action android:name="${applicationId}.iab.action.BIND" />
-      </intent-filter>
-    </service>
-
     <meta-data
         android:name="cm.aptoide.pt.networking.image.GlideModifications"
         android:value="GlideModule" />
-
-    <activity
-        android:name=".billing.view.BillingActivity"
-        android:launchMode="singleInstance"
-        android:screenOrientation="sensor"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent">
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-            android:host="aptoide.com"
-            android:pathPrefix="/adyen"
-            android:scheme="billing" />
-      </intent-filter>
-    </activity>
 
     <activity
         android:name=".account.view.LoginActivity"

@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.store.view.ads.GetAdsFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
@@ -36,7 +36,7 @@ public class StoreTabFragmentChooser {
       case getAds:
         return GetAdsFragment.newInstance();
       case getAppCoinsAds:
-        return GetRewardAppCoinsAppsFragment.newInstance();
+        return new EarnAppcListFragment();
       case listStores:
         return ListStoresFragment.newInstance();
       default:

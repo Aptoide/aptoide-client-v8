@@ -7,6 +7,7 @@ package cm.aptoide.pt.link;
 public class AptoideInstall {
   private final String storeName;
   private final String packageName;
+  private final String uname;
   private final boolean showPopup;
   private final long appId;
 
@@ -14,6 +15,7 @@ public class AptoideInstall {
     this.appId = appId;
     this.packageName = packageName;
     this.showPopup = showPopup;
+    this.uname = null;
     storeName = null;
   }
 
@@ -21,7 +23,16 @@ public class AptoideInstall {
     this.storeName = storeName;
     this.packageName = packageName;
     this.showPopup = showPopup;
+    this.uname = null;
     appId = -1;
+  }
+
+  public AptoideInstall(String uname, String packageName) {
+    this.uname = uname;
+    this.packageName = packageName;
+    this.showPopup = false;
+    this.appId = -1;
+    this.storeName = null;
   }
 
   public String getStoreName() {
@@ -38,5 +49,9 @@ public class AptoideInstall {
 
   public long getAppId() {
     return appId;
+  }
+
+  public String getUname() {
+    return uname;
   }
 }

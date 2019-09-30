@@ -52,8 +52,6 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
-import cm.aptoide.pt.billing.view.login.PaymentLoginFlavorPresenter;
-import cm.aptoide.pt.billing.view.login.PaymentLoginView;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -79,10 +77,7 @@ import cm.aptoide.pt.editorialList.EditorialListPresenter;
 import cm.aptoide.pt.editorialList.EditorialListRepository;
 import cm.aptoide.pt.editorialList.EditorialListService;
 import cm.aptoide.pt.editorialList.EditorialListView;
-import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BundlesRepository;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
@@ -102,6 +97,13 @@ import cm.aptoide.pt.home.apps.SeeMoreAppcManager;
 import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.home.bundles.BundlesRepository;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -112,7 +114,6 @@ import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
@@ -128,6 +129,7 @@ import cm.aptoide.pt.promotions.PromotionsPreferencesManager;
 import cm.aptoide.pt.promotions.PromotionsPresenter;
 import cm.aptoide.pt.promotions.PromotionsView;
 import cm.aptoide.pt.reactions.ReactionsManager;
+import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -144,6 +146,8 @@ import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
 import cm.aptoide.pt.view.wizard.WizardView;
+import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletInstallManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
@@ -398,17 +402,6 @@ import rx.subscriptions.CompositeSubscription;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides PaymentLoginFlavorPresenter providesPaymentLoginPresenter(
-      AccountNavigator accountNavigator, AptoideAccountManager accountManager,
-      CrashReport crashReport, AccountErrorMapper accountErrorMapper,
-      ScreenOrientationManager screenOrientationManager, AccountAnalytics accountAnalytics) {
-    return new PaymentLoginFlavorPresenter((PaymentLoginView) fragment,
-        arguments.getInt(FragmentNavigator.REQUEST_CODE_EXTRA),
-        Arrays.asList("email", "user_friends"), accountNavigator, Arrays.asList("email"),
-        accountManager, crashReport, accountErrorMapper, AndroidSchedulers.mainThread(),
-        screenOrientationManager, accountAnalytics);
-  }
-
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
       CrashReport crashReport) {
@@ -568,5 +561,26 @@ import rx.subscriptions.CompositeSubscription;
     return new AppcPromotionNotificationStringProvider(fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_title), fragment.getContext()
         .getString(R.string.promo_update2appc_claim_notification_body));
+  }
+
+  @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
+      CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
+      AnalyticsManager analyticsManager, AppNavigator appNavigator,
+      EarnAppcListConfiguration earnAppcListConfiguration,
+      EarnAppcListManager earnAppcListManager) {
+    return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
+        appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
+        ((PermissionService) fragment.getContext()));
+  }
+
+  @FragmentScope @Provides EarnAppcListManager provideEarnAppcListManager(
+      WalletAppProvider walletAppProvider, WalletInstallManager walletInstallManager) {
+    return new EarnAppcListManager(walletAppProvider, walletInstallManager);
+  }
+
+  @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
+    return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
+        arguments.getString(BundleCons.TAG));
   }
 }

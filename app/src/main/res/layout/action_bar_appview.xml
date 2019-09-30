@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_bar_layout"
@@ -43,8 +42,7 @@
         android:minHeight="112dp"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        >
-    </androidx.appcompat.widget.Toolbar>
+        ></androidx.appcompat.widget.Toolbar>
     <cm.aptoide.pt.app.view.ToolbarArcBackground
         android:id="@+id/toolbar_background_arc"
         android:layout_width="match_parent"
