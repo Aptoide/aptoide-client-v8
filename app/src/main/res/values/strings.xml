@@ -82,7 +82,6 @@
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
   <string name="apkfy_install_message">Do you want to install this app?</string>
-  <string name="google_play_services_needed_body">This app requires Google Play Services, which is external to Aptoide. Do you want to install Google Play Services?</string>
 
   <!-- AppView Donations-->
   <string name="appview_title_donations_leaderboard">Top Donations</string>
@@ -728,4 +727,6 @@
   <string name="auto_update_popup_title">Update Aptoide!</string>
   <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
 
+  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
+  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
 </resources>
