@@ -1,8 +1,12 @@
 <network-security-config>
+  <base-config>
+    <trust-anchors>
+      <certificates src="@raw/vanilla_cert" />
+    </trust-anchors>
+  </base-config>
   <debug-overrides>
     <trust-anchors>
-      <!-- Trust user added CAs while debuggable only -->
-      <certificates src="user"/>
+      <certificates src="user" />
     </trust-anchors>
   </debug-overrides>
 </network-security-config>
