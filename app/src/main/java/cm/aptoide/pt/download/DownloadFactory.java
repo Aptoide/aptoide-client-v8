@@ -145,7 +145,7 @@ public class DownloadFactory {
     if (splits == null) return splitsResult;
     for (cm.aptoide.pt.database.realm.Split split : splits) {
       splitsResult.add(
-          new Split(split.getName(), split.getType(), split.getLink(), split.getFileSize(),
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFileSize(),
               split.getMd5()));
     }
     return splitsResult;

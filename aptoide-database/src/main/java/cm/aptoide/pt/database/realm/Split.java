@@ -5,7 +5,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class Split extends RealmObject {
   @PrimaryKey private String md5;
-  private String link;
+  private String path;
   private String type;
   private String name;
   private long fileSize;
@@ -13,9 +13,9 @@ public class Split extends RealmObject {
   public Split() {
   }
 
-  public Split(String md5, String link, String type, String name, long fileSize) {
+  public Split(String md5, String path, String type, String name, long fileSize) {
     this.md5 = md5;
-    this.link = link;
+    this.path = path;
     this.type = type;
     this.name = name;
     this.fileSize = fileSize;
@@ -29,12 +29,12 @@ public class Split extends RealmObject {
     this.md5 = md5;
   }
 
-  public String getLink() {
-    return link;
+  public String getPath() {
+    return path;
   }
 
-  public void setLink(String link) {
-    this.link = link;
+  public void setPath(String path) {
+    this.path = path;
   }
 
   public String getType() {
