@@ -48,8 +48,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
@@ -444,16 +442,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body CardPreviewRequest.Body request);
 
-    @POST("user/timeline/card/apps/get") Observable<RelatedAppResponse> getRelatedApps(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body RelatedAppRequest.Body request);
-
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
-        @Body PostDeleteRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
