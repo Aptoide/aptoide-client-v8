@@ -46,8 +46,7 @@ public class DownloadAppFile {
   }
 
   public int getFileType() {
-    return fileType.
-        getType();
+    return fileType.getType();
   }
 
   public String getFileName() {
