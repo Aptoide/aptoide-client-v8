@@ -1,7 +1,9 @@
 package cm.aptoide.pt.promotions;
 
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
+import java.util.List;
 
 public class PromotionViewApp {
 
@@ -22,6 +24,8 @@ public class PromotionViewApp {
   private final float appcValue;
   private final String signature;
   private final boolean hasAppc;
+  private final List<Split> splits;
+  private final List<String> requiredSplits;
   private DownloadModel downloadModel;
   private boolean isClaimed;
 
@@ -29,7 +33,7 @@ public class PromotionViewApp {
       String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
       String description, long size, float rating, int numberOfDownloads, String md5,
       int versionCode, String versionName, Obb obb, float appcValue, String signature,
-      boolean hasAppc) {
+      boolean hasAppc, List<Split> splits, List<String> requiredSplits) {
     this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
@@ -49,6 +53,8 @@ public class PromotionViewApp {
     this.appcValue = appcValue;
     this.signature = signature;
     this.hasAppc = hasAppc;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
   }
 
   public String getName() {
@@ -161,5 +167,13 @@ public class PromotionViewApp {
 
   public boolean hasAppc() {
     return hasAppc;
+  }
+
+  public List<Split> getSplits() {
+    return splits;
+  }
+
+  public List<String> getRequiredSplits() {
+    return requiredSplits;
   }
 }

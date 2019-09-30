@@ -2,6 +2,7 @@ package cm.aptoide.pt.promotions;
 
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -195,10 +196,30 @@ public class PromotionsService {
             .getSignature()
             .getSha1(), app.getApp()
             .hasAdvertising() || app.getApp()
-            .hasBilling()));
+            .hasBilling(), app.getApp()
+            .hasSplits() ? map(app.getApp()
+            .getAab()
+            .getSplits()) : Collections.emptyList(), app.getApp()
+            .hasSplits() ? app.getApp()
+            .getAab()
+            .getRequiredSplits() : Collections.emptyList()));
       }
     }
 
     return result;
+  }
+
+  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    List<Split> splitsMapResult = new ArrayList<>();
+
+    if (splits == null) return splitsMapResult;
+
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsMapResult.add(
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
+              split.getMd5sum()));
+    }
+
+    return splitsMapResult;
   }
 }
