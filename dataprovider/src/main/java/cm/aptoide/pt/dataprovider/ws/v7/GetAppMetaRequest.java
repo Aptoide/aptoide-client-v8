@@ -33,6 +33,6 @@ public class GetAppMetaRequest extends V7<GetAppMeta, BaseBody> {
 
   @Override
   protected Observable<GetAppMeta> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getAppMeta(bypassCache, url);
+    return interfaces.getAppMeta(bypassCache, url, true);
   }
 }

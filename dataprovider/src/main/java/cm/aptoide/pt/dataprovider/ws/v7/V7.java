@@ -353,9 +353,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/action/item/card/get/id={cardId}/aab={aab}") Observable<EditorialCard> getEditorial(
-        @Path(value = "cardId") String cardId, @Body BaseBody body,
-        @Path(value = "aab") boolean aab);
+    @POST("user/action/item/card/get/id={cardId}") Observable<EditorialCard> getEditorial(
+        @Path(value = "cardId") String cardId, @Body BaseBody body, @Query("aab") boolean aab);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
@@ -432,7 +431,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Path(value = "url", encoded = true) String url);
+        @Path(value = "url", encoded = true) String url, boolean showAabs);
 
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
@@ -478,10 +477,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body ClaimPromotionRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/promotions/promotion/get/limit={limit}/aab={aab}")
+    @POST("appcoins/promotions/promotion/get/limit={limit}")
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
-        @Path(value = "aab") boolean aab, @Body GetPromotionAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Body GetPromotionAppsRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("appcoins/promotions/packages/getPromotions")
     Observable<GetPackagePromotionsResponse> getPromotionsForPackage(
