@@ -12,6 +12,7 @@ import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.home.bundles.apps.RewardApp
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.promotions.WalletApp
+import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
 import cm.aptoide.pt.utils.GenericDialogs
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.earn_appcoins_wallet_install_layout.*
@@ -32,6 +33,19 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
   private var errorMessageSubscription: Subscription? = null
 
   private val oneDecimalFormatter = DecimalFormat("0.0")
+
+  companion object {
+    fun newInstance(title: String, tag: String): EarnAppcListFragment {
+      val fragment = EarnAppcListFragment()
+
+      val config = Bundle()
+      config.putString(StoreTabGridRecyclerFragment.BundleCons.TITLE, title)
+      config.putString(StoreTabGridRecyclerFragment.BundleCons.TAG, tag)
+
+      fragment.arguments = config
+      return fragment
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

@@ -138,7 +138,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
-  private static final int PAY_APP_REQUEST_CODE = 12;
   private static final int APPC_TRANSITION_MS = 1000;
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
