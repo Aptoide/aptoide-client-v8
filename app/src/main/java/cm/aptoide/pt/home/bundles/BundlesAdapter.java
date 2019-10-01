@@ -85,7 +85,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener,
-            captionBackgroundPainter);
+            captionBackgroundPainter, parent);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));

@@ -54,7 +54,7 @@ public class BundlesResponseMapper {
       try {
         if (widget.getType()
             .equals(Type.ACTION_ITEM)) {
-          type = actionItemTypeMapper(widget.getViewObject());
+          type = actionItemTypeMapper(widget);
         } else {
           type = bundleTypeMapper(widget.getType(), widget.getData());
         }
@@ -130,7 +130,7 @@ public class BundlesResponseMapper {
       AppBundle.BundleType type;
       if (widget.getType()
           .equals(Type.ACTION_ITEM)) {
-        type = actionItemTypeMapper(widget.getViewObject());
+        type = actionItemTypeMapper(widget);
       } else {
         type = bundleTypeMapper(widget.getType(), widget.getData());
       }
@@ -150,6 +150,8 @@ public class BundlesResponseMapper {
   }
 
   private ActionItem map(ActionItemResponse viewObject) {
+    if (viewObject == null) return null;
+
     ActionItemData item = viewObject.getDataList()
         .getList()
         .get(0);
@@ -160,7 +162,16 @@ public class BundlesResponseMapper {
         .getTheme() : "");
   }
 
-  private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
+  private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {
+    if (widget.getViewObject() == null) {
+      switch (widget.getTag()) {
+        case "action-item-curation-1":
+          return HomeBundle.BundleType.EDITORIAL;
+        case "action-item-card-wallet-ads-offer":
+          return HomeBundle.BundleType.WALLET_ADS_OFFER;
+      }
+    }
+    Object actionItemData = widget.getViewObject();
     if (!(actionItemData instanceof ActionItemResponse)) {
       return HomeBundle.BundleType.UNKNOWN;
     }

@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
+import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
@@ -34,6 +36,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
   private final String marketName;
   private final MoPubRecyclerAdapter moPubRecyclerAdapter;
   private boolean hasAdLoaded;
+
+  private final Skeleton skeleton;
 
   public AdsWithMoPubBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
@@ -74,6 +78,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);
+
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton, 9);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -81,30 +87,33 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
-    if(homeBundle.getContent() == null) return; // TODO
-
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, position);
-    appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
+    if (homeBundle.getContent() == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      appsInBundleAdapter.updateBundle(homeBundle, position);
+      appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
-    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+      appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
+      });
+
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+
+      if (!hasAdLoaded) {
+        hasAdLoaded = true;
+        moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
       }
-    });
-
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
-
-    if (!hasAdLoaded) {
-      hasAdLoaded = true;
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
     }
   }
 }

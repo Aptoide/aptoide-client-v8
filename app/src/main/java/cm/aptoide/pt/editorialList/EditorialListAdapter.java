@@ -31,10 +31,11 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
   @Override public EditorialBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == EDITORIAL_CARD) {
       return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter);
+          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter,
+          parent);
     } else {
       return new LoadingViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(LOADING, parent, false), uiEventsListener, captionBackgroundPainter);
+          .inflate(LOADING, parent, false), uiEventsListener, captionBackgroundPainter, parent);
     }
   }
 

@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
+import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
@@ -31,6 +33,9 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
   private final RecyclerView appsList;
   private final String marketName;
 
+  private final Skeleton skeleton;
+
+
   public AppsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, String marketName) {
     super(view);
@@ -53,6 +58,8 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
     appsList.setNestedScrollingEnabled(false);
+
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton, 9);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -60,11 +67,12 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AppBundle instance!");
     }
-    if(homeBundle.getContent() == null){
-      //TODO
+    bundleTitle.setText(
+        Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
+    if (homeBundle.getContent() == null) {
+      skeleton.showSkeleton();
     } else {
-      bundleTitle.setText(
-          Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
+      skeleton.showOriginal();
       appsInBundleAdapter.updateBundle(homeBundle, position);
       appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
       appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {

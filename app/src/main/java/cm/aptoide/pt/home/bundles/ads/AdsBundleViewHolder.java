@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
+import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
@@ -30,6 +32,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final RecyclerView appsList;
   private final String marketName;
 
+  private final Skeleton skeleton;
+
   public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
       String marketName) {
@@ -53,6 +57,7 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
     appsList.setNestedScrollingEnabled(false);
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton, 9);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -60,25 +65,28 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
       throw new IllegalStateException(this.getClass()
           .getName() + " is getting non AdBundle instance!");
     }
-    if(homeBundle.getContent() == null) return; // TODO
-
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, position);
-    appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
+    if (homeBundle.getContent() == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      appsInBundleAdapter.updateBundle(homeBundle, position);
+      appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
-    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+      appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
-      }
-    });
+      });
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+    }
   }
 }

@@ -1,10 +1,13 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
+import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
@@ -47,8 +50,10 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private TopReactionsPreview topReactionsPreview;
 
+  private Skeleton skeleton;
+
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter) {
+      CaptionBackgroundPainter captionBackgroundPainter, ViewGroup parent) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
@@ -62,18 +67,22 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.captionBackgroundPainter = captionBackgroundPainter;
     topReactionsPreview = new TopReactionsPreview();
     topReactionsPreview.initialReactionsSetup(view);
+
+    skeleton = SkeletonUtils.applySkeleton(view, parent, R.layout.editorial_action_item_skeleton);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
-    if(homeBundle.getContent() == null) return; // TODO
-
     ActionBundle actionBundle = (ActionBundle) homeBundle;
-    ActionItem actionItem = actionBundle.getActionItem();
-
-    setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
-        actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
-        actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor());
+    if (actionBundle.getActionItem() == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      ActionItem actionItem = actionBundle.getActionItem();
+      setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
+          actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
+          actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
+          actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor());
+    }
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
