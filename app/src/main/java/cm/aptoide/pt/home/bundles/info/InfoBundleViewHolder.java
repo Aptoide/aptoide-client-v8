@@ -33,19 +33,21 @@ public class InfoBundleViewHolder extends AppBundleViewHolder {
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
-    if(homeBundle.getContent() == null) return; // TODO
+    if (homeBundle.getContent() == null) {
 
-    ActionBundle actionBundle = (ActionBundle) homeBundle;
-    ActionItem actionItem = actionBundle.getActionItem();
-    ImageLoader.with(itemView.getContext())
-        .load(actionItem.getIcon(), icon);
-    knowMoreButton.setText(R.string.all_button_know_more);
-    dismissButton.setText(R.string.all_button_got_it);
-    title.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
-    message.setText(Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
-    knowMoreButton.setOnClickListener(view -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.APPC_KNOW_MORE)));
-    dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.DISMISS_BUNDLE)));
+    } else {
+      ActionBundle actionBundle = (ActionBundle) homeBundle;
+      ActionItem actionItem = actionBundle.getActionItem();
+      ImageLoader.with(itemView.getContext())
+          .load(actionItem.getIcon(), icon);
+      knowMoreButton.setText(R.string.all_button_know_more);
+      dismissButton.setText(R.string.all_button_got_it);
+      title.setText(Translator.translate(actionItem.getTitle(), itemView.getContext(), ""));
+      message.setText(Translator.translate(actionItem.getSubTitle(), itemView.getContext(), ""));
+      knowMoreButton.setOnClickListener(view -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.APPC_KNOW_MORE)));
+      dismissButton.setOnClickListener(itemView -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.DISMISS_BUNDLE)));
+    }
   }
 }
