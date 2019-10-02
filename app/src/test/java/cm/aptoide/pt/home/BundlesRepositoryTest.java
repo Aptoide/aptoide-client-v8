@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import rx.Observable;
 import rx.Single;
 
 import static org.mockito.Mockito.verify;
@@ -39,7 +40,7 @@ public class BundlesRepositoryTest {
   @Test public void loadHomeBundlesNoCacheTest() {
     //When the manager asks for bundles and there's no cached bundles, then it should call the bundleDataSource for more apps
     when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
-        Single.just(new HomeBundlesModel(true)));
+        Observable.just(new HomeBundlesModel(true)));
     bundlesRepository.loadHomeBundles();
     verify(bundleDataSource).loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY);
   }
@@ -78,7 +79,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadFreshHomeBundles(HOME_BUNDLE_KEY)).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Observable.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadFreshHomeBundles()
         .map(HomeBundlesModel::getList)
@@ -99,7 +100,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Observable.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadNextHomeBundles()
         .map(HomeBundlesModel::getList)
@@ -129,7 +130,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Observable.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadNextHomeBundles()
         .map(HomeBundlesModel::getList)
@@ -192,7 +193,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadNextBundleForEvent("url", 0, "title", 5)).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Single.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadNextBundles("title", "url")
         .map(HomeBundlesModel::getList)
@@ -222,7 +223,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadNextBundleForEvent("url", 0, "title", 5)).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Single.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadNextBundles("title", "url")
         .map(HomeBundlesModel::getList)
@@ -253,7 +254,7 @@ public class BundlesRepositoryTest {
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
     when(bundleDataSource.loadFreshBundleForEvent("url", "title")).thenReturn(
-        Single.just(new HomeBundlesModel(freshBundles, false, 0)));
+        Single.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
     bundlesRepository.loadFreshBundles("title", "url")
         .map(HomeBundlesModel::getList)
@@ -269,7 +270,7 @@ public class BundlesRepositoryTest {
   @Test public void loadABundleWithAnErrorTest() {
     //When the manager request new fresh bundles, then it should request bundles to the bundleDataSource and return a generic error
     when(bundleDataSource.loadFreshHomeBundles(HOME_BUNDLE_KEY)).thenReturn(
-        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
+        Observable.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
     //then it should return a model with a GenericError
     bundlesRepository.loadFreshHomeBundles()
         .map(HomeBundlesModel::getError)

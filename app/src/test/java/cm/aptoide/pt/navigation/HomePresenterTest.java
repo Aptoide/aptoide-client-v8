@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -113,7 +114,7 @@ public class HomePresenterTest {
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
-    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
+    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0, true);
     localTopAppsBundle = bundlesModel.getList()
         .get(1);
 
@@ -141,7 +142,7 @@ public class HomePresenterTest {
     presenter.onCreateLoadBundles();
     //When the user clicks the Home menu item
     //And loading of bundlesModel are requested
-    when(home.loadHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the progress indicator should be shown
@@ -158,7 +159,7 @@ public class HomePresenterTest {
     //When the loading of bundlesModel is requested
     //And an unexpected error occured
     when(home.loadHomeBundles()).thenReturn(
-        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
+        Observable.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
@@ -171,7 +172,7 @@ public class HomePresenterTest {
     //When the loading of bundlesModel is requested
     //And an unexpected error occured
     when(home.loadHomeBundles()).thenReturn(
-        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.NETWORK)));
+        Observable.just(new HomeBundlesModel(HomeBundlesModel.Error.NETWORK)));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
@@ -222,7 +223,7 @@ public class HomePresenterTest {
   @Test public void bottomReached_ShowNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleBottomReached();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
@@ -243,7 +244,7 @@ public class HomePresenterTest {
   @Test public void bottomReached_NoMoreBundlesAvailableToShow() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleBottomReached();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.hasMore()).thenReturn(false);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
@@ -259,7 +260,7 @@ public class HomePresenterTest {
   @Test public void pullToRefresh_GetFreshBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handlePullToRefresh();
-    when(home.loadFreshHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadFreshHomeBundles()).thenReturn(Observable.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     pullToRefreshEvent.onNext(null);
@@ -272,7 +273,7 @@ public class HomePresenterTest {
   @Test public void retryClicked_LoadNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleRetryClick();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     retryClickedEvent.onNext(null);

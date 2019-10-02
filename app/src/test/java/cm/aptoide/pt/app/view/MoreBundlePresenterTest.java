@@ -80,7 +80,7 @@ public class MoreBundlePresenterTest {
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
-    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
+    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0, true);
     localTopAppsBundle = bundlesModel.getList()
         .get(0);
 
