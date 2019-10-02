@@ -374,6 +374,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
       ArrayList<String> list = new ArrayList<String>();
       list.add(u.getLastPathSegment());
       return startWithRepo(list);
+    } else if (u.getPath() != null && u.getPath()
+        .contains("editorial")) {
+
+      String slug = u.getPath()
+          .split("/")[2];
+      return startEditorialFromSlug(slug);
     } else {
       String[] appName = u.getHost()
           .split("\\.");
@@ -397,6 +403,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
     }
     return null;
+  }
+
+  private Intent startEditorialFromSlug(String slug) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.SLUG, slug);
+    return intent;
   }
 
   private Intent dealWithImagesApoide(String uri) {
@@ -751,7 +764,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
-    public static final String OPEN_MODE = "openMode";
+    public static final String SLUG = "slug";
 
     //deep link query parameters
     public static final String ACTION = "action";

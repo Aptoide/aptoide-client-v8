@@ -53,8 +53,8 @@ public class EditorialService {
     if (loading) {
       return Single.just(new EditorialViewModel(true));
     }
-    return EditorialRequest.of(cardId, bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+    return EditorialRequest.ofWithCardId(cardId, bodyInterceptorPoolV7, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .doOnSubscribe(() -> loading = true)
         .doOnUnsubscribe(() -> loading = false)
@@ -62,6 +62,23 @@ public class EditorialService {
         .flatMap(editorialCard -> mapEditorial(editorialCard, cardId))
         .toSingle()
         .onErrorReturn(throwable -> createErrorEditorialModel(throwable));
+  }
+
+  public Single<EditorialViewModel> loadEditorialViewModelWithSlug(String slug) {
+    if (loading) {
+      return Single.just(new EditorialViewModel(true));
+    } else {
+      return EditorialRequest.ofWithSlug(slug, bodyInterceptorPoolV7, okHttpClient,
+          converterFactory, tokenInvalidator, sharedPreferences)
+          .observe()
+          .doOnSubscribe(() -> loading = true)
+          .doOnUnsubscribe(() -> loading = false)
+          .doOnTerminate(() -> loading = false)
+          .flatMap(editorialCard -> mapEditorial(editorialCard, editorialCard.getData()
+              .getId()))
+          .toSingle()
+          .onErrorReturn(throwable -> createErrorEditorialModel(throwable));
+    }
   }
 
   private EditorialViewModel createErrorEditorialModel(Throwable throwable) {
