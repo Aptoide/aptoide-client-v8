@@ -316,7 +316,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       boolean hasAppc, boolean isAppBundle) {
     String currentContext = navigationTracker.getViewName(true);
     editorsChoiceDownloadCompletedEvent(currentContext, md5, packageName, editorsBrickPosition,
-        installType, currentContext, action);
+        installType, currentContext, action, hasAppc, isAppBundle);
     pushNotificationDownloadEvent(currentContext, md5, packageName, installType, action,
         currentContext);
     if (!offerResponseStatus.equals(WalletAdsOfferManager.OfferResponseStatus.NO_ADS)) {
@@ -419,7 +419,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
 
   private void editorsChoiceDownloadCompletedEvent(String previousScreen, String id,
       String packageName, String editorsBrickPosition, InstallType installType, String context,
-      AnalyticsManager.Action action) {
+      AnalyticsManager.Action action, boolean hasAppc, boolean isAppBundle) {
     if (editorsBrickPosition != null && !editorsBrickPosition.isEmpty()) {
       HashMap<String, Object> map = new HashMap<>();
       map.put(PACKAGENAME, packageName);
@@ -427,6 +427,8 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
       map.put(PREVIOUS_CONTEXT, previousScreen);
       map.put(POSITION, editorsBrickPosition);
       map.put(TYPE, installType.name());
+      map.put(APPC, hasAppc);
+      map.put(APP_BUNDLE, isAppBundle);
       DownloadEvent downloadEvent =
           new DownloadEvent(EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, map, context, action);
       cache.put(id + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME, downloadEvent);
