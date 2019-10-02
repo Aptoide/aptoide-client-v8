@@ -196,7 +196,7 @@ public class AppsManager {
         download.hasSplits());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false, download.hasAppc());
+        false, download.hasAppc(), download.hasSplits());
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
@@ -208,7 +208,7 @@ public class AppsManager {
         download.hasSplits());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits());
   }
 
   private Origin getOrigin(int action) {

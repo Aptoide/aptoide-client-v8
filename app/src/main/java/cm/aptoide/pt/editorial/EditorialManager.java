@@ -92,7 +92,7 @@ public class EditorialManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits() );
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

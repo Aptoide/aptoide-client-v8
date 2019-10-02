@@ -157,7 +157,7 @@ public class PromotionsManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits());
   }
 
   public Completable pauseDownload(String md5) {

@@ -56,7 +56,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         AnalyticsManager.Action.INSTALL, AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE,
-        download.hasAppc())
+        download.hasAppc(), download.hasSplits())
 
   }
 
