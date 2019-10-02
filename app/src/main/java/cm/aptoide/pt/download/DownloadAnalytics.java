@@ -217,6 +217,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, download.getPackageName());
     app.put(APPC, download.hasAppc());
+    app.put(APP_BUNDLE, download.hasSplits());
     return app;
   }
 
