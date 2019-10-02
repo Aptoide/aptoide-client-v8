@@ -153,7 +153,7 @@ public class InstallAnalytics {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
-        hasAppc);
+        hasAppc, isAppBundle);
   }
 
   private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
@@ -209,7 +209,7 @@ public class InstallAnalytics {
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
         abTestingGroup, Collections.emptyList(), isMigration, hasAppc, isAppBundle);
     createInstallEvent(action, context, origin, packageName, versionCode, campaignId,
-        abTestingGroup, isMigration, hasAppc);
+        abTestingGroup, isMigration, hasAppc, isAppBundle);
   }
 
   public void uninstallStarted(String packageName, AnalyticsManager.Action action,
@@ -225,9 +225,10 @@ public class InstallAnalytics {
 
   private void createInstallEvent(AnalyticsManager.Action action, AppContext context, Origin origin,
       String packageName, int installingVersion, int campaignId, String abTestingGroup,
-      boolean isMigration, boolean hasAppc) {
+      boolean isMigration, boolean hasAppc, boolean isAppBundle) {
     Map<String, Object> data =
-        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc, isMigration);
+        getInstallEventsBaseBundle(packageName, campaignId, abTestingGroup, hasAppc, isMigration,
+            isAppBundle);
     if (isMigration) {
       data.put(ORIGIN, UPDATE_TO_APPC);
     } else {
@@ -239,11 +240,11 @@ public class InstallAnalytics {
 
   @NonNull
   private Map<String, Object> getInstallEventsBaseBundle(String packageName, int campaignId,
-      String abTestingGroup, boolean hasAppc, boolean isMigration) {
+      String abTestingGroup, boolean hasAppc, boolean isMigration, boolean isAppBundle) {
     ScreenTagHistory previousScreenTagHistory = navigationTracker.getPreviousScreen();
     ScreenTagHistory currentScreenTagHistory = navigationTracker.getCurrentScreen();
     Map<String, Object> data = new HashMap<>();
-    data.put(APP, createApp(packageName, hasAppc, isMigration));
+    data.put(APP, createApp(packageName, hasAppc, isMigration, isAppBundle));
     data.put(NETWORK, AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .toUpperCase());
     data.put(PREVIOUS_CONTEXT, previousScreenTagHistory.getFragment());
@@ -292,11 +293,13 @@ public class InstallAnalytics {
     return root;
   }
 
-  private Map<String, Object> createApp(String packageName, boolean hasAppc, boolean isMigration) {
+  private Map<String, Object> createApp(String packageName, boolean hasAppc, boolean isMigration,
+      boolean isAppBundle) {
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, packageName);
     app.put(APPC, hasAppc);
     app.put(MIGRATOR, isMigration);
+    app.put(APP_BUNDLE, isAppBundle);
     return app;
   }
 
