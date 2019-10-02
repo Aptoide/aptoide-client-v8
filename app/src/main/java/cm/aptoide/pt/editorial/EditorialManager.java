@@ -13,6 +13,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import cm.aptoide.pt.view.EditorialConfiguration;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -24,7 +25,7 @@ import rx.Single;
 public class EditorialManager {
 
   private final EditorialRepository editorialRepository;
-  private final String cardId;
+  private final EditorialConfiguration editorialConfiguration;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final NotificationAnalytics notificationAnalytics;
@@ -34,14 +35,15 @@ public class EditorialManager {
   private final MoPubAdsManager moPubAdsManager;
   private DownloadStateParser downloadStateParser;
 
-  public EditorialManager(EditorialRepository editorialRepository, String cardId,
-      InstallManager installManager, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
-      ReactionsManager reactionsManager, MoPubAdsManager moPubAdsManager) {
+  public EditorialManager(EditorialRepository editorialRepository,
+      EditorialConfiguration editorialConfiguration, InstallManager installManager,
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
+      MoPubAdsManager moPubAdsManager) {
 
     this.editorialRepository = editorialRepository;
-    this.cardId = cardId;
+    this.editorialConfiguration = editorialConfiguration;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.downloadStateParser = downloadStateParser;
@@ -53,7 +55,7 @@ public class EditorialManager {
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
-    return editorialRepository.loadEditorialViewModel(cardId);
+    return editorialRepository.loadEditorialViewModel(editorialConfiguration.getLoadSource());
   }
 
   public boolean shouldShowRootInstallWarningPopup() {

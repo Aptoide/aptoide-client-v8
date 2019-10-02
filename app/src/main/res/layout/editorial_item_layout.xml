@@ -116,7 +116,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible"
-        ></androidx.recyclerview.widget.RecyclerView>
+        />
   </FrameLayout>
 
   <TextSwitcher
