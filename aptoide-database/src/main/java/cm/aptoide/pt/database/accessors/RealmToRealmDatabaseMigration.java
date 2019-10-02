@@ -481,7 +481,7 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
       if (!update.hasField("splits")) {
         RealmObjectSchema splitsSchema = schema.create("Split")
             .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
-            .addField("link", String.class)
+            .addField("path", String.class)
             .addField("type", String.class)
             .addField("name", String.class)
             .addField("fileSize", long.class);
