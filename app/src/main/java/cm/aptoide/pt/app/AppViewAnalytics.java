@@ -294,13 +294,13 @@ public class AppViewAnalytics {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
-          download.hasAppc());
+          download.hasAppc(), download.hasSplits());
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
-          download.hasAppc());
+          download.hasAppc(), download.hasSplits());
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, false);
     }

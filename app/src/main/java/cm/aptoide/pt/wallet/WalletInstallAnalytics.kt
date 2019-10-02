@@ -37,11 +37,11 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.md5, download.packageName,
-          action, offerResponseStatus, false, download.hasAppc())
+          action, offerResponseStatus, false, download.hasAppc(), download.hasSplits())
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(download.md5, download.packageName, action,
-          offerResponseStatus)
+          offerResponseStatus, download.hasSplits())
     }
   }
 
