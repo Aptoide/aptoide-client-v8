@@ -6,8 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
-import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
@@ -34,7 +34,6 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
   private final String marketName;
 
   private final Skeleton skeleton;
-
 
   public AppsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, String marketName) {
@@ -72,9 +71,9 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
     if (homeBundle.getContent() == null) {
       skeleton.showSkeleton();
     } else {
-      skeleton.showOriginal();
       appsInBundleAdapter.updateBundle(homeBundle, position);
       appsInBundleAdapter.update((List<Application>) homeBundle.getContent());
+      skeleton.showOriginal();
       appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
         @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
           super.onScrolled(recyclerView, dx, dy);

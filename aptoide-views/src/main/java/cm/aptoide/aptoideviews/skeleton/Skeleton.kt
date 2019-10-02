@@ -1,4 +1,4 @@
-package cm.aptoide.aptoideviews.skeletonV2
+package cm.aptoide.aptoideviews.skeleton
 
 interface Skeleton {
   fun showOriginal()

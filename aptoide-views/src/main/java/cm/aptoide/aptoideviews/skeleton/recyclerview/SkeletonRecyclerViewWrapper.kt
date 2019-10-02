@@ -1,7 +1,8 @@
-package cm.aptoide.aptoideviews.skeletonV2.recyclerview
+package cm.aptoide.aptoideviews.skeleton.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
-import cm.aptoide.aptoideviews.skeletonV2.Skeleton
+import cm.aptoide.aptoideviews.skeleton.Skeleton
+
 
 internal class SkeletonRecyclerViewWrapper(private val recyclerView: RecyclerView,
                                            listItemLayoutResId: Int, itemCount: Int) :
@@ -14,7 +15,6 @@ internal class SkeletonRecyclerViewWrapper(private val recyclerView: RecyclerVie
     val state = recyclerView.layoutManager?.onSaveInstanceState()
     recyclerView.adapter = originalAdapter
     state?.let { recyclerView.layoutManager?.onRestoreInstanceState(it) }
-    recyclerView.startLayoutAnimation()
   }
 
   override fun showSkeleton() {

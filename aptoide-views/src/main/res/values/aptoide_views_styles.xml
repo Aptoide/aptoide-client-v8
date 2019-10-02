@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="SkeletonGroup">
-    <attr name="layout_skeleton_shape">
+  <declare-styleable name="SkeletonView">
+    <attr name="skeleton_shape">
       <enum name="rect" value="0" />
       <enum name="oval" value="1" />
     </attr>
-    <attr name="layout_skeleton_width" format="dimension|fraction"/>
-    <attr name="layout_skeleton_height" format="dimension|fraction"/>
-    <attr name="layout_skeleton_color" format="reference|color"/>
-    <attr name="layout_skeleton_border_color" format="reference|color"/>
-    <attr name="layout_skeleton_border_thickness" format="dimension"/>
-    <attr name="layout_skeleton_corner_radius" format="dimension"/>
+    <attr name="skeleton_color" format="reference|color" />
+    <attr name="skeleton_border_color" format="reference|color" />
+    <attr name="skeleton_border_thickness" format="dimension" />
+    <attr name="skeleton_corner_radius" format="dimension" />
   </declare-styleable>
 </resources>

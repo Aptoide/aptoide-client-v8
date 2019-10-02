@@ -6,8 +6,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
-import cm.aptoide.aptoideviews.skeletonV2.Skeleton;
-import cm.aptoide.aptoideviews.skeletonV2.SkeletonUtils;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
@@ -68,7 +68,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     topReactionsPreview = new TopReactionsPreview();
     topReactionsPreview.initialReactionsSetup(view);
 
-    skeleton = SkeletonUtils.applySkeleton(view, parent, R.layout.editorial_action_item_skeleton);
+    skeleton = SkeletonUtils.applySkeleton(editorialCard, view.findViewById(R.id.root_cardview),
+        R.layout.editorial_action_item_skeleton);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -139,6 +140,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
+    skeleton.showOriginal();
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
         curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),

@@ -1,55 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="240dp"
-  android:layout_marginStart="8dp"
-  android:layout_marginLeft="8dp"
-  android:layout_marginTop="15dp"
-  android:layout_marginEnd="8dp"
-  android:layout_marginRight="8dp"
-  android:layout_marginBottom="5dp"
-  app:cardCornerRadius="4dp">
+  android:layout_height="match_parent">
+
+
+  <cm.aptoide.aptoideviews.skeleton.SkeletonView
+    android:id="@+id/background_image_sk"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
   <RelativeLayout
-    android:id="@+id/editorial_card"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="40dp"
+    android:layout_alignBottom="@id/background_image_sk"
+    android:background="@color/white"
+    android:paddingTop="7dp"
+    android:paddingBottom="2dp">
 
-    <View
-      android:id="@+id/background_image"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:adjustViewBounds="true"
-      android:background="#edeef2"
-      android:scaleType="centerCrop" />
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/sk1"
+      android:layout_width="32dp"
+      android:layout_height="24dp"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="16dp"
+      android:layout_marginLeft="16dp"
+      app:skeleton_corner_radius="12dp" />
 
-    <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="40dp"
-      android:layout_alignBottom="@id/background_image"
-      android:background="@color/white"
-      android:paddingTop="7dp"
-      android:paddingBottom="2dp">
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:layout_width="23dp"
+      android:layout_height="23dp"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="-10dp"
+      android:layout_toRightOf="@id/sk3"
+      android:cropToPadding="true"
+      app:skeleton_border_thickness="2dp"
+      app:skeleton_corner_radius="12dp" />
 
-      <View
-        android:layout_width="120dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="#edeef2" />
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/sk3"
+      android:layout_width="23dp"
+      android:layout_height="23dp"
+      android:layout_centerVertical="true"
+      android:layout_marginLeft="-10dp"
+      android:layout_toRightOf="@id/sk2"
+      app:skeleton_border_thickness="2dp"
+      app:skeleton_corner_radius="12dp" />
 
-      <View
-        android:layout_width="82dp"
-        android:layout_height="19dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="#edeef2" />
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/sk2"
+      android:layout_width="23dp"
+      android:layout_height="23dp"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="9dp"
+      android:layout_marginLeft="9dp"
+      android:layout_toRightOf="@id/sk1"
+      app:skeleton_border_thickness="2dp"
+      app:skeleton_corner_radius="12dp" />
 
-    </RelativeLayout>
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:layout_width="82dp"
+      android:layout_height="19dp"
+      android:layout_alignParentEnd="true"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      app:skeleton_corner_radius="2dp" />
+
   </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</RelativeLayout>

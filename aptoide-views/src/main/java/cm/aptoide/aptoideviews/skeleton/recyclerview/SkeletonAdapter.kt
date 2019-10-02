@@ -1,4 +1,4 @@
-package cm.aptoide.aptoideviews.skeletonV2.recyclerview
+package cm.aptoide.aptoideviews.skeleton.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

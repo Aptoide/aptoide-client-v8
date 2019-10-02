@@ -340,12 +340,15 @@ public class HomePresenter implements Presenter {
     return home.shouldLoadNativeAd()
         .toObservable()
         .observeOn(viewScheduler)
-        .doOnNext(showNatives -> view.setAdsTest(showNatives));
+        .doOnNext(showNatives -> view.setAdsTest(showNatives))
+        .onErrorReturn(__ -> {
+          view.setAdsTest(false);
+          return false;
+        });
   }
 
   private Observable<HomeBundlesModel> loadHome() {
-    return Observable.mergeDelayError(showNativeAds(), home.loadHomeBundles())
-        .filter(obj -> obj instanceof HomeBundlesModel)
+    return showNativeAds().flatMap(__ -> home.loadHomeBundles())
         .cast(HomeBundlesModel.class)
         .observeOn(viewScheduler)
         .doOnNext(view::showBundlesSkeleton)

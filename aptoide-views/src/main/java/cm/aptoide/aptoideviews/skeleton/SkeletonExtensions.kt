@@ -1,12 +1,12 @@
 @file:JvmName("SkeletonUtils")
 
-package cm.aptoide.aptoideviews.skeletonV2
+package cm.aptoide.aptoideviews.skeleton
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import cm.aptoide.aptoideviews.skeletonV2.recyclerview.SkeletonRecyclerViewWrapper
+import cm.aptoide.aptoideviews.skeleton.recyclerview.SkeletonRecyclerViewWrapper
 
 @JvmOverloads
 fun RecyclerView.applySkeleton(
@@ -17,5 +17,6 @@ fun RecyclerView.applySkeleton(
 @JvmOverloads
 fun View.applySkeleton(
     parent: ViewGroup,
-    @LayoutRes skeletonLayoutResId: Int): Skeleton = SkeletonViewWrapper(this, parent,
+    @LayoutRes skeletonLayoutResId: Int): Skeleton = SkeletonViewWrapper(
+    this, parent,
     skeletonLayoutResId)
