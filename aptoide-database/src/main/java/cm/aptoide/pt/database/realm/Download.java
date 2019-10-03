@@ -223,6 +223,15 @@ public class Download extends RealmObject {
     this.size = size;
   }
 
+  public boolean hasSplits() {
+    for (FileToDownload fileToDownload : filesToDownload) {
+      if (fileToDownload.getFileType() == FileToDownload.SPLIT) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @IntDef({
       INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN,
       STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE

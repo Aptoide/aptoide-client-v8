@@ -288,7 +288,7 @@ public class AppViewManager {
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
