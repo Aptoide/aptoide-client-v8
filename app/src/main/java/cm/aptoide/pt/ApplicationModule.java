@@ -43,6 +43,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
@@ -1342,9 +1343,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides PromotionsService providesPromotionsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper) {
     return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences);
+        converterFactory, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
@@ -1494,14 +1496,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppService providesAppService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("defaultInterceptorV3")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("defaultInterceptorV3") BodyInterceptor<BaseBody> bodyInterceptorV3,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
+      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper) {
 
     return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, bodyInterceptorV3,
         okHttpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-        application.getResources());
+        application.getResources(), splitsMapper);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -1697,9 +1698,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides EditorialService providesEditorialService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper) {
     return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences);
+        converterFactory, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides DonationsService providesDonationsService(
@@ -1930,5 +1932,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PreferencesPersister preferencesPersister) {
     return new AptoideMd5Manager(preferencesPersister, application.getPackageManager(),
         application.getPackageName(), BuildConfig.VERSION_CODE);
+  }
+
+  @Singleton @Provides SplitsMapper providesSplitsMapper() {
+    return new SplitsMapper();
   }
 }

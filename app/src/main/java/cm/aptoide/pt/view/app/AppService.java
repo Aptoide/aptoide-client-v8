@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.app;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -21,6 +22,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -41,6 +43,7 @@ public class AppService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
+  private final SplitsMapper splitsMapper;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
   private boolean loadingAppcSimilarApps;
@@ -49,7 +52,8 @@ public class AppService {
       BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      SplitsMapper splitsMapper) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -58,6 +62,7 @@ public class AppService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
+    this.splitsMapper = splitsMapper;
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
@@ -222,7 +227,9 @@ public class AppService {
               app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
-              .getSha1());
+              .getSha1(), app.hasSplits() ? splitsMapper.mapSplits(app.getAab()
+              .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
+              .getRequiredSplits() : Collections.emptyList());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

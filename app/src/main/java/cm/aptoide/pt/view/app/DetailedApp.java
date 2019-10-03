@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.app;
 
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -37,6 +38,8 @@ public class DetailedApp {
   private final String webUrls;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
+  private final List<Split> splits;
+  private final List<String> requiredSplits;
   private String path;
   private long id;
   private boolean hasBilling;
@@ -51,7 +54,8 @@ public class DetailedApp {
       long fileSize, String md5, String path, String pathAlt, int versionCode, String versionName,
       AppDeveloper appDeveloper, Store store, AppMedia media, AppStats stats, Obb obb,
       String webUrls, boolean isLatestTrustedVersion, String uniqueName, boolean hasBilling,
-      boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature) {
+      boolean hasAdvertising, List<String> bdsFlags, boolean isMature, String signature,
+      List<Split> splits, List<String> requiredSplits) {
 
     this.id = id;
     this.name = name;
@@ -83,6 +87,8 @@ public class DetailedApp {
     this.hasAdvertising = hasAdvertising;
     this.bdsFlags = bdsFlags;
     this.isMature = isMature;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
     this.signature = signature;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
@@ -230,5 +236,13 @@ public class DetailedApp {
 
   public String getSignature() {
     return signature;
+  }
+
+  public List<Split> getSplits() {
+    return this.splits;
+  }
+
+  public List<String> getRequiredSplits() {
+    return this.requiredSplits;
   }
 }

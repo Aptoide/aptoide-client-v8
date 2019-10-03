@@ -48,9 +48,7 @@ public class DownloadModel {
   }
 
   public boolean isDownloadable() {
-    return action.equals(INSTALL)
-        || action.equals(UPDATE)
-        || action.equals(DOWNGRADE);
+    return action.equals(INSTALL) || action.equals(UPDATE) || action.equals(DOWNGRADE);
   }
 
   public enum Error {

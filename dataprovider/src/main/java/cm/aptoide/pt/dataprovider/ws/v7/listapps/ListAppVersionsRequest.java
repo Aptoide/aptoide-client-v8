@@ -51,7 +51,7 @@ public class ListAppVersionsRequest extends V7<ListAppVersions, ListAppVersionsR
 
   @Override protected Observable<ListAppVersions> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listAppVersions(body, bypassCache);
+    return interfaces.listAppVersions(body, bypassCache, true);
   }
 
   public static class Body extends BaseBodyWithApp implements Endless {

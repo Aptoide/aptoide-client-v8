@@ -59,8 +59,8 @@ public class EditorialRequest extends V7<EditorialCard, BaseBody> {
   @Override protected Observable<EditorialCard> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     if (!"".equals(slug)) {
-      return interfaces.getEditorialFromSlug(slug, body);
+      return interfaces.getEditorialFromSlug(slug, body, true);
     }
-    return interfaces.getEditorialFromCardId(cardId, body);
+    return interfaces.getEditorialFromCardId(cardId, body, true);
   }
 }

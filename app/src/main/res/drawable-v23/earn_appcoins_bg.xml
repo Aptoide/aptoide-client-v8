@@ -2,18 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-  <item
-      android:drawable="@drawable/appc_gradient"/>
+  <item android:drawable="@drawable/appc_gradient" />
   <item
       android:drawable="@drawable/ic_earn_appcoins_figures1"
       android:gravity="left|top"
       android:left="14dp"
-      android:top="11dp"
-      />
+      android:top="11dp" />
   <item
       android:drawable="@drawable/ic_earn_appcoins_figures2"
       android:gravity="right|top"
       android:right="11dp"
-      android:top="25dp"
-      />
+      android:top="25dp" />
 </layer-list>
