@@ -256,5 +256,6 @@ public class GenericDialogs {
     /**
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
-    CANCEL,}
+    CANCEL,
+  }
 }

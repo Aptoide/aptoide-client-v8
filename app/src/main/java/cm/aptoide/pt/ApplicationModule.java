@@ -43,6 +43,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
 import cm.aptoide.analytics.implementation.utils.AnalyticsEventParametersNormalizer;
+import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
@@ -100,7 +101,6 @@ import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.appview.PreferencesPersister;
 import cm.aptoide.pt.autoupdate.Service;
-import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.blacklist.BlacklistPersistence;
 import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
@@ -144,7 +144,6 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.OemidProvider;
-import cm.aptoide.pt.download.PaidAppsDownloadInterceptor;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
@@ -159,15 +158,15 @@ import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
-import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.BannerRepository;
-import cm.aptoide.pt.home.BundleDataSource;
-import cm.aptoide.pt.home.BundlesRepository;
-import cm.aptoide.pt.home.BundlesResponseMapper;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
-import cm.aptoide.pt.home.RemoteBundleDataSource;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.home.bundles.BundleDataSource;
+import cm.aptoide.pt.home.bundles.BundlesRepository;
+import cm.aptoide.pt.home.bundles.BundlesResponseMapper;
+import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallEvents;
@@ -421,7 +420,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     final OkHttpClient.Builder httpClientBuilder =
         new OkHttpClient.Builder().addInterceptor(userAgentInterceptor)
-            .addInterceptor(new PaidAppsDownloadInterceptor(authenticationPersistence))
             .addInterceptor(new DownloadMirrorEventInterceptor(downloadAnalytics, installAnalytics))
             .connectTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(20, TimeUnit.SECONDS)
@@ -926,8 +924,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
-        aptoidePackage, qManager, Cdn.POOL, sharedPreferences,
-        resources, BuildConfig.VERSION_CODE);
+        aptoidePackage, qManager, Cdn.POOL, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("multipart") MultipartBodyInterceptor provideMultipartBodyInterceptor(
@@ -950,8 +947,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new BodyInterceptorV7(idsRepository, authenticationPersistence, aptoideMd5Manager,
-        aptoidePackage, qManager, Cdn.WEB, sharedPreferences,
-        resources, BuildConfig.VERSION_CODE);
+        aptoidePackage, qManager, Cdn.WEB, sharedPreferences, resources, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides @Named("analytics-interceptor")
@@ -960,8 +956,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, Resources resources, QManager qManager,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
     return new AnalyticsBodyInterceptorV7(idsRepository, authenticationPersistence,
-        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE,
-        qManager, sharedPreferences);
+        aptoideMd5Manager, aptoidePackage, resources, BuildConfig.VERSION_CODE, qManager,
+        sharedPreferences);
   }
 
   @Singleton @Provides QManager provideQManager(
@@ -1107,9 +1103,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NetworkOperatorManager networkOperatorManager,
       AuthenticationPersistence authenticationPersistence,
       @Named("aptoidePackage") String aptoidePackage, AptoideMd5Manager aptoideMd5Manager) {
-    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage,
-        qManager, defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON,
-        Build.VERSION.SDK_INT, networkOperatorManager, authenticationPersistence);
+    return new BodyInterceptorV3(idsRepository, aptoideMd5Manager, aptoidePackage, qManager,
+        defaultSharedPreferences, BodyInterceptorV3.RESPONSE_MODE_JSON, Build.VERSION.SDK_INT,
+        networkOperatorManager, authenticationPersistence);
   }
 
   @Singleton @Provides NetworkOperatorManager providesNetworkOperatorManager(
@@ -1347,9 +1343,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides PromotionsService providesPromotionsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences) {
+      Converter.Factory converterFactory, @Named("default") SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper) {
     return new PromotionsService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences);
+        converterFactory, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides WalletService.ServiceV7 providesWalletServiceV8(
@@ -1499,14 +1496,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppService providesAppService(
       StoreCredentialsProvider storeCredentialsProvider, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      @Named("defaultInterceptorV3")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
+      @Named("defaultInterceptorV3") BodyInterceptor<BaseBody> bodyInterceptorV3,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences) {
+      @Named("default") SharedPreferences sharedPreferences, SplitsMapper splitsMapper) {
 
     return new AppService(storeCredentialsProvider, bodyInterceptorPoolV7, bodyInterceptorV3,
         okHttpClient, WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences,
-        application.getResources());
+        application.getResources(), splitsMapper);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -1605,10 +1601,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
-      StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        billingAnalytics, storeAnalytics);
+        storeAnalytics);
   }
 
   @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
@@ -1637,11 +1632,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
         ((AptoideApplication) application.getApplicationContext()).getDatabase(),
         StoredMinimalAd.class), new MinimalAdMapper());
-  }
-
-  @Singleton @Provides BillingAnalytics providesBillingAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new BillingAnalytics(BuildConfig.APPLICATION_ID, analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
@@ -1708,9 +1698,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides EditorialService providesEditorialService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper) {
     return new EditorialService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
-        converterFactory, sharedPreferences);
+        converterFactory, sharedPreferences, splitsMapper);
   }
 
   @Singleton @Provides DonationsService providesDonationsService(
@@ -1807,13 +1798,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AccountAnalytics.LOGIN_SIGN_UP_START_SCREEN, AccountAnalytics.CREATE_USER_PROFILE,
         AccountAnalytics.PROFILE_SETTINGS, AccountAnalytics.ENTRY,
         DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
-        BillingAnalytics.PAYMENT_AUTH, BillingAnalytics.PAYMENT_LOGIN,
-        BillingAnalytics.PAYMENT_POPUP, AppShortcutsAnalytics.APPS_SHORTCUTS,
-        AccountAnalytics.CREATE_YOUR_STORE, DeepLinkAnalytics.FACEBOOK_APP_LAUNCH,
-        AppViewAnalytics.CLICK_INSTALL, BillingAnalytics.PAYMENT_AUTH,
-        BillingAnalytics.PAYMENT_LOGIN, BillingAnalytics.PAYMENT_POPUP, HomeAnalytics.HOME_INTERACT,
-        HomeAnalytics.CURATION_CARD_CLICK, HomeAnalytics.CURATION_CARD_IMPRESSION,
-        HomeAnalytics.HOME_CHIP_INTERACT, AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
+        AppShortcutsAnalytics.APPS_SHORTCUTS, AccountAnalytics.CREATE_YOUR_STORE,
+        DeepLinkAnalytics.FACEBOOK_APP_LAUNCH, AppViewAnalytics.CLICK_INSTALL,
+        HomeAnalytics.HOME_INTERACT, HomeAnalytics.CURATION_CARD_CLICK,
+        HomeAnalytics.CURATION_CARD_IMPRESSION, HomeAnalytics.HOME_CHIP_INTERACT,
+        AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_CLICK,
         EditorialListAnalytics.EDITORIAL_BN_CURATION_CARD_IMPRESSION,
         AccountAnalytics.PROMOTE_APTOIDE_EVENT_NAME,
@@ -1943,5 +1932,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PreferencesPersister preferencesPersister) {
     return new AptoideMd5Manager(preferencesPersister, application.getPackageManager(),
         application.getPackageName(), BuildConfig.VERSION_CODE);
+  }
+
+  @Singleton @Provides SplitsMapper providesSplitsMapper() {
+    return new SplitsMapper();
   }
 }

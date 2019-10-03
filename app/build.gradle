@@ -207,19 +207,11 @@ android {
     variant.buildConfigField "String", "SIGNATURE_UPLOADER",
         "\"" + project.SIGNATURE_UPLOADER + "\""
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
-    variant.buildConfigField "String", "DEFAULT_PAYMENT_SERVICE_TYPE",
-        "\"" + project.DEFAULT_PAYMENT_SERVICE_TYPE + "\""
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
-    variant.buildConfigField "int", "PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_AUTHORIZATION_SYNC_INTERVAL_MILLIS
-    variant.buildConfigField "int", "PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS",
-        project.PAYMENT_TRANSACTION_SYNC_INTERVAL_MILLIS
     variant.buildConfigField "int", "REALM_SCHEMA_VERSION",
         project.REALM_SCHEMA_VERSION
     variant.buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
-    variant.buildConfigField "int", "IN_BILLING_SUPPORTED_API_VERSION",
-        project.IN_BILLING_SUPPORTED_API_VERSION
     variant.buildConfigField "int", "ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS",
         project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
     variant.buildConfigField "int", "ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS",
@@ -259,16 +251,6 @@ android {
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + "default" + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + "Aptoide" + "\""
-    }
-
-    if (flavors[1].name.contains('internal')) {
-      variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_SANDBOX + "\""
-      variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_SANDBOX_KEY + "\""
-    } else {
-      variant.buildConfigField "String", "PAYPAL_ENVIRONMENT",
-          "\"" + project.PAYPAL_ENVIRONMENT_LIVE + "\""
-      variant.buildConfigField "String", "PAYPAL_KEY", "\"" + project.PAYPAL_PRODUCTION_KEY + "\""
     }
 
     //flurry
@@ -449,11 +431,6 @@ dependencies {
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
   implementation "com.squareup.picasso:picasso:${PICASSO_VERSION}"
 
-  // paypal SDK
-  implementation("com.paypal.sdk:paypal-android-sdk:${PAYPAL_SDK}") {
-    exclude group: 'io.card'
-  }
-
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 
@@ -494,10 +471,6 @@ dependencies {
   implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}")
 
   annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
-
-  implementation "com.adyen.checkout:core:${ADYEN_VERSION}"
-  implementation "com.adyen.checkout:ui:${ADYEN_VERSION}"
-  implementation "com.braintreepayments:card-form:${CARD_FORM_VERSION}"
 
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
 

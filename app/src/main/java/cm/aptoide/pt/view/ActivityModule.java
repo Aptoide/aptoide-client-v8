@@ -348,10 +348,11 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
-      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
+      WalletInstallConfiguration configuration, WalletInstallNavigator walletInstallNavigator,
+      WalletInstallManager walletInstallManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
         walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
-        AndroidSchedulers.mainThread(), Schedulers.io());
+        AndroidSchedulers.mainThread(), Schedulers.io(), configuration);
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
@@ -360,14 +361,13 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
-      WalletInstallConfiguration configuration, InstallManager installManager,
-      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
-      MoPubAdsManager moPubAdsManager, WalletInstallAnalytics walletInstallAnalytics,
-      InstalledRepository installedRepository, WalletAppProvider walletAppProvider,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
-    return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
-        downloadFactory, downloadStateParser, moPubAdsManager, walletInstallAnalytics,
-        installedRepository, walletAppProvider, appInstallerStatusReceiver);
+      InstallManager installManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
+      WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository,
+      WalletAppProvider walletAppProvider, AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new WalletInstallManager(activity.getPackageManager(), installManager, downloadFactory,
+        downloadStateParser, moPubAdsManager, walletInstallAnalytics, installedRepository,
+        walletAppProvider, appInstallerStatusReceiver);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(

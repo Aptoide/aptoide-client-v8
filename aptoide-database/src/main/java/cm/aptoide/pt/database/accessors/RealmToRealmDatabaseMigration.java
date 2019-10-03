@@ -472,11 +472,16 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     }
 
     if (oldVersion == 8102) {
+      realm.delete("RealmAuthorization");
+      oldVersion++;
+    }
+
+    if (oldVersion == 8103) {
       RealmObjectSchema update = schema.get("Update");
       if (!update.hasField("splits")) {
         RealmObjectSchema splitsSchema = schema.create("Split")
             .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
-            .addField("link", String.class)
+            .addField("path", String.class)
             .addField("type", String.class)
             .addField("name", String.class)
             .addField("fileSize", long.class);

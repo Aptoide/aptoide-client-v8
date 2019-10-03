@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.home.AdHomeEvent;
-import cm.aptoide.pt.home.AppHomeEvent;
-import cm.aptoide.pt.home.HomeBundle;
-import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Observable;

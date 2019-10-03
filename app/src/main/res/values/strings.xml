@@ -493,27 +493,8 @@
   <string name="list_store_apps_fragment_title">Store Apps</string>
 
   <!-- Payments -->
-  <string name="buy">buy</string>
   <string name="cancel">Cancel</string>
-  <string name="no_payments_available">No payments available.</string>
-
-  <string name="iab_title_payment_methods">Payment methods</string>
-  <string name="iab_title_add_payment_method">Add payment method</string>
-  <string name="iab_title_add_card">Add card</string>
-  <string name="iab_title_purchase">Purchase</string>
-  <string name="iab_title_delete">Delete</string>
   <string name="iab_button_next">Next</string>
-  <string name="iab_button_ok">OK</string>
-  <string name="iab_message_cvv">The CVV is the three-number code that appears in the signature bar on the back of your card.</string>
-  <string name="iab_title_payment_product_name">You\'re purchasing</string>
-  <string name="iab_title_price">Price</string>
-  <string name="iab_title_payment_method">Payment method</string>
-  <string name="iab_button_change">Change</string>
-  <string name="iab_button_buy">Buy</string>
-  <string name="iab_button_done">Done</string>
-  <string name="iab_button_retry">Retry</string>
-  <string name="iab_message_error_general">The purchase couldn\'t be completed</string>
-  <string name="iab_message_error_card">Provide your card information</string>
 
   <!--Strings for shortcuts-->
   <string name="shortcut_button_search">Search</string>
@@ -711,7 +692,7 @@
   <string name="poa_home_card_title">Earn AppCoins Credits</string>
   <string name="poa_home_card_body">Install these apps and spend 2 minutes in them to earn AppCoins Credits.</string>
   <string name="poa_app_view_card_body_1">Try this app for 2 minutes and get</string>
-  <string name="poa_app_view_card_body_2">$1$s AppCoins Credits (%2$s)</string>
+  <string name="poa_app_view_card_body_2">%1$s AppCoins Credits (%2$s)</string>
   <string name="poa_APPCC_left_body">Hurry up! There are only %s rewards available.</string>
   <string name="poa_time_left_days">DAYS</string>
   <string name="poa_time_left_hours">HOURS</string>
@@ -719,7 +700,7 @@
   <string name="poa_time_left_seconds">SECONDS</string>
   <string name="poa_earn_view_title">Earn AppCoins Credits</string>
   <string name="poa_earn_view_wallet_message">Install the AppCoins Wallet to receive your rewards.</string>
-  <string name="poa_bundle_title">Earn AppCoins</string>
+  <string name="poa_bundle_title">Earn AppCoins Credits</string>
 
   <!--APPC Info View-->
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
@@ -746,4 +727,6 @@
   <string name="auto_update_popup_title">Update Aptoide!</string>
   <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
 
+  <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
+  <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
 </resources>

@@ -2,6 +2,12 @@ package cm.aptoide.pt.home;
 
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
+import cm.aptoide.pt.home.bundles.BundlesRepository;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.ActionItem;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.promotions.PromotionsModel;

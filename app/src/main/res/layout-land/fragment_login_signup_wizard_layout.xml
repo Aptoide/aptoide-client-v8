@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
@@ -9,15 +8,13 @@
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
-  <ScrollView
-      xmlns:android="http://schemas.android.com/apk/res/android"
+  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/white"
       >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -29,7 +26,7 @@
           android:layout_height="wrap_content"
           android:visibility="gone"
           >
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
       </com.google.android.material.appbar.AppBarLayout>
 
       <ImageView

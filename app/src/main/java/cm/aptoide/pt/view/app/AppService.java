@@ -3,10 +3,9 @@ package cm.aptoide.pt.view.app;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v3.PaidApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
@@ -15,13 +14,11 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.File;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v3.GetApkInfoRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.GetRecommendedRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListAppsRequest;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.exception.RepositoryItemNotFoundException;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
@@ -46,6 +43,7 @@ public class AppService {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final Resources resources;
+  private final SplitsMapper splitsMapper;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
   private boolean loadingAppcSimilarApps;
@@ -54,7 +52,8 @@ public class AppService {
       BodyInterceptor<BaseBody> bodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
+      SplitsMapper splitsMapper) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.bodyInterceptorV3 = bodyInterceptorV3;
@@ -63,6 +62,7 @@ public class AppService {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.resources = resources;
+    this.splitsMapper = splitsMapper;
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
@@ -216,76 +216,24 @@ public class AppService {
       AppMedia appMedia = new AppMedia(media.getDescription(), media.getKeywords(), media.getNews(),
           mapToScreenShots(media.getScreenshots()), mapToVideo(media.getVideos()));
 
-      if (app.isPaid()) {
-        return getPaidApp(app.getId()).map(paidApp -> {
-          app.getPay()
-              .setStatus(paidApp.getPayment()
-                  .getStatus());
-          return new DetailedAppRequestResult(
-              new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
-                  app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(),
-                  file.isGoodApp(), file.getMalware(), appFlags, file.getTags(),
-                  file.getUsedFeatures(), file.getUsedPermissions(), file.getFilesize(),
-                  app.getMd5(), file.getPath(), file.getPathAlt(), file.getVercode(),
-                  file.getVername(), appDeveloper, app.getStore(), appMedia, appStats, app.getObb(),
-                  app.getPay(), app.getUrls()
-                  .getW(), app.isPaid(), paidApp.getPayment()
-                  .isPaid(), paidApp.getPath()
-                  .getStringPath(), paidApp.getPayment()
-                  .getStatus(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-                  app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
-                  .getRating() == MATURE_APP_RATING, app.getFile()
-                  .getSignature()
-                  .getSha1()));
-        });
-      }
-
       DetailedApp detailedApp =
           new DetailedApp(app.getId(), app.getName(), app.getPackageName(), app.getSize(),
               app.getIcon(), app.getGraphic(), app.getAdded(), app.getModified(), file.isGoodApp(),
               file.getMalware(), appFlags, file.getTags(), file.getUsedFeatures(),
               file.getUsedPermissions(), file.getFilesize(), app.getMd5(), file.getPath(),
               file.getPathAlt(), file.getVercode(), file.getVername(), appDeveloper, app.getStore(),
-              appMedia, appStats, app.getObb(), app.getPay(), app.getUrls()
-              .getW(), app.isPaid(), isLatestTrustedVersion(listAppVersions, file), uniqueName,
-              app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(), app.getAge()
+              appMedia, appStats, app.getObb(), app.getUrls()
+              .getW(), isLatestTrustedVersion(listAppVersions, file), uniqueName, app.hasBilling(),
+              app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
-              .getSha1(), app.hasSplits() ? map(app.getAab()
+              .getSha1(), app.hasSplits() ? splitsMapper.mapSplits(app.getAab()
               .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
               .getRequiredSplits() : Collections.emptyList());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));
     }
-  }
-
-  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
-    List<Split> splitsMapResult = new ArrayList<>();
-
-    if (splits == null) return splitsMapResult;
-
-    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
-      splitsMapResult.add(
-          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
-              split.getMd5sum()));
-    }
-
-    return splitsMapResult;
-  }
-
-  private Observable<PaidApp> getPaidApp(long appId) {
-    return GetApkInfoRequest.of(appId, bodyInterceptorV3, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences, resources)
-        .observe(true)
-        .flatMap(response -> {
-          if (response != null && response.isOk() && response.isPaid()) {
-            return Observable.just(response);
-          } else {
-            return Observable.error(
-                new RepositoryItemNotFoundException("No paid app found for app id " + appId));
-          }
-        });
   }
 
   private boolean isLatestTrustedVersion(ListAppVersions listAppVersions, File file) {

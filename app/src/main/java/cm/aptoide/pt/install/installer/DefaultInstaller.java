@@ -266,6 +266,9 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
+    boolean shouldUserPackageInstaller =
+        shouldSetPackageInstaller || !map(installation).getSplitApks()
+            .isEmpty();
     return Observable.<Void>fromCallable(() -> {
       AppInstall appInstall = map(installation);
       if (shouldSetPackageInstaller || !appInstall.getSplitApks()
@@ -281,8 +284,7 @@ public class DefaultInstaller implements Installer {
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
                   if (installation.getStatus() == Installed.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldSetPackageInstaller || !map(installation).getSplitApks()
-                            .isEmpty() ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                             : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
                   }
                   return null;
@@ -301,8 +303,7 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldSetPackageInstaller || !map(installation).getSplitApks()
-                          .isEmpty() ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                      shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                           : Installed.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
@@ -315,9 +316,8 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldSetPackageInstaller || !map(installation).getSplitApks()
-                .isEmpty() ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER : Installed.TYPE_DEFAULT,
-            Installed.STATUS_INSTALLING));
+            shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
   }
 
   @NotNull private AppInstall map(Installation installation) {

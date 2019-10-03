@@ -5,8 +5,8 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
-import cm.aptoide.pt.home.EditorialBundleViewHolder;
-import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
 import java.util.List;
 import rx.subjects.PublishSubject;
 

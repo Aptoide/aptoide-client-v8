@@ -7,26 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
 public class AppCoinsCampaign {
-  private String id;
-  private String reward;
+  private Reward reward;
   private CampaignApp app;
+  private Budget budget;
+  private String endDate;
 
   public AppCoinsCampaign() {
   }
 
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public String getReward() {
+  public Reward getReward() {
     return reward;
   }
 
-  public void setReward(String reward) {
+  public void setReward(Reward reward) {
     this.reward = reward;
   }
 
@@ -36,6 +29,46 @@ public class AppCoinsCampaign {
 
   public void setApp(CampaignApp app) {
     this.app = app;
+  }
+
+  public Budget getBudget() {
+    return budget;
+  }
+
+  public void setBudget(Budget budget) {
+    this.budget = budget;
+  }
+
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
+
+  public static class Reward {
+    private double appc;
+    private Fiat fiat;
+
+    public Reward() {
+    }
+
+    public double getAppc() {
+      return appc;
+    }
+
+    public void setAppc(double appc) {
+      this.appc = appc;
+    }
+
+    public Fiat getFiat() {
+      return fiat;
+    }
+
+    public void setFiat(Fiat fiat) {
+      this.fiat = fiat;
+    }
   }
 
   public static class CampaignApp {
@@ -286,15 +319,15 @@ public class AppCoinsCampaign {
       }
 
       public static class ClickUrls {
-        private String download;
+        private String install;
         private String click;
 
-        public String getDownload() {
-          return download;
+        public String getInstall() {
+          return install;
         }
 
-        public void setDownload(String download) {
-          this.download = download;
+        public void setInstall(String install) {
+          this.install = install;
         }
 
         public String getClick() {
@@ -305,6 +338,63 @@ public class AppCoinsCampaign {
           this.click = click;
         }
       }
+    }
+  }
+
+  public static class Budget {
+    private double appc;
+    private Fiat fiat;
+
+    public Budget() {
+    }
+
+    public double getAppc() {
+      return appc;
+    }
+
+    public void setAppc(double appc) {
+      this.appc = appc;
+    }
+
+    public Fiat getFiat() {
+      return fiat;
+    }
+
+    public void setFiat(Fiat fiat) {
+      this.fiat = fiat;
+    }
+  }
+
+  public static class Fiat {
+    private double amount;
+    private String currency;
+    private String symbol;
+
+    public Fiat() {
+    }
+
+    public double getAmount() {
+      return amount;
+    }
+
+    public void setAmount(double amount) {
+      this.amount = amount;
+    }
+
+    public String getCurrency() {
+      return currency;
+    }
+
+    public void setCurrency(String currency) {
+      this.currency = currency;
+    }
+
+    public String getSymbol() {
+      return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+      this.symbol = symbol;
     }
   }
 }

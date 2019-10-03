@@ -19,6 +19,7 @@ data class WalletApp(
     val obb: Obb? = null,
     val size: Long = 0,
     val developer: String = "",
+    val rating: Float = -1f,
     val splits: List<Split> = emptyList(),
     val requiredSplits: List<String> = emptyList()
 

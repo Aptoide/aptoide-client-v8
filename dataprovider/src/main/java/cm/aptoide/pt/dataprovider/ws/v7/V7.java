@@ -37,16 +37,6 @@ import cm.aptoide.pt.dataprovider.util.ToRetryThrowable;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.RefreshBody;
 import cm.aptoide.pt.dataprovider.ws.v7.analyticsbody.DownloadInstallAnalyticsBaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.CreateTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.DeletePurchaseRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetAuthorizationRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetMerchantRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetProductsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchaseRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetPurchasesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetServicesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.GetTransactionRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.billing.UpdateAuthorizationRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetActionItemRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
@@ -58,8 +48,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
@@ -88,7 +76,6 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -364,9 +351,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/action/item/card/get/id={cardId}/aab={aab}") Observable<EditorialCard> getEditorial(
-        @Path(value = "cardId") String cardId, @Body BaseBody body,
-        @Path(value = "aab") boolean aab);
+    @POST("user/action/item/card/get/id={cardId}") Observable<EditorialCard> getEditorialFromCardId(
+        @Path(value = "cardId") String cardId, @Body BaseBody body, @Query("aab") boolean aab);
+
+    @POST("user/action/item/card/get/slug={slug}") Observable<EditorialCard> getEditorialFromSlug(
+        @Path(value = "slug") String slug, @Body BaseBody body, @Query("aab") boolean aab);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
@@ -443,7 +432,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Path(value = "url", encoded = true) String url);
+        @Path(value = "url", encoded = true) String url, boolean showAabs);
 
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
@@ -456,65 +445,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body CardPreviewRequest.Body request);
 
-    @POST("user/timeline/card/apps/get") Observable<RelatedAppResponse> getRelatedApps(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body RelatedAppRequest.Body request);
-
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/getPackage") Observable<GetMerchantRequest.ResponseBody> getBillingMerchant(
-        @Body GetMerchantRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/products/get") Observable<GetProductsRequest.ResponseBody> getBillingProducts(
-        @Body GetProductsRequest.RequestBody requestBody,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/bank/services/get") Observable<GetServicesRequest.ResponseBody> getBillingServices(
-        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchases/get")
-    Observable<Response<GetPurchasesRequest.ResponseBody>> getBillingPurchases(
-        @Body GetPurchasesRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchase/getMeta")
-    Observable<Response<GetPurchaseRequest.ResponseBody>> getBillingPurchase(
-        @Body GetPurchaseRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("inapp/bank/transaction/getMeta")
-    Observable<Response<GetTransactionRequest.ResponseBody>> getBillingTransaction(
-        @Query("product_id") long productId, @Header("Authorization") String authorization,
-        @Query("user_id") String customerId);
-
-    @POST("inapp/bank/transaction/set")
-    Observable<CreateTransactionRequest.ResponseBody> createBillingTransaction(
-        @Body CreateTransactionRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/product/getMeta") Observable<GetProductsRequest.ResponseBody> getBillingProduct(
-        @Body GetProductsRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/purchase/consume") Observable<BaseV7Response> deleteBillingPurchase(
-        @Body DeletePurchaseRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("inapp/bank/authorization/set")
-    Observable<UpdateAuthorizationRequest.ResponseBody> updateBillingAuthorization(
-        @Body UpdateAuthorizationRequest.RequestBody body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @GET("inapp/bank/authorization/getMeta")
-    Observable<Response<GetAuthorizationRequest.ResponseBody>> getBillingAuthorization(
-        @Query("transaction_id") long transactionId, @Header("Authorization") String authorization,
-        @Query("user_id") String customerId);
-
-    @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
-        @Body PostDeleteRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
@@ -538,10 +470,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body ClaimPromotionRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/promotions/promotion/get/limit={limit}/aab={aab}")
+    @POST("appcoins/promotions/promotion/get/limit={limit}")
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
-        @Path(value = "aab") boolean aab, @Body GetPromotionAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Body GetPromotionAppsRequest.Body body,
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("appcoins/promotions/packages/getPromotions")
     Observable<GetPackagePromotionsResponse> getPromotionsForPackage(

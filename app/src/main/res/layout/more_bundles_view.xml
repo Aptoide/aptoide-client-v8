@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,11 +13,13 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/more_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
+
       <androidx.recyclerview.widget.RecyclerView
           android:id="@+id/more_bundles_list"
           android:layout_width="match_parent"
@@ -34,6 +35,6 @@
         android:visibility="gone"
         />
 
-    <include layout="@layout/partial_view_progress_bar"/>
+    <include layout="@layout/partial_view_progress_bar" />
   </FrameLayout>
 </LinearLayout>
