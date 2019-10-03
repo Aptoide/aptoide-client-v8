@@ -1,9 +1,9 @@
 <network-security-config>
-  <base-config>
-    <trust-anchors>
-      <certificates src="@raw/vanilla_cert" />
-    </trust-anchors>
-  </base-config>
+  <!--  <base-config>-->
+  <!--    <trust-anchors>-->
+  <!--      <certificates src="@raw/vanilla_cert" />-->
+  <!--    </trust-anchors>-->
+  <!--  </base-config>-->
   <debug-overrides>
     <trust-anchors>
       <certificates src="user" />
