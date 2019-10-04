@@ -121,7 +121,6 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(view::appCardClicked)
-        .doOnError(throwable -> throwable.printStackTrace())
         .doOnNext(editorialEvent -> {
           editorialNavigator.navigateToAppView(editorialEvent.getId(),
               editorialEvent.getPackageName());

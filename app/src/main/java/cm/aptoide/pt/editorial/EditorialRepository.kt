@@ -4,7 +4,7 @@ import rx.Single
 
 class EditorialRepository(private val editorialService: EditorialService) {
 
-  private var cachedEditorialViewModel: EditorialViewModel? = null;
+  private var cachedEditorialViewModel: EditorialViewModel? = null
 
   fun loadEditorialViewModel(editorialLoadSource: EditorialLoadSource): Single<EditorialViewModel> {
     return if (cachedEditorialViewModel != null)
