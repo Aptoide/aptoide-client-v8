@@ -12,17 +12,19 @@ class EditorialRepository(private val editorialService: EditorialService) {
     else
       when (editorialLoadSource) {
         is CardId -> editorialService.loadEditorialViewModel(
-            editorialLoadSource.cardId).map { editorialViewModel ->
+            editorialLoadSource.cardId).doOnError { throwable -> throwable.printStackTrace() }.map { editorialViewModel ->
           saveResponse(editorialViewModel)
         }
         is Slug -> editorialService.loadEditorialViewModelWithSlug(
-            editorialLoadSource.slug).map { editorialViewModel -> saveResponse(editorialViewModel) }
+            editorialLoadSource.slug).doOnError { throwable -> throwable.printStackTrace() }.map { editorialViewModel ->
+          saveResponse(editorialViewModel)
+        }
       }
   }
 
   private fun saveResponse(editorialViewModel: EditorialViewModel): EditorialViewModel {
     if (!editorialViewModel.hasError() && !editorialViewModel.isLoading) {
-      cachedEditorialViewModel = cachedEditorialViewModel
+      cachedEditorialViewModel = editorialViewModel
     }
     return editorialViewModel
   }

@@ -121,6 +121,7 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> setUpViewModelOnViewReady())
         .flatMap(view::appCardClicked)
+        .doOnError(throwable -> throwable.printStackTrace())
         .doOnNext(editorialEvent -> {
           editorialNavigator.navigateToAppView(editorialEvent.getId(),
               editorialEvent.getPackageName());
@@ -392,7 +393,8 @@ public class EditorialPresenter implements Presenter {
   private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
     return view.isViewReady()
         .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable());
+            .toObservable())
+        .observeOn(viewScheduler);
   }
 
   @VisibleForTesting public void handleReactionButtonClick() {
