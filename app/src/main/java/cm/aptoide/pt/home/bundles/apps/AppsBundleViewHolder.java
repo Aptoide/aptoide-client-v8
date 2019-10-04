@@ -67,7 +67,7 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
         .getResources();
     WindowManager windowManager = (WindowManager) view.getContext()
         .getSystemService(WINDOW_SERVICE);
-    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.feature_graphic_home_item_skeleton,
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton,
         Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 3);
   }
 

@@ -47,7 +47,7 @@ class EarnAppCoinsViewHolder(val view: View,
     itemView.apps_list.setHasFixedSize(true)
     val resources = view.context.resources
     val windowManager = view.context.getSystemService(WINDOW_SERVICE) as WindowManager
-    skeleton = itemView.apps_list.applySkeleton(R.layout.feature_graphic_home_item_skeleton,
+    skeleton = itemView.apps_list.applySkeleton(R.layout.earn_appcoins_item_skeleton,
         Type.APPCOINS_ADS.getPerLineCount(resources, windowManager) * 3)
   }
 

@@ -1,7 +1,6 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -74,11 +73,11 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
-    if (actionBundle.getActionItem() == null) {
+    ActionItem actionItem = actionBundle.getActionItem();
+    if (actionItem == null) {
       skeleton.showSkeleton();
     } else {
       skeleton.showOriginal();
-      ActionItem actionItem = actionBundle.getActionItem();
       setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
           actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
           actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),

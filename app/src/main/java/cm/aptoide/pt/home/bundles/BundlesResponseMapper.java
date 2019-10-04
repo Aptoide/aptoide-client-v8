@@ -102,13 +102,14 @@ public class BundlesResponseMapper {
               map((ActionItemResponse) viewObject)));
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (!blacklistManager.isBlacklisted(type.toString(), actionItem.getCardId())) {
+          if (actionItem == null || !blacklistManager.isBlacklisted(type.toString(),
+              actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (walletAdsOfferCardManager.shouldShowWalletOfferCard(type.toString(),
-              actionItem.getCardId())) {
+          if (actionItem == null || walletAdsOfferCardManager.shouldShowWalletOfferCard(
+              type.toString(), actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         }

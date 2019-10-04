@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/root_layout"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content">
+
+  <androidx.cardview.widget.CardView
     android:id="@+id/card_info_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,17 +15,16 @@
     app:cardUseCompatPadding="true"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    >
+    app:layout_constraintTop_toTopOf="parent">
 
-  <LinearLayout
+    <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@drawable/white_card"
       android:gravity="center"
-      android:orientation="vertical"
-      >
-    <ImageView
+      android:orientation="vertical">
+
+      <ImageView
         android:id="@+id/icon"
         android:layout_width="63dp"
         android:layout_height="63dp"
@@ -29,75 +33,74 @@
         app:layout_constraintLeft_toLeftOf="@+id/card_info_layout"
         app:layout_constraintRight_toRightOf="@+id/card_info_layout"
         app:layout_constraintTop_toTopOf="@+id/card_info_layout"
-        tools:src="@drawable/ic_appcoins"
-        />
-    <RelativeLayout
+        tools:src="@drawable/ic_appcoins" />
+
+      <RelativeLayout
         android:id="@+id/info_card_description_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:padding="8dp"
-        tools:background="@drawable/my_store_background"
-        >
+        tools:background="@drawable/my_store_background">
 
-      <LinearLayout
+        <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="16dp"
-          android:layout_marginLeft="16dp"
-          android:layout_marginRight="16dp"
           android:layout_marginStart="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginEnd="16dp"
+          android:layout_marginRight="16dp"
           android:gravity="center"
-          android:orientation="vertical"
-          >
-        <TextView
+          android:orientation="vertical">
+
+          <TextView
             android:id="@+id/title"
+            style="@style/Aptoide.TextView.Medium.M.Grey_900"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textStyle="normal"
-            tools:text="title"
-            style="@style/Aptoide.TextView.Medium.M.Grey_900"
-            />
-        <TextView
+            tools:text="title" />
+
+          <TextView
             android:id="@+id/message"
+            style="@style/Aptoide.TextView.Regular.S.Grey_900"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
             android:textAlignment="center"
-            tools:text="something something this description will briefly talk about the card etc etc etc more characters whatever even more characters"
-            style="@style/Aptoide.TextView.Regular.S.Grey_900"
-            />
-      </LinearLayout>
-    </RelativeLayout>
-    <RelativeLayout
+            tools:text="something something this description will briefly talk about the card etc etc etc more characters whatever even more characters" />
+        </LinearLayout>
+      </RelativeLayout>
+
+      <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        >
-      <LinearLayout
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
-          android:layout_alignParentRight="true"
-          >
-        <Button
+          android:layout_alignParentRight="true">
+
+          <Button
             android:id="@+id/dismiss_button"
+            style="@style/Aptoide.Button.Flat.GreyMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="@string/all_button_got_it"
-            style="@style/Aptoide.Button.Flat.GreyMedium"
-            />
-        <Button
+            tools:text="@string/all_button_got_it" />
+
+          <Button
             android:id="@+id/action_button"
+            style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
             android:layout_marginRight="30dp"
-            tools:text="@string/all_button_know_more"
-            style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
-            />
-      </LinearLayout>
-    </RelativeLayout>
-  </LinearLayout>
-</androidx.cardview.widget.CardView>
+            tools:text="@string/all_button_know_more" />
+        </LinearLayout>
+      </RelativeLayout>
+    </LinearLayout>
+  </androidx.cardview.widget.CardView>
+</FrameLayout>
