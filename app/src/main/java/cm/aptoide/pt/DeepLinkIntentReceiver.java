@@ -21,6 +21,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -536,7 +537,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
             ((AptoideApplication) getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
-            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
+            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()))
             .observe()
             .toBlocking()
             .first();

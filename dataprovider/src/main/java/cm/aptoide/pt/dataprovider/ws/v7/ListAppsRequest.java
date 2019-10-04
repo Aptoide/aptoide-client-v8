@@ -8,6 +8,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -23,43 +24,51 @@ import rx.Observable;
 public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
   private static final int LINES_PER_REQUEST = 6;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private String url;
 
   public ListAppsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.url = url;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public ListAppsRequest(Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static ListAppsRequest ofAction(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager) {
+      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     V7Url listAppsV7Url = new V7Url(url).remove("listApps");
     if (listAppsV7Url.containsLimit()) {
       return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials, sharedPreferences),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
+          bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+          appBundlesVisibilityManager);
     } else {
       return new ListAppsRequest(listAppsV7Url.get(), new Body(storeCredentials,
           Type.APPS_GROUP.getPerLineCount(resources, windowManager) * LINES_PER_REQUEST,
           sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-          sharedPreferences);
+          sharedPreferences, appBundlesVisibilityManager);
     }
   }
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url != null ? url : "", body, bypassCache, true);
+    return interfaces.listApps(url != null ? url : "", body, bypassCache,
+        appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   public enum Sort {

@@ -7,6 +7,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.DataList;
@@ -40,12 +41,14 @@ import rx.Single;
   private final Database database;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager) {
+      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -56,6 +59,7 @@ import rx.Single;
     this.database = database;
     this.accountManager = accountManager;
     this.moPubAdsManager = moPubAdsManager;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -63,7 +67,8 @@ import rx.Single;
         .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps, int offset) {
+  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps,
+      int offset) {
     return searchAppInStores(query, onlyTrustedApps, offset, false);
   }
 
@@ -80,7 +85,8 @@ import rx.Single;
             enabled -> ListSearchAppsRequest.of(query, offset, onlyFollowedStores, onlyTrustedApps,
                 StoreUtils.getSubscribedStoresIds(
                     AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
-                httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled)
+                httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
+                appBundlesVisibilityManager)
                 .observe(true))
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
@@ -89,7 +95,8 @@ import rx.Single;
 
   public Single<SearchResult> searchInStore(String query, String storeName, int offset) {
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        appBundlesVisibilityManager)
         .observe(true)
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
