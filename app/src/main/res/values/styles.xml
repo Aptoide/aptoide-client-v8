@@ -193,7 +193,7 @@
   </style>
 
   <style name="ToolbarDark" parent="@style/Theme.AppCompat">
-    <!--<item name="pstsIndicatorColor">@skeletonColor/aptoide_orange</item>-->
+    <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->
   </style>
 
   <style name="customRowStyle">
