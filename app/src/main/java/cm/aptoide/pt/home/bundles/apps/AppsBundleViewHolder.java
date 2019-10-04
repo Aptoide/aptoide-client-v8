@@ -1,7 +1,9 @@
 package cm.aptoide.pt.home.bundles.apps;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
@@ -20,6 +23,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -58,7 +63,12 @@ public class AppsBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(appsInBundleAdapter);
     appsList.setNestedScrollingEnabled(false);
 
-    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton, 9);
+    Resources resources = view.getContext()
+        .getResources();
+    WindowManager windowManager = (WindowManager) view.getContext()
+        .getSystemService(WINDOW_SERVICE);
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.feature_graphic_home_item_skeleton,
+        Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 3);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {

@@ -1,12 +1,15 @@
 package cm.aptoide.pt.home.bundles.appcoins
 
+import android.content.Context.WINDOW_SERVICE
 import android.graphics.Rect
 import android.view.View
+import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.aptoideviews.skeleton.Skeleton
 import cm.aptoide.aptoideviews.skeleton.applySkeleton
 import cm.aptoide.pt.R
+import cm.aptoide.pt.dataprovider.model.v7.Type
 import cm.aptoide.pt.home.bundles.base.AppBundle
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder
 import cm.aptoide.pt.home.bundles.base.HomeBundle
@@ -42,7 +45,10 @@ class EarnAppCoinsViewHolder(val view: View,
     itemView.apps_list.adapter = adapter
     itemView.apps_list.isNestedScrollingEnabled = false
     itemView.apps_list.setHasFixedSize(true)
-    skeleton = itemView.apps_list.applySkeleton(R.layout.earn_appcoins_item_skeleton, 5)
+    val resources = view.context.resources
+    val windowManager = view.context.getSystemService(WINDOW_SERVICE) as WindowManager
+    skeleton = itemView.apps_list.applySkeleton(R.layout.feature_graphic_home_item_skeleton,
+        Type.APPCOINS_ADS.getPerLineCount(resources, windowManager) * 3)
   }
 
 

@@ -1,8 +1,10 @@
 package cm.aptoide.pt.home.bundles.ads;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
@@ -25,6 +28,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
 
@@ -78,7 +83,12 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);
 
-    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton, 9);
+    Resources resources = view.getContext()
+        .getResources();
+    WindowManager windowManager = (WindowManager) view.getContext()
+        .getSystemService(WINDOW_SERVICE);
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.feature_graphic_home_item_skeleton,
+        Type.ADS.getPerLineCount(resources, windowManager) * 3);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
