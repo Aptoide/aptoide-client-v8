@@ -12,15 +12,14 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|start"
     android:layout_marginStart="8dp"
-      tools:text="random bundle"
     android:layout_marginLeft="8dp"
-      />
+    tools:text="random bundle" />
 
   <Button
     android:id="@+id/bundle_more"
+    style="@style/Aptoide.Button.Flat"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="end"
-    style="@style/Aptoide.Button.Flat"
-      android:text="@string/button_header_more" />
+    android:text="@string/button_header_more" />
 </FrameLayout>
