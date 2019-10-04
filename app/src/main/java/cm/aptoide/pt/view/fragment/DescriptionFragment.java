@@ -17,6 +17,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -45,6 +46,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String STORE_THEME = "store_theme";
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
+  @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
   @Inject @Named("aptoide-theme") String theme;
   private boolean hasAppId = false;
   private long appId;
@@ -157,7 +159,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
           StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
           baseBodyBodyInterceptor, httpClient, converterFactory,
           ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())
+          ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+          appBundlesVisibilityManager)
           .execute(getApp -> {
             setupAppDescription(getApp);
             setupTitle(getApp);

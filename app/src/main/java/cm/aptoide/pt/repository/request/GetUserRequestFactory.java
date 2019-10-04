@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -34,13 +35,15 @@ public class GetUserRequestFactory {
   private final String filters;
   private final ConnectivityManager systemService;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   public GetUserRequestFactory(BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       StoreCredentialsProvider storeCredentialsProvider, String clientUniqueId, String partnerId,
       AptoideAccountManager accountManager, String filters, ConnectivityManager systemService,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
@@ -55,6 +58,7 @@ public class GetUserRequestFactory {
     this.filters = filters;
     this.systemService = systemService;
     this.versionCodeProvider = versionCodeProvider;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
@@ -68,6 +72,6 @@ public class GetUserRequestFactory {
     return GetUserRequest.of(url, storeCredentialsProvider.fromUrl(url), bodyInterceptor,
         httpClient, converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
         clientUniqueId, googlePlayServicesAvailable, partnerId, adultContentEnabled, filters,
-        systemService, versionCodeProvider);
+        systemService, versionCodeProvider, appBundlesVisibilityManager);
   }
 }
