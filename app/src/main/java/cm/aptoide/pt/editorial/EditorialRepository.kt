@@ -4,7 +4,7 @@ import rx.Single
 
 class EditorialRepository(private val editorialService: EditorialService) {
 
-  private var cachedEditorialViewModel: EditorialViewModel? = null;
+  private var cachedEditorialViewModel: EditorialViewModel? = null
 
   fun loadEditorialViewModel(editorialLoadSource: EditorialLoadSource): Single<EditorialViewModel> {
     return if (cachedEditorialViewModel != null)
@@ -16,13 +16,15 @@ class EditorialRepository(private val editorialService: EditorialService) {
           saveResponse(editorialViewModel)
         }
         is Slug -> editorialService.loadEditorialViewModelWithSlug(
-            editorialLoadSource.slug).map { editorialViewModel -> saveResponse(editorialViewModel) }
+            editorialLoadSource.slug).map { editorialViewModel ->
+          saveResponse(editorialViewModel)
+        }
       }
   }
 
   private fun saveResponse(editorialViewModel: EditorialViewModel): EditorialViewModel {
     if (!editorialViewModel.hasError() && !editorialViewModel.isLoading) {
-      cachedEditorialViewModel = cachedEditorialViewModel
+      cachedEditorialViewModel = editorialViewModel
     }
     return editorialViewModel
   }
