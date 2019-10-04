@@ -12,11 +12,11 @@ class EditorialRepository(private val editorialService: EditorialService) {
     else
       when (editorialLoadSource) {
         is CardId -> editorialService.loadEditorialViewModel(
-            editorialLoadSource.cardId).doOnError { throwable -> throwable.printStackTrace() }.map { editorialViewModel ->
+            editorialLoadSource.cardId).map { editorialViewModel ->
           saveResponse(editorialViewModel)
         }
         is Slug -> editorialService.loadEditorialViewModelWithSlug(
-            editorialLoadSource.slug).doOnError { throwable -> throwable.printStackTrace() }.map { editorialViewModel ->
+            editorialLoadSource.slug).map { editorialViewModel ->
           saveResponse(editorialViewModel)
         }
       }
