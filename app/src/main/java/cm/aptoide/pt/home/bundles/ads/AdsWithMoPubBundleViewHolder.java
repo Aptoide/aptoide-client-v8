@@ -35,9 +35,8 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
   private final RecyclerView appsList;
   private final String marketName;
   private final MoPubRecyclerAdapter moPubRecyclerAdapter;
-  private boolean hasAdLoaded;
-
   private final Skeleton skeleton;
+  private boolean hasAdLoaded;
 
   public AdsWithMoPubBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,

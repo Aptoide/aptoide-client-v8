@@ -123,22 +123,6 @@ public class BundlesResponseMapper {
     return appBundles;
   }
 
-  private List<AppBundle.BundleType> fromWidgetsToBundleType(
-      List<GetStoreWidgets.WSWidget> widgetBundles) {
-    List<AppBundle.BundleType> appBundlesTypes = new ArrayList<>();
-    for (GetStoreWidgets.WSWidget widget : widgetBundles) {
-      AppBundle.BundleType type;
-      if (widget.getType()
-          .equals(Type.ACTION_ITEM)) {
-        type = actionItemTypeMapper(widget);
-      } else {
-        type = bundleTypeMapper(widget.getType(), widget.getData());
-      }
-      appBundlesTypes.add(type);
-    }
-    return appBundlesTypes;
-  }
-
   private String getWidgetActionTag(GetStoreWidgets.WSWidget widget) {
     String widgetActionTag = "";
     if (widget.hasActions()) {
@@ -163,32 +147,18 @@ public class BundlesResponseMapper {
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {
-    if (widget.getViewObject() == null) {
-      switch (widget.getTag()) {
-        case "action-item-curation-1":
+    if (widget.getData() != null) {
+      switch (widget.getData()
+          .getLayout()) {
+        case APPC_INFO:
+          return HomeBundle.BundleType.INFO_BUNDLE;
+        case CURATION_1:
           return HomeBundle.BundleType.EDITORIAL;
-        case "action-item-card-wallet-ads-offer":
+        case WALLET_ADS_OFFER:
           return HomeBundle.BundleType.WALLET_ADS_OFFER;
       }
     }
-    Object actionItemData = widget.getViewObject();
-    if (!(actionItemData instanceof ActionItemResponse)) {
-      return HomeBundle.BundleType.UNKNOWN;
-    }
-    String layout = ((ActionItemResponse) actionItemData).getDataList()
-        .getList()
-        .get(0)
-        .getType();
-    switch (layout) {
-      case "APPC_INFO":
-        return HomeBundle.BundleType.INFO_BUNDLE;
-      case "CURATION_1":
-        return HomeBundle.BundleType.EDITORIAL;
-      case "WALLET_ADS_OFFER":
-        return HomeBundle.BundleType.WALLET_ADS_OFFER;
-      default:
-        return HomeBundle.BundleType.UNKNOWN;
-    }
+    return HomeBundle.BundleType.UNKNOWN;
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {

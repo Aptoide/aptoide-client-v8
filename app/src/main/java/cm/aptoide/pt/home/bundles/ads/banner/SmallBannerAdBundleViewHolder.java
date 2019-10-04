@@ -22,7 +22,7 @@ public class SmallBannerAdBundleViewHolder extends AppBundleViewHolder {
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
-    if(homeBundle.getContent() == null) return; // TODO
+    if (homeBundle.getContent() == null) return;
 
     if (!hasLoaded) {
       bannerView.loadAd();

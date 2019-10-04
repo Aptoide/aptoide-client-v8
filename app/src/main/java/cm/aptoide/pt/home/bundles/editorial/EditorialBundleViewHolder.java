@@ -53,7 +53,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private Skeleton skeleton;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter, ViewGroup parent) {
+      CaptionBackgroundPainter captionBackgroundPainter) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
