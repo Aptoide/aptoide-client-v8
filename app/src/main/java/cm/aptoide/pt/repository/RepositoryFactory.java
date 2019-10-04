@@ -13,12 +13,14 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
+import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
 
 /**
@@ -33,7 +35,8 @@ public final class RepositoryFactory {
         ((AptoideApplication) context.getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
         getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
-        getTokenInvalidator(context), sharedPreferences, context.getPackageManager());
+        getTokenInvalidator(context), sharedPreferences, context.getPackageManager(),
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()));
   }
 
   private static IdsRepository getIdsRepository(Context context) {

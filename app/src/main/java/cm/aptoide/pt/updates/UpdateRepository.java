@@ -8,6 +8,7 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.database.realm.Split;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
@@ -44,12 +45,13 @@ public class UpdateRepository {
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
   private final PackageManager packageManager;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      PackageManager packageManager) {
+      PackageManager packageManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.updateAccessor = updateAccessor;
     this.storeAccessor = storeAccessor;
     this.idsRepository = idsRepository;
@@ -59,6 +61,7 @@ public class UpdateRepository {
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.packageManager = packageManager;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
@@ -103,7 +106,8 @@ public class UpdateRepository {
     Logger.getInstance()
         .d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
     return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager,
+        appBundlesVisibilityManager)
         .observe(bypassCache, bypassServerCache)
         .map(result -> {
           if (result != null && result.isOk()) {
