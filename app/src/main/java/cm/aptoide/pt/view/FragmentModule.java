@@ -104,6 +104,10 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsConfiguration;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -137,6 +141,7 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -156,6 +161,7 @@ import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -583,4 +589,31 @@ import rx.subscriptions.CompositeSubscription;
     return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.TAG));
   }
+
+  @FragmentScope @Provides ListAppsConfiguration providesListAppsMoreConfiguration() {
+    return new ListAppsConfiguration(fragment.getArguments()
+        .getString(BundleCons.TITLE), arguments.getString(BundleCons.TAG),
+        arguments.getString(BundleCons.ACTION));
+  }
+
+  @FragmentScope @Provides ListAppsMorePresenter providesListAppsMorePresenter(
+      CrashReport crashReport, AppNavigator appNavigator,
+      @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreRepository listAppsMoreRepository) {
+    return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
+        listAppsConfiguration, listAppsMoreRepository);
+  }
+
+  @FragmentScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      Converter.Factory converterFactory) {
+    return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        fragment.getActivity().getResources(), fragment.getActivity().getWindowManager());
+  }
+
 }
