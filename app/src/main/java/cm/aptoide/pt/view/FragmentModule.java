@@ -30,6 +30,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
@@ -592,7 +593,7 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides ListAppsConfiguration providesListAppsMoreConfiguration() {
     return new ListAppsConfiguration(fragment.getArguments()
         .getString(BundleCons.TITLE), arguments.getString(BundleCons.TAG),
-        arguments.getString(BundleCons.ACTION));
+        arguments.getString(BundleCons.ACTION), arguments.getString(BundleCons.NAME));
   }
 
   @FragmentScope @Provides ListAppsMorePresenter providesListAppsMorePresenter(
@@ -605,7 +606,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
-      ListAppsMoreRepository listAppsMoreRepository) {
-    return new ListAppsMoreManager(listAppsMoreRepository);
+      ListAppsMoreRepository listAppsMoreRepository, AdsRepository adsRepository) {
+    return new ListAppsMoreManager(listAppsMoreRepository, adsRepository);
   }
 }

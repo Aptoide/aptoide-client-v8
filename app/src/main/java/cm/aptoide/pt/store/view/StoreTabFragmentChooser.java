@@ -7,7 +7,6 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
-import cm.aptoide.pt.store.view.ads.GetAdsFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
@@ -42,7 +41,7 @@ public class StoreTabFragmentChooser {
       case getMoreBundle:
         return new MoreBundleFragment();
       case getAds:
-        return GetAdsFragment.newInstance();
+        return new ListAppsMoreFragment();
       case getAppCoinsAds:
         return new EarnAppcListFragment();
       case listStores:

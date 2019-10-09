@@ -45,7 +45,7 @@ class ListAppsMoreFragment : ListAppsFragment<Application, ListAppsMoreViewHolde
     return { parent, _ ->
       ListAppsMoreViewHolder(
           LayoutInflater.from(parent.context).inflate(R.layout.app_home_item, parent,
-              false), DecimalFormat("0.00"))
+              false), DecimalFormat("0.0"))
     }
   }
 }
