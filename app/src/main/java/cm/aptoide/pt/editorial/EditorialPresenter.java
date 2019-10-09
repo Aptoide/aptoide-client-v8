@@ -392,7 +392,8 @@ public class EditorialPresenter implements Presenter {
   private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
     return view.isViewReady()
         .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable());
+            .toObservable())
+        .observeOn(viewScheduler);
   }
 
   @VisibleForTesting public void handleReactionButtonClick() {

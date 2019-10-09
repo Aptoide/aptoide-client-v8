@@ -63,6 +63,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorial.EditorialManager;
@@ -71,6 +72,7 @@ import cm.aptoide.pt.editorial.EditorialPresenter;
 import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
+import cm.aptoide.pt.editorial.Slug;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
@@ -422,10 +424,18 @@ import rx.subscriptions.CompositeSubscription;
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
       EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
       MoPubAdsManager moPubAdsManager) {
-    return new EditorialManager(editorialRepository,
-        arguments.getString(EditorialFragment.CARD_ID, ""), installManager, downloadFactory,
-        downloadStateParser, notificationAnalytics, installAnalytics, editorialAnalytics,
-        reactionsManager, moPubAdsManager);
+    return new EditorialManager(editorialRepository, getEditorialConfiguration(), installManager,
+        downloadFactory, downloadStateParser, notificationAnalytics, installAnalytics,
+        editorialAnalytics, reactionsManager, moPubAdsManager);
+  }
+
+  private EditorialConfiguration getEditorialConfiguration() {
+    String source = arguments.getString(EditorialFragment.CARD_ID, "");
+    if (source.equals("")) {
+      source = arguments.getString(EditorialFragment.SLUG, "");
+      return new EditorialConfiguration(new Slug(source));
+    }
+    return new EditorialConfiguration(new CardId(source));
   }
 
   @FragmentScope @Provides EditorialRepository providesEditorialRepository(

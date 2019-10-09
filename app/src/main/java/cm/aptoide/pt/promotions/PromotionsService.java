@@ -2,6 +2,9 @@ package cm.aptoide.pt.promotions;
 
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.aab.SplitsMapper;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -32,19 +35,22 @@ public class PromotionsService {
   private final TokenInvalidator tokenInvalidator;
   private final Converter.Factory converterFactory;
   private final SharedPreferences sharedPreferences;
-
+  private final SplitsMapper splitsMapper;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   //Use ONLY to restore view state
   private String walletAddress;
 
   public PromotionsService(BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      Converter.Factory converterFactory, SharedPreferences sharedPreferences) {
-
+      Converter.Factory converterFactory, SharedPreferences sharedPreferences,
+      SplitsMapper splitsMapper, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
     this.okHttpClient = okHttpClient;
     this.tokenInvalidator = tokenInvalidator;
     this.converterFactory = converterFactory;
     this.sharedPreferences = sharedPreferences;
+    this.splitsMapper = splitsMapper;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public Single<ClaimStatusWrapper> claimPromotion(String walletAddress, String packageName,
@@ -131,7 +137,7 @@ public class PromotionsService {
 
   public Single<List<PromotionApp>> getPromotionApps(String promotionId) {
     return GetPromotionAppsRequest.of(promotionId, bodyInterceptorPoolV7, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences)
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, false)
         .map(this::mapPromotionsResponse)
         .toSingle();
@@ -195,10 +201,30 @@ public class PromotionsService {
             .getSignature()
             .getSha1(), app.getApp()
             .hasAdvertising() || app.getApp()
-            .hasBilling()));
+            .hasBilling(), app.getApp()
+            .hasSplits() ? splitsMapper.mapSplits(app.getApp()
+            .getAab()
+            .getSplits()) : Collections.emptyList(), app.getApp()
+            .hasSplits() ? app.getApp()
+            .getAab()
+            .getRequiredSplits() : Collections.emptyList()));
       }
     }
 
     return result;
+  }
+
+  private List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    List<Split> splitsMapResult = new ArrayList<>();
+
+    if (splits == null) return splitsMapResult;
+
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsMapResult.add(
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
+              split.getMd5sum()));
+    }
+
+    return splitsMapResult;
   }
 }

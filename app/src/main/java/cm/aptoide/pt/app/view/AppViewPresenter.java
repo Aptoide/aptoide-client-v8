@@ -263,7 +263,7 @@ public class AppViewPresenter implements Presenter {
         .flatMapCompletable(__ -> downloadApp(action, appModel).doOnCompleted(
             () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
-                    .getName(), action.toString()))
+                    .getName(), action.toString(), appModel.hasSplits()))
             .onErrorComplete())
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
@@ -995,7 +995,7 @@ public class AppViewPresenter implements Presenter {
                                 }
                                 appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                                     appModel.getDeveloper()
-                                        .getName(), action.toString());
+                                        .getName(), action.toString(), appModel.hasSplits());
 
                                 if (appViewManager.hasClaimablePromotion(
                                     Promotion.ClaimAction.INSTALL)) {
@@ -1016,7 +1016,8 @@ public class AppViewPresenter implements Presenter {
                           appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
                               () -> appViewAnalytics.clickOnInstallButton(
                                   appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
-                                      .getName(), action.toString())));
+                                      .getName(), action.toString(),
+                                  appViewViewModel.hasSplits())));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1027,7 +1028,7 @@ public class AppViewPresenter implements Presenter {
                         }
                         appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
                             appViewViewModel.getDeveloper()
-                                .getName(), "UPDATE TO APPC");
+                                .getName(), "UPDATE TO APPC", appViewViewModel.hasSplits());
                         return migrateApp(action, appViewViewModel);
                       });
                   break;

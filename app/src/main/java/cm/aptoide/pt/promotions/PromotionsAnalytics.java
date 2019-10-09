@@ -46,11 +46,11 @@ public class PromotionsAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      Origin origin) {
+      Origin origin, boolean isAppBundle) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
-        action, offerResponseStatus);
+        action, offerResponseStatus, isAppBundle);
   }
 
   public void sendOpenPromotionsFragmentEvent() {

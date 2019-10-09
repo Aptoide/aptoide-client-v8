@@ -48,8 +48,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.RelatedAppResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
@@ -84,6 +82,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.Url;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -254,15 +253,15 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
   public interface Interfaces {
 
     @POST("getApp") Observable<GetApp> getApp(@Body GetAppRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listApps{url}") Observable<ListApps> listApps(
         @Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppcAppsUpgrades") Observable<ListAppsUpdates> listAppcAppssUpgrades(
         @Body ListAppcAppsUpgradesRequest.Body body,
@@ -314,11 +313,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
         @Body ListSearchAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listReviews") Observable<ListReviews> listReviews(@Body ListReviewsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
@@ -352,8 +351,11 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body SetReviewRatingRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/action/item/card/get/id={cardId}") Observable<EditorialCard> getEditorial(
-        @Path(value = "cardId") String cardId, @Body BaseBody body);
+    @POST("user/action/item/card/get/id={cardId}") Observable<EditorialCard> getEditorialFromCardId(
+        @Path(value = "cardId") String cardId, @Body BaseBody body, @Query("aab") boolean aab);
+
+    @POST("user/action/item/card/get/slug={slug}") Observable<EditorialCard> getEditorialFromSlug(
+        @Path(value = "slug") String slug, @Body BaseBody body, @Query("aab") boolean aab);
 
     @POST("user/addEvent/name={name}/action={action}/context={context}")
     Observable<BaseV7Response> addEvent(@Path(value = "name") String name,
@@ -430,7 +432,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("getAppMeta{url}") Observable<GetAppMeta> getAppMeta(
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Path(value = "url", encoded = true) String url);
+        @Path(value = "url", encoded = true) String url, boolean showAabs);
 
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
@@ -443,16 +445,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
         @Body CardPreviewRequest.Body request);
 
-    @POST("user/timeline/card/apps/get") Observable<RelatedAppResponse> getRelatedApps(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body RelatedAppRequest.Body request);
-
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("user/timeline/card/del") Observable<BaseV7Response> deletePost(
-        @Body PostDeleteRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
@@ -479,7 +473,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("appcoins/promotions/promotion/get/limit={limit}")
     Observable<GetPromotionAppsResponse> getPromotionApps(@Path(value = "limit") int limit,
         @Body GetPromotionAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("appcoins/promotions/packages/getPromotions")
     Observable<GetPackagePromotionsResponse> getPromotionsForPackage(

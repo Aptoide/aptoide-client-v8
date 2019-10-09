@@ -1,8 +1,9 @@
 package cm.aptoide.pt.view.app;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.aab.SplitsMapper;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -21,6 +22,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -35,29 +37,29 @@ public class AppService {
   private static final int MATURE_APP_RATING = 18;
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final BodyInterceptor<BaseBody> bodyInterceptorV7;
-  private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final Resources resources;
+  private final SplitsMapper splitsMapper;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private boolean loadingApps;
   private boolean loadingSimilarApps;
   private boolean loadingAppcSimilarApps;
 
   public AppService(StoreCredentialsProvider storeCredentialsProvider,
-      BodyInterceptor<BaseBody> bodyInterceptorV7,
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources) {
+      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, SplitsMapper splitsMapper,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.bodyInterceptorV7 = bodyInterceptorV7;
-    this.bodyInterceptorV3 = bodyInterceptorV3;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.resources = resources;
+    this.splitsMapper = splitsMapper;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   private Single<AppsList> loadApps(long storeId, boolean bypassCache, int offset, int limit) {
@@ -69,7 +71,8 @@ public class AppService {
     body.setOffset(offset);
     body.setStoreId(storeId);
     return new ListAppsRequest(body, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences).observe(bypassCache, false)
+        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager).observe(bypassCache,
+        false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
         .doOnTerminate(() -> loadingApps = false)
@@ -104,7 +107,8 @@ public class AppService {
     }
     return GetAppRequest.of(appId, null,
         StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
-        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences)
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -119,7 +123,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.of(packageName, storeName, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -134,7 +138,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofMd5(md5, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences))
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -149,7 +153,7 @@ public class AppService {
       return Single.just(new DetailedAppRequestResult(true));
     }
     return GetAppRequest.ofUname(uniqueName, bodyInterceptorV7, httpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe(false, false)
         .doOnSubscribe(() -> loadingApps = true)
         .doOnUnsubscribe(() -> loadingApps = false)
@@ -222,7 +226,9 @@ public class AppService {
               app.hasAdvertising(), app.getBdsFlags(), app.getAge()
               .getRating() == MATURE_APP_RATING, app.getFile()
               .getSignature()
-              .getSha1());
+              .getSha1(), app.hasSplits() ? splitsMapper.mapSplits(app.getAab()
+              .getSplits()) : Collections.emptyList(), app.hasSplits() ? app.getAab()
+              .getRequiredSplits() : Collections.emptyList());
       return Observable.just(new DetailedAppRequestResult(detailedApp));
     } else {
       return Observable.error(new IllegalStateException("Could not obtain request from server."));

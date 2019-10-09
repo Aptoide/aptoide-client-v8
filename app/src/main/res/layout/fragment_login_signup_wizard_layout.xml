@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 android:fitsSystemWindows="true"
 -->
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
@@ -18,8 +16,7 @@ android:fitsSystemWindows="true"
       android:layout_height="match_parent"
       >
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -33,7 +30,7 @@ android:fitsSystemWindows="true"
           android:layout_height="wrap_content"
           android:visibility="invisible"
           >
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/toolbar" />
       </com.google.android.material.appbar.AppBarLayout>
 
       <ImageView
@@ -78,7 +75,7 @@ android:fitsSystemWindows="true"
       android:visibility="visible"
       app:behavior_hideable="false"
       app:behavior_peekHeight="315dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

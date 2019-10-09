@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
@@ -21,17 +22,22 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+
   private ListSearchAppsRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator) {
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static ListSearchAppsRequest of(String query, String storeName, int offset,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     List<String> stores = null;
     if (storeName != null) {
@@ -48,50 +54,33 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       body = new Body(Endless.DEFAULT_LIMIT, offset, query, stores, false, sharedPreferences);
     }
     return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
-  }
-
-  public static ListSearchAppsRequest of(String query, int offset, boolean addSubscribedStores,
-      List<Long> subscribedStoresIds, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
-
-    if (addSubscribedStores) {
-      return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds,
-              subscribedStoresAuthMap, false, sharedPreferences), getHost(sharedPreferences),
-          bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
-    } else {
-      return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, false, sharedPreferences),
-          getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
-    }
+        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   public static ListSearchAppsRequest of(String query, int offset, boolean addSubscribedStores,
       boolean trustedOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Boolean isMature) {
+      SharedPreferences sharedPreferences, Boolean isMature,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds, null, trustedOnly,
               sharedPreferences, isMature), getHost(sharedPreferences), bodyInterceptor, httpClient,
-          converterFactory, tokenInvalidator);
+          converterFactory, tokenInvalidator, appBundlesVisibilityManager);
     } else {
       return new ListSearchAppsRequest(
           new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences, isMature),
           getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
-          tokenInvalidator);
+          tokenInvalidator, appBundlesVisibilityManager);
     }
   }
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listSearchApps(body, bypassCache);
+    return interfaces.listSearchApps(body, bypassCache,
+        appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {

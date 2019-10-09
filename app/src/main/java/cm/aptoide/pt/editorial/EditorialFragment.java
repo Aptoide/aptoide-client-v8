@@ -74,6 +74,7 @@ public class EditorialFragment extends NavigationTrackFragment
     implements EditorialView, NotBottomNavigationView {
 
   public static final String CARD_ID = "cardId";
+  public static final String SLUG = "slug";
   public static final String FROM_HOME = "fromHome";
   private static final String TAG = EditorialFragment.class.getName();
   @Inject EditorialPresenter presenter;

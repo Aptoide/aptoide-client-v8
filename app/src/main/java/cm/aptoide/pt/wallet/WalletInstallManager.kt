@@ -49,7 +49,7 @@ class WalletInstallManager(val packageManager: PackageManager,
             walletApp.packageName,
             walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size))
+            false, walletApp.size, walletApp.splits, walletApp.requiredSplits))
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
@@ -71,7 +71,8 @@ class WalletInstallManager(val packageManager: PackageManager,
                                   packageName: String,
                                   developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
-    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer)
+    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer,
+        download.hasSplits())
   }
 
   fun onWalletInstalled(): Observable<Boolean> {

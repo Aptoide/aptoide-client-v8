@@ -19,13 +19,16 @@ import rx.Observable;
 public class EditorialRequest extends V7<EditorialCard, BaseBody> {
 
   private final String cardId;
+  private final String slug;
 
-  public EditorialRequest(BaseBody body, String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+  public EditorialRequest(BaseBody body, String cardId, String slug,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.cardId = cardId;
+    this.slug = slug;
   }
 
   public static String getHost(SharedPreferences sharedPreferences) {
@@ -36,16 +39,28 @@ public class EditorialRequest extends V7<EditorialCard, BaseBody> {
         + "/api/7.20181019/";
   }
 
-  public static EditorialRequest of(String cardId, BodyInterceptor<BaseBody> bodyInterceptor,
+  public static EditorialRequest ofWithCardId(String cardId,
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
+    final BaseBody body = new BaseBody();
+    return new EditorialRequest(body, cardId, "", bodyInterceptor, httpClient, converterFactory,
+        tokenInvalidator, sharedPreferences);
+  }
+
+  public static EditorialRequest ofWithSlug(String slug, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
     final BaseBody body = new BaseBody();
-    return new EditorialRequest(body, cardId, bodyInterceptor, httpClient, converterFactory,
+    return new EditorialRequest(body, "", slug, bodyInterceptor, httpClient, converterFactory,
         tokenInvalidator, sharedPreferences);
   }
 
   @Override protected Observable<EditorialCard> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getEditorial(cardId, body);
+    if (!"".equals(slug)) {
+      return interfaces.getEditorialFromSlug(slug, body, true);
+    }
+    return interfaces.getEditorialFromCardId(cardId, body, true);
   }
 }
