@@ -27,6 +27,7 @@ class ListAppsMoreViewHolder(val view: View,
       else
         itemView.rating_label.text = decimalFormatter.format(app.rating)
       itemView.rating_info_layout.visibility = View.VISIBLE
+      itemView.appc_info_layout.visibility = View.GONE
     }
     val cardHeight = itemView.height
     itemView.icon.layoutParams.height = cardHeight / 2

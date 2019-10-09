@@ -21,7 +21,7 @@ public class StoreTabFragmentChooser {
   public static Fragment choose(Event event) {
     switch (event.getName()) {
       case listApps:
-        if (event.getData()
+        if (event.getData() != null && event.getData()
             .getLayout()
             .equals(Layout.GRAPHIC)) {
           return ListAppsFragment.newInstance();

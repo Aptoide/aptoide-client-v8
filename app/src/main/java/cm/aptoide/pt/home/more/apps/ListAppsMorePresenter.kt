@@ -18,18 +18,18 @@ class ListAppsMorePresenter(view: ListAppsView<Application>,
                             private val appNavigator: AppNavigator,
                             private val sharedPreferences: SharedPreferences,
                             private val listAppsConfiguration: ListAppsConfiguration,
-                            private val listAppsMoreRepository: ListAppsMoreRepository) :
+                            private val listAppsMoreManager: ListAppsMoreManager) :
     ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
     val url = convertUrl()
-    return listAppsMoreRepository.getApps(url, refresh)
+    return listAppsMoreManager.loadFreshApps(url, refresh)
   }
 
   override fun loadMoreApps(): Observable<List<Application>> {
     val url = convertUrl()
-    return listAppsMoreRepository.loadMoreApps(url, true)
+    return listAppsMoreManager.loadMoreApps(url, true)
   }
 
   override fun getTitle(): String {
