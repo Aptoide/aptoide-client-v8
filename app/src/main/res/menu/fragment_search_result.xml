@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified by Neurophobic Animal on 02/06/2016.
   -->
@@ -14,7 +13,6 @@
       android:title="@string/menu_title_search"
       app:actionLayout="@layout/search_input_text"
     app:actionViewClass="androidx.appcompat.widget.SearchView"
-      app:showAsAction="always|collapseActionView"
-      />
+    app:showAsAction="always|collapseActionView" />
 
 </menu>

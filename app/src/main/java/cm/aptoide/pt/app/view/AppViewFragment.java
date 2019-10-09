@@ -1764,45 +1764,54 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       case ACTIVE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        downloadProgressValue.setText(progress + "%");
+        downloadProgressValue.setVisibility(View.VISIBLE);
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
         installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INDETERMINATE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
+        downloadProgressValue.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
         installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        downloadProgressValue.setText(progress + "%");
+        downloadProgressValue.setVisibility(View.VISIBLE);
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
+        downloadControlsLayout.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseHidden);
         installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case COMPLETE:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.VISIBLE);
+        downloadProgressValue.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
+        downloadControlsLayout.setVisibility(View.VISIBLE);
         downloadControlsLayout.setLayoutParams(pauseShowing);
         installStateText.setText(getString(R.string.appview_short_downloading));
         break;
       case INSTALLING:
         downloadProgressBar.setIndeterminate(true);
         pauseDownload.setVisibility(View.GONE);
+        downloadProgressValue.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
-        downloadControlsLayout.setLayoutParams(pauseHidden);
+        downloadControlsLayout.setVisibility(View.GONE);
         installStateText.setText(getString(R.string.appview_short_installing));
         break;
       case ERROR:

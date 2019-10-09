@@ -77,6 +77,7 @@ public class GetAppMeta extends BaseV7Response {
     private Stats stats;
     private Obb obb;
     private AppCoinsInfo appcoins;
+    private Aab aab;
 
     public App() {
     }
@@ -360,6 +361,19 @@ public class GetAppMeta extends BaseV7Response {
 
     public List<String> getBdsFlags() {
       return appcoins.getFlags();
+    }
+
+    public Aab getAab() {
+      return aab;
+    }
+
+    public void setAab(Aab aab) {
+      this.aab = aab;
+    }
+
+    public boolean hasSplits() {
+      return aab != null && !aab.getRequiredSplits()
+          .isEmpty();
     }
   }
 

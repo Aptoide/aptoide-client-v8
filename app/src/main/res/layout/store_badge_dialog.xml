@@ -85,9 +85,7 @@
 
     <!--start of progress badges-->
     <!--tin->bronze line-->
-    <include
-        layout="@layout/badge_progress_layout"
-        />
+    <include layout="@layout/badge_progress_layout" />
     <!--end of progress badges-->
 
     <View

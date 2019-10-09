@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
@@ -59,6 +60,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final PackageRepository packageRepository;
   private final int latestPackagesCount;
   private final int randomPackagesCount;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
   private Map<String, Boolean> error;
@@ -72,7 +74,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
-      int latestPackagesCount, int randomPackagesCount) {
+      int latestPackagesCount, int randomPackagesCount,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -97,6 +100,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.randomPackagesCount = randomPackagesCount;
     loading = new HashMap<>();
     error = new HashMap<>();
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   private Observable<HomeBundlesModel> getHomeBundles(int offset, int limit,
@@ -116,7 +120,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
                 bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
                 storeCredentialsProvider.fromUrl(""), clientUniqueId, isGooglePlayServicesAvailable,
                 partnerId, adultContentEnabled, filters, resources, windowManager,
-                connectivityManager, versionCodeProvider, packageNames)
+                connectivityManager, versionCodeProvider, packageNames, appBundlesVisibilityManager)
                 .observe(invalidateHttpCache, false)
                 .flatMap(widgets -> Observable.merge(Observable.just(widgets),
                     loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
@@ -147,7 +151,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
                 adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
                 tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
                 versionCodeProvider, bypassCache,
-                Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
+                Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
+                appBundlesVisibilityManager))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
@@ -171,7 +176,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
+        versionCodeProvider, new WSWidgetsUtils(), appBundlesVisibilityManager);
   }
 
   private Single<List<String>> getPackages() {

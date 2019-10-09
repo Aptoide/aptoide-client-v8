@@ -9,13 +9,13 @@
       android:title="@string/menu_title_search"
       app:actionLayout="@layout/search_input_text"
     app:actionViewClass="androidx.appcompat.widget.SearchView"
-      app:showAsAction="always|collapseActionView"/>
+    app:showAsAction="always|collapseActionView" />
 
   <item
       android:id="@+id/menu_item_share"
       android:icon="@drawable/ic_share"
       android:orderInCategory="2"
       android:title="@string/share"
-      app:showAsAction="ifRoom"/>
+    app:showAsAction="ifRoom" />
 
 </menu>

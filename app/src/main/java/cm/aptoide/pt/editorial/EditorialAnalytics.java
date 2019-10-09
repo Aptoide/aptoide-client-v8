@@ -42,7 +42,7 @@ public class EditorialAnalytics {
       AnalyticsManager.Action action,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), action,
-        offerResponseStatus, false, download.hasAppc());
+        offerResponseStatus, false, download.hasAppc(), download.hasSplits());
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false);

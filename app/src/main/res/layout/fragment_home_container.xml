@@ -91,17 +91,14 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
-    <include
-        layout="@layout/home_action_bar_chips"
-        />
+
+    <include layout="@layout/home_action_bar_chips" />
 
     <FrameLayout
         android:id="@+id/main_home_container_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:background="@color/white"
-        >
-    </FrameLayout>
+        tools:background="@color/white"></FrameLayout>
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

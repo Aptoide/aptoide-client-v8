@@ -608,7 +608,8 @@ public class InstallManager {
 
   public void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (!FileUtils.fileExists(getFilePathFromFileType(fileToDownload))) {
+      if (!FileUtils.fileExists(
+          getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
         Logger.getInstance()
             .d(TAG, "trying to move file : "
                 + fileToDownload.getFileName()
@@ -637,6 +638,9 @@ public class InstallManager {
         break;
       case FileToDownload.OBB:
         path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.SPLIT:
+        path = apkPath + fileToDownload.getPackageName() + "-splits/";
         break;
       case FileToDownload.GENERIC:
       default:

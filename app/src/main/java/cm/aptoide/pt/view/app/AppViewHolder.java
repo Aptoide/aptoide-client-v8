@@ -9,6 +9,5 @@ public abstract class AppViewHolder extends RecyclerView.ViewHolder {
     super(itemView);
   }
 
-  public abstract void setApp(Application app, HomeBundle homeBundle,
-      int bundlePosition);
+  public abstract void setApp(Application app, HomeBundle homeBundle, int bundlePosition);
 }
