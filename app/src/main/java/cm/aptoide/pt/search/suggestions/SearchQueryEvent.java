@@ -1,6 +1,6 @@
 package cm.aptoide.pt.search.suggestions;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class SearchQueryEvent {
   private final String query;

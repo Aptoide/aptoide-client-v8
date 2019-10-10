@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     >
-  <android.support.design.widget.AppBarLayout
+
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@color/transparent"
       >
-    <android.support.design.widget.CollapsingToolbarLayout
+
+    <com.google.android.material.appbar.CollapsingToolbarLayout
         android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,7 +36,8 @@
           android:paddingBottom="16dp"
           app:layout_collapseMode="pin"
           >
-        <android.support.v7.widget.CardView
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/action_item_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,9 +65,10 @@
               tools:text="Game of the Week"
               style="@style/Aptoide.TextView.Regular.XXS"
               />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
       </LinearLayout>
-      <android.support.v7.widget.Toolbar
+
+      <androidx.appcompat.widget.Toolbar
           android:id="@+id/toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
@@ -74,22 +77,26 @@
           android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
           app:layout_collapseMode="pin"
           >
+
         <TextView
             android:id="@+id/toolbar_title"
+            style="@style/Aptoide.TextView.Medium.L"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
             android:layout_marginEnd="13dp"
             android:layout_marginRight="13dp"
-            android:layout_marginTop="13dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/white"
             tools:text="Title"
-            style="@style/Aptoide.TextView.Medium.L"
             />
-      </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.CollapsingToolbarLayout>
-  </android.support.design.widget.AppBarLayout>
 
-  <android.support.v4.widget.NestedScrollView
+      </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.CollapsingToolbarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.core.widget.NestedScrollView
       android:id="@+id/nested_scroll_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -99,7 +106,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
-      <android.support.v7.widget.CardView
+
+      <androidx.cardview.widget.CardView
           android:id="@+id/card_info_layout"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -110,14 +118,14 @@
           android:layout_marginStart="8dp"
           app:cardUseCompatPadding="true"
           >
-        <android.support.v7.widget.RecyclerView
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/editorial_items"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="64dp"
             android:nestedScrollingEnabled="false"
-            >
-        </android.support.v7.widget.RecyclerView>
+            />
         <include
             layout="@layout/reactions_layout_white"
             android:layout_width="wrap_content"
@@ -127,24 +135,22 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             />
-      </android.support.v7.widget.CardView>
+      </androidx.cardview.widget.CardView>
     </RelativeLayout>
-  </android.support.v4.widget.NestedScrollView>
+  </androidx.core.widget.NestedScrollView>
   <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_marginTop="?attr/actionBarSize"
       >
-    <include
-        layout="@layout/partial_view_incl_no_network"
+
+    <cm.aptoide.aptoideviews.errors.ErrorView
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         tools:visibility="gone"
         />
-
-    <include
-        layout="@layout/partial_view_error"
-        tools:visibility="gone"
-        />
-
     <include
         layout="@layout/partial_view_progress_bar"
         tools:visibility="gone"
@@ -169,5 +175,5 @@
           />
     </LinearLayout>
   </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

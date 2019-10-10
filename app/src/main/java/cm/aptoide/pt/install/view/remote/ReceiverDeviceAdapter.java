@@ -1,12 +1,12 @@
 package cm.aptoide.pt.install.view.remote;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.install.remote.ReceiverDevice;
 import java.util.List;

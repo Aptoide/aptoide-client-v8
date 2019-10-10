@@ -13,14 +13,15 @@ import android.content.pm.ShortcutManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
+import androidx.annotation.Nullable;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -182,6 +183,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromEditorialCard(u.getQueryParameter("id"));
     } else if ("appc_info_view".equals(u.getQueryParameter("name"))) {
       return startAppcInfoView();
+    } else if ("appcoins_ads".equals(u.getQueryParameter("name"))) {
+      return startFromAppcAds();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
     }
@@ -301,7 +304,17 @@ public class DeepLinkIntentReceiver extends ActivityView {
       Logger.getInstance()
           .v(TAG, "aptoide thank you: app id: " + appId);
       if (TextUtils.isEmpty(appId)) {
-        return null;
+        String uname = u.getQueryParameter("package_uname");
+        if (!TextUtils.isEmpty(uname)) {
+          return parseAptoideInstallUri("uname=" + uname);
+        } else {
+          String packageName = u.getQueryParameter("package");
+          if (!TextUtils.isEmpty(packageName)) {
+            return parseAptoideInstallUri("package=" + packageName);
+          } else {
+            return null;
+          }
+        }
       } else {
         return parseAptoideInstallUri(appId);
       }
@@ -362,6 +375,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
       ArrayList<String> list = new ArrayList<String>();
       list.add(u.getLastPathSegment());
       return startWithRepo(list);
+    } else if (u.getPath() != null && u.getPath()
+        .contains("editorial")) {
+
+      String slug = u.getPath()
+          .split("/")[2];
+      return startEditorialFromSlug(slug);
     } else {
       String[] appName = u.getHost()
           .split("\\.");
@@ -385,6 +404,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
     }
     return null;
+  }
+
+  private Intent startEditorialFromSlug(String slug) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.EDITORIAL_DEEPLINK, true);
+    intent.putExtra(DeepLinksKeys.SLUG, slug);
+    return intent;
   }
 
   private Intent dealWithImagesApoide(String uri) {
@@ -511,7 +537,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
             ((AptoideApplication) getApplicationContext()).getDefaultClient(),
             WebService.getDefaultConverter(),
             ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
-            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())
+            ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
+            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()))
             .observe()
             .toBlocking()
             .first();
@@ -571,6 +598,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
     AptoideInstall aptoideInstall = parser.parse(host);
     if (aptoideInstall.getAppId() > 0) {
       return startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(), false);
+    } else if (!TextUtils.isEmpty(aptoideInstall.getUname())) {
+      return startAppView(aptoideInstall.getUname());
     } else {
       return startFromAppview(aptoideInstall.getStoreName(), aptoideInstall.getPackageName(),
           aptoideInstall.shouldShowPopup());
@@ -629,6 +658,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Intent startFromPromotions() {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK, true);
+    return intent;
+  }
+
+  private Intent startFromAppcAds() {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APPC_ADS, true);
     return intent;
   }
 
@@ -718,6 +753,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String PROMOTIONS_DEEPLINK = "promotions";
     public static final String EDITORIAL_DEEPLINK = "editorial";
     public static final String APPC_INFO_VIEW = "appc_info_view";
+    public static final String APPC_ADS = "appc_ads";
   }
 
   public static class DeepLinksKeys {
@@ -730,7 +766,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String SHOW_AUTO_INSTALL_POPUP = "show_auto_install_popup";
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
-    public static final String OPEN_MODE = "openMode";
+    public static final String SLUG = "slug";
 
     //deep link query parameters
     public static final String ACTION = "action";

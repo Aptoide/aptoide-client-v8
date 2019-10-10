@@ -1,6 +1,5 @@
 package cm.aptoide.pt.comments.view;
 
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Comment;
@@ -8,6 +7,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.view.FragmentProvider;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Created by trinkes on 8/4/16.

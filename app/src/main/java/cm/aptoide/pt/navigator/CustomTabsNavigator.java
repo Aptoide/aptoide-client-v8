@@ -1,7 +1,7 @@
 package cm.aptoide.pt.navigator;
 
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 import rx.Observable;
 
 public interface CustomTabsNavigator {

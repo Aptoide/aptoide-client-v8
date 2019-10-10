@@ -1,7 +1,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7.promotions;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -30,12 +30,12 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
         + "/api/7/";
   }
 
-  public static ClaimPromotionRequest of(String walletAddress, String packageName, String captcha,
+  public static ClaimPromotionRequest of(String walletAddress, String packageName,
       String promotionId, BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences) {
 
-    return new ClaimPromotionRequest(new Body(walletAddress, packageName, captcha, promotionId),
+    return new ClaimPromotionRequest(new Body(walletAddress, packageName, promotionId),
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences);
   }
 
@@ -48,14 +48,12 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
 
     private final String walletAddress;
     private final String packageName;
-    private final String captcha;
     private final String promotionId;
 
-    public Body(String walletAddress, String packageName, String captcha, String promotionId) {
+    public Body(String walletAddress, String packageName, String promotionId) {
 
       this.walletAddress = walletAddress;
       this.packageName = packageName;
-      this.captcha = captcha;
       this.promotionId = promotionId;
     }
 
@@ -65,10 +63,6 @@ public class ClaimPromotionRequest extends V7<BaseV7Response, ClaimPromotionRequ
 
     public String getPackageName() {
       return packageName;
-    }
-
-    public String getCaptcha() {
-      return captcha;
     }
 
     public String getPromotionId() {

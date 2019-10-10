@@ -16,8 +16,8 @@ import cm.aptoide.pt.utils.AptoideUtils
 import rx.Completable
 import rx.Observable
 
-class WalletInstallManager(val configuration: WalletInstallConfiguration,
-                           val packageManager: PackageManager, val installManager: InstallManager,
+class WalletInstallManager(val packageManager: PackageManager,
+                           val installManager: InstallManager,
                            val downloadFactory: DownloadFactory,
                            val downloadStateParser: DownloadStateParser,
                            val moPubAdsManager: MoPubAdsManager,
@@ -26,12 +26,11 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                            val walletAppProvider: WalletAppProvider,
                            val appInstallerStatusReceiver: AppInstallerStatusReceiver) {
 
-  fun getAppIcon(): Observable<String> {
+  fun getAppIcon(packageName: String?): Observable<String> {
     return Observable.fromCallable {
       AptoideUtils.SystemU.getApkIconPath(
-          packageManager.getPackageInfo(configuration.appPackageName, 0))
+          packageManager.getPackageInfo(packageName, 0))
     }.onErrorReturn { null }
-
   }
 
   fun shouldShowRootInstallWarningPopup(): Boolean {
@@ -50,7 +49,7 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
             walletApp.packageName,
             walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size))
+            false, walletApp.size, walletApp.splits, walletApp.requiredSplits))
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
@@ -72,7 +71,8 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
                                   packageName: String,
                                   developer: String) {
     walletInstallAnalytics.setupDownloadEvents(download, downloadAction, appId, offerResponseStatus)
-    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer)
+    walletInstallAnalytics.sendClickOnInstallButtonEvent(packageName, developer,
+        download.hasSplits())
   }
 
   fun onWalletInstalled(): Observable<Boolean> {
@@ -89,11 +89,35 @@ class WalletInstallManager(val configuration: WalletInstallConfiguration,
     return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
   }
 
+  fun cancelDownload(app: WalletApp): Completable {
+    return Completable.fromAction { removeDownload(app) }
+  }
+
   fun loadDownloadModel(walletApp: WalletApp): Observable<DownloadModel> {
     return installManager.getInstall(walletApp.md5sum, walletApp.packageName, walletApp.versionCode)
         .map { install ->
-          DownloadModel(downloadStateParser.parseDownloadType(install.type, false, false, false),
-              install.progress, downloadStateParser.parseDownloadState(install.state), null)
+          DownloadModel(downloadStateParser.parseDownloadType(install.type, false),
+              install.progress, downloadStateParser.parseDownloadState(install.state))
+        }
+  }
+
+  fun pauseDownload(app: WalletApp): Completable {
+    return Completable.fromAction { installManager.stopInstallation(app.md5sum) }
+  }
+
+  fun resumeDownload(app: WalletApp): Completable {
+    return installManager.getDownload(app.md5sum)
+        .flatMap { download ->
+          moPubAdsManager.getAdsVisibilityStatus()
+              .doOnSuccess { responseStatus ->
+                setupDownloadEvents(download, DownloadModel.Action.INSTALL, app.id,
+                    responseStatus, app.packageName, app.developer)
+              }.map {
+                download
+              }
+        }
+        .flatMapCompletable { download ->
+          installManager.splitInstall(download)
         }
   }
 

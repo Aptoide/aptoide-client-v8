@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.leak;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.leak.LeakTool;
 import com.trello.rxlifecycle.components.support.RxFragment;

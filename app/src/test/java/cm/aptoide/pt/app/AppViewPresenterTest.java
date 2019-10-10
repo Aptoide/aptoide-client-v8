@@ -83,16 +83,15 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null, "editorsChoice", "origin", false,
-            "marketName", false, false, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_AND_INSTALL, 0, null,
+            "editorsChoice", "origin", false, "marketName", false, false, bdsFlags, "", "", false,
+            null, null);
 
     errorAppModel = new AppModel(DetailedAppRequestResult.Error.GENERIC);
 
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
 
     appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
@@ -139,13 +138,11 @@ public class AppViewPresenterTest {
     verify(view).showAppView(appModel);
 
     // Verify analytics
-    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+    verify(appViewManager).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
         appModel.getDeveloper()
             .getName(), appModel.getMalware()
             .getRank()
-            .name(), appModel.hasBilling(), appModel.hasAdvertising());
-    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
-        appModel.getEditorsChoice());
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
 
     // Verify our init streams
     verify(presenter).loadAds(appViewModel);
@@ -178,15 +175,12 @@ public class AppViewPresenterTest {
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-    //Then editors choice click event should not be sent
-    verify(appViewManager).sendEditorsChoiceClickEvent(appModel.getPackageName(),
-        appModel.getEditorsChoice());
-    //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(appModel.getPackageName(),
+    //Then editors choice click event should be sent
+    verify(appViewManager).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
         appModel.getDeveloper()
             .getName(), appModel.getMalware()
             .getRank()
-            .name(), appModel.hasBilling(), appModel.hasAdvertising());
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
   }
 
   @Test public void handleOpenAppViewEventsWithEmptyEditorsChoice() {
@@ -203,13 +197,11 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", false,
-            false, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
+            false, "marketName", false, false, bdsFlags, "", "", false, null, null);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
             new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
@@ -222,10 +214,14 @@ public class AppViewPresenterTest {
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then editors choice click event should not be sent
-    verify(appViewManager, never()).sendEditorsChoiceClickEvent(
-        emptyEditorsChoiceAppModel.getPackageName(), emptyEditorsChoiceAppModel.getEditorsChoice());
+    verify(appViewManager, never()).sendEditorsAppOpenAnalytics(appModel.getPackageName(),
+        appModel.getDeveloper()
+            .getName(), appModel.getMalware()
+            .getRank()
+            .name(), appModel.hasBilling(), appModel.hasAdvertising(),
+        emptyEditorsChoiceAppModel.getEditorsChoice());
     //and app view opened from event should be sent
-    verify(appViewManager).sendAppViewOpenedFromEvent(emptyEditorsChoiceAppModel.getPackageName(),
+    verify(appViewManager).sendAppOpenAnalytics(emptyEditorsChoiceAppModel.getPackageName(),
         emptyEditorsChoiceAppModel.getDeveloper()
             .getName(), emptyEditorsChoiceAppModel.getMalware()
             .getRank()
@@ -246,13 +242,11 @@ public class AppViewPresenterTest {
             new AppRating(0, 100, Collections.emptyList()),
             new AppDeveloper("Felipao", "felipao@aptoide.com", "privacy", "website"), "graphic",
             "icon", new AppMedia("description", Collections.<String>emptyList(), "news",
-            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null, null,
-            "weburls", false, false, "paid path", "no", true, "aptoide",
-            AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin", false, "marketName", true,
-            true, bdsFlags, "", "", false);
+            Collections.emptyList(), Collections.emptyList()), "modified", "app added", null,
+            "weburls", true, "aptoide", AppViewFragment.OpenType.OPEN_ONLY, 0, null, "", "origin",
+            false, "marketName", true, true, bdsFlags, "", "", false, null, null);
     DownloadModel downloadModel =
-        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE,
-            null);
+        new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
         new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
         new MigrationModel(false));

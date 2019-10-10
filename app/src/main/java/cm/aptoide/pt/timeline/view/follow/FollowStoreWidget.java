@@ -1,8 +1,8 @@
 package cm.aptoide.pt.timeline.view.follow;
 
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.store.view.AddStoreDialog;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;

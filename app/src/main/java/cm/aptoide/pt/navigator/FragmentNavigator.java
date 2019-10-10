@@ -1,7 +1,7 @@
 package cm.aptoide.pt.navigator;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import rx.Observable;
 
 public interface FragmentNavigator {

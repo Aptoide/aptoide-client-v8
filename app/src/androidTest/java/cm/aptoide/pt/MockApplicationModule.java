@@ -4,7 +4,7 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.provider.Settings;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
@@ -294,8 +294,7 @@ public class MockApplicationModule extends ApplicationModule {
       @Named("multipart") MultipartBodyInterceptor multipartBodyInterceptor,
       @Named("defaultInterceptorV3")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
-      @Named("mature-pool-v7")
-          BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7,
+      @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
       ObjectMapper nonNullObjectMapper) {

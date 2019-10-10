@@ -9,7 +9,6 @@ import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -237,7 +236,8 @@ public class AppViewManager {
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
             app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
-            app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize())))
+            app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(), app.getSplits(),
+            app.getRequiredSplits())))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> {
               setupDownloadEvents(download, downloadAction, appId, trustedValue,
@@ -262,7 +262,7 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize()))
+        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
@@ -288,7 +288,7 @@ public class AppViewManager {
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits());
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
@@ -297,14 +297,12 @@ public class AppViewManager {
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
-      boolean hasAppc) {
+      int versionCode, String signature, long storeId, boolean hasAppc) {
     return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), isMigration), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+            downloadStateParser.parseDownloadType(install.getType(), isMigration),
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
   }
 
   public Completable pauseDownload(String md5) {
@@ -338,16 +336,7 @@ public class AppViewManager {
     adsManager.handleAdsLogic(searchAdResult);
   }
 
-  public Completable appBought(String path) {
-    return getAppModel().doOnSuccess(appModel -> {
-      appModel.getPay()
-          .setPaid();
-      appModel.setPath(path);
-    })
-        .toCompletable();
-  }
-
-  public void sendAppViewOpenedFromEvent(String packageName, String publisher, String badge,
+  public void sendAppOpenAnalytics(String packageName, String publisher, String badge,
       boolean hasBilling, boolean hasAdvertising) {
     if (isFirstLoad) {
       appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, hasBilling,
@@ -356,8 +345,11 @@ public class AppViewManager {
     }
   }
 
-  public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
+  public void sendEditorsAppOpenAnalytics(String packageName, String publisher, String badge,
+      boolean hasBilling, boolean hasAdvertising, String editorsBrickPosition) {
     if (isFirstLoad) {
+      appViewAnalytics.sendAppViewOpenedFromEvent(packageName, publisher, badge, hasBilling,
+          hasAdvertising);
       appViewAnalytics.sendEditorsChoiceClickEvent(packageName, editorsBrickPosition);
       isFirstLoad = false;
     }

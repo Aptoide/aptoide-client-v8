@@ -6,17 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +21,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
@@ -48,6 +46,9 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
@@ -73,6 +74,7 @@ public class EditorialFragment extends NavigationTrackFragment
     implements EditorialView, NotBottomNavigationView {
 
   public static final String CARD_ID = "cardId";
+  public static final String SLUG = "slug";
   public static final String FROM_HOME = "fromHome";
   private static final String TAG = EditorialFragment.class.getName();
   @Inject EditorialPresenter presenter;
@@ -84,11 +86,8 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView appImage;
   private TextView itemName;
   private View appCardView;
-  private View genericErrorView;
-  private View noNetworkErrorView;
+  private ErrorView errorView;
   private ProgressBar progressBar;
-  private View genericRetryButton;
-  private View noNetworkRetryButton;
   private RecyclerView editorialItems;
   private EditorialItemsAdapter adapter;
   private ImageView appCardImage;
@@ -168,13 +167,10 @@ public class EditorialFragment extends NavigationTrackFragment
     actionItemCard = view.findViewById(R.id.action_item_card);
     editorialItemsCard = view.findViewById(R.id.card_info_layout);
     editorialItems = (RecyclerView) view.findViewById(R.id.editorial_items);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    genericRetryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    layoutManager.setOrientation(RecyclerView.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener,
         downloadEventListener);
     editorialItems.setLayoutManager(layoutManager);
@@ -286,11 +282,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
     editorialItemsCard = null;
     editorialItems = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
+    errorView = null;
     progressBar = null;
-    genericRetryButton = null;
-    noNetworkRetryButton = null;
     collapsingToolbarLayout = null;
     appBarLayout = null;
     adapter = null;
@@ -323,8 +316,7 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
@@ -333,13 +325,12 @@ public class EditorialFragment extends NavigationTrackFragment
     editorialItemsCard.setVisibility(View.GONE);
     appCardView.setVisibility(View.GONE);
     itemName.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(genericRetryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<EditorialEvent> appCardClicked(EditorialViewModel model) {
@@ -364,10 +355,12 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showError(EditorialViewModel.Error error) {
     switch (error) {
       case NETWORK:
-        noNetworkErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.NO_NETWORK);
+        errorView.setVisibility(View.VISIBLE);
         break;
       case GENERIC:
-        genericErrorView.setVisibility(View.VISIBLE);
+        errorView.setError(ErrorView.Error.GENERIC);
+        errorView.setVisibility(View.VISIBLE);
         break;
     }
   }

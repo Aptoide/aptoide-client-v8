@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        tools:src="@drawable/error2"
+        tools:src="@drawable/no_connection_error"
         />
 
   </LinearLayout>

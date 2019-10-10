@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.recycler;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.LifecycleSchim;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

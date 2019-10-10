@@ -3,14 +3,12 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.view.AppViewConfiguration;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.DetailedApp;
 import cm.aptoide.pt.view.app.DetailedAppRequestResult;
-import com.jakewharton.rx.transformer.ReplayingShare;
 import rx.Observable;
 import rx.Single;
 
@@ -29,8 +27,6 @@ public class AppViewModelManager {
   private AppModel cachedApp;
   private AppCoinsViewModel cachedAppCoinsViewModel;
 
-  private Observable<AppViewModel> observeAppViewModel;
-
   public AppViewModelManager(AppViewConfiguration appViewConfiguration, StoreManager storeManager,
       String marketName, AppCenter appCenter, DownloadStateParser downloadStateParser,
       InstallManager installManager, AppcMigrationManager appcMigrationManager,
@@ -46,21 +42,17 @@ public class AppViewModelManager {
   }
 
   public Observable<AppViewModel> observeAppViewModel() {
-    if (observeAppViewModel == null) {
-      observeAppViewModel = getAppModel().toObservable()
-          .flatMap(appModel -> {
-            Observable<DownloadModel> downloadModelObservable = getDownloadModel(appModel);
-            Observable<AppCoinsViewModel> appCoinsViewModelObservable =
-                getAppCoinsViewModel(appModel);
-            Observable<MigrationModel> migrationModelObservable = getMigrationModel(appModel);
-            return Observable.combineLatest(downloadModelObservable, appCoinsViewModelObservable,
-                migrationModelObservable,
-                (downloadModel, appCoinsModel, migrationModel) -> mergeToAppViewModel(appModel,
-                    downloadModel, appCoinsModel, migrationModel));
-          })
-          .compose(ReplayingShare.instance());
-    }
-    return observeAppViewModel;
+    return getAppModel().toObservable()
+        .flatMap(appModel -> {
+          Observable<DownloadModel> downloadModelObservable = getDownloadModel(appModel);
+          Observable<AppCoinsViewModel> appCoinsViewModelObservable =
+              getAppCoinsViewModel(appModel);
+          Observable<MigrationModel> migrationModelObservable = getMigrationModel(appModel);
+          return Observable.combineLatest(downloadModelObservable, appCoinsViewModelObservable,
+              migrationModelObservable,
+              (downloadModel, appCoinsModel, migrationModel) -> mergeToAppViewModel(appModel,
+                  downloadModel, appCoinsModel, migrationModel));
+        });
   }
 
   /**
@@ -115,8 +107,8 @@ public class AppViewModelManager {
   }
 
   private Observable<DownloadModel> getDownloadModel(AppModel app) {
-    return loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(), app.isPaid(),
-        app.getPay(), app.getSignature(), app.getStore()
+    return loadDownloadModel(app.getMd5(), app.getPackageName(), app.getVersionCode(),
+        app.getSignature(), app.getStore()
             .getId(), app.hasAdvertising() || app.hasBilling());
   }
 
@@ -126,14 +118,12 @@ public class AppViewModelManager {
   }
 
   private Observable<DownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, String signature, long storeId,
-      boolean hasAppc) {
+      int versionCode, String signature, long storeId, boolean hasAppc) {
     return combineLatest(installManager.getInstall(md5, packageName, versionCode),
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), isMigration), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay));
+            downloadStateParser.parseDownloadType(install.getType(), isMigration),
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
   }
 
   private Single<AppModel> loadAppModel(long appId, String storeName, String packageName) {
@@ -196,13 +186,13 @@ public class AppViewModelManager {
             app.getVersionName(), app.getPackageName(), app.getSize(), stats.getDownloads(),
             stats.getGlobalRating(), stats.getPackageDownloads(), stats.getRating(),
             app.getDeveloper(), app.getGraphic(), app.getIcon(), app.getMedia(), app.getModified(),
-            app.getAdded(), app.getObb(), app.getPay(), app.getWebUrls(), app.isPaid(),
-            app.wasPaid(), app.getPaidAppPath(), app.getPaymentStatus(),
-            app.isLatestTrustedVersion(), app.getUniqueName(), appViewConfiguration.shouldInstall(),
+            app.getAdded(), app.getObb(), app.getWebUrls(), app.isLatestTrustedVersion(),
+            app.getUniqueName(), appViewConfiguration.shouldInstall(),
             appViewConfiguration.getAppc(), appViewConfiguration.getMinimalAd(),
             appViewConfiguration.getEditorsChoice(), appViewConfiguration.getOriginTag(),
             isStoreFollowed, marketName, app.hasBilling(), app.hasAdvertising(), app.getBdsFlags(),
-            appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature()));
+            appViewConfiguration.getCampaignUrl(), app.getSignature(), app.isMature(),
+            app.getSplits(), app.getRequiredSplits()));
   }
 
   private Single<Boolean> isStoreFollowed(long storeId) {

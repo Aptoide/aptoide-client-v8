@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     >
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -19,9 +19,9 @@
         android:id="@+id/toolbar"
 
         />
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
-  <android.support.v4.widget.NestedScrollView
+  <androidx.core.widget.NestedScrollView
       android:id="@+id/about_appcoins_scroll"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -325,7 +325,7 @@
           style="@style/Aptoide.TextView.Regular.S.Grey"
           />
     </RelativeLayout>
-  </android.support.v4.widget.NestedScrollView>
+  </androidx.core.widget.NestedScrollView>
 
 
   <LinearLayout

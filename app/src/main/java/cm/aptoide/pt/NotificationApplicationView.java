@@ -3,7 +3,7 @@ package cm.aptoide.pt;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -21,8 +21,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 20/11/17.
  */
 
-public abstract class NotificationApplicationView extends AptoideApplication
-    implements NotificationView {
+public class NotificationApplicationView extends AptoideApplication implements NotificationView {
 
   private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;

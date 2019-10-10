@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.view.swipe;
 
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;

@@ -93,9 +93,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<MenuItem> clickToolbar();
 
-  Observable<Void> clickNoNetworkRetry();
-
-  Observable<Void> clickGenericRetry();
+  Observable<Void> clickErrorRetry();
 
   Observable<Void> clickTopDonorsDonateButton();
 
@@ -183,4 +181,6 @@ public interface AppViewView extends InstallAppView {
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 
   void showConsentDialog();
+
+  void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 }

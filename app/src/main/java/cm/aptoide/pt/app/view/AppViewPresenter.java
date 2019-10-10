@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -112,7 +112,6 @@ public class AppViewPresenter implements Presenter {
     pauseDownload();
     resumeDownload();
     cancelDownload();
-    handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
@@ -165,6 +164,7 @@ public class AppViewPresenter implements Presenter {
       view.handleError(appViewModel.getAppModel()
           .getError());
     } else {
+      view.setInstallButton(appViewModel.getAppCoinsViewModel());
       view.showAppView(appViewModel.getAppModel());
       view.showDownloadAppModel(appViewModel.getDownloadModel(),
           appViewModel.getAppCoinsViewModel());
@@ -179,16 +179,17 @@ public class AppViewPresenter implements Presenter {
 
   private void sendAppViewLoadAnalytics(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
-    if (!appModel.getEditorsChoice()
-        .isEmpty()) {
-      appViewManager.sendEditorsChoiceClickEvent(appModel.getPackageName(),
-          appModel.getEditorsChoice());
+    if (appModel.isFromEditorsChoice()) {
+      appViewManager.sendEditorsAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
+    } else {
+      appViewManager.sendAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising());
     }
-    appViewManager.sendAppViewOpenedFromEvent(appModel.getPackageName(), appModel.getDeveloper()
-        .getName(), appModel.getMalware()
-        .getRank()
-        .name(), appModel.hasBilling(), appModel.hasAdvertising());
-
     if (appViewModel.getDownloadModel()
         .getAction()
         .equals(DownloadModel.Action.MIGRATE) && !appViewManager.isMigrationImpressionSent()) {
@@ -262,7 +263,7 @@ public class AppViewPresenter implements Presenter {
         .flatMapCompletable(__ -> downloadApp(action, appModel).doOnCompleted(
             () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
-                    .getName(), action.toString()))
+                    .getName(), action.toString(), appModel.hasSplits()))
             .onErrorComplete())
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
@@ -555,6 +556,7 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendAppcInfoInteractEvent();
           appViewNavigator.navigateToAppCoinsInfo();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -820,7 +822,7 @@ public class AppViewPresenter implements Presenter {
   private void handleClickOnRetry() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> Observable.merge(view.clickNoNetworkRetry(), view.clickGenericRetry())
+        .flatMap(__ -> view.clickErrorRetry()
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())
@@ -993,7 +995,7 @@ public class AppViewPresenter implements Presenter {
                                 }
                                 appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                                     appModel.getDeveloper()
-                                        .getName(), action.toString());
+                                        .getName(), action.toString(), appModel.hasSplits());
 
                                 if (appViewManager.hasClaimablePromotion(
                                     Promotion.ClaimAction.INSTALL)) {
@@ -1014,12 +1016,8 @@ public class AppViewPresenter implements Presenter {
                           appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
                               () -> appViewAnalytics.clickOnInstallButton(
                                   appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
-                                      .getName(), action.toString())));
-                  break;
-                case PAY:
-                  completable = appViewManager.getAppModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
+                                      .getName(), action.toString(),
+                                  appViewViewModel.hasSplits())));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1030,7 +1028,7 @@ public class AppViewPresenter implements Presenter {
                         }
                         appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
                             appViewViewModel.getDeveloper()
-                                .getName(), "UPDATE TO APPC");
+                                .getName(), "UPDATE TO APPC", appViewViewModel.hasSplits());
                         return migrateApp(action, appViewViewModel);
                       });
                   break;
@@ -1047,13 +1045,6 @@ public class AppViewPresenter implements Presenter {
         }, error -> {
           throw new IllegalStateException(error);
         });
-  }
-
-  private Completable payApp(long appId) {
-    return Completable.fromAction(() -> {
-      appViewAnalytics.sendPaymentViewShowEvent();
-      appViewNavigator.buyApp(appId);
-    });
   }
 
   private Completable downgradeApp(DownloadModel.Action action, AppModel appModel) {
@@ -1091,30 +1082,6 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .name(), appModel.getEditorsChoice())))
         .toCompletable();
-  }
-
-  private void handleAppBought() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.appBought()
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .toObservable()
-                .filter(appViewViewModel -> appViewViewModel.getAppId()
-                    == appBoughClickEvent.getAppId())
-                .map(__2 -> appBoughClickEvent))
-            .first()
-            .observeOn(viewScheduler)
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .flatMapCompletable(
-                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
-                .toObservable())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
   }
 
   private void handleApkfyDialogPositiveClick() {

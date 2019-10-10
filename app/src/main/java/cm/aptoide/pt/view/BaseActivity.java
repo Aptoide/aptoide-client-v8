@@ -1,14 +1,12 @@
 package cm.aptoide.pt.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.FlavourActivityModule;
 import cm.aptoide.pt.presenter.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 public abstract class BaseActivity extends RxAppCompatActivity {
 

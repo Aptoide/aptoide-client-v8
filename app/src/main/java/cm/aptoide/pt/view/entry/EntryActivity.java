@@ -2,7 +2,7 @@ package cm.aptoide.pt.view.entry;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.view.ActivityView;
 

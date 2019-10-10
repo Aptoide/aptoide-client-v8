@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.content.res.Resources;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.ErrorsMapper;
 

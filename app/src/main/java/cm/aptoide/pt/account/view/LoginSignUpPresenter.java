@@ -1,13 +1,13 @@
 package cm.aptoide.pt.account.view;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BackButton;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallback
     implements Presenter, BackButton.ClickHandler {

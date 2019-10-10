@@ -3,6 +3,7 @@ package cm.aptoide.pt.home;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.data.ApplicationAd;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import java.util.HashMap;
 import java.util.Map;
 

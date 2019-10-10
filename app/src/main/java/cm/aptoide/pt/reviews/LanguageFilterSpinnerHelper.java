@@ -2,13 +2,13 @@ package cm.aptoide.pt.reviews;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.R;
 import java.util.LinkedList;
 import java.util.List;

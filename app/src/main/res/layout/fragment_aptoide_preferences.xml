@@ -11,7 +11,7 @@
     android:orientation="vertical"
     >
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="?attr/toolbarBackground"
@@ -20,11 +20,11 @@
 
     <include layout="@layout/toolbar"/>
 
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <!-- Required ViewGroup for PreferenceFragmentCompat -->
   <FrameLayout
-      android:id="@+id/android:list_container"
+      android:id="@android:id/list_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >

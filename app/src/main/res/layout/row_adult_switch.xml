@@ -6,7 +6,7 @@
     style="?attr/backgroundCard"
     >
 
-  <android.support.v7.widget.SwitchCompat
+  <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/adult_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -18,7 +18,7 @@
       android:textOn=""
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/pin_adult_content"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

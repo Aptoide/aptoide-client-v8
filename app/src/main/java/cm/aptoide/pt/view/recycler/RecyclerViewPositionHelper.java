@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.recycler;
 
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewPositionHelper {
 

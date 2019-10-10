@@ -1,10 +1,7 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-
 import static cm.aptoide.pt.app.DownloadModel.Action.DOWNGRADE;
 import static cm.aptoide.pt.app.DownloadModel.Action.INSTALL;
-import static cm.aptoide.pt.app.DownloadModel.Action.PAY;
 import static cm.aptoide.pt.app.DownloadModel.Action.UPDATE;
 
 /**
@@ -16,14 +13,11 @@ public class DownloadModel {
   private final Action action;
   private final int progress;
   private final DownloadState downloadState;
-  private final GetAppMeta.Pay pay;
 
-  public DownloadModel(Action action, int progress, DownloadState downloadState,
-      GetAppMeta.Pay pay) {
+  public DownloadModel(Action action, int progress, DownloadState downloadState) {
     this.action = action;
     this.progress = progress;
     this.downloadState = downloadState;
-    this.pay = pay;
   }
 
   public Action getAction() {
@@ -48,20 +42,13 @@ public class DownloadModel {
     return isDownloading() || downloadState.equals(DownloadState.INSTALLING);
   }
 
-  public GetAppMeta.Pay getPay() {
-    return pay;
-  }
-
   public boolean hasError() {
     return downloadState.equals(DownloadState.ERROR) || downloadState.equals(
         DownloadState.NOT_ENOUGH_STORAGE_ERROR);
   }
 
   public boolean isDownloadable() {
-    return action.equals(INSTALL)
-        || action.equals(UPDATE)
-        || action.equals(DOWNGRADE)
-        || action.equals(PAY);
+    return action.equals(INSTALL) || action.equals(UPDATE) || action.equals(DOWNGRADE);
   }
 
   public enum Error {
@@ -69,7 +56,7 @@ public class DownloadModel {
   }
 
   public enum Action {
-    UPDATE, INSTALL, DOWNGRADE, OPEN, PAY, MIGRATE
+    UPDATE, INSTALL, DOWNGRADE, OPEN, MIGRATE
   }
 
   public enum DownloadState {

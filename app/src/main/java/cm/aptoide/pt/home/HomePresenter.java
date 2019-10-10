@@ -1,9 +1,16 @@
 package cm.aptoide.pt.home;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.apps.RewardApp;
+import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -16,9 +23,9 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
-import static cm.aptoide.pt.home.HomeBundle.BundleType.APPCOINS_ADS;
-import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORIAL;
-import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORIAL;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORS;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -81,6 +88,20 @@ public class HomePresenter implements Presenter {
     handleSnackLogInClick();
 
     handleMoPubConsentDialog();
+
+    handleLoadMoreErrorRetry();
+  }
+
+  private void handleLoadMoreErrorRetry() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.onLoadMoreRetryClicked())
+        .doOnNext(__ -> view.removeLoadMoreError())
+        .doOnNext(__ -> view.showLoadMore())
+        .flatMap(__ -> loadNextBundlesAndReactions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleMoPubConsentDialog() {
@@ -380,7 +401,8 @@ public class HomePresenter implements Presenter {
                 homeAnalytics.convertAppcAdClick(rewardApp.getClickUrl());
                 homeNavigator.navigateWithDownloadUrlAndReward(rewardApp.getAppId(),
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
-                    rewardApp.getReward());
+                    (float) rewardApp.getReward()
+                        .getAppc());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
@@ -495,7 +517,7 @@ public class HomePresenter implements Presenter {
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
-            handleError(bundlesModel.getError());
+            handleLoadMoreError();
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
@@ -504,6 +526,10 @@ public class HomePresenter implements Presenter {
           }
           view.hideShowMore();
         });
+  }
+
+  private void handleLoadMoreError() {
+    view.showLoadMoreError();
   }
 
   @VisibleForTesting public void handlePullToRefresh() {

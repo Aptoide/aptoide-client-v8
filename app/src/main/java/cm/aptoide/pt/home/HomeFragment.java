@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
@@ -26,11 +26,22 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.bundles.BundlesAdapter;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
+import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
+import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -69,16 +80,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   private PublishSubject<AdHomeEvent> adClickedEvents;
   private LinearLayoutManager layoutManager;
   private DecimalFormat oneDecimalFormatter;
-  private View genericErrorView;
-  private View noNetworkErrorView;
   private ProgressBar progressBar;
   private SwipeRefreshLayout swipeRefreshLayout;
   private Parcelable listState;
-  private View noNetworkRetryButton;
-  private View retryButton;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
   private PromotionsHomeDialog promotionsHomeDialog;
+  private ErrorView errorView;
 
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
@@ -121,10 +129,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     bundlesList = view.findViewById(R.id.bundles_list);
     bundlesList.getItemAnimator()
         .setChangeDuration(0);
-    genericErrorView = view.findViewById(R.id.generic_error);
-    noNetworkErrorView = view.findViewById(R.id.no_network_connection);
-    retryButton = genericErrorView.findViewById(R.id.retry);
-    noNetworkRetryButton = noNetworkErrorView.findViewById(R.id.retry);
+    errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -161,8 +166,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     adapter = null;
     layoutManager = null;
     swipeRefreshLayout = null;
-    genericErrorView = null;
-    noNetworkErrorView = null;
+    errorView = null;
     progressBar = null;
     if (promotionsHomeDialog != null) {
       promotionsHomeDialog.destroyDialog();
@@ -188,26 +192,24 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public void showLoading() {
     bundlesList.setVisibility(View.GONE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     bundlesList.setVisibility(View.VISIBLE);
-    genericErrorView.setVisibility(View.GONE);
-    noNetworkErrorView.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.GONE);
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
   @Override public void showGenericError() {
-    this.genericErrorView.setVisibility(View.VISIBLE);
-    this.noNetworkErrorView.setVisibility(View.GONE);
-    this.bundlesList.setVisibility(View.GONE);
-    this.progressBar.setVisibility(View.GONE);
-    if (this.swipeRefreshLayout.isRefreshing()) {
-      this.swipeRefreshLayout.setRefreshing(false);
+    errorView.setError(ErrorView.Error.GENERIC);
+    errorView.setVisibility(View.VISIBLE);
+    bundlesList.setVisibility(View.GONE);
+    progressBar.setVisibility(View.GONE);
+    if (swipeRefreshLayout.isRefreshing()) {
+      swipeRefreshLayout.setRefreshing(false);
     }
   }
 
@@ -258,8 +260,8 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showNetworkError() {
-    this.noNetworkErrorView.setVisibility(View.VISIBLE);
-    this.genericErrorView.setVisibility(View.GONE);
+    errorView.setError(ErrorView.Error.NO_NETWORK);
+    errorView.setVisibility(View.VISIBLE);
     this.bundlesList.setVisibility(View.GONE);
     this.progressBar.setVisibility(View.GONE);
     if (this.swipeRefreshLayout.isRefreshing()) {
@@ -268,7 +270,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public Observable<Void> retryClicked() {
-    return Observable.merge(RxView.clicks(retryButton), RxView.clicks(noNetworkRetryButton));
+    return errorView.retryClick();
   }
 
   @Override public Observable<HomeEvent> bundleScrolled() {
@@ -303,7 +305,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.KNOW_MORE));
+        .equals(HomeEvent.Type.APPC_KNOW_MORE));
   }
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
@@ -341,10 +343,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void setAdsTest(boolean showNatives) {
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, marketName,
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
+        oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives), captionBackgroundPainter);
+            marketName, showNatives), captionBackgroundPainter, marketName);
     bundlesList.setAdapter(adapter);
   }
 
@@ -400,6 +402,19 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @Override public void showLoadMoreError() {
+    adapter.showLoadMoreError();
+  }
+
+  @Override public void removeLoadMoreError() {
+    adapter.removeLoadMoreError();
+  }
+
+  @Override public Observable<HomeEvent> onLoadMoreRetryClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.LOAD_MORE_RETRY));
   }
 
   @Override public boolean isAtTop() {

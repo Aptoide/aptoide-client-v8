@@ -6,6 +6,7 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -19,79 +20,90 @@ import rx.Observable;
  * Created by neuro on 22-04-2016.
  */
 public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private GetAppRequest(String baseHost, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator) {
+      TokenInvalidator tokenInvalidator, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static GetAppRequest of(String packageName, String storeName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     boolean forceServerRefresh =
         ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
     return new GetAppRequest(getHost(sharedPreferences),
         new Body(packageName, storeName, forceServerRefresh, sharedPreferences), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator);
+        httpClient, converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
       long appId, OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     return new GetAppRequest(getHost(sharedPreferences),
         new Body(appId, packageName, sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   public static GetAppRequest of(String packageName, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     boolean forceServerRefresh =
         ManagerPreferences.getAndResetForceServerRefresh(sharedPreferences);
 
     return new GetAppRequest(getHost(sharedPreferences),
         new Body(packageName, forceServerRefresh, sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   public static GetAppRequest ofMd5(String md5, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     return new GetAppRequest(getHost(sharedPreferences), new Body(sharedPreferences, md5),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        appBundlesVisibilityManager);
   }
 
   public static GetAppRequest ofUname(String uname, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     return new GetAppRequest(getHost(sharedPreferences), new Body(uname, sharedPreferences),
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator);
+        bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        appBundlesVisibilityManager);
   }
 
   public static GetAppRequest of(long appId, String storeName,
       BaseRequestWithStore.StoreCredentials storeCredentials, String packageName,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     Body body = new Body(appId, storeName, packageName, sharedPreferences);
     body.setStoreUser(storeCredentials.getUsername());
     body.setStorePassSha1(storeCredentials.getPasswordSha1());
 
     return new GetAppRequest(getHost(sharedPreferences), body, bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator);
+        converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApp(body, bypassCache);
+    return interfaces.getApp(body, bypassCache,
+        appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   public static class Body extends BaseBodyWithApp {

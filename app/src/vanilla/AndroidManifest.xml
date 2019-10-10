@@ -5,7 +5,7 @@
     package="cm.aptoide.pt">
 
   <application
-      android:name=".VanillaApplication"
+      android:name=".NotificationApplicationView"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:supportsRtl="true"

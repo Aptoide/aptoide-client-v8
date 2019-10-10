@@ -6,7 +6,7 @@
 package cm.aptoide.pt.account;
 
 import android.content.res.Resources;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.R;
 
 /**

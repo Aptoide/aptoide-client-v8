@@ -1,8 +1,8 @@
 package cm.aptoide.pt.dataprovider.ads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import com.google.android.gms.common.ConnectionResult;

@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -30,6 +30,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -150,9 +151,17 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK)) {
       promotionsDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.EDITORIAL_DEEPLINK)) {
-      editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
+      String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+      String slug = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.SLUG);
+      if (cardId != null) {
+        editorialDeepLinkFromCardId(cardId);
+      } else if (slug != null) {
+        editorialDeepLinkFromSlug(slug);
+      }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_INFO_VIEW)) {
       appcInfoDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_ADS)) {
+      appcAdsDeepLink();
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -170,11 +179,25 @@ public class DeepLinkManager {
     return true;
   }
 
+  private void editorialDeepLinkFromSlug(String slug) {
+    Bundle bundle = new Bundle();
+    bundle.putString(EditorialFragment.SLUG, slug);
+
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
+  }
+
   private void appcInfoDeepLink() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
   }
 
-  private void editorialDeepLink(String cardId) {
+  private void appcAdsDeepLink() {
+    fragmentNavigator.navigateTo(
+        EarnAppcListFragment.Companion.newInstance("Earn AppCoins Credits", "appcoins-ads"), true);
+  }
+
+  private void editorialDeepLinkFromCardId(String cardId) {
     Bundle bundle = new Bundle();
     bundle.putString(EditorialFragment.CARD_ID, cardId);
 

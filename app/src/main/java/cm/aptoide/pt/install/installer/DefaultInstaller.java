@@ -14,8 +14,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -27,6 +27,7 @@ import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.packageinstaller.AppInstall;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -38,6 +39,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -264,9 +266,14 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
+    boolean shouldUserPackageInstaller =
+        shouldSetPackageInstaller || !map(installation).getSplitApks()
+            .isEmpty();
     return Observable.<Void>fromCallable(() -> {
-      if (shouldSetPackageInstaller) {
-        appInstaller.install(installation.getFile(), installation.getPackageName());
+      AppInstall appInstall = map(installation);
+      if (shouldSetPackageInstaller || !appInstall.getSplitApks()
+          .isEmpty()) {
+        appInstaller.install(appInstall);
       } else {
         startInstallIntent(context, installation.getFile());
       }
@@ -277,7 +284,7 @@ public class DefaultInstaller implements Installer {
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
                   if (installation.getStatus() == Installed.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                             : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
                   }
                   return null;
@@ -296,7 +303,7 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                      shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                           : Installed.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
@@ -309,8 +316,20 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+            shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                 : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  @NotNull private AppInstall map(Installation installation) {
+    AppInstall.InstallBuilder installBuilder = AppInstall.builder()
+        .setPackageName(installation.getPackageName())
+        .setBaseApk(installation.getFile());
+    for (FileToDownload file : installation.getFiles()) {
+      if (FileToDownload.SPLIT == file.getFileType()) {
+        installBuilder.addApkSplit(new File(file.getFilePath()));
+      }
+    }
+    return installBuilder.build();
   }
 
   private boolean isDeviceMIUI() {

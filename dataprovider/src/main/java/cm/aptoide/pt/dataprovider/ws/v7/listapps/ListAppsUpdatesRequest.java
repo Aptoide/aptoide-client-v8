@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -33,23 +34,27 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
 
   private static final int SPLIT_SIZE = 100;
   private final SharedPreferences sharedPreferences;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private ListAppsUpdatesRequest(Body body, String baseHost,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.sharedPreferences = sharedPreferences;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PackageManager packageManager) {
+      SharedPreferences sharedPreferences, PackageManager packageManager,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new ListAppsUpdatesRequest(
         new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId,
             sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences);
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
   }
 
   private static List<PackageInfo> getAllInstalledApps(PackageManager packageManager) {
@@ -108,7 +113,8 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                 .observeOn(Schedulers.io())
                 // map bodies to request with bodies
                 //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-                .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+                .map(body -> interfaces.listAppsUpdates(body, bypassCache,
+                    appBundlesVisibilityManager.shouldEnableAppBundles()))
                 // wait for all requests to be ready and return a list of requests
                 .toList()
                 // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -130,7 +136,8 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                   return resultListAppsUpdates;
                 });
           }
-          return interfaces.listAppsUpdates(body, bypassCache);
+          return interfaces.listAppsUpdates(body, bypassCache,
+              appBundlesVisibilityManager.shouldEnableAppBundles());
         });
   }
 

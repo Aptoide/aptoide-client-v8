@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.rx;
 
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.Preference;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.store;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 
 /**

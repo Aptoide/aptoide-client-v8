@@ -2,7 +2,7 @@ package cm.aptoide.pt.view;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
