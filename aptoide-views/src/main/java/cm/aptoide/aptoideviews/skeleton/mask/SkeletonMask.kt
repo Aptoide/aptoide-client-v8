@@ -24,6 +24,10 @@ internal class SkeletonMask(val view: View, val preferences: SkeletonViewPrefere
     isAntiAlias = preferences.border.size > 0 || preferences.shape is Shape.Circle
   }
 
+  init {
+    view.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+  }
+
   fun draw(canvas: Canvas) {
     val rect = RectF(preferences.border.size / 2.0f, preferences.border.size / 2.0f,
         view.width.toFloat() - (preferences.border.size / 2.0f),
