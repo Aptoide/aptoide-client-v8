@@ -124,6 +124,8 @@ ext {
 
   CRASHLYTICS_VERSION = '2.10.0'
 
+  //Rakam
+  RAKAM_VERSION = '2.7.14'
 
   //MOPUB ADS
   MOPUB_SDK_VERSION = '5.7.1'

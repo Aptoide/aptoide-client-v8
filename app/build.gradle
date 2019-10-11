@@ -435,7 +435,7 @@ dependencies {
   implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
 
   //Rakam
-  implementation "io.rakam:android-sdk:2.7.14"
+  implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
