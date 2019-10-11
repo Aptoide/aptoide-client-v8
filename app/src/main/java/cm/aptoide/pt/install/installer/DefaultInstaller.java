@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -51,7 +52,6 @@ public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER = Environment.getExternalStorageDirectory()
       .getAbsolutePath() + "/Android/obb/";
-  public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
@@ -195,8 +195,7 @@ public class DefaultInstaller implements Installer {
   private Observable<Installation> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
       return Observable.create(new RootCommandOnSubscribe(installation.getId()
-          .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
-          .getAbsolutePath(), installerAnalytics))
+          .hashCode(), getRootInstallCommand(installation), installerAnalytics))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
@@ -213,6 +212,14 @@ public class DefaultInstaller implements Installer {
     } else {
       return Observable.error(new InstallationException("User doesn't allow root installation"));
     }
+  }
+
+  private String getRootInstallCommand(Installation installation) {
+    File file = installation.getFile();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      return "cat " + file.getAbsolutePath() + " | pm install -S " + file.length();
+    }
+    return "pm install -r " + file.getAbsolutePath();
   }
 
   private void startUninstallIntent(Context context, String packageName, Uri uri)
@@ -245,12 +252,28 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
-    return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
-        .subscribeOn(Schedulers.computation())
-        .map(success -> installation)
-        .startWith(
-            updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    if (isSystem(context)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        return defaultInstall(context, installation, true);
+      }
+      return Observable.create(new SystemInstallOnSubscribe(context, packageManager,
+          Uri.fromFile(installation.getFile())))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
+          .startWith(
+              updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    }
+    return Observable.error(new Throwable());
+  }
+
+  private boolean isSystem(Context context) {
+    try {
+      ApplicationInfo info = packageManager.getApplicationInfo(context.getPackageName(),
+          PackageManager.PERMISSION_GRANTED);
+      return (info.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new AssertionError("Aptoide application not found by package manager.");
+    }
   }
 
   @NonNull
