@@ -5,7 +5,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
 import cm.aptoide.analytics.SessionLogger;
 import io.rakam.api.Rakam;
-import java.util.HashMap;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,16 +65,5 @@ public class RakamEventLogger implements EventLogger, SessionLogger {
 
   @Override public void endSession() {
     //According to rakam documentation: Sessions are handled automatically now; you no longer have to manually call startSession() or endSession().
-  }
-
-  private Map<String, String> map(Map<String, Object> data) {
-    Map<String, String> map = new HashMap<>();
-    for (Map.Entry<String, Object> entry : data.entrySet()) {
-      if (entry.getValue() != null) {
-        map.put(entry.getKey(), entry.getValue()
-            .toString());
-      }
-    }
-    return map;
   }
 }
