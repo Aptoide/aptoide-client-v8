@@ -40,6 +40,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -49,6 +50,7 @@ import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -76,6 +78,7 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -387,5 +390,16 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
       AppNavigator appNavigator) {
     return new SeeMoreAppcNavigator(appNavigator);
+  }
+
+  @ActivityScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      Converter.Factory converterFactory, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+    return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
   }
 }

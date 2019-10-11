@@ -18,6 +18,7 @@ import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
 import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.promotions.PromotionsFragment;
@@ -122,4 +123,6 @@ public interface FragmentComponent {
   void inject(SeeMoreAppcFragment seeMoreAppcFragment);
 
   void inject(EarnAppcListFragment earnAppcListFragment);
+
+  void inject(ListAppsMoreFragment listAppsMoreFragment);
 }

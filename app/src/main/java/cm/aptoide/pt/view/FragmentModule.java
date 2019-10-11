@@ -30,6 +30,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
@@ -106,6 +107,11 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsConfiguration;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
+import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
@@ -592,5 +598,25 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
     return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.TAG));
+  }
+
+  @FragmentScope @Provides ListAppsConfiguration providesListAppsMoreConfiguration() {
+    return new ListAppsConfiguration(fragment.getArguments()
+        .getString(BundleCons.TITLE), arguments.getString(BundleCons.TAG),
+        arguments.getString(BundleCons.ACTION), arguments.getString(BundleCons.NAME));
+  }
+
+  @FragmentScope @Provides ListAppsMorePresenter providesListAppsMorePresenter(
+      CrashReport crashReport, AppNavigator appNavigator,
+      @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
+    return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
+        listAppsConfiguration, listAppsMoreManager);
+  }
+
+  @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
+      ListAppsMoreRepository listAppsMoreRepository, AdsRepository adsRepository) {
+    return new ListAppsMoreManager(listAppsMoreRepository, adsRepository);
   }
 }
