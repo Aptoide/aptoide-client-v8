@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -251,15 +252,28 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      return defaultInstall(context, installation, true);
+    if (isSystem(context)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        return defaultInstall(context, installation, true);
+      }
+      return Observable.create(new SystemInstallOnSubscribe(context, packageManager,
+          Uri.fromFile(installation.getFile())))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
+          .startWith(
+              updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
     }
-    return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
-        .subscribeOn(Schedulers.computation())
-        .map(success -> installation)
-        .startWith(
-            updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    return Observable.error(new Throwable());
+  }
+
+  private boolean isSystem(Context context) {
+    try {
+      ApplicationInfo info = packageManager.getApplicationInfo(context.getPackageName(),
+          PackageManager.PERMISSION_GRANTED);
+      return (info.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new AssertionError("Aptoide application not found by package manager.");
+    }
   }
 
   @NonNull
