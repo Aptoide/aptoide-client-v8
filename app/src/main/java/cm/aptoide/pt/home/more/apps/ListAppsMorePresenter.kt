@@ -23,14 +23,16 @@ class ListAppsMorePresenter(view: ListAppsView<Application>,
                             private val listAppsMoreManager: ListAppsMoreManager) :
     ListAppsPresenter<Application>(view, viewScheduler, crashReporter) {
 
+  private val url by lazy(LazyThreadSafetyMode.NONE) {
+    listAppsConfiguration.action?.replace(V7.getHost(sharedPreferences), "")
+  }
+
 
   override fun getApps(refresh: Boolean): Observable<List<Application>> {
-    val url = convertUrl()
     return listAppsMoreManager.loadFreshApps(url, refresh, listAppsConfiguration.eventName)
   }
 
   override fun loadMoreApps(): Observable<List<Application>> {
-    val url = convertUrl()
     return listAppsMoreManager.loadMoreApps(url, true, listAppsConfiguration.eventName)
   }
 
@@ -49,13 +51,4 @@ class ListAppsMorePresenter(view: ListAppsView<Application>,
           listAppsConfiguration.tag)
     }
   }
-
-  private fun convertUrl(): String? {
-    return if (listAppsConfiguration.action != null)
-      listAppsConfiguration.action.replace(V7.getHost(sharedPreferences),
-          "")
-    else
-      null
-  }
-
 }

@@ -41,7 +41,5 @@ class ListAppsMoreViewHolder(val view: View,
         itemView.ad_label.visibility = View.GONE
       }
     }
-    val cardHeight = itemView.height
-    itemView.icon.layoutParams.height = cardHeight / 2
   }
 }
