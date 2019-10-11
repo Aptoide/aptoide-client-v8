@@ -4,6 +4,8 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,6 +52,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView message;
   private View media;
   private ImageView image;
+  private WebView embeddedVideo;
   private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
   private RecyclerView mediaList;
@@ -78,6 +81,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
+    embeddedVideo = view.findViewById(R.id.embedded_video);
     videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
     videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     descriptionSwitcher =
@@ -249,6 +253,13 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             videoThumbnailContainer.setOnClickListener(v -> uiEventListener.onNext(
                 new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
           }
+        }
+        if (editorialMedia.isEmbedded()) {
+          embeddedVideo.setWebViewClient(new WebViewClient());
+          embeddedVideo.getSettings()
+              .setJavaScriptEnabled(true);
+          embeddedVideo.loadUrl(editorialMedia.getUrl());
+          embeddedVideo.setVisibility(View.VISIBLE);
         }
       }
     }
