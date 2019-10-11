@@ -8,6 +8,6 @@ public class AppBundlesVisibilityManager {
   }
 
   public boolean shouldEnableAppBundles() {
-    return !isDeviceMiui;
+    return false;
   }
 }
