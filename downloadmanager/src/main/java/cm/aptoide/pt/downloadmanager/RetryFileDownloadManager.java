@@ -20,6 +20,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private FileDownloader fileDownloader;
   private PublishSubject<FileDownloadCallback> retryFileDownloadSubject;
   private Subscription startDownloadSubscription;
+  private boolean retried;
 
   public RetryFileDownloadManager(String mainDownloadPath, int fileType, String packageName,
       int versionCode, String fileName, String md5, FileDownloaderProvider fileDownloaderProvider,
@@ -71,12 +72,13 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
             == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND)
         .flatMap(fileDownloadCallback -> {
           if (fileDownloadCallback.getDownloadState()
-              == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
+              == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND && !retried) {
             Logger.getInstance()
                 .d(TAG, "File not found error, restarting the download with the alternative link");
             FileDownloader retryFileDownloader =
                 fileDownloaderProvider.createFileDownloader(md5, alternativeDownloadPath, fileType,
                     packageName, versionCode, fileName, PublishSubject.create());
+            retried = true;
             this.fileDownloader = retryFileDownloader;
             return retryFileDownloader.startFileDownload()
                 .andThen(handleFileDownloadProgress(retryFileDownloader));
