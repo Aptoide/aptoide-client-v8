@@ -68,6 +68,9 @@ dependencies {
 
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:6.4.2"
+
+  //Rakam android sdk
+  implementation "io.rakam:android-sdk:2.7.14"
 }
 
 version = "1.0.3"
