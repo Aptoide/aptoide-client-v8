@@ -29,8 +29,11 @@ public class AptoideApplicationAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty(APTOIDE_PACKAGE, packageName);
-    Rakam.getInstance()
-        .identify(new Identify().add(APTOIDE_PACKAGE, packageName));
+
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().add(APTOIDE_PACKAGE, packageName));
+    }
   }
 
   public void setVersionCodeDimension(String versionCode) {

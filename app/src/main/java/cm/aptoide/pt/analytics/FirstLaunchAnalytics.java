@@ -6,6 +6,7 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -253,8 +254,11 @@ public class FirstLaunchAnalytics {
     AppEventsLogger.updateUserProperties(parameters,
         response -> logger.logDebug("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty(key, value);
-    Rakam.getInstance()
-        .identify(new Identify().add(key, value));
+
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().add(key, value));
+    }
   }
 
   private void setUserPropertiesWithBundle(Bundle data) {
@@ -272,12 +276,14 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
     FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
 
-    Rakam.getInstance()
-        .identify(new Identify().add(UTM_CONTENT, utmContent)
-            .add(UTM_SOURCE, utmSource)
-            .add(UTM_CAMPAIGN, utmCampaign)
-            .add(UTM_MEDIUM, utmMedium)
-            .add(ENTRY_POINT, entryPoint));
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().add(UTM_CONTENT, utmContent)
+              .add(UTM_SOURCE, utmSource)
+              .add(UTM_CAMPAIGN, utmCampaign)
+              .add(UTM_MEDIUM, utmMedium)
+              .add(ENTRY_POINT, entryPoint));
+    }
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -305,11 +311,13 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
     FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
 
-    Rakam.getInstance()
-        .identify(new Identify().add(UTM_CONTENT, UNKNOWN)
-            .add(UTM_SOURCE, UNKNOWN)
-            .add(UTM_CAMPAIGN, UNKNOWN)
-            .add(UTM_MEDIUM, UNKNOWN)
-            .add(ENTRY_POINT, UNKNOWN));
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().add(UTM_CONTENT, UNKNOWN)
+              .add(UTM_SOURCE, UNKNOWN)
+              .add(UTM_CAMPAIGN, UNKNOWN)
+              .add(UTM_MEDIUM, UNKNOWN)
+              .add(ENTRY_POINT, UNKNOWN));
+    }
   }
 }
