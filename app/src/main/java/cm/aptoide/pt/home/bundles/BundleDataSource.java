@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.bundles;
 
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -8,9 +9,9 @@ import rx.Single;
 
 public interface BundleDataSource {
 
-  Single<HomeBundlesModel> loadFreshHomeBundles(String key);
+  Observable<HomeBundlesModel> loadFreshHomeBundles(String key);
 
-  Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key);
+  Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key);
 
   boolean hasMore(Integer offset, String title);
 

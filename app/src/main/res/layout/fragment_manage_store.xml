@@ -137,7 +137,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="22dp"
                 android:orientation="horizontal"
-                tools:visibility="visible"
+              tools:visibility="visible"
                 >
 
               <ImageView
@@ -455,7 +455,7 @@
               android:layout_height="wrap_content"
               android:layout_marginBottom="@dimen/padding_very_small"
               android:layout_marginTop="@dimen/padding_very_small"
-              tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
               tools:orientation="horizontal"
               />
         </LinearLayout>

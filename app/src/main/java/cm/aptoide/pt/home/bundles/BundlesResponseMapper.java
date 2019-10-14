@@ -54,7 +54,7 @@ public class BundlesResponseMapper {
       try {
         if (widget.getType()
             .equals(Type.ACTION_ITEM)) {
-          type = actionItemTypeMapper(widget.getViewObject());
+          type = actionItemTypeMapper(widget);
         } else {
           type = bundleTypeMapper(widget.getType(), widget.getData());
         }
@@ -75,33 +75,41 @@ public class BundlesResponseMapper {
         if (type.equals(HomeBundle.BundleType.APPS)
             || type.equals(HomeBundle.BundleType.EDITORS)
             || type.equals(HomeBundle.BundleType.TOP)) {
-
-          appBundles.add(new AppBundle(title, map(((ListApps) viewObject).getDataList()
-              .getList(), type, widgetTag), type, event, widgetTag, widgetActionTag));
+          List<Application> apps = null;
+          if (viewObject != null) {
+            apps = map(((ListApps) viewObject).getDataList()
+                .getList(), type, widgetTag);
+          }
+          appBundles.add(new AppBundle(title, apps, type, event, widgetTag, widgetActionTag));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
-
-          List<Application> applicationList =
-              map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
-          if (!applicationList.isEmpty()) {
+          List<Application> applicationList = null;
+          if (viewObject != null) {
+            applicationList = map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
+          }
+          if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
                 new Event().setName(Event.Name.getAppCoinsAds), widgetTag, widgetActionTag));
           }
         } else if (type.equals(HomeBundle.BundleType.ADS)) {
-          appBundles.add(new AdBundle(title,
-              new AdsTagWrapper(((GetAdsResponse) viewObject).getAds(), widgetTag),
+          List<GetAdsResponse.Ad> adsList = null;
+          if (viewObject != null) {
+            adsList = ((GetAdsResponse) viewObject).getAds();
+          }
+          appBundles.add(new AdBundle(title, new AdsTagWrapper(adsList, widgetTag),
               new Event().setName(Event.Name.getAds), widgetTag));
         } else if (type.equals(HomeBundle.BundleType.EDITORIAL)) {
           appBundles.add(new ActionBundle(title, type, event, widgetTag,
               map((ActionItemResponse) viewObject)));
         } else if (type.equals(HomeBundle.BundleType.INFO_BUNDLE)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (!blacklistManager.isBlacklisted(type.toString(), actionItem.getCardId())) {
+          if (actionItem == null || !blacklistManager.isBlacklisted(type.toString(),
+              actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         } else if (type.equals(HomeBundle.BundleType.WALLET_ADS_OFFER)) {
           ActionItem actionItem = map((ActionItemResponse) viewObject);
-          if (walletAdsOfferCardManager.shouldShowWalletOfferCard(type.toString(),
-              actionItem.getCardId())) {
+          if (actionItem == null || walletAdsOfferCardManager.shouldShowWalletOfferCard(
+              type.toString(), actionItem.getCardId())) {
             appBundles.add(new ActionBundle(title, type, event, widgetTag, actionItem));
           }
         }
@@ -127,6 +135,8 @@ public class BundlesResponseMapper {
   }
 
   private ActionItem map(ActionItemResponse viewObject) {
+    if (viewObject == null) return null;
+
     ActionItemData item = viewObject.getDataList()
         .getList()
         .get(0);
@@ -137,27 +147,19 @@ public class BundlesResponseMapper {
         .getTheme() : "");
   }
 
-  private HomeBundle.BundleType actionItemTypeMapper(Object actionItemData) {
-    if (!(actionItemData instanceof ActionItemResponse)
-        || ((ActionItemResponse) actionItemData).getDataList()
-        .getList()
-        .isEmpty()) {
-      return HomeBundle.BundleType.UNKNOWN;
+  private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {
+    if (widget.getData() != null) {
+      switch (widget.getData()
+          .getLayout()) {
+        case APPC_INFO:
+          return HomeBundle.BundleType.INFO_BUNDLE;
+        case CURATION_1:
+          return HomeBundle.BundleType.EDITORIAL;
+        case WALLET_ADS_OFFER:
+          return HomeBundle.BundleType.WALLET_ADS_OFFER;
+      }
     }
-    String layout = ((ActionItemResponse) actionItemData).getDataList()
-        .getList()
-        .get(0)
-        .getType();
-    switch (layout) {
-      case "APPC_INFO":
-        return HomeBundle.BundleType.INFO_BUNDLE;
-      case "CURATION_1":
-        return HomeBundle.BundleType.EDITORIAL;
-      case "WALLET_ADS_OFFER":
-        return HomeBundle.BundleType.WALLET_ADS_OFFER;
-      default:
-        return HomeBundle.BundleType.UNKNOWN;
-    }
+    return HomeBundle.BundleType.UNKNOWN;
   }
 
   private Event getEvent(GetStoreWidgets.WSWidget widget) {

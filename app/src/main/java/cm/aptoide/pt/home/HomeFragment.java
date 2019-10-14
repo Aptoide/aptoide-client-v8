@@ -27,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.bundles.BundlesAdapter;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
 import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
@@ -417,6 +418,11 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
         .equals(HomeEvent.Type.LOAD_MORE_RETRY));
   }
 
+  @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
+    hideLoading();
+    adapter.update(homeBundles.getList());
+  }
+
   @Override public boolean isAtTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     return layoutManager.findFirstVisibleItemPosition() == 0;
@@ -424,7 +430,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
-        <= VISIBLE_THRESHOLD;
+        <= VISIBLE_THRESHOLD && adapter.isLoaded();
   }
 
   private EditorialBundleViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
