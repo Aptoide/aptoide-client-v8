@@ -27,6 +27,7 @@
   <string name="open">Open</string>
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
+  <string name="learn_more_button">LEARN MORE</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -703,6 +704,8 @@
   <string name="poa_bundle_title">Earn AppCoins Credits</string>
 
   <!--APPC Info View-->
+  <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
+  <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
   <string name="appc_info_view_body_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>30% bonus in all purchases!</b></string>
   <string name="appc_info_view_title_2">First Things First</string>
@@ -711,6 +714,8 @@
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle "Earn AppCoins Credits" in Aptoide home!</string>
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
   <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_devs_title">Are you a developer?</string>
+  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
 
   <!--Updates Notification-->
   <string name="updates_notification_title">Don\'t get left behind!</string>

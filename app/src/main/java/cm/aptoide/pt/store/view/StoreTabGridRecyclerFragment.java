@@ -68,7 +68,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   public static Fragment newInstance(Event event, HomeEvent.Type type, String title,
       String storeTheme, String tag, StoreContext storeContext) {
     Bundle args = buildBundle(event, type, title, storeTheme, tag, storeContext);
-    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
+    Fragment fragment = StoreTabFragmentChooser.choose(event);
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
       args.putAll(arguments);

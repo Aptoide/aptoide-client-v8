@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -465,7 +466,7 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(placeHolderDrawableId)
-              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+              .transforms(new CenterInside(), new RoundedCorners(radius)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }

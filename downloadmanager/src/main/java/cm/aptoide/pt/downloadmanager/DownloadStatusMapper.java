@@ -1,7 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
-import java.util.List;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -45,6 +44,7 @@ public class DownloadStatusMapper {
     int downloadError;
     switch (appDownloadState) {
       case ERROR:
+      case ERROR_FILE_NOT_FOUND:
         downloadError = Download.GENERIC_ERROR;
         break;
       case ERROR_NOT_ENOUGH_SPACE:

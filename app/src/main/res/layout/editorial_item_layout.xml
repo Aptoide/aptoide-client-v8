@@ -108,6 +108,13 @@
           />
     </FrameLayout>
 
+    <WebView
+      android:id="@+id/embedded_video"
+      android:layout_width="match_parent"
+      android:layout_height="200dp"
+      android:visibility="gone"
+      tools:ignore="WebViewLayout"
+      tools:visibility="gone" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/editoral_image_list"
         android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
+import cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.home.bundles.apps.RewardApp
@@ -207,6 +208,10 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
 
   override fun getItemSizeHeight(): Int {
     return 158
+  }
+
+  override fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy {
+    return GridRecyclerView.AdaptStrategy.SCALE_KEEP_ASPECT_RATIO
   }
 
   override fun getContainerPaddingDp(): Rect {

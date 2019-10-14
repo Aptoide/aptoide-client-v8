@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytics,
-    cm.aptoide.pt.downloadmanager.DownloadAnalytics {
+public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.DownloadAnalytics {
   public static final String DOWNLOAD_EVENT_NAME = "DOWNLOAD";
   public static final String NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME =
       "Aptoide_Push_Notification_Download_Complete";
@@ -73,34 +72,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Analytic
     this.telephonyManager = telephonyManager;
     this.navigationTracker = navigationTracker;
     this.analyticsManager = analyticsManager;
-  }
-
-  @Override public void onError(Download download, Throwable throwable) {
-
-    String key = download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME;
-    DownloadEvent downloadEvent = cache.get(key);
-    if (downloadEvent != null) {
-      Map<String, Object> data = downloadEvent.getData();
-      Map<String, Object> result = new HashMap<>();
-      Map<String, Object> error = new HashMap<>();
-
-      result.put(STATUS, FAIL);
-      error.put(TYPE, throwable.getClass()
-          .getSimpleName());
-      error.put(MESSAGE, throwable.getMessage());
-      result.put(ERROR, error);
-      data.put(RESULT, result);
-      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext());
-      cache.remove(key);
-    }
-  }
-
-  @Override public void onDownloadComplete(Download download) {
-    sendDownloadCompletedEvent(download);
-    sendDownloadEvent(download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
-    sendDownloadEvent(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
-    sendDownloadEvent(download.getMd5() + NOTIFICATION_DOWNLOAD_COMPLETE_EVENT_NAME);
   }
 
   @Override public void onDownloadComplete(String md5, String packageName, int versionCode) {
