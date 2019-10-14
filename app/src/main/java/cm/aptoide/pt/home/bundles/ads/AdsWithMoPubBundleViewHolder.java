@@ -1,15 +1,20 @@
 package cm.aptoide.pt.home.bundles.ads;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
@@ -24,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
+import static android.content.Context.WINDOW_SERVICE;
+
 public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
 
   private final TextView bundleTitle;
@@ -33,6 +40,7 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
   private final RecyclerView appsList;
   private final String marketName;
   private final MoPubRecyclerAdapter moPubRecyclerAdapter;
+  private final Skeleton skeleton;
   private boolean hasAdLoaded;
 
   public AdsWithMoPubBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
@@ -74,6 +82,13 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     appsList.setAdapter(moPubRecyclerAdapter);
     appsList.setNestedScrollingEnabled(false);
+
+    Resources resources = view.getContext()
+        .getResources();
+    WindowManager windowManager = (WindowManager) view.getContext()
+        .getSystemService(WINDOW_SERVICE);
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton,
+        Type.ADS.getPerLineCount(resources, windowManager) * 3);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -84,25 +99,30 @@ public class AdsWithMoPubBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, position);
-    appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
+    if (homeBundle.getContent() == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      appsInBundleAdapter.updateBundle(homeBundle, position);
+      appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
-    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+      appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
+      });
+
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+
+      if (!hasAdLoaded) {
+        hasAdLoaded = true;
+        moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
       }
-    });
-
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
-
-    if (!hasAdLoaded) {
-      hasAdLoaded = true;
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_HOME_PLACEMENT_ID);
     }
   }
 }

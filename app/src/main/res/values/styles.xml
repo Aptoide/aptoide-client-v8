@@ -494,7 +494,7 @@
   </style>
 
   <style name="AlertTextAppearanceAptoide" parent="@style/Base.Widget.AppCompat.Button">
-    <!-- Set text size and color of title and message here -->
+    <!-- Set text size and skeletonColor of title and message here -->
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 

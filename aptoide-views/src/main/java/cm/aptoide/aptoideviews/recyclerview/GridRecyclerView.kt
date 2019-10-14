@@ -11,6 +11,7 @@ import androidx.annotation.Dimension
 import androidx.annotation.Px
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cm.aptoide.aptoideviews.safeLet
 
 /**
  * An extension of a RecyclerView to make sure that grid animations work correctly and to

@@ -5,6 +5,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
@@ -47,6 +49,8 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private TopReactionsPreview topReactionsPreview;
 
+  private Skeleton skeleton;
+
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       CaptionBackgroundPainter captionBackgroundPainter) {
     super(view);
@@ -62,16 +66,23 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
     this.captionBackgroundPainter = captionBackgroundPainter;
     topReactionsPreview = new TopReactionsPreview();
     topReactionsPreview.initialReactionsSetup(view);
+
+    skeleton = SkeletonUtils.applySkeleton(editorialCard, view.findViewById(R.id.root_cardview),
+        R.layout.editorial_action_item_skeleton);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
     ActionBundle actionBundle = (ActionBundle) homeBundle;
     ActionItem actionItem = actionBundle.getActionItem();
-
-    setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
-        actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
-        actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
-        actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor());
+    if (actionItem == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
+          actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
+          actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
+          actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor());
+    }
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
@@ -128,6 +139,7 @@ public class EditorialBundleViewHolder extends AppBundleViewHolder {
   }
 
   public void setEditorialCard(CurationCard curationCard, int position) {
+    skeleton.showOriginal();
     setBundleInformation(curationCard.getIcon(), curationCard.getTitle(),
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
         curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),

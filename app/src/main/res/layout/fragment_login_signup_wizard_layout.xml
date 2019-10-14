@@ -30,6 +30,7 @@ android:fitsSystemWindows="true"
           android:layout_height="wrap_content"
           android:visibility="invisible"
           >
+
         <include layout="@layout/toolbar" />
       </com.google.android.material.appbar.AppBarLayout>
 
@@ -75,7 +76,7 @@ android:fitsSystemWindows="true"
       android:visibility="visible"
       app:behavior_hideable="false"
       app:behavior_peekHeight="315dp"
-      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

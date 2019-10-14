@@ -152,21 +152,16 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
     AptoideNativeAd ad = (AptoideNativeAd) o;
 
     return ad.modified.equals(this.modified)
-        && ad.stars.equals(this.stars)
-        && ((Integer) ad.getDownloads()).equals(this.getDownloads())
-        && ad.description.equals(this.description)
-        && ad.getIcon()
-        .equals(this.getIcon())
-        && ad.getName()
+        && ad.stars.equals(this.stars) && ((Integer) ad.getDownloads()).equals(this.getDownloads())
+        && ad.description.equals(this.description) && ad.getIcon()
+        .equals(this.getIcon()) && ad.getName()
         .equals(this.getName())
         && ad.cpiUrl.equals(this.cpiUrl)
         && ad.adId.equals(this.adId)
         && ad.cpdUrl.equals(this.cpdUrl)
-        && ad.cpcUrl.equals(this.cpcUrl)
-        && ((Long) ad.getAppId()).equals(this.getAppId())
+        && ad.cpcUrl.equals(this.cpcUrl) && ((Long) ad.getAppId()).equals(this.getAppId())
         && ad.clickUrl.equals(this.clickUrl)
-        && ad.networkId.equals(this.networkId)
-        && ad.getPackageName()
+        && ad.networkId.equals(this.networkId) && ad.getPackageName()
         .equals(getPackageName());
   }
 }

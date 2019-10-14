@@ -28,7 +28,7 @@
       android:background="@color/white"
       app:itemIconTint="?attr/nav_item_color_state"
       app:itemTextColor="?attr/nav_item_color_state"
-      app:labelVisibilityMode="labeled"
+    app:labelVisibilityMode="labeled"
       app:menu="@menu/bottom_navigation_main"
       />
 </RelativeLayout>

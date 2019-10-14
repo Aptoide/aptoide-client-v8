@@ -18,9 +18,13 @@ public class AdBundle implements HomeBundle {
 
   public AdBundle(String title, AdsTagWrapper ads, Event event, String tag) {
     this.title = title;
-    this.ads = new ArrayList<>();
-    for (GetAdsResponse.Ad ad : ads.getAds()) {
-      this.ads.add(new AdClick(ad, tag));
+    if (ads.getAds() != null) {
+      this.ads = new ArrayList<>();
+      for (GetAdsResponse.Ad ad : ads.getAds()) {
+        this.ads.add(new AdClick(ad, tag));
+      }
+    } else {
+      this.ads = null;
     }
     this.event = event;
     this.tag = tag;

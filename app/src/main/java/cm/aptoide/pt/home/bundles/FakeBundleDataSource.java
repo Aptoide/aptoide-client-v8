@@ -9,6 +9,7 @@ import cm.aptoide.pt.view.app.FeatureGraphicApplication;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -17,11 +18,12 @@ import rx.Single;
 
 public class FakeBundleDataSource implements BundleDataSource {
 
-  @Override public Single<HomeBundlesModel> loadFreshHomeBundles(String key) {
+  @Override public Observable<HomeBundlesModel> loadFreshHomeBundles(String key) {
     return getHomeBundles();
   }
 
-  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
+  @Override
+  public Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
     return loadFreshHomeBundles(key);
   }
 
@@ -30,17 +32,17 @@ public class FakeBundleDataSource implements BundleDataSource {
   }
 
   @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {
-    return getHomeBundles();
+    return getHomeBundles().toSingle();
   }
 
   @Override
   public Single<HomeBundlesModel> loadNextBundleForEvent(String url, int offset, String key,
       int limit) {
-    return getHomeBundles();
+    return getHomeBundles().toSingle();
   }
 
-  private Single<HomeBundlesModel> getHomeBundles() {
-    return Single.just(new HomeBundlesModel(getFakeBundles(), false, 0));
+  private Observable<HomeBundlesModel> getHomeBundles() {
+    return Observable.just(new HomeBundlesModel(getFakeBundles(), false, 0, true));
   }
 
   public List<HomeBundle> getFakeBundles() {
