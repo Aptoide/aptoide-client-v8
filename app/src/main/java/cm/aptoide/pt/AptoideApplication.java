@@ -290,6 +290,7 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     checkAppSecurity().andThen(generateAptoideUuid())
+        .andThen(initializeRakamSdk())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -300,10 +301,6 @@ public abstract class AptoideApplication extends Application {
         .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
-
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      initializeRakam();
-    }
 
     //
     // app synchronous initialization
@@ -648,6 +645,14 @@ public abstract class AptoideApplication extends Application {
   private Completable generateAptoideUuid() {
     return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
+  }
+
+  private Completable initializeRakamSdk() {
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      return Completable.fromAction(() -> initializeRakam())
+          .subscribeOn(Schedulers.newThread());
+    }
+    return Completable.complete();
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
