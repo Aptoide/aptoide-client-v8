@@ -32,7 +32,7 @@ public class AptoideApplicationAnalytics {
 
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
       Rakam.getInstance()
-          .identify(new Identify().add(APTOIDE_PACKAGE, packageName));
+          .identify(new Identify().set(APTOIDE_PACKAGE, packageName));
     }
   }
 

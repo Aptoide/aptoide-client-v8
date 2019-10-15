@@ -255,7 +255,7 @@ public class FirstLaunchAnalytics {
   private void sendRakamGMSUserProperty(String gmsValue) {
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
       Rakam.getInstance()
-          .identify(new Identify().add(GMS_RAKAM, gmsValue));
+          .identify(new Identify().set(GMS_RAKAM, gmsValue));
     }
   }
 
@@ -287,11 +287,11 @@ public class FirstLaunchAnalytics {
 
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
       Rakam.getInstance()
-          .identify(new Identify().add(UTM_CONTENT_RAKAM, utmContent)
-              .add(UTM_SOURCE_RAKAM, utmSource)
-              .add(UTM_CAMPAIGN_RAKAM, utmCampaign)
-              .add(UTM_MEDIUM_RAKAM, utmMedium)
-              .add(ENTRY_POINT_RAKAM, entryPoint));
+          .identify(new Identify().set(UTM_CONTENT_RAKAM, utmContent)
+              .set(UTM_SOURCE_RAKAM, utmSource)
+              .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
+              .set(UTM_MEDIUM_RAKAM, utmMedium)
+              .set(ENTRY_POINT_RAKAM, entryPoint));
     }
   }
 
@@ -322,11 +322,11 @@ public class FirstLaunchAnalytics {
 
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
       Rakam.getInstance()
-          .identify(new Identify().add(UTM_CONTENT_RAKAM, UNKNOWN)
-              .add(UTM_SOURCE_RAKAM, UNKNOWN)
-              .add(UTM_CAMPAIGN_RAKAM, UNKNOWN)
-              .add(UTM_MEDIUM_RAKAM, UNKNOWN)
-              .add(ENTRY_POINT_RAKAM, UNKNOWN));
+          .identify(new Identify().set(UTM_CONTENT_RAKAM, UNKNOWN)
+              .set(UTM_SOURCE_RAKAM, UNKNOWN)
+              .set(UTM_CAMPAIGN_RAKAM, UNKNOWN)
+              .set(UTM_MEDIUM_RAKAM, UNKNOWN)
+              .set(ENTRY_POINT_RAKAM, UNKNOWN));
     }
   }
 }
