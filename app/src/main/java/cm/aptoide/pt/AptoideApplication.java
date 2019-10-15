@@ -86,7 +86,6 @@ import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
-import cm.aptoide.pt.utils.SecurityUtils;
 import cm.aptoide.pt.utils.q.QManager;
 import cm.aptoide.pt.view.ActivityModule;
 import cm.aptoide.pt.view.ActivityProvider;
@@ -292,8 +291,7 @@ public abstract class AptoideApplication extends Application {
      * TODO change this class in order to accept that there's no test
      * AN-1838
      */
-    checkAppSecurity().andThen(generateAptoideUuid())
-        .andThen(initializeRakamSdk())
+    generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
@@ -624,25 +622,6 @@ public abstract class AptoideApplication extends Application {
             getDefaultSharedPreferences()));
   }
 
-  private Completable checkAppSecurity() {
-    return Completable.fromAction(() -> {
-      if (SecurityUtils.checkAppSignature(this) != SecurityUtils.VALID_APP_SIGNATURE) {
-        Logger.getInstance()
-            .w(TAG, "app signature is not valid!");
-      }
-
-      if (SecurityUtils.checkEmulator()) {
-        Logger.getInstance()
-            .w(TAG, "application is running on an emulator");
-      }
-
-      if (SecurityUtils.checkDebuggable(this)) {
-        Logger.getInstance()
-            .w(TAG, "application has debug flag active");
-      }
-    });
-  }
-
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
     return DisplayableWidgetMapping.getInstance();
   }
@@ -661,22 +640,17 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
-    return accountManager.accountStatus()
-        .first()
-        .toSingle()
-        .flatMapCompletable(account -> {
-          if (SecurePreferences.isFirstRun(
-              SecurePreferencesImplementation.getInstance(getApplicationContext(),
-                  getDefaultSharedPreferences()))) {
+    if (SecurePreferences.isFirstRun(
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()))) {
 
-            setSharedPreferencesValues();
+      setSharedPreferencesValues();
 
-            return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
-                .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-          }
+      return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
+          .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
+    }
 
-          return Completable.complete();
-        });
+    return Completable.complete();
   }
 
   private void setSharedPreferencesValues() {
