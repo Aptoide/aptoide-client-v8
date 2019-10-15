@@ -39,6 +39,7 @@ import cm.aptoide.analytics.implementation.loggers.FabricEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
+import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
@@ -284,6 +285,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1408,6 +1410,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new FlurryEventLogger(application, logger);
   }
 
+  @Singleton @Provides @Named("rakamEventLogger") EventLogger providesRakamEventLogger(
+      AnalyticsLogger logger) {
+    return new RakamEventLogger(logger);
+  }
+
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
       @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
@@ -1466,18 +1473,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("flurrySession") SessionLogger flurrySessionLogger,
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
-      AnalyticsLogger logger) {
+      @Named("rakamEventLogger") EventLogger rakamEventLogger,
+      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
+        .addLogger(rakamEventLogger, rakamEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
         .setAnalyticsNormalizer(analyticsNormalizer)
         .setDebugLogger(logger)
         .build();
+  }
+
+  @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
+    return Collections.emptyList();
   }
 
   @Singleton @Provides @Named("normalizer")

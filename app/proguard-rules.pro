@@ -187,3 +187,7 @@
 
 #Don't warn about flurry ads
 -dontwarn com.flurry.sdk.**
+
+#rakam
+-keep class com.google.android.gms.ads.** { *; }
+-dontwarn okio.**

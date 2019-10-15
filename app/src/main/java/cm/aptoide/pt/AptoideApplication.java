@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
@@ -109,7 +110,11 @@ import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
+import io.rakam.api.Rakam;
+import io.rakam.api.RakamClient;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -135,7 +140,7 @@ public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
-
+  private static final String RAKAM_URL = "http://rak-api.aptoide.com:9999";
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
@@ -193,6 +198,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private AptoideApplicationAnalytics aptoideApplicationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -274,6 +280,8 @@ public abstract class AptoideApplication extends Application {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
+    aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+
     //
     // async app initialization
     // beware! this code could be executed at the same time the first activity is
@@ -285,6 +293,9 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     checkAppSecurity().andThen(generateAptoideUuid())
+        .andThen(initializeRakamSdk())
+        .andThen(sendAptoideApplicationStartAnalytics())
+        .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -295,17 +306,6 @@ public abstract class AptoideApplication extends Application {
         .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
-
-    //
-    // app synchronous initialization
-    //
-
-    sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())))
-        .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -324,9 +324,7 @@ public abstract class AptoideApplication extends Application {
     startNotificationCenter();
     startNotificationCleaner();
     rootInstallationRetryHandler.start();
-    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
-    aptoideApplicationAnalytics.setPackageDimension(getPackageName());
-    aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
@@ -340,6 +338,30 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
 
     adsUserPropertyManager.start();
+  }
+
+  private Completable setUpFirstRunAnalytics() {
+    return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences())));
+  }
+
+  private void initializeRakam() {
+
+    RakamClient instance = Rakam.getInstance();
+
+    try {
+      instance.initialize(this, new URL(RAKAM_URL), BuildConfig.RAKAM_API_KEY);
+    } catch (MalformedURLException e) {
+      Logger.getInstance()
+          .e(TAG, "error: ", e);
+    }
+    instance.setDeviceId(idsRepository.getAndroidId());
+    instance.enableForegroundTracking(this);
+    instance.trackSessionEvents(true);
+    instance.setLogLevel(Log.VERBOSE);
+    instance.setEventUploadPeriodMillis(1);
+    instance.setUserId(idsRepository.getUniqueIdentifier());
   }
 
   public void initializeMoPub() {
@@ -589,6 +611,13 @@ public abstract class AptoideApplication extends Application {
         .build(context, flurryKey);
   }
 
+  private Completable sendAptoideApplicationStartAnalytics() {
+    return Completable.fromAction(() -> {
+      aptoideApplicationAnalytics.setPackageDimension(getPackageName());
+      aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+    });
+  }
+
   private Completable sendAppStartToAnalytics() {
     return firstLaunchAnalytics.sendAppStart(this,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
@@ -621,6 +650,14 @@ public abstract class AptoideApplication extends Application {
   private Completable generateAptoideUuid() {
     return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
         .subscribeOn(Schedulers.newThread());
+  }
+
+  private Completable initializeRakamSdk() {
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      return Completable.fromAction(() -> initializeRakam())
+          .subscribeOn(Schedulers.newThread());
+    }
+    return Completable.complete();
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {

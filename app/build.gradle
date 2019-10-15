@@ -294,6 +294,9 @@ android {
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
 
+    variant.buildConfigField "String", "RAKAM_API_KEY",
+        "\"" + project.RAKAM_API_KEY + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -433,6 +436,9 @@ dependencies {
 
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:${FLURRY_VERSION}"
+
+  //Rakam
+  implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
