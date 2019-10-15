@@ -198,6 +198,7 @@ public abstract class AptoideApplication extends Application {
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
   private NotificationsCleaner notificationsCleaner;
   private NotificationSyncScheduler notificationSyncScheduler;
+  private AptoideApplicationAnalytics aptoideApplicationAnalytics;
 
   public static FragmentProvider getFragmentProvider() {
     return fragmentProvider;
@@ -279,6 +280,8 @@ public abstract class AptoideApplication extends Application {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
 
+    aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+
     //
     // async app initialization
     // beware! this code could be executed at the same time the first activity is
@@ -291,6 +294,8 @@ public abstract class AptoideApplication extends Application {
      */
     checkAppSecurity().andThen(generateAptoideUuid())
         .andThen(initializeRakamSdk())
+        .andThen(sendAptoideApplicationStartAnalytics())
+        .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -301,17 +306,6 @@ public abstract class AptoideApplication extends Application {
         .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
-
-    //
-    // app synchronous initialization
-    //
-
-    sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())))
-        .subscribe(() -> {
-        }, throwable -> CrashReport.getInstance()
-            .log(throwable));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
@@ -330,9 +324,7 @@ public abstract class AptoideApplication extends Application {
     startNotificationCenter();
     startNotificationCleaner();
     rootInstallationRetryHandler.start();
-    AptoideApplicationAnalytics aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
-    aptoideApplicationAnalytics.setPackageDimension(getPackageName());
-    aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
         .distinctUntilChanged()
@@ -346,6 +338,12 @@ public abstract class AptoideApplication extends Application {
     aptoideDownloadManager.start();
 
     adsUserPropertyManager.start();
+  }
+
+  private Completable setUpFirstRunAnalytics() {
+    return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences())));
   }
 
   private void initializeRakam() {
@@ -611,6 +609,13 @@ public abstract class AptoideApplication extends Application {
   private void initializeFlurry(Context context, String flurryKey) {
     new FlurryAgent.Builder().withLogEnabled(false)
         .build(context, flurryKey);
+  }
+
+  private Completable sendAptoideApplicationStartAnalytics() {
+    return Completable.fromAction(() -> {
+      aptoideApplicationAnalytics.setPackageDimension(getPackageName());
+      aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+    });
   }
 
   private Completable sendAppStartToAnalytics() {
