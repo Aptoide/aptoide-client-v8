@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.video.YoutubeWebViewPlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -43,6 +44,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Toolbar toolbar;
   private View appCardView;
   private TextView appcMessageAppcoinsSection2a;
+  private YoutubeWebViewPlayer webView;
   private Button installButton;
   private int spannableColor;
 
@@ -65,17 +67,20 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     TextView appcMessageAppcoinsSection4 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_4);
 
-    setupTextViewTwoPlaceholders(getString(R.string.appc_card_short),
-        getString(R.string.appc_home_bundle_poa),
-        getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
-    setupTextView(getString(R.string.appc_card_short),
-        getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
+    webView = view.findViewById(R.id.webview);
 
+    //setupTextViewTwoPlaceholders(getString(R.string.appc_card_short),
+    //    getString(R.string.appc_home_bundle_poa),
+    //    getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
+    //setupTextView(getString(R.string.appc_card_short),
+    //    getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
+    //
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
     ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
+    setupWebView();
     setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
@@ -85,6 +90,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
+  }
+
+  private void setupWebView() {
+    webView.loadVideo("j-Ejvmy5pUs", true);
+    webView.setVisibility(View.VISIBLE);
   }
 
   @Override public void onDestroyView() {

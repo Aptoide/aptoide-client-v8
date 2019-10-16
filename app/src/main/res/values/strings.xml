@@ -533,19 +533,19 @@
   <string name="appc_title_homepage_card">You can get AppCoins now!</string>
   <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
-  <string name="appc_message_appcoins_section_1">AppCoins is the cryptocurrency for in-app transactions. You can earn AppCoins Credits when installing your favourite apps and use them to make in-app purchases, like buying gems or upgrading your game!</string>
+  <string name="appc_message_appcoins_section_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You’ll earn up to <b>30% bonus with all purchases!</b></string>
   <string name="appc_message_appcoins_header_2">First Things First</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
-  <string name="appc_message_appcoins_section_2a">Get the %s</string>
+  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
   <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
-  <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
+  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_3">Get AppCoins Credits for free! Download any of the apps of the bundle %1$s, in the homepage, and spend 2 minutes in it. The AppCoins Wallet will process your reward, and you can use it to buy your favorite items in any app with the symbol %2$s.</string>
-  <string name="appc_message_appcoins_header_4">Every purchase has a bonus!</string>
+  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
   <string name="appc_message_appcoins_header_5">Benefits</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_4">You\'ll identify the apps on which you can spend your AppCoins Credits with the symbol %s, and every time you buy an item you\'ll get a bonus in AppCoins Credits! Don\'t worry if you don\'t have AppCoins yet, you\'ll still be able to use your bank card, PayPal account or even ask a friend to send you the funds.</string>
+  <string name="appc_message_appcoins_section_4">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
   <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
@@ -715,7 +715,8 @@
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
   <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Are you a developer?</string>
-  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_devs_body">Check the new way to distribute apps for free.</string>
+  <string name="appc_info_view_devs_button">Know More</string>
 
   <!--Updates Notification-->
   <string name="updates_notification_title">Don\'t get left behind!</string>
