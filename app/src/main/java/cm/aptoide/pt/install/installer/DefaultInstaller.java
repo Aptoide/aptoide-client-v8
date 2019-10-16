@@ -26,6 +26,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
+import cm.aptoide.pt.install.RootInstallerProvider;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.packageinstaller.AppInstall;
@@ -62,6 +63,7 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+  private RootInstallerProvider rootInstallerProvider;
   private int installingStateTimeout;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
@@ -69,7 +71,8 @@ public class DefaultInstaller implements Installer {
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics, int installingStateTimeout,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      RootInstallerProvider rootInstallerProvider) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
@@ -77,6 +80,7 @@ public class DefaultInstaller implements Installer {
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
     this.appInstallerStatusReceiver = appInstallerStatusReceiver;
+    this.rootInstallerProvider = rootInstallerProvider;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
@@ -194,8 +198,7 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
-      return Observable.create(new RootCommandOnSubscribe(installation.getId()
-          .hashCode(), getRootInstallCommand(installation), installerAnalytics))
+      return Observable.create(rootInstallerProvider.provideRootInstaller(installation))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
@@ -212,14 +215,6 @@ public class DefaultInstaller implements Installer {
     } else {
       return Observable.error(new InstallationException("User doesn't allow root installation"));
     }
-  }
-
-  private String getRootInstallCommand(Installation installation) {
-    File file = installation.getFile();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-      return "cat " + file.getAbsolutePath() + " | pm install -S " + file.length();
-    }
-    return "pm install -r " + file.getAbsolutePath();
   }
 
   private void startUninstallIntent(Context context, String packageName, Uri uri)

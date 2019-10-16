@@ -180,6 +180,7 @@ import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
+import cm.aptoide.pt.install.RootInstallerProvider;
 import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationProvider;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotificationFactory;
@@ -333,13 +334,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
       @Named("obbPath") String obbPath, AppInstaller appInstaller,
       AppInstallerStatusReceiver appInstallerStatusReceiver,
-      PackageInstallerManager packageInstallerManager) {
+      PackageInstallerManager packageInstallerManager,
+      RootInstallerProvider rootInstallerProvider) {
     return new InstallManager(application, aptoideDownloadManager,
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            getInstallingStateTimeout(), appInstallerStatusReceiver).create(application),
-        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, cachePath, apkPath, obbPath, new FileUtils(),
-        packageInstallerManager);
+            getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
+            application), rootAvailabilityManager, defaultSharedPreferences,
+        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
+        obbPath, new FileUtils(), packageInstallerManager);
+  }
+
+  @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
+      InstallerAnalytics installerAnalytics) {
+    return new RootInstallerProvider(installerAnalytics);
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -462,11 +469,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences,
       InstalledRepository installedRepository, RootAvailabilityManager rootAvailabilityManager,
       InstallerAnalytics installerAnalytics, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      RootInstallerProvider rootInstallerProvider) {
     return new DefaultInstaller(application.getPackageManager(), installationProvider, appInstaller,
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
-        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver);
+        installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver,
+        rootInstallerProvider);
   }
 
   private int getInstallingStateTimeout() {
