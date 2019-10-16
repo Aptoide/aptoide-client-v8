@@ -11,6 +11,8 @@ public interface AppCoinsInfoView extends View {
 
   Observable<Void> cardViewClick();
 
+  Observable<Void> catappultButtonClick();
+
   Observable<Void> installButtonClick();
 
   Observable<Void> appCoinsWalletLinkClick();
@@ -18,4 +20,6 @@ public interface AppCoinsInfoView extends View {
   void openApp(String packageName);
 
   void setButtonText(boolean installState);
+
+  void startCatappultDevWebView();
 }

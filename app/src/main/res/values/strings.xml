@@ -545,7 +545,7 @@
   <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
   <string name="appc_message_appcoins_header_5">Benefits</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_4">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
+  <string name="appc_message_appcoins_section_4">You\'ll get up to 30%% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
   <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>

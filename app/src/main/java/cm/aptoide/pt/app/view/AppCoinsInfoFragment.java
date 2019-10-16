@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubeWebViewPlayer;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
@@ -46,6 +47,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private TextView appcMessageAppcoinsSection2a;
   private YoutubeWebViewPlayer webView;
   private Button installButton;
+  private Button catappultDevButton;
   private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
         .getPrimaryColor();
     appCardView = view.findViewById(R.id.app_cardview);
     installButton = (Button) view.findViewById(R.id.appview_install_button);
+    catappultDevButton = (Button) view.findViewById(R.id.catappult_dev_button);
     appcMessageAppcoinsSection2a =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_2a);
     TextView appcMessageAppcoinsSection3 =
@@ -69,12 +72,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     webView = view.findViewById(R.id.webview);
 
-    //setupTextViewTwoPlaceholders(getString(R.string.appc_card_short),
-    //    getString(R.string.appc_home_bundle_poa),
-    //    getString(R.string.appc_message_appcoins_section_3), appcMessageAppcoinsSection3);
-    //setupTextView(getString(R.string.appc_card_short),
-    //    getString(R.string.appc_message_appcoins_section_4), appcMessageAppcoinsSection4);
-    //
+    setupTextView(R.drawable.ic_poa_coins, getString(R.string.appc_message_appcoins_section_3),
+        appcMessageAppcoinsSection3);
+    setupTextView(R.drawable.ic_poa_coins, getString(R.string.appc_message_appcoins_section_4),
+        appcMessageAppcoinsSection4);
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
     ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
@@ -107,28 +108,17 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
   private void setupWalletLink() {
     final String formattedString =
-        String.format(getString(R.string.appc_message_appcoins_section_2a),
+        String.format(getString(R.string.appc_message_appcoins_section_3),
             getString(R.string.appc_title_settings_appcoins_wallet));
     SpannableString spannableString = new SpannableString(formattedString);
     appcMessageAppcoinsSection2a.setText(spannableString);
     appcMessageAppcoinsSection2a.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
-  private void setupTextView(String appcString, String text, TextView appcMessageAppcoinsSection) {
+  private void setupTextView(int image, String text, TextView appcMessageAppcoinsSection) {
     final String spendGetAppcoinsLogo =
-        String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
-            R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
+        String.format("<img width='24px' height='20px' src=\"%1$s\"/>", image);
     final String formatedText = String.format(text, spendGetAppcoinsLogo);
-    appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
-  }
-
-  private void setupTextViewTwoPlaceholders(String appcString, String bundle, String text,
-      TextView appcMessageAppcoinsSection) {
-    final String spendGetAppcoinsLogo =
-        String.format("<img src=\"%1$s\"/> <font color=\"%2$s\"><small>%3$s</small></font>",
-            R.drawable.spend_get_appc_icon, getResources().getColor(spannableColor), appcString);
-    String boldBundle = "<b>" + bundle + "</b> ";
-    final String formatedText = String.format(text, boldBundle, spendGetAppcoinsLogo);
     appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
   }
 
@@ -163,6 +153,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     return RxView.clicks(appCardView);
   }
 
+  @Override public Observable<Void> catappultButtonClick() {
+    return RxView.clicks(catappultDevButton);
+  }
+
   @Override public Observable<Void> installButtonClick() {
     return RxView.clicks(installButton);
   }
@@ -182,6 +176,11 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     } else {
       installButton.setText(installState);
     }
+  }
+
+  @Override public void startCatappultDevWebView() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab("https://catappult.io/", getContext(), theme);
   }
 
   @Nullable @Override
