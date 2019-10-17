@@ -133,7 +133,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/ic_appcoins_white_border"
+            android:src="@drawable/ic_spend_appc"
             />
 
         <TextView
@@ -141,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/appc_card_short"
-            style="@style/Aptoide.TextView.Medium.XXS.OrangeGradientEnd"
+            style="@style/Aptoide.TextView.Medium.XXS.SpendAppc"
             />
 
       </LinearLayout>

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
@@ -59,6 +61,8 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private ProgressBar progressBar;
   private ImageView userAvatar;
 
+  private Skeleton skeleton;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
@@ -87,6 +91,9 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
     errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
+
+    skeleton =
+        SkeletonUtils.applySkeleton(editorialList, R.layout.editorial_list_action_item_skeleton, 4);
     attachPresenter(presenter);
   }
 
@@ -129,12 +136,12 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
 
   @Override public void showLoading() {
     errorView.setVisibility(View.GONE);
-    progressBar.setVisibility(View.VISIBLE);
+    skeleton.showSkeleton();
   }
 
   @Override public void hideLoading() {
     errorView.setVisibility(View.GONE);
-    progressBar.setVisibility(View.GONE);
+    skeleton.showOriginal();
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
 
