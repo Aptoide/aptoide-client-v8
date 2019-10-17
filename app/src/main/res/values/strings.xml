@@ -83,6 +83,8 @@
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
   <string name="apkfy_install_message">Do you want to install this app?</string>
+  <string name="appview_devs_title">Are you the developer of this app?</string>
+  <string name="appview_devs_body">Check the new way to distribute apps.</string>
 
   <!-- AppView Donations-->
   <string name="appview_title_donations_leaderboard">Top Donations</string>
@@ -715,8 +717,9 @@
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
   <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Are you a developer?</string>
-  <string name="appc_info_view_devs_body">Check the new way to distribute apps for free.</string>
+  <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
   <string name="appc_info_view_devs_button">Know More</string>
+
 
   <!--Updates Notification-->
   <string name="updates_notification_title">Don\'t get left behind!</string>
