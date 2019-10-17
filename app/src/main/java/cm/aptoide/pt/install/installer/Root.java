@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Aurora Store.  If not, see <http://www.gnu.org/licenses/>.
  *
+ * taken from https://gitlab.com/AuroraOSS/AuroraStore/blob/master/app/src/main/java/com/aurora/store/utility/Root.java
  *
  */
 
