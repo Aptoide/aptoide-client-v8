@@ -137,12 +137,10 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   @Override public void showLoading() {
     errorView.setVisibility(View.GONE);
     skeleton.showSkeleton();
-    //progressBar.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideLoading() {
     errorView.setVisibility(View.GONE);
-    //progressBar.setVisibility(View.GONE);
     skeleton.showOriginal();
     swipeRefreshLayout.setVisibility(View.VISIBLE);
   }
