@@ -9,15 +9,17 @@ import rx.Observable;
 
 public class RootInstallerProvider {
 
+  private final String packageName;
   private InstallerAnalytics installerAnalytics;
 
-  public RootInstallerProvider(InstallerAnalytics installerAnalytics) {
+  public RootInstallerProvider(InstallerAnalytics installerAnalytics, String packageName) {
     this.installerAnalytics = installerAnalytics;
+    this.packageName = packageName;
   }
 
   public Observable.OnSubscribe<Void> provideRootInstaller(Installation installation) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return new RootInstaller(installation);
+      return new RootInstaller(packageName, installation);
     } else {
       return new RootCommandOnSubscribe(installation.getId()
           .hashCode(), getRootInstallCommand(installation), installerAnalytics);

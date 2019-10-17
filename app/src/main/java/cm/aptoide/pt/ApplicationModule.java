@@ -346,7 +346,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
       InstallerAnalytics installerAnalytics) {
-    return new RootInstallerProvider(installerAnalytics);
+    return new RootInstallerProvider(installerAnalytics, getApplicationContext().getPackageName());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(

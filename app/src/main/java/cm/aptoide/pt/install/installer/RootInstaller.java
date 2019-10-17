@@ -13,11 +13,12 @@ import rx.Subscriber;
 public class RootInstaller implements Observable.OnSubscribe<Void> {
 
   private static final String TAG = "RootInstaller";
-
+  private final String packageName;
   private Installation installation;
   private Root root;
 
-  public RootInstaller(Installation installation) {
+  public RootInstaller(String packageName, Installation installation) {
+    this.packageName = packageName;
     this.installation = installation;
     root = new Root();
   }
@@ -37,7 +38,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
     }
 
     String commandResult = root.exec(String.format(Locale.getDefault(),
-        "pm install-create -i com.android.vending --user %s -r -S %d", "0",
+        "pm install-create -i " + packageName + " --user %s -r -S %d", "0",
         getFilesSize(installation)));
 
     if (commandResult == null || commandResult.length() == 0) {
@@ -47,7 +48,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
 
     Pattern sessionIdPattern = Pattern.compile("(\\d+)");
     Matcher sessionIdMatcher = sessionIdPattern.matcher(commandResult);
-    boolean found = sessionIdMatcher.find();
+    sessionIdMatcher.find();
     int sessionId = Integer.parseInt(sessionIdMatcher.group(1));
 
     for (FileToDownload apkFile : installation.getFiles()) {
