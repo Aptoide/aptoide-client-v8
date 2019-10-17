@@ -52,7 +52,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
 
     for (FileToDownload apkFile : installation.getFiles()) {
       Logger.getInstance()
-          .d("install", "started instalation of:" + apkFile.getFileName());
+          .d(TAG, "started instalation of file: " + apkFile.getFileName());
       File file = new File(apkFile.getPath() + apkFile.getFileName());
 
       String fileResult = root.exec(
