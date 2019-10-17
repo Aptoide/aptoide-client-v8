@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.animation.Animator;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
+import com.google.android.material.appbar.AppBarLayout;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -106,6 +108,16 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     ((ImageView) bottomAppCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
+    ((AppBarLayout) view.findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(
+        (appBarLayout, verticalOffset) -> {
+          float percentage =
+              ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
+          view.findViewById(R.id.appc_header_text)
+              .setAlpha(1 - percentage);
+          view.findViewById(R.id.app_graphic_guy)
+              .setAlpha(1 - percentage);
+        });
+
     setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
@@ -159,13 +171,13 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
   private void setupToolbar() {
     toolbar.setTitle(R.string.appc_title_about_appcoins);
-
-    final AppCompatActivity activity = (AppCompatActivity) getActivity();
-    activity.setSupportActionBar(toolbar);
-    ActionBar actionBar = activity.getSupportActionBar();
+    toolbar.setTitleTextColor(Color.WHITE);
+    toolbar.setSubtitleTextColor(Color.WHITE);
+    AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+    appCompatActivity.setSupportActionBar(toolbar);
+    ActionBar actionBar = appCompatActivity.getSupportActionBar();
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
-      actionBar.setTitle(toolbar.getTitle());
     }
   }
 

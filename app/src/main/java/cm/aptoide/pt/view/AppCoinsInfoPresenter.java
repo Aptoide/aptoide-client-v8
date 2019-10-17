@@ -35,7 +35,7 @@ public class AppCoinsInfoPresenter implements Presenter {
 
   @Override public void present() {
     handleClickOnAppcWalletLink();
-    handleClickOnCattapultDevButton();
+    handleClickOnCatappultDevButton();
     handleClickOnInstallButton();
     handleButtonText();
     handlePlaceHolderVisibilityChange();
@@ -57,7 +57,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         }, crashReport::log);
   }
 
-  private void handleClickOnCattapultDevButton() {
+  private void handleClickOnCatappultDevButton() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.catappultButtonClick())

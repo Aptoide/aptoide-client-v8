@@ -1,21 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
+
 
   <com.google.android.material.appbar.AppBarLayout
     android:id="@+id/app_bar_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/toolbarBackground"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    android:background="@color/transparent">
 
-    <include
-      android:id="@+id/toolbar"
-      layout="@layout/toolbar"
+    <com.google.android.material.appbar.CollapsingToolbarLayout
+      android:id="@+id/collapsing_toolbar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:collapsedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
+      app:expandedTitleMarginBottom="80dp"
+      app:expandedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewExpanded"
+      app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-      />
+      <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_collapseMode="parallax"
+        app:layout_collapseParallaxMultiplier="0.2">
+
+        <ImageView
+          android:id="@+id/app_graphic"
+          android:layout_width="match_parent"
+          android:layout_height="248dp"
+          android:scaleType="fitXY"
+          android:src="@drawable/appc_gradient"
+          app:layout_collapseMode="parallax"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+          android:id="@+id/app_graphic_guy_ref"
+          android:layout_width="132dp"
+          android:layout_height="154dp"
+          android:layout_marginTop="40dp"
+          android:layout_marginRight="16dp"
+          app:layout_collapseMode="parallax"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+          android:id="@+id/appc_header_text"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="bottom"
+          android:paddingBottom="40dp"
+          android:text="@string/appc_info_view_title_1"
+          android:textAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
+          app:layout_constraintBottom_toBottomOf="@+id/app_graphic"
+          app:layout_constraintEnd_toStartOf="@+id/app_graphic_guy_ref"
+          app:layout_constraintStart_toStartOf="@+id/header_guideline"
+          app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+          android:id="@+id/header_guideline"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          app:layout_constraintGuide_begin="20dp" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <ImageView
+        android:id="@+id/app_graphic_guy"
+        android:layout_width="132dp"
+        android:layout_height="154dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="16dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/appc_info_app_bar_guy"
+        app:layout_collapseMode="parallax"
+
+        />
+
+      <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center"
+        app:layout_collapseMode="pin"
+        app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:titleTextColor="@color/white">
+
+      </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.CollapsingToolbarLayout>
   </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.core.widget.NestedScrollView
@@ -25,6 +100,7 @@
     android:layout_above="@id/app_cardview_layout"
     android:layout_below="@id/app_bar_layout"
     android:scrollbars="none"
+    app:behavior_overlapTop="84dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
@@ -292,6 +368,4 @@
     </LinearLayout>
 
   </RelativeLayout>
-
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

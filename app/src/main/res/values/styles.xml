@@ -236,6 +236,17 @@
     <item name="android:textSize">@dimen/appview_title_text_size</item>
   </style>
 
+  <style name="AppcInfoHeaderTextAppViewExpanded" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textColor">@color/transparent</item>
+    <item name="android:alpha">0</item>
+
+  </style>
+
+  <style name="AppcInfoHeaderTextAppViewCollapsed" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <item name="android:textColor">@color/white</item>
+    <item name="android:alpha">1</item>
+  </style>
+
   <!--Preferences Theme-->
   <style name="Aptoide.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
     <item name="android:layout">@layout/fragment_aptoide_preferences</item>
