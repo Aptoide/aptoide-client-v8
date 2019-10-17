@@ -38,6 +38,23 @@ public class AppCoinsInfoPresenter implements Presenter {
     handleClickOnCattapultDevButton();
     handleClickOnInstallButton();
     handleButtonText();
+    handlePlaceHolderVisibilityChange();
+  }
+
+  @VisibleForTesting public void handlePlaceHolderVisibilityChange() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appItemVisibilityChanged())
+        .doOnNext(scrollEvent -> {
+          if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
+            view.removeBottomCardAnimation();
+          } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
+            view.addBottomCardAnimation();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private void handleClickOnCattapultDevButton() {

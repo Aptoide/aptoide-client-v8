@@ -120,6 +120,35 @@
             app:layout_constraintStart_toStartOf="@id/guideline_left"
             app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_2" />
 
+          <FrameLayout
+            android:id="@+id/app_card_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_2a">
+
+            <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:background="@color/grey_fog_normal" />
+
+            <include
+              android:id="@+id/app_cardview"
+              layout="@layout/app_install_cardview"
+
+              android:layout_width="match_parent"
+              android:layout_height="57dp" />
+
+            <View
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:layout_gravity="bottom"
+              android:background="@color/grey_fog_normal" />
+
+          </FrameLayout>
+
           <TextView
             android:id="@+id/appc_message_appcoins_header_3"
             style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
@@ -130,7 +159,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_right"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_2a" />
+            app:layout_constraintTop_toBottomOf="@+id/app_card_layout" />
 
           <TextView
             android:id="@+id/appc_message_appcoins_section_3"
@@ -243,22 +272,26 @@
 
   </androidx.core.widget.NestedScrollView>
 
+  <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-  <LinearLayout
-    android:id="@+id/app_cardview_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@drawable/background_with_shadow">
-
-    <include
-      android:id="@+id/app_cardview"
-      layout="@layout/app_install_cardview"
+    <LinearLayout
+      android:id="@+id/app_cardview_layout"
       android:layout_width="match_parent"
-      android:layout_height="57dp"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:background="@drawable/background_with_shadow"
+      android:visibility="gone">
 
-      />
-  </LinearLayout>
+      <include
+        android:id="@+id/app_cardview"
+        layout="@layout/app_install_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="57dp" />
+    </LinearLayout>
+
+  </RelativeLayout>
 
 
 </RelativeLayout>
