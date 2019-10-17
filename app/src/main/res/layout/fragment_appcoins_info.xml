@@ -84,16 +84,10 @@
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="4dp">
 
-                <FrameLayout
+                <cm.aptoide.aptoideviews.video.YoutubePlayer
+                  android:id="@+id/youtube_player"
                   android:layout_width="match_parent"
-                  android:layout_height="match_parent">
-
-                  <cm.aptoide.aptoideviews.video.YoutubeWebViewPlayer
-                    android:id="@+id/webview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-                </FrameLayout>
-
+                  android:layout_height="match_parent" />
 
               </androidx.cardview.widget.CardView>
 

@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.aptoideviews.video.YoutubeWebViewPlayer;
+import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.store.StoreTheme;
@@ -45,7 +45,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Toolbar toolbar;
   private View appCardView;
   private TextView appcMessageAppcoinsSection2a;
-  private YoutubeWebViewPlayer webView;
+  private YoutubePlayer youtubePlayer;
   private Button installButton;
   private Button catappultDevButton;
   private int spannableColor;
@@ -70,7 +70,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     TextView appcMessageAppcoinsSection4 =
         (TextView) view.findViewById(R.id.appc_message_appcoins_section_4);
 
-    webView = view.findViewById(R.id.webview);
+    youtubePlayer = view.findViewById(R.id.youtube_player);
 
     setupTextView(R.drawable.ic_poa_coins, getString(R.string.appc_message_appcoins_section_3),
         appcMessageAppcoinsSection3);
@@ -81,21 +81,16 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     ((ImageView) appCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
-    setupWebView();
     setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
+    youtubePlayer.loadVideo("j-Ejvmy5pUs", true);
     attachPresenter(appCoinsInfoPresenter);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  private void setupWebView() {
-    webView.loadVideo("j-Ejvmy5pUs", true);
-    webView.setVisibility(View.VISIBLE);
   }
 
   @Override public void onDestroyView() {
