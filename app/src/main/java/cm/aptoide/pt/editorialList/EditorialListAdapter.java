@@ -7,10 +7,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
+import cm.aptoide.pt.home.bundles.editorial.EditorialViewHolder;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
-class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolder> {
+class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
 
   private static final int LOADING = R.layout.progress_item;
   private static final int EDITORIAL_CARD = R.layout.editorial_action_item;
@@ -28,7 +29,7 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
     this.captionBackgroundPainter = captionBackgroundPainter;
   }
 
-  @Override public EditorialBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+  @Override public EditorialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == EDITORIAL_CARD) {
       return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
           .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter);
@@ -38,10 +39,10 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialBundleViewHolde
     }
   }
 
-  @Override
-  public void onBindViewHolder(EditorialBundleViewHolder editorialsViewHolder, int position) {
-    if (!(editorialsViewHolder instanceof LoadingViewHolder)) {
-      editorialsViewHolder.setEditorialCard(editorialListItems.get(position), position);
+  @Override public void onBindViewHolder(EditorialViewHolder editorialsViewHolder, int position) {
+    if (editorialsViewHolder instanceof EditorialBundleViewHolder) {
+      ((EditorialBundleViewHolder) editorialsViewHolder).setEditorialCard(
+          editorialListItems.get(position), position);
     }
   }
 

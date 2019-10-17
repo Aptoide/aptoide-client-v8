@@ -12,7 +12,6 @@ import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
-import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -36,7 +35,7 @@ import static cm.aptoide.pt.reactions.ReactionMapper.mapUserReaction;
  * Created by franciscocalado on 29/08/2018.
  */
 
-public class EditorialBundleViewHolder extends AppBundleViewHolder {
+public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final View editorialCard;
   private final TextView editorialTitle;
