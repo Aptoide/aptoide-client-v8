@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class Root {
-  private static final String TAG = "SAIRoot";
+  private static final String TAG = "Root";
 
   private Process mSuProcess;
   private boolean mIsAcquired = true;
