@@ -810,7 +810,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private EditorialItemsViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
-    if (placeHolderPosition != -1) {
+    if (placeHolderPosition != -1 && editorialItems != null) {
       EditorialItemsViewHolder placeHolderViewHolder =
           ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
               placeHolderPosition));
