@@ -59,8 +59,9 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
   }
 
   public void add(List<CurationCard> editorialItemList) {
+    int size = editorialListItems.size();
     this.editorialListItems.addAll(editorialItemList);
-    notifyDataSetChanged();
+    notifyItemRangeInserted(size, editorialItemList.size());
   }
 
   public void addLoadMore() {
