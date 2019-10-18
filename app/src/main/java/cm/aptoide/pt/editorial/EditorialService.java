@@ -160,9 +160,16 @@ public class EditorialService {
     List<EditorialMedia> editorialMediaList = new ArrayList<>();
     if (mediaList != null) {
       for (Media media : mediaList) {
-        EditorialMedia editorialMedia =
-            new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
-                media.getImage());
+        EditorialMedia editorialMedia;
+        if (media.getUrl() != null) {
+          editorialMedia =
+              new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                  media.getUrl());
+        } else {
+          editorialMedia =
+              new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                  media.getImage());
+        }
         editorialMediaList.add(editorialMedia);
       }
     }
