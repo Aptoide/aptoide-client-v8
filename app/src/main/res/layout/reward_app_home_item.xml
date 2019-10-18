@@ -63,7 +63,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/ic_poa_coins"
+          android:src="@drawable/ic_get_appc"
             />
 
         <TextView

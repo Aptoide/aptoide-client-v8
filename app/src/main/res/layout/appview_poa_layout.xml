@@ -22,7 +22,7 @@
         android:layout_height="63dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_poa_coins"
+      android:src="@drawable/ic_get_appc"
         />
 
     <TextView

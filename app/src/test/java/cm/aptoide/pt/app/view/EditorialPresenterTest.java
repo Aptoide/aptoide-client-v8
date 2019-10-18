@@ -245,8 +245,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(true, true)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(true)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -259,8 +258,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(false, false)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(false)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

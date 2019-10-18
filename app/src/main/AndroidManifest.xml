@@ -342,9 +342,9 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-            android:host="*.aptoide.com"
-            android:pathPattern="/download*"
-            android:scheme="https" />
+          android:host="*.aptoide.com"
+          android:pathPattern="/download*"
+          android:scheme="https" />
       </intent-filter>
 
       <intent-filter>
