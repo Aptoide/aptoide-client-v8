@@ -226,7 +226,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   }
 
   @Override public boolean hasMore(Integer offset, String key) {
-    return offset < getTotal(key) && !isLoading(key);
+    return offset < getTotal(key) && !isLoading(key) && !isError(key);
   }
 
   @Override public Single<HomeBundlesModel> loadFreshBundleForEvent(String url, String key) {

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.home.bundles;
 
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -127,5 +128,12 @@ public class BundlesRepository {
 
   public void updateCache(List<HomeBundle> homeBundles) {
     cachedBundles.put(HOME_BUNDLE_KEY, homeBundles);
+  }
+
+  public void setHomeLoadMoreError() {
+    List<HomeBundle> list = cachedBundles.get(HOME_BUNDLE_KEY);
+    if (!list.isEmpty() && !(list.get(list.size() - 1) instanceof ErrorHomeBundle)) {
+      list.add(new ErrorHomeBundle());
+    }
   }
 }

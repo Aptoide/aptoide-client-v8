@@ -535,6 +535,7 @@ public class HomePresenter implements Presenter {
   }
 
   private void handleLoadMoreError() {
+    home.setLoadMoreError();
     view.showLoadMoreError();
   }
 

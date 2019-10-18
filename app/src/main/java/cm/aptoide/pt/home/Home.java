@@ -191,4 +191,8 @@ public class Home {
   public Single<Boolean> isFirstReaction(String cardId, String groupId) {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
+
+  public void setLoadMoreError() {
+    bundlesRepository.setHomeLoadMoreError();
+  }
 }
