@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install.installer;
 
 import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import java.io.File;
@@ -14,11 +15,14 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
 
   private static final String TAG = "RootInstaller";
   private final String packageName;
+  private final InstallerAnalytics analytics;
   private Installation installation;
   private Root root;
 
-  public RootInstaller(String packageName, Installation installation) {
+  public RootInstaller(String packageName, InstallerAnalytics analytics,
+      Installation installation) {
     this.packageName = packageName;
+    this.analytics = analytics;
     this.installation = installation;
     root = new Root();
   }
@@ -27,6 +31,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
     Logger.getInstance()
         .d(TAG, "call: start with installation package name: " + installation.getPackageName());
 
+    analytics.rootInstallStart();
     if (root.isTerminated() || !root.isAcquired()) {
       Root.requestRoot();
       if (!root.isAcquired()) {
@@ -42,7 +47,9 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
         getFilesSize(installation)));
 
     if (commandResult == null || commandResult.length() == 0) {
-      subscriber.onError(new InstallationException(root.readError()));
+      InstallationException installationException = new InstallationException(root.readError());
+      analytics.rootInstallFail(installationException);
+      subscriber.onError(installationException);
       return;
     }
 
@@ -60,7 +67,9 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
           String.format(Locale.getDefault(), "cat \"%s\" | pm install-write -S %d %d \"%s\"",
               file.getAbsolutePath(), file.length(), sessionId, file.getName()));
       if (fileResult == null || fileResult.length() == 0) {
-        subscriber.onError(new InstallationException(root.readError()));
+        InstallationException installationException = new InstallationException(root.readError());
+        analytics.rootInstallFail(installationException);
+        subscriber.onError(installationException);
         return;
       }
     }
@@ -68,18 +77,23 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
     String commitResult =
         root.exec(String.format(Locale.getDefault(), "pm install-commit %d ", sessionId));
     if (commitResult == null || commitResult.length() == 0) {
-      subscriber.onError(new InstallationException(root.readError()));
+      InstallationException installationException = new InstallationException(root.readError());
+      analytics.rootInstallFail(installationException);
+      subscriber.onError(installationException);
       return;
     }
 
     if (commitResult.toLowerCase()
         .contains("success")) {
       if (!subscriber.isUnsubscribed()) {
+        analytics.rootInstallCompleted(0);
         subscriber.onCompleted();
         return;
       }
     } else {
-      subscriber.onError(new InstallationException(root.readError()));
+      InstallationException installationException = new InstallationException(root.readError());
+      analytics.rootInstallFail(installationException);
+      subscriber.onError(installationException);
       return;
     }
   }

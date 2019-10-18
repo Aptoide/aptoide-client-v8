@@ -19,7 +19,7 @@ public class RootInstallerProvider {
 
   public Observable.OnSubscribe<Void> provideRootInstaller(Installation installation) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return new RootInstaller(packageName, installation);
+      return new RootInstaller(packageName, installerAnalytics, installation);
     } else {
       return new RootCommandOnSubscribe(installation.getId()
           .hashCode(), getRootInstallCommand(installation), installerAnalytics);
