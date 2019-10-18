@@ -86,9 +86,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
-    setupTextView(R.drawable.ic_get_appc, getString(R.string.appc_message_appcoins_section_3),
+    setupTextView(R.drawable.ic_get_appc, getString(R.string.appc_info_view_body_3),
         appcMessageAppcoinsSection3);
-    setupTextView(R.drawable.ic_spend_appc, getString(R.string.appc_message_appcoins_section_4),
+    setupTextView(R.drawable.ic_spend_appc, getString(R.string.appc_info_view_title_5),
         appcMessageAppcoinsSection4);
 
     appCardViewLayout = view.findViewById(R.id.app_card_layout);
