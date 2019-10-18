@@ -2,6 +2,7 @@ package cm.aptoide.aptoideviews.video
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
 import android.util.AttributeSet
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -22,14 +23,18 @@ class YoutubeWebViewPlayer : WebView {
 
   init {
     setOnTouchListener { v, event ->
-      val removeEndScreen = "document.getElementsByClassName('ytp-endscreen-content')[0].remove();"
-      val removeEndScreenHtml5 = "document.getElementsByClassName('html5-endscreen')[0].remove();"
-      val changeReplayPosition =
-          "document.getElementsByClassName('ytp-replay-button')[0].style.top=0;"
-      val removePauseOverlay =
-          "document.getElementsByClassName('ytp-pause-overlay')[0].remove();"
-      this.evaluateJavascript(
-          removeEndScreen + removeEndScreenHtml5 + changeReplayPosition + removePauseOverlay, null)
+      if (Build.VERSION.SDK_INT >= 19) {
+        val removeEndScreen =
+            "document.getElementsByClassName('ytp-endscreen-content')[0].remove();"
+        val removeEndScreenHtml5 = "document.getElementsByClassName('html5-endscreen')[0].remove();"
+        val changeReplayPosition =
+            "document.getElementsByClassName('ytp-replay-button')[0].style.top=0;"
+        val removePauseOverlay =
+            "document.getElementsByClassName('ytp-pause-overlay')[0].remove();"
+        this.evaluateJavascript(
+            removeEndScreen + removeEndScreenHtml5 + changeReplayPosition + removePauseOverlay,
+            null)
+      }
       false
     }
   }
@@ -59,18 +64,20 @@ class YoutubeWebViewPlayer : WebView {
     }
 
     override fun onPageFinished(view: WebView, url: String?) {
-      val removeTopBar = "document.getElementsByClassName('ytp-chrome-top')[0].remove();"
-      val hoverBackground =
-          "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.background=\"no-repeat url('https://cdn6.aptoide.com/includes/themes/2014/images/vanilla_appcoins_info_video_placeholder.svg')\";"
-      val hoverBackgroundWidth =
-          "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.width=\"75px\";"
-      val hoverBackgroundHeight =
-          "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.height=\"75px\";"
-      view.evaluateJavascript(
-          removeTopBar + hoverBackground + hoverBackgroundWidth + hoverBackgroundHeight) {
-        if (!hasError) {
-          hasLoaded = true
-          onPageFinishedAction?.let { action -> action() }
+      if (Build.VERSION.SDK_INT >= 19) {
+        val removeTopBar = "document.getElementsByClassName('ytp-chrome-top')[0].remove();"
+        val hoverBackground =
+            "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.background=\"no-repeat url('https://cdn6.aptoide.com/includes/themes/2014/images/vanilla_appcoins_info_video_placeholder.svg')\";"
+        val hoverBackgroundWidth =
+            "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.width=\"75px\";"
+        val hoverBackgroundHeight =
+            "document.getElementsByClassName('ytp-icon-large-play-button-hover')[0].style.height=\"75px\";"
+        view.evaluateJavascript(
+            removeTopBar + hoverBackground + hoverBackgroundWidth + hoverBackgroundHeight) {
+          if (!hasError) {
+            hasLoaded = true
+            onPageFinishedAction?.let { action -> action() }
+          }
         }
       }
     }
