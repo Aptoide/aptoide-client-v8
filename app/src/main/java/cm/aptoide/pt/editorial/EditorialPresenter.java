@@ -285,9 +285,9 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.placeHolderVisibilityChange())
         .doOnNext(scrollEvent -> {
-          if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
+          if (scrollEvent.getItemShown()) {
             view.removeBottomCardAnimation();
-          } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
+          } else if (!scrollEvent.getItemShown()) {
             view.addBottomCardAnimation();
           }
         })

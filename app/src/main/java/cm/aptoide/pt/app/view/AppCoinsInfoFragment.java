@@ -35,6 +35,7 @@ import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.google.android.material.appbar.AppBarLayout;
+import com.jakewharton.rxbinding.support.design.widget.RxAppBarLayout;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -58,6 +59,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private View bottomAppCardViewLayout;
   private View bottomAppCardView;
 
+  private AppBarLayout appBarLayout;
   private TextView appcMessageAppcoinsSection2a;
   private YoutubePlayer youtubePlayer;
   private Button installButton;
@@ -108,15 +110,14 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     ((ImageView) bottomAppCardView.findViewById(R.id.app_icon_imageview)).setImageDrawable(
         ContextCompat.getDrawable(getContext(), R.drawable.appcoins_wallet_icon));
 
-    ((AppBarLayout) view.findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(
-        (appBarLayout, verticalOffset) -> {
-          float percentage =
-              ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
-          view.findViewById(R.id.appc_header_text)
-              .setAlpha(1 - percentage);
-          view.findViewById(R.id.app_graphic_guy)
-              .setAlpha(1 - percentage);
-        });
+    appBarLayout = view.findViewById(R.id.app_bar_layout);
+    appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+      float percentage = ((float) Math.abs(verticalOffset) / appBarLayout.getTotalScrollRange());
+      view.findViewById(R.id.appc_header_text)
+          .setAlpha(1 - percentage);
+      view.findViewById(R.id.app_graphic_guy)
+          .setAlpha(1 - percentage);
+    });
 
     setupWalletLink();
     setHasOptionsMenu(true);
@@ -233,12 +234,10 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   }
 
   @Override public Observable<ScrollEvent> appItemVisibilityChanged() {
-    return RxNestedScrollView.scrollChangeEvents(scrollView)
-        .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
-            .map(scrollDown -> isAppItemShown())
-            .map(isItemShown -> new ScrollEvent(
-                isScrollDown(viewScrollChangeEvent.oldScrollY(), viewScrollChangeEvent.scrollY()),
-                isItemShown)))
+    return Observable.mergeDelayError(RxNestedScrollView.scrollChangeEvents(scrollView),
+        RxAppBarLayout.offsetChanges(appBarLayout))
+        .map(scrollDown -> isAppItemShown())
+        .map(ScrollEvent::new)
         .distinctUntilChanged(ScrollEvent::getItemShown);
   }
 
@@ -299,10 +298,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
           }
         })
         .start();
-  }
-
-  private boolean isScrollDown(int oldScrollY, int scrollY) {
-    return scrollY > oldScrollY;
   }
 
   public boolean isAppItemShown() {
