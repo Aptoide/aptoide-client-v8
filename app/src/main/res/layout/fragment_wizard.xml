@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:orientation="vertical"
-    android:weightSum="9"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
     <View
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view_pager"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/animated_color_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         />
 
     <cm.aptoide.pt.view.custom.AptoideViewPager
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/skip_next_layout"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="@color/transparent"
         tools:background="@color/indigo"
         />
-  </FrameLayout>
 
-  <LinearLayout
+  <androidx.constraintlayout.widget.Group
       android:id="@+id/skip_next_layout"
-      android:layout_width="match_parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/view_pager"
+      android:layout_width="0dp"
       android:layout_height="56dp"
       android:layout_alignParentBottom="true"
       android:background="@color/white"
       android:measureWithLargestChild="false"
-      android:minHeight="48dp"
-      android:orientation="horizontal"
-      android:weightSum="4"
       tools:background="@color/white"
       tools:visibility="visible"
-      >
-    <!-- UI element used for padding only -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+      app:constraint_referenced_ids="view_pager_radio_group,skip_text"
+      />
 
     <RadioGroup
+        app:layout_constraintTop_toTopOf="@id/skip_next_layout"
+        app:layout_constraintRight_toLeftOf="@+id/skip_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/view_pager_radio_group"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center"
-        android:layout_weight="2"
         android:baselineAligned="false"
         android:clickable="false"
         android:gravity="center"
@@ -66,9 +67,12 @@
 
     <TextView
         android:id="@+id/skip_text"
+        app:layout_constraintTop_toTopOf="@id/skip_next_layout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/view_pager_radio_group"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
+        android:layout_height="30dp"
         android:gravity="center"
         android:padding="4dp"
         android:text="@string/skip"
@@ -76,10 +80,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?attr/colorPrimaryDark"
         android:textStyle="bold"
-        android:weightSum="1"
         tools:text="SKIP"
         />
 
-  </LinearLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
