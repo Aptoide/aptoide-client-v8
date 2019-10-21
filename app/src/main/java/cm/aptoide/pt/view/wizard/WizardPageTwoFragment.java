@@ -59,7 +59,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     ((TextView) view.findViewById(R.id.description)).setText(
         marketResourceFormatter.formatString(getContext(),
             R.string.wizard_sub_title_viewpager_two));
-    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
+    ((ImageView) view.findViewById(R.id.wizard_icon)).setImageResource(R.drawable.wizard_2);
   }
 
   @Override public void onDestroyView() {

@@ -1,85 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:orientation="vertical"
-    android:weightSum="9"
+    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+  >
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
     <View
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/view_pager"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:id="@+id/animated_color_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         />
 
     <cm.aptoide.pt.view.custom.AptoideViewPager
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/skip_next_layout"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:background="@color/transparent"
         tools:background="@color/indigo"
-        />
-  </FrameLayout>
+      />
 
-  <LinearLayout
+  <FrameLayout
       android:id="@+id/skip_next_layout"
-      android:layout_width="match_parent"
-      android:layout_height="56dp"
-      android:layout_alignParentBottom="true"
-      android:background="@color/white"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/view_pager"
       android:measureWithLargestChild="false"
       android:minHeight="48dp"
-      android:orientation="horizontal"
-      android:weightSum="4"
+      android:layout_width="0dp"
+      android:layout_height="56dp"
+      android:background="@color/white"
       tools:background="@color/white"
-      tools:visibility="visible"
-      >
-    <!-- UI element used for padding only -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        />
+      android:visibility="visible"
+    >
 
     <RadioGroup
         android:id="@+id/view_pager_radio_group"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="2"
-        android:baselineAligned="false"
-        android:clickable="false"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:orientation="horizontal"
         tools:background="@color/grey_medium"
-        tools:layout_height="25dp"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:gravity="center"
         />
 
     <TextView
         android:id="@+id/skip_text"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
         android:text="@string/skip"
         android:textAllCaps="true"
+        android:layout_gravity="end|center"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?attr/colorPrimaryDark"
         android:textStyle="bold"
-        android:weightSum="1"
         tools:text="SKIP"
+        android:padding="4dp"
+        android:visibility="visible"
+        android:layout_marginRight="28dp"
+        android:layout_marginEnd="28dp"
         />
 
-  </LinearLayout>
+  </FrameLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
