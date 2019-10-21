@@ -31,7 +31,7 @@
         android:layout_height="0dp"
         android:background="@color/transparent"
         tools:background="@color/indigo"
-        />
+      />
 
   <FrameLayout
       android:id="@+id/skip_next_layout"
@@ -46,7 +46,7 @@
       android:background="@color/white"
       tools:background="@color/white"
       android:visibility="visible"
-      >
+    >
 
     <RadioGroup
         android:id="@+id/view_pager_radio_group"
