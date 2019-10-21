@@ -113,7 +113,8 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                 .observeOn(Schedulers.io())
                 // map bodies to request with bodies
                 //.map(body -> fetchDataUsingBodyWithRetry(interfaces, body, bypassCache, 3))
-                .map(body -> interfaces.listAppsUpdates(body, bypassCache))
+                .map(body -> interfaces.listAppsUpdates(body, bypassCache,
+                    appBundlesVisibilityManager.shouldEnableAppBundles()))
                 // wait for all requests to be ready and return a list of requests
                 .toList()
                 // subscribe to all observables (list of observables<request>) at the same time using merge
@@ -135,7 +136,8 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
                   return resultListAppsUpdates;
                 });
           }
-          return interfaces.listAppsUpdates(body, bypassCache);
+          return interfaces.listAppsUpdates(body, bypassCache,
+              appBundlesVisibilityManager.shouldEnableAppBundles());
         });
   }
 
