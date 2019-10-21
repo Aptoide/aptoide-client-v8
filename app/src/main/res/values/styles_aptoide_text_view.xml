@@ -295,6 +295,10 @@
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.ThemeDark">
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XXS.Theme">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
