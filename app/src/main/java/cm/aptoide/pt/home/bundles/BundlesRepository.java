@@ -60,7 +60,6 @@ public class BundlesRepository {
     return remoteBundleDataSource.loadNextHomeBundles(getOffset(HOME_BUNDLE_KEY), limit,
         HOME_BUNDLE_KEY)
         .doOnNext(homeBundlesModel -> {
-
           if (homeBundlesModel.isComplete()) {
             updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY);
           }
