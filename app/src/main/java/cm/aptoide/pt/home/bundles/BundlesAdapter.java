@@ -232,7 +232,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   public void removeLoadMoreError() {
-    remove(bundles.size()-1);
+    remove(bundles.size() - 1);
   }
 
   /**

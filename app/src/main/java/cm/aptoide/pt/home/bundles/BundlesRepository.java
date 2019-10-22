@@ -60,6 +60,7 @@ public class BundlesRepository {
     return remoteBundleDataSource.loadNextHomeBundles(getOffset(HOME_BUNDLE_KEY), limit,
         HOME_BUNDLE_KEY)
         .doOnNext(homeBundlesModel -> {
+
           if (homeBundlesModel.isComplete()) {
             updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY);
           }
@@ -74,6 +75,9 @@ public class BundlesRepository {
         cachedBundles.put(bundleKey, new ArrayList<>(homeBundles.getList()));
       } else {
         List<HomeBundle> homeBundleList = cachedBundles.get(bundleKey);
+        if (homeBundleList.get(homeBundleList.size() - 1) instanceof ErrorHomeBundle) {
+          homeBundleList.remove(homeBundleList.size() - 1);
+        }
         homeBundleList.addAll(homeBundles.getList());
         cachedBundles.put(bundleKey, homeBundleList);
       }
