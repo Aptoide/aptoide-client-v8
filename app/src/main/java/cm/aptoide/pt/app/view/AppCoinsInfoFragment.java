@@ -119,7 +119,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
           .setAlpha(1 - percentage);
     });
 
-    setupWalletLink();
     setHasOptionsMenu(true);
     setupToolbar();
     setupBottomAppBar();
@@ -152,15 +151,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     bottomInstallButton = null;
     appcMessageAppcoinsSection2a = null;
     super.onDestroyView();
-  }
-
-  private void setupWalletLink() {
-    final String formattedString =
-        String.format(getString(R.string.appc_message_appcoins_section_3),
-            getString(R.string.appc_title_settings_appcoins_wallet));
-    SpannableString spannableString = new SpannableString(formattedString);
-    appcMessageAppcoinsSection2a.setText(spannableString);
-    appcMessageAppcoinsSection2a.setMovementMethod(LinkMovementMethod.getInstance());
   }
 
   private void setupTextView(int image, String text, TextView appcMessageAppcoinsSection) {
