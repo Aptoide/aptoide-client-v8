@@ -36,7 +36,7 @@ public class TopBundleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    ((AppViewHolder) holder).setApp(apps.get(position), homeBundle, bundlePosition);
+    ((AppViewHolder) holder).setApp(apps.get(position), homeBundle, position);
   }
 
   @Override public int getItemViewType(int position) {
