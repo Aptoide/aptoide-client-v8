@@ -96,7 +96,12 @@ public class Home {
   }
 
   public Observable<HomeBundlesModel> loadNextHomeBundles() {
-    return bundlesRepository.loadNextHomeBundles();
+    return bundlesRepository.loadNextHomeBundles()
+        .doOnNext(homeBundlesModel -> {
+          if (homeBundlesModel.hasErrors()) {
+            setLoadMoreError();
+          }
+        });
   }
 
   public boolean hasMore() {
@@ -192,7 +197,7 @@ public class Home {
     return reactionsManager.isFirstReaction(cardId, groupId);
   }
 
-  public void setLoadMoreError() {
+  private void setLoadMoreError() {
     bundlesRepository.setHomeLoadMoreError();
   }
 }
