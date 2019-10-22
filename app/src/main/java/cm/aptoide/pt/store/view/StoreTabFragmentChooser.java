@@ -5,6 +5,7 @@ import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
@@ -17,12 +18,12 @@ import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 
 public class StoreTabFragmentChooser {
 
-  public static Fragment choose(Event event) {
+  public static Fragment choose(Event event, HomeEvent.Type eventType) {
     switch (event.getName()) {
       case listApps:
         if (event.getData() != null && event.getData()
             .getLayout()
-            .equals(Layout.GRAPHIC)) {
+            .equals(Layout.GRAPHIC) || eventType.equals(HomeEvent.Type.MORE_TOP)) {
           return ListAppsFragment.newInstance();
         } else {
           return new ListAppsMoreFragment();
