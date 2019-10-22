@@ -382,6 +382,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       String slug = u.getPath()
           .split("/")[2];
       return startEditorialFromSlug(slug);
+    } else if (u.getPath() != null && u.getPath()
+        .contains("using-appcoins")) {
+      return startAppcInfoView();
     } else {
       String[] appName = u.getHost()
           .split("\\.");

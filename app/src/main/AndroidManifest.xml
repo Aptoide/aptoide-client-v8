@@ -342,6 +342,19 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
+          android:host="*community.aptoide.com"
+          android:pathPattern="/using-appcoins*"
+          android:scheme="https" />
+      </intent-filter>
+
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
           android:host="*.aptoide.com"
           android:pathPattern="/download*"
           android:scheme="https" />
