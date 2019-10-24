@@ -9,7 +9,7 @@
     >
 
   <ImageView
-      android:id="@android:id/icon"
+      android:id="@+id/wizard_icon"
       android:layout_width="0dp"
       android:layout_height="match_parent"
       android:layout_weight="2"
