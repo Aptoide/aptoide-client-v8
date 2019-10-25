@@ -224,11 +224,13 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<Boolean> loadBannerAds() {
     return appViewManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
-        .doOnSuccess(shouldLoadBanner -> {
+        .flatMap(shouldLoadBanner -> {
           if (shouldLoadBanner) {
-            view.showBannerAd();
+            return appViewManager.isMatureApp()
+                .observeOn(viewScheduler)
+                .doOnSuccess(isMature -> view.showBannerAd(isMature));
           }
+          return Single.just(shouldLoadBanner);
         })
         .onErrorReturn(__ -> null)
         .toObservable();
