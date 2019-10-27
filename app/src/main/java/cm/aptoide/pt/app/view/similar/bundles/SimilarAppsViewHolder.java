@@ -59,11 +59,11 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
     similarSnap.attachToRecyclerView(similarApps);
   }
 
-  private void setSimilarAdapter(boolean mopubAdapter) {
+  private void setSimilarAdapter(boolean loadMoPubAdapter, boolean isFromMatureApp) {
     this.adapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
             AppViewSimilarAppsAdapter.SimilarAppType.SIMILAR_APPS);
-    if (mopubAdapter) {
+    if (loadMoPubAdapter) {
       moPubSimilarAppsRecyclerAdapter =
           new MoPubRecyclerAdapter((Activity) similarApps.getContext(), adapter);
       configureAdRenderers();
@@ -71,12 +71,20 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
 
       if (Build.VERSION.SDK_INT >= 21) {
         similarApps.setAdapter(moPubSimilarAppsRecyclerAdapter);
-        moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
+        loadAds(isFromMatureApp);
       } else {
         similarApps.setAdapter(adapter);
       }
     } else {
       similarApps.setAdapter(adapter);
+    }
+  }
+
+  private void loadAds(boolean isFromMatureApp) {
+    if (isFromMatureApp) {
+      moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
     }
   }
 
@@ -97,7 +105,8 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
   @Override public void setBundle(SimilarAppsBundle bundle, int position) {
     if (adapter == null) {
       setSimilarAdapter(bundle.getContent()
-          .shouldLoadNativeAds());
+          .shouldLoadNativeAds(), bundle.getContent()
+          .isFromMatureApp());
     }
     adapter.update(mapToSimilar(bundle.getContent(), bundle.getContent()
         .hasAd()));

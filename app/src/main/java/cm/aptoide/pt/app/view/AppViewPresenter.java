@@ -900,6 +900,8 @@ public class AppViewPresenter implements Presenter {
             .getKeywords())
         .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
             .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
+            .flatMap(__ -> appViewManager.isMatureApp())
+            .doOnSuccess(similarAppsViewModel::setFromMatureApp)
             .map(__ -> similarAppsViewModel))
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {

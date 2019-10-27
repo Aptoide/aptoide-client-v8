@@ -20,6 +20,7 @@ public class SimilarAppsViewModel {
   private final ApplicationAdError adError;
   private boolean hasRecordedAdImpression;
   private boolean shouldLoadNativeAds;
+  private boolean isFromMatureApp;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
@@ -101,5 +102,13 @@ public class SimilarAppsViewModel {
 
   public void setShouldLoadNativeAds(boolean shouldLoadNativeAds) {
     this.shouldLoadNativeAds = shouldLoadNativeAds;
+  }
+
+  public boolean isFromMatureApp() {
+    return isFromMatureApp;
+  }
+
+  public void setFromMatureApp(boolean fromMatureApp) {
+    isFromMatureApp = fromMatureApp;
   }
 }
