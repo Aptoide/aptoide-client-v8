@@ -213,8 +213,9 @@ public class AppViewPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
-            view.initInterstitialAd();
-            return handleConsentDialog();
+            return appViewManager.isMatureApp()
+                .doOnSuccess(isMature -> view.initInterstitialAd(isMature))
+                .flatMap(__ -> handleConsentDialog());
           }
           return Single.just(false);
         })
