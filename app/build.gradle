@@ -228,6 +228,9 @@ android {
         "\"" + APPLOVIN_SDK_VERSION + "\""
     variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
         "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
+    variant.buildConfigField "String", "APPNEXT_SDK_VERSION",
+        "\"" + APPNEXT_SDK_VERSION + "\""
+
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
@@ -436,6 +439,13 @@ dependencies {
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
+
+  //AppNext
+  implementation "com.appnext.sdk.adapters:mopub-ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
+  //implementation 'com.google.android.gms:play-services-ads:17.0.0' // Mandatory
+  //implementation 'com.google.android.gms:play-services-location:17.0.0' // Mandatory
 
   //Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"
