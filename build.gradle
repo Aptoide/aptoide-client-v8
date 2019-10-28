@@ -160,6 +160,8 @@ ext {
   JMDNS_VERSION = '3.5.1'
 
   EPOXY_VERSION = '3.8.0'
+
+  STATEMACHINE_VERSION = '0.1.2'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html
