@@ -1,9 +1,14 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.home.apps.App;
+import cm.aptoide.pt.home.apps.AppClick;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
+import cm.aptoide.pt.home.apps.model.StateApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

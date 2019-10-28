@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps
+package cm.aptoide.pt.home.apps.seemore
 
 import cm.aptoide.pt.app.AppNavigator
 import cm.aptoide.pt.app.view.AppViewFragment

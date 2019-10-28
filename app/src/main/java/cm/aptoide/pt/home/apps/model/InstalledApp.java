@@ -1,4 +1,6 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.model;
+
+import cm.aptoide.pt.home.apps.App;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -36,5 +38,9 @@ public class InstalledApp implements App {
 
   @Override public Type getType() {
     return Type.INSTALLED;
+  }
+
+  @Override public String getIdentifier() {
+    return packageName;
   }
 }

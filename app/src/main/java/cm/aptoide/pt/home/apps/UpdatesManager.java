@@ -59,7 +59,7 @@ public class UpdatesManager {
   }
 
   public Observable<List<Update>> getUpdatesList(boolean isExcluded, boolean excludeAppcUpgrades) {
-    return updateRepository.getAll(isExcluded)
+    return updateRepository.getAll(false)
         .flatMap(updates -> Observable.just(updates)
             .flatMapIterable(list -> list)
             .filter(update -> !excludeAppcUpgrades || !update.isAppcUpgrade())

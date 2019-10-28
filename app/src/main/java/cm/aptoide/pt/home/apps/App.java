@@ -8,7 +8,9 @@ public interface App {
 
   App.Type getType();
 
+  String getIdentifier();
+
   enum Type {
-    UPDATE, DOWNLOAD, INSTALLED, HEADER_INSTALLED, HEADER_DOWNLOADS, HEADER_UPDATES
+    UPDATE, DOWNLOAD, INSTALLED, APPC_MIGRATION
   }
 }

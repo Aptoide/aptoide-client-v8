@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.model;
 
 /**
  * Created by filipegoncalves on 3/8/18.
@@ -65,6 +65,10 @@ public class DownloadApp implements StateApp {
 
   @Override public Type getType() {
     return Type.DOWNLOAD;
+  }
+
+  @Override public String getIdentifier() {
+    return md5;
   }
 
   public String getPackageName() {

@@ -16,7 +16,7 @@ import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
-import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
+import cm.aptoide.pt.home.apps.seemore.SeeMoreAppcFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;

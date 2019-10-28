@@ -1,8 +1,9 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -111,7 +112,7 @@ public class SeeMoreAppcPresenter implements Presenter {
         .filter(hasPromotion -> !hasPromotion.first)
         .flatMap(__ -> seeMoreAppcManager.getAppcUpgradeDownloadsList())
         .observeOn(viewScheduler)
-        .doOnNext(list -> view.showAppcUpgradesDownloadList(list))
+        .doOnNext(view::showAppcUpgradesDownloadList)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

@@ -1,7 +1,8 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import android.view.View;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.pt.home.apps.App;
 
 /**
  * Created by filipegoncalves on 3/8/18.

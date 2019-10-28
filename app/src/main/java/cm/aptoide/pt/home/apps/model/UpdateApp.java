@@ -1,4 +1,6 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.model;
+
+import cm.aptoide.pt.home.apps.App;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -31,8 +33,12 @@ public class UpdateApp implements StateApp {
     this.appId = appId;
   }
 
-  @Override public Type getType() {
-    return Type.UPDATE;
+  @Override public App.Type getType() {
+    return App.Type.UPDATE;
+  }
+
+  @Override public String getIdentifier() {
+    return md5;
   }
 
   public String getName() {

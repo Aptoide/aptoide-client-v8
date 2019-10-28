@@ -1,4 +1,6 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.model;
+
+import cm.aptoide.pt.home.apps.App;
 
 public interface StateApp extends App {
 

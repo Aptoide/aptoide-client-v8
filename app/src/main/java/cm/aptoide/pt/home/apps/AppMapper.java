@@ -2,6 +2,11 @@ package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
+import cm.aptoide.pt.home.apps.model.DownloadApp;
+import cm.aptoide.pt.home.apps.model.InstalledApp;
+import cm.aptoide.pt.home.apps.model.StateApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +17,8 @@ import java.util.List;
 
 public class AppMapper {
 
-  public List<App> getDownloadApps(List<Install> installations) {
-    List<App> downloadsList = new ArrayList<>();
+  public List<DownloadApp> getDownloadApps(List<Install> installations) {
+    List<DownloadApp> downloadsList = new ArrayList<>();
 
     for (int i = 0; i < installations.size(); i++) {
       Install install = installations.get(i);
@@ -54,8 +59,8 @@ public class AppMapper {
     return status;
   }
 
-  public List<App> mapInstalledToInstalledApps(List<Installed> installeds) {
-    List<App> installedAppsList = new ArrayList<>();
+  public List<InstalledApp> mapInstalledToInstalledApps(List<Installed> installeds) {
+    List<InstalledApp> installedAppsList = new ArrayList<>();
 
     for (Installed installed : installeds) {
       installedAppsList.add(new InstalledApp(installed.getName(), installed.getPackageName(),
@@ -64,8 +69,8 @@ public class AppMapper {
     return installedAppsList;
   }
 
-  public List<App> mapUpdateToUpdateAppList(List<Update> updates) {
-    List<App> updatesList = new ArrayList<>();
+  public List<UpdateApp> mapUpdateToUpdateAppList(List<Update> updates) {
+    List<UpdateApp> updatesList = new ArrayList<>();
     for (Update update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
@@ -74,9 +79,9 @@ public class AppMapper {
     return updatesList;
   }
 
-  public List<App> mapUpdateToUpdateAppcAppList(List<Update> updates, boolean hasPromotion,
-      float appcValue) {
-    List<App> updatesList = new ArrayList<>();
+  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
+      boolean hasPromotion, float appcValue) {
+    List<AppcUpdateApp> updatesList = new ArrayList<>();
     for (Update update : updates) {
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
@@ -85,8 +90,8 @@ public class AppMapper {
     return updatesList;
   }
 
-  public List<App> getUpdatesList(List<Install> installs) {
-    List<App> updatesList = new ArrayList<>();
+  public List<UpdateApp> getUpdatesList(List<Install> installs) {
+    List<UpdateApp> updatesList = new ArrayList<>();
     for (Install install : installs) {
       updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
           install.getPackageName(), install.getProgress(), install.isIndeterminate(),

@@ -1,11 +1,13 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
+import cm.aptoide.pt.home.apps.App;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.presenter.View;
 import java.util.List;
 import rx.Observable;
 
 interface SeeMoreAppcView extends View {
-  void showAppcUpgradesList(List<App> list);
+  void showAppcUpgradesList(List<AppcUpdateApp> list);
 
   Observable<Void> refreshApps();
 

@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.home.apps.App;
+import cm.aptoide.pt.home.apps.AppClick;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -114,9 +117,9 @@ public class SeeMoreAppcFragment extends NavigationTrackFragment implements SeeM
     return super.onOptionsItemSelected(item);
   }
 
-  @Override public void showAppcUpgradesList(List<App> list) {
+  @Override public void showAppcUpgradesList(List<AppcUpdateApp> list) {
     if (list != null && !list.isEmpty()) {
-      appcAppsAdapter.setAvailableUpgradesList(list);
+      appcAppsAdapter.setAvailableUpgradesList((List<App>) (List<? extends App>) list);
     }
   }
 

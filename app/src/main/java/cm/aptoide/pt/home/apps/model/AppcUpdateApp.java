@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.model;
 
 public class AppcUpdateApp extends UpdateApp {
 
@@ -20,5 +20,9 @@ public class AppcUpdateApp extends UpdateApp {
 
   public float getAppcReward() {
     return appcReward;
+  }
+
+  @Override public Type getType() {
+    return Type.APPC_MIGRATION;
   }
 }

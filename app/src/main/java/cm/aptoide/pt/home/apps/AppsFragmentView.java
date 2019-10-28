@@ -10,12 +10,6 @@ import rx.Observable;
 
 public interface AppsFragmentView extends View {
 
-  void showUpdatesList(List<App> list);
-
-  void showInstalledApps(List<App> installedApps);
-
-  void showDownloadsList(List<App> list);
-
   Observable<App> retryDownload();
 
   Observable<App> installApp();
@@ -40,10 +34,6 @@ public interface AppsFragmentView extends View {
 
   Observable<Boolean> showRootWarning();
 
-  void showUpdatesDownloadList(List<App> updatesDownloadList);
-
-  void showAppcUpgradesDownloadList(List<App> updatesDownloadList);
-
   Observable<Void> updateAll();
 
   Observable<App> updateLongClick();
@@ -54,10 +44,6 @@ public interface AppsFragmentView extends View {
 
   void showUnknownErrorMessage();
 
-  void removeExcludedUpdates(List<App> excludedUpdatesList);
-
-  Observable<Void> moreAppcClick();
-
   Observable<App> cardClick();
 
   void setUserImage(String userAvatarUrl);
@@ -66,35 +52,15 @@ public interface AppsFragmentView extends View {
 
   Observable<Void> imageClick();
 
-  void removeInstalledDownloads(List<App> installedDownloadsList);
-
   void scrollToTop();
 
   Observable<Void> refreshApps();
 
   void hidePullToRefresh();
 
-  void removeCanceledAppDownload(App app);
-
-  void removeAppcCanceledAppDownload(App app);
-
-  void setStandbyState(App app);
-
-  void setAppcStandbyState(App app);
-
-  void showIndeterminateAllUpdates();
-
   void setDefaultUserImage();
 
-  void setPausingDownloadState(App app);
-
-  void setAppcPausingDownloadState(App app);
-
-  void showAppcUpgradesList(List<App> list);
-
-  void removeExcludedAppcUpgrades(List<App> excludedUpdatesList);
+  void showModel(AppsModel model);
 
   Observable<Void> onLoadAppcUpgradesSection();
-
-  Observable<Void> onLoadUpdatesSection();
 }

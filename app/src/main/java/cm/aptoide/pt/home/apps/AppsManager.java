@@ -11,6 +11,10 @@ import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
+import cm.aptoide.pt.home.apps.model.DownloadApp;
+import cm.aptoide.pt.home.apps.model.InstalledApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -18,6 +22,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,54 +69,53 @@ public class AppsManager {
     this.promotionsManager = promotionsManager;
   }
 
-  public Observable<List<App>> getUpdatesList(boolean isExcluded) {
-    return updatesManager.getUpdatesList(isExcluded, true)
+  public Observable<List<UpdateApp>> getUpdatesList() {
+    return Observable.combineLatest(getAllUpdatesList(), getUpdateDownloadsList(),
+        this::mergeUpdates);
+  }
+
+  private List<UpdateApp> mergeUpdates(List<UpdateApp> allUpdates,
+      List<UpdateApp> updateDownloads) {
+    for (UpdateApp app1 : allUpdates) {
+      boolean add = true;
+      for (UpdateApp app2 : updateDownloads) {
+        if (app1.getAppId() == app2.getAppId()) {
+          add = false;
+          break;
+        }
+      }
+      if (add) updateDownloads.add(app1);
+    }
+    return updateDownloads;
+  }
+
+  private Observable<List<UpdateApp>> getAllUpdatesList() {
+    return updatesManager.getUpdatesList(false, true)
         .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppList(updates));
+        .map(appMapper::mapUpdateToUpdateAppList);
   }
 
-  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded, boolean hasPromotion,
-      float appcValue) {
-    return updatesManager.getAppcUpgradesList(isExcluded)
-        .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, hasPromotion, appcValue));
-  }
-
-  public Observable<List<App>> getExcludedAppcUpgradesList() {
-    return getAppcUpgradesList(true, false, 0);
-  }
-
-  public Observable<List<App>> getUpdateDownloadsList() {
+  private Observable<List<UpdateApp>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
+            return Observable.just(new ArrayList<>());
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
-              .flatMap(install -> updatesManager.filterAppcUpgrade(install))
+              .flatMap(updatesManager::filterAppcUpgrade)
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+              .map(appMapper::getUpdatesList);
         });
   }
 
-  public Observable<List<App>> getAppcUpgradeDownloadsList() {
-    return installManager.getInstallations()
+  public Observable<List<AppcUpdateApp>> getAppcUpgradesList() {
+    return migrationPromotionActive().flatMap(pair -> updatesManager.getAppcUpgradesList(false)
         .distinctUntilChanged()
-        .throttleLast(200, TimeUnit.MILLISECONDS)
-        .flatMap(installations -> {
-          if (installations == null || installations.isEmpty()) {
-            return Observable.empty();
-          }
-          return Observable.just(installations)
-              .flatMapIterable(installs -> installs)
-              .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
-              .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList));
-        });
+        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, pair.first, pair.second)));
   }
 
   public Observable<Pair<Boolean, Float>> migrationPromotionActive() {
@@ -122,16 +126,16 @@ public class AppsManager {
         .toObservable();
   }
 
-  public Observable<List<App>> getInstalledApps() {
+  public Observable<List<InstalledApp>> getInstalledApps() {
     return installManager.fetchInstalled()
         .distinctUntilChanged()
         .flatMapIterable(list -> list)
-        .flatMap(item -> updatesManager.filterUpdates(item))
+        .flatMap(updatesManager::filterUpdates)
         .toList()
-        .map(installeds -> appMapper.mapInstalledToInstalledApps(installeds));
+        .map(appMapper::mapInstalledToInstalledApps);
   }
 
-  public Observable<List<App>> getDownloadApps() {
+  public Observable<List<DownloadApp>> getDownloadApps() {
     return installManager.getInstallations()
         .doOnNext(installs -> Logger.getInstance()
             .d("Apps", "emit list of installs from getDownloadApps - before throttle"))
@@ -145,16 +149,16 @@ public class AppsManager {
                   .d("Apps", "emit list of installs from getDownloadApps - after throttle"))
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
-              .flatMap(item -> installManager.filterInstalled(item))
+              .flatMap(installManager::filterInstalled)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
-              .flatMap(item -> updatesManager.filterAppcUpgrade(item))
+              .flatMap(updatesManager::filterAppcUpgrade)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
               .doOnNext(__ -> Logger.getInstance()
                   .d("Apps", "emit list of installs from getDownloadApps - after toList"))
-              .map(installedApps -> appMapper.getDownloadApps(installedApps));
+              .map(appMapper::getDownloadApps);
         });
   }
 
@@ -297,7 +301,7 @@ public class AppsManager {
     updatesAnalytics.updates(UpdatesAnalytics.OPEN_APP_VIEW_MIGRATIOM);
   }
 
-  public Observable<List<App>> getInstalledDownloads() {
+  public Observable<List<DownloadApp>> getInstalledDownloads() {
     return installManager.getInstalledApps()
         .distinctUntilChanged()
         .map(installedDownloads -> appMapper.getDownloadApps(installedDownloads));

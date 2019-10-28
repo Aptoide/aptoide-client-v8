@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,6 +7,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.home.apps.App;
+import cm.aptoide.pt.home.apps.AppClick;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import rx.subjects.PublishSubject;
 

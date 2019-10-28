@@ -1,4 +1,4 @@
-package cm.aptoide.pt.home.apps;
+package cm.aptoide.pt.home.apps.seemore;
 
 import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -8,6 +8,12 @@ import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
+import cm.aptoide.pt.home.apps.App;
+import cm.aptoide.pt.home.apps.AppMapper;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
+import cm.aptoide.pt.home.apps.model.DownloadApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
+import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.promotions.PromotionsManager;
@@ -42,8 +48,8 @@ public class SeeMoreAppcManager {
     this.promotionsManager = promotionsManager;
   }
 
-  public Observable<List<App>> getAppcUpgradesList(boolean isExcluded, boolean hasPromotion,
-      float appcValue) {
+  public Observable<List<AppcUpdateApp>> getAppcUpgradesList(boolean isExcluded,
+      boolean hasPromotion, float appcValue) {
     return updatesManager.getAppcUpgradesList(isExcluded)
         .distinctUntilChanged()
         .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, hasPromotion, appcValue));
@@ -59,9 +65,10 @@ public class SeeMoreAppcManager {
           }
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
-              .flatMap(install -> updatesManager.filterNonAppcUpgrade(install))
+              .flatMap(updatesManager::filterNonAppcUpgrade)
               .toList()
-              .map(updatesList -> appMapper.getUpdatesList(updatesList));
+              .map(updatesList -> (List<App>) (List<? extends App>) appMapper.getUpdatesList(
+                  updatesList));
         });
   }
 
