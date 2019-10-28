@@ -364,15 +364,9 @@ public class AppViewManager {
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {
-    return appViewModelManager.getAppViewModel()
-        .flatMap(appViewModel -> Single.just(shouldLoad && !appViewModel.getAppCoinsViewModel()
-            .hasBilling() && !appViewModel.getAppCoinsViewModel()
-            .hasAdvertising()));
-  }
-
-  public Single<Boolean> isMatureApp() {
     return appViewModelManager.getAppModel()
-        .map(AppModel::isMature);
+        .flatMap(appModel -> Single.just(
+            shouldLoad && !appModel.hasBilling() && !appModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {

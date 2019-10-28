@@ -199,8 +199,8 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.mergeDelayError(loadInterstitialAds(), loadOrganicAds(appViewModel),
-        loadBannerAds())
+    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()),
+        loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -208,14 +208,13 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds() {
+  private Observable<Boolean> loadInterstitialAds(AppModel appModel) {
     return appViewManager.shouldLoadInterstitialAd()
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
-            return appViewManager.isMatureApp()
-                .doOnSuccess(isMature -> view.initInterstitialAd(isMature))
-                .flatMap(__ -> handleConsentDialog());
+            view.initInterstitialAd(appModel.isMature());
+            return handleConsentDialog();
           }
           return Single.just(false);
         })
@@ -223,15 +222,12 @@ public class AppViewPresenter implements Presenter {
         .toObservable();
   }
 
-  private Observable<Boolean> loadBannerAds() {
+  private Observable<Boolean> loadBannerAds(AppModel appModel) {
     return appViewManager.shouldLoadBannerAd()
-        .flatMap(shouldLoadBanner -> {
+        .doOnSuccess(shouldLoadBanner -> {
           if (shouldLoadBanner) {
-            return appViewManager.isMatureApp()
-                .observeOn(viewScheduler)
-                .doOnSuccess(isMature -> view.showBannerAd(isMature));
+            view.showBannerAd(appModel.isMature());
           }
-          return Single.just(shouldLoadBanner);
         })
         .onErrorReturn(__ -> null)
         .toObservable();
@@ -900,8 +896,7 @@ public class AppViewPresenter implements Presenter {
             .getKeywords())
         .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
             .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
-            .flatMap(__ -> appViewManager.isMatureApp())
-            .doOnSuccess(similarAppsViewModel::setFromMatureApp)
+            .doOnSuccess(__ -> similarAppsViewModel.setFromMatureApp(appViewModel.isMature()))
             .map(__ -> similarAppsViewModel))
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
