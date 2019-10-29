@@ -4,6 +4,9 @@ import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import io.rakam.api.Rakam;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MoPubAnalytics {
 
@@ -24,6 +27,18 @@ public class MoPubAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty("ads", ads);
+    Rakam.getInstance()
+        .setSuperProperties(createRakamSuperProperties(ads));
+  }
+
+  private JSONObject createRakamSuperProperties(String ads) {
+    JSONObject superProperties = new JSONObject();
+    try {
+      superProperties.put("ads", ads);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    return superProperties;
   }
 
   private AdsVisibility mapToAdsVisibility(WalletAdsOfferManager.OfferResponseStatus status) {

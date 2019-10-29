@@ -292,6 +292,7 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
+        .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
@@ -334,8 +335,10 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+  }
 
-    adsUserPropertyManager.start();
+  private Completable checkAdsUserProperty() {
+    return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
   private Completable setUpFirstRunAnalytics() {
