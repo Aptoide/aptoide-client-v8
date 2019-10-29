@@ -1,6 +1,7 @@
 package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
@@ -27,8 +28,25 @@ public class MoPubAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty("ads", ads);
-    Rakam.getInstance()
-        .setSuperProperties(createRakamSuperProperties(ads));
+
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
+      Rakam.getInstance()
+          .setSuperProperties(createRakamSuperProperties(rakamAds));
+    }
+  }
+
+  private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
+    switch (status) {
+      case NO_ADS:
+        return "no_ads";
+      case ADS_HIDE:
+        return "ads_block_by_offer";
+      case ADS_SHOW:
+        return "with_ads";
+      default:
+        throw new IllegalStateException("Invalid OfferResponseStatus");
+    }
   }
 
   private JSONObject createRakamSuperProperties(String ads) {
