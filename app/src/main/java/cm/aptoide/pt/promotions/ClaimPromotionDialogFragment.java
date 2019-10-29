@@ -2,7 +2,9 @@ package cm.aptoide.pt.promotions;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,6 +27,7 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.BaseDialogView;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.jakewharton.rxbinding.widget.TextViewAfterTextChangeEvent;
@@ -192,7 +195,30 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   }
 
   @Override public void sendWalletIntent() {
-    AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(), getContext());
+    WalletPackageManager walletPackageManager =
+        new WalletPackageManager(getContext().getPackageManager());
+    if (walletPackageManager.getWalletPackage()
+        .equals(WALLET_PACKAGE)) {
+      if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(),
+              getContext());
+        } else {
+          Intent intent = new Intent("android.intent.action.MAIN");
+          intent.addCategory("android.intent.category.LAUNCHER");
+          intent.setComponent(
+              new ComponentName("cm.aptoide.pt", "com.asfoundation.wallet.ui.SplashActivity"));
+          getContext().startActivity(intent);
+        }
+      } else {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(),
+              getContext());
+        }
+      }
+    } else {
+      AptoideUtils.SystemU.openApp(WALLET_PACKAGE, getContext().getPackageManager(), getContext());
+    }
   }
 
   @Override public void showGenericError() {

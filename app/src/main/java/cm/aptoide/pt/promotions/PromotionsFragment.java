@@ -1,7 +1,6 @@
 package cm.aptoide.pt.promotions;
 
 import android.app.AlertDialog;
-import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -34,6 +33,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.jakewharton.rxbinding.view.RxView;
@@ -534,13 +534,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   private boolean isWalletInstalled() {
-    for (ApplicationInfo applicationInfo : getContext().getPackageManager()
-        .getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
-        return true;
-      }
-    }
-    return false;
+    return new WalletPackageManager(this.getContext()
+        .getPackageManager()).isWalletInstalled();
   }
 
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {

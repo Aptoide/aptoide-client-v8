@@ -1,6 +1,5 @@
 package cm.aptoide.pt.promotions;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -100,12 +100,7 @@ public class PromotionsManager {
   }
 
   private boolean isWalletInstalled() {
-    for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
-        return true;
-      }
-    }
-    return false;
+    return new WalletPackageManager(packageManager).isWalletInstalled();
   }
 
   private int getTotalAppc(List<PromotionApp> appsList) {

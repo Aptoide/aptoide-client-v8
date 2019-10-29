@@ -1,6 +1,8 @@
 package cm.aptoide.pt.home.apps;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -18,6 +20,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -164,8 +167,32 @@ public class AppsManager {
         .first()
         .flatMapCompletable(installationProgress -> {
           if (installationProgress.getState() == Install.InstallationStatus.INSTALLED) {
-            AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(), packageManager,
-                context);
+            WalletPackageManager walletPackageManager =
+                new WalletPackageManager(context.getPackageManager());
+            if (walletPackageManager.getWalletPackage()
+                .equals(((DownloadApp) app).getPackageName())) {
+              if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+                if (walletPackageManager.isWalletInstalled()) {
+                  AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(),
+                      context.getPackageManager(), context);
+                } else {
+                  Intent intent = new Intent("android.intent.action.MAIN");
+                  intent.addCategory("android.intent.category.LAUNCHER");
+                  intent.setComponent(new ComponentName("cm.aptoide.pt",
+                      "com.asfoundation.wallet.ui.SplashActivity"));
+                  context.startActivity(intent);
+                }
+              } else {
+                if (walletPackageManager.isWalletInstalled()) {
+                  AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(),
+                      context.getPackageManager(), context);
+                }
+              }
+            } else {
+              AptoideUtils.SystemU.openApp(((DownloadApp) app).getPackageName(),
+                  context.getPackageManager(), context);
+            }
+
             return Completable.never();
           } else {
             return resumeDownload(app);

@@ -15,7 +15,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferCardManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.blacklist.BlacklistManager;
-import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.preferences.AdultContentManager;
 import cm.aptoide.pt.preferences.LocalPersistenceAdultContent;
 import cm.aptoide.pt.preferences.Preferences;
@@ -82,8 +81,8 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides WalletAdsOfferCardManager providesWalletAdsOfferCardManager(
-      BlacklistManager blacklistManager, PackageRepository packageRepository) {
-    return new WalletAdsOfferCardManager(blacklistManager, packageRepository);
+      BlacklistManager blacklistManager) {
+    return new WalletAdsOfferCardManager(blacklistManager, application.getPackageManager());
   }
 
   @Singleton @Provides MoPubConsentManager providesMoPubConsentManager() {

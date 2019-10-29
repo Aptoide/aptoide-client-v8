@@ -1,6 +1,8 @@
 package cm.aptoide.pt.editorial;
 
 import android.animation.Animator;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -46,6 +48,7 @@ import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -401,7 +404,28 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void openApp(String packageName) {
-    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    WalletPackageManager walletPackageManager =
+        new WalletPackageManager(getContext().getPackageManager());
+    if (walletPackageManager.getWalletPackage()
+        .equals(packageName)) {
+      if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        } else {
+          Intent intent = new Intent("android.intent.action.MAIN");
+          intent.addCategory("android.intent.category.LAUNCHER");
+          intent.setComponent(
+              new ComponentName("cm.aptoide.pt", "com.asfoundation.wallet.ui.SplashActivity"));
+          getContext().startActivity(intent);
+        }
+      } else {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        }
+      }
+    } else {
+      AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    }
   }
 
   @Override public Observable<EditorialDownloadEvent> installButtonClick(

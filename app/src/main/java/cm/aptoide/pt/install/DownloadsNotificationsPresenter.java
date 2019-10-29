@@ -50,6 +50,7 @@ public class DownloadsNotificationsPresenter {
           }
         }, throwable -> {
           Log.e(TAG, "Error on handleOpenDownloadManager");
+          throwable.printStackTrace();
           service.removeNotificationAndStop();
         }));
   }

@@ -25,8 +25,10 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import java.util.Collections;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -498,6 +500,29 @@ public class InstallManager {
   }
 
   private Observable<Install.InstallationType> getInstallationType(String packageName,
+      int versionCode) {
+    WalletPackageManager walletPackageManager =
+        new WalletPackageManager(context.getPackageManager());
+    if (packageName.equals(walletPackageManager.getWalletPackage())) {
+      if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+        if (!walletPackageManager.isWalletInstalled()) {
+          return Observable.just(Install.InstallationType.INSTALLED);
+        } else {
+          return getInstallationTypeForInstalled(packageName, versionCode);
+        }
+      } else {
+        if (!walletPackageManager.isWalletInstalled()) {
+          return Observable.just(Install.InstallationType.INSTALL);
+        } else {
+          return getInstallationTypeForInstalled(packageName, versionCode);
+        }
+      }
+    }
+    return getInstallationTypeForInstalled(packageName, versionCode);
+  }
+
+  @NotNull
+  private Observable<Install.InstallationType> getInstallationTypeForInstalled(String packageName,
       int versionCode) {
     return installedRepository.getInstalled(packageName)
         .map(installed -> {

@@ -1,12 +1,11 @@
 package cm.aptoide.pt.ads;
 
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import rx.Single;
 
 public class WalletAdsOfferManager {
 
-  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
   private final PackageManager packageManager;
   private final WalletAdsOfferService walletAdsOfferService;
 
@@ -20,20 +19,12 @@ public class WalletAdsOfferManager {
     return walletAdsOfferService.isWalletOfferActive()
         .flatMap(isOfferActive -> {
           if (isOfferActive) {
-            return Single.just(!isWalletInstalled());
+            return Single.just(
+                !new WalletPackageManager(packageManager).isThereAPackageToProcessAPPCPayments());
           } else {
             return Single.just(true);
           }
         });
-  }
-
-  private boolean isWalletInstalled() {
-    for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public enum OfferResponseStatus {

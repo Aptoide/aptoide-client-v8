@@ -1,14 +1,14 @@
 package cm.aptoide.pt.app.view;
 
 import android.animation.Animator;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +34,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.jakewharton.rxbinding.support.design.widget.RxAppBarLayout;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
@@ -204,7 +205,28 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   }
 
   @Override public void openApp(String packageName) {
-    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    WalletPackageManager walletPackageManager =
+        new WalletPackageManager(getContext().getPackageManager());
+    if (walletPackageManager.getWalletPackage()
+        .equals(packageName)) {
+      if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        } else {
+          Intent intent = new Intent("android.intent.action.MAIN");
+          intent.addCategory("android.intent.category.LAUNCHER");
+          intent.setComponent(
+              new ComponentName("cm.aptoide.pt", "com.asfoundation.wallet.ui.SplashActivity"));
+          getContext().startActivity(intent);
+        }
+      } else {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        }
+      }
+    } else {
+      AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    }
   }
 
   @Override public void setButtonText(boolean isInstalled) {

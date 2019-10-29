@@ -12,14 +12,16 @@ import rx.Observable
 
 class WalletAppProvider(val appCenter: AppCenter, val installedRepository: InstalledRepository,
                         val installManager: InstallManager,
-                        val downloadStateParser: DownloadStateParser) {
+                        val downloadStateParser: DownloadStateParser,
+                        val packageManager: WalletPackageManager) {
 
   fun getWalletApp(): Observable<WalletApp> {
     return appCenter.loadDetailedApp("com.appcoins.wallet", "catappult")
         .toObservable()
         .map { app -> this.mapToWalletApp(app) }.flatMap { walletApp ->
           val walletAppObs = Observable.just<WalletApp>(walletApp)
-          val isWalletInstalled = installedRepository.isInstalled(walletApp.packageName)
+          val isWalletInstalled =
+              Observable.just(packageManager.isWalletInstalled())
           val walletDownload = installManager.getInstall(walletApp.md5sum, walletApp.packageName,
               walletApp.versionCode)
           Observable.combineLatest<WalletApp, Boolean, Install, WalletApp>(walletAppObs,

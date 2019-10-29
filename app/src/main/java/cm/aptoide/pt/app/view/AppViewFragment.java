@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -92,6 +93,7 @@ import cm.aptoide.pt.view.dialog.DialogBadgeV7;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import cm.aptoide.pt.view.recycler.LinearLayoutManagerWithSmoothScroller;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
@@ -1648,7 +1650,28 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void openApp(String packageName) {
-    AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    WalletPackageManager walletPackageManager =
+        new WalletPackageManager(getContext().getPackageManager());
+    if (walletPackageManager.getWalletPackage()
+        .equals(packageName)) {
+      if (walletPackageManager.isThereAPackageToProcessAPPCPayments()) {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        } else {
+          Intent intent = new Intent("android.intent.action.MAIN");
+          intent.addCategory("android.intent.category.LAUNCHER");
+          intent.setComponent(
+              new ComponentName("cm.aptoide.pt", "com.asfoundation.wallet.ui.SplashActivity"));
+          getContext().startActivity(intent);
+        }
+      } else {
+        if (walletPackageManager.isWalletInstalled()) {
+          AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+        }
+      }
+    } else {
+      AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
+    }
   }
 
   @Override public Observable<Boolean> showDowngradeMessage() {

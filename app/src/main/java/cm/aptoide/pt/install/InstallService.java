@@ -139,6 +139,8 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   private void treatNext(boolean hasNext) {
+    Logger.getInstance()
+        .d(TAG, "treatNext: Install service " + hasNext);
     if (!hasNext) {
       removeNotificationAndStop();
       subscriptions.add(cacheManager.cleanCache()
@@ -328,6 +330,9 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   @Override public void removeNotificationAndStop() {
+    Logger.getInstance()
+        .d(this.getClass()
+            .getName(), "Remove notification and stop.");
     stopForeground(true);
     stopSelf();
   }

@@ -252,6 +252,7 @@ import cm.aptoide.pt.view.app.AppCenterRepository;
 import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
+import cm.aptoide.pt.wallet.WalletPackageManager;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -1712,7 +1713,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       InstalledRepository installedRepository, InstallManager installManager,
       DownloadStateParser downloadStateParser) {
     return new WalletAppProvider(appCenter, installedRepository, installManager,
-        downloadStateParser);
+        downloadStateParser, new WalletPackageManager(getApplicationContext().getPackageManager()));
   }
 
   @Singleton @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
