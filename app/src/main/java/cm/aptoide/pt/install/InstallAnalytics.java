@@ -29,13 +29,18 @@ public class InstallAnalytics {
   public static final String APPLICATION_INSTALL = "Application Install";
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
+  public static final String CLICK_ON_INSTALL = "click_on_install_button";
   private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
   private static final int MIGRATION_UNINSTALL_KEY = 8726;
   private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
+  private static final String ADS_BLOCKED = "ads";
   private static final String APP = "app";
   private static final String APPC = "appc";
   private static final String APP_BUNDLE = "app_bundle";
+  private static final String APP_MIGRATION = "app_migration";
+  private static final String APP_APPC = "app_appc";
+  private static final String APP_AAB = "app_aab";
   private static final String CAMPAIGN_ID = "campaign_id";
   private static final String EDITORS_CHOICE = "apps-group-editors-choice";
   private static final String FAIL = "FAIL";
@@ -49,6 +54,7 @@ public class InstallAnalytics {
   private static final String OBB = "obb";
   private static final String ORIGIN = "origin";
   private static final String PACKAGE = "package";
+  private static final String PACKAGE_NAME = "package_name";
   private static final String PATCH = "PATCH";
   private static final String PHONE = "phone";
   private static final String PREVIOUS_CONTEXT = "previous_context";
@@ -60,6 +66,7 @@ public class InstallAnalytics {
   private static final String STORE = "store";
   private static final String SUCCESS = "SUCC";
   private static final String TELECO = "teleco";
+  private static final String TRUSTED_BADGE = "trusted_badge";
   private static final String TYPE = "type";
   private static final String URL = "url";
   private final CrashReport crashReport;
@@ -401,6 +408,38 @@ public class InstallAnalytics {
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     }
+  }
+
+  public void clickOnInstallEvent(String packageName, String type, boolean hasSplits,
+      boolean hasBilling, boolean isMigration, String rank, String adsBlocked, String origin,
+      String store) {
+    String context = navigationTracker.getCurrentViewName();
+
+    Map<String, Object> eventMap =
+        createInstallClickEventMap(packageName, type, hasSplits, hasBilling, isMigration, rank,
+            adsBlocked, origin, store, context);
+
+    analyticsManager.logEvent(eventMap, CLICK_ON_INSTALL, AnalyticsManager.Action.CLICK, context);
+  }
+
+  private Map<String, Object> createInstallClickEventMap(String packageName, String type,
+      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
+      String origin, String store, String context) {
+    String previousContext = navigationTracker.getPreviousViewName();
+
+    Map<String, Object> result = new HashMap<>();
+    result.put(CONTEXT, context);
+    result.put(ACTION, type.toLowerCase());
+    result.put(PACKAGE_NAME, packageName);
+    result.put(PREVIOUS_CONTEXT, previousContext);
+    result.put(APP_MIGRATION, isMigration);
+    result.put(APP_APPC, hasBilling);
+    result.put(APP_AAB, hasSplits);
+    if (rank != null) result.put(TRUSTED_BADGE, rank.toLowerCase());
+    result.put(ADS_BLOCKED, adsBlocked);
+    if (origin != null) result.put(TAG, origin);
+    result.put(STORE, store);
+    return result;
   }
 
   private Map<String, Object> createCancelResult() {

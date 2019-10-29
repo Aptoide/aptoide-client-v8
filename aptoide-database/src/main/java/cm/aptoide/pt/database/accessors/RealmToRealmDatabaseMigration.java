@@ -497,6 +497,12 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
         update.addRealmListField("splits", splitsSchema);
         update.addRealmListField("requiredSplits", stringSchema);
       }
+      oldVersion++;
+    }
+    if (oldVersion == 8104) {
+      schema.get("Update")
+          .addField("storeName", String.class);
+      oldVersion++;
     }
   }
 }

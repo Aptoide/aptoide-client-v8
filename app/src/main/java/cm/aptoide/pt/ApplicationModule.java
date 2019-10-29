@@ -286,7 +286,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -365,8 +364,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new UpdatesAnalytics(analyticsManager, navigationTracker);
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
+    return new UpdatesAnalytics(analyticsManager, navigationTracker, installAnalytics);
   }
 
   @Singleton @Provides CampaignAnalytics providesCampaignAnalytics(
@@ -1499,7 +1498,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
-    return Collections.emptyList();
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1630,9 +1629,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics,
+      InstallAnalytics installAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        storeAnalytics);
+        storeAnalytics, installAnalytics);
   }
 
   @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
@@ -1868,8 +1868,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      DownloadAnalytics downloadAnalytics) {
-    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics) {
+    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics,
+        installAnalytics);
   }
 
   @Singleton @Provides @Named("retrofit-auto-update") Retrofit providesAutoUpdateRetrofit(

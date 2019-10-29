@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,16 +49,19 @@ public class AppViewAnalytics {
   private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics,
+      InstallAnalytics installAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.storeAnalytics = storeAnalytics;
+    this.installAnalytics = installAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
@@ -263,7 +267,8 @@ public class AppViewAnalytics {
   }
 
   public void clickOnInstallButton(String packageName, String developerName, String type,
-      boolean hasSplits) {
+      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
+      String origin, String store) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -271,6 +276,9 @@ public class AppViewAnalytics {
     map.put(APPLICATION_PUBLISHER, developerName);
     map.put(APP_BUNDLE, hasSplits);
     map.put(CONTEXT, context);
+
+    installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
+        rank, adsBlocked, origin, store);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
@@ -246,17 +247,17 @@ public class AppsManager {
   public Completable updateApp(App app, boolean isAppcUpdate) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
-        .flatMap(update -> {
-          Download value = downloadFactory.create(update, isAppcUpdate);
-          return Observable.just(value);
-        })
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> {
-              updatesAnalytics.sendUpdateClickedEvent(packageName);
-              setupUpdateEvents(download, Origin.UPDATE, status);
+        .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
+            .flatMap(status -> {
+              Download value = downloadFactory.create(update, isAppcUpdate);
+              String type = isAppcUpdate ? "update_to_appc" : "update";
+              updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
+                  update.hasAppc(), false, update.getTrustedBadge(), status.toString()
+                      .toLowerCase(), null, update.getStoreName(), type);
+              setupUpdateEvents(value, Origin.UPDATE, status);
+              return Single.just(value);
             })
-            .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download))
+            .flatMapCompletable(download -> installManager.install(download)))
         .toCompletable();
   }
 
@@ -278,8 +279,13 @@ public class AppsManager {
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
                 .flatMap(update -> Observable.just(downloadFactory.create(update, false))
-                    .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
-                        offerResponseStatus))
+                    .doOnNext(download1 -> {
+                      updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
+                          update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
+                          offerResponseStatus.toString()
+                              .toLowerCase(), null, update.getStoreName(), "update_all");
+                      setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus);
+                    })
                     .toList()
                     .flatMap(installManager::startInstalls))))
         .toCompletable();

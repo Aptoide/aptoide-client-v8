@@ -231,22 +231,21 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
-      String trustedValue, String editorsChoicePosition) {
+      String trustedValue, String editorsChoicePosition,
+      WalletAdsOfferManager.OfferResponseStatus status) {
     return getAppModel().flatMapObservable(app -> Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
             app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
             app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(), app.getSplits(),
             app.getRequiredSplits())))
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> {
-              setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                  editorsChoicePosition, status);
-              if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
-                setupMigratorUninstallEvent(download.getPackageName());
-              }
-            })
-            .map(__ -> download))
+        .doOnNext(download -> {
+          setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
+              status);
+          if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
+            setupMigratorUninstallEvent(download.getPackageName());
+          }
+        })
         .doOnNext(download -> {
           if (downloadAction == DownloadModel.Action.MIGRATE) {
             appcMigrationManager.addMigrationCandidate(download.getPackageName());
@@ -500,5 +499,9 @@ public class AppViewManager {
 
   public Single<Boolean> shouldShowConsentDialog() {
     return moPubAdsManager.shouldShowConsentDialog();
+  }
+
+  public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
+    return moPubAdsManager.getAdsVisibilityStatus();
   }
 }

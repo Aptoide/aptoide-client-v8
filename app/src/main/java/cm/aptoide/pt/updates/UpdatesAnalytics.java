@@ -3,6 +3,7 @@ package cm.aptoide.pt.updates;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.app.AppViewAnalytics;
+import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +21,13 @@ public class UpdatesAnalytics {
   private static final String CONTEXT = "context";
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
+  private InstallAnalytics installAnalytics;
 
-  public UpdatesAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+  public UpdatesAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      InstallAnalytics installAnalytics) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
+    this.installAnalytics = installAnalytics;
   }
 
   public void updates(String action) {
@@ -37,12 +41,17 @@ public class UpdatesAnalytics {
     return data;
   }
 
-  public void sendUpdateClickedEvent(String packageName) {
+  public void sendUpdateClickedEvent(String packageName, boolean hasSplits, boolean hasBilling,
+      boolean isMigration, String rank, String adsBlocked, String origin, String store,
+      String type) {
     String context = navigationTracker.getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, "UPDATE");
     map.put(APPLICATION_NAME, packageName);
     map.put(CONTEXT, context);
+
+    installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
+        rank, adsBlocked, origin, store);
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         context);
   }

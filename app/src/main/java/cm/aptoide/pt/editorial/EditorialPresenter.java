@@ -155,18 +155,30 @@ public class EditorialPresenter implements Presenter {
                       .flatMapCompletable(
                           viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
                               .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
-                                  editorialDownloadEvent.getPackageName(), action.toString())));
+                                  editorialDownloadEvent.getPackageName(), action.toString(),
+                                  viewModel.hasSplits(), viewModel.hasAppc(), false,
+                                  viewModel.getRank(), null, viewModel.getStoreName())));
                   break;
                 case OPEN:
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
                       .flatMapCompletable(appViewViewModel -> openInstalledApp(
-                          editorialDownloadEvent.getPackageName()));
+                          editorialDownloadEvent.getPackageName()).doOnCompleted(
+                          () -> editorialAnalytics.clickOnInstallButton(
+                              editorialDownloadEvent.getPackageName(), action.toString(),
+                              appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
+                              appViewViewModel.getRank(), null, appViewViewModel.getStoreName())));
                   break;
                 case DOWNGRADE:
                   completable = editorialManager.loadEditorialViewModel()
                       .observeOn(viewScheduler)
-                      .flatMapCompletable(__ -> downgradeApp(editorialDownloadEvent));
+                      .flatMapCompletable(
+                          appViewViewModel -> downgradeApp(editorialDownloadEvent).doOnCompleted(
+                              () -> editorialAnalytics.clickOnInstallButton(
+                                  editorialDownloadEvent.getPackageName(), action.toString(),
+                                  appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
+                                  appViewViewModel.getRank(), null,
+                                  appViewViewModel.getStoreName())));
                   break;
               }
               return completable;
