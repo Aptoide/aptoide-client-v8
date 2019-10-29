@@ -486,6 +486,10 @@ dependencies {
     exclude group: 'org.web3j'
   }
 
+  //libs needed for the merge, even if they are not being used.
+  implementation "androidx.vectordrawable:vectordrawable:1.0.1"
+  implementation "androidx.viewpager2:viewpager2:1.0.0-rc01"
+
   //careful updating this because of support library conflicts
   implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
 }
