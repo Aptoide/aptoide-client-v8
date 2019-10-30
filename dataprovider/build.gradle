@@ -84,6 +84,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TEST_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
       matchingFallbacks = ['prod', 'internal']
