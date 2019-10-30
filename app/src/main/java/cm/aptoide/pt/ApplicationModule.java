@@ -48,6 +48,7 @@ import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
@@ -1276,6 +1277,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("ab-test-service-provider")
+  ABTestServiceProvider providesABTestServiceProvider(@Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new ABTestServiceProvider(httpClient, converterFactory, rxCallAdapterFactory);
+  }
+
   @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1333,9 +1340,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(Service.class);
   }
 
-  @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
+  @Singleton @Provides ABTestService.ABTestingService providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
-    return retrofit.create(ABTestService.ServiceV7.class);
+    return retrofit.create(ABTestService.ABTestingService.class);
   }
 
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
@@ -1663,9 +1670,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
+  @Singleton @Provides ABTestService providesABTestService(
+      @Named("ab-test-service-provider") ABTestServiceProvider abTestServiceProvider,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
+    return new ABTestService(abTestServiceProvider, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
