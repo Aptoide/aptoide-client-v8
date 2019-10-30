@@ -1090,7 +1090,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void initInterstitialAd(Boolean isMature) {
+  @Override public void initInterstitialAd(boolean isMature) {
     if (isMature) {
       interstitialAd =
           new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID);
@@ -1116,7 +1116,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     interstitialAd.show();
   }
 
-  @Override public void showBannerAd(Boolean isMature) {
+  @Override public void showBannerAd(boolean isMature) {
     bannerAd.setBannerAdListener(new MoPubBannerAdListener());
     if (isMature) {
       bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID);
