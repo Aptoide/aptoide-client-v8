@@ -108,7 +108,7 @@ public class SimilarAppsViewModel {
     return isFromMatureApp;
   }
 
-  public void setFromMatureApp(boolean fromMatureApp) {
-    isFromMatureApp = fromMatureApp;
+  public void setFromMatureApp(boolean isFromMatureApp) {
+    this.isFromMatureApp = isFromMatureApp;
   }
 }
