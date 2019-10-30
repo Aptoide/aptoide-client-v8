@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.apps;
 
+import android.util.Log;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
@@ -24,39 +25,10 @@ public class AppMapper {
       Install install = installations.get(i);
       downloadsList.add(
           new DownloadApp(install.getAppName(), install.getMd5(), install.getPackageName(),
-              install.getIcon(), install.getProgress(), install.isIndeterminate(),
-              install.getVersionCode(), mapDownloadStatus(install.getState())));
+              install.getIcon(), install.getProgress(), install.getVersionName(),
+              install.getVersionCode(), mapDownloadStatus(install.getState()), -1));
     }
     return downloadsList;
-  }
-
-  private StateApp.Status mapDownloadStatus(Install.InstallationStatus installationStatus) {
-    StateApp.Status status;
-    switch (installationStatus) {
-      case GENERIC_ERROR:
-      case INSTALLATION_TIMEOUT:
-      case NOT_ENOUGH_SPACE_ERROR:
-        status = StateApp.Status.ERROR;
-        break;
-      case PAUSED:
-      case IN_QUEUE:
-      case INITIAL_STATE:
-        status = StateApp.Status.STANDBY;
-        break;
-      case DOWNLOADING:
-        status = StateApp.Status.ACTIVE;
-        break;
-      case INSTALLING:
-        status = StateApp.Status.INSTALLING;
-        break;
-      case INSTALLED:
-      case UNINSTALLED:
-        status = StateApp.Status.COMPLETED;
-        break;
-      default:
-        throw new IllegalStateException("Invalid installation status");
-    }
-    return status;
   }
 
   public List<InstalledApp> mapInstalledToInstalledApps(List<Installed> installeds) {
@@ -73,8 +45,8 @@ public class AppMapper {
     List<UpdateApp> updatesList = new ArrayList<>();
     for (Update update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
-          StateApp.Status.UPDATE, update.getAppId()));
+          update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+          StateApp.Status.STANDBY, update.getAppId()));
     }
     return updatesList;
   }
@@ -84,8 +56,8 @@ public class AppMapper {
     List<AppcUpdateApp> updatesList = new ArrayList<>();
     for (Update update : updates) {
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, false, update.getUpdateVersionName(), update.getVersionCode(),
-          StateApp.Status.UPDATE, update.getAppId(), hasPromotion, appcValue));
+          update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+          StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));
     }
     return updatesList;
   }
@@ -93,15 +65,18 @@ public class AppMapper {
   public List<UpdateApp> getUpdatesList(List<Install> installs) {
     List<UpdateApp> updatesList = new ArrayList<>();
     for (Install install : installs) {
+      Log.i("DownloadProgressView_A", install.getPackageName() + ": " + install.getState()
+          .toString() + "____" + install.getProgress());
+
       updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
-          install.getPackageName(), install.getProgress(), install.isIndeterminate(),
-          install.getVersionName(), install.getVersionCode(), mapUpdateStatus(install.getState()),
+          install.getPackageName(), install.getProgress(), install.getVersionName(),
+          install.getVersionCode(), mapDownloadStatus(install.getState()),
           -1)); //Updates in progress (downloads) dont have app id.
     }
     return updatesList;
   }
 
-  private StateApp.Status mapUpdateStatus(Install.InstallationStatus state) {
+  private StateApp.Status mapDownloadStatus(Install.InstallationStatus state) {
     StateApp.Status status;
     switch (state) {
       case GENERIC_ERROR:
@@ -109,23 +84,23 @@ public class AppMapper {
       case NOT_ENOUGH_SPACE_ERROR:
         status = StateApp.Status.ERROR;
         break;
-      case PAUSED:
       case IN_QUEUE:
-      case INITIAL_STATE:
-        status = StateApp.Status.STANDBY;
+        status = StateApp.Status.IN_QUEUE;
+        break;
+      case PAUSED:
+        status = StateApp.Status.PAUSE;
         break;
       case DOWNLOADING:
-        status = StateApp.Status.UPDATING;
-        break;
-      case INSTALLED:
-      case UNINSTALLED:
-        status = StateApp.Status.UPDATE;
+        status = StateApp.Status.ACTIVE;
         break;
       case INSTALLING:
         status = StateApp.Status.INSTALLING;
         break;
+      case INSTALLED:
+      case UNINSTALLED:
+      case INITIAL_STATE:
       default:
-        status = StateApp.Status.UPDATE;
+        status = StateApp.Status.STANDBY;
         break;
     }
     return status;

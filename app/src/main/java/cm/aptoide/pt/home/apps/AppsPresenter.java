@@ -5,8 +5,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
-import cm.aptoide.pt.home.apps.model.DownloadApp;
+import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -53,23 +52,17 @@ public class AppsPresenter implements Presenter {
 
     handlePauseDownloadClick();
 
-    //handleResumeDownloadClick();
+    handleResumeClick();
 
-    //handleCancelDownloadClick();
+    handleCancelDownloadClick();
 
     handleInstallAppClick();
 
     handleUpdateAllClick();
 
-    //handleUpdateAppClick();
+    handleStartDownloadClick();
 
-    //handlePauseUpdateClick();
-
-    //handleCancelUpdateClick();
-
-    //handleResumeUpdateClick();
-
-    handleUpdateCardClick();
+    handleCardClick();
 
     handleUpdateCardLongClick();
 
@@ -118,28 +111,22 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-  private void handleUpdateCardClick() {
+  private void handleCardClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> view.cardClick())
         .doOnNext(app -> {
-          if (app.getType() == App.Type.DOWNLOAD) {
-            appsNavigator.navigateToAppView(((DownloadApp) app).getMd5());
-          } else {
-            appsNavigator.navigateToAppView(((UpdateApp) app).getMd5());
-          }
-        })
-        .doOnNext(app -> {
-          if (app instanceof AppcUpdateApp) {
-            appsManager.setMigrationAppViewAnalyticsEvent();
-          } else {
+          if (app.getType() == App.Type.DOWNLOAD || app.getType() == App.Type.UPDATE) {
             appsManager.setAppViewAnalyticsEvent();
+          } else if (app.getType() == App.Type.APPC_MIGRATION) {
+            appsManager.setMigrationAppViewAnalyticsEvent();
           }
+          appsNavigator.navigateToAppView(((StateApp) app).getMd5());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> crashReport.log(error));
+        }, crashReport::log);
   }
 
   private void handleUpdateCardLongClick() {
@@ -159,72 +146,42 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-  //private void handleResumeUpdateClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-  //      .observeOn(viewScheduler)
-  //      .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
-  //      .doOnNext(this::setStandbyState)
-  //      .observeOn(ioScheduler)
-  //      .flatMapCompletable(
-  //          appClickEventWrapper -> appsManager.resumeUpdate(appClickEventWrapper.getApp()))
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> crashReport.log(error));
-  //}
+  private void handleResumeClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.resumeDownload())
+        .observeOn(ioScheduler)
+        .flatMapCompletable(appsManager::resumeDownload)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, crashReport::log);
+  }
 
-  //private void handleCancelUpdateClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-  //      .observeOn(viewScheduler)
-  //      .flatMap(created -> view.cancelUpdate())
-  //      .doOnNext(this::removeCanceledAppDownload)
-  //      .observeOn(ioScheduler)
-  //      .doOnNext(appClickEventWrapper -> appsManager.cancelUpdate(appClickEventWrapper.getApp()))
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> crashReport.log(error));
-  //}
-
-  //private void handlePauseUpdateClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-  //      .observeOn(viewScheduler)
-  //      .flatMap(created -> view.pauseUpdate())
-  //      .observeOn(ioScheduler)
-  //      .flatMapCompletable(
-  //          appClickEventWrapper -> appsManager.pauseUpdate(appClickEventWrapper.getApp()))
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> crashReport.log(error));
-  //}
-
-  //private void handleUpdateAppClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-  //      .observeOn(viewScheduler)
-  //      .flatMap(created -> view.updateApp()
-  //          .flatMap(appClickEventWrapper -> permissionManager.requestExternalStoragePermission(
-  //              permissionService)
-  //              .flatMap(success -> {
-  //                if (appsManager.showWarning()) {
-  //                  return view.showRootWarning()
-  //                      .doOnNext(answer -> appsManager.storeRootAnswer(answer));
-  //                }
-  //                return Observable.just(true);
-  //              })
-  //              .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
-  //              .doOnNext(__ -> setStandbyState(appClickEventWrapper))
-  //              .observeOn(ioScheduler)
-  //              .flatMapCompletable(__3 -> appsManager.updateApp(appClickEventWrapper.getApp(),
-  //                  appClickEventWrapper.isAppcUpgrade())))
-  //          .retry())
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> {
-  //        crashReport.log(error);
-  //      });
-  //}
+  private void handleStartDownloadClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .observeOn(viewScheduler)
+        .flatMap(created -> view.startDownload()
+            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
+                .flatMap(success -> {
+                  if (appsManager.showWarning()) {
+                    return view.showRootWarning()
+                        .doOnNext(answer -> appsManager.storeRootAnswer(answer));
+                  }
+                  return Observable.just(true);
+                })
+                .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
+                .observeOn(ioScheduler)
+                .flatMapCompletable(
+                    __3 -> appsManager.updateApp(app, app.getType() == App.Type.APPC_MIGRATION)))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          crashReport.log(error);
+        });
+  }
 
   private void handleBottomNavigationEvents() {
     view.getLifecycleEvent()
@@ -273,27 +230,12 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelDownload())
         .observeOn(ioScheduler)
-        .doOnNext(app -> appsManager.cancelDownload(app))
+        .doOnNext(appsManager::cancelDownload)
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
   }
-
-  //private void handleResumeDownloadClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-  //      .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload())
-  //          .observeOn(viewScheduler)
-  //          .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
-  //              .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
-  //              .observeOn(ioScheduler)
-  //              .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
-  //          .retry())
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(created -> {
-  //      }, error -> crashReport.log(error));
-  //}
 
   private void handlePauseDownloadClick() {
     view.getLifecycleEvent()
@@ -301,7 +243,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.pauseDownload())
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.pauseDownload(app))
+        .flatMapCompletable(appsManager::pauseDownload)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

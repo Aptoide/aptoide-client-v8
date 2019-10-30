@@ -37,9 +37,9 @@
         android:layout_gravity="center_vertical"
         android:layout_marginTop="12dp"
         android:layout_toEndOf="@id/apps_updates_app_icon"
-        android:layout_toLeftOf="@+id/apps_updates_update_button"
+      android:layout_toStartOf="@id/apps_action_button"
         android:layout_toRightOf="@id/apps_updates_app_icon"
-        android:layout_toStartOf="@id/apps_updates_update_button"
+      android:layout_toLeftOf="@+id/apps_action_button"
         android:orientation="vertical"
         >
 
@@ -71,7 +71,7 @@
             />
 
         <TextView
-            android:id="@+id/apps_updates_app_version"
+          android:id="@+id/apps_secondary_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -87,7 +87,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/apps_updates_update_button"
+      android:id="@+id/apps_action_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"

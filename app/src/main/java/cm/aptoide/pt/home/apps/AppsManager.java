@@ -2,6 +2,7 @@ package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
+import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -76,17 +78,18 @@ public class AppsManager {
 
   private List<UpdateApp> mergeUpdates(List<UpdateApp> allUpdates,
       List<UpdateApp> updateDownloads) {
-    for (UpdateApp app1 : allUpdates) {
-      boolean add = true;
+    List<UpdateApp> finalList = new ArrayList<>(allUpdates);
+    for (int i = 0; i < finalList.size(); i++) {
+      UpdateApp app1 = allUpdates.get(i);
       for (UpdateApp app2 : updateDownloads) {
-        if (app1.getAppId() == app2.getAppId()) {
-          add = false;
+        if (app1.getMd5()
+            .equals(app2.getMd5())) {
+          finalList.set(i, app2);
           break;
         }
       }
-      if (add) updateDownloads.add(app1);
     }
-    return updateDownloads;
+    return finalList;
   }
 
   private Observable<List<UpdateApp>> getAllUpdatesList() {
@@ -179,16 +182,13 @@ public class AppsManager {
   }
 
   public void cancelDownload(App app) {
-    installManager.removeInstallationFile(((DownloadApp) app).getMd5(),
-        ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode());
+    installManager.removeInstallationFile(((StateApp) app).getMd5(),
+        ((StateApp) app).getPackageName(), ((StateApp) app).getVersionCode());
   }
 
   public Completable resumeDownload(App app) {
-    return installManager.getDownload(((DownloadApp) app).getMd5())
-        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupDownloadEvents(download, status))
-            .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download));
+    return installManager.getDownload(((StateApp) app).getMd5())
+        .flatMapCompletable(installManager::install);
   }
 
   private void setupDownloadEvents(Download download,
@@ -228,23 +228,7 @@ public class AppsManager {
   }
 
   public Completable pauseDownload(App app) {
-    return Completable.fromAction(
-        () -> installManager.stopInstallation(((DownloadApp) app).getMd5()));
-  }
-
-  public Completable resumeUpdate(App app) {
-    return installManager.getDownload(((UpdateApp) app).getMd5())
-        .flatMapCompletable(download -> installManager.install(download));
-  }
-
-  public void cancelUpdate(App app) {
-    installManager.removeInstallationFile(((UpdateApp) app).getMd5(),
-        ((UpdateApp) app).getPackageName(), ((UpdateApp) app).getVersionCode());
-  }
-
-  public Completable pauseUpdate(App app) {
-    return Completable.fromAction(
-        () -> installManager.stopInstallation(((UpdateApp) app).getMd5()));
+    return Completable.fromAction(() -> installManager.stopInstallation(((StateApp) app).getMd5()));
   }
 
   public Completable updateApp(App app, boolean isAppcUpdate) {

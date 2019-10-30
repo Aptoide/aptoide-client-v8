@@ -95,10 +95,6 @@ import cm.aptoide.pt.home.apps.AppsFragmentView;
 import cm.aptoide.pt.home.apps.AppsManager;
 import cm.aptoide.pt.home.apps.AppsNavigator;
 import cm.aptoide.pt.home.apps.AppsPresenter;
-import cm.aptoide.pt.home.apps.seemore.SeeMoreAppcFragment;
-import cm.aptoide.pt.home.apps.seemore.SeeMoreAppcManager;
-import cm.aptoide.pt.home.apps.seemore.SeeMoreAppcNavigator;
-import cm.aptoide.pt.home.apps.seemore.SeeMoreAppcPresenter;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
@@ -490,18 +486,6 @@ import rx.subscriptions.CompositeSubscription;
         appsNavigator);
   }
 
-  @FragmentScope @Provides SeeMoreAppcManager providesSeeMoreManager(UpdatesManager updatesManager,
-      InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
-      InstallAnalytics installAnalytics, DownloadFactory downloadFactory, PromotionsManager promotionsManager) {
-    return new SeeMoreAppcManager(updatesManager, installManager, appMapper, downloadFactory,
-        downloadAnalytics, installAnalytics, promotionsManager);
-  }
-
-  @FragmentScope @Provides SeeMoreAppcPresenter providesSeeMoreAppcPresenter(SeeMoreAppcManager seeMoreAppcManager, SeeMoreAppcNavigator seeMoreAppcNavigator) {
-    return new SeeMoreAppcPresenter(((SeeMoreAppcFragment) fragment), AndroidSchedulers.mainThread(), Schedulers.io(), CrashReport.getInstance(),
-        new PermissionManager(), ((PermissionService) fragment.getContext()), seeMoreAppcManager,
-        seeMoreAppcNavigator);
-  }
 
   @FragmentScope @Provides AppcPromotionNotificationStringProvider providesAppcPromotionNotificationStringProvider() {
     return new AppcPromotionNotificationStringProvider(fragment.getContext()

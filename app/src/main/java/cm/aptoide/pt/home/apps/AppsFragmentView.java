@@ -10,8 +10,6 @@ import rx.Observable;
 
 public interface AppsFragmentView extends View {
 
-  Observable<App> retryDownload();
-
   Observable<App> installApp();
 
   Observable<App> cancelDownload();
@@ -22,15 +20,7 @@ public interface AppsFragmentView extends View {
 
   Observable<App> startDownloadInAppview();
 
-  Observable<AppClickEventWrapper> retryUpdate();
-
-  Observable<AppClickEventWrapper> updateApp();
-
-  Observable<AppClickEventWrapper> pauseUpdate();
-
-  Observable<AppClickEventWrapper> cancelUpdate();
-
-  Observable<AppClickEventWrapper> resumeUpdate();
+  Observable<App> startDownload();
 
   Observable<Boolean> showRootWarning();
 

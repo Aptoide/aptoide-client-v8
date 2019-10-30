@@ -3,6 +3,7 @@ package cm.aptoide.aptoideviews.downloadprogressview
 import android.animation.LayoutTransition
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -14,6 +15,8 @@ import cm.aptoide.aptoideviews.common.Debouncer
 import com.tinder.StateMachine
 import kotlinx.android.synthetic.main.download_progress_view.view.*
 import rx.Observable
+import kotlin.math.max
+import kotlin.math.min
 
 
 /**
@@ -29,6 +32,8 @@ class DownloadProgressView : FrameLayout {
 
   private var currentProgress: Int = 0
 
+  private var animationsEnabled = false
+
   private var stateMachine = StateMachine.create<State, Event, Any> {
     initialState(State.Queue)
     state<State.Queue> {
@@ -37,8 +42,8 @@ class DownloadProgressView : FrameLayout {
         resetProgress()
         progressBar.isIndeterminate = true
         if (isPausable) {
-          cancelButton.visibility = View.GONE
-          resumePauseButton.visibility = View.VISIBLE
+          cancelButton.visibility = View.VISIBLE
+          resumePauseButton.visibility = View.GONE
         } else {
           cancelButton.visibility = View.VISIBLE
           resumePauseButton.visibility = View.GONE
@@ -64,8 +69,8 @@ class DownloadProgressView : FrameLayout {
         resetProgress()
         progressBar.isIndeterminate = true
         if (isPausable) {
-          cancelButton.visibility = View.GONE
-          resumePauseButton.visibility = View.VISIBLE
+          cancelButton.visibility = View.VISIBLE
+          resumePauseButton.visibility = View.GONE
         } else {
           cancelButton.visibility = View.VISIBLE
           resumePauseButton.visibility = View.GONE
@@ -142,6 +147,7 @@ class DownloadProgressView : FrameLayout {
         resumePauseButton.visibility = View.VISIBLE
         resumePauseButton.setReverseAsDefault()
         downloadProgressNumber.visibility = View.VISIBLE
+        setProgress(currentProgress)
         downloadState.setText(R.string.appview_short_downloading)
       }
       on<Event.ResumeClick> {
@@ -179,7 +185,6 @@ class DownloadProgressView : FrameLayout {
       defStyleAttr) {
     inflate(context, R.layout.download_progress_view, this)
     retrievePreferences(attrs, defStyleAttr)
-    setupClickListeners()
   }
 
   private fun retrievePreferences(attrs: AttributeSet?, defStyleAttr: Int) {
@@ -217,7 +222,15 @@ class DownloadProgressView : FrameLayout {
     payload = null
   }
 
-  internal fun setEventListener(eventListener: DownloadEventListener?) {
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    setupClickListeners()
+  }
+
+  /**
+   * Should only be used if for some reason you can't use [events] directly.
+   */
+  fun setEventListener(eventListener: DownloadEventListener?) {
     this.eventListener = eventListener
     if (eventListener == null) {
       cancelButton.setOnClickListener(null)
@@ -242,6 +255,7 @@ class DownloadProgressView : FrameLayout {
    * @param enableAnimations true to enable animations, false to disable animations
    */
   fun setEnableAnimations(enableAnimations: Boolean) {
+    animationsEnabled = enableAnimations
     resumePauseButton.isAnimationsEnabled = enableAnimations
     rootLayout.layoutTransition = if (enableAnimations) LayoutTransition() else null
   }
@@ -284,9 +298,13 @@ class DownloadProgressView : FrameLayout {
    */
   fun setProgress(progress: Int) {
     if (stateMachine.state == State.Queue || stateMachine.state == State.Canceled) return
-    currentProgress = Math.min(Math.max(progress, 0), 100)
+    currentProgress = min(max(progress, 0), 100)
     if (stateMachine.state == State.InProgress || stateMachine.state == State.InitialPaused) {
-      progressBar.progress = currentProgress
+      if (Build.VERSION.SDK_INT >= 24) {
+        progressBar.setProgress(currentProgress, animationsEnabled)
+      } else {
+        progressBar.progress = currentProgress
+      }
       val progressPercent = "$currentProgress%"
       downloadProgressNumber.text = progressPercent
     }

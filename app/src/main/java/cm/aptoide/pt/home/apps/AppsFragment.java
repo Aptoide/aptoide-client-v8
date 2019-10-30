@@ -44,7 +44,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private static final int APPC_UPDATES_LIMIT = 2;
 
   @Inject AppsPresenter appsPresenter;
-  private PublishSubject<AppClick> appItemClicks;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
   private ProgressBar progressBar;
@@ -63,7 +62,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    appItemClicks = PublishSubject.create();
     appcUpgradesSectionLoaded = PublishSubject.create();
     blackListDownloads = new ArrayList<>();
   }
@@ -101,7 +99,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public void onDestroy() {
-    appItemClicks = null;
     blackListDownloads = null;
     super.onDestroy();
   }
@@ -131,80 +128,40 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     appsController.onSaveInstanceState(outState);
   }
 
-  @Override public Observable<App> retryDownload() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_DOWNLOAD)
-        .map(appClick -> appClick.getApp());
-  }
-
   @Override public Observable<App> installApp() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.INSTALL_APP)
-        .map(appClick -> appClick.getApp());
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.INSTALL_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public Observable<App> cancelDownload() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_DOWNLOAD)
-        .map(appClick -> appClick.getApp())
-        .doOnNext(app -> blackListDownloads.add(app));
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public Observable<App> resumeDownload() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_DOWNLOAD)
-        .map(appClick -> appClick.getApp());
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public Observable<App> pauseDownload() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_DOWNLOAD)
-        .map(appClick -> appClick.getApp());
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public Observable<App> startDownloadInAppview() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.APPC_DOWNLOAD_APPVIEW)
-        .map(appClick -> appClick.getApp());
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.APPC_ACTION_CLICK)
+        .map(AppClick::getApp);
   }
 
-  @Override public Observable<AppClickEventWrapper> retryUpdate() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RETRY_UPDATE
-            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY)
-        .map(appClick -> new AppClickEventWrapper(
-            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RETRY, appClick.getApp()));
-  }
-
-  @Override public Observable<AppClickEventWrapper> updateApp() {
-    return appItemClicks.filter(appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_APP
-        || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP)
-        .map(appClick -> new AppClickEventWrapper(
-            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_APP, appClick.getApp()));
-  }
-
-  @Override public Observable<AppClickEventWrapper> pauseUpdate() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.PAUSE_UPDATE
-            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE)
-        .map(appClick -> new AppClickEventWrapper(
-            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_PAUSE, appClick.getApp()));
-  }
-
-  @Override public Observable<AppClickEventWrapper> cancelUpdate() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.CANCEL_UPDATE
-            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL)
-        .map(appClick -> new AppClickEventWrapper(
-            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_CANCEL, appClick.getApp()));
-  }
-
-  @Override public Observable<AppClickEventWrapper> resumeUpdate() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.RESUME_UPDATE
-            || appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME)
-        .map(appClick -> new AppClickEventWrapper(
-            appClick.getClickType() == AppClick.ClickType.APPC_UPGRADE_RESUME, appClick.getApp()));
+  @Override public Observable<App> startDownload() {
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.DOWNLOAD_ACTION_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public Observable<Boolean> showRootWarning() {
@@ -218,9 +175,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public Observable<App> updateLongClick() {
-    return appItemClicks.filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.UPDATE_CARD_LONG_CLICK)
-        .map(appClick -> appClick.getApp());
+    return appsController.getAppEventListener()
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.CARD_LONG_CLICK)
+        .map(AppClick::getApp);
   }
 
   @Override public void showIgnoreUpdate() {
@@ -238,9 +195,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public Observable<App> cardClick() {
-    return appItemClicks.filter(
+    return appsController.getAppEventListener()
+        .filter(
         appClick -> appClick.getClickType() == AppClick.ClickType.CARD_CLICK)
-        .map(appClick -> appClick.getApp());
+        .map(AppClick::getApp);
   }
 
   @Override public void setUserImage(String userAvatarUrl) {
