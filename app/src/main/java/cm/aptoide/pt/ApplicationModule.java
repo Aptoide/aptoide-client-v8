@@ -1258,6 +1258,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/v1/";
   }
 
+  //this host is for the new ab testing experiences we are doing with rakam.
+  @Singleton @Provides @Named("ab-test-base-host") String providesABTestBaseHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_AB_TESTING_HOST
+        + "/api/v1/";
+  }
+
   @Singleton @Provides @Named("apichain-bds-base-host") String providesApichainBdsBaseHost(
       @Named("default") SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
@@ -1268,6 +1278,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("retrofit-AB") Retrofit providesABRetrofit(
       @Named("ab-testing-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
+    return new Retrofit.Builder().baseUrl(baseHost)
+        .client(httpClient)
+        .addCallAdapterFactory(rxCallAdapterFactory)
+        .addConverterFactory(converterFactory)
+        .build();
+  }
+
+  @Singleton @Provides @Named("retrofit-AB-Test") Retrofit providesABTestRetrofit(
+      @Named("ab-test-base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
     return new Retrofit.Builder().baseUrl(baseHost)
         .client(httpClient)
@@ -1333,8 +1353,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(Service.class);
   }
 
-  @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
-      @Named("retrofit-AB") Retrofit retrofit) {
+  @Singleton @Provides @Named("ab-testing-service-v7")
+  ABTestService.ServiceV7 providesABTestingServiceV7(@Named("retrofit-AB") Retrofit retrofit) {
+    return retrofit.create(ABTestService.ServiceV7.class);
+  }
+
+  @Singleton @Provides @Named("ab-test-service-v7") ABTestService.ServiceV7 providesABTestServiceV7(
+      @Named("retrofit-AB-Test") Retrofit retrofit) {
     return retrofit.create(ABTestService.ServiceV7.class);
   }
 
@@ -1663,8 +1688,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
+  @Singleton @Provides @Named("ab-testing-service") ABTestService providesABTestingService(
+      @Named("ab-testing-service-v7") ABTestService.ServiceV7 serviceV7,
       IdsRepository idsRepository) {
+    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
+  }
+
+  @Singleton @Provides @Named("ab-test-service") ABTestService providesABTestService(
+      @Named("ab-test-service-v7") ABTestService.ServiceV7 serviceV7, IdsRepository idsRepository) {
     return new ABTestService(serviceV7, idsRepository, Schedulers.io());
   }
 
@@ -1683,8 +1714,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AbTestCacheValidator(localCache);
   }
 
-  @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence,
+  @Singleton @Provides @Named("ab-testing-repository")
+  ABTestCenterRepository providesABTestingCenterRepository(
+      @Named("ab-testing-service") ABTestService abTestService,
+      RealmExperimentPersistence persistence,
+      @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
+      AbTestCacheValidator cacheValidator) {
+    return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
+  }
+
+  @Singleton @Provides @Named("ab-test-repository")
+  ABTestCenterRepository providesABTestCenterRepository(
+      @Named("ab-test-service") ABTestService abTestService, RealmExperimentPersistence persistence,
       @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
       AbTestCacheValidator cacheValidator) {
     return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
