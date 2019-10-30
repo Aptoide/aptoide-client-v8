@@ -42,10 +42,11 @@ public class EditorialAnalytics {
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
-      AnalyticsManager.Action action,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      String trustedBadge, String storeName, String installType) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), action,
-        offerResponseStatus, false, download.hasAppc(), download.hasSplits());
+        offerResponseStatus, false, download.hasAppc(), download.hasSplits(), trustedBadge, null,
+        storeName, installType);
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
         DownloadAnalytics.AppContext.EDITORIAL, action, false);

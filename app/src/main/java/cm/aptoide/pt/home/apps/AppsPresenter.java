@@ -402,7 +402,8 @@ public class AppsPresenter implements Presenter {
             .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
                 .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(__ -> appsManager.resumeDownload(app)))
+                .flatMapCompletable(__ -> appsManager.resumeDownload(app, app.getType()
+                    .toString())))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

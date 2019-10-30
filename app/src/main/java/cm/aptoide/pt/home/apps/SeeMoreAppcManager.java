@@ -102,10 +102,10 @@ public class SeeMoreAppcManager {
     return updatesManager.getUpdate(packageName)
         .flatMap(update -> {
           Download value = downloadFactory.create(update, true);
+          setupUpdateEvents(value, Origin.UPDATE, NO_ADS, update.getTrustedBadge(),
+              update.getStoreName(), app.getType()
+                  .toString());
           return Observable.just(value);
-        })
-        .doOnNext(download -> {
-          setupUpdateEvents(download, Origin.UPDATE, NO_ADS);
         })
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -124,14 +124,16 @@ public class SeeMoreAppcManager {
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
+      String storeName, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_MIGRATOR_SEE_MORE, true);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, true, download.hasAppc(),
-        download.hasSplits());
+        download.hasSplits(), trustedBadge, null, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_MIGRATOR_SEE_MORE, origin, true,
-        download.hasAppc(), download.hasSplits());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName());
   }
 }

@@ -294,17 +294,18 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
-      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      String storeName) {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits());
+          download.hasAppc(), download.hasSplits(), storeName);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, true);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits());
+          download.hasAppc(), download.hasSplits(), storeName);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           DownloadAnalytics.AppContext.APPVIEW, action, false);
     }

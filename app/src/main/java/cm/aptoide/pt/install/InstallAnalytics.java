@@ -30,11 +30,12 @@ public class InstallAnalytics {
   public static final String EDITORS_APPLICATION_INSTALL = "Editors_Choice_Application_Install";
   public static final String INSTALL_EVENT_NAME = "INSTALL";
   public static final String CLICK_ON_INSTALL = "click_on_install_button";
+  public static final String RAKAM_INSTALL_EVENT = "install";
   private static final String UPDATE_TO_APPC = "UPDATE TO APPC";
   private static final int MIGRATION_UNINSTALL_KEY = 8726;
   private static final String ACTION = "action";
   private static final String AB_TEST_GROUP = "ab_test_group";
-  private static final String ADS_BLOCKED = "ads";
+  private static final String ADS_BLOCKED = "ads_status";
   private static final String APP = "app";
   private static final String APPC = "appc";
   private static final String APP_BUNDLE = "app_bundle";
@@ -69,6 +70,8 @@ public class InstallAnalytics {
   private static final String TRUSTED_BADGE = "trusted_badge";
   private static final String TYPE = "type";
   private static final String URL = "url";
+  private static final String ERROR_TYPE = "error_type";
+  private static final String ERROR_MESSAGE = "error_message";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -93,6 +96,7 @@ public class InstallAnalytics {
     sendEvent(getKey(packageName, installingVersion, EDITORS_APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, APPLICATION_INSTALL));
     sendEvent(getKey(packageName, installingVersion, AppViewAnalytics.BONUS_MIGRATION_APPVIEW));
+    sendEvent(getKey(packageName, installingVersion, RAKAM_INSTALL_EVENT));
     sendInstallEvents(packageName, installingVersion, isRoot, aptoideSettings);
   }
 
@@ -155,12 +159,43 @@ public class InstallAnalytics {
   }
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
-      AppContext context, Origin origin, boolean isMigration, boolean hasAppc,
-      boolean isAppBundle) {
+      AppContext context, Origin origin, boolean isMigration, boolean hasAppc, boolean isAppBundle,
+      String offerResponseStatus, String trustedBadge, String storeName) {
+
+    createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context);
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, -1, null,
         Collections.emptyList(), isMigration, hasAppc, isAppBundle);
     createInstallEvent(action, context, origin, packageName, versionCode, -1, null, isMigration,
         hasAppc, isAppBundle);
+  }
+
+  private void createRakamInstallEvent(int installingVersion, String packageName, String action,
+      String offerResponseStatus, boolean isMigration, boolean isAppBundle, boolean hasAppc,
+      String trustedBadge, String storeName, AppContext appContext) {
+    String previousContext = navigationTracker.getPreviousViewName();
+    String context = navigationTracker.getCurrentViewName();
+    String tag_ =
+        navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
+            .getTag() : "";
+
+    HashMap<String, Object> result = new HashMap<>();
+    result.put(CONTEXT, context);
+    result.put(ACTION, action.toLowerCase());
+    result.put(PACKAGE_NAME, packageName);
+    result.put(PREVIOUS_CONTEXT, previousContext);
+    result.put(APP_MIGRATION, isMigration);
+    result.put(APP_APPC, hasAppc);
+    result.put(APP_AAB, isAppBundle);
+    result.put(STATUS, "success");
+    if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
+    result.put(ADS_BLOCKED, offerResponseStatus.toLowerCase());
+    if (!tag_.isEmpty()) result.put(TAG, tag_);
+    result.put(STORE, storeName);
+
+    cache.put(getKey(packageName, installingVersion, RAKAM_INSTALL_EVENT),
+        new InstallEvent(result, RAKAM_INSTALL_EVENT, appContext.name(),
+            AnalyticsManager.Action.CLICK));
   }
 
   private void createApplicationInstallEvent(AnalyticsManager.Action action, AppContext context,
@@ -210,7 +245,12 @@ public class InstallAnalytics {
 
   public void installStarted(String packageName, int versionCode, AnalyticsManager.Action action,
       AppContext context, Origin origin, int campaignId, String abTestingGroup, boolean isMigration,
-      boolean hasAppc, boolean isAppBundle) {
+      boolean hasAppc, boolean isAppBundle, String offerResponseStatus, String trustedBadge,
+      String storeName) {
+
+    createRakamInstallEvent(versionCode, packageName, origin.toString(), offerResponseStatus,
+        isMigration, isAppBundle, hasAppc, trustedBadge, storeName, context);
+
     if (isMigration) createMigrationInstallEvent(action, context, packageName, versionCode);
 
     createApplicationInstallEvent(action, context, origin, packageName, versionCode, campaignId,
@@ -400,6 +440,7 @@ public class InstallAnalytics {
   }
 
   public void logInstallCancelEvent(String packageName, int versionCode) {
+    sendRakamInstallCanceledEvent(packageName, versionCode);
     InstallEvent installEvent = cache.get(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
     if (installEvent != null) {
       Map<String, Object> data = installEvent.getData();
@@ -407,6 +448,19 @@ public class InstallAnalytics {
       analyticsManager.logEvent(data, INSTALL_EVENT_NAME, installEvent.getAction(),
           installEvent.getContext());
       cache.remove(getKey(packageName, versionCode, INSTALL_EVENT_NAME));
+    }
+  }
+
+  private void sendRakamInstallCanceledEvent(String packageName, int versionCode) {
+    InstallEvent installEvent = cache.get(getKey(packageName, versionCode, RAKAM_INSTALL_EVENT));
+    if (installEvent != null) {
+      Map<String, Object> data = installEvent.getData();
+      data.put(STATUS, "fail");
+      data.put(ERROR_TYPE, "canceled");
+      data.put(ERROR_MESSAGE, "The download was canceled");
+      analyticsManager.logEvent(data, RAKAM_INSTALL_EVENT, installEvent.getAction(),
+          installEvent.getContext());
+      cache.remove(getKey(packageName, versionCode, RAKAM_INSTALL_EVENT));
     }
   }
 

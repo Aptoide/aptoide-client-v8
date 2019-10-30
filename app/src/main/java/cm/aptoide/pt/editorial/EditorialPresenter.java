@@ -218,7 +218,9 @@ public class EditorialPresenter implements Presenter {
                 .flatMap(success -> permissionManager.requestExternalStoragePermission(
                     permissionService))
                 .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
-                    editorialEvent.getPackageName(), editorialEvent.getAppId()))
+                    editorialEvent.getPackageName(), editorialEvent.getAppId(),
+                    editorialEvent.getAction()
+                        .toString()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

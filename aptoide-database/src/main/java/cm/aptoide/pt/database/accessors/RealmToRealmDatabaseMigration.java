@@ -502,6 +502,9 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
     if (oldVersion == 8104) {
       schema.get("Update")
           .addField("storeName", String.class);
+      schema.get("Download")
+          .addField("storeName", String.class)
+          .addField("trustedBadge", String.class);
       oldVersion++;
     }
   }

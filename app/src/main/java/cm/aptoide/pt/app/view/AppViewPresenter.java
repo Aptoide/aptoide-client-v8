@@ -957,7 +957,10 @@ public class AppViewPresenter implements Presenter {
                 .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
                     .getMd5(), app.getAppModel()
                     .getAppId(), app.getDownloadModel()
-                    .getAction()))
+                    .getAction(), app.getAppModel()
+                    .getMalware()
+                    .getRank()
+                    .toString()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1204,7 +1207,7 @@ public class AppViewPresenter implements Presenter {
                 .flatMapCompletable(
                     __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
                         walletApp.getDownloadModel()
-                            .getAction()))
+                            .getAction(), walletApp.getTrustedBadge()))
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

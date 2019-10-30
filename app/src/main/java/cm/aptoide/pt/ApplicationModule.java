@@ -1498,7 +1498,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
-    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL);
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT);
   }
 
   @Singleton @Provides @Named("normalizer")

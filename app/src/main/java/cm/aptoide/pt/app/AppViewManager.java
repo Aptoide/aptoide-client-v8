@@ -238,10 +238,13 @@ public class AppViewManager {
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
             app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
             app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(), app.getSplits(),
-            app.getRequiredSplits())))
+            app.getRequiredSplits(), app.getMalware()
+                .getRank()
+                .toString(), app.getStore()
+                .getName())))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
-              status);
+              status, download.getStoreName());
           if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
             setupMigratorUninstallEvent(download.getPackageName());
           }
@@ -261,33 +264,38 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits()))
+        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits(),
+        walletApp.getTrustedBadge(), walletApp.getStoreName()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
-                    .getAction(), walletApp.getId(), offerResponseStatus))
+                    .getAction(), walletApp.getId(), offerResponseStatus, walletApp.getStoreName(),
+                walletApp.getTrustedBadge()))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
-      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
+      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
+      String trustedBadge) {
+    setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
+        storeName);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, String malwareRank, String editorsChoice,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-        download.hasAppc(), download.hasSplits());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
+        storeName);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
@@ -308,11 +316,12 @@ public class AppViewManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
+  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action,
+      String trustedBadge) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
-                offerResponseStatus))
+                offerResponseStatus, download.getStoreName(), trustedBadge))
             .map(__ -> download))
         .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));

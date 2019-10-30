@@ -113,7 +113,7 @@ public class AppDownloadManager implements AppDownloader {
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
             if (fileDownloadCallback.hasError()) {
-              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(), app.getMd5(),
                   fileDownloadCallback.getError());
             }
           }

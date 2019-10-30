@@ -118,6 +118,8 @@ public class DownloadFactory {
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());
       download.setHasAppc(update.hasAppc());
+      download.setTrustedBadge(update.getTrustedBadge());
+      download.setStoreName(update.getStoreName());
       download.setFilesToDownload(
           createFileList(update.getMd5(), update.getPackageName(), downloadPaths.getPath(),
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
@@ -174,7 +176,8 @@ public class DownloadFactory {
 
   public Download create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
-      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits) {
+      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
+      String trustedBadge, String storeName) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
@@ -195,6 +198,8 @@ public class DownloadFactory {
       download.setVersionCode(versionCode);
       download.setVersionName(versionName);
       download.setSize(size);
+      download.setTrustedBadge(trustedBadge);
+      download.setStoreName(storeName);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
               downloadPaths.getAltPath(), versionCode, versionName, splits));
