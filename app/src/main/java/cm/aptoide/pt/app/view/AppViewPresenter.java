@@ -199,8 +199,9 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()),
-        loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()))
+    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
+        .isMature()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
+        .isMature()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -208,12 +209,12 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(AppModel appModel) {
+  private Observable<Boolean> loadInterstitialAds(boolean isMature) {
     return appViewManager.shouldLoadInterstitialAd()
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
-            view.initInterstitialAd(appModel.isMature());
+            view.initInterstitialAd(isMature);
             return handleConsentDialog();
           }
           return Single.just(false);
@@ -222,11 +223,11 @@ public class AppViewPresenter implements Presenter {
         .toObservable();
   }
 
-  private Observable<Boolean> loadBannerAds(AppModel appModel) {
+  private Observable<Boolean> loadBannerAds(boolean isMature) {
     return appViewManager.shouldLoadBannerAd()
         .doOnSuccess(shouldLoadBanner -> {
           if (shouldLoadBanner) {
-            view.showBannerAd(appModel.isMature());
+            view.showBannerAd(isMature);
           }
         })
         .onErrorReturn(__ -> null)
