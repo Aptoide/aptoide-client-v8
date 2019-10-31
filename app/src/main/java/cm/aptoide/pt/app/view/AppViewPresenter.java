@@ -204,8 +204,9 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.mergeDelayError(loadInterstitialAds(), loadOrganicAds(appViewModel),
-        loadBannerAds())
+    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
+        .isMature()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
+        .isMature()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -213,12 +214,12 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds() {
+  private Observable<Boolean> loadInterstitialAds(boolean isMature) {
     return appViewManager.shouldLoadInterstitialAd()
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
-            view.initInterstitialAd();
+            view.initInterstitialAd(isMature);
             return handleConsentDialog();
           }
           return Single.just(false);
@@ -227,12 +228,11 @@ public class AppViewPresenter implements Presenter {
         .toObservable();
   }
 
-  private Observable<Boolean> loadBannerAds() {
+  private Observable<Boolean> loadBannerAds(boolean isMature) {
     return appViewManager.shouldLoadBannerAd()
-        .observeOn(viewScheduler)
         .doOnSuccess(shouldLoadBanner -> {
           if (shouldLoadBanner) {
-            view.showBannerAd();
+            view.showBannerAd(isMature);
           }
         })
         .onErrorReturn(__ -> null)
@@ -906,8 +906,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> updateSuggestedAppcApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
     return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
+        appViewModel.isMature())
         .map(appcAppsViewModel -> {
           if (appcAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -920,12 +919,10 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
-    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
-        .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
-            .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
-            .map(__ -> similarAppsViewModel))
+    return appViewManager.shouldLoadNativeAds()
+        .flatMap(shouldLoadNativeAds -> appViewManager.loadSimilarAppsViewModel(
+            appViewModel.getPackageName(), appViewModel.getMedia()
+                .getKeywords(), appViewModel.isMature(), shouldLoadNativeAds))
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
             list.add(

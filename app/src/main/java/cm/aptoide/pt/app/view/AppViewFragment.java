@@ -130,12 +130,6 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class AppViewFragment extends NavigationTrackFragment implements AppViewView {
-  private static final int DOWNLOADING = 1;
-  private static final int DOWNGRADE = 2;
-  private static final int INSTALL = 3;
-  private static final int CLAIM = 4;
-  private static final int UPDATE = 5;
-  private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int APPC_TRANSITION_MS = 1000;
@@ -1097,9 +1091,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void initInterstitialAd() {
-    interstitialAd =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
+  @Override public void initInterstitialAd(boolean isMature) {
+    if (isMature) {
+      interstitialAd =
+          new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      interstitialAd =
+          new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
+    }
     interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
     interstitialAd.load();
   }
@@ -1118,9 +1117,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     interstitialAd.show();
   }
 
-  @Override public void showBannerAd() {
+  @Override public void showBannerAd(boolean isMature) {
     bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
+    if (isMature) {
+      bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
+    }
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
   }

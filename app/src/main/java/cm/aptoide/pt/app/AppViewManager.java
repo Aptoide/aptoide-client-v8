@@ -4,8 +4,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.ads.data.ApplicationAd;
-import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
@@ -127,7 +125,7 @@ public class AppViewManager {
   }
 
   public Single<SimilarAppsViewModel> loadAppcSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
+      boolean isFromMature) {
     if (cachedAppcSimilarAppsViewModel != null) {
       return Single.just(cachedAppcSimilarAppsViewModel);
     } else {
@@ -135,14 +133,14 @@ public class AppViewManager {
         cachedAppcSimilarAppsViewModel =
             new SimilarAppsViewModel(null, recommendedAppsRequestResult.getList(),
                 recommendedAppsRequestResult.isLoading(), recommendedAppsRequestResult.getError(),
-                null);
+                null, isFromMature, false);
         return cachedAppcSimilarAppsViewModel;
       });
     }
   }
 
   public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
+      List<String> keyWords, boolean isMature, boolean shouldLoadNativeAds) {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
@@ -152,29 +150,10 @@ public class AppViewManager {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
                     recommendedAppsRequestResult.getList(),
                     recommendedAppsRequestResult.isLoading(),
-                    recommendedAppsRequestResult.getError(), adResult.getError());
+                    recommendedAppsRequestResult.getError(), adResult.getError(), isMature,
+                    shouldLoadNativeAds);
                 return cachedSimilarAppsViewModel;
               }));
-    }
-  }
-
-  public Single<SimilarAppsViewModel> loadAptoideSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
-    if (cachedSimilarAppsViewModel != null) {
-      return Single.just(cachedSimilarAppsViewModel);
-    } else {
-      return loadAdForSimilarApps(packageName, keyWords).flatMap(
-          adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            ApplicationAd applicationAd = null;
-            if (adResult.getMinimalAd() != null) {
-              applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
-            }
-            cachedSimilarAppsViewModel =
-                new SimilarAppsViewModel(applicationAd, recommendedAppsRequestResult.getList(),
-                    recommendedAppsRequestResult.isLoading(),
-                    recommendedAppsRequestResult.getError(), adResult.getError());
-            return cachedSimilarAppsViewModel;
-          }));
     }
   }
 
@@ -364,11 +343,9 @@ public class AppViewManager {
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {
-    return appViewModelManager.getAppViewModel()
-        .flatMap(appViewModel -> Single.just(shouldLoad && !appViewModel.getAppCoinsViewModel()
-            .hasBilling() && !appViewModel.getAppCoinsViewModel()
-            .hasAdvertising() && !appViewModel.getAppModel()
-            .isMature()));
+    return appViewModelManager.getAppModel()
+        .flatMap(appModel -> Single.just(
+            shouldLoad && !appModel.hasBilling() && !appModel.hasAdvertising()));
   }
 
   public Single<Boolean> shouldLoadInterstitialAd() {

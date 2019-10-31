@@ -27,7 +27,6 @@ import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
-import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.ArrayList;
@@ -75,13 +74,11 @@ public class AppViewManagerTest {
   @Mock private AppViewModelManager appViewModelManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
-  private AppStats appStats;
 
   @Before public void setupAppViewManagerTest() {
     MockitoAnnotations.initMocks(this);
     downloadStateParser = new DownloadStateParser();
     AppRating appRating = new AppRating(1, 1, Collections.emptyList());
-    appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
@@ -162,7 +159,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
             .toBlocking()
             .value();
 
@@ -191,7 +188,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
             .toBlocking()
             .value();
 
