@@ -38,10 +38,7 @@ public class ABTestServiceProvider {
 
   @NotNull private String decorateWithSchemeAndAPI(String host) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
-        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
-        + "://"
-        + host
-        + "/api/v1/";
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME) + "://" + host + "/api/v1/";
   }
 
   private ABTestService.ABTestingService getABTestService(String baseHost) {
