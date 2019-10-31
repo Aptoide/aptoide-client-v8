@@ -10,6 +10,7 @@ import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,11 +24,12 @@ public class AppMapper {
 
     for (int i = 0; i < installations.size(); i++) {
       Install install = installations.get(i);
-      downloadsList.add(
-          new DownloadApp(install.getAppName(), install.getMd5(), install.getPackageName(),
-              install.getIcon(), install.getProgress(), install.getVersionName(),
-              install.getVersionCode(), mapDownloadStatus(install.getState()), -1));
+      downloadsList.add(new DownloadApp(install.getAppName(), install.getMd5(), install.getIcon(),
+          install.getPackageName(), install.getProgress(), install.getVersionName(),
+          install.getVersionCode(), mapDownloadStatus(install.getState()), -1));
     }
+    Collections.sort(downloadsList, (app1, app2) -> app1.getName()
+        .compareToIgnoreCase(app2.getName()));
     return downloadsList;
   }
 
@@ -67,11 +69,12 @@ public class AppMapper {
     for (Install install : installs) {
       Log.i("DownloadProgressView_A", install.getPackageName() + ": " + install.getState()
           .toString() + "____" + install.getProgress());
-
-      updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
-          install.getPackageName(), install.getProgress(), install.getVersionName(),
-          install.getVersionCode(), mapDownloadStatus(install.getState()),
-          -1)); //Updates in progress (downloads) dont have app id.
+      if (install.getAppName() != null && install.getIcon() != null) {
+        updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
+            install.getPackageName(), install.getProgress(), install.getVersionName(),
+            install.getVersionCode(), mapDownloadStatus(install.getState()),
+            -1)); //Updates in progress (downloads) dont have app id.
+      }
     }
     return updatesList;
   }
@@ -96,7 +99,6 @@ public class AppMapper {
       case INSTALLING:
         status = StateApp.Status.INSTALLING;
         break;
-      case INSTALLED:
       case UNINSTALLED:
       case INITIAL_STATE:
       default:

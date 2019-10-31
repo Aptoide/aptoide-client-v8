@@ -35,20 +35,19 @@ class AppsController :
           .addTo(this)
     }
 
-    // Downloads TODO
-//    TitleModel_()
-//        .id("downloads", "header")
-//        .title(R.string.apps_title_downloads_header)
-//        .shouldShowButton(false)
-//        .addIf(downloads.isNotEmpty(), this)
-//
-//    for (download in downloads) {
-//      AppCardModel_()
-//          .id("downloads", download.identifier)
-//          .application(download)
-//          .eventSubject(appEventListener)
-//          .addTo(this)
-//    }
+    TitleModel_()
+        .id("downloads", "header")
+        .title(R.string.apps_title_downloads_header)
+        .shouldShowButton(false)
+        .addIf(downloads.isNotEmpty(), this)
+
+    for (download in downloads) {
+      DownloadCardModel_()
+          .id("downloads", download.identifier)
+          .application(download)
+          .eventSubject(appEventListener)
+          .addTo(this)
+    }
 
     // Updates
     TitleModel_()

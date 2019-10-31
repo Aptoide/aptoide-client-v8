@@ -218,7 +218,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.installApp())
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.installApp(app))
+        .flatMapCompletable(appsManager::installApp)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -228,9 +228,10 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.cancelDownload())
-        .observeOn(ioScheduler)
-        .doOnNext(appsManager::cancelDownload)
+        .flatMap(created -> view.cancelDownload()
+            .observeOn(ioScheduler)
+            .doOnNext(appsManager::cancelDownload)
+            .retry())
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -241,9 +242,10 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.pauseDownload())
-        .observeOn(ioScheduler)
-        .flatMapCompletable(appsManager::pauseDownload)
+        .flatMap(created -> view.pauseDownload()
+            .observeOn(ioScheduler)
+            .flatMapCompletable(appsManager::pauseDownload)
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));

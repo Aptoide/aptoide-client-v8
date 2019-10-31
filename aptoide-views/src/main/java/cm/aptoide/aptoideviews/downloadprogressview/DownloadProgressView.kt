@@ -62,6 +62,14 @@ class DownloadProgressView : FrameLayout {
       on<Event.Reset> {
         dontTransition()
       }
+      on<Event.CancelClick> {
+        eventListener?.onActionClick(
+            DownloadEventListener.Action(DownloadEventListener.Action.Type.CANCEL, payload))
+        transitionTo(State.Canceled)
+      }
+      on<Event.InstallStart> {
+        transitionTo(State.Installing)
+      }
     }
     state<State.Canceled> {
       onEnter {
@@ -80,6 +88,14 @@ class DownloadProgressView : FrameLayout {
       }
       on<Event.Reset> {
         transitionTo(State.Queue)
+      }
+      on<Event.DownloadStart> {
+        debouncer.reset()
+        transitionTo(State.InProgress)
+      }
+      on<Event.PauseStart> {
+        debouncer.reset()
+        transitionTo(State.InitialPaused)
       }
     }
     state<State.InProgress> {
