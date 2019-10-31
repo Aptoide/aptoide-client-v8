@@ -48,6 +48,7 @@ import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
@@ -55,6 +56,7 @@ import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -286,7 +288,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1276,6 +1277,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("ab-test-service-provider")
+  ABTestServiceProvider providesABTestServiceProvider(@Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ABTestServiceProvider(httpClient, converterFactory, rxCallAdapterFactory,
+        sharedPreferences);
+  }
+
   @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1333,9 +1342,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(Service.class);
   }
 
-  @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
+  @Singleton @Provides ABTestService.ABTestingService providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
-    return retrofit.create(ABTestService.ServiceV7.class);
+    return retrofit.create(ABTestService.ABTestingService.class);
   }
 
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
@@ -1499,7 +1508,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
-    return Collections.emptyList();
+    return Arrays.asList(AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1663,9 +1673,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
+  @Singleton @Provides ABTestService providesABTestService(
+      @Named("ab-test-service-provider") ABTestServiceProvider abTestServiceProvider,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
+    return new ABTestService(abTestServiceProvider, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
@@ -1965,5 +1976,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
+  }
+
+  @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
+      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
+    return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
 }
