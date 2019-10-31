@@ -5,8 +5,9 @@ import cm.aptoide.pt.abtesting.RakamExperiment
 import cm.aptoide.pt.app.AppViewAnalytics
 import rx.Single
 
-class SimilarAppsExperiment(private val abTestManager: ABTestManager,
-                            private val appViewAnalytics: AppViewAnalytics) : RakamExperiment() {
+open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
+                                 private val appViewAnalytics: AppViewAnalytics) :
+    RakamExperiment() {
   private val EXPERIMENT_ID = "ASV-2053-SimilarApps"
   private var isControlGroup: Boolean = true
 
