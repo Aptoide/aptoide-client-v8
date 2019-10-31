@@ -121,7 +121,7 @@ class DownloadProgressView : FrameLayout {
         progressBar.isIndeterminate = false
         cancelButton.visibility = View.VISIBLE
         resumePauseButton.visibility = View.VISIBLE
-        resumePauseButton.play()
+        resumePauseButton.playReverse()
         downloadProgressNumber.visibility = View.VISIBLE
         downloadState.setText(R.string.appview_short_downloading)
       }

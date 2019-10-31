@@ -14,8 +14,6 @@ class AnimatedImageView : ImageView {
   var reverse: Animatable? = null
   var isAnimationsEnabled = true
 
-  private var isReverse = false
-
   constructor(context: Context) : this(context, null)
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
@@ -39,11 +37,16 @@ class AnimatedImageView : ImageView {
   }
 
   fun play() {
-    val drawable: Animatable? = if (!isReverse) animation else reverse
-    drawable?.let {
-      setImageDrawable(drawable as Drawable)
-      if (isAnimationsEnabled) drawable.start()
-      isReverse = !isReverse
+    animation?.let { anim ->
+      setImageDrawable(anim as Drawable)
+      if (isAnimationsEnabled) anim.start()
+    }
+  }
+
+  fun playReverse(){
+    reverse?.let { anim ->
+      setImageDrawable(anim as Drawable)
+      if (isAnimationsEnabled) anim.start()
     }
   }
 
