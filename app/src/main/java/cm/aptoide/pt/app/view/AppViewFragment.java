@@ -288,6 +288,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<PromotionEvent> promotionAppClick;
   private DecimalFormat poaFiatDecimalFormat;
   private CountDownTimer poaCountdownTimer;
+  private boolean bumpedUp;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -1369,22 +1370,27 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
-    if (!hasSimilarApps) {
-      hideSimilarApps();
-    } else {
-      similarListRecyclerView.setVisibility(View.VISIBLE);
-      LinearLayout similarParentView = ((LinearLayout) similarListRecyclerView.getParent());
+    if (!bumpedUp) {
       if (isDownloading) {
-        similarParentView.removeView(similarListRecyclerView);
-        LinearLayout parentLayout = (LinearLayout) similarDownloadPlaceholder.getParent();
-        int downloadIndex = parentLayout.indexOfChild(similarDownloadPlaceholder);
-        parentLayout.addView(similarListRecyclerView, downloadIndex);
-        similarAppsVisibilitySubject.onNext(true);
+        bumpedUp = true;
+      }
+      if (!hasSimilarApps) {
+        hideSimilarApps();
       } else {
-        similarParentView.removeView(similarListRecyclerView);
-        LinearLayout parentLayout = (LinearLayout) similarBottomPlaceholder.getParent();
-        int downloadIndex = parentLayout.indexOfChild(similarBottomPlaceholder);
-        parentLayout.addView(similarListRecyclerView, downloadIndex);
+        similarListRecyclerView.setVisibility(View.VISIBLE);
+        LinearLayout similarParentView = ((LinearLayout) similarListRecyclerView.getParent());
+        if (isDownloading) {
+          similarParentView.removeView(similarListRecyclerView);
+          LinearLayout parentLayout = (LinearLayout) similarDownloadPlaceholder.getParent();
+          int downloadIndex = parentLayout.indexOfChild(similarDownloadPlaceholder);
+          parentLayout.addView(similarListRecyclerView, downloadIndex);
+          similarAppsVisibilitySubject.onNext(true);
+        } else {
+          similarParentView.removeView(similarListRecyclerView);
+          LinearLayout parentLayout = (LinearLayout) similarBottomPlaceholder.getParent();
+          int downloadIndex = parentLayout.indexOfChild(similarBottomPlaceholder);
+          parentLayout.addView(similarListRecyclerView, downloadIndex);
+        }
       }
     }
   }

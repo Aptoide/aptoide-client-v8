@@ -8,6 +8,7 @@ import rx.Single
 class SimilarAppsExperiment(private val abTestManager: ABTestManager,
                             private val appViewAnalytics: AppViewAnalytics) : RakamExperiment() {
   private val EXPERIMENT_ID = "ASV-2053-SimilarApps"
+  private var isControlGroup: Boolean = true
 
   fun shouldShowAppCoinsSimilarBundleFirst(): Single<Boolean> {
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
@@ -19,16 +20,28 @@ class SimilarAppsExperiment(private val abTestManager: ABTestManager,
           }
           when (experimentAssignment) {
             "default", "control" -> {
-              appViewAnalytics.sendSimilarABTestGroup(true)
+              appViewAnalytics.sendSimilarABTestGroupEvent(true)
+              isControlGroup = true
               return@flatMap Single.just(false)
             }
             "appc_bundle" -> {
-              appViewAnalytics.sendSimilarABTestGroup(false)
+              appViewAnalytics.sendSimilarABTestGroupEvent(false)
+              isControlGroup = false
               return@flatMap Single.just(true)
             }
-            else ->
+            else -> {
+              isControlGroup = true
               return@flatMap Single.just(false)
+            }
           }
         }
+  }
+
+  fun recordImpression() {
+    appViewAnalytics.sendSimilarABTestImpressionEvent(isControlGroup)
+  }
+
+  fun recordConversion() {
+    appViewAnalytics.sendSimilarABTestConversionEvent(isControlGroup)
   }
 }

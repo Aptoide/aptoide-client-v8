@@ -56,6 +56,7 @@ import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -287,7 +288,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1279,8 +1279,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("ab-test-service-provider")
   ABTestServiceProvider providesABTestServiceProvider(@Named("default") OkHttpClient httpClient,
-      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
-    return new ABTestServiceProvider(httpClient, converterFactory, rxCallAdapterFactory);
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ABTestServiceProvider(httpClient, converterFactory, rxCallAdapterFactory,
+        sharedPreferences);
   }
 
   @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
@@ -1506,7 +1508,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
-    return Collections.emptyList();
+    return Arrays.asList(AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1973,5 +1976,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
+  }
+
+  @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
+      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
+    return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
 }

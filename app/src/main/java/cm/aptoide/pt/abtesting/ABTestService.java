@@ -35,7 +35,8 @@ public class ABTestService {
   public Observable<ExperimentModel> getExperiment(String identifier,
       BaseExperiment.ExperimentType type) {
     return getAptoideId().flatMap(aptoideId -> abTestServiceProvider.getService(type)
-        .getExperiment(identifier, aptoideId))
+        .getExperiment(identifier, aptoideId)
+        .subscribeOn(scheduler))
         .map((ABTestImpressionResponse response) -> mapToExperimentModel(response, false))
         .onErrorReturn(response -> new ExperimentModel(new Experiment(), true));
   }
