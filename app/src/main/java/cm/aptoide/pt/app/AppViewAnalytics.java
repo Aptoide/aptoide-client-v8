@@ -10,6 +10,7 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.HashMap;
 import java.util.Map;
@@ -484,5 +485,10 @@ public class AppViewAnalytics {
       return BONUS_GAME_WALLET_OFFER_19;
     }
     return "N/A";
+  }
+
+  public void sendSimilarABTestGroup(boolean isControlGroup) {
+    Logger.getInstance()
+        .d("AppViewAnalytics", "control_group: " + isControlGroup);
   }
 }
