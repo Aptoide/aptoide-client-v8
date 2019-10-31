@@ -878,8 +878,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> updateSuggestedAppcApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
     return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
+        appViewModel.isMature())
         .map(appcAppsViewModel -> {
           if (appcAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -892,13 +891,10 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
-    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
-        .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
-            .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
-            .doOnSuccess(__ -> similarAppsViewModel.setFromMatureApp(appViewModel.isMature()))
-            .map(__ -> similarAppsViewModel))
+    return appViewManager.shouldLoadNativeAds()
+        .flatMap(shouldLoadNativeAds -> appViewManager.loadSimilarAppsViewModel(
+            appViewModel.getPackageName(), appViewModel.getMedia()
+                .getKeywords(), appViewModel.isMature(), shouldLoadNativeAds))
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
             list.add(

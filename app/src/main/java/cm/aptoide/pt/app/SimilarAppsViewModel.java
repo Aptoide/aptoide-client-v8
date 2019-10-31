@@ -4,7 +4,6 @@ import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.ApplicationAdError;
 import cm.aptoide.pt.view.app.Application;
 import cm.aptoide.pt.view.app.AppsList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,33 +18,19 @@ public class SimilarAppsViewModel {
   private final AppsList.Error recommendedAppsError;
   private final ApplicationAdError adError;
   private boolean hasRecordedAdImpression;
-  private boolean shouldLoadNativeAds;
   private boolean isFromMatureApp;
-
-  public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
-      AppsList.Error recommendedAppsError, ApplicationAdError adResultError) {
-    this(ad, recommendedApps, loading, recommendedAppsError, adResultError, false);
-  }
+  private boolean shouldLoadNativeAds;
 
   public SimilarAppsViewModel(ApplicationAd ad, List<Application> recommendedApps, boolean loading,
       AppsList.Error recommendedAppsError, ApplicationAdError adResultError,
-      boolean shouldLoadNativeAds) {
+      boolean isFromMatureApp, boolean shouldLoadNativeAds) {
     this.ad = ad;
     this.recommendedApps = recommendedApps;
     this.loading = loading;
     this.recommendedAppsError = recommendedAppsError;
     this.adError = adResultError;
-    this.hasRecordedAdImpression = false;
+    this.isFromMatureApp = isFromMatureApp;
     this.shouldLoadNativeAds = shouldLoadNativeAds;
-  }
-
-  public SimilarAppsViewModel() {
-    this.ad = null;
-    this.recommendedApps = Collections.emptyList();
-    this.loading = false;
-    this.recommendedAppsError = null;
-    this.adError = null;
-    this.shouldLoadNativeAds = false;
   }
 
   public ApplicationAd getAd() {
@@ -100,15 +85,7 @@ public class SimilarAppsViewModel {
     return shouldLoadNativeAds;
   }
 
-  public void setShouldLoadNativeAds(boolean shouldLoadNativeAds) {
-    this.shouldLoadNativeAds = shouldLoadNativeAds;
-  }
-
   public boolean isFromMatureApp() {
     return isFromMatureApp;
-  }
-
-  public void setFromMatureApp(boolean isFromMatureApp) {
-    this.isFromMatureApp = isFromMatureApp;
   }
 }
