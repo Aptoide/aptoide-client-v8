@@ -11,9 +11,11 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by pedroribeiro on 10/05/17.
@@ -33,6 +35,10 @@ public class AppViewAnalytics {
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
   public static final String BONUS_MIGRATION_APPVIEW = "Bonus_Migration_19_App_View";
   public static final String BONUS_GAME_WALLET_OFFER_19 = "Bonus_Game_Wallet_Offer_19_App_View";
+  public static final String ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME =
+      "asv_2053_similar_apps_converting";
+  public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
+      "asv_2053_similar_apps_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -493,5 +499,32 @@ public class AppViewAnalytics {
       return BONUS_GAME_WALLET_OFFER_19;
     }
     return "N/A";
+  }
+
+  public void sendSimilarABTestGroupEvent(boolean isControlGroup) {
+    Logger.getInstance()
+        .d("AppViewAnalytics", "similar_apps_control_group: " + isControlGroup);
+  }
+
+  public void sendSimilarABTestConversionEvent(boolean isControlGroup) {
+    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
+        ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendSimilarABTestImpressionEvent(boolean isControlGroup) {
+    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
+        ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  @NotNull private HashMap<String, Object> getSimilarABTestData(boolean isControlGroup) {
+    HashMap<String, Object> data = new HashMap<>();
+    if (isControlGroup) {
+      data.put("group", "control");
+    } else {
+      data.put("group", "appc_bundle");
+    }
+    return data;
   }
 }

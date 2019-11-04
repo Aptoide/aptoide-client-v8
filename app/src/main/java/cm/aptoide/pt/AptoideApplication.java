@@ -107,6 +107,7 @@ import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import io.rakam.api.Rakam;
@@ -292,6 +293,7 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
+        .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
@@ -334,8 +336,10 @@ public abstract class AptoideApplication extends Application {
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
     aptoideDownloadManager.start();
+  }
 
-    adsUserPropertyManager.start();
+  private Completable checkAdsUserProperty() {
+    return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
   private Completable setUpFirstRunAnalytics() {
@@ -376,6 +380,10 @@ public abstract class AptoideApplication extends Application {
             getMediatedNetworkConfigurationWithAppIdMap(
                 BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
                 BuildConfig.MOPUB_FYBER_APPLICATION_ID))
+        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+            getMediatedNetworkConfigurationBaseMap(
+                BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID))
         .withAdditionalNetwork(GooglePlayServicesAdapterConfiguration.class.getName())
         .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
             getAdMobAdsPreferencesMap())

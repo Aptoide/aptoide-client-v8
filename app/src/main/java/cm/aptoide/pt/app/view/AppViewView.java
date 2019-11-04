@@ -149,7 +149,7 @@ public interface AppViewView extends InstallAppView {
 
   void showDonations(List<Donation> donations);
 
-  void initInterstitialAd();
+  void initInterstitialAd(boolean isMature);
 
   Observable<MoPubInterstitialAdClickType> InterstitialAdClicked();
 
@@ -157,7 +157,7 @@ public interface AppViewView extends InstallAppView {
 
   void showInterstitialAd();
 
-  void showBannerAd();
+  void showBannerAd(boolean isMature);
 
   void setupAppcAppView();
 

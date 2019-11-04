@@ -1,10 +1,11 @@
 package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.WasabiExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import rx.Single;
 
-public class MoPubInterstitialAdExperiment {
+public class MoPubInterstitialAdExperiment extends WasabiExperiment {
 
   private final String EXPERIMENT_ID = "ASV-1377-MoPub-Ads";
   private final ABTestManager abTestManager;
@@ -16,7 +17,7 @@ public class MoPubInterstitialAdExperiment {
   }
 
   public Single<Boolean> shouldLoadInterstitial() {
-    return abTestManager.getExperiment(EXPERIMENT_ID)
+    return abTestManager.getExperiment(EXPERIMENT_ID, getType())
         .toSingle()
         .flatMap(experiment -> {
           String experimentAssignment = "default";
@@ -38,12 +39,12 @@ public class MoPubInterstitialAdExperiment {
   }
 
   public Single<Boolean> recordAdImpression() {
-    return abTestManager.recordImpression(EXPERIMENT_ID)
+    return abTestManager.recordImpression(EXPERIMENT_ID, getType())
         .toSingle();
   }
 
   public Single<Boolean> recordAdClick() {
-    return abTestManager.recordAction(EXPERIMENT_ID)
+    return abTestManager.recordAction(EXPERIMENT_ID, getType())
         .toSingle();
   }
 }

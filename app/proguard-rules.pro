@@ -154,6 +154,9 @@
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
 
+#appnext
+-keep class com.appnext.** { *; }
+-dontwarn com.appnext.**
 
 #inmobi
 -keepattributes SourceFile,LineNumberTable

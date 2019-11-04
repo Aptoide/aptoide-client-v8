@@ -159,8 +159,11 @@ public class InstallManager {
   }
 
   public Observable<Install> getCurrentInstallation() {
-    return getInstallations().flatMap(installs -> Observable.from(installs)
-        .filter(install -> install.getState() == Install.InstallationStatus.DOWNLOADING));
+    return aptoideDownloadManager.getCurrentInProgressDownload()
+        .observeOn(Schedulers.io())
+        .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
+            download.getVersionCode()).first())
+        .distinctUntilChanged();
   }
 
   public Completable install(Download download) {
