@@ -41,13 +41,8 @@ class DownloadProgressView : FrameLayout {
         Log.d("DownloadProgressView", "State.Queue")
         resetProgress()
         progressBar.isIndeterminate = true
-        if (isPausable) {
-          cancelButton.visibility = View.VISIBLE
-          resumePauseButton.visibility = View.GONE
-        } else {
-          cancelButton.visibility = View.VISIBLE
-          resumePauseButton.visibility = View.GONE
-        }
+        cancelButton.visibility = View.INVISIBLE
+        resumePauseButton.visibility = View.GONE
         downloadProgressNumber.visibility = View.VISIBLE
         downloadState.setText(R.string.appview_short_downloading)
       }
