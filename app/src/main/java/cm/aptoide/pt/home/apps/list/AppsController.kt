@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps.list
 
 import cm.aptoide.pt.R
-import cm.aptoide.pt.home.apps.*
+import cm.aptoide.pt.home.apps.AppClick
 import cm.aptoide.pt.home.apps.list.models.*
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp
 import cm.aptoide.pt.home.apps.model.DownloadApp
@@ -19,7 +19,6 @@ class AppsController :
   override fun buildModels(updates: List<UpdateApp>, installedApps: List<InstalledApp>,
                            migrations: List<AppcUpdateApp>,
                            downloads: List<DownloadApp>) {
-
 
     // Appc migrations
     AppcHeaderModel_()

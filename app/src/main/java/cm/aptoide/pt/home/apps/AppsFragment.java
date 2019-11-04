@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
@@ -26,8 +27,6 @@ import com.airbnb.epoxy.EpoxyRecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.view.RxView;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -41,7 +40,6 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 public class AppsFragment extends NavigationTrackFragment implements AppsFragmentView {
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
-  private static final int APPC_UPDATES_LIMIT = 2;
 
   @Inject AppsPresenter appsPresenter;
   private RxAlertDialog ignoreUpdateDialog;
@@ -49,9 +47,9 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private ProgressBar progressBar;
   private BottomNavigationActivity bottomNavigationActivity;
   private SwipeRefreshLayout swipeRefreshLayout;
-  private List<App> blackListDownloads;
   private PublishSubject<Void> appcUpgradesSectionLoaded;
 
+  private boolean hasScrolledToTop = false;
   private EpoxyRecyclerView appsRecyclerView;
   private AppsController appsController;
 
@@ -63,7 +61,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     appcUpgradesSectionLoaded = PublishSubject.create();
-    blackListDownloads = new ArrayList<>();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -72,8 +69,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     appsRecyclerView = view.findViewById(R.id.fragment_apps_recycler_view);
-    appsController = new AppsController();
-    appsRecyclerView.setController(appsController);
+    setupRecyclerView();
 
     swipeRefreshLayout = view.findViewById(R.id.fragment_apps_swipe_container);
     swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
@@ -91,16 +87,24 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .getSimpleName());
   }
 
+  private void setupRecyclerView() {
+    appsController = new AppsController();
+    appsRecyclerView.setController(appsController);
+    appsController.getAdapter()
+        .registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+          @Override public void onItemRangeInserted(int positionStart, int itemCount) {
+            if (positionStart == 0) {
+              appsRecyclerView.scrollToPosition(0);
+            }
+          }
+        });
+  }
+
   @Override public void onAttach(Activity activity) {
     super.onAttach(activity);
     if (activity instanceof BottomNavigationActivity) {
       bottomNavigationActivity = ((BottomNavigationActivity) activity);
     }
-  }
-
-  @Override public void onDestroy() {
-    blackListDownloads = null;
-    super.onDestroy();
   }
 
   private void buildIgnoreUpdatesDialog() {
@@ -196,8 +200,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<App> cardClick() {
     return appsController.getAppEventListener()
-        .filter(
-        appClick -> appClick.getClickType() == AppClick.ClickType.CARD_CLICK)
+        .filter(appClick -> appClick.getClickType() == AppClick.ClickType.CARD_CLICK)
         .map(AppClick::getApp);
   }
 
@@ -225,7 +228,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public Observable<Void> refreshApps() {
-    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout)
+        .doOnNext(__ -> hasScrolledToTop = false);
   }
 
   @Override public void hidePullToRefresh() {
