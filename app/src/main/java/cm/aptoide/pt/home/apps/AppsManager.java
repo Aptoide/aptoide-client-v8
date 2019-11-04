@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 import static cm.aptoide.pt.install.Install.InstallationType.UPDATE;
 
@@ -168,7 +169,8 @@ public class AppsManager {
                 context);
             return Completable.never();
           } else {
-            return resumeDownload(app);
+            return resumeDownload(app, installationProgress.getType()
+                .toString());
           }
         })
         .toCompletable();
@@ -179,36 +181,40 @@ public class AppsManager {
         ((DownloadApp) app).getPackageName(), ((DownloadApp) app).getVersionCode());
   }
 
-  public Completable resumeDownload(App app) {
+  public Completable resumeDownload(App app, String installType) {
     return installManager.getDownload(((DownloadApp) app).getMd5())
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> setupDownloadEvents(download, status))
+            .doOnSuccess(status -> setupDownloadEvents(download, status, installType))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }
 
   private void setupDownloadEvents(Download download,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits());
+        download.hasSplits(), download.getTrustedBadge(), null, download.getStoreName(),
+        installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false, download.hasAppc(), download.hasSplits());
+        false, download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName());
   }
 
   private void setupUpdateEvents(Download download, Origin origin,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
+      String tag, String storeName, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits());
+        download.hasSplits(), trustedBadge, tag, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
-        download.hasAppc(), download.hasSplits());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName());
   }
 
   private Origin getOrigin(int action) {
@@ -246,17 +252,18 @@ public class AppsManager {
   public Completable updateApp(App app, boolean isAppcUpdate) {
     String packageName = ((UpdateApp) app).getPackageName();
     return updatesManager.getUpdate(packageName)
-        .flatMap(update -> {
-          Download value = downloadFactory.create(update, isAppcUpdate);
-          return Observable.just(value);
-        })
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> {
-              updatesAnalytics.sendUpdateClickedEvent(packageName);
-              setupUpdateEvents(download, Origin.UPDATE, status);
+        .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
+            .flatMap(status -> {
+              Download value = downloadFactory.create(update, isAppcUpdate);
+              String type = isAppcUpdate ? "update_to_appc" : "update";
+              updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
+                  update.hasAppc(), false, update.getTrustedBadge(), status.toString()
+                      .toLowerCase(), null, update.getStoreName(), type);
+              setupUpdateEvents(value, Origin.UPDATE, status, update.getTrustedBadge(), null,
+                  update.getStoreName(), "update");
+              return Single.just(value);
             })
-            .map(__ -> download))
-        .flatMapCompletable(download -> installManager.install(download))
+            .flatMapCompletable(download -> installManager.install(download)))
         .toCompletable();
   }
 
@@ -278,8 +285,14 @@ public class AppsManager {
                 .map(showAds1 -> updates)
                 .flatMapIterable(updatesList -> updatesList)
                 .flatMap(update -> Observable.just(downloadFactory.create(update, false))
-                    .doOnNext(download1 -> setupUpdateEvents(download1, Origin.UPDATE_ALL,
-                        offerResponseStatus))
+                    .doOnNext(download1 -> {
+                      updatesAnalytics.sendUpdateClickedEvent(update.getPackageName(),
+                          update.hasSplits(), update.hasAppc(), false, update.getTrustedBadge(),
+                          offerResponseStatus.toString()
+                              .toLowerCase(), null, update.getStoreName(), "update_all");
+                      setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
+                          update.getTrustedBadge(), update.getStoreName(), "update_all");
+                    })
                     .toList()
                     .flatMap(installManager::startInstalls))))
         .toCompletable();

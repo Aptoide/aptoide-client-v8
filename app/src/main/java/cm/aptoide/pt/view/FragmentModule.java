@@ -520,9 +520,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        arguments.getBoolean("fromHome"));
+        arguments.getBoolean("fromHome"), installAnalytics);
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(

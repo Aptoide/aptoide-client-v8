@@ -26,12 +26,14 @@ public class PromotionApp {
   private final boolean hasAppc;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private final String rank;
+  private final String storeName;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, String description, long size, float rating,
       int numberOfDownloads, String md5, int versionCode, boolean isClaimed, String versionName,
       Obb obb, float appcValue, String signature, boolean hasAppc, List<Split> splits,
-      List<String> requiredSplits) {
+      List<String> requiredSplits, String rank, String storeName) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -52,6 +54,8 @@ public class PromotionApp {
     this.hasAppc = hasAppc;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.rank = rank;
+    this.storeName = storeName;
   }
 
   public String getName() {
@@ -132,5 +136,13 @@ public class PromotionApp {
 
   public List<String> getRequiredSplits() {
     return requiredSplits;
+  }
+
+  public String getRank() {
+    return rank;
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

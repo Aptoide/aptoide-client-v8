@@ -21,7 +21,9 @@ data class WalletApp(
     val developer: String = "",
     val rating: Float = -1f,
     val splits: List<Split> = emptyList(),
-    val requiredSplits: List<String> = emptyList()
+    val requiredSplits: List<String> = emptyList(),
+    val storeName: String = "",
+    val trustedBadge: String = ""
 
 ) {
   fun exists(): Boolean {

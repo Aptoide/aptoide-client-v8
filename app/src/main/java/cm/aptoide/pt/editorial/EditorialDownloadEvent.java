@@ -20,6 +20,8 @@ public class EditorialDownloadEvent {
   private final DownloadModel.Action action;
   private final long appId;
   private final long size;
+  private final String trustedBadge;
+  private final String storeName;
   private final List<Split> splits;
   private final List<String> requiredSplits;
 
@@ -36,6 +38,8 @@ public class EditorialDownloadEvent {
     this.path = path;
     this.pathAlt = pathAlt;
     this.obb = obb;
+    this.trustedBadge = "";
+    this.storeName = "";
     this.appId = -1;
     this.action = null;
     this.size = size;
@@ -61,6 +65,8 @@ public class EditorialDownloadEvent {
     this.splits = editorialViewModel.getBottomCardSplits();
     this.requiredSplits = editorialViewModel.getBottomCardRequiredSplits();
     this.action = action;
+    this.storeName = editorialViewModel.getStoreName();
+    this.trustedBadge = editorialViewModel.getRank();
   }
 
   public EditorialDownloadEvent(Type button, String packageName, String md5, int verCode,
@@ -80,11 +86,14 @@ public class EditorialDownloadEvent {
     this.splits = null;
     this.requiredSplits = null;
     this.action = null;
+    this.trustedBadge = "";
+    this.storeName = "";
   }
 
   public EditorialDownloadEvent(Type button, String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb,
-      DownloadModel.Action action, long size, List<Split> splits, List<String> requiredSplits) {
+      DownloadModel.Action action, long size, List<Split> splits, List<String> requiredSplits,
+      String trustedBadge, String storeName) {
     this.button = button;
     this.appName = appName;
     this.packageName = packageName;
@@ -95,6 +104,8 @@ public class EditorialDownloadEvent {
     this.path = path;
     this.pathAlt = pathAlt;
     this.obb = obb;
+    this.trustedBadge = trustedBadge;
+    this.storeName = storeName;
     this.appId = -1;
     this.action = action;
     this.size = size;
@@ -160,5 +171,13 @@ public class EditorialDownloadEvent {
 
   public List<String> getRequiredSplits() {
     return this.requiredSplits;
+  }
+
+  public String getTrustedBadge() {
+    return trustedBadge;
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

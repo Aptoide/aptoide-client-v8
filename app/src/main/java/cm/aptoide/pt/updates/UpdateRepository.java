@@ -190,7 +190,8 @@ public class UpdateRepository {
         map(app.hasSplits() ? app.getAab()
             .getSplits() : Collections.emptyList()), mapRequiredSplits(
         app.hasSplits() ? app.getAab()
-            .getRequiredSplits() : Collections.emptyList()));
+            .getRequiredSplits() : Collections.emptyList()), app.getStore()
+        .getName());
   }
 
   private RealmList<RealmString> mapRequiredSplits(List<String> requiredSplits) {

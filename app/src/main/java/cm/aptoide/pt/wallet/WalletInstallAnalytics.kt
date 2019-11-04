@@ -37,11 +37,13 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.md5, download.packageName,
-          action, offerResponseStatus, false, download.hasAppc(), download.hasSplits())
+          action, offerResponseStatus, false, download.hasAppc(), download.hasSplits(),
+          download.trustedBadge, null, download.storeName, action.toString())
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(download.md5, download.packageName, action,
-          offerResponseStatus, download.hasSplits())
+          offerResponseStatus, download.hasSplits(), download.trustedBadge, null,
+          download.storeName)
     }
   }
 
@@ -56,7 +58,9 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         AnalyticsManager.Action.INSTALL, AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE,
-        download.hasAppc(), download.hasSplits())
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.trustedBadge,
+        download.storeName)
 
   }
 

@@ -53,7 +53,7 @@ public class NavigationTracker {
 
   public String getPreviousViewName() {
     if (historyList.size() < 2) {
-      return "";
+      return "NoHistory";
     } else {
       return historyList.get(historyList.size() - 2)
           .getFragment();
