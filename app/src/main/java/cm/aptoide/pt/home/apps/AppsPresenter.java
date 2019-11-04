@@ -249,7 +249,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> Observable.merge(view.resumeUpdate(), view.retryUpdate()))
+        .flatMap(created -> view.resumeUpdate())
         .doOnNext(this::setStandbyState)
         .observeOn(ioScheduler)
         .flatMapCompletable(
@@ -315,7 +315,7 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.updateApp()
+        .flatMap(created -> Observable.merge(view.updateApp(), view.retryUpdate())
             .flatMap(appClickEventWrapper -> permissionManager.requestExternalStoragePermission(
                 permissionService)
                 .flatMap(success -> {

@@ -242,6 +242,10 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private Observable<Download> updateDownload(Download download,
       AppDownloadStatus appDownloadStatus) {
+    if (appDownloadStatus.getDownloadStatus()
+        .equals(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH)) {
+      removeDownloadFiles(download);
+    }
     download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
         downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
