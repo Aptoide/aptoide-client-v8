@@ -27,12 +27,17 @@ class AppsController :
         .reward(getPromotionValue(migrations))
         .addIf(migrations.isNotEmpty(), this)
 
-    for (migration in migrations) {
-      AppcCardModel_()
-          .id("appc_migration", migration.identifier)
-          .application(migration)
-          .eventSubject(appEventListener)
-          .addTo(this)
+    migrations.forEachIndexed { index, migration ->
+      // Currently, See more for appc is disabled
+      if (index < 5) {
+        AppcCardModel_()
+            .id("appc_migration", migration.identifier)
+            .application(migration)
+            .eventSubject(appEventListener)
+            .addTo(this)
+      } else {
+        return@forEachIndexed
+      }
     }
 
     TitleModel_()
