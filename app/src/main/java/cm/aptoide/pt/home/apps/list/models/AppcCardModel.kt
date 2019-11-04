@@ -5,7 +5,6 @@ import android.widget.TextView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.home.apps.AppClick
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp
-import cm.aptoide.pt.home.apps.model.InstalledApp
 import cm.aptoide.pt.networking.image.ImageLoader
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
