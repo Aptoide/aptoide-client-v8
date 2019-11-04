@@ -230,6 +230,7 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<Boolean> loadBannerAds(boolean isMature) {
     return appViewManager.shouldLoadBannerAd()
+        .observeOn(viewScheduler)
         .doOnSuccess(shouldLoadBanner -> {
           if (shouldLoadBanner) {
             view.showBannerAd(isMature);
