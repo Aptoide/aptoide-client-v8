@@ -49,7 +49,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private SwipeRefreshLayout swipeRefreshLayout;
   private PublishSubject<Void> appcUpgradesSectionLoaded;
 
-  private boolean hasScrolledToTop = false;
   private EpoxyRecyclerView appsRecyclerView;
   private AppsController appsController;
 
@@ -228,8 +227,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   @Override public Observable<Void> refreshApps() {
-    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout)
-        .doOnNext(__ -> hasScrolledToTop = false);
+    return RxSwipeRefreshLayout.refreshes(swipeRefreshLayout);
   }
 
   @Override public void hidePullToRefresh() {
