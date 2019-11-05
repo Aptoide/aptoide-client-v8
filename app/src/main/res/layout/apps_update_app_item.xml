@@ -64,7 +64,7 @@
     <TextView
       android:id="@+id/apps_secondary_text"
       style="@style/Aptoide.TextView.Medium.XS.Grey"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:layout_marginTop="3dp"
@@ -73,7 +73,7 @@
       android:text="@string/promo_update2appc_appcard_short"
       android:visibility="visible"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintEnd_toStartOf="@+id/apps_action_button"
       app:layout_constraintStart_toEndOf="@+id/secondary_icon"
       app:layout_constraintTop_toBottomOf="@+id/apps_app_name"
       app:layout_constraintVertical_bias="0"
