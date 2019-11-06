@@ -93,7 +93,7 @@ public class AppsManager {
   }
 
   private Observable<List<UpdateApp>> getAllUpdatesList() {
-    return updatesManager.getUpdatesList(false, true)
+    return updatesManager.getUpdatesList(true)
         .distinctUntilChanged()
         .map(appMapper::mapUpdateToUpdateAppList);
   }
@@ -188,6 +188,9 @@ public class AppsManager {
 
   public Completable resumeDownload(App app) {
     return installManager.getDownload(((StateApp) app).getMd5())
+        .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> setupDownloadEvents(download, status))
+            .map(__ -> download))
         .flatMapCompletable(installManager::install);
   }
 

@@ -48,7 +48,7 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
           DownloadEventListener.Action.Type.CANCEL -> {
             eventSubject?.onNext(
                 AppClick(app, AppClick.ClickType.CANCEL_CLICK))
-            setDownloadViewVisibility(holder, app, false, false)
+            setDownloadViewVisibility(holder, false, false)
           }
           DownloadEventListener.Action.Type.RESUME -> eventSubject?.onNext(
               AppClick(app, AppClick.ClickType.RESUME_CLICK))
@@ -65,28 +65,27 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
   }
 
   private fun processDownload(holder: CardHolder, app: DownloadApp) {
-    Log.i("DownloadProgressView_S", app.status.toString())
     when (app.status) {
       StateApp.Status.ACTIVE -> {
-        setDownloadViewVisibility(holder, app, false, false)
+        setDownloadViewVisibility(holder, false, false)
         holder.downloadProgressView.startDownload()
       }
       StateApp.Status.INSTALLING -> {
-        setDownloadViewVisibility(holder, app, false, false)
+        setDownloadViewVisibility(holder, false, false)
         holder.downloadProgressView.startInstallation()
       }
       StateApp.Status.PAUSE -> {
-        setDownloadViewVisibility(holder, app, false, false)
+        setDownloadViewVisibility(holder, false, false)
         holder.downloadProgressView.pauseDownload()
       }
       StateApp.Status.ERROR -> {
-        setDownloadViewVisibility(holder, app, false, true)
+        setDownloadViewVisibility(holder, false, true)
       }
       StateApp.Status.IN_QUEUE -> {
-        setDownloadViewVisibility(holder, app, false, false)
+        setDownloadViewVisibility(holder, false, false)
       }
       StateApp.Status.STANDBY -> {
-        setDownloadViewVisibility(holder, app, true, false)
+        setDownloadViewVisibility(holder, true, false)
       }
       else -> Unit
     }
@@ -94,7 +93,7 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
   }
 
 
-  private fun setDownloadViewVisibility(holder: CardHolder, app: DownloadApp, installed: Boolean,
+  private fun setDownloadViewVisibility(holder: CardHolder, installed: Boolean,
                                         error: Boolean) {
     if (error) {
       holder.downloadProgressView.visibility = View.GONE
