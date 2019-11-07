@@ -1,7 +1,6 @@
 package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
@@ -29,11 +28,9 @@ public class MoPubAnalytics {
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty("ads", ads);
 
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
-      Rakam.getInstance()
-          .setSuperProperties(createRakamSuperProperties(rakamAds));
-    }
+    String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
+    Rakam.getInstance()
+        .setSuperProperties(createRakamSuperProperties(rakamAds));
   }
 
   private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
