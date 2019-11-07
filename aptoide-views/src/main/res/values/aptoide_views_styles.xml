@@ -10,4 +10,13 @@
     <attr name="skeleton_border_thickness" format="dimension" />
     <attr name="skeleton_corner_radius" format="dimension" />
   </declare-styleable>
+  <declare-styleable name="DownloadProgressView">
+    <attr name="progressDrawable" format="reference" />
+    <attr name="isPausable" format="boolean" />
+    <attr name="enableAnimations" format="boolean" />
+  </declare-styleable>
+  <declare-styleable name="AnimatedImageView">
+    <attr name="animation" format="reference" />
+    <attr name="reverseAnimation" format="reference" />
+  </declare-styleable>
 </resources>

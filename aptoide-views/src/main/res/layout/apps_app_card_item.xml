@@ -19,7 +19,7 @@
     android:layout_alignParentLeft="true">
 
     <ImageView
-      android:id="@+id/apps_app_icon"
+      android:id="@+id/apps_updates_app_icon"
       android:layout_width="56dp"
       android:layout_height="56dp"
       android:layout_margin="8dp"
@@ -30,7 +30,7 @@
       tools:background="@mipmap/ic_launcher" />
 
     <TextView
-      android:id="@+id/apps_app_name"
+      android:id="@+id/apps_updates_app_name"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -38,11 +38,11 @@
       android:layout_marginLeft="7dp"
       android:ellipsize="end"
       android:maxLines="1"
-      app:layout_constraintBottom_toBottomOf="@+id/apps_app_icon"
+      app:layout_constraintBottom_toBottomOf="@+id/apps_updates_app_icon"
       app:layout_constraintEnd_toStartOf="@id/apps_action_button"
       app:layout_constraintHorizontal_bias="0"
-      app:layout_constraintStart_toEndOf="@+id/apps_app_icon"
-      app:layout_constraintTop_toTopOf="@id/apps_app_icon"
+      app:layout_constraintTop_toTopOf="@id/apps_updates_app_icon"
+      app:layout_constraintStart_toEndOf="@+id/apps_updates_app_icon"
       app:layout_constraintVertical_bias="0.1"
       tools:text="Application Name" />
 
@@ -58,12 +58,12 @@
       app:layout_constraintEnd_toStartOf="@id/apps_secondary_text"
       app:layout_constraintHorizontal_bias="0"
       app:layout_constraintHorizontal_chainStyle="packed"
-      app:layout_constraintStart_toStartOf="@+id/apps_app_name"
+      app:layout_constraintStart_toStartOf="@+id/apps_updates_app_name"
       app:layout_constraintTop_toTopOf="@+id/apps_secondary_text" />
 
     <TextView
       android:id="@+id/apps_secondary_text"
-      style="@style/Aptoide.TextView.Medium.XS.AppcOrange"
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
@@ -71,13 +71,24 @@
       android:ellipsize="end"
       android:maxLines="1"
       android:text="@string/promo_update2appc_appcard_short"
+      android:textColor="#fd6363"
       android:visibility="visible"
+      app:layout_constraintVertical_bias="0"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/secondary_icon"
-      app:layout_constraintTop_toBottomOf="@+id/apps_app_name"
-      app:layout_constraintVertical_bias="0"
+      app:layout_constraintTop_toBottomOf="@+id/apps_updates_app_name"
       tools:text="1239123ojd" />
+
+    <cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
+      android:id="@+id/download_progress_view"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="@+id/apps_updates_app_name"
+      app:layout_constraintTop_toTopOf="@+id/apps_updates_app_icon" />
 
     <ImageView
       android:id="@+id/apps_action_button"
@@ -92,7 +103,7 @@
       android:contentDescription="@null"
       android:padding="12dp"
       android:scaleType="center"
-      android:src="@drawable/ic_update_appc_icon"
+      android:src="@drawable/ic_refresh_appc"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
@@ -100,4 +111,3 @@
   </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
-

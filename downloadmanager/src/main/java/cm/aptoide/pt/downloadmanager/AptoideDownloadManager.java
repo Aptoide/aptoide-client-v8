@@ -56,7 +56,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
         .flatMap(download -> getAppDownloader(download.getMd5()).doOnError(
-            throwable -> removeDownload(download.getMd5()))
+            throwable -> removeDownloadFiles(download))
             .doOnNext(AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
         .doOnError(throwable -> throwable.printStackTrace())
