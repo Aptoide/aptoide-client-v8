@@ -1,10 +1,10 @@
 package cm.aptoide.pt.store.view.recommended;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;

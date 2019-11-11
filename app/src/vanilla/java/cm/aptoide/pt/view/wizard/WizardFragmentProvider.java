@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.wizard;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
 

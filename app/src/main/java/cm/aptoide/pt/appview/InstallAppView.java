@@ -1,8 +1,7 @@
 package cm.aptoide.pt.appview;
 
-import cm.aptoide.pt.app.DownloadAppViewModel;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.app.view.AppBoughClickEvent;
+import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -16,7 +15,7 @@ public interface InstallAppView extends View {
 
   Observable<Boolean> showRootInstallWarningPopup();
 
-  void showDownloadAppModel(DownloadAppViewModel model, boolean hasDonations);
+  void showDownloadAppModel(DownloadModel downloadModel, AppCoinsViewModel appCoinsViewModel);
 
   void openApp(String packageName);
 
@@ -29,10 +28,4 @@ public interface InstallAppView extends View {
   Observable<DownloadModel.Action> resumeDownload();
 
   Observable<Void> cancelDownload();
-
-  Observable<Void> isAppViewReadyToDownload();
-
-  void readyToDownload();
-
-  Observable<AppBoughClickEvent> appBought();
 }

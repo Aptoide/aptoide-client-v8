@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -41,6 +42,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
   private final WindowManager windowManager;
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private String url;
   private boolean bypassServerCache;
 
@@ -51,7 +53,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, SharedPreferences sharedPreferences1, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.url = url;
@@ -68,6 +71,7 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
     this.windowManager = windowManager;
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static GetUserRequest of(String url,
@@ -77,14 +81,15 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     final GetUserRequest.Body body =
         new GetUserRequest.Body(WidgetsArgs.createDefault(resources, windowManager));
     return new GetUserRequest(new V7Url(url).remove("user/get")
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, sharedPreferences, resources, windowManager,
-        connectivityManager, versionCodeProvider);
+        connectivityManager, versionCodeProvider, appBundlesVisibilityManager);
   }
 
   @Override
@@ -112,7 +117,8 @@ public class GetUserRequest extends V7<GetStore, GetUserRequest.Body> {
               ((BodyInterceptor<BaseBody>) bodyInterceptor), httpClient, converterFactory, filters,
               tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
               versionCodeProvider, bypassServerCache,
-              Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList());
+              Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(),
+              appBundlesVisibilityManager);
         })
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getNodes()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,10 +28,11 @@
           />
 
       <include
-          layout="@layout/claim_promotion_captcha_view"
-          android:id="@+id/captcha_view"
+          layout="@layout/promotion_update_wallet_view"
+          android:id="@+id/update_wallet_view"
           android:visibility="gone"
           />
+
       <include
           layout="@layout/promotions_dialog_generic_message_view"
           android:id="@+id/generic_message_view"
@@ -44,4 +45,4 @@
 
     </RelativeLayout>
   </ScrollView>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

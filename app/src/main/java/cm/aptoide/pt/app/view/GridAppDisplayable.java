@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.Type;

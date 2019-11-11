@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="168dp"
+    android:layout_height="158dp"
+    app:cardCornerRadius="4dp"
+    >
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+    <ImageView
+        android:id="@+id/app_feature_graphic"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/earn_bg"
+        app:layout_constraintHeight_percent="0.35"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp"
+        />
+
+    <ImageView
+        android:id="@+id/app_image"
+        android:layout_width="64dp"
+        android:layout_height="92dp"
+        android:paddingBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/app_feature_graphic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_feature_graphic"
+        app:layout_constraintVertical_bias="0.2"
+        />
+    <TextView
+        android:id="@+id/app_title_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginStart="12dp"
+        android:gravity="center"
+        android:maxLines="2"
+        android:paddingBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/earn_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_image"
+        tools:text="Cut the rope 2 - the best game"
+        style="@style/Aptoide.TextView.Medium.XS"
+        />
+
+    <View
+        android:id="@+id/earn_bg"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/grey_fog_lighter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/coins_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="7dp"
+        app:layout_constraintBottom_toBottomOf="@+id/earn_bg"
+        app:layout_constraintEnd_toStartOf="@+id/reward_textview"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/earn_bg"
+        app:layout_constraintStart_toStartOf="@+id/earn_bg"
+        app:layout_constraintTop_toTopOf="@+id/earn_bg"
+      app:srcCompat="@drawable/ic_get_appc"
+        />
+    <TextView
+        android:id="@+id/reward_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:text="EARN €0.78"
+        android:textColor="@color/curation_gold"
+        app:layout_constraintBottom_toBottomOf="@+id/earn_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/coins_image"
+        app:layout_constraintTop_toTopOf="@+id/earn_bg"
+        tools:text="EARN €0.78"
+        style="@style/Aptoide.TextView.Medium.XS"
+        />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,9 +1,9 @@
 package com.mopub.nativeads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.fyber.inneractive.sdk.external.InneractiveAdManager;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
@@ -17,7 +17,7 @@ import static com.mopub.common.logging.MoPubLog.AdapterLogEvent.CUSTOM_WITH_THRO
 
 public class InneractiveAdapterConfiguration extends BaseAdapterConfiguration {
 
-  private static final String MOPUB_NETWORK_NAME = "inneractive";
+  private static final String MOPUB_NETWORK_NAME = "Fyber";
 
   /**
    * 4-digit versioning scheme, of which the leftmost 3 digits correspond to the network SDK

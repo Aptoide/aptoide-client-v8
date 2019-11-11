@@ -43,7 +43,7 @@
         android:orientation="horizontal"
         >
 
-      <android.support.v7.widget.SearchView
+      <androidx.appcompat.widget.SearchView
           android:id="@+id/store_search_view"
           android:layout_width="wrap_content"
           android:layout_height="40dp"
@@ -59,8 +59,7 @@
           app:iconifiedByDefault="false"
           app:queryBackground="@color/transparent"
           app:searchIcon="@null"
-          >
-      </android.support.v7.widget.SearchView>
+          ></androidx.appcompat.widget.SearchView>
 
       <Button
           android:id="@+id/button_dialog_add_store"

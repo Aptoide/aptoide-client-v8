@@ -1,8 +1,8 @@
 package cm.aptoide.pt.reviews;
 
-import android.support.v7.widget.AppCompatRatingBar;
 import android.view.View;
 import android.widget.TextView;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.utils.AptoideUtils;

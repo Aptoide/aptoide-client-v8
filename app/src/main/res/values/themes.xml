@@ -30,7 +30,7 @@
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
     <item name="raisedButtonTextColor">@color/white</item>
-    <item name="buttonTextFont">roboto-medium</item>
+    <item name="buttonTextFont">sans-serif-medium</item>
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
@@ -139,6 +139,10 @@
 
   <style name="AppBaseTheme.NoTitle">
     <item name="android:windowNoTitle">true</item>
+  </style>
+
+  <style name="AppBaseTheme.Splash">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
   </style>
 
   <style name="AppBaseTheme.NoTitle.Transparent">

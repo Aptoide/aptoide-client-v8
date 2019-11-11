@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="?android:actionBarSize"
@@ -16,7 +17,7 @@
         android:id="@+id/toolbar"
         />
 
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <FrameLayout
       android:layout_width="match_parent"
@@ -24,9 +25,13 @@
       android:layout_below="@id/app_bar_layout"
       >
 
-    <include layout="@layout/partial_view_incl_no_network"/>
-
-    <include layout="@layout/partial_view_error"/>
+    <cm.aptoide.aptoideviews.errors.ErrorView
+        android:id="@+id/error_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="gone"
+        />
 
     <include layout="@layout/partial_view_progress_bar"/>
 

@@ -3,19 +3,19 @@ package cm.aptoide.pt.app.view;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.home.AdBundle;
-import cm.aptoide.pt.home.AdClick;
-import cm.aptoide.pt.home.AdHomeEvent;
-import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AdsTagWrapper;
-import cm.aptoide.pt.home.AppHomeEvent;
 import cm.aptoide.pt.home.ChipManager;
-import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.HomeAnalytics;
-import cm.aptoide.pt.home.HomeBundle;
-import cm.aptoide.pt.home.HomeBundlesModel;
-import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.HomeNavigator;
+import cm.aptoide.pt.home.bundles.FakeBundleDataSource;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdBundle;
+import cm.aptoide.pt.home.bundles.ads.AdClick;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BundleEvent;
 import cm.aptoide.pt.view.app.Application;
@@ -80,7 +80,7 @@ public class MoreBundlePresenterTest {
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
-    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
+    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0, true);
     localTopAppsBundle = bundlesModel.getList()
         .get(0);
 

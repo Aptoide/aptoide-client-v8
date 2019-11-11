@@ -12,15 +12,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -31,7 +27,9 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.ironsource.mediationsdk.IronSource;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import javax.inject.Inject;
@@ -63,7 +61,6 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
 
-    initializeAdsMediation();
     setupUpdatesNotification();
 
     attachPresenter(presenter);
@@ -81,10 +78,6 @@ public class MainActivity extends BottomNavigationActivity
     MoPub.onDestroy(this);
   }
 
-  private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
-  }
-
   @Override protected void onStart() {
     super.onStart();
     MoPub.onStart(this);
@@ -93,13 +86,11 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onResume() {
     super.onResume();
     MoPub.onResume(this);
-    IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
     MoPub.onPause(this);
-    IronSource.onPause(this);
   }
 
   @Override protected void onStop() {

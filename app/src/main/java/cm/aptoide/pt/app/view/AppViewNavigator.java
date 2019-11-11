@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppNavigator;
@@ -57,13 +57,6 @@ public class AppViewNavigator {
     Fragment fragment = AptoideApplication.getFragmentProvider()
         .newDescriptionFragment(name, description, theme);
     fragmentNavigator.navigateTo(fragment, true);
-  }
-
-  public void buyApp(long appId) {
-    Fragment fragment = fragmentNavigator.peekLast();
-    if (fragment != null && AppViewFragment.class.isAssignableFrom(fragment.getClass())) {
-      ((AppViewFragment) fragment).buyApp(appId);
-    }
   }
 
   public void navigateToStore(Store store) {

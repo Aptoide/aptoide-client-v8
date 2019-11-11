@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;

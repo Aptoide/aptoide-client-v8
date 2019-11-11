@@ -3,7 +3,7 @@ package cm.aptoide.pt.app.view;
 import android.util.Pair;
 import android.view.MenuItem;
 import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
-import cm.aptoide.pt.app.AppViewViewModel;
+import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.view.donations.Donation;
@@ -29,7 +29,7 @@ public interface AppViewView extends InstallAppView {
 
   void showLoading();
 
-  void showAppView(AppViewViewModel detailedApp);
+  void showAppView(AppModel detailedApp);
 
   void handleError(DetailedAppRequestResult.Error error);
 
@@ -37,7 +37,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ReadMoreClickEvent> clickedReadMore();
 
-  void populateReviews(ReviewsViewModel reviews, AppViewViewModel app);
+  void populateReviews(ReviewsViewModel reviews, AppModel app);
 
   void populateSimilar(List<SimilarAppsBundle> similarAppsViewModel);
 
@@ -93,9 +93,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<MenuItem> clickToolbar();
 
-  Observable<Void> clickNoNetworkRetry();
-
-  Observable<Void> clickGenericRetry();
+  Observable<Void> clickErrorRetry();
 
   Observable<Void> clickTopDonorsDonateButton();
 
@@ -103,17 +101,17 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Integer> scrollReviewsResponse();
 
-  void navigateToDeveloperWebsite(AppViewViewModel app);
+  void navigateToDeveloperWebsite(AppModel app);
 
-  void navigateToDeveloperEmail(AppViewViewModel app);
+  void navigateToDeveloperEmail(AppModel app);
 
-  void navigateToDeveloperPrivacy(AppViewViewModel app);
+  void navigateToDeveloperPrivacy(AppModel app);
 
-  void navigateToDeveloperPermissions(AppViewViewModel app);
+  void navigateToDeveloperPermissions(AppModel app);
 
   void setFollowButton(boolean isFollowing);
 
-  void showTrustedDialog(AppViewViewModel app);
+  void showTrustedDialog(AppModel app);
 
   String getLanguageFilter();
 
@@ -142,10 +140,10 @@ public interface AppViewView extends InstallAppView {
 
   void recoverScrollViewState();
 
-  Observable<DownloadModel.Action> showOpenAndInstallDialog(String title, String appName);
+  Observable<Void> showOpenAndInstallDialog(String title, String appName);
 
-  Observable<DownloadModel.Action> showOpenAndInstallApkFyDialog(String title, String appName,
-      double appc, float rating, String icon, int downloads);
+  Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
+      float rating, String icon, int downloads);
 
   void showApkfyElement(String appName);
 
@@ -183,4 +181,6 @@ public interface AppViewView extends InstallAppView {
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 
   void showConsentDialog();
+
+  void setInstallButton(AppCoinsViewModel appCoinsViewModel);
 }

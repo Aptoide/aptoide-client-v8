@@ -1,7 +1,7 @@
 package cm.aptoide.pt.promotions;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.app.DownloadModel;
 import java.util.List;
 

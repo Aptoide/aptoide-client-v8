@@ -9,13 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -25,8 +26,10 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
+import cm.aptoide.pt.install.RootInstallerProvider;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.packageinstaller.AppInstall;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.packageinstaller.InstallStatus;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -38,6 +41,7 @@ import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -49,7 +53,6 @@ public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER = Environment.getExternalStorageDirectory()
       .getAbsolutePath() + "/Android/obb/";
-  public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
@@ -60,6 +63,7 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+  private RootInstallerProvider rootInstallerProvider;
   private int installingStateTimeout;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
@@ -67,7 +71,8 @@ public class DefaultInstaller implements Installer {
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics, int installingStateTimeout,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      RootInstallerProvider rootInstallerProvider) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
@@ -75,6 +80,7 @@ public class DefaultInstaller implements Installer {
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
     this.appInstallerStatusReceiver = appInstallerStatusReceiver;
+    this.rootInstallerProvider = rootInstallerProvider;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
@@ -192,9 +198,7 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
-      return Observable.create(new RootCommandOnSubscribe(installation.getId()
-          .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
-          .getAbsolutePath(), installerAnalytics))
+      return Observable.create(rootInstallerProvider.provideRootInstaller(installation))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
@@ -243,12 +247,28 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
-    return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
-        .subscribeOn(Schedulers.computation())
-        .map(success -> installation)
-        .startWith(
-            updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    if (isSystem(context)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        return defaultInstall(context, installation, true);
+      }
+      return Observable.create(new SystemInstallOnSubscribe(context, packageManager,
+          Uri.fromFile(installation.getFile())))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
+          .startWith(
+              updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    }
+    return Observable.error(new Throwable());
+  }
+
+  private boolean isSystem(Context context) {
+    try {
+      ApplicationInfo info = packageManager.getApplicationInfo(context.getPackageName(),
+          PackageManager.PERMISSION_GRANTED);
+      return (info.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new AssertionError("Aptoide application not found by package manager.");
+    }
   }
 
   @NonNull
@@ -264,9 +284,14 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
+    boolean shouldUserPackageInstaller =
+        shouldSetPackageInstaller || !map(installation).getSplitApks()
+            .isEmpty();
     return Observable.<Void>fromCallable(() -> {
-      if (shouldSetPackageInstaller) {
-        appInstaller.install(installation.getFile(), installation.getPackageName());
+      AppInstall appInstall = map(installation);
+      if (shouldSetPackageInstaller || !appInstall.getSplitApks()
+          .isEmpty()) {
+        appInstaller.install(appInstall);
       } else {
         startInstallIntent(context, installation.getFile());
       }
@@ -277,7 +302,7 @@ public class DefaultInstaller implements Installer {
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
                   if (installation.getStatus() == Installed.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                             : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
                   }
                   return null;
@@ -296,7 +321,7 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+                      shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                           : Installed.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
@@ -309,8 +334,20 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldSetPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
+            shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
                 : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+  }
+
+  @NotNull private AppInstall map(Installation installation) {
+    AppInstall.InstallBuilder installBuilder = AppInstall.builder()
+        .setPackageName(installation.getPackageName())
+        .setBaseApk(installation.getFile());
+    for (FileToDownload file : installation.getFiles()) {
+      if (FileToDownload.SPLIT == file.getFileType()) {
+        installBuilder.addApkSplit(new File(file.getFilePath()));
+      }
+    }
+    return installBuilder.build();
   }
 
   private boolean isDeviceMIUI() {

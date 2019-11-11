@@ -1,6 +1,6 @@
 package cm.aptoide.pt.account;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountValidationException;
 import cm.aptoide.analytics.AnalyticsManager;

@@ -49,12 +49,10 @@ public class DownloadStateParser {
     return downloadState;
   }
 
-  public DownloadModel.Action parseDownloadType(Install.InstallationType type, boolean paidApp,
-      boolean wasPaid, boolean isMigration) {
+  public DownloadModel.Action parseDownloadType(Install.InstallationType type,
+      boolean isMigration) {
     DownloadModel.Action action;
-    if (paidApp && !wasPaid) {
-      action = DownloadModel.Action.PAY;
-    } else if (isMigration) {
+    if (isMigration) {
       action = DownloadModel.Action.MIGRATE;
     } else {
       switch (type) {
@@ -94,7 +92,7 @@ public class DownloadStateParser {
         downloadAction = Download.ACTION_DOWNGRADE;
         break;
       default:
-        throw new IllegalArgumentException("Invalid action");
+        throw new IllegalArgumentException("Invalid action " + action.toString());
     }
     return downloadAction;
   }

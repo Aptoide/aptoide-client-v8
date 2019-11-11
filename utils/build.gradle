@@ -51,8 +51,8 @@ dependencies {
   testImplementation "junit:junit:${JUNIT_VERSION}"
 
   //noinspection GradleDependency
-  implementation "com.android.support:design:${SUPPORT_LIB_VERSION}"
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "com.google.android.material:material:${MATERIAL_VERSION}"
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
 
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"

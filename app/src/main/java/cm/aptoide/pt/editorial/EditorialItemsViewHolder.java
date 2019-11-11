@@ -1,12 +1,11 @@
 package cm.aptoide.pt.editorial;
 
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -15,7 +14,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.home.SnapToStartHelper;
@@ -49,6 +52,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView message;
   private View media;
   private ImageView image;
+  private WebView embeddedVideo;
   private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
   private RecyclerView mediaList;
@@ -77,6 +81,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
+    embeddedVideo = view.findViewById(R.id.embedded_video);
     videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
     videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     descriptionSwitcher =
@@ -104,8 +109,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
     pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
 
-    layoutManager =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+    layoutManager = new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
 
     SnapHelper mediaSnap = new SnapToStartHelper();
     mediaSnap.attachToRecyclerView(mediaList);
@@ -141,7 +145,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
       setPlaceHolderListeners(editorialItem.getAppName(), editorialItem.getPackageName(),
           editorialItem.getMd5sum(), editorialItem.getIcon(), editorialItem.getVerName(),
           editorialItem.getVerCode(), editorialItem.getPath(), editorialItem.getPathAlt(),
-          editorialItem.getObb(), editorialItem.getId(), editorialItem.getSize());
+          editorialItem.getObb(), editorialItem.getId(), editorialItem.getSize(),
+          editorialItem.getSplits(), editorialItem.getRequiredSplits());
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
       if (shouldHaveAnimation) {
@@ -248,6 +253,13 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             videoThumbnailContainer.setOnClickListener(v -> uiEventListener.onNext(
                 new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
           }
+        }
+        if (editorialMedia.isEmbedded()) {
+          embeddedVideo.setWebViewClient(new WebViewClient());
+          embeddedVideo.getSettings()
+              .setJavaScriptEnabled(true);
+          embeddedVideo.loadUrl(editorialMedia.getUrl());
+          embeddedVideo.setVisibility(View.VISIBLE);
         }
       }
     }
@@ -359,19 +371,19 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
 
   private void setPlaceHolderListeners(String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id,
-      long size) {
+      long size, List<Split> splits, List<String> requiredSplits) {
     cancelDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.CANCEL, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size)));
+            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size)));
+            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size)));
+            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, action, size)));
+            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

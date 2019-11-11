@@ -1,9 +1,9 @@
 package cm.aptoide.pt.home.apps;
 
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.cardview.widget.CardView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import rx.subjects.PublishSubject;

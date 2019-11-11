@@ -1,8 +1,8 @@
 package cm.aptoide.pt.view.rx;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.SwitchCompat;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import rx.Observable;
 
 import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;

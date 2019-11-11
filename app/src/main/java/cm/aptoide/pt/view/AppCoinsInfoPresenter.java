@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
@@ -35,8 +35,37 @@ public class AppCoinsInfoPresenter implements Presenter {
 
   @Override public void present() {
     handleClickOnAppcWalletLink();
+    handleClickOnCatappultDevButton();
     handleClickOnInstallButton();
     handleButtonText();
+    handlePlaceHolderVisibilityChange();
+  }
+
+  @VisibleForTesting public void handlePlaceHolderVisibilityChange() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(created -> view.appItemVisibilityChanged())
+        .doOnNext(scrollEvent -> {
+          if (scrollEvent.getItemShown()) {
+            view.removeBottomCardAnimation();
+          } else if (!scrollEvent.getItemShown()) {
+            view.addBottomCardAnimation();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
+  private void handleClickOnCatappultDevButton() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.catappultButtonClick())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.startCatappultDevWebView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   @VisibleForTesting public void handleClickOnInstallButton() {

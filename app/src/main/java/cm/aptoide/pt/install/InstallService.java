@@ -11,10 +11,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
@@ -24,7 +24,6 @@ import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.downloadmanager.OldAptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
@@ -52,6 +51,8 @@ public class InstallService extends BaseService implements DownloadsNotification
   public static final String EXTRA_FORCE_DEFAULT_INSTALL = "EXTRA_FORCE_DEFAULT_INSTALL";
   public static final String EXTRA_SET_PACKAGE_INSTALLER = "EXTRA_SET_PACKAGE_INSTALLER";
   public static final int INSTALLER_TYPE_DEFAULT = 0;
+  public static final String FILE_MD5_EXTRA = "APTOIDE_APPID_EXTRA";
+  static public final int PROGRESS_MAX_VALUE = 100;
 
   private static final int NOTIFICATION_ID = 8;
 
@@ -235,7 +236,7 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download), requestCode,
         ACTION_STOP_INSTALL, md5);
@@ -243,7 +244,7 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   @NonNull private NotificationCompat.Action getDownloadManagerAction(int requestCode, String md5) {
     Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(OldAptoideDownloadManager.FILE_MD5_EXTRA, md5);
+    appIdExtras.putString(FILE_MD5_EXTRA, md5);
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager), requestCode,
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
@@ -260,7 +261,7 @@ public class InstallService extends BaseService implements DownloadsNotification
             .append(" - ")
             .append(getString(cm.aptoide.pt.database.R.string.download_progress)))
         .setContentIntent(contentIntent)
-        .setProgress(OldAptoideDownloadManager.PROGRESS_MAX_VALUE, progress, isIndeterminate)
+        .setProgress(PROGRESS_MAX_VALUE, progress, isIndeterminate)
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();

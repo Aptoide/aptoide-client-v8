@@ -5,16 +5,10 @@ package cm.aptoide.pt.editorial;
  */
 
 public class ScrollEvent {
-  private final boolean scrollDown;
   private final Boolean isItemShown;
 
-  public ScrollEvent(boolean scrollDown, Boolean isItemShown) {
-    this.scrollDown = scrollDown;
+  public ScrollEvent(Boolean isItemShown) {
     this.isItemShown = isItemShown;
-  }
-
-  public boolean isScrollDown() {
-    return scrollDown;
   }
 
   public Boolean getItemShown() {

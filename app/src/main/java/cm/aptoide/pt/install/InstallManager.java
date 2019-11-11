@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
@@ -608,7 +608,8 @@ public class InstallManager {
 
   public void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (!FileUtils.fileExists(getFilePathFromFileType(fileToDownload))) {
+      if (!FileUtils.fileExists(
+          getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
         Logger.getInstance()
             .d(TAG, "trying to move file : "
                 + fileToDownload.getFileName()
@@ -637,6 +638,9 @@ public class InstallManager {
         break;
       case FileToDownload.OBB:
         path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.SPLIT:
+        path = apkPath + fileToDownload.getPackageName() + "-splits/";
         break;
       case FileToDownload.GENERIC:
       default:

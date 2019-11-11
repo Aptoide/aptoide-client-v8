@@ -1,14 +1,14 @@
 package cm.aptoide.pt.view.spannable;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
 import android.text.ParcelableSpan;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 
 public class SpannableFactory {
 

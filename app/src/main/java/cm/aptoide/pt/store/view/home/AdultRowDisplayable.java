@@ -1,8 +1,8 @@
 package cm.aptoide.pt.store.view.home;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

@@ -10,7 +10,7 @@ import android.content.pm.PackageInstaller;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,16 +32,22 @@ public final class AppInstaller {
     registerInstallResultBroadcastReceiver();
   }
 
-  public void install(File file, String packageName) {
+  public void install(AppInstall appInstall) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      installWithPackageInstaller(file, packageName);
+      installWithPackageInstaller(appInstall);
     } else {
-      installWithActionInstallPackageIntent(file, packageName);
+      if (!appInstall.getSplitApks()
+          .isEmpty()) {
+        installResultCallback.onInstallationResult(new InstallStatus(InstallStatus.Status.FAIL,
+            "Can't install split apks in devices bellow api 21", appInstall.getPackageName()));
+      } else {
+        installWithActionInstallPackageIntent(appInstall.getBaseApk(), appInstall.getPackageName());
+      }
     }
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-  private void installWithPackageInstaller(File file, String packageName) {
+  private void installWithPackageInstaller(AppInstall appInstall) {
     PackageInstaller.Session session = null;
     try {
       PackageInstaller packageInstaller = context.getPackageManager()
@@ -51,7 +57,14 @@ public final class AppInstaller {
       int sessionId = packageInstaller.createSession(params);
       session = packageInstaller.openSession(sessionId);
 
-      addApkToInstallSession(file, session);
+      addApkToInstallSession(appInstall.getBaseApk(), session);
+
+      if (!appInstall.getSplitApks()
+          .isEmpty()) {
+        for (File file : appInstall.getSplitApks()) {
+          addApkToInstallSession(file, session);
+        }
+      }
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
           new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
@@ -63,7 +76,8 @@ public final class AppInstaller {
         session.abandon();
       }
       installResultCallback.onInstallationResult(
-          new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR, e.getMessage(), packageName));
+          new InstallStatus(InstallStatus.Status.UNKNOWN_ERROR, e.getMessage(),
+              appInstall.getPackageName()));
     }
   }
 
@@ -110,7 +124,7 @@ public final class AppInstaller {
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void addApkToInstallSession(File file, PackageInstaller.Session session) {
     try {
-      OutputStream packageInSession = session.openWrite("apk-id", 0, file.length());
+      OutputStream packageInSession = session.openWrite(file.getName(), 0, file.length());
       InputStream is = new FileInputStream(file);
       byte[] buffer = new byte[16384];
       int n;
@@ -119,6 +133,7 @@ public final class AppInstaller {
       }
       session.fsync(packageInSession);
       packageInSession.close();
+      is.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

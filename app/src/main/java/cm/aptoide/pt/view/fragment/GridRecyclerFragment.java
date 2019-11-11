@@ -6,8 +6,8 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.WindowManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.recycler.BaseAdapter;

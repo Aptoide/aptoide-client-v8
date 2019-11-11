@@ -1,10 +1,10 @@
 package cm.aptoide.pt.account.view.store;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.store.StoreTheme;
 import com.jakewharton.rxbinding.view.RxView;

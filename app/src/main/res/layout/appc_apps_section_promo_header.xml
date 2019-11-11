@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+  <TextView
+      android:id="@+id/title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="9dp"
+      android:layout_marginStart="9dp"
+      android:gravity="center"
+      android:paddingTop="19dp"
+      android:text="@string/promo_update2appc_title"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      />
+
+  <TextView
+      android:id="@+id/message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:paddingEnd="19dp"
+      android:paddingStart="19dp"
+      android:paddingTop="2dp"
+      app:layout_constraintHorizontal_bias="0.5"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/title"
+      app:layout_constraintVertical_bias="0"
+      tools:text="@string/promo_update2appc_message"
+      style="@style/Aptoide.TextView.Regular.XS.Grey_900"
+      />
+
+  <ImageView
+      android:id="@+id/appc_disclaimer_icon"
+      android:layout_width="17dp"
+      android:layout_height="17dp"
+      android:layout_marginEnd="9dp"
+      android:layout_marginRight="9dp"
+      android:layout_marginTop="9dp"
+      android:src="@drawable/ic_info_outline_appc"
+      app:layout_constraintHorizontal_bias="0.15"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/message"
+      />
+
+  <TextView
+      android:id="@+id/appc_disclaimer_message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginLeft="7dp"
+      android:layout_marginStart="7dp"
+      android:gravity="center_vertical"
+      android:text="@string/promo_update2appc_data_disclaimer"
+      android:textColor="#fd6363"
+      app:layout_constraintBottom_toBottomOf="@id/appc_disclaimer_icon"
+      app:layout_constraintLeft_toRightOf="@id/appc_disclaimer_icon"
+      app:layout_constraintTop_toTopOf="@id/appc_disclaimer_icon"
+      style="@style/Aptoide.TextView.Medium.XXS"
+
+      />
+</androidx.constraintlayout.widget.ConstraintLayout>

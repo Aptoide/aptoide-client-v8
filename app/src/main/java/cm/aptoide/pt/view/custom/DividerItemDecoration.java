@@ -3,11 +3,11 @@ package cm.aptoide.pt.view.custom;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by fabio on 22-10-2015.
@@ -63,13 +63,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     if (parentLayoutManager instanceof LinearLayoutManager) {
       LinearLayoutManager manager = ((LinearLayoutManager) parentLayoutManager);
-      if (manager.getOrientation() == LinearLayoutManager.VERTICAL
-          && manager.getPosition(view) == 0) {
+      if (manager.getOrientation() == RecyclerView.VERTICAL && manager.getPosition(view) == 0) {
         outRect.top = space;
       }
     } else if (GridLayoutManager.class.isAssignableFrom(parentLayoutManager.getClass())) {
       GridLayoutManager manager = ((GridLayoutManager) parentLayoutManager);
-      if (manager.getOrientation() == LinearLayoutManager.VERTICAL) {
+      if (manager.getOrientation() == RecyclerView.VERTICAL) {
         int colcount = manager.getSpanCount();
         if (parent.getChildPosition(view) < colcount) {
           outRect.top = space;

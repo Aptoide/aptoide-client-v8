@@ -4,34 +4,29 @@
   ~ Modified on 22/06/2016.
   -->
 
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <include
-      layout="@layout/partial_view_incl_no_network"
-      android:layout_width="wrap_content"
+  <cm.aptoide.aptoideviews.errors.ErrorView
+      android:id="@+id/error_view"
+      android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="?attr/actionBarSize"
-      />
-
-  <include
-      layout="@layout/partial_view_error"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginTop="?attr/actionBarSize"
+      android:visibility="gone"
+      tools:visibility="gone"
       />
 
   <include layout="@layout/partial_view_progress_bar"/>
 
   <include layout="@layout/view_pager"/>
 
-  <android.support.design.widget.AppBarLayout
+  <com.google.android.material.appbar.AppBarLayout
       android:id="@+id/app_bar_layout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -51,7 +46,7 @@
         android:layout_height="@dimen/tabsHeight"
         />
 
-  </android.support.design.widget.AppBarLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -45,7 +45,7 @@ dependencies {
   implementation fileTree(include: ['*.jar'], dir: 'libs')
   api project(path: ':aptoide-analytics-core')
 
-  implementation 'com.android.support:appcompat-v7:25.4.0'
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
 
   testImplementation 'junit:junit:4.12'
   testImplementation "junit:junit:${JUNIT_VERSION}"
@@ -68,6 +68,9 @@ dependencies {
 
   // Flurry Android sdk
   implementation "com.flurry.android:analytics:6.4.2"
+
+  //Rakam android sdk
+  implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 }
 
 version = "1.0.3"

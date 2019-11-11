@@ -1,9 +1,9 @@
 package cm.aptoide.pt.view.recycler.widget;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;

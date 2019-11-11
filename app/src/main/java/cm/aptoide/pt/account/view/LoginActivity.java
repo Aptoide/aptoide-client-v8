@@ -2,8 +2,8 @@ package cm.aptoide.pt.account.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.R;
 
 public class LoginActivity extends LoginBottomSheetActivity {

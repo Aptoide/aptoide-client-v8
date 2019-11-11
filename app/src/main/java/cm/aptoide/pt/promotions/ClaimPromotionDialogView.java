@@ -12,17 +12,7 @@ public interface ClaimPromotionDialogView extends View {
 
   Observable<ClaimPromotionsClickWrapper> continueWalletClick();
 
-  Observable<ClaimPromotionsSubmitWrapper> finishClick();
-
-  Observable<String> refreshCaptchaClick();
-
-  void showLoadingCaptcha();
-
-  void hideLoadingCaptcha(String captcha);
-
   void sendWalletIntent();
-
-  void showCaptchaView(String captchaUrl);
 
   void showGenericError();
 
@@ -31,8 +21,6 @@ public interface ClaimPromotionDialogView extends View {
   void showInvalidWalletAddress();
 
   void showPromotionAlreadyClaimed();
-
-  void showInvalidCaptcha(String captcha);
 
   void showClaimSuccess();
 
@@ -43,8 +31,6 @@ public interface ClaimPromotionDialogView extends View {
   Observable<Void> dismissGenericErrorClick();
 
   Observable<String> walletCancelClick();
-
-  Observable<String> captchaCancelClick();
 
   Observable<ClaimDialogResultWrapper> dismissGenericMessage();
 
@@ -57,4 +43,14 @@ public interface ClaimPromotionDialogView extends View {
   void updateWalletText(String walletAddress);
 
   void fetchWalletAddressByClipboard();
+
+  void verifyWallet();
+
+  void showCanceledVerificationError();
+
+  void showUpdateWalletDialog();
+
+  Observable<Void> onCancelWalletUpdate();
+
+  Observable<Void> onUpdateWalletClick();
 }

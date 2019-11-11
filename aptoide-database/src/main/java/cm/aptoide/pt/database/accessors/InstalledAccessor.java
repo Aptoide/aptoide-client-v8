@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.database.accessors;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Installation;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;

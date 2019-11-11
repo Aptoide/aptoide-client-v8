@@ -3,45 +3,44 @@ package cm.aptoide.pt.ads.data;
 import android.view.View;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
+import cm.aptoide.pt.view.app.Application;
 
 /**
  * Created by franciscoaleixo on 04/10/2018.
  */
 
-public class AptoideNativeAd implements ApplicationAd {
+public class AptoideNativeAd extends Application implements ApplicationAd {
   private String cpdUrl;
   private String description;
-  private String packageName;
   private Long networkId;
   private String clickUrl;
   private String cpcUrl;
-  private Long appId;
   private Long adId;
   private String cpiUrl;
-  private String name;
-  private String iconPath;
-  private Integer downloads;
   private Integer stars;
   private Long modified;
 
   public AptoideNativeAd(MinimalAd ad) {
-    this.packageName = ad.getPackageName();
+    super(ad.getName(), ad.getIconPath(), 0f, ad.getDownloads(), ad.getPackageName(), ad.getAppId(),
+        "", false);
     this.networkId = ad.getNetworkId();
     this.clickUrl = ad.getClickUrl();
     this.cpcUrl = ad.getCpcUrl();
     this.cpdUrl = ad.getCpdUrl();
-    this.appId = ad.getAppId();
     this.adId = ad.getAdId();
     this.cpiUrl = ad.getCpiUrl();
-    this.name = ad.getName();
-    this.iconPath = ad.getIconPath();
     this.description = ad.getDescription();
-    this.downloads = ad.getDownloads();
     this.stars = ad.getStars();
     this.modified = ad.getModified();
   }
 
   public AptoideNativeAd(GetAdsResponse.Ad ad) {
+    super(ad.getData()
+        .getName(), ad.getData()
+        .getIcon(), 0f, ad.getData()
+        .getDownloads(), ad.getData()
+        .getPackageName(), ad.getData()
+        .getId(), "", false);
     GetAdsResponse.Partner partner = ad.getPartner();
     int id = 0;
     String clickUrl = null;
@@ -51,28 +50,18 @@ public class AptoideNativeAd implements ApplicationAd {
       clickUrl = partner.getData()
           .getClickUrl();
     }
-    this.packageName = ad.getData()
-        .getPackageName();
     this.networkId = (long) id;
     this.clickUrl = clickUrl;
     this.cpcUrl = ad.getInfo()
         .getCpcUrl();
     this.cpdUrl = ad.getInfo()
         .getCpdUrl();
-    this.appId = ad.getData()
-        .getId();
     this.adId = ad.getInfo()
         .getAdId();
     this.cpiUrl = ad.getInfo()
         .getCpiUrl();
-    this.name = ad.getData()
-        .getName();
-    this.iconPath = ad.getData()
-        .getIcon();
     this.description = ad.getData()
         .getDescription();
-    this.downloads = ad.getData()
-        .getDownloads();
     this.stars = ad.getData()
         .getStars();
     this.modified = ad.getData()
@@ -81,11 +70,11 @@ public class AptoideNativeAd implements ApplicationAd {
   }
 
   @Override public String getAdTitle() {
-    return name;
+    return super.getName();
   }
 
   @Override public String getIconUrl() {
-    return iconPath;
+    return super.getIcon();
   }
 
   @Override public Integer getStars() {
@@ -95,15 +84,15 @@ public class AptoideNativeAd implements ApplicationAd {
   @Override public void registerClickableView(View view) {
   }
 
-  @Override public String getPackageName() {
-    return packageName;
-  }
-
   @Override public Network getNetwork() {
     return Network.SERVER;
   }
 
   @Override public void setAdView(View adView) {
+  }
+
+  @Override public String getPackageName() {
+    return super.getPackageName();
   }
 
   public String getCpdUrl() {
@@ -126,20 +115,12 @@ public class AptoideNativeAd implements ApplicationAd {
     return cpcUrl;
   }
 
-  public Long getAppId() {
-    return appId;
-  }
-
   public Long getAdId() {
     return adId;
   }
 
   public String getCpiUrl() {
     return cpiUrl;
-  }
-
-  public Integer getDownloads() {
-    return downloads;
   }
 
   public Long getModified() {
@@ -149,16 +130,16 @@ public class AptoideNativeAd implements ApplicationAd {
   @Override public int hashCode() {
     int result = cpdUrl.hashCode();
     result = 31 * result + description.hashCode();
-    result = 31 * result + packageName.hashCode();
+    result = 31 * result + getPackageName().hashCode();
     result = 31 * result + clickUrl.hashCode();
     result = 31 * result + cpcUrl.hashCode();
     result = 31 * result + cpiUrl.hashCode();
-    result = 31 * result + name.hashCode();
-    result = 31 * result + iconPath.hashCode();
-    result = 31 * result + downloads.hashCode();
+    result = 31 * result + getName().hashCode();
+    result = 31 * result + getIcon().hashCode();
+    result = 31 * result + ((Integer) getDownloads()).hashCode();
     result = 31 * result + stars.hashCode();
     result = 31 * result + (int) (networkId ^ (networkId >>> 32));
-    result = 31 * result + (int) (appId ^ (appId >>> 32));
+    result = 31 * result + (int) (getAppId() ^ (getAppId() >>> 32));
     result = 31 * result + (int) (adId ^ (adId >>> 32));
     result = 31 * result + (int) (modified ^ (modified >>> 32));
     return result;
@@ -171,18 +152,16 @@ public class AptoideNativeAd implements ApplicationAd {
     AptoideNativeAd ad = (AptoideNativeAd) o;
 
     return ad.modified.equals(this.modified)
-        && ad.stars.equals(this.stars)
-        && ad.downloads.equals(this.downloads)
-        && ad.description.equals(this.description)
-        && ad.iconPath.equals(this.iconPath)
-        && ad.name.equals(this.name)
+        && ad.stars.equals(this.stars) && ((Integer) ad.getDownloads()).equals(this.getDownloads())
+        && ad.description.equals(this.description) && ad.getIcon()
+        .equals(this.getIcon()) && ad.getName()
+        .equals(this.getName())
         && ad.cpiUrl.equals(this.cpiUrl)
         && ad.adId.equals(this.adId)
         && ad.cpdUrl.equals(this.cpdUrl)
-        && ad.cpcUrl.equals(this.cpcUrl)
-        && ad.appId.equals(this.appId)
+        && ad.cpcUrl.equals(this.cpcUrl) && ((Long) ad.getAppId()).equals(this.getAppId())
         && ad.clickUrl.equals(this.clickUrl)
-        && ad.networkId.equals(this.networkId)
-        && ad.packageName.equals(packageName);
+        && ad.networkId.equals(this.networkId) && ad.getPackageName()
+        .equals(getPackageName());
   }
 }

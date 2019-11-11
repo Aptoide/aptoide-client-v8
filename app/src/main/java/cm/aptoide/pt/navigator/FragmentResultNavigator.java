@@ -1,11 +1,11 @@
 package cm.aptoide.pt.navigator;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import androidx.annotation.IdRes;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import java.util.Map;
 import rx.Observable;

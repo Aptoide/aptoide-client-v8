@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -158,7 +158,7 @@
       tools:visibility="visible"
       />
 
-  <android.support.constraint.Group
+  <androidx.constraintlayout.widget.Group
       android:id="@+id/wallet_install_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
       tools:visibility="visible"
       />
 
-  <android.support.constraint.Group
+  <androidx.constraintlayout.widget.Group
       android:id="@+id/wallet_install_success_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -175,7 +175,7 @@
       app:constraint_referenced_ids="install_complete_message,app_icon_image_background"
       />
 
-  <android.support.constraint.Group
+  <androidx.constraintlayout.widget.Group
       android:id="@+id/sdk_error_view_group"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -184,4 +184,4 @@
       />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

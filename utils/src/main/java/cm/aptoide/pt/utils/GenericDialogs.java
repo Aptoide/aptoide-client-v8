@@ -7,11 +7,11 @@ package cm.aptoide.pt.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -248,10 +248,12 @@ public class GenericDialogs {
     /**
      * Used when yes/ok button is pressed
      */
-    YES, /**
+    YES,
+    /**
      * Used when no/cancel button is pressed
      */
-    NO, /**
+    NO,
+    /**
      * Used when user cancels the dialog by pressing back or clicking out of the dialog
      */
     CANCEL,

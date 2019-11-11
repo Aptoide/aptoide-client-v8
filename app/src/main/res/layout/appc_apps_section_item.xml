@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,53 +8,18 @@
     android:background="@drawable/white_bg_bottom_separator"
     >
 
-  <TextView
-      android:id="@+id/title"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="9dp"
-      android:layout_marginStart="9dp"
-      android:paddingTop="19dp"
-      android:text="@string/promo_update2appc_appcard_short"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintHorizontal_bias="0"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0"
-      style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
+  <include
+      layout="@layout/appc_apps_section_header"
+      android:id="@+id/header_message"
+      android:visibility="visible"
+      />
+  <include
+      layout="@layout/appc_apps_section_promo_header"
+      android:id="@+id/header_promo_message"
+      android:visibility="gone"
       />
 
-  <ImageView
-      android:id="@+id/appc_disclaimer_icon"
-      android:layout_width="17dp"
-      android:layout_height="17dp"
-      android:layout_marginEnd="9dp"
-      android:layout_marginRight="9dp"
-      android:layout_marginTop="12dp"
-      android:src="@drawable/ic_info_outline_appc"
-      app:layout_constraintLeft_toLeftOf="@id/title"
-      app:layout_constraintTop_toBottomOf="@id/title"
-      />
-
-  <TextView
-      android:id="@+id/appc_disclaimer_message"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginLeft="7dp"
-      android:layout_marginStart="7dp"
-      android:gravity="center_vertical"
-      android:text="@string/promo_update2appc_data_disclaimer"
-      android:textColor="#fd6363"
-      app:layout_constraintBottom_toBottomOf="@id/appc_disclaimer_icon"
-      app:layout_constraintLeft_toRightOf="@id/appc_disclaimer_icon"
-      app:layout_constraintTop_toTopOf="@id/appc_disclaimer_icon"
-      style="@style/Aptoide.TextView.Medium.XXS"
-
-      />
-
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/appc_apps_recycler_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -63,7 +28,7 @@
       android:scrollbars="vertical"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@id/appc_disclaimer_message"
+      app:layout_constraintTop_toBottomOf="@id/header_message"
       tools:visibility="visible"
       />
 
@@ -80,4 +45,4 @@
       style="@style/Aptoide.Button.Flat"
       />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,7 @@
 package cm.aptoide.pt.install;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.ads.MinimalAdMapper;
@@ -33,15 +33,18 @@ public class InstallerFactory {
   private final AppInstaller appInstaller;
   private final int installingStateTimeout;
   private final AppInstallerStatusReceiver appInstallerStatusReceiver;
+  private final RootInstallerProvider rootInstallerProvider;
 
   public InstallerFactory(MinimalAdMapper adMapper, InstallerAnalytics installerAnalytics,
       AppInstaller appInstaller, int installingStateTimeout,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      RootInstallerProvider rootInstallerProvider) {
     this.adMapper = adMapper;
     this.installerAnalytics = installerAnalytics;
     this.appInstaller = appInstaller;
     this.installingStateTimeout = installingStateTimeout;
     this.appInstallerStatusReceiver = appInstallerStatusReceiver;
+    this.rootInstallerProvider = rootInstallerProvider;
   }
 
   public Installer create(Context context) {
@@ -57,7 +60,8 @@ public class InstallerFactory {
         RepositoryFactory.getInstalledRepository(context.getApplicationContext()), 180000,
         ((AptoideApplication) context.getApplicationContext()).getRootAvailabilityManager(),
         ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences(),
-        installerAnalytics, installingStateTimeout, appInstallerStatusReceiver);
+        installerAnalytics, installingStateTimeout, appInstallerStatusReceiver,
+        rootInstallerProvider);
   }
 
   @NonNull private DownloadInstallationProvider getInstallationProvider(

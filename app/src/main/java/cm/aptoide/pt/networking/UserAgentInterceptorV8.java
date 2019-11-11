@@ -3,6 +3,7 @@ package cm.aptoide.pt.networking;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -13,7 +14,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
   private final DisplayMetrics displayMetrics;
   private final String versionName;
   private final String aptoidePackage;
-  private final String aptoideMd5;
+  private final AptoideMd5Manager aptoideMd5Manager;
   private final int aptoideVersionCode;
   private final AuthenticationPersistence authenticationPersistence;
   private final String androidVersion;
@@ -24,7 +25,8 @@ public class UserAgentInterceptorV8 implements Interceptor {
 
   public UserAgentInterceptorV8(IdsRepository idsRepository, String androidVersion, int apiLevel,
       String model, String productCode, String architecture, DisplayMetrics displayMetrics,
-      String versionName, String aptoidePackage, String aptoideMd5, int aptoideVersionCode,
+      String versionName, String aptoidePackage, AptoideMd5Manager aptoideMd5Manager,
+      int aptoideVersionCode,
       AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
     this.androidVersion = androidVersion;
@@ -35,7 +37,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
     this.displayMetrics = displayMetrics;
     this.versionName = versionName;
     this.aptoidePackage = aptoidePackage;
-    this.aptoideMd5 = aptoideMd5;
+    this.aptoideMd5Manager = aptoideMd5Manager;
     this.aptoideVersionCode = aptoideVersionCode;
     this.authenticationPersistence = authenticationPersistence;
   }
@@ -99,8 +101,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
         + aptoidePackage
         + "; "
         + aptoideVersionCode
-        + "; "
-        + aptoideMd5
+        + "; " + aptoideMd5Manager.getAptoideMd5()
         + "; "
         + myscr
         + "; ");

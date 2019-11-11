@@ -1,13 +1,13 @@
 package cm.aptoide.pt.view.wizard;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -59,7 +59,7 @@ public class WizardPageTwoFragment extends BackButtonFragment {
     ((TextView) view.findViewById(R.id.description)).setText(
         marketResourceFormatter.formatString(getContext(),
             R.string.wizard_sub_title_viewpager_two));
-    ((ImageView) view.findViewById(android.R.id.icon)).setImageResource(R.drawable.wizard_2);
+    ((ImageView) view.findViewById(R.id.wizard_icon)).setImageResource(R.drawable.wizard_2);
   }
 
   @Override public void onDestroyView() {

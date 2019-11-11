@@ -3,11 +3,11 @@ package cm.aptoide.pt.app.view.similar.bundles;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
@@ -52,7 +52,7 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
     });
 
     LinearLayoutManager similarLayout =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
 
     similarApps.setLayoutManager(similarLayout);
     SnapHelper similarSnap = new SnapToStartHelper();

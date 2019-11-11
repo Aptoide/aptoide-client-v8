@@ -6,7 +6,7 @@
 package cm.aptoide.pt.view.recycler.displayable;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.view.LifecycleSchim;
 import java.util.Collections;
 import java.util.LinkedList;

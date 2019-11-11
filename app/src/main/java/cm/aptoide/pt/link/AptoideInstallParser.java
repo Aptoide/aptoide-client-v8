@@ -12,6 +12,7 @@ public class AptoideInstallParser {
     String[] split = substring.split("&");
     String repo = null;
     String packageName = null;
+    String uname = "";
     boolean showPopup = false;
     for (String property : split) {
       if (property.toLowerCase()
@@ -23,6 +24,10 @@ public class AptoideInstallParser {
       } else if (property.toLowerCase()
           .contains("show_install_popup")) {
         showPopup = property.split("=")[1].equals("true");
+      } else if (property.toLowerCase()
+          .contains("uname")) {
+        uname = property.split("=")[1];
+        return new AptoideInstall(uname, packageName);
       } else {
         //old version only with app id
         try {

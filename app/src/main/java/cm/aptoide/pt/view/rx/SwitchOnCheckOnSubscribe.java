@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view.rx;
 
-import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
+import androidx.appcompat.widget.SwitchCompat;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;

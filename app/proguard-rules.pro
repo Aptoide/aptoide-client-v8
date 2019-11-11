@@ -17,8 +17,8 @@
 #}
 
 -keep class cm.aptoide.** {*;}
--keep class android.support.v7.appcompat.** { *; }
--keep class android.support.v7.widget.SearchView { *; }
+-keep class androidx.v7.appcompat.** { *; }
+-keep class androidx.v7.widget.SearchView { *; }
 
 # Retrofit 2.X
 ## https://square.github.io/retrofit/ ##
@@ -73,27 +73,13 @@
 -dontwarn com.bumptech.glide.manager.RequestManagerRetriever
 -dontwarn com.bumptech.glide.util.Util$1
 
-### Adyen ###
--dontwarn com.adyen.ui.**
-
-### disable shift animation bottom navigation ###
--keepclassmembers class android.support.design.internal.BottomNavigationMenuView {
-    boolean mShiftingMode;
-}
-
--keepclassmembers class com.ironsource.sdk.controller.IronSourceWebView$JSInterface {
-    public *;
-}
 -keepclassmembers class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
 -keep public class com.google.android.gms.ads.** {
    public *;
 }
--keep class com.ironsource.adapters.** { *;
-}
--dontwarn com.ironsource.mediationsdk.**
--dontwarn com.ironsource.adapters.**
+
 -dontwarn com.moat.**
 -keep class com.moat.** { public protected private *; }
 
@@ -147,7 +133,6 @@
 -keep class com.google.android.gms.ads.identifier.** { *; }
 
 -keep class com.chartboost.** { *; }
--dontwarn com.ironsource.adapters.chartboost.**
 -dontwarn com.chartboost.sdk.**
 
 # Keep filenames and line numbers for stack traces
@@ -168,7 +153,6 @@
 }
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
--dontwarn com.ironsource.adapters.unityads.**
 
 
 #inmobi
@@ -183,9 +167,10 @@
 
 
 #smaato
--keep public class com.smaato.soma.internal.connector.OrmmaBridge {
-public *;
-}
+-dontwarn com.smaato.soma.SomaUnityPlugin*
+-dontwarn com.millennialmedia**
+-dontwarn com.facebook.**
+
 -keepattributes *Annotation*
 
 #skip the Picasso library classes
@@ -202,3 +187,7 @@ public *;
 
 #Don't warn about flurry ads
 -dontwarn com.flurry.sdk.**
+
+#rakam
+-keep class com.google.android.gms.ads.** { *; }
+-dontwarn okio.**

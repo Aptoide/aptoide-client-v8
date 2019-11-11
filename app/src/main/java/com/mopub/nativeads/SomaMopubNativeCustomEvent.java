@@ -5,8 +5,8 @@
 package com.mopub.nativeads;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
+import androidx.annotation.NonNull;
 import com.smaato.soma.ActivityIntentHandler;
 import com.smaato.soma.CrashReportTemplate;
 import com.smaato.soma.ErrorCode;

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -7,8 +7,8 @@ package cm.aptoide.pt.permission;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.view.BackButtonFragment;
 import rx.functions.Action0;

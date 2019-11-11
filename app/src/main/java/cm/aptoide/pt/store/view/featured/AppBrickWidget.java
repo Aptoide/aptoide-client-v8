@@ -5,9 +5,9 @@
 
 package cm.aptoide.pt.store.view.featured;
 
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ImageView;
+import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;

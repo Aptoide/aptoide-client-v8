@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorial;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -256,7 +256,7 @@ public class EditorialPresenter implements Presenter {
         .flatMapIterable(editorialViewModel -> editorialViewModel.getPlaceHolderContent())
         .flatMap(
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
-                editorialContent.getPackageName(), editorialContent.getVerCode(), false, null,
+                editorialContent.getPackageName(), editorialContent.getVerCode(),
                 editorialContent.getPosition()))
         .observeOn(viewScheduler)
         .doOnNext(view::showDownloadModel)
@@ -285,9 +285,9 @@ public class EditorialPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.placeHolderVisibilityChange())
         .doOnNext(scrollEvent -> {
-          if (scrollEvent.getItemShown() && scrollEvent.isScrollDown()) {
+          if (scrollEvent.getItemShown()) {
             view.removeBottomCardAnimation();
-          } else if (!scrollEvent.getItemShown() && !scrollEvent.isScrollDown()) {
+          } else if (!scrollEvent.getItemShown()) {
             view.addBottomCardAnimation();
           }
         })
@@ -392,7 +392,8 @@ public class EditorialPresenter implements Presenter {
   private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
     return view.isViewReady()
         .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable());
+            .toObservable())
+        .observeOn(viewScheduler);
   }
 
   @VisibleForTesting public void handleReactionButtonClick() {

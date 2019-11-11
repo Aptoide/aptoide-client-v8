@@ -4,6 +4,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -49,6 +50,7 @@ public class GridAppCoinsRewardAppsDisplayable extends DisplayablePojo<RewardApp
   public void openAppView() {
     analyticsManager.logEvent(getPojo().getClickUrl());
     appNavigator.navigateWithDownloadUrlAndReward(getPojo().getAppId(), getPojo().getPackageName(),
-        tag, getPojo().getDownloadUrl(), getPojo().getReward());
+        tag, getPojo().getDownloadUrl(), (float) getPojo().getReward()
+            .getAppc());
   }
 }

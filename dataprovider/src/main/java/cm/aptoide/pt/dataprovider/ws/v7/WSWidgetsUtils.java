@@ -8,9 +8,10 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
-import android.support.annotation.NonNull;
 import android.util.Pair;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -51,7 +52,7 @@ import rx.schedulers.Schedulers;
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean bypassServerCache, int limit,
-      List<String> packageNames) {
+      List<String> packageNames, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     if (wsWidget.getType() != null) {
 
       String url = null;
@@ -64,7 +65,8 @@ import rx.schedulers.Schedulers;
         case APPS_TOP_GROUP:
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
-              converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager)
+              converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
+              appBundlesVisibilityManager)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
@@ -199,7 +201,7 @@ import rx.schedulers.Schedulers;
               .map(myStore -> wsWidget);
         case APP_META:
           return GetAppMetaRequest.ofAction(url, bodyInterceptor, httpClient, converterFactory,
-              tokenInvalidator, sharedPreferences)
+              tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
               .observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))

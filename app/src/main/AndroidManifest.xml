@@ -7,44 +7,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="cm.aptoide.pt">
 
-  <permission
-      android:name="${applicationId}.permission.BILLING"
-      android:label="Make internal payments"
-      android:protectionLevel="normal"/>
-
   <uses-feature
       android:name="android.hardware.camera"
-      android:required="false"/>
+    android:required="false" />
 
-  <uses-permission android:name="android.permission.WAKE_LOCK"/>
-  <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
-  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-  <uses-permission android:name="android.permission.INSTALL_PACKAGES"/>
-  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-  <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-  <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+  <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+  <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+  <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+  <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+  <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.CAMERA" />
 
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-  <uses-sdk
-      tools:overrideLibrary="com.paypal.android.sdk.onetouch.core, com.paypal.android.sdk.payments,
-      com.adyen.core, com.adyen.ui, com.braintreepayments.cardform, com.asf.appcoins.sdk.contractproxy,
+  <uses-sdk tools:overrideLibrary="com.asf.appcoins.sdk.contractproxy,
       com.asf.appcoins.sdk.core, com.mopub.mobileads, com.mopub.mobileads.banner,
       com.mopub.mobileads.rewarded_video, com.mopub.mobileads.interstitial,
       com.mopub.mobileads.native_video, com.mopub.mobileads.native_static,
       com.mopub.mobileads.base, com.flurry.android.analytics.sdk,
-      com.applovin.sdk, com.mopub.mobileads.applovin, com.mopub.mobileads.ironsource,
-      com.mopub.mobileads.vungle"/>
+      com.applovin.sdk, com.mopub.mobileads.applovin,
+      com.mopub.mobileads.vungle" />
 
   <application
       android:allowBackup="false"
@@ -58,40 +51,39 @@
     <!-- MoPub's consent dialog -->
     <activity
         android:name="com.mopub.common.privacy.ConsentDialogActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
 
     <!-- All ad formats -->
     <activity
         android:name="com.mopub.common.MoPubBrowser"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
 
     <!-- Interstitials -->
     <activity
         android:name="com.mopub.mobileads.MoPubActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
     <activity
         android:name="com.mopub.mobileads.MraidActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
 
     <!-- Rewarded Video and Rewarded Playables -->
     <activity
         android:name="com.mopub.mobileads.RewardedMraidActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
     <activity
         android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"/>
+      android:configChanges="keyboardHidden|orientation|screenSize" />
 
     <activity
         android:name=".view.entry.EntryActivity"
-        android:theme="@style/Theme.AppCompat.Translucent"
-        >
+        android:theme="@style/AppBaseTheme.Splash">
       <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
-        <category android:name="android.intent.category.LAUNCHER"/>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
       <meta-data
           android:name="android.app.shortcuts"
-          android:resource="@xml/shortcuts"/>
+        android:resource="@xml/shortcuts" />
     </activity>
 
     <activity
@@ -99,84 +91,67 @@
         android:configChanges="keyboardHidden|orientation|screenSize"
         android:excludeFromRecents="true"
         android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+      android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
     <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+      android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
     <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitTransparentActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+      android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
     <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitTransparentSoftwareActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="false"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+      android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
     <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitSoftwareActivity"
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="false"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
+      android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
     <activity
         android:name=".view.OpenGLES20Activity"
-        android:theme="@style/Theme.AppCompat.Translucent"></activity>
+      android:theme="@style/AppBaseTheme.Splash" />
 
     <activity
         android:name=".view.MainActivity"
-        android:windowSoftInputMode="adjustPan"></activity>
+      android:windowSoftInputMode="adjustPan" />
 
     <activity
         android:name=".wallet.WalletInstallActivity"
         android:excludeFromRecents="true"
         android:taskAffinity=".wallet.WalletInstallActivity"
         android:theme="@style/Aptoide.DialogTheme"
-        android:windowSoftInputMode="adjustPan"/>
-
-    <activity
-        android:name="com.ironsource.sdk.controller.ControllerActivity"
-        android:configChanges="orientation|screenSize"
-        android:hardwareAccelerated="true"/>
-
-    <activity
-        android:name="com.ironsource.sdk.controller.InterstitialActivity"
-        android:configChanges="orientation|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent"/>
-
-    <activity
-        android:name="com.ironsource.sdk.controller.OpenUrlActivity"
-        android:configChanges="orientation|screenSize"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent"/>
+      android:windowSoftInputMode="adjustPan" />
 
     <activity
         android:name="com.applovin.adview.AppLovinInterstitialActivity"
-        android:configChanges="orientation|screenSize"/>
+      android:configChanges="orientation|screenSize" />
 
     <activity
         android:name="com.applovin.adview.AppLovinConfirmationActivity"
-        android:configChanges="orientation|screenSize"/>
+      android:configChanges="orientation|screenSize" />
 
     <meta-data
         android:name="io.fabric.ApiKey"
-        android:value="${fabricApiKey}"/>
+      android:value="${fabricApiKey}" />
 
     <meta-data
         android:name="applovin.sdk.key"
-        android:value="${appLovinApiKey}"/>
+      android:value="${appLovinApiKey}" />
 
     <meta-data
         android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version"/>
+      android:value="@integer/google_play_services_version" />
 
     <meta-data
         android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="${adMobApiKey}"/>
+      android:value="${adMobApiKey}" />
 
     <activity
         android:name="com.inmobi.rendering.InMobiAdActivity"
@@ -184,286 +159,289 @@
         android:hardwareAccelerated="true"
         android:resizeableActivity="false"
         android:theme="@android:style/Theme.NoTitleBar"
-        tools:ignore="UnusedAttribute"/>
+      tools:ignore="UnusedAttribute" />
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"
-        android:value="@string/facebook_app_id"/>
+      android:value="@string/facebook_app_id" />
 
     <service android:name=".account.AccountAuthenticatorService">
       <intent-filter>
-        <action android:name="android.accounts.AccountAuthenticator"/>
+        <action android:name="android.accounts.AccountAuthenticator" />
       </intent-filter>
       <meta-data
           android:name="android.accounts.AccountAuthenticator"
-          android:resource="@xml/authenticator"/>
+        android:resource="@xml/authenticator" />
     </service>
 
     <provider
         android:name="cm.aptoide.pt.toolbox.ToolboxContentProvider"
         android:authorities="${toolboxProviderAuthority}"
-        android:exported="true"/>
+      android:exported="true" />
 
     <provider
-        android:name="android.support.v4.content.FileProvider"
+        android:name="androidx.core.content.FileProvider"
         android:authorities="${applicationId}.provider"
         android:exported="false"
         android:grantUriPermissions="true">
       <meta-data
           android:name="android.support.FILE_PROVIDER_PATHS"
-          android:resource="@xml/file_paths"/>
+        android:resource="@xml/file_paths" />
     </provider>
-
-    <service
-        android:name="cm.aptoide.pt.iab.InAppBillingService"
-        android:exported="true"
-        android:permission="${applicationId}.permission.BILLING">
-
-      <intent-filter>
-        <action android:name="${applicationId}.iab.action.BIND"/>
-      </intent-filter>
-    </service>
 
     <meta-data
         android:name="cm.aptoide.pt.networking.image.GlideModifications"
-        android:value="GlideModule"/>
-
-    <activity
-        android:name=".billing.view.BillingActivity"
-        android:launchMode="singleInstance"
-        android:screenOrientation="sensor"
-        android:theme="@style/AppBaseTheme.NoTitle.Transparent"
-        >
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
-
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
-
-        <data
-            android:host="aptoide.com"
-            android:pathPrefix="/adyen"
-            android:scheme="billing"/>
-      </intent-filter>
-    </activity>
+      android:value="GlideModule" />
 
     <activity
         android:name=".account.view.LoginActivity"
-        android:windowSoftInputMode="adjustPan"
-        />
+      android:windowSoftInputMode="adjustPan" />
 
     <activity
         android:name="com.facebook.FacebookActivity"
         android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-        android:windowSoftInputMode="adjustPan"
-        />
+      android:windowSoftInputMode="adjustPan" />
 
     <activity
         android:name=".DeepLinkIntentReceiver"
         android:exported="true"
-        android:taskAffinity=".DeepLinkIntentReceiver"
-        >
+        android:taskAffinity=".DeepLinkIntentReceiver">
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:mimeType="application/vnd.cm.aptoide.pt"
-            android:scheme="file"/>
+          android:scheme="file" />
         <data
             android:mimeType="application/vnd.cm.aptoide.pt"
-            android:scheme="http"/>
+          android:scheme="http" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-        <data android:scheme="aptoide"/>
-        <data android:scheme="aptoiderepo"/>
-        <data android:scheme="aptoidexml"/>
-        <data android:scheme="aptoideinstall"/>
-        <data android:scheme="aptoidesearch"/>
-        <data android:scheme="aptword"/>
+        <data android:scheme="aptoide" />
+        <data android:scheme="aptoiderepo" />
+        <data android:scheme="aptoidexml" />
+        <data android:scheme="aptoideinstall" />
+        <data android:scheme="aptoidesearch" />
+        <data android:scheme="aptword" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-        <data android:scheme="market"/>
+        <data android:scheme="market" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="market.android.com"
-            android:scheme="https"/>
+          android:scheme="https" />
 
         <data
             android:host="market.android.com"
-            android:scheme="http"/>
+          android:scheme="http" />
 
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="webservices.aptoide.com"
             android:pathPrefix="/apkinstall"
-            android:scheme="http"/>
+          android:scheme="http" />
 
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="play.google.com"
-            android:scheme="https"/>
+          android:scheme="https" />
         <data
             android:host="play.google.com"
-            android:scheme="http"/>
+          android:scheme="http" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="imgs.aptoide.com"
             android:pathPattern="*//.myapp"
-            android:scheme="http"/>
+          android:scheme="http" />
       </intent-filter>
 
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="*.aptoide.com"
-            android:scheme="http"/>
+          android:scheme="http" />
       </intent-filter>
 
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="*.aptoide.com"
             android:pathPattern="/store/..*"
-            android:scheme="https"/>
+          android:scheme="https" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
             android:host="*.aptoide.com"
             android:pathPattern="/thank-you*"
-            android:scheme="https"/>
+          android:scheme="https" />
       </intent-filter>
 
       <intent-filter>
-        <action android:name="android.intent.action.VIEW"/>
+        <action android:name="android.intent.action.VIEW" />
 
-        <category android:name="android.intent.category.DEFAULT"/>
-        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-            android:host="*.aptoide.com"
-            android:path="/"
-            android:scheme="https"
-            tools:ignore="AppLinkUrlError"/>
+          android:host="*community.aptoide.com"
+          android:pathPattern="/using-appcoins*"
+          android:scheme="https" />
+      </intent-filter>
+
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="*.aptoide.com"
+          android:pathPattern="/download*"
+          android:scheme="https" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="*.aptoide.com"
+          android:pathPattern="/editorial/..*"
+          android:scheme="https" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="*.aptoide.com"
+          android:path="/"
+          android:scheme="https"
+          tools:ignore="AppLinkUrlError" />
       </intent-filter>
 
     </activity>
 
     <receiver android:name=".install.InstalledBroadcastReceiver">
       <intent-filter android:priority="999">
-        <action android:name="android.intent.action.PACKAGE_ADDED"/>
-        <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-        <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+        <action android:name="android.intent.action.PACKAGE_ADDED" />
+        <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <action android:name="android.intent.action.PACKAGE_REPLACED" />
 
-        <data android:scheme="package"/>
+        <data android:scheme="package" />
       </intent-filter>
     </receiver>
 
-    <service android:name=".notification.PullingContentService"/>
-    <service android:name=".sync.alarm.AlarmSyncService"/>
+    <service android:name=".notification.PullingContentService" />
+    <service android:name=".sync.alarm.AlarmSyncService" />
 
     <receiver android:name=".notification.NotificationReceiver">
       <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
       </intent-filter>
     </receiver>
 
 
-    <receiver android:name=".link.CustomTabNativeReceiver"/>
+    <receiver android:name=".link.CustomTabNativeReceiver" />
 
     <receiver android:name=".install.CheckRootOnBoot">
       <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-        <action android:name="android.intent.action.REBOOT"/>
-        <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.REBOOT" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
       </intent-filter>
     </receiver>
-    <receiver android:name=".install.RootInstallNotificationEventReceiver"/>
+    <receiver android:name=".install.RootInstallNotificationEventReceiver" />
 
-    <service android:name=".install.InstallService"/>
+    <service android:name=".install.InstallService" />
 
-    <service android:name=".install.InstalledIntentService"/>
+    <service android:name=".install.InstalledIntentService" />
 
     <receiver
         android:name=".widget.SearchWidgetProvider"
         android:label="Aptoide Search">
       <intent-filter>
-        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-        <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER"/>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        <action android:name="android.appwidget.action.ACTION_WIDGET_RECEIVER" />
       </intent-filter>
       <meta-data
           android:name="android.appwidget.provider"
-          android:resource="@xml/widget_search_app"/>
+        android:resource="@xml/widget_search_app" />
     </receiver>
 
     <!--Smaato-->
     <activity
         android:name="com.smaato.soma.interstitial.InterstitialActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize">
-    </activity>
+        android:configChanges="keyboardHidden|orientation|screenSize"></activity>
     <activity
         android:name="com.smaato.soma.ExpandedBannerActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize">
-    </activity>
+        android:configChanges="keyboardHidden|orientation|screenSize"></activity>
 
   </application>
 

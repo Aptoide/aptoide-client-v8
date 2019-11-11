@@ -75,6 +75,10 @@
   </style>
 
   <!-- Colors-->
+  <style name="Aptoide.TextView.Regular.M.White">
+    <item name="android:textColor">@color/white</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.GreyFog">
     <item name="android:textColor">@color/grey_fog_dark</item>
   </style>
@@ -109,6 +113,10 @@
 
   <style name="Aptoide.TextView.Regular.XS.Grey">
     <item name="android:textColor">@color/grey</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.GreyMedium">
+    <item name="android:textColor">@color/grey_medium</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.Black">
@@ -147,12 +155,21 @@
     <item name="android:textColor">@color/black</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.Grey_900">
+    <item name="android:textColor">@color/grey_900</item>
+  </style>
+
+
   <style name="Aptoide.TextView.Medium.S.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.M.BlackAlpha">
     <item name="android:textColor">@color/black_87_alpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.M.White">
+    <item name="android:textColor">@color/white</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XS.White">
@@ -210,6 +227,14 @@
     <item name="android:textColor">@color/default_orange_gradient_end</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS.CurationGold">
+    <item name="android:textColor">@color/curation_gold</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XXS.SpendAppc">
+    <item name="android:textColor">@color/appc_spend</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.XXS.GreyMedium">
     <item name="android:textColor">@color/grey_medium</item>
   </style>
@@ -217,6 +242,11 @@
   <style name="Aptoide.TextView.Medium.XXS.Black">
     <item name="android:textColor">@color/black</item>
   </style>
+
+  <style name="Aptoide.TextView.Medium.XXS.White">
+    <item name="android:textColor">@color/white</item>
+  </style>
+
 
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
@@ -253,12 +283,20 @@
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.M.AppcColor">
+    <item name="android:textColor">#ff7867</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.S.Theme">
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XS.Theme">
     <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.XS.ThemeDark">
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
   </style>
 
   <style name="Aptoide.TextView.Regular.XXS.Theme">

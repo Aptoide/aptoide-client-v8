@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.presenter;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
 import com.trello.rxlifecycle.LifecycleTransformer;
 import rx.Observable;
 

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app.view.donations.view;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.Translator;
 import java.text.DecimalFormat;

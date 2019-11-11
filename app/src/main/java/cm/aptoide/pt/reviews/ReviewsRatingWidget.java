@@ -1,7 +1,7 @@
 package cm.aptoide.pt.reviews;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.view.recycler.widget.Widget;
 

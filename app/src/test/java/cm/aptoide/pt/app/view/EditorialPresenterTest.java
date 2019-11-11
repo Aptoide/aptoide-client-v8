@@ -73,11 +73,11 @@ public class EditorialPresenterTest {
     editorialContent.add(
         new EditorialContent("title", Collections.emptyList(), "message", "type", 1, "appName",
             "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
-            "pathAlt", "md5", "actionTitle", "url", 1));
+            "pathAlt", "md5", "actionTitle", "url", 1, null, null));
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
         Collections.emptyList(), editorialContent, false, "1", "CURATION_1", "");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
-        DownloadModel.DownloadState.ACTIVE, null, 1);
+        DownloadModel.DownloadState.ACTIVE, 1);
     errorEditorialViewModel = new EditorialViewModel(EditorialViewModel.Error.GENERIC);
     loadingEditorialViewModel = new EditorialViewModel(true);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
@@ -218,9 +218,8 @@ public class EditorialPresenterTest {
     when(editorialManager.loadEditorialViewModel()).thenReturn(Single.just(editorialViewModel));
 
     //And request and load the downloadModel for each one
-    when(editorialManager.loadDownloadModel("md5", "packageName", 0, false, null,
-        editorialContent.get(0)
-            .getPosition())).thenReturn(Observable.just(downloadModel));
+    when(editorialManager.loadDownloadModel("md5", "packageName", 0, editorialContent.get(0)
+        .getPosition())).thenReturn(Observable.just(downloadModel));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -246,8 +245,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(true, true)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(true)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -260,8 +258,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(false, false)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(false)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
