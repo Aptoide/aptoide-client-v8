@@ -16,7 +16,7 @@ public class SearchAnalytics {
   public static final String SEARCH = "Search";
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
-  public static final String SEARCH_RESULTS = "Search_Results";
+  public static final String SEARCH_RESULT_CLICK = "Search_Result_Click";
   public static final String SEARCH_START = "Search_Start";
   public static final String AB_SEARCH_ACTION = "AB_Search_Action";
   public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
@@ -89,7 +89,7 @@ public class SearchAnalytics {
     } else {
       map.put(AttributeKey.POSITION, "empty");
     }
-    analyticsManager.logEvent(map, SEARCH_RESULTS, AnalyticsManager.Action.CLICK,
+    analyticsManager.logEvent(map, SEARCH_RESULT_CLICK, AnalyticsManager.Action.CLICK,
         getViewName(true));
   }
 

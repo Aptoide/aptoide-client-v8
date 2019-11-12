@@ -1512,7 +1512,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         InstallAnalytics.RAKAM_INSTALL_EVENT,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULTS);
+        SearchAnalytics.SEARCH_RESULT_CLICK);
   }
 
   @Singleton @Provides @Named("normalizer")
