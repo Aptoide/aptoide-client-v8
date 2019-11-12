@@ -8,12 +8,14 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -46,6 +48,14 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7/";
+  }
+
   public static ListAppsRequest ofAction(String url,
       BaseRequestWithStore.StoreCredentials storeCredentials,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -67,8 +77,8 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url != null ? url : "", body, bypassCache,
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.listApps(url != null ? url : "", bypassCache,
+        new QueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
   }
 
   public enum Sort {

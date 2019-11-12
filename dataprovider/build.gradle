@@ -42,6 +42,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
@@ -70,6 +72,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",

@@ -6,11 +6,13 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -27,6 +29,14 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       TokenInvalidator tokenInvalidator, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7/";
   }
 
   public static GetAppRequest of(String packageName, String storeName,
@@ -102,8 +112,8 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApp(body, bypassCache,
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.getApp(bypassCache,
+        new QueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
   }
 
   public static class Body extends BaseBodyWithApp {
@@ -153,7 +163,6 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
     }
 
     public Body(long appId, SharedPreferences sharedPreferences) {
-      // TODO: 27/12/2016 analara
       super(sharedPreferences);
       this.appId = appId;
       this.nodes = new Node(appId);
