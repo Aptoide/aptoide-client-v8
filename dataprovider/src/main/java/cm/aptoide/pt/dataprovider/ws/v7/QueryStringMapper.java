@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.HashMap;
 import java.util.Map;
 
-class QueryStringMapper {
+public class QueryStringMapper {
 
   public Map<String, String> map(Map<String, String> queryMap, BaseBody body) {
     queryMap.put("aptoide_md5sum", body.getAptoideMd5sum());
@@ -86,10 +86,14 @@ class QueryStringMapper {
     Map<String, String> data = new HashMap<>();
     map(data, body);
 
-    String nodes = getNodesAsString(body);
-
     data.put("aab", String.valueOf(shouldEnableAppBundles));
-    data.put("app_id", String.valueOf(body.getAppId()));
+
+    Long appId = body.getAppId();
+    if (appId != null) {
+      data.put("app_id", String.valueOf(appId));
+    }
+
+    String nodes = getNodesAsString(body);
     if (nodes != null) {
       data.put("nodes", nodes);
     }
