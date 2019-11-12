@@ -77,7 +77,7 @@ public class ListAppsRequest extends V7<ListApps, ListAppsRequest.Body> {
 
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.listApps(url != null ? url : "", bypassCache,
+    return interfaces.listApps(url != null ? url : "", bypassCache ? "no-cache" : "false",
         new QueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
   }
 

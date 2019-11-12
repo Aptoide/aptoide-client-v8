@@ -10,113 +10,71 @@ import java.util.Map;
 
 public class QueryStringMapper {
 
-  public Map<String, String> map(Map<String, String> queryMap, BaseBody body,
-      boolean shouldSendAptoideUID) {
-    queryMap.put("aptoide_md5sum", body.getAptoideMd5sum());
-    queryMap.put("aptoide_package", body.getAptoidePackage());
-    queryMap.put("aptoide_vercode", String.valueOf(body.getAptoideVercode()));
-    queryMap.put("cdn", body.getCdn());
-    queryMap.put("lang", body.getLang());
-    queryMap.put("mature", String.valueOf(body.isMature()));
-    queryMap.put("q", body.getQ());
-    queryMap.put("refresh", String.valueOf(body.isRefresh()));
+  public Map<String, String> map(BaseBody body, boolean shouldSendAptoideUID,
+      Map<String, String> queryMap) {
+    put("aptoide_md5sum", body.getAptoideMd5sum(), queryMap);
+    put("aptoide_package", body.getAptoidePackage(), queryMap);
+    put("aptoide_vercode", body.getAptoideVercode(), queryMap);
+    put("cdn", body.getCdn(), queryMap);
+    put("lang", body.getLang(), queryMap);
+    put("mature", body.isMature(), queryMap);
+    put("q", body.getQ(), queryMap);
+    put("refresh", body.isRefresh(), queryMap);
     if (shouldSendAptoideUID) {
-      queryMap.put("aptoide_uid", body.getAptoideId());
+      put("aptoide_uid", body.getAptoideId(), queryMap);
     }
-    if (body.getCountry() != null) {
-      queryMap.put("country", body.getCountry());
-    }
+    put("country", body.getCountry(), queryMap);
     if (body.getAccessToken() != null && !body.getAccessToken()
         .equals("")) {
-      queryMap.put("access_token", body.getAccessToken());
+      put("access_token", body.getAccessToken(), queryMap);
     }
 
     if (body instanceof BaseBodyWithAlphaBetaKey) {
-      String notApkTags = ((BaseBodyWithAlphaBetaKey) body).getNotApkTags();
-      if (notApkTags != null) {
-        queryMap.put("not_apk_tags", notApkTags);
-      }
+      put("not_apk_tags", ((BaseBodyWithAlphaBetaKey) body).getNotApkTags(), queryMap);
     }
 
     if (body instanceof BaseBodyWithApp) {
-      String storeUser = ((BaseBodyWithApp) body).getStoreUser();
-      if (storeUser != null) {
-        queryMap.put("store_user", storeUser);
-      }
-      String storePassSha1 = ((BaseBodyWithApp) body).getStorePassSha1();
-      if (storePassSha1 != null) {
-        queryMap.put("store_pass_sha1", storePassSha1);
-      }
+      put("store_user", ((BaseBodyWithApp) body).getStoreUser(), queryMap);
+      put("store_pass_sha1", ((BaseBodyWithApp) body).getStorePassSha1(), queryMap);
     }
     return queryMap;
   }
 
   public Map<String, String> map(ListAppsRequest.Body body, boolean shouldEnableAab) {
     Map<String, String> data = new HashMap<>();
-    map(data, body, false);
-    data.put("aab", String.valueOf(shouldEnableAab));
-    data.put("not_apk_tags", body.getNotApkTags());
-    String storeUser = body.getStoreUser();
-    if (storeUser != null) {
-      data.put("store_user", storeUser);
-    }
-
-    String storePassSha1 = body.getStorePassSha1();
-    if (storePassSha1 != null) {
-      data.put("store_pass_sha1", storePassSha1);
-    }
-
-    if (body.getLimit() != null) {
-      data.put("limit", String.valueOf(body.getLimit()));
-    }
-
-    data.put("offset", String.valueOf(body.getOffset()));
-
-    if (body.getGroupId() != null) {
-      data.put("group_id", String.valueOf(body.getGroupId()));
-    }
+    map(body, false, data);
+    put("aab", shouldEnableAab, data);
+    put("not_apk_tags", body.getNotApkTags(), data);
+    put("store_user", body.getStoreUser(), data);
+    put("store_pass_sha1", body.getStorePassSha1(), data);
+    put("limit", body.getLimit(), data);
+    put("offset", body.getOffset(), data);
+    put("group_id", body.getGroupId(), data);
+    put("store_id", body.getStoreId(), data);
     if (body.getSort() != null) {
-      data.put("sort", body.getSort()
-          .name());
-    }
-    if (body.getStoreId() != null) {
-      data.put("store_id", String.valueOf(body.getStoreId()));
+      put("sort", body.getSort()
+          .name(), data);
     }
     return data;
   }
 
   public Map<String, String> map(GetAppRequest.Body body, boolean shouldEnableAppBundles) {
     Map<String, String> data = new HashMap<>();
-    map(data, body, false);
-
-    data.put("aab", String.valueOf(shouldEnableAppBundles));
-
-    Long appId = body.getAppId();
-    if (appId != null) {
-      data.put("app_id", String.valueOf(appId));
-    }
-
-    String nodes = getNodesAsString(body);
-    if (nodes != null) {
-      data.put("nodes", nodes);
-    }
-
-    if (body.getPackageName() != null) {
-      data.put("package_name", body.getPackageName());
-    }
-
-    if (body.getUname() != null) {
-      data.put("package_uname", body.getUname());
-    }
-
-    if (body.getMd5() != null) {
-      data.put("apk_md5sum", body.getMd5());
-    }
-
-    if (body.getStoreName() != null) {
-      data.put("store_name", body.getStoreName());
-    }
+    map(body, false, data);
+    put("aab", shouldEnableAppBundles, data);
+    put("app_id", body.getAppId(), data);
+    put("nodes", getNodesAsString(body), data);
+    put("package_name", body.getPackageName(), data);
+    put("package_uname", body.getUname(), data);
+    put("apk_md5sum", body.getMd5(), data);
+    put("store_name", body.getStoreName(), data);
     return data;
+  }
+
+  private void put(String key, Object value, Map<String, String> data) {
+    if (value != null) {
+      data.put(key, String.valueOf(value));
+    }
   }
 
   private String getNodesAsString(GetAppRequest.Body body) {

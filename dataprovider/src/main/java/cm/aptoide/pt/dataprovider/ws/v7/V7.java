@@ -255,13 +255,12 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
   public interface Interfaces {
 
-    @GET("getApp") Observable<GetApp> getApp(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+    @GET("getApp") Observable<GetApp> getApp(@Header("Cache-Control") String bypassCache,
         @QueryMap(encoded = true) Map<String, String> parameters);
 
     @GET("listApps{url}") Observable<ListApps> listApps(
         @Path(value = "url", encoded = true) String path,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+        @Header("Cache-Control") String bypassCache,
         @QueryMap(encoded = true) Map<String, String> parameters);
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(

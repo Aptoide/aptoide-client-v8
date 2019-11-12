@@ -112,7 +112,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
 
   @Override
   protected Observable<GetApp> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getApp(bypassCache,
+    return interfaces.getApp(bypassCache ? "no-cache" : "false",
         new QueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
   }
 
