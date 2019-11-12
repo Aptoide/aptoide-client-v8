@@ -306,7 +306,7 @@ public class AppViewManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.stopInstallation(md5);
   }
 
   public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {

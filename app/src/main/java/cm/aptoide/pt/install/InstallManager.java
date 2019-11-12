@@ -74,15 +74,8 @@ public class InstallManager {
     this.packageInstallerManager = packageInstallerManager;
   }
 
-  public void stopAllInstallations() {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
-    context.startService(intent);
-  }
-
   public void removeInstallationFile(String md5, String packageName, int versionCode) {
-    stopInstallation(md5);
-    installedRepository.remove(packageName, versionCode)
+    stopInstallation(md5).andThen(installedRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .subscribe(() -> {
         }, throwable -> {
@@ -92,11 +85,8 @@ public class InstallManager {
         });
   }
 
-  public void stopInstallation(String md5) {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_STOP_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
-    context.startService(intent);
+  public Completable stopInstallation(String md5) {
+    return aptoideDownloadManager.pauseDownload(md5);
   }
 
   public Observable<List<Install>> getTimedOutInstallations() {

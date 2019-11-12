@@ -105,7 +105,7 @@ public class EditorialManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.stopInstallation(md5);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {

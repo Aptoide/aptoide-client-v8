@@ -2,7 +2,6 @@ package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
@@ -231,7 +230,7 @@ public class AppsManager {
   }
 
   public Completable pauseDownload(App app) {
-    return Completable.fromAction(() -> installManager.stopInstallation(((StateApp) app).getMd5()));
+    return installManager.stopInstallation(((StateApp) app).getMd5());
   }
 
   public Completable updateApp(App app, boolean isAppcUpdate) {

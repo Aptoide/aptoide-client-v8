@@ -102,7 +102,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   }
 
   fun pauseDownload(app: WalletApp): Completable {
-    return Completable.fromAction { installManager.stopInstallation(app.md5sum) }
+    return installManager.stopInstallation(app.md5sum)
   }
 
   fun resumeDownload(app: WalletApp): Completable {
