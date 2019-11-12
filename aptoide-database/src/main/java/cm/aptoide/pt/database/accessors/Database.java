@@ -6,7 +6,9 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import java.util.ArrayList;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -111,6 +113,22 @@ public final class Database {
         .flatMap(query -> findAsList(query));
   }
 
+  public <E extends RealmObject> Completable deepUpdateList(Class<E> clazz, List<E> list) {
+    return Completable.fromSingle(getAll(clazz).first()
+        .doOnNext(currentList -> insertUpdateAndRemove(list, subtract(currentList, list)))
+        .toSingle());
+  }
+
+  private <E extends RealmObject> List<E> subtract(List<E> srcList, List<E> targetList) {
+    ArrayList<E> toRemove = new ArrayList<>();
+    for (E obj : srcList) {
+      if (!targetList.contains(obj)) {
+        toRemove.add(obj);
+      }
+    }
+    return toRemove;
+  }
+
   public <E extends RealmObject> void delete(Class<E> clazz, String key, String value) {
     Realm realm = get();
     try {
@@ -201,6 +219,28 @@ public final class Database {
       realm.beginTransaction();
       realm.insertOrUpdate(object);
       realm.commitTransaction();
+    } finally {
+      if (realm != null) {
+        realm.close();
+      }
+    }
+  }
+
+  private <E extends RealmObject> void insertUpdateAndRemove(List<E> insertObjects,
+      List<E> removeObjects) {
+    Realm realm = get();
+
+    try {
+      realm.beginTransaction();
+      for (E obj : removeObjects) {
+        if (obj != null && obj.isValid()) {
+          obj.deleteFromRealm();
+        }
+      }
+      realm.insertOrUpdate(insertObjects);
+      realm.commitTransaction();
+    } catch (Exception e) {
+      realm.cancelTransaction();
     } finally {
       if (realm != null) {
         realm.close();

@@ -3,6 +3,7 @@ package cm.aptoide.pt.database.accessors;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -96,6 +97,10 @@ public class UpdateAccessor extends SimpleAccessor<Update> {
 
   public void saveAll(List<Update> updates) {
     database.insertAll(updates);
+  }
+
+  public Completable deepSaveAll(List<Update> list) {
+    return database.deepUpdateList(Update.class, list);
   }
 
   public void save(Update update) {

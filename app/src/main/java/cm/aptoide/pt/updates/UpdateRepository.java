@@ -73,13 +73,7 @@ public class UpdateRepository {
             .toList())
         .flatMap(storeIds -> getNetworkUpdates(storeIds, bypassCache, bypassServerCache))
         .toSingle()
-        .flatMapCompletable(updates -> {
-          // remove local non-excluded updates
-          // save the new updates
-          // return all the local (non-excluded) updates
-          // this is a non-closing Observable, so new db modifications will trigger this observable
-          return removeAllNonExcluded().andThen(saveNewUpdates(updates));
-        })
+        .flatMapCompletable(this::saveNewUpdates)
         .andThen(saveAppcUpgrades(bypassCache, bypassServerCache));
   }
 
@@ -117,13 +111,6 @@ public class UpdateRepository {
         });
   }
 
-  public Completable removeAllNonExcluded() {
-    return updateAccessor.getAll(false)
-        .first()
-        .toSingle()
-        .flatMapCompletable(updates -> removeAll(updates));
-  }
-
   private Completable saveNewUpdates(List<App> updates) {
     return Completable.fromSingle(Observable.from(updates)
         .map(app -> mapAppUpdate(app, false))
@@ -133,7 +120,7 @@ public class UpdateRepository {
           Logger.getInstance()
               .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
                   updateList.size()));
-          return saveNonExcludedUpdates(updateList);
+          return saveNonExcludedUpdates(updateList, true);
         }));
   }
 
@@ -146,7 +133,7 @@ public class UpdateRepository {
           Logger.getInstance()
               .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
                   updateList.size()));
-          return saveNonExcludedUpdates(updateList);
+          return saveNonExcludedUpdates(updateList, false);
         }));
   }
 
@@ -226,7 +213,8 @@ public class UpdateRepository {
         .toCompletable();
   }
 
-  @NonNull private Single<List<Update>> saveNonExcludedUpdates(List<Update> updateList) {
+  @NonNull
+  private Single<List<Update>> saveNonExcludedUpdates(List<Update> updateList, boolean deepUpdate) {
     // remove excluded from list
     // save the remainder
     return Observable.from(updateList)
@@ -239,10 +227,16 @@ public class UpdateRepository {
             }))
         .toList()
         .toSingle()
-        .doOnSuccess(updateListFiltered -> {
+        .flatMap(updateListFiltered -> {
           if (updateListFiltered != null && !updateList.isEmpty()) {
-            updateAccessor.saveAll(updateListFiltered);
+            if (deepUpdate) {
+              return updateAccessor.deepSaveAll(updateListFiltered)
+                  .andThen(Single.just(updateListFiltered));
+            } else {
+              updateAccessor.saveAll(updateListFiltered);
+            }
           }
+          return Single.just(updateListFiltered);
         });
   }
 
