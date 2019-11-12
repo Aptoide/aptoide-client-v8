@@ -16,9 +16,11 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.SearchResultCount;
 import cm.aptoide.pt.search.model.SearchResultError;
+import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -174,8 +176,8 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getCurrentQuery(),
-            viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()))
+        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
@@ -202,8 +204,8 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataFromFollowedStores(viewModel.getCurrentQuery(),
-            viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()))
+        .flatMapSingle(viewModel -> loadDataFromFollowedStores(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
@@ -231,7 +233,8 @@ import rx.exceptions.OnErrorNotImplementedException;
         .map(__ -> view.getViewModel())
         .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
-        .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getCurrentQuery())
+        .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getSearchQueryModel()
+            .getFinalQuery())
             .onErrorReturn(err -> {
               crashReport.log(err);
               return null;
@@ -253,7 +256,8 @@ import rx.exceptions.OnErrorNotImplementedException;
   }
 
   @VisibleForTesting public boolean hasValidQuery(SearchResultView.Model viewModel) {
-    return viewModel.getCurrentQuery() != null && !viewModel.getCurrentQuery()
+    return viewModel.getSearchQueryModel() != null && !viewModel.getSearchQueryModel()
+        .getFinalQuery()
         .isEmpty();
   }
 
@@ -275,8 +279,9 @@ import rx.exceptions.OnErrorNotImplementedException;
         .flatMap(__ -> view.onAdClicked())
         .doOnNext(data -> {
           analytics.searchAdClick(view.getViewModel()
-              .getCurrentQuery(), data.getSearchAdResult()
-              .getPackageName(), data.getPosition());
+              .getSearchQueryModel(), data.getSearchAdResult()
+              .getPackageName(), data.getPosition(), data.getSearchAdResult()
+              .isAppc());
           navigator.goToAppView(data.getSearchAdResult());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -290,7 +295,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
         .filter(query -> query.length() > 1)
-        .doOnNext(query -> navigator.goToSearchFragment(query))
+        .doOnNext(query -> navigator.goToSearchFragment(new SearchQueryModel(query)))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -304,7 +309,8 @@ import rx.exceptions.OnErrorNotImplementedException;
     final String storeName = searchApp.getSearchAppResult()
         .getStoreName();
     analytics.searchAppClick(view.getViewModel()
-        .getCurrentQuery(), packageName, searchApp.getPosition());
+        .getSearchQueryModel(), packageName, searchApp.getPosition(), searchApp.getSearchAppResult()
+        .isAppcApp());
     navigator.goToAppView(appId, packageName, view.getViewModel()
         .getStoreTheme(), storeName);
   }
@@ -426,8 +432,9 @@ import rx.exceptions.OnErrorNotImplementedException;
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
         .observeOn(ioScheduler)
-        .flatMapSingle(viewModel -> loadData(viewModel.getCurrentQuery(), viewModel.getStoreName(),
-            viewModel.isOnlyTrustedApps()).observeOn(viewScheduler)
+        .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).observeOn(
+            viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
             .flatMap(searchResultPair -> {
               int count = 0;
@@ -442,7 +449,7 @@ import rx.exceptions.OnErrorNotImplementedException;
                 count = getResultsCount(searchResultPair);
                 if (getResultsCount(searchResultPair) <= 0) {
                   view.showNoResultsView();
-                  analytics.searchNoResults(viewModel.getCurrentQuery());
+                  analytics.searchNoResults(viewModel.getSearchQueryModel());
                 } else {
                   view.showResultsView();
                   if (viewModel.isAllStoresSelected()) {
@@ -511,8 +518,9 @@ import rx.exceptions.OnErrorNotImplementedException;
         .doOnNext(data -> {
           view.collapseSearchBar(false);
           view.hideSuggestionsViews();
-          analytics.search(data.getQuery());
-          navigator.navigate(data.getQuery());
+          SearchQueryModel searchQueryModel = new SearchQueryModel(data.getQuery());
+          analytics.search(searchQueryModel);
+          navigator.navigate(searchQueryModel);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -527,9 +535,11 @@ import rx.exceptions.OnErrorNotImplementedException;
         .doOnNext(data -> {
           view.collapseSearchBar(false);
           view.hideSuggestionsViews();
-          navigator.navigate(data.second.getQuery());
-          analytics.searchFromSuggestion(data.second.getQuery(), data.second.getPosition(),
-              data.first);
+          SearchQueryModel searchQueryModel =
+              new SearchQueryModel(data.first, data.second.getQuery(),
+                  data.first.isEmpty() ? Source.FROM_TRENDING : Source.FROM_AUTOCOMPLETE);
+          navigator.navigate(searchQueryModel);
+          analytics.searchFromSuggestion(searchQueryModel, data.second.getPosition());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
