@@ -55,12 +55,11 @@ public class AptoideDownloadManager implements DownloadManager {
             .d(TAG, "Queued downloads " + downloads.size()))
         .filter(downloads -> !downloads.isEmpty())
         .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download.getMd5()).doOnError(
+        .flatMap(download -> getAppDownloader(download).doOnError(
             throwable -> removeDownloadFiles(download))
             .doOnNext(AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
         .doOnError(throwable -> throwable.printStackTrace())
-        .retry()
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
@@ -127,7 +126,7 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadsRepository.getDownloadsInProgress()
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(downloads -> downloads)
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMapCompletable(
+        .flatMap(download -> getAppDownloader(download).flatMapCompletable(
             appDownloader -> appDownloader.pauseAppDownload())
             .map(appDownloader -> download))
         .toCompletable();
@@ -141,7 +140,7 @@ public class AptoideDownloadManager implements DownloadManager {
           downloadsRepository.save(download);
           return download;
         })
-        .flatMap(download -> getAppDownloader(download.getMd5()))
+        .flatMap(download -> getAppDownloader(download))
         .flatMapCompletable(appDownloader -> appDownloader.pauseAppDownload())
         .toCompletable();
   }
@@ -162,7 +161,7 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Completable removeDownload(String md5) {
     return downloadsRepository.getDownload(md5)
         .first()
-        .flatMap(download -> getAppDownloader(download.getMd5()).flatMap(
+        .flatMap(download -> getAppDownloader(download).flatMap(
             appDownloader -> appDownloader.removeAppDownload()
                 .andThen(downloadsRepository.remove(md5))
                 .andThen(Observable.just(download))))
@@ -231,11 +230,11 @@ public class AptoideDownloadManager implements DownloadManager {
   private void removeAppDownloader(String md5) {
     AppDownloader appDownloader = appDownloaderMap.get(md5);
     Logger.getInstance()
-        .d(TAG, "removing download manager");
+        .d(TAG, "removing download manager from app : " + md5);
     if (appDownloader != null) {
       appDownloader.stop();
       Logger.getInstance()
-          .d(TAG, "removed download manager ");
+          .d(TAG, "removed download manager from app " + md5);
       appDownloaderMap.remove(md5);
     }
   }
@@ -257,7 +256,17 @@ public class AptoideDownloadManager implements DownloadManager {
     return Observable.just(download);
   }
 
-  private Observable<AppDownloader> getAppDownloader(String md5) {
-    return Observable.just(appDownloaderMap.get(md5));
+  private Observable<AppDownloader> getAppDownloader(Download download) {
+    return Observable.just(appDownloaderMap.get(download.getMd5()))
+        .map(appDownloader -> {
+          if (appDownloader == null) {
+            // TODO: 2019-11-12 This is a work around to fix the problem
+            //  related with appdownloader being null.
+            //  We are going to investigate the source of this problem
+            //  on https://aptoide.atlassian.net/browse/ASV-2085
+            return createAppDownloadManager(download);
+          }
+          return appDownloader;
+        });
   }
 }
