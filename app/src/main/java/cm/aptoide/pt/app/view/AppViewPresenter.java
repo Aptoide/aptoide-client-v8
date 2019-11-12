@@ -109,6 +109,7 @@ public class AppViewPresenter implements Presenter {
     handleClickOnSimilarApps();
     handleClickOnToolbar();
     handleClickOnRetry();
+    handleClickOnCatappultCard();
     handleOnScroll();
     handleOnSimilarAppsVisible();
 
@@ -862,6 +863,17 @@ public class AppViewPresenter implements Presenter {
             .retry())
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnCatappultCard() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickCatappultCard())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> view.startCatappultWebView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {

@@ -51,6 +51,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGetAppcInfo();
 
+  Observable<Void> clickCatappultCard();
+
   void displayNotLoggedInSnack();
 
   void displayStoreFollowedSnack(String storeName);
@@ -183,4 +185,6 @@ public interface AppViewView extends InstallAppView {
   void showConsentDialog();
 
   void setInstallButton(AppCoinsViewModel appCoinsViewModel);
+
+  void startCatappultWebView();
 }

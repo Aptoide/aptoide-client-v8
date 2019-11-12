@@ -72,6 +72,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
+import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.promotions.Promotion;
@@ -259,6 +260,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View flagThisAppSection;
   private View collapsingAppcBackground;
   private TextView installStateText;
+  private View catappultCard;
 
   //wallet promotions
   private View promotionView;
@@ -422,6 +424,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     infoEmail = view.findViewById(R.id.email_label);
     infoPrivacy = view.findViewById(R.id.privacy_policy_label);
     infoPermissions = view.findViewById(R.id.permissions_label);
+    catappultCard = view.findViewById(R.id.catappult_card);
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
@@ -603,6 +606,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     viewProgress = null;
     appview = null;
     screenshotsAdapter = null;
+    catappultCard = null;
     menu = null;
     toolbar = null;
     actionBar = null;
@@ -779,6 +783,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> clickGetAppcInfo() {
     return RxView.clicks(poaCoinsIcon);
+  }
+
+  @Override public Observable<Void> clickCatappultCard() {
+    return RxView.clicks(catappultCard);
   }
 
   @Override public void displayNotLoggedInSnack() {
@@ -1228,6 +1236,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       appviewInstall.inflate();
     }
+  }
+
+  @Override public void startCatappultWebView() {
+    CustomTabsHelper.getInstance()
+        .openInChromeCustomTab("https://catappult.io/", getContext(), theme);
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
