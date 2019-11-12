@@ -41,6 +41,6 @@ public class WalletAdsOfferRequest extends V7<WalletAdsOfferResponse, BaseBody> 
   @Override protected Observable<WalletAdsOfferResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
     return interfaces.isWalletOfferActive(bypassCache,
-        new QueryStringMapper().map(new HashMap<>(), body));
+        new QueryStringMapper().map(new HashMap<>(), body, false));
   }
 }

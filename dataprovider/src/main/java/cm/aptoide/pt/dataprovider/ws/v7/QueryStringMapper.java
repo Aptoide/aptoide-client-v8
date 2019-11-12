@@ -10,7 +10,8 @@ import java.util.Map;
 
 public class QueryStringMapper {
 
-  public Map<String, String> map(Map<String, String> queryMap, BaseBody body) {
+  public Map<String, String> map(Map<String, String> queryMap, BaseBody body,
+      boolean shouldSendAptoideUID) {
     queryMap.put("aptoide_md5sum", body.getAptoideMd5sum());
     queryMap.put("aptoide_package", body.getAptoidePackage());
     queryMap.put("aptoide_vercode", String.valueOf(body.getAptoideVercode()));
@@ -19,7 +20,9 @@ public class QueryStringMapper {
     queryMap.put("mature", String.valueOf(body.isMature()));
     queryMap.put("q", body.getQ());
     queryMap.put("refresh", String.valueOf(body.isRefresh()));
-    queryMap.put("aptoide_uid", body.getAptoideId());
+    if (shouldSendAptoideUID) {
+      queryMap.put("aptoide_uid", body.getAptoideId());
+    }
     if (body.getCountry() != null) {
       queryMap.put("country", body.getCountry());
     }
@@ -50,7 +53,7 @@ public class QueryStringMapper {
 
   public Map<String, String> map(ListAppsRequest.Body body, boolean shouldEnableAab) {
     Map<String, String> data = new HashMap<>();
-    map(data, body);
+    map(data, body, false);
     data.put("aab", String.valueOf(shouldEnableAab));
     data.put("not_apk_tags", body.getNotApkTags());
     String storeUser = body.getStoreUser();
@@ -84,7 +87,7 @@ public class QueryStringMapper {
 
   public Map<String, String> map(GetAppRequest.Body body, boolean shouldEnableAppBundles) {
     Map<String, String> data = new HashMap<>();
-    map(data, body);
+    map(data, body, false);
 
     data.put("aab", String.valueOf(shouldEnableAppBundles));
 
