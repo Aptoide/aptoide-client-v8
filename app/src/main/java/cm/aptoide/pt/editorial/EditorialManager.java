@@ -105,7 +105,7 @@ public class EditorialManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return installManager.stopInstallation(md5);
+    return installManager.pauseInstall(md5);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {
@@ -118,7 +118,7 @@ public class EditorialManager {
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return installManager.removeInstallationFile(md5, packageName, versionCode);
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {

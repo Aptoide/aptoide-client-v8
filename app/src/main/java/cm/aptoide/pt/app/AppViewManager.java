@@ -306,7 +306,7 @@ public class AppViewManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return installManager.stopInstallation(md5);
+    return installManager.pauseInstall(md5);
   }
 
   public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
@@ -320,7 +320,7 @@ public class AppViewManager {
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return installManager.removeInstallationFile(md5, packageName, versionCode);
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public SearchAdResult getSearchAdResult() {

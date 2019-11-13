@@ -416,7 +416,7 @@ public class AppViewManagerTest {
         .test()
         .assertCompleted();
     //And it should ask the installManager to stop the installation
-    verify(installManager).stopInstallation("md5");
+    verify(installManager).pauseInstall("md5");
   }
 
   @Test public void resumeDownloadTest() {
@@ -458,7 +458,7 @@ public class AppViewManagerTest {
         .test()
         .assertCompleted();
     //And it should ask the installManager to remove the file
-    verify(installManager).removeInstallationFile("md5", "packageName", 1);
+    verify(installManager).cancelInstall("md5", "packageName", 1);
   }
 
   @Test public void setAndGetSearchAdResultTest() {

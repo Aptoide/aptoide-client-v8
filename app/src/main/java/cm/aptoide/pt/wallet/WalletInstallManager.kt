@@ -86,7 +86,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   }
 
   fun removeDownload(app: WalletApp): Completable? {
-    return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
+    return installManager.cancelInstall(app.md5sum, app.packageName, app.versionCode)
   }
 
   fun cancelDownload(app: WalletApp): Completable {
@@ -102,7 +102,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   }
 
   fun pauseDownload(app: WalletApp): Completable {
-    return installManager.stopInstallation(app.md5sum)
+    return installManager.pauseInstall(app.md5sum)
   }
 
   fun resumeDownload(app: WalletApp): Completable {

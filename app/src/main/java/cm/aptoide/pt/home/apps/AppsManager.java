@@ -181,7 +181,7 @@ public class AppsManager {
   }
 
   public Completable cancelDownload(App app) {
-    return installManager.removeInstallationFile(((StateApp) app).getMd5(),
+    return installManager.cancelInstall(((StateApp) app).getMd5(),
         ((StateApp) app).getPackageName(), ((StateApp) app).getVersionCode());
   }
 
@@ -230,7 +230,7 @@ public class AppsManager {
   }
 
   public Completable pauseDownload(App app) {
-    return installManager.stopInstallation(((StateApp) app).getMd5());
+    return installManager.pauseInstall(((StateApp) app).getMd5());
   }
 
   public Completable updateApp(App app, boolean isAppcUpdate) {

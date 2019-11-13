@@ -73,13 +73,13 @@ public class InstallManager {
     this.packageInstallerManager = packageInstallerManager;
   }
 
-  public Completable removeInstallationFile(String md5, String packageName, int versionCode) {
-    return stopInstallation(md5).andThen(installedRepository.remove(packageName, versionCode))
+  public Completable cancelInstall(String md5, String packageName, int versionCode) {
+    return pauseInstall(md5).andThen(installedRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .doOnError(throwable -> throwable.printStackTrace());
   }
 
-  public Completable stopInstallation(String md5) {
+  public Completable pauseInstall(String md5) {
     return aptoideDownloadManager.pauseDownload(md5);
   }
 
