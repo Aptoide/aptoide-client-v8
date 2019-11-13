@@ -230,7 +230,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.cancelDownload()
             .observeOn(ioScheduler)
-            .doOnNext(appsManager::cancelDownload)
+            .flatMapCompletable(appsManager::cancelDownload)
             .retry())
         .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

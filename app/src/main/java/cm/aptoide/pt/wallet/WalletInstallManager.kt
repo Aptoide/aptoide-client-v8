@@ -85,7 +85,7 @@ class WalletInstallManager(val packageManager: PackageManager,
     return walletAppProvider.getWalletApp()
   }
 
-  fun removeDownload(app: WalletApp) {
+  fun removeDownload(app: WalletApp): Completable? {
     return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
   }
 

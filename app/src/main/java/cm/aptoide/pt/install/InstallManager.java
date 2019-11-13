@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
@@ -74,15 +73,10 @@ public class InstallManager {
     this.packageInstallerManager = packageInstallerManager;
   }
 
-  public void removeInstallationFile(String md5, String packageName, int versionCode) {
-    stopInstallation(md5).andThen(installedRepository.remove(packageName, versionCode))
+  public Completable removeInstallationFile(String md5, String packageName, int versionCode) {
+    return stopInstallation(md5).andThen(installedRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
-        .subscribe(() -> {
-        }, throwable -> {
-          CrashReport.getInstance()
-              .log(throwable);
-          throwable.printStackTrace();
-        });
+        .doOnError(throwable -> throwable.printStackTrace());
   }
 
   public Completable stopInstallation(String md5) {

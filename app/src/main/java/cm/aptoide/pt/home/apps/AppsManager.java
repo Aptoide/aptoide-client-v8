@@ -180,8 +180,8 @@ public class AppsManager {
         .toCompletable();
   }
 
-  public void cancelDownload(App app) {
-    installManager.removeInstallationFile(((StateApp) app).getMd5(),
+  public Completable cancelDownload(App app) {
+    return installManager.removeInstallationFile(((StateApp) app).getMd5(),
         ((StateApp) app).getPackageName(), ((StateApp) app).getVersionCode());
   }
 

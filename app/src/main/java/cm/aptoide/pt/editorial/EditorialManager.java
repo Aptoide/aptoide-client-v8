@@ -118,8 +118,7 @@ public class EditorialManager {
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.removeInstallationFile(md5, packageName, versionCode);
   }
 
   public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
