@@ -93,10 +93,9 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
-import cm.aptoide.pt.view.entry.EntryActivity;
-import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -188,7 +187,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
-  private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -568,13 +566,6 @@ public abstract class AptoideApplication extends Application {
     return qManager;
   }
 
-  public EntryPointChooser getEntryPointChooser() {
-    if (entryPointChooser == null) {
-      entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
-    }
-    return entryPointChooser;
-  }
-
   public AptoideAccountManager getAccountManager() {
     return accountManager;
   }
@@ -803,7 +794,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, EntryActivity.class);
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

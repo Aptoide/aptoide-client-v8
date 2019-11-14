@@ -973,10 +973,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         sharedPreferences);
   }
 
-  @Singleton @Provides QManager provideQManager(
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      WindowManager windowManager) {
-    return new QManager(sharedPreferences, resources,
+  @Singleton @Provides QManager provideQManager(Resources resources, WindowManager windowManager) {
+    return new QManager(resources,
         ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager,
         (UiModeManager) application.getSystemService(UI_MODE_SERVICE));
   }
