@@ -72,7 +72,6 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.install.view.remote.RemoteInstallDialog;
-import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.permission.DialogPermissions;
 import cm.aptoide.pt.promotions.Promotion;
@@ -1236,11 +1235,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     } else {
       appviewInstall.inflate();
     }
-  }
-
-  @Override public void startCatappultWebView() {
-    CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://catappult.io/", getContext(), theme);
   }
 
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {

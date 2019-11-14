@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -21,16 +22,18 @@ public class AppCoinsInfoPresenter implements Presenter {
   private final CrashReport crashReport;
   private final String appcWalletPackageName;
   private final Scheduler viewScheduler;
+  private final ExternalNavigator externalNavigator;
 
   public AppCoinsInfoPresenter(AppCoinsInfoView view, AppCoinsInfoNavigator appCoinsInfoNavigator,
       InstallManager installManager, CrashReport crashReport, String appcWalletPackageName,
-      Scheduler viewScheduler) {
+      Scheduler viewScheduler, ExternalNavigator externalNavigator) {
     this.view = view;
     this.appCoinsInfoNavigator = appCoinsInfoNavigator;
     this.installManager = installManager;
     this.crashReport = crashReport;
     this.appcWalletPackageName = appcWalletPackageName;
     this.viewScheduler = viewScheduler;
+    this.externalNavigator = externalNavigator;
   }
 
   @Override public void present() {
@@ -62,7 +65,7 @@ public class AppCoinsInfoPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.catappultButtonClick())
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.startCatappultDevWebView())
+        .doOnNext(__ -> externalNavigator.navigateToCatappultWebsite())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
