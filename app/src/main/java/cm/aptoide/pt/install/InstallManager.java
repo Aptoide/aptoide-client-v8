@@ -387,9 +387,31 @@ public class InstallManager {
 
   private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
-    return waitBackgroundInstallationResult(md5).doOnSubscribe(
-        () -> startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller))
-        .map(aVoid -> null);
+    return waitBackgroundInstallationResult(md5).startWith(
+        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller));
+  }
+
+  private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
+    return aptoideDownloadManager.getDownload(md5)
+        .first()
+        .doOnNext(download -> initInstallationProgress(download))
+        .doOnNext(__ -> sendIntent(md5, forceDefaultInstall, shouldSetPackageInstaller))
+        .flatMapCompletable(download -> aptoideDownloadManager.startDownload(download))
+        .map(__ -> null);
+  }
+
+  private void sendIntent(String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
+    Intent intent = new Intent(context, InstallService.class);
+    intent.setAction(InstallService.ACTION_START_INSTALL);
+    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
+    intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
+    intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
+    if (installer instanceof DefaultInstaller) {
+      intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
+    }
+    context.startService(intent);
   }
 
   private Observable<Void> waitBackgroundInstallationResult(String md5) {
@@ -401,17 +423,20 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_START_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
-    intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
-    intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
-    if (installer instanceof DefaultInstaller) {
-      intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
-    }
-    context.startService(intent);
+  private void initInstallationProgress(Download download) {
+    Installed installed = convertDownloadToInstalled(download);
+    installedRepository.save(installed);
+  }
+
+  @NonNull private Installed convertDownloadToInstalled(Download download) {
+    Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
+    installed.setVersionCode(download.getVersionCode());
+    installed.setVersionName(download.getVersionName());
+    installed.setStatus(Installed.STATUS_WAITING);
+    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setPackageName(download.getPackageName());
+    return installed;
   }
 
   public boolean showWarning() {

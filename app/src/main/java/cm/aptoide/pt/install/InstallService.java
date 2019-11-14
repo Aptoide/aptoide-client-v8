@@ -21,7 +21,6 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -162,10 +161,6 @@ public class InstallService extends BaseService implements DownloadsNotification
   private Observable<Boolean> downloadAndInstall(Context context, String md5,
       boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     return downloadManager.getDownload(md5)
-        .first()
-        .doOnNext(download -> initInstallationProgress(download))
-        .flatMap(download -> downloadManager.startDownload(download)
-            .andThen(downloadManager.getDownload(md5)))
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
           if (download.getOverallDownloadStatus() == Download.PROGRESS) {
@@ -182,11 +177,6 @@ public class InstallService extends BaseService implements DownloadsNotification
         .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
             shouldSetPackageInstaller).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));
-  }
-
-  private void initInstallationProgress(Download download) {
-    Installed installed = convertDownloadToInstalled(download);
-    installedRepository.save(installed);
   }
 
   private void stopOnDownloadError(int downloadStatus) {
@@ -338,16 +328,5 @@ public class InstallService extends BaseService implements DownloadsNotification
         .getMainActivityFragmentClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
     return intent;
-  }
-
-  @NonNull private Installed convertDownloadToInstalled(Download download) {
-    Installed installed = new Installed();
-    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
-    installed.setVersionCode(download.getVersionCode());
-    installed.setVersionName(download.getVersionName());
-    installed.setStatus(Installed.STATUS_WAITING);
-    installed.setType(Installed.TYPE_UNKNOWN);
-    installed.setPackageName(download.getPackageName());
-    return installed;
   }
 }
