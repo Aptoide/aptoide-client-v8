@@ -101,6 +101,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
+  private QueryStringMapper queryStringMapper;
 
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
@@ -132,6 +133,13 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
       builder.append("Server returned null response.");
     }
     return builder.toString();
+  }
+
+  protected QueryStringMapper getQueryStringMapper() {
+    if (queryStringMapper == null) {
+      queryStringMapper = new QueryStringMapper();
+    }
+    return queryStringMapper;
   }
 
   protected TokenInvalidator getTokenInvalidator() {
@@ -484,8 +492,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetPackagePromotionsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
+    @GET("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
+        @Header("Cache-Control") String bypassCache,
         @QueryMap(encoded = true) Map<String, String> parameters);
 
     @POST("user/action/item/cards/get/type=CURATION_1/limit={limit}")

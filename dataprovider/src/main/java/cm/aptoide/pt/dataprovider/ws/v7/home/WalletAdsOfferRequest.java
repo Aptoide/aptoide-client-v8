@@ -5,7 +5,6 @@ import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.QueryStringMapper;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class WalletAdsOfferRequest extends V7<WalletAdsOfferResponse, BaseBody> 
 
   @Override protected Observable<WalletAdsOfferResponse> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.isWalletOfferActive(bypassCache,
-        new QueryStringMapper().map(body, false, new HashMap<>()));
+    return interfaces.isWalletOfferActive(bypassCache ? "no-cache" : null,
+        getQueryStringMapper().map(body, false, new HashMap<>()));
   }
 }
