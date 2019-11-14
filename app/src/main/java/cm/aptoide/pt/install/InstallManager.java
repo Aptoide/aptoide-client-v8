@@ -171,9 +171,7 @@ public class InstallManager {
             downloadRepository.save(storedDownload);
           }
         })
-        .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
-            download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall,
+        .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
         .first()
         .toCompletable();
@@ -387,20 +385,11 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
+  private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
-    return getInstall(install.getMd5(), install.getPackageName(),
-        install.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(install, forceDefaultInstall,
-            shouldSetPackageInstaller));
-  }
-
-  @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
-      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
-    return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller))
-        .map(aVoid -> install);
+    return waitBackgroundInstallationResult(md5).doOnSubscribe(
+        () -> startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller))
+        .map(aVoid -> null);
   }
 
   private Observable<Void> waitBackgroundInstallationResult(String md5) {
