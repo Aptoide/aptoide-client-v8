@@ -189,6 +189,7 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private void moveFilesFromCompletedDownloads() {
     downloadsRepository.getWaitingToMoveFilesDownloads()
+        .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
         .doOnNext(download -> moveCompletedDownloadFiles(download))
         .subscribe(__ -> {
