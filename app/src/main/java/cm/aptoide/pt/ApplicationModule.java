@@ -774,23 +774,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new OAuthModeProvider();
   }
 
-  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent") Interceptor userAgentInterceptor,
-      @Named("default") SharedPreferences sharedPreferences,
-      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
-    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-    okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
-    okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
-    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    okHttpClientBuilder.cache(cache); // 10 MiB
-    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent") Interceptor userAgentInterceptor) {
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
-
-    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
-      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
-    }
-
     return okHttpClientBuilder.build();
   }
 
@@ -831,23 +818,27 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent-v8") Interceptor userAgentInterceptorV8,
-      @Named("default") SharedPreferences sharedPreferences,
+  @Singleton @Provides @Named("default") OkHttpClient.Builder providesOkHttpBuilder(
+      L2Cache httpClientCache, @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
     okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
-    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
       okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
     }
 
+    return okHttpClientBuilder;
+  }
+
+  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent-v8") Interceptor userAgentInterceptorV8) {
+    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
     return okHttpClientBuilder.build();
   }
 
