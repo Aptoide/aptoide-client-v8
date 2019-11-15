@@ -18,8 +18,8 @@ import rx.Subscription;
 public class AptoideDownloadManager implements DownloadManager {
 
   private static final String TAG = "AptoideDownloadManager";
-  private final String cachePath;
   private final DownloadAppMapper downloadAppMapper;
+  private final String cachePath;
   private final String apkPath;
   private final String obbPath;
   private DownloadsRepository downloadsRepository;
@@ -27,6 +27,7 @@ public class AptoideDownloadManager implements DownloadManager {
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
+  private Subscription moveFilesSubscription;
   private DownloadAnalytics downloadAnalytics;
   private FileUtils fileUtils;
 
@@ -55,6 +56,9 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public void stop() {
     if (!dispatchDownloadsSubscription.isUnsubscribed()) {
       dispatchDownloadsSubscription.unsubscribe();
+    }
+    if (!moveFilesSubscription.isUnsubscribed()) {
+      moveFilesSubscription.unsubscribe();
     }
   }
 
@@ -192,7 +196,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   private void moveFilesFromCompletedDownloads() {
-    downloadsRepository.getWaitingToMoveFilesDownloads()
+    moveFilesSubscription = downloadsRepository.getWaitingToMoveFilesDownloads()
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
         .doOnNext(download -> moveCompletedDownloadFiles(download))
