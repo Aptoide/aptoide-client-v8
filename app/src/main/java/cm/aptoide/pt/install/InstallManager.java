@@ -386,12 +386,12 @@ public class InstallManager {
     return aptoideDownloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .doOnNext(__ -> sendIntent(md5, forceDefaultInstall, shouldSetPackageInstaller))
+        .doOnNext(__ -> startInstallService(md5, forceDefaultInstall, shouldSetPackageInstaller))
         .flatMapCompletable(download -> aptoideDownloadManager.startDownload(download))
         .map(__ -> null);
   }
 
-  private void sendIntent(String md5, boolean forceDefaultInstall,
+  private void startInstallService(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
