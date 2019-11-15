@@ -281,7 +281,6 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -784,13 +783,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
@@ -848,13 +840,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
 
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
     okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
