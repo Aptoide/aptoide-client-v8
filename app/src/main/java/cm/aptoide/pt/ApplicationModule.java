@@ -340,8 +340,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
             getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
             application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils(), packageInstallerManager);
+        secureSharedPreferences, downloadsRepository, installedRepository, packageInstallerManager);
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
