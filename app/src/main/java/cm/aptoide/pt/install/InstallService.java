@@ -173,7 +173,6 @@ public class InstallService extends BaseService implements DownloadsNotification
                 + " state: "
                 + download.getOverallDownloadStatus()))
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .doOnNext(download -> installManager.moveCompletedDownloadFiles(download))
         .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
             shouldSetPackageInstaller).andThen(sendBackgroundInstallFinishedBroadcast(download))
             .andThen(hasNextDownload()));

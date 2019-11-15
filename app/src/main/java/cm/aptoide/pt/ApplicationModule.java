@@ -411,7 +411,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider, downloadAnalytics);
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics, apkPath, obbPath,
+        new FileUtils());
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {

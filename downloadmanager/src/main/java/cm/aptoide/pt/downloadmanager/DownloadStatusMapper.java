@@ -18,7 +18,7 @@ public class DownloadStatusMapper {
         downloadState = Download.INVALID_STATUS;
         break;
       case COMPLETED:
-        downloadState = Download.COMPLETED;
+        downloadState = Download.WAITING_TO_MOVE_FILES;
         break;
       case PENDING:
         downloadState = Download.PENDING;

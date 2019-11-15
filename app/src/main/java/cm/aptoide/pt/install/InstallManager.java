@@ -331,6 +331,7 @@ public class InstallManager {
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
         case Download.PENDING:
+        case Download.WAITING_TO_MOVE_FILES:
           status = Install.InstallationStatus.DOWNLOADING;
           break;
         case Download.IN_QUEUE:

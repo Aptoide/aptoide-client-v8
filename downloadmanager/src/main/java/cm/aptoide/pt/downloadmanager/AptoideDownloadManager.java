@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -19,23 +20,29 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final String cachePath;
   private final DownloadAppMapper downloadAppMapper;
+  private final String apkPath;
+  private final String obbPath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
   private AppDownloaderProvider appDownloaderProvider;
   private Subscription dispatchDownloadsSubscription;
   private DownloadAnalytics downloadAnalytics;
+  private FileUtils fileUtils;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics) {
+      DownloadAnalytics downloadAnalytics, String apkPath, String obbPath, FileUtils fileUtils) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
     this.downloadAnalytics = downloadAnalytics;
+    this.apkPath = apkPath;
+    this.obbPath = obbPath;
+    this.fileUtils = fileUtils;
     this.appDownloaderMap = new HashMap<>();
   }
 
@@ -62,6 +69,8 @@ public class AptoideDownloadManager implements DownloadManager {
         .doOnError(throwable -> throwable.printStackTrace())
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
+
+    moveFilesFromCompletedDownloads();
   }
 
   @Override public void stop() {
@@ -176,6 +185,59 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
         .toList()
         .toCompletable();
+  }
+
+  private void moveFilesFromCompletedDownloads() {
+    downloadsRepository.getWaitingToMoveFilesDownloads()
+        .flatMapIterable(download -> download)
+        .doOnNext(download -> moveCompletedDownloadFiles(download))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  public void moveCompletedDownloadFiles(Download download) {
+    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
+      if (!FileUtils.fileExists(
+          getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
+        Logger.getInstance()
+            .d(TAG, "trying to move file : "
+                + fileToDownload.getFileName()
+                + " "
+                + fileToDownload.getPackageName());
+        String newFilePath = getFilePathFromFileType(fileToDownload);
+        fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
+        fileToDownload.setPath(newFilePath);
+      } else {
+        Logger.getInstance()
+            .d(TAG, "tried moving file: "
+                + fileToDownload.getFileName()
+                + " "
+                + fileToDownload.getPackageName()
+                + " but it was already moved");
+      }
+    }
+    download.setOverallDownloadStatus(Download.COMPLETED);
+    downloadsRepository.save(download);
+  }
+
+  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
+    String path;
+    switch (fileToDownload.getFileType()) {
+      case FileToDownload.APK:
+        path = apkPath;
+        break;
+      case FileToDownload.OBB:
+        path = obbPath + fileToDownload.getPackageName() + "/";
+        break;
+      case FileToDownload.SPLIT:
+        path = apkPath + fileToDownload.getPackageName() + "-splits/";
+        break;
+      case FileToDownload.GENERIC:
+      default:
+        path = cachePath;
+        break;
+    }
+    return path;
   }
 
   private void removeDownloadFiles(Download download) {
