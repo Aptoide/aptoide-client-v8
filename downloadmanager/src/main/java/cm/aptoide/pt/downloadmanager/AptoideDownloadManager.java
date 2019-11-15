@@ -47,28 +47,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   public synchronized void start() {
-    dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
-        .doOnError(throwable -> throwable.printStackTrace())
-        .retry()
-        .doOnNext(downloads -> Logger.getInstance()
-            .d(TAG, "Downloads in Progress " + downloads.size()))
-        .filter(List::isEmpty)
-        .flatMap(__ -> downloadsRepository.getInQueueDownloads()
-            .first())
-        .distinctUntilChanged()
-        .doOnError(throwable -> throwable.printStackTrace())
-        .retry()
-        .doOnNext(downloads -> Logger.getInstance()
-            .d(TAG, "Queued downloads " + downloads.size()))
-        .filter(downloads -> !downloads.isEmpty())
-        .map(downloads -> downloads.get(0))
-        .flatMap(download -> getAppDownloader(download).doOnError(
-            throwable -> removeDownloadFiles(download))
-            .doOnNext(AppDownloader::startAppDownload)
-            .flatMap(this::handleDownloadProgress))
-        .doOnError(throwable -> throwable.printStackTrace())
-        .subscribe(__ -> {
-        }, Throwable::printStackTrace);
+    dispatchDownloads();
 
     moveFilesFromCompletedDownloads();
   }
@@ -185,6 +164,31 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMapCompletable(download -> downloadsRepository.remove(download.getMd5()))
         .toList()
         .toCompletable();
+  }
+
+  private void dispatchDownloads() {
+    dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d(TAG, "Downloads in Progress " + downloads.size()))
+        .filter(List::isEmpty)
+        .flatMap(__ -> downloadsRepository.getInQueueDownloads()
+            .first())
+        .distinctUntilChanged()
+        .doOnError(throwable -> throwable.printStackTrace())
+        .retry()
+        .doOnNext(downloads -> Logger.getInstance()
+            .d(TAG, "Queued downloads " + downloads.size()))
+        .filter(downloads -> !downloads.isEmpty())
+        .map(downloads -> downloads.get(0))
+        .flatMap(download -> getAppDownloader(download).doOnError(
+            throwable -> removeDownloadFiles(download))
+            .doOnNext(AppDownloader::startAppDownload)
+            .flatMap(this::handleDownloadProgress))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
   }
 
   private void moveFilesFromCompletedDownloads() {
