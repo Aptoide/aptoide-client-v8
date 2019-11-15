@@ -10,7 +10,7 @@
     android:orientation="vertical"
     >
 
-  <include layout="@layout/action_bar_appview" />
+  <include layout="@layout/action_bar_appview"/>
   <ImageView
       android:id="@+id/app_icon"
       android:layout_width="104dp"
@@ -277,8 +277,8 @@
 
         </LinearLayout>
         <include
-            android:id="@+id/other_versions_top_separator"
             layout="@layout/separator_horizontal"
+            android:id="@+id/other_versions_top_separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginEnd="10dp"
@@ -397,6 +397,17 @@
             android:layout_height="wrap_content"
             />
 
+        <include
+            layout="@layout/appview_catappult_card"
+            android:id="@+id/catappult_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="16dp"
+            />
 
         <include
             layout="@layout/displayable_app_view_developer"
