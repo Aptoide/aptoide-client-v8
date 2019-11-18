@@ -333,7 +333,8 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
-    aptoideDownloadManager.start();
+
+    installManager.start();
 
     adsUserPropertyManager.start();
   }

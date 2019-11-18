@@ -29,7 +29,6 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.subjects.PublishSubject;
@@ -173,9 +172,9 @@ public class InstallService extends BaseService implements DownloadsNotification
                 + " state: "
                 + download.getOverallDownloadStatus()))
         .first(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
-        .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
-            shouldSetPackageInstaller).andThen(sendBackgroundInstallFinishedBroadcast(download))
-            .andThen(hasNextDownload()));
+        .doOnNext(__ -> Logger.getInstance()
+            .d(TAG, "test se recebe completeds antes"))
+        .map(__ -> true);
   }
 
   private void stopOnDownloadError(int downloadStatus) {
@@ -188,35 +187,6 @@ public class InstallService extends BaseService implements DownloadsNotification
     return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
-  }
-
-  private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
-    return Completable.fromAction(() -> {
-      sendBroadcast(
-          new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-    });
-  }
-
-  private Completable stopForegroundAndInstall(Context context, Download download,
-      boolean removeNotification, boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
-    Logger.getInstance()
-        .d(TAG, "Stopping download notification and starting installation");
-    Installer installer = getInstaller();
-    stopForeground(removeNotification);
-    switch (download.getAction()) {
-      case Download.ACTION_INSTALL:
-        return installer.install(context, download.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller);
-      case Download.ACTION_UPDATE:
-        return installer.update(context, download.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller);
-      case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, download.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller);
-      default:
-        return Completable.error(
-            new IllegalArgumentException("Invalid download action " + download.getAction()));
-    }
   }
 
   private Installer getInstaller() {

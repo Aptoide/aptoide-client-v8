@@ -112,4 +112,16 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
         .subscribeOn(RealmSchedulers.getScheduler())
         .observeOn(Schedulers.io());
   }
+
+  public Observable<List<Download>> getCompletedDownloads() {
+    return Observable.fromCallable(() -> database.get())
+        .flatMap(realm -> realm.where(Download.class)
+            .equalTo("overallDownloadStatus", Download.COMPLETED)
+            .findAllSorted("timeStamp", Sort.ASCENDING)
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
 }

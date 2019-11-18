@@ -176,7 +176,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
@@ -326,21 +325,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
-      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
-      RootAvailabilityManager rootAvailabilityManager,
+      AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
+      InstallerAnalytics installerAnalytics, RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      AppInstaller appInstaller, AppInstallerStatusReceiver appInstallerStatusReceiver,
       PackageInstallerManager packageInstallerManager,
       RootInstallerProvider rootInstallerProvider) {
-    return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, packageInstallerManager);
+    return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, packageInstallerManager);
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(

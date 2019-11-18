@@ -38,7 +38,7 @@ public class DownloadsRepository {
     return downloadAccessor.getAll();
   }
 
-  public Observable<List<Download>> getWaitingToMoveFilesDownloads(){
+  public Observable<List<Download>> getWaitingToMoveFilesDownloads() {
     return downloadAccessor.getUnmovedFilesDownloads();
   }
 
@@ -60,5 +60,9 @@ public class DownloadsRepository {
             .filter(download -> download.getOverallDownloadStatus() == Download.PROGRESS
                 || download.getOverallDownloadStatus() == (Download.PENDING))
             .toList());
+  }
+
+  public Observable<List<Download>> getCompletedDownloads() {
+    return downloadAccessor.getCompletedDownloads();
   }
 }
