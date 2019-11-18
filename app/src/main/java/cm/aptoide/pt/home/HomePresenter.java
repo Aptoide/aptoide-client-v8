@@ -159,6 +159,13 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
+  private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId,
+      HomeBundlesModel homeBundlesModel) {
+    return home.loadReactionModel(cardId, groupId, homeBundlesModel)
+        .observeOn(viewScheduler)
+        .doOnSuccess(homeBundles -> view.updateEditorialCards());
+  }
+
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
@@ -166,13 +173,15 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
-    return loadHome().flatMapIterable(HomeBundlesModel::getList)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
-        .cast(ActionBundle.class)
-        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
-            .getCardId(), actionBundle.getActionItem()
-            .getType()));
+    return loadHome().
+        flatMap(homeBundlesModel -> Observable.from(homeBundlesModel.getList())
+            .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+            .filter(homeBundle -> homeBundle instanceof ActionBundle)
+            .cast(ActionBundle.class)
+            .filter(actionBundle -> actionBundle.getActionItem() != null)
+            .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+                .getCardId(), actionBundle.getActionItem()
+                .getType(), homeBundlesModel)));
   }
 
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
@@ -212,12 +221,14 @@ public class HomePresenter implements Presenter {
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
-            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
-            homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
+            if (actionBundle.getActionItem() != null) {
+              homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+              homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+            }
           }
         })
         .filter(homeEvent -> homeEvent.getBundle()

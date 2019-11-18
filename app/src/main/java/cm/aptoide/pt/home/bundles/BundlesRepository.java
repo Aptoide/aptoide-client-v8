@@ -30,7 +30,7 @@ public class BundlesRepository {
 
   public Observable<HomeBundlesModel> loadHomeBundles() {
     if (!cachedBundles.containsKey(HOME_BUNDLE_KEY)) {
-      return loadNextHomeBundles();
+      return loadNextHomeBundles(true);
     } else {
       return Observable.just(new HomeBundlesModel(
           cachedBundles.put(HOME_BUNDLE_KEY, new ArrayList<>(cachedBundles.get(HOME_BUNDLE_KEY))),
@@ -40,11 +40,7 @@ public class BundlesRepository {
 
   public Observable<HomeBundlesModel> loadFreshHomeBundles() {
     return remoteBundleDataSource.loadFreshHomeBundles(HOME_BUNDLE_KEY)
-        .doOnNext(homeBundlesModel -> {
-          if (homeBundlesModel.isComplete()) {
-            updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY);
-          }
-        })
+        .doOnNext(homeBundlesModel -> updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY))
         .map(this::cloneList);
   }
 
@@ -56,19 +52,15 @@ public class BundlesRepository {
         homeBundlesModel.isLoading(), homeBundlesModel.getOffset(), homeBundlesModel.isComplete());
   }
 
-  public Observable<HomeBundlesModel> loadNextHomeBundles() {
+  public Observable<HomeBundlesModel> loadNextHomeBundles(boolean skeletonLoad) {
     return remoteBundleDataSource.loadNextHomeBundles(getOffset(HOME_BUNDLE_KEY), limit,
-        HOME_BUNDLE_KEY)
-        .doOnNext(homeBundlesModel -> {
-          if (homeBundlesModel.isComplete()) {
-            updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY);
-          }
-        })
+        HOME_BUNDLE_KEY, skeletonLoad)
+        .doOnNext(homeBundlesModel -> updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY))
         .map(this::cloneList);
   }
 
   private void updateCache(HomeBundlesModel homeBundles, boolean cacheIsDirty, String bundleKey) {
-    if (!homeBundles.hasErrors() && !homeBundles.isLoading()) {
+    if (!homeBundles.hasErrors() && !homeBundles.isLoading() && homeBundles.isComplete()) {
       offset.put(bundleKey, homeBundles.getOffset());
       if (cacheIsDirty || !cachedBundles.containsKey(bundleKey)) {
         cachedBundles.put(bundleKey, new ArrayList<>(homeBundles.getList()));

@@ -239,9 +239,12 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
    * @return true if the bundles are fully loaded (i.e. no skeleton layout placeholder)
    */
   public boolean isLoaded() {
-    return bundles != null
-        && !bundles.isEmpty()
-        && bundles.get(0)
-        .getContent() != null;
+    if (bundles == null || bundles.isEmpty()) return false;
+    for (HomeBundle bundle : bundles) {
+      if (bundle.getContent() == null) {
+        return false;
+      }
+    }
+    return true;
   }
 }
