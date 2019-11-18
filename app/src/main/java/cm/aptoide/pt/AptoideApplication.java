@@ -139,11 +139,11 @@ public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
-  private static final String RAKAM_URL = "http://rak-api.aptoide.com:9999";
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
+  @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject CacheHelper cacheHelper;
@@ -351,7 +351,7 @@ public abstract class AptoideApplication extends Application {
     RakamClient instance = Rakam.getInstance();
 
     try {
-      instance.initialize(this, new URL(RAKAM_URL), BuildConfig.RAKAM_API_KEY);
+      instance.initialize(this, new URL(rakamBaseHost), BuildConfig.RAKAM_API_KEY);
     } catch (MalformedURLException e) {
       Logger.getInstance()
           .e(TAG, "error: ", e);

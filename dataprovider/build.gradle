@@ -62,6 +62,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['internal', 'prod']
     }
     prod {
@@ -92,6 +94,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['prod', 'internal']
     }
   }
