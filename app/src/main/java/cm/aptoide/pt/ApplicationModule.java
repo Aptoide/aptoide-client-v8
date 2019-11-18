@@ -1985,4 +1985,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
     return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
+
+  @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
+  }
 }
