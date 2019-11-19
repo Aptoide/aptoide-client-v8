@@ -20,7 +20,7 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
             experimentAssignment = experiment.assignment
           }
           when (experimentAssignment) {
-            "default", "control" -> {
+            "control" -> {
               appViewAnalytics.sendSimilarABTestGroupEvent(true)
               isControlGroup = true
               return@flatMap Single.just(false)
@@ -30,6 +30,10 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
               isControlGroup = false
               return@flatMap Single.just(true)
             }
+            "default" -> {
+              isControlGroup = true
+              return@flatMap Single.just(false)
+            }
             else -> {
               isControlGroup = true
               return@flatMap Single.just(false)
@@ -38,11 +42,17 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
         }
   }
 
-  fun recordImpression() {
-    appViewAnalytics.sendSimilarABTestImpressionEvent(isControlGroup)
+  fun recordImpression(): Completable {
+    return abTestManager.getExperiment(EXPERIMENT_ID, type)
+        .filter { !it.isExperimentOver && it.isPartOfExperiment }
+        .toCompletable()
+        .doOnCompleted { appViewAnalytics.sendSimilarABTestImpressionEvent(isControlGroup) }
   }
 
-  fun recordConversion() {
-    appViewAnalytics.sendSimilarABTestConversionEvent(isControlGroup)
+  fun recordConversion(): Completable {
+    return abTestManager.getExperiment(EXPERIMENT_ID, type)
+        .filter { !it.isExperimentOver && it.isPartOfExperiment }
+        .toCompletable()
+        .doOnCompleted { appViewAnalytics.sendSimilarABTestConversionEvent(isControlGroup) }
   }
 }

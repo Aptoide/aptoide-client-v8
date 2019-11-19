@@ -4,6 +4,7 @@ import cm.aptoide.pt.abtesting.ABTestManager
 import cm.aptoide.pt.abtesting.RakamExperiment
 import cm.aptoide.pt.app.AppViewAnalytics
 import cm.aptoide.pt.logger.Logger
+import rx.Completable
 import rx.Single
 
 open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
@@ -16,15 +17,17 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
     return Single.just(true)
   }
 
-  fun recordImpression() {
+  fun recordImpression(): Completable {
     Logger.getInstance()
         .d("SimilarAppsExperiment",
             "similar_apps_impression: $isControlGroup - NOT registering analytics")
+    return Completable.complete()
   }
 
-  fun recordConversion() {
+  fun recordConversion(): Completable {
     Logger.getInstance()
         .d("SimilarAppsExperiment",
             "similar_apps_conversion: $isControlGroup - NOT registering analytics")
+    return Completable.complete()
   }
 }
