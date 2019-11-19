@@ -128,7 +128,8 @@ public class AppViewPresenterTest {
   @Test public void handleLoadAppView() {
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
     when(appViewManager.observeAppViewModel()).thenReturn(Observable.just(appViewModel));
-    when(appViewManager.shouldLoadInterstitialAd()).thenReturn(Single.just(false));
+    when(appViewManager.shouldLoadInterstitialAd(appModel.getPackageName())).thenReturn(
+        Single.just(false));
     when(appViewManager.loadAdsFromAppView()).thenReturn(Single.just(new SearchAdResult()));
     when(appViewManager.shouldLoadBannerAd()).thenReturn(Single.just(false));
     when(appViewManager.loadPromotionViewModel()).thenReturn(

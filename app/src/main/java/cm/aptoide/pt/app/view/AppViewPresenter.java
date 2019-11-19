@@ -211,7 +211,8 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
-        .isMature()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
+        .isMature(), appViewModel.getAppModel()
+        .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
         .isMature()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -220,8 +221,8 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(boolean isMature) {
-    return appViewManager.shouldLoadInterstitialAd()
+  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
+    return appViewManager.shouldLoadInterstitialAd(packageName)
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
@@ -391,7 +392,8 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.installAppClick())
         .flatMapSingle(__ -> appViewManager.getAppModel())
-        .filter(appModel -> !appModel.isAppCoinApp())
+        .filter(appModel -> !(appModel.isAppCoinApp() || "com.appcoins.wallet".equals(
+            appModel.getPackageName())))
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
