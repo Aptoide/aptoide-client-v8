@@ -73,7 +73,8 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -772,7 +773,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.similarAppsVisibility())
-        .doOnNext(__ -> similarAppsExperiment.recordImpression())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -783,7 +784,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installAppClick())
         .flatMap(__ -> view.clickSimilarApp())
-        .doOnNext(__ -> similarAppsExperiment.recordConversion())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordConversion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
