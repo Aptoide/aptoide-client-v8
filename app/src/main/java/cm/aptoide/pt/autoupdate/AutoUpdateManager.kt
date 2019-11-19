@@ -1,5 +1,6 @@
 package cm.aptoide.pt.autoupdate
 
+import android.content.SharedPreferences
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
@@ -16,7 +17,8 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
                              private val downloadAnalytics: DownloadAnalytics,
                              private val localVersionCode: Int,
                              private val autoUpdateRepository: AutoUpdateRepository,
-                             private val localVersionSdk: Int) {
+                             private val localVersionSdk: Int,
+                             private val sharedPrefereneces: SharedPreferences) {
 
   fun shouldUpdate(): Observable<Boolean> {
     return loadAutoUpdateModel().toObservable().map { it.shouldUpdate }
@@ -40,6 +42,16 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
           .toCompletable()
           .andThen(getInstall())
     }
+  }
+
+  fun shouldShowAutoUpdateDialog(): Boolean {
+    return sharedPrefereneces.getInt("showAutoUpdate", 0) % 5 == 0
+  }
+
+  fun incrementeAutoUpdateShow() {
+    var autoUpdateShow = sharedPrefereneces.getInt("showAutoUpdate", 0)
+    autoUpdateShow++
+    sharedPrefereneces.edit().putInt("showAutoUpdate", autoUpdateShow).apply()
   }
 
   private fun loadAutoUpdateModel(): Single<AutoUpdateModel> {
