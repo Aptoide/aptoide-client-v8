@@ -3,6 +3,7 @@ package cm.aptoide.pt.abtesting.experiments
 import cm.aptoide.pt.abtesting.ABTestManager
 import cm.aptoide.pt.abtesting.RakamExperiment
 import cm.aptoide.pt.app.AppViewAnalytics
+import rx.Completable
 import rx.Single
 
 open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
