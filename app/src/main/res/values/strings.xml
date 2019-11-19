@@ -616,6 +616,10 @@
   <string name="holidayspromotion_message_dealformillions_description">Beat the banker by taking deals or simply not and holding out to reveal your briefcase.</string>
   <string name="holidayspromotion_message_daysofempire_description">Build your army, construct a city and destroy your enemies on the battlefield.</string>
   <string name="holidayspromotion_message_hercules_description">Help Hercules and Megara undo the damage done by the vengeful Gods in this greek adventure.</string>
+  <string name="holidayspromotion_message_space_shooter_description">If you are a fan of sky fire shooting, Space shooter: Galaxy attack game is game for you.</string>
+  <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
+  <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
 
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
