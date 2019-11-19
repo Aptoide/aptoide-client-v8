@@ -180,6 +180,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Promotion> claimAppClick();
 
+  Observable<Void> iabInfoClick();
+
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 
   void showConsentDialog();
