@@ -121,10 +121,6 @@ public class BundlesRepository {
     });
   }
 
-  public void updateCache(List<HomeBundle> homeBundles) {
-    cachedBundles.put(HOME_BUNDLE_KEY, homeBundles);
-  }
-
   public void setHomeLoadMoreError() {
     List<HomeBundle> list = cachedBundles.get(HOME_BUNDLE_KEY);
     if (!list.isEmpty() && !(list.get(list.size() - 1) instanceof ErrorHomeBundle)) {

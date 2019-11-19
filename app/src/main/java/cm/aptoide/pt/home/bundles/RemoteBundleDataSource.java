@@ -24,7 +24,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import com.google.android.exoplayer2.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

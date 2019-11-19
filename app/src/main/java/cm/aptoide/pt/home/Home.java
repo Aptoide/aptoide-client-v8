@@ -190,7 +190,6 @@ public class Home {
         }
       }
     }
-    bundlesRepository.updateCache(homeBundles);
     return Single.just(homeBundles);
   }
 
