@@ -1220,6 +1220,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .map(promotionAppClick -> promotionAppClick.getPromotion());
   }
 
+  @Override public Observable<Void> iabInfoClick() {
+    return Observable.merge(RxView.clicks(poaIabInfo), RxView.clicks(iabInfo));
+  }
+
   @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
     manageSimilarAppsVisibility(hasSimilarApps, true);
   }
