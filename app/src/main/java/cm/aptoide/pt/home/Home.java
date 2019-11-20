@@ -96,7 +96,7 @@ public class Home {
   }
 
   public Observable<HomeBundlesModel> loadNextHomeBundles() {
-    return bundlesRepository.loadNextHomeBundles()
+    return bundlesRepository.loadNextHomeBundles(false)
         .doOnNext(homeBundlesModel -> {
           if (homeBundlesModel.hasErrors()) {
             setLoadMoreError();
@@ -158,6 +158,15 @@ public class Home {
     return moPubAdsManager.shouldShowConsentDialog();
   }
 
+  public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId,
+      HomeBundlesModel homeBundlesModel) {
+    return reactionsManager.loadReactionModel(cardId, groupId)
+        .toObservable()
+        .filter(__ -> homeBundlesModel.isComplete())
+        .toSingle()
+        .flatMap(loadReactionModel -> getUpdatedCards(homeBundlesModel, loadReactionModel, cardId));
+  }
+
   public Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
         .flatMap(loadReactionModel -> bundlesRepository.loadHomeBundles()
@@ -173,7 +182,7 @@ public class Home {
       if (homeBundle.getType() == HomeBundle.BundleType.EDITORIAL
           && homeBundle instanceof ActionBundle) {
         ActionItem actionBundle = ((ActionBundle) homeBundle).getActionItem();
-        if (actionBundle.getCardId()
+        if (actionBundle != null && actionBundle.getCardId()
             .equals(cardId)) {
           actionBundle.setReactions(loadReactionModel.getTopReactionList());
           actionBundle.setNumberOfReactions(loadReactionModel.getTotal());
@@ -181,7 +190,6 @@ public class Home {
         }
       }
     }
-    bundlesRepository.updateCache(homeBundles);
     return Single.just(homeBundles);
   }
 
