@@ -39,10 +39,10 @@ public class BundlesRepositoryTest {
 
   @Test public void loadHomeBundlesNoCacheTest() {
     //When the manager asks for bundles and there's no cached bundles, then it should call the bundleDataSource for more apps
-    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, false)).thenReturn(
+    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, true)).thenReturn(
         Observable.just(new HomeBundlesModel(true)));
     bundlesRepository.loadHomeBundles();
-    verify(bundleDataSource).loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, false);
+    verify(bundleDataSource).loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, true);
   }
 
   @Test public void loadHomeBundlesWithCacheTest() {
