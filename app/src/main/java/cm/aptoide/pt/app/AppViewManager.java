@@ -356,21 +356,25 @@ public class AppViewManager {
             shouldLoad && !appModel.hasBilling() && !appModel.hasAdvertising()));
   }
 
-  public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubAdsManager.shouldHaveInterstitialAds()
-        .flatMap(hasAds -> {
-          if (hasAds) {
-            return moPubAdsManager.shouldShowAds()
-                .doOnSuccess(showAds -> {
-                  if (!showAds) {
-                    sendAdsBlockByOfferEvent();
-                  }
-                });
-          } else {
-            return Single.just(false);
-          }
-        })
-        .flatMap(this::shouldLoadAds);
+  public Single<Boolean> shouldLoadInterstitialAd(String packageName) {
+    if (packageName.equals("com.appcoins.wallet")) {
+      return Single.just(false);
+    } else {
+      return moPubAdsManager.shouldHaveInterstitialAds()
+          .flatMap(hasAds -> {
+            if (hasAds) {
+              return moPubAdsManager.shouldShowAds()
+                  .doOnSuccess(showAds -> {
+                    if (!showAds) {
+                      sendAdsBlockByOfferEvent();
+                    }
+                  });
+            } else {
+              return Single.just(false);
+            }
+          })
+          .flatMap(this::shouldLoadAds);
+    }
   }
 
   private void sendAdsBlockByOfferEvent() {
