@@ -620,6 +620,7 @@
   <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
   <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
   <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
 
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
@@ -736,8 +737,8 @@
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">UPDATE</string>
 
-  <string name="auto_update_popup_title">Update Aptoide!</string>
-  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
+  <string name="auto_update_popup_title">Update Ready to Install!</string>
+  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
 
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
