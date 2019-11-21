@@ -631,8 +631,11 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeRakamSdk() {
-    return Completable.fromAction(() -> initializeRakam())
-        .subscribeOn(Schedulers.newThread());
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      return Completable.fromAction(() -> initializeRakam())
+          .subscribeOn(Schedulers.newThread());
+    }
+    return Completable.complete();
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
