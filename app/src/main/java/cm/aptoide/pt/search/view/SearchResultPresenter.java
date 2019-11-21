@@ -91,8 +91,6 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleClickOnBottomNavWithoutResults();
     handleErrorRetryClick();
     listenToSearchQueries();
-
-    loadBannerAd();
   }
 
   private void handleErrorRetryClick() {
@@ -107,18 +105,13 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, crashReport::log);
   }
 
-  private void loadBannerAd() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.showingSearchResultsView())
-        .observeOn(ioScheduler)
-        .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
-        .filter(loadBanner -> loadBanner)
+  private Completable loadBannerAd() {
+    return searchManager.shouldLoadBannerAd()
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showBannerAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
+        .doOnSuccess(shouldLoad -> {
+          if (shouldLoad) view.showBannerAd();
+        })
+        .toCompletable();
   }
 
   @VisibleForTesting public void handleFragmentRestorationVisibility() {
@@ -249,6 +242,12 @@ import rx.exceptions.OnErrorNotImplementedException;
                 view.setAllStoresAdsResult(ad);
                 view.setFollowedStoresAdsResult(ad);
               }
+            })
+            .flatMapCompletable(ad -> {
+              if (ad == null) {
+                return loadBannerAd();
+              }
+              return Completable.complete();
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -362,16 +361,7 @@ import rx.exceptions.OnErrorNotImplementedException;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(
               getItemCount(getResultList(data)));
-        })
-        .observeOn(ioScheduler)
-        .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
-            .observeOn(viewScheduler)
-            .doOnSuccess(loadNativeAds -> {
-              if (loadNativeAds) {
-                view.showNativeAds(query);
-              }
-            })
-            .map(__ -> nonFollowedStoresSearchResult));
+        });
   }
 
   @NonNull

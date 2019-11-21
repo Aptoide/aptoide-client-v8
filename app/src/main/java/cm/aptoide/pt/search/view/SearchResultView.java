@@ -108,8 +108,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<Boolean> showingSearchResultsView();
 
-  void showNativeAds(String query);
-
   void showNoNetworkView();
 
   void showGenericErrorView();
