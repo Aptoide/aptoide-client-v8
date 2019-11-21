@@ -427,7 +427,8 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(resumeDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.RESUME,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId(),
+            action))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.RESUME)));
   }
