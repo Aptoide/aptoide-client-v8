@@ -356,7 +356,7 @@ public class AppViewPresenter implements Presenter {
   private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMap(__ -> downloadInRange(0, 100))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showDownloadingSimilarApps(
@@ -371,7 +371,7 @@ public class AppViewPresenter implements Presenter {
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(appModel -> !appModel.isAppCoinApp())
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
