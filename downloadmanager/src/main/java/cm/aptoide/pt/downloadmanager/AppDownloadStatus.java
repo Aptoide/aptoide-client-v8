@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 
 /**
@@ -103,6 +104,8 @@ public class AppDownloadStatus {
           return AppDownloadState.PROGRESS;
         } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
             == fileDownloadCallbackList.size() - 1) {
+          Logger.getInstance()
+              .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
           return AppDownloadState.COMPLETED;
         }
       } else if (fileDownloadCallback.getDownloadState()
@@ -130,6 +133,8 @@ public class AppDownloadStatus {
   }
 
   private void refreshAppDownloadState() {
+    Logger.getInstance()
+        .d("lol", "refreshing app download state");
     appDownloadState = getAppDownloadState();
   }
 

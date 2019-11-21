@@ -2,6 +2,7 @@ package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -19,6 +20,11 @@ public class DownloadsRepository {
   }
 
   public void save(Download download) {
+    Logger.getInstance()
+        .d("lol", "saving a download: "
+            + download.getMd5()
+            + " with the state "
+            + download.getOverallDownloadStatus());
     downloadAccessor.save(download);
   }
 
@@ -43,6 +49,8 @@ public class DownloadsRepository {
   }
 
   public Completable remove(String md5) {
+    Logger.getInstance()
+        .d("lol", "removing download from the repository !!");
     return Completable.fromAction(() -> downloadAccessor.delete(md5));
   }
 
@@ -63,6 +71,8 @@ public class DownloadsRepository {
   }
 
   public Observable<List<Download>> getCompletedDownloads() {
-    return downloadAccessor.getCompletedDownloads();
+    return downloadAccessor.getCompletedDownloads()
+        .doOnNext(list -> Logger.getInstance()
+            .d("lol", "emitting list from the repository"));
   }
 }

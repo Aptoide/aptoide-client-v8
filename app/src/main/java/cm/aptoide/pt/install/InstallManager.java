@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -50,6 +51,7 @@ public class InstallManager {
   private final DownloadsRepository downloadRepository;
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
+  private final CrashReport crashReporter;
   private List<DownloadInstallationType> startedDownloadsList;
   private Subscription installCompletedDownloadsSubscription;
 
@@ -57,7 +59,7 @@ public class InstallManager {
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager) {
+      PackageInstallerManager packageInstallerManager, CrashReport crashReporter) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -67,6 +69,7 @@ public class InstallManager {
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
     this.packageInstallerManager = packageInstallerManager;
+    this.crashReporter = crashReporter;
   }
 
   public void start() {
@@ -81,14 +84,19 @@ public class InstallManager {
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
         .flatMapCompletable(
-            download -> Observable.just(getDownloadInstallationInfo(download.getMd5()))
+            download -> Observable.just(takeDownloadInstallationInfo(download.getMd5()))
                 .filter(downloadInstallationType -> downloadInstallationType != null)
                 .flatMapCompletable(
                     downloadInstallationType -> stopForegroundAndInstall(download.getAction(),
                         downloadInstallationType))
                 .toCompletable()
                 .andThen(sendBackgroundInstallFinishedBroadcast(download)))
-        .subscribe();
+        .retry()
+        .subscribe(__ -> {
+        }, throwable -> {
+          throwable.printStackTrace();
+          crashReporter.log(throwable);
+        });
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
@@ -108,7 +116,11 @@ public class InstallManager {
 
   private Completable stopForegroundAndInstall(int downloadAction,
       DownloadInstallationType downloadInstallationType) {
-
+    Logger.getInstance()
+        .d(TAG, "going to pop install from: "
+            + downloadInstallationType.getMd5()
+            + "and download action: "
+            + downloadAction);
     switch (downloadAction) {
       case Download.ACTION_INSTALL:
         return installer.install(context, downloadInstallationType.getMd5(),
@@ -128,14 +140,21 @@ public class InstallManager {
     }
   }
 
-  private DownloadInstallationType getDownloadInstallationInfo(String md5) {
-    for (DownloadInstallationType downloadInstallationType : startedDownloadsList) {
-      if (downloadInstallationType.getMd5()
-          .equals(md5)) {
-        return downloadInstallationType;
+  private DownloadInstallationType takeDownloadInstallationInfo(String md5) {
+    int indexOfDownloadInstallationInfo = -1;
+
+    for (int i = 0; i < startedDownloadsList.size(); i++) {
+      if (md5.equals(startedDownloadsList.get(i)
+          .getMd5())) {
+        indexOfDownloadInstallationInfo = i;
       }
     }
-    return null;
+
+    if (indexOfDownloadInstallationInfo != -1) {
+      return startedDownloadsList.remove(indexOfDownloadInstallationInfo);
+    } else {
+      return null;
+    }
   }
 
   public Completable cancelInstall(String md5, String packageName, int versionCode) {
@@ -327,7 +346,10 @@ public class InstallManager {
     if (download != null) {
       progress = download.getOverallProgress();
       Logger.getInstance()
-          .d(TAG, " download is not null " + progress);
+          .d(TAG, " download is not null "
+              + progress
+              + " state "
+              + download.getOverallDownloadStatus());
     } else {
       Logger.getInstance()
           .d(TAG, " download is null");
@@ -444,6 +466,8 @@ public class InstallManager {
       Download download) {
     return errors.flatMap(throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
+        Logger.getInstance()
+            .d(TAG, "saved the newly created download because the other one was null");
         downloadRepository.save(download);
         return Observable.just(throwable);
       } else {
@@ -465,7 +489,18 @@ public class InstallManager {
         .doOnNext(download -> initInstallationProgress(download, forceDefaultInstall,
             shouldSetPackageInstaller))
         .doOnNext(__ -> startInstallService(md5, forceDefaultInstall, shouldSetPackageInstaller))
-        .flatMapCompletable(download -> aptoideDownloadManager.startDownload(download))
+        .flatMapCompletable(download -> {
+          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+            return Completable.fromAction(() -> {
+              Logger.getInstance()
+                  .d(TAG,
+                      "Saving an already completed download to trigger the download installation");
+              downloadRepository.save(download);
+            });
+          } else {
+            return aptoideDownloadManager.startDownload(download);
+          }
+        })
         .map(__ -> null);
   }
 

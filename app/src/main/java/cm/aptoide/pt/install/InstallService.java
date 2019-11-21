@@ -7,7 +7,6 @@ package cm.aptoide.pt.install;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -88,10 +87,8 @@ public class InstallService extends BaseService implements DownloadsNotification
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         Logger.getInstance()
             .d(TAG, "Observing download and install with an intent");
-        subscriptions.add(downloadAndInstall(this, md5, intent.getExtras()
-            .getBoolean(EXTRA_FORCE_DEFAULT_INSTALL, false), intent.getExtras()
-            .getBoolean(EXTRA_SET_PACKAGE_INSTALLER, false)).subscribe(
-            hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
+        subscriptions.add(downloadAndInstall(md5).subscribe(hasNext -> treatNext(hasNext),
+            throwable -> removeNotificationAndStop()));
       } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         subscriptions.add(stopDownload(md5).subscribe(hasNext -> treatNext(hasNext),
             throwable -> removeNotificationAndStop()));
@@ -105,8 +102,8 @@ public class InstallService extends BaseService implements DownloadsNotification
     } else {
       Logger.getInstance()
           .d(TAG, "Observing current download and installation without an intent");
-      subscriptions.add(downloadAndInstallCurrentDownload(this, false, false).subscribe(
-          hasNext -> treatNext(hasNext), throwable -> removeNotificationAndStop()));
+      subscriptions.add(downloadAndInstallCurrentDownload().subscribe(hasNext -> treatNext(hasNext),
+          throwable -> removeNotificationAndStop()));
     }
     return START_STICKY;
   }
@@ -149,22 +146,16 @@ public class InstallService extends BaseService implements DownloadsNotification
     }
   }
 
-  private Observable<Boolean> downloadAndInstallCurrentDownload(Context context,
-      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
+  private Observable<Boolean> downloadAndInstallCurrentDownload() {
     return downloadManager.getCurrentInProgressDownload()
         .first()
-        .flatMap(currentDownload -> downloadAndInstall(context, currentDownload.getMd5(),
-            forceDefaultInstall, shouldSetPackageInstaller));
+        .flatMap(currentDownload -> downloadAndInstall(currentDownload.getMd5()));
   }
 
-  private Observable<Boolean> downloadAndInstall(Context context, String md5,
-      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
+  private Observable<Boolean> downloadAndInstall(String md5) {
     return downloadManager.getDownload(md5)
         .doOnNext(download -> {
           stopOnDownloadError(download.getOverallDownloadStatus());
-          if (download.getOverallDownloadStatus() == Download.PROGRESS) {
-            downloadAnalytics.startProgress(download);
-          }
         })
         .doOnNext(download -> Logger.getInstance()
             .d(TAG, "received download: "
@@ -187,10 +178,6 @@ public class InstallService extends BaseService implements DownloadsNotification
     return downloadManager.getCurrentActiveDownloads()
         .first()
         .map(downloads -> downloads != null && !downloads.isEmpty());
-  }
-
-  private Installer getInstaller() {
-    return defaultInstaller;
   }
 
   @NonNull private NotificationCompat.Action getPauseAction(int requestCode, String md5) {

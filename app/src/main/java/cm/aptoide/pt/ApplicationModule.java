@@ -335,7 +335,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RootInstallerProvider rootInstallerProvider) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager);
+        downloadsRepository, installedRepository, packageInstallerManager,
+        CrashReport.getInstance());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
