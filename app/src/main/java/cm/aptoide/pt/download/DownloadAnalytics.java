@@ -101,6 +101,14 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
+  @Override public void startProgress(Download download) {
+    updateDownloadEventWithHasProgress(
+        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
+    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+    updateDownloadEventWithHasProgress(
+        download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
+  }
+
   private void sendDownloadCompletedEvent(Download download) {
     String key = download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME;
     DownloadEvent downloadEvent = cache.get(key);
@@ -241,14 +249,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
     obb.put(URL, url);
     return obb;
-  }
-
-  public void startProgress(Download download) {
-    updateDownloadEventWithHasProgress(
-        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
-    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
-    updateDownloadEventWithHasProgress(
-        download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
   }
 
   private void updateDownloadEventWithHasProgress(String key) {

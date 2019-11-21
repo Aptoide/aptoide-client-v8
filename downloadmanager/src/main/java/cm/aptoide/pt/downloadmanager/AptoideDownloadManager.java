@@ -291,6 +291,11 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
+        .doOnNext(download -> {
+          if (download.getOverallDownloadStatus() == Download.PROGRESS) {
+            downloadAnalytics.startProgress(download);
+          }
+        })
         .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
