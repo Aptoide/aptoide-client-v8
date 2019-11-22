@@ -229,6 +229,9 @@ android {
         "\"" + APPLOVIN_SDK_VERSION + "\""
     variant.buildConfigField "String", "APPLOVIN_ADAPTER_VERSION",
         "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
+    variant.buildConfigField "String", "APPNEXT_SDK_VERSION",
+        "\"" + APPNEXT_SDK_VERSION + "\""
+
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
@@ -294,6 +297,13 @@ android {
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
     variant.buildConfigField "String", "MOPUB_BANNER_50_HOME_PLACEMENT_ID",
         "\"" + project.MOPUB_BANNER_50_PLACEMENT_ID_PROD + "\""
+
+    variant.buildConfigField "String", "MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID",
+        "\"" + project.MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID",
+        "\"" + project.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID + "\""
+    variant.buildConfigField "String", "MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID",
+        "\"" + project.MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID + "\""
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY + "\""
@@ -437,6 +447,11 @@ dependencies {
   implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
   implementation "com.unity3d.ads:unity-ads:${UNITY_ADS_SDK_VERSION}"
   implementation "com.mopub.mediation:unityads:${MOPUB_MEDIATION_UNITYADS_VERSION}"
+
+  //AppNext
+  implementation "com.appnext.sdk.adapters:mopub-ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-native-ads:${APPNEXT_SDK_VERSION}"
+  implementation "com.appnext.sdk.adapters:mopub-banners:${APPNEXT_SDK_VERSION}"
 
   //Inmobi
   implementation "com.inmobi.monetization:inmobi-ads:${INMOBI_SDK_VERSION}"

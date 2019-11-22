@@ -207,7 +207,13 @@ public class PromotionsService {
             .getSplits()) : Collections.emptyList(), app.getApp()
             .hasSplits() ? app.getApp()
             .getAab()
-            .getRequiredSplits() : Collections.emptyList()));
+            .getRequiredSplits() : Collections.emptyList(), app.getApp()
+            .getFile()
+            .getMalware()
+            .getRank()
+            .toString(), app.getApp()
+            .getStore()
+            .getName()));
       }
     }
 

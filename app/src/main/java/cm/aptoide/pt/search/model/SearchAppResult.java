@@ -106,4 +106,8 @@ import org.parceler.Parcel;
   public boolean hasAppcBilling() {
     return this.appcBilling;
   }
+
+  public boolean isAppcApp() {
+    return hasAppcBilling() || hasAppcAdvertising();
+  }
 }

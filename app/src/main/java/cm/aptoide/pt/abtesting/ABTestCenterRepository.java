@@ -23,13 +23,14 @@ public class ABTestCenterRepository implements AbTestRepository {
     this.cacheValidator = cacheValidator;
   }
 
-  public Observable<Experiment> getExperiment(String identifier) {
+  public Observable<Experiment> getExperiment(String identifier,
+      BaseExperiment.ExperimentType type) {
     if (localCache.containsKey(identifier)) {
       if (cacheValidator.isExperimentValid(identifier)) {
         return Observable.just(localCache.get(identifier)
             .getExperiment());
       } else {
-        return service.getExperiment(identifier)
+        return service.getExperiment(identifier, type)
             .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                 __ -> Observable.just(experimentToCache.getExperiment())));
       }
@@ -44,7 +45,7 @@ public class ABTestCenterRepository implements AbTestRepository {
             }
             return Observable.just(model.getExperiment());
           } else {
-            return service.getExperiment(identifier)
+            return service.getExperiment(identifier, type)
                 .flatMap(
                     experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
                         __ -> Observable.just(experimentToCache.getExperiment())));
@@ -52,23 +53,25 @@ public class ABTestCenterRepository implements AbTestRepository {
         });
   }
 
-  public Observable<Boolean> recordImpression(String identifier) {
+  public Observable<Boolean> recordImpression(String identifier,
+      BaseExperiment.ExperimentType type) {
     if (cacheValidator.isCacheValid(identifier)) {
-      return service.recordImpression(identifier);
+      return service.recordImpression(identifier, type);
     }
     return Observable.just(false);
   }
 
-  public Observable<Boolean> recordAction(String identifier) {
+  public Observable<Boolean> recordAction(String identifier, BaseExperiment.ExperimentType type) {
     if (cacheValidator.isCacheValid(identifier)) {
-      return getExperiment(identifier).flatMap(
-          experiment -> service.recordAction(identifier, experiment.getAssignment()));
+      return getExperiment(identifier, null).flatMap(
+          experiment -> service.recordAction(identifier, experiment.getAssignment(), type));
     }
     return Observable.just(false);
   }
 
-  @Override public Observable<Boolean> recordAction(String identifier, int position) {
-    return recordAction(identifier);
+  @Override public Observable<Boolean> recordAction(String identifier, int position,
+      BaseExperiment.ExperimentType type) {
+    return recordAction(identifier, type);
   }
 
   public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {

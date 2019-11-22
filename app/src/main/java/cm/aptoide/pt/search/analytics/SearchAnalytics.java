@@ -3,6 +3,8 @@ package cm.aptoide.pt.search.analytics;
 import androidx.annotation.NonNull;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.Source;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,12 +16,10 @@ public class SearchAnalytics {
   public static final String SEARCH = "Search";
   public static final String NO_RESULTS = "Search_No_Results";
   public static final String APP_CLICK = "Search_Results_App_View_Click";
+  public static final String SEARCH_RESULT_CLICK = "Search_Result_Click";
   public static final String SEARCH_START = "Search_Start";
   public static final String AB_SEARCH_ACTION = "AB_Search_Action";
   public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
-  private static final String FROM_TRENDING = "trending";
-  private static final String FROM_AUTOCOMPLETE = "autocomplete";
-  private static final String MANUAL = "manual";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -28,49 +28,81 @@ public class SearchAnalytics {
     this.navigationTracker = navigationTracker;
   }
 
-  public void searchFromSuggestion(String query, int suggestionPosition, String inputQuery) {
-
-    search(query, true, suggestionPosition,
-        inputQuery.isEmpty() ? FROM_TRENDING : FROM_AUTOCOMPLETE, inputQuery);
+  public void searchFromSuggestion(SearchQueryModel searchQueryModel, int suggestionPosition) {
+    search(searchQueryModel, suggestionPosition);
   }
 
-  public void search(String query) {
-    search(query, false, 0, MANUAL, query);
+  public void search(SearchQueryModel searchQueryModel) {
+    search(searchQueryModel, 0);
   }
 
-  private void search(String query, boolean isSuggestion, int suggestionPosition, String source,
-      String inputQuery) {
+  private void search(SearchQueryModel searchQueryModel, int suggestionPosition) {
     Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.QUERY, query);
-    map.put(AttributeKey.SEARCH_TERM_SOURCE, source);
-    map.put(AttributeKey.KEYWORD_INPUT, inputQuery);
-    if (isSuggestion) {
+    map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
+    map.put(AttributeKey.SEARCH_TERM_SOURCE, parseSource(searchQueryModel.getSource()));
+    map.put(AttributeKey.KEYWORD_INPUT, searchQueryModel.getUserQuery());
+    if (searchQueryModel.getSource() != Source.MANUAL) {
       map.put(AttributeKey.SEARCH_TERM_POSITION, Integer.toString(suggestionPosition));
     }
     analyticsManager.logEvent(map, SEARCH, AnalyticsManager.Action.CLICK, getViewName(false));
   }
 
-  public void searchNoResults(String query) {
-    analyticsManager.logEvent(createMapData(AttributeKey.QUERY, query), NO_RESULTS,
-        AnalyticsManager.Action.CLICK, getViewName(false));
+  public void searchNoResults(SearchQueryModel searchQueryModel) {
+    analyticsManager.logEvent(createMapData(AttributeKey.QUERY, searchQueryModel.getFinalQuery()),
+        NO_RESULTS, AnalyticsManager.Action.CLICK, getViewName(false));
+    sendRakkamSearchResults(searchQueryModel, true, null, false, false, 0);
   }
 
-  public void searchAppClick(String query, String packageName, int position) {
+  public void searchAppClick(SearchQueryModel searchQueryModel, String packageName, int position,
+      boolean hasAppc) {
     Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.QUERY, query);
+    map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     map.put(AttributeKey.IS_AD, false);
     map.put(AttributeKey.POSITION, position);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
+    sendRakkamSearchResults(searchQueryModel, false, packageName, false, hasAppc, position);
   }
 
-  public void searchAdClick(String query, String packageName, int position) {
+  public void searchAdClick(SearchQueryModel searchQueryModel, String packageName, int position,
+      boolean hasAppc) {
     Map<String, Object> map = new HashMap<>();
-    map.put(AttributeKey.QUERY, query);
+    map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
     map.put(AttributeKey.PACKAGE_NAME, packageName);
     map.put(AttributeKey.IS_AD, true);
     map.put(AttributeKey.POSITION, position);
     analyticsManager.logEvent(map, APP_CLICK, AnalyticsManager.Action.CLICK, getViewName(true));
+    sendRakkamSearchResults(searchQueryModel, false, packageName, true, hasAppc, position);
+  }
+
+  public void sendRakkamSearchResults(SearchQueryModel searchQueryModel, boolean empty,
+      String packageName, boolean isAd, boolean isAppc, int position) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(AttributeKey.QUERY, searchQueryModel.getFinalQuery());
+    map.put(AttributeKey.KEYWORD_INPUT, searchQueryModel.getUserQuery());
+    map.put(AttributeKey.SEARCH_TERM_SOURCE, parseSource(searchQueryModel.getSource()));
+    if (!empty) {
+      map.put(AttributeKey.PACKAGE_NAME, packageName);
+      map.put(AttributeKey.POSITION, position);
+      map.put(AttributeKey.IS_AD, isAd);
+      map.put(AttributeKey.IS_APPC, isAppc);
+    } else {
+      map.put(AttributeKey.POSITION, "empty");
+    }
+    analyticsManager.logEvent(map, SEARCH_RESULT_CLICK, AnalyticsManager.Action.CLICK,
+        getViewName(true));
+  }
+
+  private String parseSource(Source source) {
+    switch (source) {
+      case FROM_TRENDING:
+        return "trending";
+      case FROM_AUTOCOMPLETE:
+        return "autocomplete";
+      case MANUAL:
+      default:
+        return "manual";
+    }
   }
 
   public void searchStart(@NonNull SearchSource source, boolean isCurrent) {
@@ -95,6 +127,7 @@ public class SearchAnalytics {
     private static final String SEARCH_TERM_SOURCE = "search_term_source";
     private static final String SEARCH_TERM_POSITION = "search_term_position";
     private static final String IS_AD = "is_ad";
+    private static final String IS_APPC = "is_appc";
     private static final String POSITION = "position";
     private static final String KEYWORD_INPUT = "inserted_keyword";
     private static final String AB_TEST_ID = "ab_test_uid";

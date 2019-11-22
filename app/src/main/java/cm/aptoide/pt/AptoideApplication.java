@@ -93,10 +93,9 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
-import cm.aptoide.pt.view.entry.EntryActivity;
-import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -107,6 +106,7 @@ import com.mopub.common.SdkConfiguration;
 import com.mopub.common.logging.MoPubLog;
 import com.mopub.mobileads.GooglePlayServicesAdapterConfiguration;
 import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
+import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import io.rakam.api.Rakam;
@@ -139,11 +139,11 @@ public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
-  private static final String RAKAM_URL = "http://rak-api.aptoide.com:9999";
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
+  @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject CacheHelper cacheHelper;
@@ -187,7 +187,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
-  private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -292,6 +291,7 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
+        .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
@@ -335,8 +335,9 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
-
-    adsUserPropertyManager.start();
+  }
+  private Completable checkAdsUserProperty() {
+    return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
   private Completable setUpFirstRunAnalytics() {
@@ -350,7 +351,7 @@ public abstract class AptoideApplication extends Application {
     RakamClient instance = Rakam.getInstance();
 
     try {
-      instance.initialize(this, new URL(RAKAM_URL), BuildConfig.RAKAM_API_KEY);
+      instance.initialize(this, new URL(rakamBaseHost), BuildConfig.RAKAM_API_KEY);
     } catch (MalformedURLException e) {
       Logger.getInstance()
           .e(TAG, "error: ", e);
@@ -377,6 +378,10 @@ public abstract class AptoideApplication extends Application {
             getMediatedNetworkConfigurationWithAppIdMap(
                 BuildConfig.MOPUB_BANNER_50_HOME_PLACEMENT_ID,
                 BuildConfig.MOPUB_FYBER_APPLICATION_ID))
+        .withAdditionalNetwork(AppnextBaseAdapterConfiguration.class.toString())
+        .withMediatedNetworkConfiguration(AppnextBaseAdapterConfiguration.class.toString(),
+            getMediatedNetworkConfigurationBaseMap(
+                BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID))
         .withAdditionalNetwork(GooglePlayServicesAdapterConfiguration.class.getName())
         .withMediatedNetworkConfiguration(GooglePlayServicesAdapterConfiguration.class.getName(),
             getAdMobAdsPreferencesMap())
@@ -559,13 +564,6 @@ public abstract class AptoideApplication extends Application {
 
   public QManager getQManager() {
     return qManager;
-  }
-
-  public EntryPointChooser getEntryPointChooser() {
-    if (entryPointChooser == null) {
-      entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
-    }
-    return entryPointChooser;
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -796,7 +794,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, EntryActivity.class);
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

@@ -13,6 +13,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -159,7 +160,7 @@ public class SearchResultPresenterTest {
     //Then it should make the search view disappear and navigate to correspondent result
     verify(searchResultView).collapseSearchBar(anyBoolean());
     verify(searchResultView).hideSuggestionsViews();
-    verify(searchNavigator).navigate(anyString());
+    verify(searchNavigator).navigate(any(SearchQueryModel.class));
   }
 
   @Test public void stopLoadingMoreOnDestroyTest() {
@@ -190,7 +191,7 @@ public class SearchResultPresenterTest {
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
     //It should load data
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.getStoreName()).thenReturn("");
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
@@ -230,7 +231,7 @@ public class SearchResultPresenterTest {
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
 
     //It should load data
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.getStoreName()).thenReturn("non-empty");
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
@@ -251,14 +252,14 @@ public class SearchResultPresenterTest {
 
     verify(searchResultView).hideLoading();
     verify(searchResultView).showNoResultsView();
-    verify(searchAnalytics).searchNoResults(anyString());
+    verify(searchAnalytics).searchNoResults(any(SearchQueryModel.class));
   }
 
   @Test public void firstAdsDataLoadTestNonEmptyAds() {
     presenter.firstAdsDataLoad();
 
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.hasLoadedAds()).thenReturn(false);
     when(searchManager.getAdsForQuery(anyString())).thenReturn(Observable.just(searchAdResult));
 
@@ -273,7 +274,7 @@ public class SearchResultPresenterTest {
     presenter.firstAdsDataLoad();
 
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.hasLoadedAds()).thenReturn(false);
     when(searchManager.getAdsForQuery(anyString())).thenReturn(Observable.just(null));
 
@@ -317,13 +318,13 @@ public class SearchResultPresenterTest {
     when(searchAppResult.getPackageName()).thenReturn("random");
     when(searchAppResult.getAppId()).thenReturn((long) 0);
     when(searchAppResult.getStoreName()).thenReturn("random");
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.getStoreTheme()).thenReturn("non-empty");
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
     //verify(searchManager).recordAbTestAction();
-    verify(searchAnalytics).searchAppClick("non-empty", "random", 1);
+    verify(searchAnalytics).searchAppClick(new SearchQueryModel("non-empty"), "random", 1, false);
     verify(searchNavigator).goToAppView(anyLong(), eq("random"), anyString(), eq("random"));
   }
 
@@ -333,13 +334,13 @@ public class SearchResultPresenterTest {
     //When the user clicks on an Ad
     when(searchResultView.onAdClicked()).thenReturn(Observable.just(searchAdResultWrapper));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchAdResult.getPackageName()).thenReturn("random");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //It should send the necessary analytics and navigate to the app's App view
-    verify(searchAnalytics).searchAdClick("non-empty", "random", 1);
+    verify(searchAnalytics).searchAdClick(new SearchQueryModel("non-empty"), "random", 1, false);
     verify(searchNavigator).goToAppView(searchAdResult);
   }
 
@@ -354,7 +355,7 @@ public class SearchResultPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should navigate back to the search view
-    verify(searchNavigator).goToSearchFragment(anyString());
+    verify(searchNavigator).goToSearchFragment(any(SearchQueryModel.class));
   }
 
   @Test public void handleAllStoresListReachedBottomTest() {
@@ -366,7 +367,7 @@ public class SearchResultPresenterTest {
     when(searchResultModel.hasReachedBottomOfAllStores()).thenReturn(false);
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
-    when(searchResultModel.getCurrentQuery()).thenReturn("anyQuery");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
     searchAppResultList.add(searchAppResult);
     when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
@@ -390,7 +391,7 @@ public class SearchResultPresenterTest {
     when(searchResultView.followedStoresResultReachedBottom()).thenReturn(Observable.just(null));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultModel.hasReachedBottomOfFollowedStores()).thenReturn(false);
-    when(searchResultModel.getCurrentQuery()).thenReturn("non-empty");
+    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     List<SearchAppResult> searchAppResultList = new ArrayList<>();
@@ -424,8 +425,8 @@ public class SearchResultPresenterTest {
     //Then it should navigate to the results and send the necessary analytics
     verify(searchResultView).collapseSearchBar(false);
     verify(searchResultView).hideSuggestionsViews();
-    verify(searchAnalytics).search(anyString());
-    verify(searchNavigator).navigate(anyString());
+    verify(searchAnalytics).search(any(SearchQueryModel.class));
+    verify(searchNavigator).navigate(any(SearchQueryModel.class));
   }
 
   @Test public void handleNoSuggestionQueryTextSubmittedTest() {
@@ -444,8 +445,8 @@ public class SearchResultPresenterTest {
     //Then it should navigate to the results and send the necessary analytics
     verify(searchResultView).collapseSearchBar(false);
     verify(searchResultView).hideSuggestionsViews();
-    verify(searchNavigator).navigate(anyString());
-    verify(searchAnalytics).search(anyString());
+    verify(searchNavigator).navigate(any(SearchQueryModel.class));
+    verify(searchAnalytics).search(any(SearchQueryModel.class));
   }
 
   @Test public void handleQueryTextChangedTest() {

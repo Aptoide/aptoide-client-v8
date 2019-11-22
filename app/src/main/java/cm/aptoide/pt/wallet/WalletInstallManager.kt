@@ -49,7 +49,8 @@ class WalletInstallManager(val packageManager: PackageManager,
             walletApp.packageName,
             walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size, walletApp.splits, walletApp.requiredSplits))
+            false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
+            walletApp.trustedBadge, walletApp.storeName))
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,

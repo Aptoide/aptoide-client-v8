@@ -46,6 +46,7 @@ public class Update extends RealmObject {
   private boolean excluded;
   private String trustedBadge;
   private String alternativeApkPath;
+  private String storeName;
 
   private boolean appcUpgrade;
 
@@ -71,7 +72,7 @@ public class Update extends RealmObject {
       long size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
       String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc,
-      RealmList<Split> splits, RealmList<RealmString> requiredSplits) {
+      RealmList<Split> splits, RealmList<RealmString> requiredSplits, String storeName) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -93,6 +94,7 @@ public class Update extends RealmObject {
     this.appcUpgrade = appcUpgrade;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.storeName = storeName;
   }
 
   public long getAppId() {
@@ -281,5 +283,13 @@ public class Update extends RealmObject {
 
   public void setRequiredSplits(RealmList<RealmString> requiredSplits) {
     this.requiredSplits = requiredSplits;
+  }
+
+  public boolean hasSplits() {
+    return splits != null && !splits.isEmpty();
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

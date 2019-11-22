@@ -21,25 +21,30 @@ public class ABTestService {
   private static final String EXPERIMENT_NOT_FOUND = "EXPERIMENT_NOT_FOUND";
   private static final String EXPERIMENT_DRAFT = "EXPERIMENT_IN_DRAFT_STATE";
 
-  private ServiceV7 service;
   private IdsRepository idsRepository;
   private Scheduler scheduler;
+  private ABTestServiceProvider abTestServiceProvider;
 
-  public ABTestService(ServiceV7 service, IdsRepository idsRepository, Scheduler scheduler) {
-    this.service = service;
+  public ABTestService(ABTestServiceProvider abTestServiceProvider, IdsRepository idsRepository,
+      Scheduler scheduler) {
+    this.abTestServiceProvider = abTestServiceProvider;
     this.idsRepository = idsRepository;
     this.scheduler = scheduler;
   }
 
-  public Observable<ExperimentModel> getExperiment(String identifier) {
-    return getAptoideId().flatMap(aptoideId -> service.getExperiment(identifier, aptoideId))
+  public Observable<ExperimentModel> getExperiment(String identifier,
+      BaseExperiment.ExperimentType type) {
+    return getAptoideId().flatMap(aptoideId -> abTestServiceProvider.getService(type)
+        .getExperiment(identifier, aptoideId)
+        .subscribeOn(scheduler))
         .map((ABTestImpressionResponse response) -> mapToExperimentModel(response, false))
         .onErrorReturn(response -> new ExperimentModel(new Experiment(), true));
   }
 
-  public Observable<Boolean> recordImpression(String identifier) {
-    return getAptoideId().flatMap(aptoideId -> service.recordImpression(identifier, aptoideId,
-        new ABTestRequestBody(IMPRESSION)))
+  public Observable<Boolean> recordImpression(String identifier,
+      BaseExperiment.ExperimentType type) {
+    return getAptoideId().flatMap(aptoideId -> abTestServiceProvider.getService(type)
+        .recordImpression(identifier, aptoideId, new ABTestRequestBody(IMPRESSION)))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -47,9 +52,10 @@ public class ABTestService {
         .map(__ -> true);
   }
 
-  public Observable<Boolean> recordAction(String identifier, String assignment) {
-    return getAptoideId().flatMap(
-        aptoideId -> service.recordAction(identifier, aptoideId, new ABTestRequestBody(assignment)))
+  public Observable<Boolean> recordAction(String identifier, String assignment,
+      BaseExperiment.ExperimentType type) {
+    return getAptoideId().flatMap(aptoideId -> abTestServiceProvider.getService(type)
+        .recordAction(identifier, aptoideId, new ABTestRequestBody(assignment)))
         .doOnNext(voidResponse -> Logger.getInstance()
             .d(this.getClass()
                 .getName(), "response : " + voidResponse.isSuccessful()))
@@ -77,7 +83,7 @@ public class ABTestService {
         .subscribeOn(scheduler);
   }
 
-  public interface ServiceV7 {
+  public interface ABTestingService {
     @GET("assignments/applications/Android/experiments/{experimentName}/users/{aptoideId}")
     Observable<ABTestImpressionResponse> getExperiment(
         @Path(value = "experimentName") String experimentName,

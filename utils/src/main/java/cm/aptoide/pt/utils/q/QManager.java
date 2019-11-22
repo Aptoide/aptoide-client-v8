@@ -2,7 +2,6 @@ package cm.aptoide.pt.utils.q;
 
 import android.app.ActivityManager;
 import android.app.UiModeManager;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Base64;
@@ -16,7 +15,6 @@ import static cm.aptoide.pt.utils.AptoideUtils.SystemU;
  */
 public class QManager {
 
-  private final GlExtensionsManager glExtensionsManager;
   private final Resources resources;
   private final ActivityManager activityManager;
   private final WindowManager windowManager;
@@ -28,44 +26,43 @@ public class QManager {
   private String cachedFilters;
   private UiModeManager uiModeManager;
 
-  public QManager(SharedPreferences sharedPreferences, Resources resources,
-      ActivityManager activityManager, WindowManager windowManager, UiModeManager uiModeManager) {
-    this.glExtensionsManager = new GlExtensionsManager(sharedPreferences);
+  public QManager(Resources resources, ActivityManager activityManager, WindowManager windowManager,
+      UiModeManager uiModeManager) {
     this.resources = resources;
     this.activityManager = activityManager;
     this.windowManager = windowManager;
     this.uiModeManager = uiModeManager;
   }
 
-  public Integer getMinSdk() {
+  private Integer getMinSdk() {
     if (minSdk == null) {
       minSdk = computeMinSdk();
     }
     return minSdk;
   }
 
-  public String getCpuAbi() {
+  private String getCpuAbi() {
     if (cpuAbi == null) {
       cpuAbi = computeCpuAbi();
     }
     return cpuAbi;
   }
 
-  public String getScreenSize() {
+  private String getScreenSize() {
     if (screenSize == null) {
       screenSize = computeScreenSize();
     }
     return screenSize;
   }
 
-  public String getGlEs() {
+  private String getGlEs() {
     if (glEs == null) {
       glEs = computeGlEs();
     }
     return glEs;
   }
 
-  public Integer getDensityDpi() {
+  private Integer getDensityDpi() {
     if (densityDpi == null) {
       densityDpi = computeDensityDpi();
     }
@@ -92,14 +89,6 @@ public class QManager {
     return SystemU.getAbis();
   }
 
-  public String getSupportedOpenGlExtensionsManager() {
-    return glExtensionsManager.getSupportedExtensions();
-  }
-
-  public boolean isSupportedExtensionsDefined() {
-    return glExtensionsManager.isSupportedExtensionsDefined();
-  }
-
   public String getFilters(boolean hwSpecsFilter) {
     if (!hwSpecsFilter) {
       return null;
@@ -121,7 +110,6 @@ public class QManager {
   }
 
   private String computeFilters() {
-
     String filters = "maxSdk="
         + getMinSdk()
         + "&maxScreen="
@@ -133,23 +121,12 @@ public class QManager {
         + "&leanback="
         + hasLeanback()
         + "&myDensity="
-        + getDensityDpi()
-        + (getSupportedOpenGlExtensionsManager().equals("") ? ""
-        : "&myGLTex=" + getSupportedOpenGlExtensionsManager());
+        + getDensityDpi();
 
     return Base64.encodeToString(filters.getBytes(), 0)
         .replace("=", "")
         .replace("/", "*")
         .replace("+", "_")
         .replace("\n", "");
-  }
-
-  private void invalidate() {
-    cachedFilters = null;
-  }
-
-  public void setSupportedOpenGLExtensions(String openGLExtensions) {
-    glExtensionsManager.setSupportedOpenGLExtensions(openGLExtensions);
-    invalidate();
   }
 }

@@ -152,7 +152,8 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.resumeDownload())
         .observeOn(ioScheduler)
-        .flatMapCompletable(appsManager::resumeDownload)
+        .flatMapCompletable(app -> appsManager.resumeDownload(app, app.getType()
+            .toString()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, crashReport::log);
