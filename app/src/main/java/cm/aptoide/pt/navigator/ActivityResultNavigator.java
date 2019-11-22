@@ -13,6 +13,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -21,8 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
-    implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends BaseActivity implements ActivityNavigator {
 
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
