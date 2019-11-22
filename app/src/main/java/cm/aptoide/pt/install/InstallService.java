@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
-import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
@@ -25,7 +24,6 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.repository.RepositoryFactory;
-import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -33,7 +31,7 @@ import rx.Single;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-public class InstallService extends BaseService implements DownloadsNotification {
+public class InstallService extends BaseService {
 
   public static final String TAG = "InstallService";
 
@@ -63,7 +61,6 @@ public class InstallService extends BaseService implements DownloadsNotification
   private Notification notification;
   private PublishSubject<String> openAppViewAction;
   private PublishSubject<Void> openDownloadManagerAction;
-  private DownloadsNotificationsPresenter presenter;
 
   @Override public void onCreate() {
 
@@ -76,13 +73,11 @@ public class InstallService extends BaseService implements DownloadsNotification
     subscriptions = new CompositeSubscription();
     openDownloadManagerAction = PublishSubject.create();
     openAppViewAction = PublishSubject.create();
-    presenter = new DownloadsNotificationsPresenter(this, installManager);
-    presenter.setupSubscriptions();
     installedRepository = RepositoryFactory.getInstalledRepository(getApplicationContext());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if (intent != null) {
+    /*if (intent != null) {
       String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
       if (ACTION_START_INSTALL.equals(intent.getAction())) {
         Logger.getInstance()
@@ -104,7 +99,7 @@ public class InstallService extends BaseService implements DownloadsNotification
           .d(TAG, "Observing current download and installation without an intent");
       subscriptions.add(downloadAndInstallCurrentDownload().subscribe(hasNext -> treatNext(hasNext),
           throwable -> removeNotificationAndStop()));
-    }
+    }*/
     return START_STICKY;
   }
 
@@ -113,7 +108,6 @@ public class InstallService extends BaseService implements DownloadsNotification
         .d(this.getClass()
             .getName(), "InstallService.onDestroy");
     subscriptions.unsubscribe();
-    presenter.onDestroy();
     openAppViewAction = null;
     openDownloadManagerAction = null;
     super.onDestroy();
@@ -130,12 +124,12 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   private void stopAllDownloads() {
     downloadManager.pauseAllDownloads();
-    removeNotificationAndStop();
+    //removeNotificationAndStop();
   }
 
   private void treatNext(boolean hasNext) {
     if (!hasNext) {
-      removeNotificationAndStop();
+      //removeNotificationAndStop();
       subscriptions.add(cacheManager.cleanCache()
           .toSingle()
           .flatMap(cleaned -> downloadManager.invalidateDatabase()
@@ -170,7 +164,7 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   private void stopOnDownloadError(int downloadStatus) {
     if (downloadStatus == Download.ERROR) {
-      removeNotificationAndStop();
+      //removeNotificationAndStop();
     }
   }
 
@@ -195,7 +189,7 @@ public class InstallService extends BaseService implements DownloadsNotification
         ACTION_OPEN_DOWNLOAD_MANAGER, md5);
   }
 
-  private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
+ /* private Notification buildNotification(String appName, int progress, boolean isIndeterminate,
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
@@ -211,7 +205,7 @@ public class InstallService extends BaseService implements DownloadsNotification
         .addAction(pauseAction)
         .addAction(openDownloadManager);
     return builder.build();
-  }
+  }*/
 
   private NotificationCompat.Action getAction(int icon, String title, int requestCode,
       String action, String md5) {
@@ -229,7 +223,7 @@ public class InstallService extends BaseService implements DownloadsNotification
         PendingIntent.FLAG_ONE_SHOT);
   }
 
-  @Override public Observable<String> handleOpenAppView() {
+/*  @Override public Observable<String> handleOpenAppView() {
     return openAppViewAction;
   }
 
@@ -276,7 +270,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   @Override public void removeNotificationAndStop() {
     stopForeground(true);
     stopSelf();
-  }
+  }*/
 
   @NonNull private Intent createDeeplinkingIntent() {
     Intent intent = new Intent();

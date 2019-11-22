@@ -744,6 +744,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     public static final String NEW_REPO = "newrepo";
     public static final String FROM_DOWNLOAD_NOTIFICATION = "fromDownloadNotification";
+    public static final String PAUSE_FROM_DOWNLOAD_NOTIFICATION = "pausefromDownloadNotification";
     public static final String NEW_UPDATES = "new_updates";
     public static final String FROM_AD = "fromAd";
     public static final String APP_VIEW_FRAGMENT = "appViewFragment";
