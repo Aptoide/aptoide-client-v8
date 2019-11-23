@@ -229,9 +229,9 @@ public class InstallManager {
   public Observable<Install> getCurrentInstallation() {
     return aptoideDownloadManager.getCurrentInProgressDownload()
         .observeOn(Schedulers.io())
+        .distinctUntilChanged(download -> download.getMd5())
         .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
-            download.getVersionCode()).first())
-        .distinctUntilChanged();
+            download.getVersionCode()));
   }
 
   public Completable install(Download download) {
@@ -699,5 +699,11 @@ public class InstallManager {
         })
         .toBlocking()
         .first();
+  }
+
+  public Observable<Install.InstallationStatus> getDownloadState(String md5) {
+    return aptoideDownloadManager.getDownload(md5)
+        .first()
+        .map(download -> mapDownloadState(download));
   }
 }

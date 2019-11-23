@@ -1,6 +1,7 @@
 package cm.aptoide.pt.install;
 
 import cm.aptoide.pt.presenter.Presenter;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -22,16 +23,25 @@ public class DownloadsNotificationsPresenter implements Presenter {
   }
 
   private void handleCurrentInstallation() {
-    subscriptions.add(installManager.getCurrentInstallation()
-        .subscribe(installation -> {
+    Subscription subscription = installManager.getCurrentInstallation()
+        .doOnNext(installation -> {
           if (!installation.isIndeterminate()) {
             String md5 = installation.getMd5();
             service.setupNotification(md5, installation.getAppName(), installation.getProgress(),
                 installation.isIndeterminate());
           }
-        }, throwable -> {
-          service.removeNotificationAndStop();
-        }));
+        })
+        .distinctUntilChanged(install -> install.getState())
+        .flatMap(install -> installManager.getDownloadState(install.getMd5()))
+        .doOnNext(installationStatus -> {
+          if (installationStatus != Install.InstallationStatus.DOWNLOADING) {
+            service.removeNotificationAndStop();
+          }
+        })
+        .subscribe(__ -> {
+        }, throwable -> service.removeNotificationAndStop());
+
+    subscriptions.add(subscription);
   }
 
   public void onDestroy() {
