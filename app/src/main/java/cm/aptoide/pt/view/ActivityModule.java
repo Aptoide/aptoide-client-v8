@@ -74,6 +74,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -184,14 +185,15 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
-      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager) {
+      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
+      RootAvailabilityManager rootAvailabilityManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager);
+        autoUpdateManager, rootAvailabilityManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

@@ -21,6 +21,7 @@ import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
@@ -50,6 +51,7 @@ public class MainPresenter implements Presenter {
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
   private final AutoUpdateManager autoUpdateManager;
+  private final RootAvailabilityManager rootAvailabilityManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -59,7 +61,7 @@ public class MainPresenter implements Presenter {
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
-      AutoUpdateManager autoUpdateManager) {
+      AutoUpdateManager autoUpdateManager, RootAvailabilityManager rootAvailabilityManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -79,6 +81,7 @@ public class MainPresenter implements Presenter {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
     this.autoUpdateManager = autoUpdateManager;
+    this.rootAvailabilityManager = rootAvailabilityManager;
   }
 
   @Override public void present() {
@@ -133,6 +136,8 @@ public class MainPresenter implements Presenter {
   private void setupInstallErrorsDisplay() {
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.RESUME.equals(event))
+        .flatMapSingle(__ -> rootAvailabilityManager.isRootAvailable())
+        .filter(rootAvailable -> rootAvailable)
         .flatMap(lifecycleEvent -> rootInstallationRetryHandler.retries()
             .compose(view.bindUntilEvent(View.LifecycleEvent.PAUSE)))
         .distinctUntilChanged(installationProgresses -> installationProgresses.size())
@@ -146,6 +151,8 @@ public class MainPresenter implements Presenter {
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMapSingle(__ -> rootAvailabilityManager.isRootAvailable())
+        .filter(rootAvailable -> rootAvailable)
         .flatMap(lifecycleEvent -> installManager.getTimedOutInstallations())
         .filter(installationProgresses -> !installationProgresses.isEmpty())
         .observeOn(AndroidSchedulers.mainThread())
@@ -155,12 +162,16 @@ public class MainPresenter implements Presenter {
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMapSingle(__ -> rootAvailabilityManager.isRootAvailable())
+        .filter(rootAvailable -> rootAvailable)
         .flatMap(event -> installCompletedNotifier.getWatcher())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(allInstallsCompleted -> view.showInstallationSuccessMessage());
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.RESUME.equals(lifecycleEvent))
+        .flatMapSingle(__ -> rootAvailabilityManager.isRootAvailable())
+        .filter(rootAvailable -> rootAvailable)
         .flatMap(lifecycleEvent -> view.getInstallErrorsDismiss())
         .flatMapCompletable(click -> installManager.cleanTimedOutInstalls())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
