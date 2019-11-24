@@ -69,10 +69,4 @@ public class DownloadsRepository {
                 || download.getOverallDownloadStatus() == (Download.PENDING))
             .toList());
   }
-
-  public Observable<List<Download>> getCompletedDownloads() {
-    return downloadAccessor.getCompletedDownloads()
-        .doOnNext(list -> Logger.getInstance()
-            .d("lol", "emitting list from the repository"));
-  }
 }

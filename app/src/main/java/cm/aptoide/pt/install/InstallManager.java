@@ -23,13 +23,11 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.Subscription;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.install.InstallService.ACTION_INSTALL_FINISHED;
@@ -52,8 +50,6 @@ public class InstallManager {
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
   private final CrashReport crashReporter;
-  private List<DownloadInstallationType> startedDownloadsList;
-  private Subscription installCompletedDownloadsSubscription;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
@@ -74,30 +70,6 @@ public class InstallManager {
 
   public void start() {
     aptoideDownloadManager.start();
-    startedDownloadsList = new ArrayList<>();
-
-    //installCompletedDownloads();
-  }
-
-  private void installCompletedDownloads() {
-    installCompletedDownloadsSubscription = downloadRepository.getCompletedDownloads()
-        .filter(downloads -> !downloads.isEmpty())
-        .flatMapIterable(download -> download)
-        .flatMapCompletable(
-            download -> Observable.just(takeDownloadInstallationInfo(download.getMd5()))
-                .filter(downloadInstallationType -> downloadInstallationType != null)
-                .flatMapCompletable(
-                    downloadInstallationType -> stopForegroundAndInstall(download.getMd5(),
-                        download.getAction(), downloadInstallationType.getForceDefaultInstall(),
-                        downloadInstallationType.getShouldSetPackageInstaller()))
-                .toCompletable()
-                .andThen(sendBackgroundInstallFinishedBroadcast(download)))
-        .retry()
-        .subscribe(__ -> {
-        }, throwable -> {
-          throwable.printStackTrace();
-          crashReporter.log(throwable);
-        });
   }
 
   private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
@@ -123,10 +95,6 @@ public class InstallManager {
 
   public void stop() {
     aptoideDownloadManager.stop();
-    if (installCompletedDownloadsSubscription != null
-        && !installCompletedDownloadsSubscription.isUnsubscribed()) {
-      installCompletedDownloadsSubscription.unsubscribe();
-    }
   }
 
   private Completable stopForegroundAndInstall(String md5, int downloadAction,
@@ -143,23 +111,6 @@ public class InstallManager {
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + downloadAction));
-    }
-  }
-
-  private DownloadInstallationType takeDownloadInstallationInfo(String md5) {
-    int indexOfDownloadInstallationInfo = -1;
-
-    for (int i = 0; i < startedDownloadsList.size(); i++) {
-      if (md5.equals(startedDownloadsList.get(i)
-          .getMd5())) {
-        indexOfDownloadInstallationInfo = i;
-      }
-    }
-
-    if (indexOfDownloadInstallationInfo != -1) {
-      return startedDownloadsList.remove(indexOfDownloadInstallationInfo);
-    } else {
-      return null;
     }
   }
 
