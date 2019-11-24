@@ -76,7 +76,7 @@ public class InstallManager {
     aptoideDownloadManager.start();
     startedDownloadsList = new ArrayList<>();
 
-    installCompletedDownloads();
+    //installCompletedDownloads();
   }
 
   private void installCompletedDownloads() {
@@ -87,8 +87,9 @@ public class InstallManager {
             download -> Observable.just(takeDownloadInstallationInfo(download.getMd5()))
                 .filter(downloadInstallationType -> downloadInstallationType != null)
                 .flatMapCompletable(
-                    downloadInstallationType -> stopForegroundAndInstall(download.getAction(),
-                        downloadInstallationType))
+                    downloadInstallationType -> stopForegroundAndInstall(download.getMd5(),
+                        download.getAction(), downloadInstallationType.getForceDefaultInstall(),
+                        downloadInstallationType.getShouldSetPackageInstaller()))
                 .toCompletable()
                 .andThen(sendBackgroundInstallFinishedBroadcast(download)))
         .retry()
@@ -97,6 +98,20 @@ public class InstallManager {
           throwable.printStackTrace();
           crashReporter.log(throwable);
         });
+  }
+
+  private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
+      boolean forceSplitInstall) {
+    aptoideDownloadManager.getDownload(md5)
+        .filter(download -> download != null)
+        .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .flatMapCompletable(
+            download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
+                forceDefaultInstall, forceSplitInstall).andThen(
+                sendBackgroundInstallFinishedBroadcast(download)))
+        .toCompletable()
+        .subscribe();
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
@@ -114,26 +129,17 @@ public class InstallManager {
     }
   }
 
-  private Completable stopForegroundAndInstall(int downloadAction,
-      DownloadInstallationType downloadInstallationType) {
+  private Completable stopForegroundAndInstall(String md5, int downloadAction,
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
     Logger.getInstance()
-        .d(TAG, "going to pop install from: "
-            + downloadInstallationType.getMd5()
-            + "and download action: "
-            + downloadAction);
+        .d(TAG, "going to pop install from: " + md5 + "and download action: " + downloadAction);
     switch (downloadAction) {
       case Download.ACTION_INSTALL:
-        return installer.install(context, downloadInstallationType.getMd5(),
-            downloadInstallationType.getForceDefaultInstall(),
-            downloadInstallationType.getShouldSetPackageInstaller());
+        return installer.install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
       case Download.ACTION_UPDATE:
-        return installer.update(context, downloadInstallationType.getMd5(),
-            downloadInstallationType.getForceDefaultInstall(),
-            downloadInstallationType.getShouldSetPackageInstaller());
+        return installer.update(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
       case Download.ACTION_DOWNGRADE:
-        return installer.downgrade(context, downloadInstallationType.getMd5(),
-            downloadInstallationType.getForceDefaultInstall(),
-            downloadInstallationType.getShouldSetPackageInstaller());
+        return installer.downgrade(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + downloadAction));
@@ -488,10 +494,10 @@ public class InstallManager {
 
   private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
+    waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
     return aptoideDownloadManager.getDownload(md5)
         .first()
-        .doOnNext(download -> initInstallationProgress(download, forceDefaultInstall,
-            shouldSetPackageInstaller))
+        .doOnNext(download -> initInstallationProgress(download))
         .doOnNext(__ -> startInstallService(md5, forceDefaultInstall, shouldSetPackageInstaller))
         .flatMapCompletable(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
@@ -530,10 +536,7 @@ public class InstallManager {
         .map(intent -> null);
   }
 
-  private void initInstallationProgress(Download download, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
-    startedDownloadsList.add(new DownloadInstallationType(download.getMd5(), forceDefaultInstall,
-        shouldSetPackageInstaller));
+  private void initInstallationProgress(Download download) {
     Installed installed = convertDownloadToInstalled(download);
     installedRepository.save(installed);
   }
