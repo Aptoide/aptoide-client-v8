@@ -100,7 +100,7 @@ public class NotificationApplicationView extends AptoideApplication
   @Override
   public void setupNotification(String md5, String appName, int progress, boolean isIndeterminate) {
 
-    NotificationCompat.Action downloadManagerAction = getDownloadManagerAction(md5);
+    NotificationCompat.Action downloadManagerAction = getDownloadManagerAction();
     PendingIntent appViewPendingIntent = getAppViewOpeningPendingIntent(md5);
     NotificationCompat.Action pauseAction = getPauseAction(md5);
 
@@ -121,19 +121,19 @@ public class NotificationApplicationView extends AptoideApplication
 
   @Override public void removeNotificationAndStop() {
     notificationManager.cancel(NOTIFICATION_ID);
+    notification = null;
   }
 
   private PendingIntent getAppViewOpeningPendingIntent(String md5) {
     Intent intent = createDeeplinkingIntent();
 
     final Bundle bundle = new Bundle();
-
     bundle.putBoolean(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     bundle.putString(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
     intent.putExtras(bundle);
 
     return PendingIntent.getActivity(this, OPEN_APPVIEW_REQUEST_CODE, intent,
-        PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent.FLAG_CANCEL_CURRENT);
   }
 
   @NonNull private Intent createDeeplinkingIntent() {
@@ -167,8 +167,6 @@ public class NotificationApplicationView extends AptoideApplication
   }
 
   @NonNull private NotificationCompat.Action getPauseAction(String md5) {
-    Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(FILE_MD5_EXTRA, md5);
     return getAction(cm.aptoide.pt.downloadmanager.R.drawable.media_pause,
         getString(cm.aptoide.pt.downloadmanager.R.string.pause_download),
         getPausePendingIntent(md5));
@@ -179,18 +177,16 @@ public class NotificationApplicationView extends AptoideApplication
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.PAUSE_FROM_DOWNLOAD_NOTIFICATION, true);
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY, md5);
     return PendingIntent.getActivity(this, PAUSE_DOWNLOAD_REQUEST_CODE, intent,
-        PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent.FLAG_CANCEL_CURRENT);
   }
 
   private PendingIntent getOpenDownloadManagerPendingIntent(int requestCode) {
     Intent intent = createDeeplinkingIntent();
     intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION, true);
-    return PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
+    return PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
   }
 
-  @NonNull private NotificationCompat.Action getDownloadManagerAction(String md5) {
-    Bundle appIdExtras = new Bundle();
-    appIdExtras.putString(FILE_MD5_EXTRA, md5);
+  @NonNull private NotificationCompat.Action getDownloadManagerAction() {
     return getAction(R.drawable.ic_manager, getString(R.string.open_apps_manager),
         getOpenDownloadManagerPendingIntent(OPEN_DOWNLOAD_MANAGER_REQUEST_CODE));
   }

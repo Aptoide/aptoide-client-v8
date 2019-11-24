@@ -189,7 +189,9 @@ public class DeepLinkManager {
   }
 
   private void pauseDownloadFromNotification(String md5) {
-    installManager.pauseInstall(md5);
+    installManager.pauseInstall(md5)
+        .retry()
+        .subscribe();
   }
 
   private void editorialDeepLinkFromSlug(String slug) {

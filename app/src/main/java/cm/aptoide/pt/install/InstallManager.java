@@ -228,6 +228,7 @@ public class InstallManager {
 
   public Observable<Install> getCurrentInstallation() {
     return aptoideDownloadManager.getCurrentInProgressDownload()
+        .filter(download -> download != null)
         .observeOn(Schedulers.io())
         .distinctUntilChanged(download -> download.getMd5())
         .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
