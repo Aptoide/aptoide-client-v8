@@ -45,6 +45,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -134,16 +135,17 @@ public class SearchResultFragment extends BackButtonFragment
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private ErrorView errorView;
 
-  public static SearchResultFragment newInstance(String currentQuery) {
-    return newInstance(currentQuery, false);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
+    return newInstance(searchQueryModel, false);
   }
 
   public static SearchResultFragment newInstance(boolean focusInSearchBar) {
-    return newInstance("", false, focusInSearchBar);
+    return newInstance(new SearchQueryModel(), false, focusInSearchBar);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      boolean onlyTrustedApps) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -151,9 +153,9 @@ public class SearchResultFragment extends BackButtonFragment
     return fragment;
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      boolean focusInSearchBar) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      boolean onlyTrustedApps, boolean focusInSearchBar) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     args.putBoolean(FOCUS_IN_SEARCH, focusInSearchBar);
@@ -162,9 +164,9 @@ public class SearchResultFragment extends BackButtonFragment
     return fragment;
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String storeTheme) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, storeTheme);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      String storeName, String storeTheme) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, storeName, storeTheme);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -657,7 +659,10 @@ public class SearchResultFragment extends BackButtonFragment
       focusInSearchBar = getArguments().getBoolean(FOCUS_IN_SEARCH);
     }
 
-    if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
+    if (viewModel != null) {
+      currentQuery = viewModel.getSearchQueryModel()
+          .getFinalQuery();
+    }
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
@@ -956,16 +961,15 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupToolbar() {
-
-    if (viewModel.getCurrentQuery()
-        .isEmpty() && !noResults) {
+    String query = viewModel.getSearchQueryModel()
+        .getFinalQuery();
+    if (query.isEmpty() && !noResults) {
       toolbar.setTitle(R.string.search_hint_title);
       toolbar.setTitleMarginStart(100);
-    } else if (viewModel.getCurrentQuery()
-        .isEmpty()) {
+    } else if (query.isEmpty()) {
       toolbar.setTitle(R.string.search_hint_title);
     } else {
-      toolbar.setTitle(viewModel.getCurrentQuery());
+      toolbar.setTitle(query);
     }
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();

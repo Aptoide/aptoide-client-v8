@@ -138,7 +138,8 @@ public class PromotionsManager {
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
         promotionViewApp.hasAppc(), promotionViewApp.getSize(), promotionViewApp.getSplits(),
-        promotionViewApp.getRequiredSplits()))
+        promotionViewApp.getRequiredSplits(), promotionViewApp.getRank(),
+        promotionViewApp.getStoreName()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
@@ -158,16 +159,16 @@ public class PromotionsManager {
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc(), download.hasSplits());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName());
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {

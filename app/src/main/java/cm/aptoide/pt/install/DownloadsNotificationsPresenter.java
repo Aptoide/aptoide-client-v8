@@ -1,13 +1,15 @@
 package cm.aptoide.pt.install;
 
-import android.util.Log;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.presenter.Presenter;
+import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by tiagopedrinho on 10/10/2018.
  */
 
-public class DownloadsNotificationsPresenter {
+public class DownloadsNotificationsPresenter implements Presenter {
 
   private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
   private DownloadsNotification service;
@@ -21,40 +23,41 @@ public class DownloadsNotificationsPresenter {
     subscriptions = new CompositeSubscription();
   }
 
-  public void setupSubscriptions() {
-    handleOpenAppView();
-    handleOpenDownloadManager();
-    handleCurrentInstallation();
-  }
-
-  private void handleOpenAppView() {
-
-    subscriptions.add(service.handleOpenAppView()
-        .doOnNext(md5 -> service.openAppView(md5))
-        .subscribe());
-  }
-
-  private void handleOpenDownloadManager() {
-    subscriptions.add(service.handleOpenDownloadManager()
-        .doOnNext(openDownloadManagerView -> service.openDownloadManager())
-        .subscribe());
-  }
-
   private void handleCurrentInstallation() {
-    subscriptions.add(installManager.getCurrentInstallation()
-        .subscribe(installation -> {
+    Subscription subscription = installManager.getCurrentInstallation()
+        .doOnError(throwable -> {
+          throwable.printStackTrace();
+          Logger.getInstance()
+              .d(TAG, "error on getCurrentInstallation");
+        })
+        .doOnNext(installation -> {
           if (!installation.isIndeterminate()) {
             String md5 = installation.getMd5();
             service.setupNotification(md5, installation.getAppName(), installation.getProgress(),
                 installation.isIndeterminate());
           }
+        })
+        .distinctUntilChanged(Install::getState)
+        .flatMap(install -> installManager.getDownloadState(install.getMd5()))
+        .doOnNext(installationStatus -> {
+          if (installationStatus != Install.InstallationStatus.DOWNLOADING) {
+            service.removeNotificationAndStop();
+          }
+        })
+        .subscribe(__ -> {
         }, throwable -> {
-          Log.e(TAG, "Error on handleOpenDownloadManager");
           service.removeNotificationAndStop();
-        }));
+          throwable.printStackTrace();
+        });
+
+    subscriptions.add(subscription);
   }
 
   public void onDestroy() {
     subscriptions.unsubscribe();
+  }
+
+  @Override public void present() {
+    handleCurrentInstallation();
   }
 }

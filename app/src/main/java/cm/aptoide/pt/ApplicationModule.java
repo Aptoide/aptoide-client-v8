@@ -48,6 +48,7 @@ import cm.aptoide.pt.aab.SplitsMapper;
 import cm.aptoide.pt.abtesting.ABTestCenterRepository;
 import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
+import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
@@ -55,6 +56,7 @@ import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -176,7 +178,6 @@ import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
@@ -279,14 +280,12 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -326,22 +325,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
-      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
-      RootAvailabilityManager rootAvailabilityManager,
+      AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
+      InstallerAnalytics installerAnalytics, RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      AppInstaller appInstaller, AppInstallerStatusReceiver appInstallerStatusReceiver,
       PackageInstallerManager packageInstallerManager,
       RootInstallerProvider rootInstallerProvider) {
-    return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils(), packageInstallerManager);
+    return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, packageInstallerManager,
+        CrashReport.getInstance());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
@@ -365,8 +360,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides UpdatesAnalytics providesUpdatesAnalytics(AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
-    return new UpdatesAnalytics(analyticsManager, navigationTracker);
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
+    return new UpdatesAnalytics(analyticsManager, navigationTracker, installAnalytics);
   }
 
   @Singleton @Provides CampaignAnalytics providesCampaignAnalytics(
@@ -411,7 +406,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider, downloadAnalytics);
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics, apkPath, obbPath,
+        new FileUtils());
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
@@ -774,30 +770,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new OAuthModeProvider();
   }
 
-  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent") Interceptor userAgentInterceptor,
-      @Named("default") SharedPreferences sharedPreferences,
-      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
-    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-    okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
-    okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
-    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
-    okHttpClientBuilder.cache(cache); // 10 MiB
-    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent") Interceptor userAgentInterceptor) {
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
-
-    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
-      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
-    }
-
     return okHttpClientBuilder.build();
   }
 
@@ -838,30 +814,27 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent-v8") Interceptor userAgentInterceptorV8,
-      @Named("default") SharedPreferences sharedPreferences,
+  @Singleton @Provides @Named("default") OkHttpClient.Builder providesOkHttpBuilder(
+      L2Cache httpClientCache, @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
     okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
-    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
       okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
     }
 
+    return okHttpClientBuilder;
+  }
+
+  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent-v8") Interceptor userAgentInterceptorV8) {
+    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
     return okHttpClientBuilder.build();
   }
 
@@ -972,10 +945,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         sharedPreferences);
   }
 
-  @Singleton @Provides QManager provideQManager(
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      WindowManager windowManager) {
-    return new QManager(sharedPreferences, resources,
+  @Singleton @Provides QManager provideQManager(Resources resources, WindowManager windowManager) {
+    return new QManager(resources,
         ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager,
         (UiModeManager) application.getSystemService(UI_MODE_SERVICE));
   }
@@ -1276,6 +1247,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("ab-test-service-provider")
+  ABTestServiceProvider providesABTestServiceProvider(@Named("default") OkHttpClient httpClient,
+      Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ABTestServiceProvider(httpClient, converterFactory, rxCallAdapterFactory,
+        sharedPreferences);
+  }
+
   @Singleton @Provides @Named("retrofit-donations") Retrofit providesDonationsRetrofit(
       @Named("v8") OkHttpClient httpClient, Converter.Factory converterFactory,
       @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -1333,9 +1312,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(Service.class);
   }
 
-  @Singleton @Provides ABTestService.ServiceV7 providesABTestServiceV7(
+  @Singleton @Provides ABTestService.ABTestingService providesABTestServiceV7(
       @Named("retrofit-AB") Retrofit retrofit) {
-    return retrofit.create(ABTestService.ServiceV7.class);
+    return retrofit.create(ABTestService.ABTestingService.class);
   }
 
   @Singleton @Provides DonationsService.ServiceV8 providesDonationsServiceV8(
@@ -1499,7 +1478,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
-    return Collections.emptyList();
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1630,9 +1613,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics,
+      InstallAnalytics installAnalytics) {
     return new AppViewAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        storeAnalytics);
+        storeAnalytics, installAnalytics);
   }
 
   @Singleton @Provides PreferencesPersister providesUserPreferencesPersister(
@@ -1663,9 +1647,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         StoredMinimalAd.class), new MinimalAdMapper());
   }
 
-  @Singleton @Provides ABTestService providesABTestService(ABTestService.ServiceV7 serviceV7,
+  @Singleton @Provides ABTestService providesABTestService(
+      @Named("ab-test-service-provider") ABTestServiceProvider abTestServiceProvider,
       IdsRepository idsRepository) {
-    return new ABTestService(serviceV7, idsRepository, Schedulers.io());
+    return new ABTestService(abTestServiceProvider, idsRepository, Schedulers.io());
   }
 
   @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
@@ -1868,8 +1853,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides PromotionsAnalytics providesPromotionsAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      DownloadAnalytics downloadAnalytics) {
-    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics);
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics) {
+    return new PromotionsAnalytics(analyticsManager, navigationTracker, downloadAnalytics,
+        installAnalytics);
   }
 
   @Singleton @Provides @Named("retrofit-auto-update") Retrofit providesAutoUpdateRetrofit(
@@ -1965,5 +1951,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
+  }
+
+  @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
+      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
+    return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
+  }
+
+  @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
   }
 }

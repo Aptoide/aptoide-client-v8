@@ -49,7 +49,8 @@ class WalletInstallManager(val packageManager: PackageManager,
             walletApp.packageName,
             walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
             walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size, walletApp.splits, walletApp.requiredSplits))
+            false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
+            walletApp.trustedBadge, walletApp.storeName))
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
@@ -85,8 +86,8 @@ class WalletInstallManager(val packageManager: PackageManager,
     return walletAppProvider.getWalletApp()
   }
 
-  fun removeDownload(app: WalletApp) {
-    return installManager.removeInstallationFile(app.md5sum, app.packageName, app.versionCode)
+  fun removeDownload(app: WalletApp): Completable? {
+    return installManager.cancelInstall(app.md5sum, app.packageName, app.versionCode)
   }
 
   fun cancelDownload(app: WalletApp): Completable {
@@ -102,7 +103,7 @@ class WalletInstallManager(val packageManager: PackageManager,
   }
 
   fun pauseDownload(app: WalletApp): Completable {
-    return Completable.fromAction { installManager.stopInstallation(app.md5sum) }
+    return installManager.pauseInstall(app.md5sum)
   }
 
   fun resumeDownload(app: WalletApp): Completable {

@@ -39,10 +39,10 @@ public class BundlesRepositoryTest {
 
   @Test public void loadHomeBundlesNoCacheTest() {
     //When the manager asks for bundles and there's no cached bundles, then it should call the bundleDataSource for more apps
-    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
+    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, true)).thenReturn(
         Observable.just(new HomeBundlesModel(true)));
     bundlesRepository.loadHomeBundles();
-    verify(bundleDataSource).loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY);
+    verify(bundleDataSource).loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, true);
   }
 
   @Test public void loadHomeBundlesWithCacheTest() {
@@ -99,10 +99,10 @@ public class BundlesRepositoryTest {
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
-    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
+    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, false)).thenReturn(
         Observable.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
-    bundlesRepository.loadNextHomeBundles()
+    bundlesRepository.loadNextHomeBundles(false)
         .map(HomeBundlesModel::getList)
         .test()
         .assertValue(freshBundles);
@@ -129,10 +129,10 @@ public class BundlesRepositoryTest {
     List<HomeBundle> freshBundles = new ArrayList<>();
     freshBundles.add(freshHomeBundle);
     //When it requests apps to the bundleDataSource then return a list of apps
-    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY)).thenReturn(
+    when(bundleDataSource.loadNextHomeBundles(0, 5, HOME_BUNDLE_KEY, false)).thenReturn(
         Observable.just(new HomeBundlesModel(freshBundles, false, 0, true)));
     //Then it should return the requested bundle list
-    bundlesRepository.loadNextHomeBundles()
+    bundlesRepository.loadNextHomeBundles(false)
         .map(HomeBundlesModel::getList)
         .test()
         .assertValue(freshBundles);

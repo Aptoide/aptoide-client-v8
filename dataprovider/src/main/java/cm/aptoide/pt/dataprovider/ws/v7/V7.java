@@ -69,6 +69,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.PostCommentForStore;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -76,6 +77,7 @@ import retrofit2.Converter;
 import retrofit2.Response;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -83,6 +85,7 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -98,6 +101,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
   private final int MAX_RETRY_COUNT = 3;
   private final TokenInvalidator tokenInvalidator;
   private boolean accessTokenRetry = false;
+  private QueryStringMapper queryStringMapper;
 
   protected V7(B body, String baseHost, OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor bodyInterceptor, TokenInvalidator tokenInvalidator) {
@@ -129,6 +133,13 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
       builder.append("Server returned null response.");
     }
     return builder.toString();
+  }
+
+  protected QueryStringMapper getQueryStringMapper() {
+    if (queryStringMapper == null) {
+      queryStringMapper = new QueryStringMapper();
+    }
+    return queryStringMapper;
   }
 
   protected TokenInvalidator getTokenInvalidator() {
@@ -252,12 +263,13 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
   public interface Interfaces {
 
-    @POST("getApp") Observable<GetApp> getApp(@Body GetAppRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
+    @GET("getApp") Observable<GetApp> getApp(@Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
 
-    @POST("listApps{url}") Observable<ListApps> listApps(
-        @Path(value = "url", encoded = true) String path, @Body ListAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
+    @GET("listApps{url}") Observable<ListApps> listApps(
+        @Path(value = "url", encoded = true) String path,
+        @Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
 
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
@@ -480,8 +492,9 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetPackagePromotionsRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
-        @Body BaseBody body, @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+    @GET("appcoins/promotions/ads/get") Observable<WalletAdsOfferResponse> isWalletOfferActive(
+        @Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
 
     @POST("user/action/item/cards/get/type=CURATION_1/limit={limit}")
     Observable<EditorialListResponse> getEditorialList(@Path(value = "limit") int limit,

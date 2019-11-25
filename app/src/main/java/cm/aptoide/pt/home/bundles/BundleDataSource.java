@@ -11,7 +11,8 @@ public interface BundleDataSource {
 
   Observable<HomeBundlesModel> loadFreshHomeBundles(String key);
 
-  Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key);
+  Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key,
+      boolean skeletonLoad);
 
   boolean hasMore(Integer offset, String title);
 

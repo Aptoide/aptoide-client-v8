@@ -170,13 +170,13 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      AdsRepository adsRepository, AppNavigator appNavigator, @Named("aptoide-theme") String theme,
+      InstallManager installManager) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository, appNavigator);
+        adsRepository, appNavigator, installManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(

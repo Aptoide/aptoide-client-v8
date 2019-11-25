@@ -27,7 +27,6 @@ import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;
 import cm.aptoide.pt.view.app.AppRating;
-import cm.aptoide.pt.view.app.AppStats;
 import cm.aptoide.pt.view.app.AppsList;
 import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.ArrayList;
@@ -75,13 +74,11 @@ public class AppViewManagerTest {
   @Mock private AppViewModelManager appViewModelManager;
   private DownloadStateParser downloadStateParser;
   private AppViewManager appViewManager;
-  private AppStats appStats;
 
   @Before public void setupAppViewManagerTest() {
     MockitoAnnotations.initMocks(this);
     downloadStateParser = new DownloadStateParser();
     AppRating appRating = new AppRating(1, 1, Collections.emptyList());
-    appStats = new AppStats(appRating, appRating, 1, 1);
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
@@ -162,7 +159,7 @@ public class AppViewManagerTest {
     when(adsManager.loadAd("anyString", keywords)).thenReturn(Single.just(minimalAdRequestResult));
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
             .toBlocking()
             .value();
 
@@ -191,7 +188,7 @@ public class AppViewManagerTest {
     when(appCenter.loadRecommendedApps(limit, "anyString")).thenReturn(Single.just(appsList));
 
     SimilarAppsViewModel similarAppsViewModel =
-        appViewManager.loadAptoideSimilarAppsViewModel("anyString", keywords)
+        appViewManager.loadSimilarAppsViewModel("anyString", keywords, false, false)
             .toBlocking()
             .value();
 
@@ -361,16 +358,21 @@ public class AppViewManagerTest {
     when(downloadFactory.create(action, appModel.getAppName(), appModel.getPackageName(),
         appModel.getMd5(), appModel.getIcon(), appModel.getVersionName(), appModel.getVersionCode(),
         appModel.getPath(), appModel.getPathAlt(), appModel.getObb(), false, appModel.getSize(),
-        null, null)).thenReturn(download);
+        null, null, appModel.getMalware()
+            .getRank()
+            .toString(), appModel.getStore()
+            .getName())).thenReturn(download);
     when(installManager.install(download)).thenReturn(Completable.complete());
     when(notificationAnalytics.getCampaignId("packageName", (long) 1)).thenReturn(2);
     when(notificationAnalytics.getAbTestingGroup("packageName", (long) 1)).thenReturn("aString");
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
+    when(download.getStoreName()).thenReturn("storeName");
 
     //Then the AppViewManager should return a Complete when the download starts
-    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "aString", null)
+    appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "", "aString",
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE)
         .test()
         .assertCompleted();
 
@@ -378,11 +380,11 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
-        AnalyticsManager.Action.CLICK, "aString", null,
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
+        AnalyticsManager.Action.CLICK, "", "aString",
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName");
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false,
-        false, false);
+        false, false, "ADS_HIDE", "", "storeName");
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -412,11 +414,12 @@ public class AppViewManagerTest {
   @Test public void pauseDownloadTest() {
     //When the presenter wants to pause the download
     //Then the appViewManager should return a Complete when the request is done
+    when(installManager.pauseInstall("md5")).thenReturn(Completable.complete());
     appViewManager.pauseDownload("md5")
         .test()
         .assertCompleted();
     //And it should ask the installManager to stop the installation
-    verify(installManager).stopInstallation("md5");
+    verify(installManager).pauseInstall("md5");
   }
 
   @Test public void resumeDownloadTest() {
@@ -429,13 +432,14 @@ public class AppViewManagerTest {
     when(download.getPackageName()).thenReturn("packageName");
     when(download.getVersionCode()).thenReturn(1);
     when(download.getAction()).thenReturn(3);
+    when(download.getStoreName()).thenReturn("storeName");
     when(moPubAdsManager.shouldHaveInterstitialAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.shouldShowAds()).thenReturn(Single.just(true));
     when(moPubAdsManager.getAdsVisibilityStatus()).thenReturn(
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     //Then the appViewManager should return a Complete when the request is done
-    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL)
+    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL, "")
         .test()
         .assertCompleted();
 
@@ -444,21 +448,22 @@ public class AppViewManagerTest {
     verify(installManager).install(download);
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
-        DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, null, null,
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW);
+        DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
+        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName");
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
-        false, false, false);
+        false, false, false, "ADS_SHOW", "", "storeName");
   }
 
   @Test public void cancelDownloadTest() {
     //When the presents asks to cancel a download
     //Then it should return a Complete when the request is done
+    when(installManager.cancelInstall("md5", "packageName", 1)).thenReturn(Completable.complete());
     appViewManager.cancelDownload("md5", "packageName", 1)
         .test()
         .assertCompleted();
     //And it should ask the installManager to remove the file
-    verify(installManager).removeInstallationFile("md5", "packageName", 1);
+    verify(installManager).cancelInstall("md5", "packageName", 1);
   }
 
   @Test public void setAndGetSearchAdResultTest() {

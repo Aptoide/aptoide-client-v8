@@ -23,7 +23,8 @@ public class FakeBundleDataSource implements BundleDataSource {
   }
 
   @Override
-  public Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
+  public Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key,
+      boolean skeletonLoad) {
     return loadFreshHomeBundles(key);
   }
 

@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
@@ -24,13 +23,15 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
-import cm.aptoide.pt.utils.FileUtils;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+
+import static cm.aptoide.pt.install.InstallService.ACTION_INSTALL_FINISHED;
+import static cm.aptoide.pt.install.InstallService.EXTRA_INSTALLATION_MD5;
 
 /**
  * Created by marcelobenites on 9/29/16.
@@ -43,22 +44,18 @@ public class InstallManager {
   private final Installer installer;
   private final SharedPreferences sharedPreferences;
   private final SharedPreferences securePreferences;
-  private final String cachePath;
-  private final String apkPath;
-  private final String obbPath;
-  private final FileUtils fileUtils;
   private final Context context;
   private final PackageInstallerManager packageInstallerManager;
   private final DownloadsRepository downloadRepository;
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
+  private final CrashReport crashReporter;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      String cachePath, String apkPath, String obbPath, FileUtils fileUtils,
-      PackageInstallerManager packageInstallerManager) {
+      PackageInstallerManager packageInstallerManager, CrashReport crashReporter) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -67,36 +64,63 @@ public class InstallManager {
     this.installedRepository = installedRepository;
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
-    this.cachePath = cachePath;
-    this.apkPath = apkPath;
-    this.obbPath = obbPath;
-    this.fileUtils = fileUtils;
     this.packageInstallerManager = packageInstallerManager;
+    this.crashReporter = crashReporter;
   }
 
-  public void stopAllInstallations() {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_STOP_ALL_INSTALLS);
-    context.startService(intent);
+  public void start() {
+    aptoideDownloadManager.start();
   }
 
-  public void removeInstallationFile(String md5, String packageName, int versionCode) {
-    stopInstallation(md5);
-    installedRepository.remove(packageName, versionCode)
+  private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
+      boolean forceSplitInstall) {
+    aptoideDownloadManager.getDownload(md5)
+        .filter(download -> download != null)
+        .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .flatMapCompletable(
+            download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
+                forceDefaultInstall, forceSplitInstall).andThen(
+                sendBackgroundInstallFinishedBroadcast(download)))
+        .doOnError(throwable -> throwable.printStackTrace())
+        .toCompletable()
+        .subscribe();
+  }
+
+  private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
+    return Completable.fromAction(() -> context.sendBroadcast(
+        new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5())));
+  }
+
+  public void stop() {
+    aptoideDownloadManager.stop();
+  }
+
+  private Completable stopForegroundAndInstall(String md5, int downloadAction,
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
+    Logger.getInstance()
+        .d(TAG, "going to pop install from: " + md5 + "and download action: " + downloadAction);
+    switch (downloadAction) {
+      case Download.ACTION_INSTALL:
+        return installer.install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+      case Download.ACTION_UPDATE:
+        return installer.update(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+      case Download.ACTION_DOWNGRADE:
+        return installer.downgrade(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+      default:
+        return Completable.error(
+            new IllegalArgumentException("Invalid download action " + downloadAction));
+    }
+  }
+
+  public Completable cancelInstall(String md5, String packageName, int versionCode) {
+    return pauseInstall(md5).andThen(installedRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
-        .subscribe(() -> {
-        }, throwable -> {
-          CrashReport.getInstance()
-              .log(throwable);
-          throwable.printStackTrace();
-        });
+        .doOnError(throwable -> throwable.printStackTrace());
   }
 
-  public void stopInstallation(String md5) {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_STOP_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
-    context.startService(intent);
+  public Completable pauseInstall(String md5) {
+    return aptoideDownloadManager.pauseDownload(md5);
   }
 
   public Observable<List<Install>> getTimedOutInstallations() {
@@ -159,8 +183,12 @@ public class InstallManager {
   }
 
   public Observable<Install> getCurrentInstallation() {
-    return getInstallations().flatMap(installs -> Observable.from(installs)
-        .filter(install -> install.getState() == Install.InstallationStatus.DOWNLOADING));
+    return aptoideDownloadManager.getCurrentInProgressDownload()
+        .filter(download -> download != null)
+        .observeOn(Schedulers.io())
+        .distinctUntilChanged(download -> download.getMd5())
+        .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
+            download.getVersionCode()));
   }
 
   public Completable install(Download download) {
@@ -187,9 +215,7 @@ public class InstallManager {
             downloadRepository.save(storedDownload);
           }
         })
-        .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
-            download.getVersionCode()))
-        .flatMap(install -> installInBackground(install, forceDefaultInstall,
+        .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
         .first()
         .toCompletable();
@@ -280,7 +306,10 @@ public class InstallManager {
     if (download != null) {
       progress = download.getOverallProgress();
       Logger.getInstance()
-          .d(TAG, " download is not null " + progress);
+          .d(TAG, " download is not null "
+              + progress
+              + " state "
+              + download.getOverallDownloadStatus());
     } else {
       Logger.getInstance()
           .d(TAG, " download is null");
@@ -293,6 +322,7 @@ public class InstallManager {
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
         case Download.IN_QUEUE:
+        case Download.WAITING_TO_MOVE_FILES:
           isIndeterminate = true;
           break;
         case Download.BLOCK_COMPLETE:
@@ -349,6 +379,7 @@ public class InstallManager {
         case Download.BLOCK_COMPLETE:
         case Download.PROGRESS:
         case Download.PENDING:
+        case Download.WAITING_TO_MOVE_FILES:
           status = Install.InstallationStatus.DOWNLOADING;
           break;
         case Download.IN_QUEUE:
@@ -395,6 +426,8 @@ public class InstallManager {
       Download download) {
     return errors.flatMap(throwable -> {
       if (throwable instanceof DownloadNotFoundException) {
+        Logger.getInstance()
+            .d(TAG, "saved the newly created download because the other one was null");
         downloadRepository.save(download);
         return Observable.just(throwable);
       } else {
@@ -403,42 +436,70 @@ public class InstallManager {
     });
   }
 
-  private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
+  private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
-    return getInstall(install.getMd5(), install.getPackageName(),
-        install.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(install, forceDefaultInstall,
-            shouldSetPackageInstaller));
+    return waitBackgroundInstallationResult(md5).startWith(
+        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
-  @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
-      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
-    return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
-        () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller))
-        .map(aVoid -> install);
+  private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+      boolean shouldSetPackageInstaller) {
+    waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
+    return aptoideDownloadManager.getDownload(md5)
+        .first()
+        .doOnNext(download -> initInstallationProgress(download))
+        .doOnNext(__ -> startInstallService(md5, forceDefaultInstall, shouldSetPackageInstaller))
+        .flatMapCompletable(download -> {
+          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+            return Completable.fromAction(() -> {
+              Logger.getInstance()
+                  .d(TAG,
+                      "Saving an already completed download to trigger the download installation");
+              downloadRepository.save(download);
+            });
+          } else {
+            return aptoideDownloadManager.startDownload(download);
+          }
+        })
+        .map(__ -> null);
   }
 
-  private Observable<Void> waitBackgroundInstallationResult(String md5) {
-    return Observable.create(new BroadcastRegisterOnSubscribe(context,
-        new IntentFilter(InstallService.ACTION_INSTALL_FINISHED), null, null))
-        .filter(intent -> intent != null && InstallService.ACTION_INSTALL_FINISHED.equals(
-            intent.getAction()))
-        .first(intent -> md5.equals(intent.getStringExtra(InstallService.EXTRA_INSTALLATION_MD5)))
-        .map(intent -> null);
-  }
-
-  private void startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+  private void startInstallService(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
-    intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
+    intent.putExtra(EXTRA_INSTALLATION_MD5, md5);
     intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
     intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
     if (installer instanceof DefaultInstaller) {
       intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
     }
     context.startService(intent);
+  }
+
+  private Observable<Void> waitBackgroundInstallationResult(String md5) {
+    return Observable.create(
+        new BroadcastRegisterOnSubscribe(context, new IntentFilter(ACTION_INSTALL_FINISHED), null,
+            null))
+        .filter(intent -> intent != null && ACTION_INSTALL_FINISHED.equals(intent.getAction()))
+        .first(intent -> md5.equals(intent.getStringExtra(EXTRA_INSTALLATION_MD5)))
+        .map(intent -> null);
+  }
+
+  private void initInstallationProgress(Download download) {
+    Installed installed = convertDownloadToInstalled(download);
+    installedRepository.save(installed);
+  }
+
+  @NonNull private Installed convertDownloadToInstalled(Download download) {
+    Installed installed = new Installed();
+    installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
+    installed.setVersionCode(download.getVersionCode());
+    installed.setVersionName(download.getVersionName());
+    installed.setStatus(Installed.STATUS_WAITING);
+    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setPackageName(download.getPackageName());
+    return installed;
   }
 
   public boolean showWarning() {
@@ -577,18 +638,6 @@ public class InstallManager {
         });
   }
 
-  public Observable<Install> filterNonInstalled(Install item) {
-    return installedRepository.isInstalled(item.getPackageName())
-        .first()
-        .flatMap(isInstalled -> {
-          if (isInstalled) {
-            return Observable.just(item);
-          } else {
-            return Observable.empty();
-          }
-        });
-  }
-
   public boolean wasAppEverInstalled(String packageName) {
     return installedRepository.getInstallationsHistory()
         .first()
@@ -606,47 +655,9 @@ public class InstallManager {
         .first();
   }
 
-  public void moveCompletedDownloadFiles(Download download) {
-    for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
-      if (!FileUtils.fileExists(
-          getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
-        Logger.getInstance()
-            .d(TAG, "trying to move file : "
-                + fileToDownload.getFileName()
-                + " "
-                + fileToDownload.getPackageName());
-        String newFilePath = getFilePathFromFileType(fileToDownload);
-        fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
-        fileToDownload.setPath(newFilePath);
-      } else {
-        Logger.getInstance()
-            .d(TAG, "tried moving file: "
-                + fileToDownload.getFileName()
-                + " "
-                + fileToDownload.getPackageName()
-                + " but it was already moved");
-      }
-    }
-    downloadRepository.save(download);
-  }
-
-  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = apkPath;
-        break;
-      case FileToDownload.OBB:
-        path = obbPath + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.SPLIT:
-        path = apkPath + fileToDownload.getPackageName() + "-splits/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = cachePath;
-        break;
-    }
-    return path;
+  public Observable<Install.InstallationStatus> getDownloadState(String md5) {
+    return aptoideDownloadManager.getDownload(md5)
+        .first()
+        .map(download -> mapDownloadState(download));
   }
 }

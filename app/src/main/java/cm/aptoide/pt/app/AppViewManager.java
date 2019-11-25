@@ -4,8 +4,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.ads.data.ApplicationAd;
-import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.realm.Download;
@@ -127,7 +125,7 @@ public class AppViewManager {
   }
 
   public Single<SimilarAppsViewModel> loadAppcSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
+      boolean isFromMature) {
     if (cachedAppcSimilarAppsViewModel != null) {
       return Single.just(cachedAppcSimilarAppsViewModel);
     } else {
@@ -135,14 +133,14 @@ public class AppViewManager {
         cachedAppcSimilarAppsViewModel =
             new SimilarAppsViewModel(null, recommendedAppsRequestResult.getList(),
                 recommendedAppsRequestResult.isLoading(), recommendedAppsRequestResult.getError(),
-                null);
+                null, isFromMature, false);
         return cachedAppcSimilarAppsViewModel;
       });
     }
   }
 
   public Single<SimilarAppsViewModel> loadSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
+      List<String> keyWords, boolean isMature, boolean shouldLoadNativeAds) {
     if (cachedSimilarAppsViewModel != null) {
       return Single.just(cachedSimilarAppsViewModel);
     } else {
@@ -152,29 +150,10 @@ public class AppViewManager {
                 cachedSimilarAppsViewModel = new SimilarAppsViewModel(adResult.getAd(),
                     recommendedAppsRequestResult.getList(),
                     recommendedAppsRequestResult.isLoading(),
-                    recommendedAppsRequestResult.getError(), adResult.getError());
+                    recommendedAppsRequestResult.getError(), adResult.getError(), isMature,
+                    shouldLoadNativeAds);
                 return cachedSimilarAppsViewModel;
               }));
-    }
-  }
-
-  public Single<SimilarAppsViewModel> loadAptoideSimilarAppsViewModel(String packageName,
-      List<String> keyWords) {
-    if (cachedSimilarAppsViewModel != null) {
-      return Single.just(cachedSimilarAppsViewModel);
-    } else {
-      return loadAdForSimilarApps(packageName, keyWords).flatMap(
-          adResult -> loadRecommended(limit, packageName).map(recommendedAppsRequestResult -> {
-            ApplicationAd applicationAd = null;
-            if (adResult.getMinimalAd() != null) {
-              applicationAd = new AptoideNativeAd(adResult.getMinimalAd());
-            }
-            cachedSimilarAppsViewModel =
-                new SimilarAppsViewModel(applicationAd, recommendedAppsRequestResult.getList(),
-                    recommendedAppsRequestResult.isLoading(),
-                    recommendedAppsRequestResult.getError(), adResult.getError());
-            return cachedSimilarAppsViewModel;
-          }));
     }
   }
 
@@ -231,22 +210,24 @@ public class AppViewManager {
   }
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
-      String trustedValue, String editorsChoicePosition) {
+      String trustedValue, String editorsChoicePosition,
+      WalletAdsOfferManager.OfferResponseStatus status) {
     return getAppModel().flatMapObservable(app -> Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
             app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
             app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(), app.getSplits(),
-            app.getRequiredSplits())))
-        .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
-            .doOnSuccess(status -> {
-              setupDownloadEvents(download, downloadAction, appId, trustedValue,
-                  editorsChoicePosition, status);
-              if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
-                setupMigratorUninstallEvent(download.getPackageName());
-              }
-            })
-            .map(__ -> download))
+            app.getRequiredSplits(), app.getMalware()
+                .getRank()
+                .toString(), app.getStore()
+                .getName())))
+        .doOnNext(download -> {
+          setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
+              status, download.getStoreName());
+          if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
+            setupMigratorUninstallEvent(download.getPackageName());
+          }
+        })
         .doOnNext(download -> {
           if (downloadAction == DownloadModel.Action.MIGRATE) {
             appcMigrationManager.addMigrationCandidate(download.getPackageName());
@@ -262,33 +243,38 @@ public class AppViewManager {
             .getAction()), walletApp.getAppName(), walletApp.getPackageName(),
         walletApp.getMd5sum(), walletApp.getIcon(), walletApp.getVersionName(),
         walletApp.getVersionCode(), walletApp.getPath(), walletApp.getPathAlt(), walletApp.getObb(),
-        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits()))
+        false, walletApp.getSize(), walletApp.getSplits(), walletApp.getRequiredSplits(),
+        walletApp.getTrustedBadge(), walletApp.getStoreName()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
-                    .getAction(), walletApp.getId(), offerResponseStatus))
+                    .getAction(), walletApp.getId(), offerResponseStatus, walletApp.getStoreName(),
+                walletApp.getTrustedBadge()))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
-      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
-    setupDownloadEvents(download, downloadAction, appId, null, null, offerResponseStatus);
+      long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
+      String trustedBadge) {
+    setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
+        storeName);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, String malwareRank, String editorsChoice,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
-        download.hasAppc(), download.hasSplits());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
+        storeName);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
@@ -306,22 +292,22 @@ public class AppViewManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
-  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action) {
+  public Completable resumeDownload(String md5, long appId, DownloadModel.Action action,
+      String trustedBadge) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
-                offerResponseStatus))
+                offerResponseStatus, download.getStoreName(), trustedBadge))
             .map(__ -> download))
         .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public SearchAdResult getSearchAdResult() {
@@ -364,28 +350,30 @@ public class AppViewManager {
   }
 
   private Single<Boolean> shouldLoadAds(boolean shouldLoad) {
-    return appViewModelManager.getAppViewModel()
-        .flatMap(appViewModel -> Single.just(shouldLoad && !appViewModel.getAppCoinsViewModel()
-            .hasBilling() && !appViewModel.getAppCoinsViewModel()
-            .hasAdvertising() && !appViewModel.getAppModel()
-            .isMature()));
+    return appViewModelManager.getAppModel()
+        .flatMap(appModel -> Single.just(
+            shouldLoad && !appModel.hasBilling() && !appModel.hasAdvertising()));
   }
 
-  public Single<Boolean> shouldLoadInterstitialAd() {
-    return moPubAdsManager.shouldHaveInterstitialAds()
-        .flatMap(hasAds -> {
-          if (hasAds) {
-            return moPubAdsManager.shouldShowAds()
-                .doOnSuccess(showAds -> {
-                  if (!showAds) {
-                    sendAdsBlockByOfferEvent();
-                  }
-                });
-          } else {
-            return Single.just(false);
-          }
-        })
-        .flatMap(this::shouldLoadAds);
+  public Single<Boolean> shouldLoadInterstitialAd(String packageName) {
+    if (packageName.equals("com.appcoins.wallet")) {
+      return Single.just(false);
+    } else {
+      return moPubAdsManager.shouldHaveInterstitialAds()
+          .flatMap(hasAds -> {
+            if (hasAds) {
+              return moPubAdsManager.shouldShowAds()
+                  .doOnSuccess(showAds -> {
+                    if (!showAds) {
+                      sendAdsBlockByOfferEvent();
+                    }
+                  });
+            } else {
+              return Single.just(false);
+            }
+          })
+          .flatMap(this::shouldLoadAds);
+    }
   }
 
   private void sendAdsBlockByOfferEvent() {
@@ -500,5 +488,9 @@ public class AppViewManager {
 
   public Single<Boolean> shouldShowConsentDialog() {
     return moPubAdsManager.shouldShowConsentDialog();
+  }
+
+  public Single<WalletAdsOfferManager.OfferResponseStatus> getAdsVisibilityStatus() {
+    return moPubAdsManager.getAdsVisibilityStatus();
   }
 }
