@@ -4,6 +4,8 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,6 +52,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
   private TextView message;
   private View media;
   private ImageView image;
+  private WebView embeddedVideo;
   private ImageView videoThumbnail;
   private FrameLayout videoThumbnailContainer;
   private RecyclerView mediaList;
@@ -78,6 +81,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
     message = (TextView) view.findViewById(R.id.editorial_item_message);
     media = view.findViewById(R.id.editorial_item_media);
     image = (ImageView) view.findViewById(R.id.editorial_image);
+    embeddedVideo = view.findViewById(R.id.embedded_video);
     videoThumbnail = view.findViewById(R.id.editorial_video_thumbnail);
     videoThumbnailContainer = view.findViewById(R.id.editorial_video_thumbnail_container);
     descriptionSwitcher =
@@ -142,7 +146,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           editorialItem.getMd5sum(), editorialItem.getIcon(), editorialItem.getVerName(),
           editorialItem.getVerCode(), editorialItem.getPath(), editorialItem.getPathAlt(),
           editorialItem.getObb(), editorialItem.getId(), editorialItem.getSize(),
-          editorialItem.getSplits(), editorialItem.getRequiredSplits());
+          editorialItem.getSplits(), editorialItem.getRequiredSplits(), editorialItem.getRank(),
+          editorialItem.getStoreName());
       setPlaceHolderInfo(editorialItem.getAppName(), editorialItem.getIcon(),
           editorialItem.getRating());
       if (shouldHaveAnimation) {
@@ -249,6 +254,13 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             videoThumbnailContainer.setOnClickListener(v -> uiEventListener.onNext(
                 new EditorialEvent(EditorialEvent.Type.MEDIA, editorialMedia.getUrl())));
           }
+        }
+        if (editorialMedia.isEmbedded()) {
+          embeddedVideo.setWebViewClient(new WebViewClient());
+          embeddedVideo.getSettings()
+              .setJavaScriptEnabled(true);
+          embeddedVideo.loadUrl(editorialMedia.getUrl());
+          embeddedVideo.setVisibility(View.VISIBLE);
         }
       }
     }
@@ -360,19 +372,22 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
 
   private void setPlaceHolderListeners(String appName, String packageName, String md5sum,
       String icon, String verName, int verCode, String path, String pathAlt, Obb obb, long id,
-      long size, List<Split> splits, List<String> requiredSplits) {
+      long size, List<Split> splits, List<String> requiredSplits, String trustedBadge,
+      String storeName) {
     cancelDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.CANCEL, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
+            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
+            trustedBadge, storeName)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     appCardButton.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.BUTTON, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits)));
+            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
+            trustedBadge, storeName)));
     appCardLayout.setOnClickListener(click -> uiEventListener.onNext(
         new EditorialEvent(EditorialEvent.Type.APPCARD, id, packageName)));
   }

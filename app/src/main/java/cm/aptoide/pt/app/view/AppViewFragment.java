@@ -130,12 +130,6 @@ import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
  */
 
 public class AppViewFragment extends NavigationTrackFragment implements AppViewView {
-  private static final int DOWNLOADING = 1;
-  private static final int DOWNGRADE = 2;
-  private static final int INSTALL = 3;
-  private static final int CLAIM = 4;
-  private static final int UPDATE = 5;
-  private static final int DOWNLOAD = 6;
   private static final String KEY_SCROLL_Y = "y";
   private static final String BADGE_DIALOG_TAG = "badgeDialog";
   private static final int APPC_TRANSITION_MS = 1000;
@@ -265,6 +259,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private View flagThisAppSection;
   private View collapsingAppcBackground;
   private TextView installStateText;
+  private View catappultCard;
 
   //wallet promotions
   private View promotionView;
@@ -288,6 +283,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private PublishSubject<PromotionEvent> promotionAppClick;
   private DecimalFormat poaFiatDecimalFormat;
   private CountDownTimer poaCountdownTimer;
+  private boolean bumpedUp;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -427,6 +423,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     infoEmail = view.findViewById(R.id.email_label);
     infoPrivacy = view.findViewById(R.id.privacy_policy_label);
     infoPermissions = view.findViewById(R.id.permissions_label);
+    catappultCard = view.findViewById(R.id.catappult_card);
 
     viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
@@ -608,6 +605,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     viewProgress = null;
     appview = null;
     screenshotsAdapter = null;
+    catappultCard = null;
     menu = null;
     toolbar = null;
     actionBar = null;
@@ -784,6 +782,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> clickGetAppcInfo() {
     return RxView.clicks(poaCoinsIcon);
+  }
+
+  @Override public Observable<Void> clickCatappultCard() {
+    return RxView.clicks(catappultCard);
   }
 
   @Override public void displayNotLoggedInSnack() {
@@ -1096,9 +1098,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void initInterstitialAd() {
-    interstitialAd =
-        new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
+  @Override public void initInterstitialAd(boolean isMature) {
+    if (isMature) {
+      interstitialAd =
+          new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      interstitialAd =
+          new MoPubInterstitial(getActivity(), BuildConfig.MOPUB_VIDEO_APPVIEW_PLACEMENT_ID);
+    }
     interstitialAd.setInterstitialAdListener(new MoPubInterstitialAdListener(interstitialClick));
     interstitialAd.load();
   }
@@ -1117,9 +1124,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     interstitialAd.show();
   }
 
-  @Override public void showBannerAd() {
+  @Override public void showBannerAd(boolean isMature) {
     bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
+    if (isMature) {
+      bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_APPVIEW_PLACEMENT_ID);
+    }
     bannerAd.setVisibility(View.VISIBLE);
     bannerAd.loadAd();
   }
@@ -1207,6 +1218,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return promotionAppClick.filter(
         promotionAppClick -> promotionAppClick.getClickType() == PromotionEvent.ClickType.CLAIM)
         .map(promotionAppClick -> promotionAppClick.getPromotion());
+  }
+
+  @Override public Observable<Void> iabInfoClick() {
+    return Observable.merge(RxView.clicks(poaIabInfo), RxView.clicks(iabInfo));
   }
 
   @Override public void showDownloadingSimilarApps(boolean hasSimilarApps) {
@@ -1369,22 +1384,27 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void manageSimilarAppsVisibility(boolean hasSimilarApps, boolean isDownloading) {
-    if (!hasSimilarApps) {
-      hideSimilarApps();
-    } else {
-      similarListRecyclerView.setVisibility(View.VISIBLE);
-      LinearLayout similarParentView = ((LinearLayout) similarListRecyclerView.getParent());
+    if (!bumpedUp) {
       if (isDownloading) {
-        similarParentView.removeView(similarListRecyclerView);
-        LinearLayout parentLayout = (LinearLayout) similarDownloadPlaceholder.getParent();
-        int downloadIndex = parentLayout.indexOfChild(similarDownloadPlaceholder);
-        parentLayout.addView(similarListRecyclerView, downloadIndex);
-        similarAppsVisibilitySubject.onNext(true);
+        bumpedUp = true;
+      }
+      if (!hasSimilarApps) {
+        hideSimilarApps();
       } else {
-        similarParentView.removeView(similarListRecyclerView);
-        LinearLayout parentLayout = (LinearLayout) similarBottomPlaceholder.getParent();
-        int downloadIndex = parentLayout.indexOfChild(similarBottomPlaceholder);
-        parentLayout.addView(similarListRecyclerView, downloadIndex);
+        similarListRecyclerView.setVisibility(View.VISIBLE);
+        LinearLayout similarParentView = ((LinearLayout) similarListRecyclerView.getParent());
+        if (isDownloading) {
+          similarParentView.removeView(similarListRecyclerView);
+          LinearLayout parentLayout = (LinearLayout) similarDownloadPlaceholder.getParent();
+          int downloadIndex = parentLayout.indexOfChild(similarDownloadPlaceholder);
+          parentLayout.addView(similarListRecyclerView, downloadIndex);
+          similarAppsVisibilitySubject.onNext(true);
+        } else {
+          similarParentView.removeView(similarListRecyclerView);
+          LinearLayout parentLayout = (LinearLayout) similarBottomPlaceholder.getParent();
+          int downloadIndex = parentLayout.indexOfChild(similarBottomPlaceholder);
+          parentLayout.addView(similarListRecyclerView, downloadIndex);
+        }
       }
     }
   }

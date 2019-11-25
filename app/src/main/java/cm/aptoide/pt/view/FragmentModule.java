@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -30,6 +31,7 @@ import cm.aptoide.pt.account.view.user.ManageUserPresenter;
 import cm.aptoide.pt.account.view.user.ManageUserView;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
@@ -106,9 +108,15 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListPresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsConfiguration;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreManager;
+import cm.aptoide.pt.home.more.apps.ListAppsMorePresenter;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -356,11 +364,11 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment, externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -406,10 +414,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, ExternalNavigator externalNavigator) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), externalNavigator);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -513,9 +521,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialAnalytics providesEditorialAnalytics(
       DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, InstallAnalytics installAnalytics) {
     return new EditorialAnalytics(downloadAnalytics, analyticsManager, navigationTracker,
-        arguments.getBoolean("fromHome"));
+        arguments.getBoolean("fromHome"), installAnalytics);
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
@@ -592,5 +600,30 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EarnAppcListConfiguration providesListAppsConfiguration() {
     return new EarnAppcListConfiguration(arguments.getString(BundleCons.TITLE),
         arguments.getString(BundleCons.TAG));
+  }
+
+  @FragmentScope @Provides ListAppsConfiguration providesListAppsMoreConfiguration() {
+    return new ListAppsConfiguration(fragment.getArguments()
+        .getString(BundleCons.TITLE), arguments.getString(BundleCons.TAG),
+        arguments.getString(BundleCons.ACTION), arguments.getString(BundleCons.NAME));
+  }
+
+  @FragmentScope @Provides ListAppsMorePresenter providesListAppsMorePresenter(
+      CrashReport crashReport, AppNavigator appNavigator,
+      @Named("default") SharedPreferences sharedPreferences,
+      ListAppsConfiguration listAppsConfiguration, ListAppsMoreManager listAppsMoreManager) {
+    return new ListAppsMorePresenter((ListAppsMoreFragment) fragment,
+        AndroidSchedulers.mainThread(), crashReport, appNavigator, sharedPreferences,
+        listAppsConfiguration, listAppsMoreManager);
+  }
+
+  @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
+      ListAppsMoreRepository listAppsMoreRepository, AdsRepository adsRepository) {
+    return new ListAppsMoreManager(listAppsMoreRepository, adsRepository);
+  }
+
+  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(
+      @Named("aptoide-theme") String theme) {
+    return new ExternalNavigator(fragment.getContext(), theme);
   }
 }

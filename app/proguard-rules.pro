@@ -154,6 +154,9 @@
 -dontwarn com.google.ar.core.**
 -dontwarn com.unity3d.services.**
 
+#appnext
+-keep class com.appnext.** { *; }
+-dontwarn com.appnext.**
 
 #inmobi
 -keepattributes SourceFile,LineNumberTable
@@ -187,3 +190,7 @@
 
 #Don't warn about flurry ads
 -dontwarn com.flurry.sdk.**
+
+#rakam
+-keep class com.google.android.gms.ads.** { *; }
+-dontwarn okio.**

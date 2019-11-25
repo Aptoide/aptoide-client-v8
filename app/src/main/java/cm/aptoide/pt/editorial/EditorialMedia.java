@@ -34,6 +34,10 @@ class EditorialMedia {
     return hasType() && type.equals("video");
   }
 
+  public boolean isEmbedded() {
+    return hasType() && type.equals("video_webview");
+  }
+
   public String getDescription() {
     return description;
   }

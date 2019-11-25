@@ -4,4 +4,4 @@
     android:animationOrder="normal"
     android:columnDelay="15%"
     android:rowDelay="15%"
-    android:direction="top_to_bottom|left_to_right" />
+  android:direction="top_to_bottom|left_to_right" />

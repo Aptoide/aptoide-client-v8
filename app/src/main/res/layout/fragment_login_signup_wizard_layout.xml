@@ -8,7 +8,6 @@ android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:background="@color/transparent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/bottom_skip_bar_height"
     >
 
   <ScrollView
@@ -30,6 +29,7 @@ android:fitsSystemWindows="true"
           android:layout_height="wrap_content"
           android:visibility="invisible"
           >
+
         <include layout="@layout/toolbar" />
       </com.google.android.material.appbar.AppBarLayout>
 
@@ -70,7 +70,7 @@ android:fitsSystemWindows="true"
   <FrameLayout
       android:id="@+id/login_signup_layout"
       android:layout_width="match_parent"
-      android:layout_height="360dp"
+      android:layout_height="wrap_content"
       android:elevation="16dp"
       android:visibility="visible"
       app:behavior_hideable="false"

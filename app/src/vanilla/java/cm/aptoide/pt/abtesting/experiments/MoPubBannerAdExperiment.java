@@ -1,10 +1,11 @@
 package cm.aptoide.pt.abtesting.experiments;
 
 import cm.aptoide.pt.abtesting.ABTestManager;
+import cm.aptoide.pt.abtesting.WasabiExperiment;
 import cm.aptoide.pt.ads.MoPubAnalytics;
 import rx.Single;
 
-public class MoPubBannerAdExperiment {
+public class MoPubBannerAdExperiment extends WasabiExperiment {
 
   private final String EXPERIMENT_ID = "ASV-1377-MoPub-Ads";
   private final ABTestManager abTestManager;
@@ -16,7 +17,7 @@ public class MoPubBannerAdExperiment {
   }
 
   public Single<Boolean> shouldLoadBanner() {
-    return abTestManager.getExperiment(EXPERIMENT_ID)
+    return abTestManager.getExperiment(EXPERIMENT_ID, getType())
         .toSingle()
         .flatMap(experiment -> {
           String experimentAssignment = "default";

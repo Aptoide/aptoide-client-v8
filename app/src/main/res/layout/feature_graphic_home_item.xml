@@ -12,7 +12,7 @@
   <ImageView
       android:id="@+id/featured_graphic"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+    android:layout_height="144dp"
       android:adjustViewBounds="true"
       android:contentDescription="@null"
       android:scaleType="fitXY"

@@ -25,7 +25,7 @@ public class ActionBundle implements HomeBundle {
   }
 
   @Override public List<?> getContent() {
-    return Collections.emptyList();
+    return actionItem != null ? Collections.emptyList() : null;
   }
 
   @Override public BundleType getType() {

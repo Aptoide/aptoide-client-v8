@@ -35,12 +35,14 @@ public class EditorialContent {
   private final boolean isPlaceHolder;
   private final List<Split> splits;
   private final List<String> requiredSplits;
+  private boolean hasAppc;
+  private String rank;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
       String pathAlt, String md5sum, String actionTitle, String url, int position,
-      List<Split> splits, List<String> requiredSplits) {
+      List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -65,7 +67,9 @@ public class EditorialContent {
     this.position = position;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.rank = rank;
     this.isPlaceHolder = true;
+    this.hasAppc = hasAppc;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -95,13 +99,15 @@ public class EditorialContent {
     md5sum = "";
     splits = null;
     requiredSplits = null;
+    hasAppc = false;
+    rank = "";
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
-      String pathAlt, String md5sum, int position, List<Split> splits,
-      List<String> requiredSplits) {
+      String pathAlt, String md5sum, int position, List<Split> splits, List<String> requiredSplits,
+      boolean hasAppc, String rank) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -124,6 +130,8 @@ public class EditorialContent {
     this.position = position;
     this.splits = splits;
     this.requiredSplits = requiredSplits;
+    this.hasAppc = hasAppc;
+    this.rank = rank;
     this.isPlaceHolder = true;
     actionTitle = "";
     url = "";
@@ -156,6 +164,8 @@ public class EditorialContent {
     url = "";
     this.splits = null;
     this.requiredSplits = null;
+    hasAppc = false;
+    rank = "";
   }
 
   public String getMessage() {
@@ -285,5 +295,13 @@ public class EditorialContent {
 
   public List<String> getRequiredSplits() {
     return this.requiredSplits;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
+  }
+
+  public String getRank() {
+    return rank;
   }
 }

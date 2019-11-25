@@ -159,6 +159,13 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
+  private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId,
+      HomeBundlesModel homeBundlesModel) {
+    return home.loadReactionModel(cardId, groupId, homeBundlesModel)
+        .observeOn(viewScheduler)
+        .doOnSuccess(homeBundles -> view.updateEditorialCards());
+  }
+
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
@@ -166,18 +173,19 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
-    return loadHome().toObservable()
-        .flatMapIterable(HomeBundlesModel::getList)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
-        .cast(ActionBundle.class)
-        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
-            .getCardId(), actionBundle.getActionItem()
-            .getType()));
+    return loadHome().
+        flatMap(homeBundlesModel -> Observable.from(homeBundlesModel.getList())
+            .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+            .filter(homeBundle -> homeBundle instanceof ActionBundle)
+            .cast(ActionBundle.class)
+            .filter(actionBundle -> actionBundle.getActionItem() != null)
+            .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+                .getCardId(), actionBundle.getActionItem()
+                .getType(), homeBundlesModel)));
   }
 
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
-    return loadFreshBundles().toObservable()
+    return loadFreshBundles().first()
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
@@ -213,12 +221,14 @@ public class HomePresenter implements Presenter {
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
-            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
-            homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
+            if (actionBundle.getActionItem() != null) {
+              homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+              homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+            }
           }
         })
         .filter(homeEvent -> homeEvent.getBundle()
@@ -337,20 +347,25 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<Boolean> showNativeAds() {
+  private Observable<Boolean> showNativeAds() {
     return home.shouldLoadNativeAd()
+        .toObservable()
         .observeOn(viewScheduler)
-        .doOnSuccess(showNatives -> view.setAdsTest(showNatives));
+        .doOnNext(showNatives -> view.setAdsTest(showNatives))
+        .onErrorReturn(__ -> {
+          view.setAdsTest(false);
+          return false;
+        });
   }
 
-  private Single<HomeBundlesModel> loadHome() {
-    return Single.zip(showNativeAds(), loadBundles(), (aBoolean, bundlesModel) -> bundlesModel)
+  private Observable<HomeBundlesModel> loadHome() {
+    return showNativeAds().flatMap(__ -> home.loadHomeBundles())
+        .cast(HomeBundlesModel.class)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> handleBundlesResult(bundlesModel));
-  }
-
-  @NonNull private Single<HomeBundlesModel> loadBundles() {
-    return home.loadHomeBundles();
+        .doOnNext(view::showBundlesSkeleton)
+        .filter(HomeBundlesModel::isComplete)
+        .observeOn(viewScheduler)
+        .doOnNext(bundlesModel -> handleBundlesResult(bundlesModel));
   }
 
   private void handleBundlesResult(HomeBundlesModel bundlesModel) {
@@ -513,6 +528,8 @@ public class HomePresenter implements Presenter {
 
   @NonNull private Single<HomeBundlesModel> loadNextBundles() {
     return home.loadNextHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
+        .toSingle()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
@@ -546,10 +563,11 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @NonNull private Single<HomeBundlesModel> loadFreshBundles() {
+  @NonNull private Observable<HomeBundlesModel> loadFreshBundles() {
     return home.loadFreshHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> {
+        .doOnNext(bundlesModel -> {
           view.hideRefresh();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());

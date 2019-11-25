@@ -166,6 +166,7 @@ public class EditorialCard extends BaseV7Response {
     private String description;
     private String thumbnail;
     private String image;
+    private String url;
 
     public String getType() {
       return type;
@@ -197,6 +198,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setThumbnail(String thumbnail) {
       this.thumbnail = thumbnail;
+    }
+
+    public String getUrl() {
+      return url;
+    }
+
+    public void setUrl(String url) {
+      this.url = url;
     }
   }
 

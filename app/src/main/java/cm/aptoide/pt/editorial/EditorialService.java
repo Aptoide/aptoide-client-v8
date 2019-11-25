@@ -160,9 +160,16 @@ public class EditorialService {
     List<EditorialMedia> editorialMediaList = new ArrayList<>();
     if (mediaList != null) {
       for (Media media : mediaList) {
-        EditorialMedia editorialMedia =
-            new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
-                media.getImage());
+        EditorialMedia editorialMedia;
+        if (media.getUrl() != null) {
+          editorialMedia =
+              new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                  media.getUrl());
+        } else {
+          editorialMedia =
+              new EditorialMedia(media.getType(), media.getDescription(), media.getThumbnail(),
+                  media.getImage());
+        }
         editorialMediaList.add(editorialMedia);
       }
     }
@@ -182,7 +189,12 @@ public class EditorialService {
           file.getPathAlt(), file.getMd5sum(), action.getTitle(), action.getUrl(), position,
           splitsMapper.mapSplits(app.hasSplits() ? app.getAab()
               .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
-          .getRequiredSplits() : Collections.emptyList());
+          .getRequiredSplits() : Collections.emptyList(), app.getAppcoins()
+          .hasAdvertising() || app.getAppcoins()
+          .hasBilling(), app.getFile()
+          .getMalware()
+          .getRank()
+          .toString());
     }
     if (app != null) {
       Store store = app.getStore();
@@ -195,7 +207,12 @@ public class EditorialService {
           file.getPathAlt(), file.getMd5sum(), position, splitsMapper.mapSplits(
           app.hasSplits() ? app.getAab()
               .getSplits() : Collections.emptyList()), app.hasSplits() ? app.getAab()
-          .getRequiredSplits() : Collections.emptyList());
+          .getRequiredSplits() : Collections.emptyList(), app.getAppcoins()
+          .hasAdvertising() || app.getAppcoins()
+          .hasBilling(), app.getFile()
+          .getMalware()
+          .getRank()
+          .toString());
     }
     if (action != null) {
       return new EditorialContent(content.getTitle(), editorialMediaList, content.getMessage(),
@@ -221,7 +238,8 @@ public class EditorialService {
           bottomCardPlaceHolderContent.getPathAlt(), bottomCardPlaceHolderContent.getObb(), true,
           cardId, groupId, bottomCardPlaceHolderContent.getSize(), captionColor,
           bottomCardPlaceHolderContent.getSplits(),
-          bottomCardPlaceHolderContent.getRequiredSplits());
+          bottomCardPlaceHolderContent.getRequiredSplits(), bottomCardPlaceHolderContent.hasAppc(),
+          bottomCardPlaceHolderContent.getRank(), bottomCardPlaceHolderContent.getStoreName());
     }
     return new EditorialViewModel(editorialContentList, card.getTitle(), card.getCaption(),
         card.getBackground(), placeHolderPositions, placeHolderContent, false, cardId, groupId,

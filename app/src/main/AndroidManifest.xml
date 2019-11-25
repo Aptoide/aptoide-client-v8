@@ -75,8 +75,9 @@
         android:configChanges="keyboardHidden|orientation|screenSize" />
 
     <activity
-        android:name=".view.entry.EntryActivity"
-        android:theme="@style/AppBaseTheme.Splash">
+        android:name=".view.MainActivity"
+        android:theme="@style/AppBaseTheme.Splash"
+        android:windowSoftInputMode="adjustPan">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -85,13 +86,6 @@
           android:name="android.app.shortcuts"
           android:resource="@xml/shortcuts" />
     </activity>
-
-    <activity
-        android:name="com.chartboost.sdk.CBImpressionActivity"
-        android:configChanges="keyboardHidden|orientation|screenSize"
-        android:excludeFromRecents="true"
-        android:hardwareAccelerated="true"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
 
     <activity
         android:name="com.unity3d.services.ads.adunit.AdUnitActivity"
@@ -113,14 +107,6 @@
         android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
         android:hardwareAccelerated="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
-
-    <activity
-        android:name=".view.OpenGLES20Activity"
-        android:theme="@style/AppBaseTheme.Splash" />
-
-    <activity
-        android:name=".view.MainActivity"
-        android:windowSoftInputMode="adjustPan" />
 
     <activity
         android:name=".wallet.WalletInstallActivity"
@@ -332,6 +318,31 @@
         <data
             android:host="*.aptoide.com"
             android:pathPattern="/thank-you*"
+            android:scheme="https" />
+      </intent-filter>
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="*community.aptoide.com"
+            android:pathPattern="/using-appcoins*"
+            android:scheme="https" />
+      </intent-filter>
+
+
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:host="*.aptoide.com"
+            android:pathPattern="/download*"
             android:scheme="https" />
       </intent-filter>
 

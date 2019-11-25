@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.AppCoinsInfoNavigator;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
@@ -26,6 +27,7 @@ public class AppCoinsInfoPresenterTest {
   @Mock private AppCoinsInfoNavigator navigator;
   @Mock private CrashReport crashReporter;
   @Mock private InstallManager installManager;
+  @Mock private ExternalNavigator externalNavigator;
 
   private String packageName = "packageName";
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -44,7 +46,7 @@ public class AppCoinsInfoPresenterTest {
 
     presenter =
         new AppCoinsInfoPresenter(view, navigator, installManager, crashReporter, packageName,
-            Schedulers.immediate());
+            Schedulers.immediate(), externalNavigator);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.installButtonClick()).thenReturn(installClickEvent);

@@ -1,12 +1,17 @@
 package cm.aptoide.pt.home.bundles.ads;
 
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import cm.aptoide.aptoideviews.skeleton.Skeleton;
+import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
@@ -16,6 +21,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import rx.subjects.PublishSubject;
+
+import static android.content.Context.WINDOW_SERVICE;
 
 /**
  * Created by jdandrade on 13/03/2018.
@@ -29,6 +36,8 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final RecyclerView appsList;
   private final String marketName;
+
+  private final Skeleton skeleton;
 
   public AdsBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
       DecimalFormat oneDecimalFormatter, PublishSubject<AdHomeEvent> adClickedEvents,
@@ -53,6 +62,12 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     appsList.setLayoutManager(layoutManager);
     appsList.setAdapter(appsInBundleAdapter);
     appsList.setNestedScrollingEnabled(false);
+    Resources resources = view.getContext()
+        .getResources();
+    WindowManager windowManager = (WindowManager) view.getContext()
+        .getSystemService(WINDOW_SERVICE);
+    skeleton = SkeletonUtils.applySkeleton(appsList, R.layout.app_home_item_skeleton,
+        Type.ADS.getPerLineCount(resources, windowManager) * 3);
   }
 
   @Override public void setBundle(HomeBundle homeBundle, int position) {
@@ -63,20 +78,25 @@ class AdsBundleViewHolder extends AppBundleViewHolder {
     bundleTitle.setText(
         Translator.translate(homeBundle.getTitle(), itemView.getContext(), marketName));
 
-    appsInBundleAdapter.updateBundle(homeBundle, position);
-    appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
+    if (homeBundle.getContent() == null) {
+      skeleton.showSkeleton();
+    } else {
+      skeleton.showOriginal();
+      appsInBundleAdapter.updateBundle(homeBundle, position);
+      appsInBundleAdapter.update((List<AdClick>) homeBundle.getContent());
 
-    appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-      @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-        super.onScrolled(recyclerView, dx, dy);
-        if (dx > 0) {
-          uiEventsListener.onNext(
-              new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+      appsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+          super.onScrolled(recyclerView, dx, dy);
+          if (dx > 0) {
+            uiEventsListener.onNext(
+                new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.SCROLL_RIGHT));
+          }
         }
-      }
-    });
+      });
 
-    moreButton.setOnClickListener(v -> uiEventsListener.onNext(
-        new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+      moreButton.setOnClickListener(v -> uiEventsListener.onNext(
+          new HomeEvent(homeBundle, getAdapterPosition(), HomeEvent.Type.MORE)));
+    }
   }
 }

@@ -1,10 +1,12 @@
 package cm.aptoide.pt.home.bundles;
 
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 
 /**
@@ -26,19 +28,19 @@ public class BundlesRepository {
     this.limit = limit;
   }
 
-  public Single<HomeBundlesModel> loadHomeBundles() {
+  public Observable<HomeBundlesModel> loadHomeBundles() {
     if (!cachedBundles.containsKey(HOME_BUNDLE_KEY)) {
-      return loadNextHomeBundles();
+      return loadNextHomeBundles(true);
     } else {
-      return Single.just(new HomeBundlesModel(
+      return Observable.just(new HomeBundlesModel(
           cachedBundles.put(HOME_BUNDLE_KEY, new ArrayList<>(cachedBundles.get(HOME_BUNDLE_KEY))),
-          false, getOffset(HOME_BUNDLE_KEY)));
+          false, getOffset(HOME_BUNDLE_KEY), true));
     }
   }
 
-  public Single<HomeBundlesModel> loadFreshHomeBundles() {
+  public Observable<HomeBundlesModel> loadFreshHomeBundles() {
     return remoteBundleDataSource.loadFreshHomeBundles(HOME_BUNDLE_KEY)
-        .doOnSuccess(homeBundlesModel -> updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY))
+        .doOnNext(homeBundlesModel -> updateCache(homeBundlesModel, true, HOME_BUNDLE_KEY))
         .map(this::cloneList);
   }
 
@@ -47,23 +49,26 @@ public class BundlesRepository {
       return homeBundlesModel;
     }
     return new HomeBundlesModel(new ArrayList<>(homeBundlesModel.getList()),
-        homeBundlesModel.isLoading(), homeBundlesModel.getOffset());
+        homeBundlesModel.isLoading(), homeBundlesModel.getOffset(), homeBundlesModel.isComplete());
   }
 
-  public Single<HomeBundlesModel> loadNextHomeBundles() {
+  public Observable<HomeBundlesModel> loadNextHomeBundles(boolean skeletonLoad) {
     return remoteBundleDataSource.loadNextHomeBundles(getOffset(HOME_BUNDLE_KEY), limit,
-        HOME_BUNDLE_KEY)
-        .doOnSuccess(homeBundlesModel -> updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY))
+        HOME_BUNDLE_KEY, skeletonLoad)
+        .doOnNext(homeBundlesModel -> updateCache(homeBundlesModel, false, HOME_BUNDLE_KEY))
         .map(this::cloneList);
   }
 
   private void updateCache(HomeBundlesModel homeBundles, boolean cacheIsDirty, String bundleKey) {
-    if (!homeBundles.hasErrors() && !homeBundles.isLoading()) {
+    if (!homeBundles.hasErrors() && !homeBundles.isLoading() && homeBundles.isComplete()) {
       offset.put(bundleKey, homeBundles.getOffset());
       if (cacheIsDirty || !cachedBundles.containsKey(bundleKey)) {
         cachedBundles.put(bundleKey, new ArrayList<>(homeBundles.getList()));
       } else {
         List<HomeBundle> homeBundleList = cachedBundles.get(bundleKey);
+        if (homeBundleList.get(homeBundleList.size() - 1) instanceof ErrorHomeBundle) {
+          homeBundleList.remove(homeBundleList.size() - 1);
+        }
         homeBundleList.addAll(homeBundles.getList());
         cachedBundles.put(bundleKey, homeBundleList);
       }
@@ -84,7 +89,7 @@ public class BundlesRepository {
     } else {
       return Single.just(
           new HomeBundlesModel(cachedBundles.put(title, new ArrayList<>(cachedBundles.get(title))),
-              false, getOffset(title)));
+              false, getOffset(title), true));
     }
   }
 
@@ -116,7 +121,10 @@ public class BundlesRepository {
     });
   }
 
-  public void updateCache(List<HomeBundle> homeBundles) {
-    cachedBundles.put(HOME_BUNDLE_KEY, homeBundles);
+  public void setHomeLoadMoreError() {
+    List<HomeBundle> list = cachedBundles.get(HOME_BUNDLE_KEY);
+    if (!list.isEmpty() && !(list.get(list.size() - 1) instanceof ErrorHomeBundle)) {
+      list.add(new ErrorHomeBundle());
+    }
   }
 }

@@ -42,6 +42,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
@@ -56,8 +58,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TEST_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['internal', 'prod']
     }
     prod {
@@ -68,6 +74,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
@@ -82,8 +90,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TEST_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['prod', 'internal']
     }
   }

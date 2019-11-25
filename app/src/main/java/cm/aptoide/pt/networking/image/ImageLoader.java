@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -139,6 +140,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(new CircleCrop())
               .placeholder(placeHolderDrawableId))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithCircleTransformAndPlaceHolder() Context is null");
@@ -152,6 +154,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -167,6 +170,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context))
               .placeholder(drawable))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -182,6 +186,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, color, spaceBetween, strokeSize)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -196,6 +201,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(drawableId)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -211,6 +217,7 @@ public class ImageLoader {
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, shadowColor)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -227,6 +234,7 @@ public class ImageLoader {
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, strokeSize))
               .placeholder(drawable))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -242,6 +250,7 @@ public class ImageLoader {
           .load(drawableId)
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, shadowColor)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -285,6 +294,7 @@ public class ImageLoader {
           .load(
               AptoideUtils.IconSizeU.screenshotToThumb(url, orientation, windowManager, resources))
           .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadScreenshotToThumb() Context is null");
@@ -299,6 +309,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
@@ -408,6 +419,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(drawableId)
           .apply(getRequestOptions().transform(new CircleCrop()))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -422,6 +434,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().transform(new CircleCrop()))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -437,6 +450,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(new CircleCrop())
               .placeholder(defaultImagePlaceholder))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransformAndPlaceholder() Context is null");
@@ -452,7 +466,8 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(placeHolderDrawableId)
-              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+              .transforms(new CenterInside(), new RoundedCorners(radius)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }
   }
@@ -467,6 +482,7 @@ public class ImageLoader {
               .placeholder(placeHolderDrawableId)
               .transforms(new CenterCrop(), new RoundedCorners(radius)))
           .listener(requestListener)
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }
     return null;
@@ -478,6 +494,7 @@ public class ImageLoader {
       Glide.with(context)
           .load(imageUrl)
           .apply(getRequestOptions())
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(simpleTarget);
     }
   }

@@ -74,26 +74,31 @@ public class EditorialManager {
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
         editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(),
-        editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits()))
+        editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits(),
+        editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getTrustedBadge()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
-                offerResponseStatus))
+                offerResponseStatus, editorialDownloadEvent.getTrustedBadge(),
+                editorialDownloadEvent.getStoreName(), editorialDownloadEvent.getAction()
+                    .toString()))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(Download download, String packageName, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
+      String storeName, String installType) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK, offerResponseStatus);
+        AnalyticsManager.Action.CLICK, offerResponseStatus, trustedBadge, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc(), download.hasSplits() );
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName());
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
@@ -108,11 +113,11 @@ public class EditorialManager {
     return Completable.fromAction(() -> installManager.stopInstallation(md5));
   }
 
-  public Completable resumeDownload(String md5, String packageName, long appId) {
+  public Completable resumeDownload(String md5, String packageName, long appId, String action) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
-                offerResponseStatus))
+                offerResponseStatus, download.getTrustedBadge(), download.getStoreName(), action))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }

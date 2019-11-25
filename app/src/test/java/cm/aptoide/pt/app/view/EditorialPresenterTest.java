@@ -73,7 +73,7 @@ public class EditorialPresenterTest {
     editorialContent.add(
         new EditorialContent("title", Collections.emptyList(), "message", "type", 1, "appName",
             "icon", 1, "packageName", 0, "graphic", null, 1, "storeName", "verName", 0, "path",
-            "pathAlt", "md5", "actionTitle", "url", 1, null, null));
+            "pathAlt", "md5", 0, Collections.emptyList(), Collections.emptyList(), false, null));
     editorialViewModel = new EditorialViewModel(editorialContent, "title", "caption", "background",
         Collections.emptyList(), editorialContent, false, "1", "CURATION_1", "");
     downloadModel = new EditorialDownloadModel(DownloadModel.Action.INSTALL, 0,
@@ -245,8 +245,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(true, true)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(true)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -259,8 +258,7 @@ public class EditorialPresenterTest {
     presenter.handlePlaceHolderVisibilityChange();
 
     //when there's a scroll event where the placeholder changes visibility
-    when(view.placeHolderVisibilityChange()).thenReturn(
-        Observable.just(new ScrollEvent(false, false)));
+    when(view.placeHolderVisibilityChange()).thenReturn(Observable.just(new ScrollEvent(false)));
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.RootCommandTimeoutException;
+import cm.aptoide.pt.install.RootInstallerProvider;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.packageinstaller.AppInstall;
@@ -51,7 +53,6 @@ public class DefaultInstaller implements Installer {
 
   public static final String OBB_FOLDER = Environment.getExternalStorageDirectory()
       .getAbsolutePath() + "/Android/obb/";
-  public static final String ROOT_INSTALL_COMMAND = "pm install -r ";
   private static final String TAG = DefaultInstaller.class.getSimpleName();
   private final PackageManager packageManager;
   private final InstallationProvider installationProvider;
@@ -62,6 +63,7 @@ public class DefaultInstaller implements Installer {
   private RootAvailabilityManager rootAvailabilityManager;
   private InstalledRepository installedRepository;
   private InstallerAnalytics installerAnalytics;
+  private RootInstallerProvider rootInstallerProvider;
   private int installingStateTimeout;
 
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
@@ -69,7 +71,8 @@ public class DefaultInstaller implements Installer {
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics, int installingStateTimeout,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
+      AppInstallerStatusReceiver appInstallerStatusReceiver,
+      RootInstallerProvider rootInstallerProvider) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
@@ -77,6 +80,7 @@ public class DefaultInstaller implements Installer {
     this.installedRepository = installedRepository;
     this.installerAnalytics = installerAnalytics;
     this.appInstallerStatusReceiver = appInstallerStatusReceiver;
+    this.rootInstallerProvider = rootInstallerProvider;
     RootShell.debugMode = debug;
     RootShell.defaultCommandTimeout = rootTimeout;
     this.rootAvailabilityManager = rootAvailabilityManager;
@@ -194,9 +198,7 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> rootInstall(Installation installation) {
     if (ManagerPreferences.allowRootInstallation(sharedPreferences)) {
-      return Observable.create(new RootCommandOnSubscribe(installation.getId()
-          .hashCode(), ROOT_INSTALL_COMMAND + installation.getFile()
-          .getAbsolutePath(), installerAnalytics))
+      return Observable.create(rootInstallerProvider.provideRootInstaller(installation))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
           .startWith(
@@ -245,12 +247,28 @@ public class DefaultInstaller implements Installer {
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
-    return Observable.create(
-        new SystemInstallOnSubscribe(context, packageManager, Uri.fromFile(installation.getFile())))
-        .subscribeOn(Schedulers.computation())
-        .map(success -> installation)
-        .startWith(
-            updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    if (isSystem(context)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        return defaultInstall(context, installation, true);
+      }
+      return Observable.create(new SystemInstallOnSubscribe(context, packageManager,
+          Uri.fromFile(installation.getFile())))
+          .subscribeOn(Schedulers.computation())
+          .map(success -> installation)
+          .startWith(
+              updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+    }
+    return Observable.error(new Throwable());
+  }
+
+  private boolean isSystem(Context context) {
+    try {
+      ApplicationInfo info = packageManager.getApplicationInfo(context.getPackageName(),
+          PackageManager.PERMISSION_GRANTED);
+      return (info.flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
+    } catch (PackageManager.NameNotFoundException e) {
+      throw new AssertionError("Aptoide application not found by package manager.");
+    }
   }
 
   @NonNull

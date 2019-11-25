@@ -20,6 +20,7 @@
   <color name="curation_green">#6ab518</color>
   <color name="curation_default">@color/default_orange_gradient_end</color>
   <color name="curation_gold">#f19c23</color>
+  <color name="appc_spend">#e74258</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
@@ -51,5 +52,9 @@
 
   <!-- transparent -->
   <color name="transparent">#00000000</color>
+
+  <!-- Catappult -->
+  <color name="catappult_purple">#190056</color>
+  <color name="catappult_pink">#ff057b</color>
 
 </resources>

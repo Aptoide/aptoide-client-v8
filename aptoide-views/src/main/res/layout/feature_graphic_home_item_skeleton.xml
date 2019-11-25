@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/brick_app_item"
+  android:layout_width="328dp"
+  android:layout_height="180dp"
+  app:cardCornerRadius="4dp"
+  app:cardUseCompatPadding="true">
+
+  <View
+    android:id="@+id/featured_graphic"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:background="#edeef2"
+    android:contentDescription="@null"
+    android:scaleType="fitXY" />
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    android:background="@color/transparent">
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentBottom="true"
+      android:layout_centerVertical="true"
+      android:background="@color/white"
+      android:orientation="horizontal">
+
+      <View
+        android:id="@+id/app_name"
+        style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
+        android:layout_width="176dp"
+        android:layout_height="19dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginRight="55dp"
+        android:background="#edeef2"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="Little Commander world world II" />
+
+
+      <View
+        android:id="@+id/rating_label"
+        style="@style/Aptoide.TextView.Medium.XS.Black"
+        android:layout_width="34dp"
+        android:layout_height="19dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:background="#edeef2"
+        tools:ignore="SmallSp"
+        tools:text="2.3" />
+    </RelativeLayout>
+
+    <View
+      android:layout_width="44dp"
+      android:layout_height="42dp"
+      android:layout_marginLeft="6dp"
+      android:layout_marginTop="50dp"
+      android:layout_marginRight="8dp"
+      android:background="@color/white"
+      tools:src="@color/red" />
+
+    <View
+      android:id="@+id/app_icon"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_marginLeft="8dp"
+      android:layout_marginTop="52dp"
+      android:layout_marginRight="8dp"
+      android:background="#edeef2"
+      tools:src="@color/red" />
+  </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

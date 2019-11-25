@@ -232,6 +232,19 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   }
 
   public void removeLoadMoreError() {
-    remove(bundles.indexOf(errorBundle));
+    remove(bundles.size() - 1);
+  }
+
+  /**
+   * @return true if the bundles are fully loaded (i.e. no skeleton layout placeholder)
+   */
+  public boolean isLoaded() {
+    if (bundles == null || bundles.isEmpty()) return false;
+    for (HomeBundle bundle : bundles) {
+      if (bundle.getContent() == null) {
+        return false;
+      }
+    }
+    return true;
   }
 }

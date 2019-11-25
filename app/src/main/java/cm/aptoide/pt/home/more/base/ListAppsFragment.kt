@@ -67,7 +67,7 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
 
     apps_list.layoutManager = GridLayoutManager(view.context, 3)
     apps_list.setAdaptiveLayout(getItemSizeWidth(), getItemSizeHeight(),
-        GridRecyclerView.AdaptStrategy.SCALE_KEEP_ASPECT_RATIO)
+        getAdapterStrategy())
     apps_list.setIntendedItemSpacing(getItemSpacingDp())
     val padding = getPixels(getContainerPaddingDp())
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
@@ -116,6 +116,8 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
   @Dimension(unit = Dimension.DP)
   abstract fun getItemSizeHeight(): Int
 
+
+  abstract fun getAdapterStrategy(): GridRecyclerView.AdaptStrategy
   /**
    * Specifies how the viewholder for this list is built
    */

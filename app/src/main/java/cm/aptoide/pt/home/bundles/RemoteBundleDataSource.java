@@ -10,6 +10,7 @@ import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -31,6 +32,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by jdandrade on 08/03/2018.
@@ -101,36 +103,58 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
-  private Single<HomeBundlesModel> getHomeBundles(int offset, int limit,
-      boolean invalidateHttpCache, String key) {
+  private Observable<HomeBundlesModel> getHomeBundles(int offset, int limit,
+      boolean invalidateHttpCache, String key, boolean skeletonLoad) {
     if (isLoading(key)) {
-      return Single.just(new HomeBundlesModel(true));
+      return Observable.just(new HomeBundlesModel(true));
     }
-    final boolean adultContentEnabled = accountManager.enabled()
-        .first()
-        .toSingle()
-        .toBlocking()
-        .value();
 
-    return getPackages().flatMap(
-        packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient, converterFactory,
-            bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
-            storeCredentialsProvider.fromUrl(""), clientUniqueId, isGooglePlayServicesAvailable,
-            partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
-            versionCodeProvider, packageNames, appBundlesVisibilityManager)
-            .observe(invalidateHttpCache, false)
-            .doOnSubscribe(() -> {
-              loading.put(key, true);
-              error.put(key, false);
-            })
-            .doOnUnsubscribe(() -> loading.put(key, false))
-            .doOnTerminate(() -> loading.put(key, false))
-            .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
-            .toSingle()
-            .onErrorReturn(throwable -> {
-              error.put(key, true);
-              return createErrorAppsList(throwable);
-            }));
+    return accountManager.enabled()
+        .first()
+        .flatMap(adultContentEnabled -> getPackages().toObservable()
+            .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
+                converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+                widgetsUtils, storeCredentialsProvider.fromUrl(""), clientUniqueId,
+                isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
+                windowManager, connectivityManager, versionCodeProvider, packageNames,
+                appBundlesVisibilityManager)
+                .observe(invalidateHttpCache, false)
+                .flatMap(widgets -> Observable.merge(Observable.just(widgets),
+                    loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
+                        widgets, false)))
+                .doOnSubscribe(() -> {
+                  loading.put(key, true);
+                  error.put(key, false);
+                })
+                .doOnUnsubscribe(() -> loading.put(key, false))
+                .doOnTerminate(() -> loading.put(key, false))
+                .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
+                .filter(model -> skeletonLoad || model.isComplete())
+                .takeUntil(HomeBundlesModel::isComplete)
+                .onErrorReturn(throwable -> {
+                  throwable.printStackTrace();
+                  loading.put(key, false);
+                  error.put(key, true);
+                  return createErrorAppsList(throwable);
+                })));
+  }
+
+  private Observable<GetStoreWidgets> loadAppsInBundles(boolean adultContentEnabled,
+      boolean invalidateHttpCache, List<String> packageNames, GetStoreWidgets getStoreWidgets,
+      boolean bypassCache) {
+    return Observable.from(getStoreWidgets.getDataList()
+        .getList())
+        .observeOn(Schedulers.io())
+        .flatMap(
+            wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentialsProvider.fromUrl(""),
+                invalidateHttpCache, clientUniqueId, isGooglePlayServicesAvailable, partnerId,
+                adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
+                tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
+                versionCodeProvider, bypassCache,
+                Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
+                appBundlesVisibilityManager)
+                .map(__ -> wsWidget))
+        .map(__ -> getStoreWidgets);
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
@@ -171,23 +195,35 @@ public class RemoteBundleDataSource implements BundleDataSource {
     if (homeResponse.isOk()) {
       List<HomeBundle> homeBundles = mapper.fromWidgetsToBundles(homeResponse.getDataList()
           .getList());
+      boolean isComplete = isComplete(homeBundles);
       homeBundles = removeEmptyBundles(homeBundles);
       int responseBundletotal = homeResponse.getDataList()
           .getTotal();
       total.put(key, responseBundletotal);
       return Observable.just(new HomeBundlesModel(homeBundles, false, homeResponse.getDataList()
-          .getNext()));
+          .getNext(), isComplete));
     }
     return Observable.error(
         new IllegalStateException("Could not obtain home bundles from server."));
   }
 
-  @Override public Single<HomeBundlesModel> loadFreshHomeBundles(String key) {
-    return getHomeBundles(0, limit, true, key);
+  private boolean isComplete(List<HomeBundle> homeBundles) {
+    for (HomeBundle bundle : homeBundles) {
+      if (bundle.getContent() == null) {
+        return false;
+      }
+    }
+    return !homeBundles.isEmpty();
   }
 
-  @Override public Single<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key) {
-    return getHomeBundles(offset, limit, false, key);
+  @Override public Observable<HomeBundlesModel> loadFreshHomeBundles(String key) {
+    return getHomeBundles(0, limit, true, key, false);
+  }
+
+  @Override
+  public Observable<HomeBundlesModel> loadNextHomeBundles(int offset, int limit, String key,
+      boolean skeletonLoad) {
+    return getHomeBundles(offset, limit, false, key, skeletonLoad);
   }
 
   @Override public boolean hasMore(Integer offset, String key) {
@@ -244,9 +280,10 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private List<HomeBundle> removeEmptyBundles(List<HomeBundle> homeBundles) {
     List<HomeBundle> newHomeBundleList = new ArrayList<>();
     for (HomeBundle homeBundle : homeBundles) {
-      if (homeBundle.getType()
+      // If content is null, it means it hasn't been loaded yet, so don't remove anything
+      if (homeBundle.getContent() == null || (homeBundle.getType()
           .isApp() && !homeBundle.getContent()
-          .isEmpty()) {
+          .isEmpty())) {
         newHomeBundleList.add(homeBundle);
       } else if (!homeBundle.getType()
           .isApp()) {

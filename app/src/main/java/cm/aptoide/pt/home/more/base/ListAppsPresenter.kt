@@ -133,6 +133,7 @@ abstract class ListAppsPresenter<T : Application>(private val view: ListAppsView
         .flatMap {
           view.onBottomReached()
               .flatMap { loadMoreApps() }
+              .observeOn(viewScheduler)
               .doOnNext { apps -> if (apps != null && apps.isNotEmpty()) view.addApps(apps) }
               .retry()
         }

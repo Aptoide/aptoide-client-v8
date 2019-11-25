@@ -294,8 +294,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
      * or bundle with format store/apps/group/group-id
      * or thank you page: https://en.aptoide.com/thank-you?app_id=34998126&store_name=superuser4k
      */
-    if (u.getPath() != null && u.getPath()
-        .contains("thank-you")) {
+    if (u.getPath() != null && (u.getPath()
+        .contains("thank-you") || u.getPath()
+        .contains("download"))) {
       /**
        * thank you page
        */
@@ -381,6 +382,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       String slug = u.getPath()
           .split("/")[2];
       return startEditorialFromSlug(slug);
+    } else if (u.getPath() != null && u.getPath()
+        .contains("using-appcoins")) {
+      return startAppcInfoView();
     } else {
       String[] appName = u.getHost()
           .split("\\.");

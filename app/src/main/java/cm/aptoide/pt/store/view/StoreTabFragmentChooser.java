@@ -4,8 +4,10 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.app.view.ListAppsFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
+import cm.aptoide.pt.dataprovider.model.v7.Layout;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
-import cm.aptoide.pt.store.view.ads.GetAdsFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
@@ -16,10 +18,16 @@ import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 
 public class StoreTabFragmentChooser {
 
-  public static Fragment choose(Event.Name name) {
-    switch (name) {
+  public static Fragment choose(Event event, HomeEvent.Type eventType) {
+    switch (event.getName()) {
       case listApps:
-        return ListAppsFragment.newInstance();
+        if (event.getData() != null && event.getData()
+            .getLayout()
+            .equals(Layout.GRAPHIC) || eventType.equals(HomeEvent.Type.MORE_TOP)) {
+          return ListAppsFragment.newInstance();
+        } else {
+          return new ListAppsMoreFragment();
+        }
       case getStore:
       case getUser:
         return GetStoreFragment.newInstance();
@@ -34,13 +42,13 @@ public class StoreTabFragmentChooser {
       case getMoreBundle:
         return new MoreBundleFragment();
       case getAds:
-        return GetAdsFragment.newInstance();
+        return new ListAppsMoreFragment();
       case getAppCoinsAds:
         return new EarnAppcListFragment();
       case listStores:
         return ListStoresFragment.newInstance();
       default:
-        throw new RuntimeException("Fragment " + name + " not implemented!");
+        throw new RuntimeException("Fragment " + event.getName() + " not implemented!");
     }
   }
 

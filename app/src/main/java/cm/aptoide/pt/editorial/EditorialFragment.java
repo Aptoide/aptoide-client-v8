@@ -49,6 +49,7 @@ import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.snackbar.Snackbar;
+import com.jakewharton.rxbinding.support.design.widget.RxAppBarLayout;
 import com.jakewharton.rxbinding.support.v4.widget.RxNestedScrollView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
@@ -426,7 +427,8 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(resumeDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.RESUME,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId(),
+            action))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.RESUME)));
   }
@@ -446,12 +448,11 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public Observable<ScrollEvent> placeHolderVisibilityChange() {
-    return RxNestedScrollView.scrollChangeEvents(scrollView)
+    return Observable.mergeDelayError(RxNestedScrollView.scrollChangeEvents(scrollView),
+        RxAppBarLayout.offsetChanges(appBarLayout))
         .flatMap(viewScrollChangeEvent -> Observable.just(viewScrollChangeEvent)
             .map(scrollDown -> isItemShown())
-            .map(isItemShown -> new ScrollEvent(
-                isScrollDown(viewScrollChangeEvent.oldScrollY(), viewScrollChangeEvent.scrollY()),
-                isItemShown)))
+            .map(ScrollEvent::new))
         .distinctUntilChanged(ScrollEvent::getItemShown);
   }
 
@@ -748,10 +749,6 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  private boolean isScrollDown(int oldY, int newY) {
-    return newY > oldY;
-  }
-
   private boolean isItemShown() {
     if (placeHolderPositions != null && !placeHolderPositions.isEmpty()) {
       EditorialItemsViewHolder placeHolderViewHolder =
@@ -814,7 +811,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private EditorialItemsViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {
-    if (placeHolderPosition != -1) {
+    if (placeHolderPosition != -1 && editorialItems != null) {
       EditorialItemsViewHolder placeHolderViewHolder =
           ((EditorialItemsViewHolder) editorialItems.findViewHolderForAdapterPosition(
               placeHolderPosition));

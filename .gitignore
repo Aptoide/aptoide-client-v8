@@ -50,3 +50,4 @@ instapk.log*
 instapk.properties
 
 .gitmodules
+crowdin.properties

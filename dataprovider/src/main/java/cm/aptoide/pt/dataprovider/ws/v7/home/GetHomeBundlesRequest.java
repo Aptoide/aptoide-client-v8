@@ -116,9 +116,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getHomeBundles(body, bypassCache)
-        .flatMap(getStoreWidgets -> loadAppsInBundles(getStoreWidgets, bypassCache).map(
-            wsWidgets -> getStoreWidgets));
+    return Observable.just(null)
+        .flatMap(__ -> interfaces.getHomeBundles(body, bypassCache));
   }
 
   public static class Body extends BaseBody implements Endless {

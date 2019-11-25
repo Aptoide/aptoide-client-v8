@@ -18,7 +18,7 @@ public class AdMapper {
       return new AbstractMap.SimpleEntry<>(wrappedAd.getTag(),
           new SearchAdResult(ad.getAdId(), ad.getIconUrl(), ad.getDownloads(), ad.getStars(),
               ad.getModified(), ad.getPackageName(), ad.getCpcUrl(), ad.getCpdUrl(), ad.getCpiUrl(),
-              ad.getClickUrl(), ad.getAdTitle(), ad.getAppId(), ad.getNetworkId()));
+              ad.getClickUrl(), ad.getAdTitle(), ad.getAppId(), ad.getNetworkId(), false));
     };
   }
 }

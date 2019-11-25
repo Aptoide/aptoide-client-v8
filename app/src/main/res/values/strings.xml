@@ -84,6 +84,7 @@
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
   <string name="apkfy_install_message">Do you want to install this app?</string>
 
+
   <!-- AppView Donations-->
   <string name="appview_title_donations_leaderboard">Top Donations</string>
   <string name="appview_message_donations_leaderboard">Donations are a great way to show your support for a developer and make a difference. Donate AppCoins now to get on the leaderboard.</string>
@@ -533,19 +534,19 @@
   <string name="appc_title_homepage_card">You can get AppCoins now!</string>
   <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
-  <string name="appc_message_appcoins_section_1">AppCoins is the cryptocurrency for in-app transactions. You can earn AppCoins Credits when installing your favourite apps and use them to make in-app purchases, like buying gems or upgrading your game!</string>
+  <string name="appc_message_appcoins_section_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You’ll earn up to <b>30% bonus with all purchases!</b></string>
   <string name="appc_message_appcoins_header_2">First Things First</string>
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
-  <string name="appc_message_appcoins_section_2a">Get the %s</string>
+  <string name="appc_message_appcoins_section_2a">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it’ll do everything for you!</string>
   <string name="appc_message_appcoins_section_2b">Open it to get it automatically configured. You\'ll receive your rewards here and it\'ll process all your transactions!</string>
-  <string name="appc_message_appcoins_header_3">Get Rewarded!</string>
+  <string name="appc_message_appcoins_header_3">Get Rewarded for Installing Apps!</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_get_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_3">Get AppCoins Credits for free! Download any of the apps of the bundle %1$s, in the homepage, and spend 2 minutes in it. The AppCoins Wallet will process your reward, and you can use it to buy your favorite items in any app with the symbol %2$s.</string>
-  <string name="appc_message_appcoins_header_4">Every purchase has a bonus!</string>
+  <string name="appc_message_appcoins_section_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s You can find them in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
+  <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
   <string name="appc_message_appcoins_header_5">Benefits</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_4">You\'ll identify the apps on which you can spend your AppCoins Credits with the symbol %s, and every time you buy an item you\'ll get a bonus in AppCoins Credits! Don\'t worry if you don\'t have AppCoins yet, you\'ll still be able to use your bank card, PayPal account or even ask a friend to send you the funds.</string>
+  <string name="appc_message_appcoins_section_4">You\'ll get up to 30%% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
   <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
@@ -615,6 +616,11 @@
   <string name="holidayspromotion_message_dealformillions_description">Beat the banker by taking deals or simply not and holding out to reveal your briefcase.</string>
   <string name="holidayspromotion_message_daysofempire_description">Build your army, construct a city and destroy your enemies on the battlefield.</string>
   <string name="holidayspromotion_message_hercules_description">Help Hercules and Megara undo the damage done by the vengeful Gods in this greek adventure.</string>
+  <string name="holidayspromotion_message_space_shooter_description">If you are a fan of sky fire shooting, Space shooter: Galaxy attack game is game for you.</string>
+  <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
+  <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
+  <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
 
   <!--APPC install Promotion-->
   <string name="wallet_promotion_title">Get %s APPC Credits now!</string>
@@ -711,11 +717,13 @@
   <string name="appc_info_view_title_2">First Things First</string>
   <string name="appc_info_view_body_2">You need to install the AppCoins Wallet to get rewards and process all transactions. Once you install it, it\'ll do everything for you!</string>
   <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
-  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle "Earn AppCoins Credits" in Aptoide home!</string>
+  <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
-  <string name="appc_info_view_title_5">You\'ll get up to 30% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
+  <string name="appc_info_view_title_5">You\'ll get up to 30%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_devs_title">Are you a developer?</string>
   <string name="appc_info_view_devs_body">Check the new way to distribute apps.</string>
+  <string name="appc_info_view_devs_button">Know More</string>
+
 
   <!--Updates Notification-->
   <string name="updates_notification_title">Don\'t get left behind!</string>
@@ -729,8 +737,8 @@
   <string name="updates_notification_dismiss_button">DISMISS</string>
   <string name="updates_notification_update_button">UPDATE</string>
 
-  <string name="auto_update_popup_title">Update Aptoide!</string>
-  <string name="auto_update_popup_body">There\'s a new version available with new features and a faster navigation. It takes less than 1 minute to update!</string>
+  <string name="auto_update_popup_title">Update Ready to Install!</string>
+  <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
 
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>

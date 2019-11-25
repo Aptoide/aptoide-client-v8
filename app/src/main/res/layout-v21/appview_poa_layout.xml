@@ -1,130 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="4dp"
-    >
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  app:cardCornerRadius="4dp">
+
   <ImageView
-      android:id="@+id/coins_icon"
-      android:layout_width="63dp"
-      android:layout_height="63dp"
-      android:layout_marginBottom="8dp"
-      android:elevation="3dp"
-      android:outlineProvider="none"
-      android:src="@drawable/ic_poa_coins"
-      app:layout_constraintBottom_toTopOf="@+id/card_info_layout"
-      app:layout_constraintLeft_toLeftOf="@+id/card_info_layout"
-      app:layout_constraintRight_toRightOf="@+id/card_info_layout"
-      app:layout_constraintTop_toTopOf="@+id/card_info_layout"
-      />
+    android:id="@+id/coins_icon"
+    android:layout_width="63dp"
+    android:layout_height="63dp"
+    android:layout_marginBottom="8dp"
+    android:elevation="3dp"
+    android:outlineProvider="none"
+    android:src="@drawable/ic_get_appc"
+    app:layout_constraintBottom_toTopOf="@+id/card_info_layout"
+    app:layout_constraintLeft_toLeftOf="@+id/card_info_layout"
+    app:layout_constraintRight_toRightOf="@+id/card_info_layout"
+    app:layout_constraintTop_toTopOf="@+id/card_info_layout" />
 
   <androidx.cardview.widget.CardView
-      android:id="@+id/card_info_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="39.5dp"
-      app:cardCornerRadius="4dp"
-      app:cardUseCompatPadding="true"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      >
+    android:id="@+id/card_info_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="39.5dp"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="25dp"
-        android:orientation="vertical"
-        >
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="25dp"
+      android:orientation="vertical">
+
       <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:text="@string/poa_app_view_card_body_1"
-          android:textStyle="bold"
-          style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-          />
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/poa_app_view_card_body_1"
+        android:textStyle="bold" />
+
       <TextView
-          android:id="@+id/offer_value"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginTop="5dp"
-          android:textStyle="bold"
-          tools:text="20 AppCoins Credits (€0.79)"
-          style="@style/Aptoide.TextView.Regular.M.AppcColor"
-          />
+        android:id="@+id/offer_value"
+        style="@style/Aptoide.TextView.Regular.M.AppcColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        tools:text="20 AppCoins Credits (€0.79)" />
 
       <include
-          layout="@layout/appview_poa_countdown_element"
-          android:id="@+id/countdown_element"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginBottom="5dp"
-          android:layout_marginTop="10dp"
-          android:visibility="gone"
-          />
+        android:id="@+id/countdown_element"
+        layout="@layout/appview_poa_countdown_element"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone" />
 
       <ViewStub
-          android:id="@+id/poa_install_element"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="20dp"
-          android:orientation="horizontal"
-          android:visibility="gone"
-          />
+        android:id="@+id/poa_install_element"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:visibility="gone" />
 
       <LinearLayout
-          android:id="@+id/inapp_purchases"
+        android:id="@+id/inapp_purchases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+          android:layout_width="13dp"
+          android:layout_height="13dp"
+          android:layout_marginEnd="7dp"
+          android:src="@drawable/appcoins_icon_gradient" />
+
+        <TextView
+          style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginBottom="16dp"
-          android:orientation="horizontal"
-          >
-        <ImageView
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_marginEnd="7dp"
-            android:src="@drawable/appcoins_icon_gradient"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/appc_message_appview_appcoins_iab"
-            style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
-            />
+          android:text="@string/appc_message_appview_appcoins_iab" />
       </LinearLayout>
 
       <LinearLayout
-          android:id="@+id/budget_element"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="#f7f7f7"
-          android:visibility="gone"
-          tools:visibility="visible"
-          >
+        android:id="@+id/budget_element"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f7f7f7"
+        android:visibility="gone"
+        tools:visibility="visible">
+
         <ImageView
-            android:layout_width="34dp"
-            android:layout_height="39dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:src="@drawable/ic_poa_clock"
-            />
+          android:layout_width="34dp"
+          android:layout_height="39dp"
+          android:layout_marginStart="8dp"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:src="@drawable/ic_poa_clock" />
+
         <TextView
-            android:id="@+id/budget_left_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="12dp"
-            android:textStyle="bold"
-            tools:text="Hurry up! We only have 190 AppCoins to give away."
-            style="@style/Aptoide.TextView.Regular.XS"
-            />
+          android:id="@+id/budget_left_message"
+          style="@style/Aptoide.TextView.Regular.XS"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginStart="12dp"
+          android:layout_marginEnd="8dp"
+          android:textStyle="bold"
+          tools:text="Hurry up! We only have 190 AppCoins to give away." />
       </LinearLayout>
     </LinearLayout>
   </androidx.cardview.widget.CardView>

@@ -53,6 +53,8 @@ public class Download extends RealmObject {
   private String versionName;
   private boolean hasAppc;
   private long size;
+  private String storeName;
+  private String trustedBadge;
   @Download.DownloadError private int downloadError;
 
   public Download() {
@@ -230,6 +232,22 @@ public class Download extends RealmObject {
       }
     }
     return false;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public void setStoreName(String storeName) {
+    this.storeName = storeName;
+  }
+
+  public String getTrustedBadge() {
+    return trustedBadge;
+  }
+
+  public void setTrustedBadge(String trustedBadge) {
+    this.trustedBadge = trustedBadge;
   }
 
   @IntDef({
