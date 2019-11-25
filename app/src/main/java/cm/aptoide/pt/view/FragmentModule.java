@@ -364,11 +364,13 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment, externalNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment,
+        externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -620,6 +622,15 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
       ListAppsMoreRepository listAppsMoreRepository, AdsRepository adsRepository) {
     return new ListAppsMoreManager(listAppsMoreRepository, adsRepository);
+  }
+
+  @FragmentScope @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager) {
+    return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
   @FragmentScope @Provides ExternalNavigator providesExternalNavigator(

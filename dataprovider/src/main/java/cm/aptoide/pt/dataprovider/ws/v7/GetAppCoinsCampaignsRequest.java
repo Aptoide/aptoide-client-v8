@@ -35,7 +35,6 @@ public class GetAppCoinsCampaignsRequest
 
   @Override protected Observable<ListAppCoinsCampaigns> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-
     return interfaces.getAppCoinsAds(body, bypassCache, body.getLimit());
   }
 

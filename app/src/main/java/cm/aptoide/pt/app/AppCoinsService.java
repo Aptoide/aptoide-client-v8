@@ -2,10 +2,12 @@ package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
+import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
+import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -36,38 +38,32 @@ public class AppCoinsService {
   }
 
   private AppCoinsAdvertisingModel mapAdvertising(ListAppCoinsCampaigns listAppCoinsCampaigns) {
-    if (listAppCoinsCampaigns.getList()
-        .isEmpty()) {
+    List<AppCoinsCampaign> list = listAppCoinsCampaigns.getDataList()
+        .getList();
+    if (list.isEmpty()) {
       return new AppCoinsAdvertisingModel();
     } else {
-      double appcReward = listAppCoinsCampaigns.getList()
-          .get(0)
+      double appcReward = list.get(0)
           .getReward()
           .getAppc();
 
-      double fiatReward = listAppCoinsCampaigns.getList()
-          .get(0)
+      double fiatReward = list.get(0)
           .getReward()
           .getFiat()
           .getAmount();
 
-      String fiatCurrency = listAppCoinsCampaigns.getList()
-          .get(0)
+      String fiatCurrency = list.get(0)
           .getReward()
           .getFiat()
           .getSymbol();
 
-      double appcBudget = listAppCoinsCampaigns.getList()
-          .get(0)
-          .getBudget() != null ? listAppCoinsCampaigns.getList()
-          .get(0)
+      double appcBudget = list.get(0)
+          .getBudget() != null ? list.get(0)
           .getBudget()
           .getAppc() : -1.0;
 
-      String endDate = listAppCoinsCampaigns.getList()
-          .get(0)
-          .getEndDate() != null ? listAppCoinsCampaigns.getList()
-          .get(0)
+      String endDate = list.get(0)
+          .getEndDate() != null ? list.get(0)
           .getEndDate() : "";
 
       return new AppCoinsAdvertisingModel(appcReward, true, fiatReward, fiatCurrency, appcBudget,

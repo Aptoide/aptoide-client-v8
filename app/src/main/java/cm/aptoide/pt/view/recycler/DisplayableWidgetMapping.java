@@ -22,7 +22,6 @@ import cm.aptoide.pt.comments.view.RateAndReviewCommentWidget;
 import cm.aptoide.pt.comments.view.StoreAddCommentWidget;
 import cm.aptoide.pt.comments.view.StoreLatestCommentsWidget;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.GridAppCoinsRewardAppsDisplayable;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterDisplayable;
 import cm.aptoide.pt.reviews.ReviewsLanguageFilterWidget;
@@ -67,7 +66,6 @@ import cm.aptoide.pt.view.recycler.displayable.ProgressBarDisplayable;
 import cm.aptoide.pt.view.recycler.widget.EmptyWidget;
 import cm.aptoide.pt.view.recycler.widget.FooterRowWidget;
 import cm.aptoide.pt.view.recycler.widget.GridAdWidget;
-import cm.aptoide.pt.view.recycler.widget.GridAppCoinsRewardAppsWidget;
 import cm.aptoide.pt.view.recycler.widget.GridDisplayWidget;
 import cm.aptoide.pt.view.recycler.widget.MessageWhiteBgWidget;
 import cm.aptoide.pt.view.recycler.widget.ProgressBarWidget;
@@ -139,8 +137,6 @@ public class DisplayableWidgetMapping {
         new DisplayableWidgetMapping(GridStoreMetaWidget.class, GridStoreMetaDisplayable.class));
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(GridAdWidget.class, GridAdDisplayable.class));
-    displayableWidgetMappings.add(new DisplayableWidgetMapping(GridAppCoinsRewardAppsWidget.class,
-        GridAppCoinsRewardAppsDisplayable.class));
 
     // Multi Layout
     displayableWidgetMappings.add(

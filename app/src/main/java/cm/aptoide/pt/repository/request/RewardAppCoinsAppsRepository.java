@@ -3,6 +3,7 @@ package cm.aptoide.pt.repository.request;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
@@ -28,6 +29,8 @@ public class RewardAppCoinsAppsRepository {
   private SharedPreferences sharedPreferences;
   private InstallManager installManager;
 
+  private int offset = 0;
+
   public RewardAppCoinsAppsRepository(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, InstallManager installManager) {
@@ -41,15 +44,17 @@ public class RewardAppCoinsAppsRepository {
 
   public Observable<List<RewardApp>> getAppCoinsRewardAppsFromHomeMore(boolean refresh,
       String tag) {
+    if (refresh) offset = 0;
     return new GetAppCoinsCampaignsRequest(
-        new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
+        new GetAppCoinsCampaignsRequest.Body(offset, APPCOINS_REWARD_LIMIT), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(refresh)
-        .flatMap(response -> map(response.getList(), tag));
+        .flatMap(response -> map(response.getDataList(), tag));
   }
 
-  private Observable<List<RewardApp>> map(List<AppCoinsCampaign> list, String tag) {
+  private Observable<List<RewardApp>> map(DataList<AppCoinsCampaign> list, String tag) {
+    this.offset = list.getNext();
     List<RewardApp> rewardAppsList = new ArrayList<>();
-    for (AppCoinsCampaign campaign : list) {
+    for (AppCoinsCampaign campaign : list.getList()) {
       AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
         rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
