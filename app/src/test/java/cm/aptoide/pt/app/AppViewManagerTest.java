@@ -414,6 +414,7 @@ public class AppViewManagerTest {
   @Test public void pauseDownloadTest() {
     //When the presenter wants to pause the download
     //Then the appViewManager should return a Complete when the request is done
+    when(installManager.pauseInstall("md5")).thenReturn(Completable.complete());
     appViewManager.pauseDownload("md5")
         .test()
         .assertCompleted();
@@ -457,6 +458,7 @@ public class AppViewManagerTest {
   @Test public void cancelDownloadTest() {
     //When the presents asks to cancel a download
     //Then it should return a Complete when the request is done
+    when(installManager.cancelInstall("md5", "packageName", 1)).thenReturn(Completable.complete());
     appViewManager.cancelDownload("md5", "packageName", 1)
         .test()
         .assertCompleted();
