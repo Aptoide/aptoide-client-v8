@@ -99,6 +99,8 @@ public class SearchAnalytics {
         return "trending";
       case FROM_AUTOCOMPLETE:
         return "autocomplete";
+      case DEEPLINK:
+        return "deeplink";
       case MANUAL:
       default:
         return "manual";
