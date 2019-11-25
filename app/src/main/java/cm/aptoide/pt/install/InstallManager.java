@@ -82,15 +82,14 @@ public class InstallManager {
             download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
                 forceDefaultInstall, forceSplitInstall).andThen(
                 sendBackgroundInstallFinishedBroadcast(download)))
+        .doOnError(throwable -> throwable.printStackTrace())
         .toCompletable()
         .subscribe();
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
-    return Completable.fromAction(() -> {
-      context.sendBroadcast(
-          new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-    });
+    return Completable.fromAction(() -> context.sendBroadcast(
+        new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5())));
   }
 
   public void stop() {

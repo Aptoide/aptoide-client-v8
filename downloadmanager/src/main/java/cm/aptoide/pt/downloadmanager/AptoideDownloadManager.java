@@ -299,11 +299,12 @@ public class AptoideDownloadManager implements DownloadManager {
             downloadAnalytics.startProgress(download);
           }
         })
-        .filter(download -> download.getOverallDownloadStatus() == Download.COMPLETED)
+        .filter(download -> download.getOverallDownloadStatus() == Download.WAITING_TO_MOVE_FILES)
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
             download.getPackageName(), download.getVersionCode()))
-        .takeUntil(download -> download.getOverallDownloadStatus() == Download.COMPLETED);
+        .takeUntil(
+            download -> download.getOverallDownloadStatus() == Download.WAITING_TO_MOVE_FILES);
   }
 
   private void removeAppDownloader(String md5) {
