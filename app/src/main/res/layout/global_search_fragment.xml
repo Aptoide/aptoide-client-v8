@@ -1,158 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <include
+    layout="@layout/partial_view_progress_bar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    tools:visibility="gone" />
+
+  <include
+    layout="@layout/incl_no_search_results_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:visibility="gone" />
 
   <include
-      layout="@layout/partial_view_progress_bar"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      tools:visibility="gone"
-      />
-
-  <include
-      layout="@layout/incl_no_search_results_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="?attr/actionBarSize"
-      tools:visibility="gone"
-      />
-
-  <include
-      layout="@layout/incl_no_search_results_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="?attr/actionBarSize"
-      tools:visibility="gone"
-      />
+    layout="@layout/incl_no_search_results_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:visibility="gone" />
 
   <cm.aptoide.aptoideviews.errors.ErrorView
-      android:id="@+id/error_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      tools:visibility="gone"
-      />
+    android:id="@+id/error_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:visibility="gone"
+    tools:visibility="gone" />
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/suggestions_list"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      />
+    android:id="@+id/suggestions_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:visibility="gone" />
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/trending_list"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      />
+    android:id="@+id/trending_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:visibility="gone" />
 
   <RelativeLayout
-      android:id="@+id/fragment_search_result_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="?attr/actionBarSize"
-      android:visibility="gone"
-      tools:visibility="visible"
-      >
+    android:id="@+id/fragment_search_result_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        >
+      android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
+      android:layout_width="match_parent"
+      android:layout_height="56dp">
 
       <LinearLayout
-          android:layout_width="262dp"
-          android:layout_height="26.6dp"
-          android:layout_centerHorizontal="true"
-          android:layout_gravity="center"
-          android:background="@drawable/search_buttons_background"
-          android:gravity="center_horizontal"
-          android:orientation="horizontal"
-          >
+        android:layout_width="262dp"
+        android:layout_height="26.6dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:background="@drawable/search_buttons_background"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/fragment_search_result_followed_stores_button"
-            android:layout_width="128dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/disabled_search_button_background"
-            android:text="@string/followed_stores"
-            android:textColor="@color/silver_dark"
-            android:textSize="10sp"
-            tools:ignore="SmallSp"
-            />
+          android:id="@+id/fragment_search_result_followed_stores_button"
+          android:layout_width="128dp"
+          android:layout_height="match_parent"
+          android:background="@drawable/disabled_search_button_background"
+          android:text="@string/followed_stores"
+          android:textColor="@color/silver_dark"
+          android:textSize="10sp"
+          tools:ignore="SmallSp" />
 
         <Button
-            android:id="@+id/fragment_search_result_all_stores_button"
-            android:layout_width="128dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/default_search_button_background"
-            android:text="@string/all_stores"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:ignore="SmallSp"
-            />
+          android:id="@+id/fragment_search_result_all_stores_button"
+          android:layout_width="128dp"
+          android:layout_height="match_parent"
+          android:background="@drawable/default_search_button_background"
+          android:text="@string/all_stores"
+          android:textColor="@color/white"
+          android:textSize="10sp"
+          tools:ignore="SmallSp" />
 
       </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <com.mopub.mobileads.MoPubView
-        android:id="@+id/mopub_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        tools:background="@color/green"
-        tools:layout_height="20dp"
-        tools:visibility="gone"
-        />
+      android:id="@+id/mopub_banner"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
+      android:layout_marginTop="5dp"
+      android:visibility="gone"
+      tools:background="@color/green"
+      tools:layout_height="20dp"
+      tools:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_search_result_followed_stores_app_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mopub_banner"
-        android:layout_marginTop="5dp"
-        android:visibility="invisible"
-        />
+      android:id="@+id/fragment_search_result_followed_stores_app_list"
+      android:layout_width="match_parent"
+      android:layout_height="fill_parent"
+      android:layout_above="@id/mopub_banner2"
+      android:layout_below="@id/mopub_banner"
+      android:layout_marginTop="5dp"
+      android:visibility="invisible" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_search_result_all_stores_app_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mopub_banner"
-        android:layout_marginTop="5dp"
-        android:visibility="visible"
-        />
+      android:id="@+id/fragment_search_result_all_stores_app_list"
+      android:layout_width="match_parent"
+      android:layout_height="fill_parent"
+      android:layout_above="@id/mopub_banner2"
+      android:layout_below="@id/mopub_banner"
+      android:layout_marginTop="5dp"
+      android:visibility="visible" />
+
+    <com.mopub.mobileads.MoPubView
+      android:id="@+id/mopub_banner2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentBottom="true"
+      android:layout_marginTop="5dp"
+      android:visibility="gone"
+      tools:background="@color/green"
+      tools:layout_height="20dp"
+      tools:visibility="gone" />
 
   </RelativeLayout>
 
   <com.google.android.material.appbar.AppBarLayout
-      android:id="@+id/app_bar_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="?attr/toolbarBackground"
-      app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-      >
+    android:id="@+id/app_bar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/toolbarBackground"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        >
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:elevation="4dp"
+      app:layout_scrollFlags="scroll|enterAlways"
+      app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     </androidx.appcompat.widget.Toolbar>
 

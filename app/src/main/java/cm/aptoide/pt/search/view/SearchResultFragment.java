@@ -126,6 +126,7 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAd;
+  private MoPubView bannerAdBottom;
   private PublishSubject<Boolean> showingSearchResultsView;
   private ErrorView errorView;
 
@@ -193,6 +194,7 @@ public class SearchResultFragment extends BackButtonFragment
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
     bannerAd = view.findViewById(R.id.mopub_banner);
+    bannerAdBottom = view.findViewById(R.id.mopub_banner2);
     errorView = view.findViewById(R.id.error_view);
   }
 
@@ -274,6 +276,11 @@ public class SearchResultFragment extends BackButtonFragment
     return errorView.retryClick();
   }
 
+  private void setBannersVisibility(int visibility) {
+    bannerAd.setVisibility(visibility);
+    bannerAdBottom.setVisibility(visibility);
+  }
+
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
@@ -283,7 +290,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    setBannersVisibility(View.GONE);
   }
 
   @Override public void showResultsView() {
@@ -300,7 +307,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    bannerAd.setVisibility(View.GONE);
+    setBannersVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -500,6 +507,10 @@ public class SearchResultFragment extends BackButtonFragment
     bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
     bannerAd.setVisibility(VISIBLE);
     bannerAd.loadAd();
+    bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
+    bannerAdBottom.setVisibility(VISIBLE);
+    bannerAdBottom.loadAd();
   }
 
   @Override public Observable<Boolean> showingSearchResultsView() {
@@ -518,7 +529,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    setBannersVisibility(View.GONE);
   }
 
   @Override public void showGenericErrorView() {
@@ -533,7 +544,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    setBannersVisibility(View.GONE);
   }
 
   public void showSuggestionsView() {
@@ -545,14 +556,14 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      setBannersVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      setBannersVisibility(View.GONE);
     }
   }
 
@@ -562,8 +573,8 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
-    if (bannerAd != null) {
-      bannerAd.setVisibility(View.GONE);
+    if (bannerAd != null && bannerAdBottom != null) {
+      setBannersVisibility(View.GONE);
     }
   }
 
@@ -772,6 +783,10 @@ public class SearchResultFragment extends BackButtonFragment
     if (bannerAd != null) {
       bannerAd.destroy();
       bannerAd = null;
+    }
+    if (bannerAdBottom != null) {
+      bannerAdBottom.destroy();
+      bannerAdBottom = null;
     }
   }
 
