@@ -21,7 +21,7 @@ class WalletAppProvider(val appCenter: AppCenter, val installedRepository: Insta
         .map { app -> this.mapToWalletApp(app) }.flatMap { walletApp ->
           val walletAppObs = Observable.just<WalletApp>(walletApp)
           val isWalletInstalled =
-              Observable.just(packageManager.isWalletInstalled())
+              Observable.just(packageManager.isThereAPackageToProcessAPPCPayments())
           val walletDownload = installManager.getInstall(walletApp.md5sum, walletApp.packageName,
               walletApp.versionCode)
           Observable.combineLatest<WalletApp, Boolean, Install, WalletApp>(walletAppObs,
