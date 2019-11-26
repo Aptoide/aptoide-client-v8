@@ -16,7 +16,6 @@ import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
-import cm.aptoide.pt.install.installer.DefaultInstaller;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -50,12 +49,14 @@ public class InstallManager {
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
   private final CrashReport crashReporter;
+  private final ForegroundManager foregroundManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, CrashReport crashReporter) {
+      PackageInstallerManager packageInstallerManager, CrashReport crashReporter,
+      ForegroundManager foregroundManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -66,6 +67,7 @@ public class InstallManager {
     this.securePreferences = securePreferences;
     this.packageInstallerManager = packageInstallerManager;
     this.crashReporter = crashReporter;
+    this.foregroundManager = foregroundManager;
   }
 
   public void start() {
@@ -448,7 +450,7 @@ public class InstallManager {
     return aptoideDownloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .doOnNext(__ -> startInstallService(md5, forceDefaultInstall, shouldSetPackageInstaller))
+        .doOnNext(__ -> startInstallService())
         .flatMapCompletable(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
             return Completable.fromAction(() -> {
@@ -464,17 +466,8 @@ public class InstallManager {
         .map(__ -> null);
   }
 
-  private void startInstallService(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
-    Intent intent = new Intent(context, InstallService.class);
-    intent.setAction(InstallService.ACTION_START_INSTALL);
-    intent.putExtra(EXTRA_INSTALLATION_MD5, md5);
-    intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
-    intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
-    if (installer instanceof DefaultInstaller) {
-      intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
-    }
-    context.startService(intent);
+  private void startInstallService() {
+    foregroundManager.startDownloadForeground();
   }
 
   private Observable<Void> waitBackgroundInstallationResult(String md5) {

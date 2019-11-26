@@ -172,6 +172,7 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
@@ -331,12 +332,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       AppInstaller appInstaller, AppInstallerStatusReceiver appInstallerStatusReceiver,
-      PackageInstallerManager packageInstallerManager,
-      RootInstallerProvider rootInstallerProvider) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
         downloadsRepository, installedRepository, packageInstallerManager,
-        CrashReport.getInstance());
+        CrashReport.getInstance(), foregroundManager);
+  }
+
+  @Singleton @Provides ForegroundManager providesForegroundManager() {
+    return new ForegroundManager(getApplicationContext());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(

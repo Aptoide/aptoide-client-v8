@@ -12,14 +12,16 @@ import rx.subscriptions.CompositeSubscription;
 public class DownloadsNotificationsPresenter implements Presenter {
 
   private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
+  private final String action;
   private DownloadsNotification service;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
 
   public DownloadsNotificationsPresenter(DownloadsNotification service,
-      InstallManager installManager) {
+      InstallManager installManager, String action) {
     this.service = service;
     this.installManager = installManager;
+    this.action = action;
     subscriptions = new CompositeSubscription();
   }
 
@@ -58,6 +60,8 @@ public class DownloadsNotificationsPresenter implements Presenter {
   }
 
   @Override public void present() {
-    handleCurrentInstallation();
+    if (action.equals(InstallService.DOWNLOAD_APP_ACTION)) {
+      handleCurrentInstallation();
+    }
   }
 }
