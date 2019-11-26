@@ -327,16 +327,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides InstallManager providesInstallManager(
       AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
-      InstallerAnalytics installerAnalytics, RootAvailabilityManager rootAvailabilityManager,
+      RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      AppInstaller appInstaller, AppInstallerStatusReceiver appInstallerStatusReceiver,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager,
-        CrashReport.getInstance(), foregroundManager);
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {

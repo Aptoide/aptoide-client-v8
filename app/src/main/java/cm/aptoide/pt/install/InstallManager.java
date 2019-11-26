@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -48,15 +47,13 @@ public class InstallManager {
   private final DownloadsRepository downloadRepository;
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
-  private final CrashReport crashReporter;
   private final ForegroundManager foregroundManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, CrashReport crashReporter,
-      ForegroundManager foregroundManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -66,7 +63,6 @@ public class InstallManager {
     this.sharedPreferences = sharedPreferences;
     this.securePreferences = securePreferences;
     this.packageInstallerManager = packageInstallerManager;
-    this.crashReporter = crashReporter;
     this.foregroundManager = foregroundManager;
   }
 

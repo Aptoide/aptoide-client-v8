@@ -19,13 +19,10 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
-import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.logger.Logger;
 import java.util.Locale;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 public class InstallService extends BaseService implements DownloadsNotification {
 
@@ -41,10 +38,6 @@ public class InstallService extends BaseService implements DownloadsNotification
   private final int OPEN_DOWNLOAD_MANAGER_REQUEST_CODE = 222;
   private final int OPEN_APPVIEW_REQUEST_CODE = 333;
   @Inject AptoideDownloadManager downloadManager;
-  @Inject @Named("default") Installer defaultInstaller;
-  @Inject InstalledRepository installedRepository;
-  @Inject DownloadAnalytics downloadAnalytics;
-  @Inject CacheHelper cacheManager;
   private DownloadsNotificationsPresenter downloadsNotificationsPresenter;
   private InstallManager installManager;
   private Notification notification;
@@ -135,9 +128,6 @@ public class InstallService extends BaseService implements DownloadsNotification
       NotificationCompat.Action pauseAction, NotificationCompat.Action openDownloadManager,
       PendingIntent contentIntent) {
 
-    Logger.getInstance()
-        .d("notification", "building notification:: " + appName);
-
     NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
     builder.setSmallIcon(android.R.drawable.stat_sys_download)
         .setContentTitle(String.format(Locale.ENGLISH,
@@ -160,8 +150,6 @@ public class InstallService extends BaseService implements DownloadsNotification
     PendingIntent appViewPendingIntent = getAppViewOpeningPendingIntent(md5);
     NotificationCompat.Action pauseAction = getPauseAction(md5);
 
-    Logger.getInstance()
-        .d("notification", "setting up notification for app: " + appName);
     if (notification == null) {
       notification =
           buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
