@@ -305,7 +305,7 @@ android {
         "\"" + project.MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID + "\""
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
-        "\"" + project.RAKAM_API_KEY + "\""
+        "\"" + project.RAKAM_API_KEY_TEST + "\""
 
     variant.outputs.all { output ->
       def SEP = "_"
