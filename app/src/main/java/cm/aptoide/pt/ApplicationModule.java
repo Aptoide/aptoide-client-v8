@@ -281,7 +281,6 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -775,30 +774,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new OAuthModeProvider();
   }
 
-  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent") Interceptor userAgentInterceptor,
-      @Named("default") SharedPreferences sharedPreferences,
-      @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
-    final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-    okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
-    okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
-    final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
-    okHttpClientBuilder.cache(cache); // 10 MiB
-    okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
+  @Singleton @Provides @Named("default") OkHttpClient provideOkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent") Interceptor userAgentInterceptor) {
     okHttpClientBuilder.addInterceptor(userAgentInterceptor);
-
-    if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
-      okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
-    }
-
     return okHttpClientBuilder.build();
   }
 
@@ -839,30 +818,27 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return okHttpClientBuilder.build();
   }
 
-  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(L2Cache httpClientCache,
-      @Named("user-agent-v8") Interceptor userAgentInterceptorV8,
-      @Named("default") SharedPreferences sharedPreferences,
+  @Singleton @Provides @Named("default") OkHttpClient.Builder providesOkHttpBuilder(
+      L2Cache httpClientCache, @Named("default") SharedPreferences sharedPreferences,
       @Named("retrofit-log") Interceptor retrofitLogInterceptor) {
     final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
     okHttpClientBuilder.readTimeout(45, TimeUnit.SECONDS);
     okHttpClientBuilder.writeTimeout(45, TimeUnit.SECONDS);
-
     final Cache cache = new Cache(application.getCacheDir(), 10 * 1024 * 1024);
-    try {
-      // For billing to handle stale data properly the cache should only be stored in memory.
-      // In order to make sure it happens we clean up all data persisted in disk when client
-      // is first created. It only affects API calls with GET verb.
-      cache.evictAll();
-    } catch (IOException ignored) {
-    }
     okHttpClientBuilder.cache(cache); // 10 MiB
     okHttpClientBuilder.addInterceptor(new POSTCacheInterceptor(httpClientCache));
-    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
 
     if (ToolboxManager.isToolboxEnableRetrofitLogs(sharedPreferences)) {
       okHttpClientBuilder.addInterceptor(retrofitLogInterceptor);
     }
 
+    return okHttpClientBuilder;
+  }
+
+  @Singleton @Provides @Named("v8") OkHttpClient provideV8OkHttpClient(
+      @Named("default") OkHttpClient.Builder okHttpClientBuilder,
+      @Named("user-agent-v8") Interceptor userAgentInterceptorV8) {
+    okHttpClientBuilder.addInterceptor(userAgentInterceptorV8);
     return okHttpClientBuilder.build();
   }
 
@@ -973,10 +949,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         sharedPreferences);
   }
 
-  @Singleton @Provides QManager provideQManager(
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      WindowManager windowManager) {
-    return new QManager(sharedPreferences, resources,
+  @Singleton @Provides QManager provideQManager(Resources resources, WindowManager windowManager) {
+    return new QManager(resources,
         ((ActivityManager) application.getSystemService(Context.ACTIVITY_SERVICE)), windowManager,
         (UiModeManager) application.getSystemService(UI_MODE_SERVICE));
   }
@@ -1986,5 +1960,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
       @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
     return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
+  }
+
+  @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
   }
 }

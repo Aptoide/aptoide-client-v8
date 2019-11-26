@@ -93,10 +93,9 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
+import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
-import cm.aptoide.pt.view.entry.EntryActivity;
-import cm.aptoide.pt.view.entry.EntryPointChooser;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
@@ -140,11 +139,11 @@ public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
-  private static final String RAKAM_URL = "http://rak-api.aptoide.com:9999";
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
+  @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject CacheHelper cacheHelper;
@@ -188,7 +187,6 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideMd5Manager aptoideMd5Manager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
-  private EntryPointChooser entryPointChooser;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
@@ -345,7 +343,7 @@ public abstract class AptoideApplication extends Application {
     RakamClient instance = Rakam.getInstance();
 
     try {
-      instance.initialize(this, new URL(RAKAM_URL), BuildConfig.RAKAM_API_KEY);
+      instance.initialize(this, new URL(rakamBaseHost), BuildConfig.RAKAM_API_KEY);
     } catch (MalformedURLException e) {
       Logger.getInstance()
           .e(TAG, "error: ", e);
@@ -558,13 +556,6 @@ public abstract class AptoideApplication extends Application {
 
   public QManager getQManager() {
     return qManager;
-  }
-
-  public EntryPointChooser getEntryPointChooser() {
-    if (entryPointChooser == null) {
-      entryPointChooser = new EntryPointChooser(() -> qManager.isSupportedExtensionsDefined());
-    }
-    return entryPointChooser;
   }
 
   public AptoideAccountManager getAccountManager() {
@@ -795,7 +786,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, EntryActivity.class);
+    Intent shortcutIntent = new Intent(this, MainActivity.class);
     shortcutIntent.setAction(Intent.ACTION_MAIN);
     Intent intent = new Intent();
     intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);

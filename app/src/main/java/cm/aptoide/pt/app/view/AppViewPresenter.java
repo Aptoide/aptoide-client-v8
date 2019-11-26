@@ -25,6 +25,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
@@ -65,13 +66,15 @@ public class AppViewPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private final SimilarAppsExperiment similarAppsExperiment;
+  private final ExternalNavigator externalNavigator;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -85,6 +88,7 @@ public class AppViewPresenter implements Presenter {
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
     this.similarAppsExperiment = similarAppsExperiment;
+    this.externalNavigator = externalNavigator;
   }
 
   @Override public void present() {
@@ -106,9 +110,11 @@ public class AppViewPresenter implements Presenter {
     handleClickFlags();
     handleClickLoginSnack();
     handleClickOnAppcInfo();
+    handleClickOnAppcIabInfo();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
     handleClickOnRetry();
+    handleClickOnCatappultCard();
     handleOnScroll();
     handleOnSimilarAppsVisible();
 
@@ -206,7 +212,8 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
-        .isMature()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
+        .isMature(), appViewModel.getAppModel()
+        .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
         .isMature()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -215,8 +222,8 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(boolean isMature) {
-    return appViewManager.shouldLoadInterstitialAd()
+  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
+    return appViewManager.shouldLoadInterstitialAd(packageName)
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
@@ -386,7 +393,8 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.installAppClick())
         .flatMapSingle(__ -> appViewManager.getAppModel())
-        .filter(appModel -> !appModel.isAppCoinApp())
+        .filter(appModel -> !(appModel.isAppCoinApp() || "com.appcoins.wallet".equals(
+            appModel.getPackageName())))
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
@@ -569,6 +577,16 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendAppcInfoInteractEvent();
           appViewNavigator.navigateToAppCoinsInfo();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnAppcIabInfo() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.iabInfoClick())
+        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -768,7 +786,7 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.similarAppsVisibility())
-        .doOnNext(__ -> similarAppsExperiment.recordImpression())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -779,7 +797,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.installAppClick())
         .flatMap(__ -> view.clickSimilarApp())
-        .doOnNext(__ -> similarAppsExperiment.recordConversion())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordConversion())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -862,6 +880,17 @@ public class AppViewPresenter implements Presenter {
             .retry())
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnCatappultCard() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickCatappultCard())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> externalNavigator.navigateToCatappultWebsite())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {

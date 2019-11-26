@@ -11,6 +11,7 @@ import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
@@ -55,6 +56,7 @@ public class AppViewPresenterTest {
   @Mock private CampaignAnalytics campaignAnalytics;
   @Mock private PromotionsNavigator promotionsNavigator;
   @Mock private SimilarAppsExperiment similarAppsExperiment;
+  @Mock private ExternalNavigator externalNavigator;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -68,7 +70,8 @@ public class AppViewPresenterTest {
     presenter =
         spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
             appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-            permissionManager, permissionService, promotionsNavigator, similarAppsExperiment));
+            permissionManager, permissionService, promotionsNavigator, similarAppsExperiment,
+            externalNavigator));
 
     lifecycleEvent = PublishSubject.create();
 
@@ -125,7 +128,8 @@ public class AppViewPresenterTest {
   @Test public void handleLoadAppView() {
     when(appViewManager.getAppViewModel()).thenReturn(Single.just(appViewModel));
     when(appViewManager.observeAppViewModel()).thenReturn(Observable.just(appViewModel));
-    when(appViewManager.shouldLoadInterstitialAd()).thenReturn(Single.just(false));
+    when(appViewManager.shouldLoadInterstitialAd(appModel.getPackageName())).thenReturn(
+        Single.just(false));
     when(appViewManager.loadAdsFromAppView()).thenReturn(Single.just(new SearchAdResult()));
     when(appViewManager.shouldLoadBannerAd()).thenReturn(Single.just(false));
     when(appViewManager.loadPromotionViewModel()).thenReturn(

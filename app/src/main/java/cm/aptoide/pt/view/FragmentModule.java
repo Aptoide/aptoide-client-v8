@@ -119,6 +119,7 @@ import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.navigator.ActivityNavigator;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.FragmentResultNavigator;
 import cm.aptoide.pt.navigator.Result;
@@ -366,11 +367,11 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment, externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -416,10 +417,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AppCoinsInfoPresenter providesAppCoinsInfoPresenter(
       AppCoinsInfoNavigator appCoinsInfoNavigator, InstallManager installManager,
-      CrashReport crashReport) {
+      CrashReport crashReport, ExternalNavigator externalNavigator) {
     return new AppCoinsInfoPresenter((AppCoinsInfoView) fragment, appCoinsInfoNavigator,
         installManager, crashReport, AppCoinsInfoNavigator.APPC_WALLET_PACKAGE_NAME,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), externalNavigator);
   }
 
   @FragmentScope @Provides EditorialManager providesEditorialManager(
@@ -628,5 +629,10 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReporter, AutoUpdateManager autoUpdateManager) {
     return new AutoUpdateDialogPresenter((AutoUpdateDialogFragment) fragment,
         AndroidSchedulers.mainThread(), crashReporter, autoUpdateManager);
+  }
+
+  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(
+      @Named("aptoide-theme") String theme) {
+    return new ExternalNavigator(fragment.getContext(), theme);
   }
 }

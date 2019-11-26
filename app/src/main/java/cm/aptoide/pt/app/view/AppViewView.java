@@ -51,6 +51,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGetAppcInfo();
 
+  Observable<Void> clickCatappultCard();
+
   void displayNotLoggedInSnack();
 
   void displayStoreFollowedSnack(String storeName);
@@ -177,6 +179,8 @@ public interface AppViewView extends InstallAppView {
   Observable<WalletApp> resumePromotionDownload();
 
   Observable<Promotion> claimAppClick();
+
+  Observable<Void> iabInfoClick();
 
   void showDownloadingSimilarApps(boolean hasSimilarApps);
 

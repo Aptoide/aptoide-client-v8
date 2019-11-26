@@ -7,8 +7,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.SpannableString;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
-import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
@@ -216,11 +213,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
       installButton.setText(installState);
       bottomInstallButton.setText(installState);
     }
-  }
-
-  @Override public void startCatappultDevWebView() {
-    CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://catappult.io/", getContext(), theme);
   }
 
   @Override public Observable<ScrollEvent> appItemVisibilityChanged() {

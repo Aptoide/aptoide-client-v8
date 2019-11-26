@@ -379,7 +379,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
+            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
+            trustedBadge, storeName)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));

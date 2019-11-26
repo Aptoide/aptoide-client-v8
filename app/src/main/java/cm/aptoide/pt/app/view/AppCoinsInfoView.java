@@ -22,8 +22,6 @@ public interface AppCoinsInfoView extends View {
 
   void setButtonText(boolean installState);
 
-  void startCatappultDevWebView();
-
   Observable<ScrollEvent> appItemVisibilityChanged();
 
   void removeBottomCardAnimation();

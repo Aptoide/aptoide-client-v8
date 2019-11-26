@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
-import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -21,8 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
 
-public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigator
-    implements ActivityNavigator {
+public abstract class ActivityResultNavigator extends BaseActivity implements ActivityNavigator {
 
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
@@ -31,7 +29,6 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
   private Map<Integer, Result> fragmentResultMap;
-  private ScreenOrientationManager screenOrientationManager;
 
   public BehaviorRelay<Map<Integer, Result>> getFragmentResultRelay() {
     return fragmentResultRelay;
@@ -154,13 +151,5 @@ public abstract class ActivityResultNavigator extends ActivityCustomTabsNavigato
 
   public AccountNavigator getAccountNavigator() {
     return accountNavigator;
-  }
-
-  public ScreenOrientationManager getScreenOrientationManager() {
-    if (screenOrientationManager == null) {
-      screenOrientationManager =
-          new ScreenOrientationManager(this, (WindowManager) this.getSystemService(WINDOW_SERVICE));
-    }
-    return screenOrientationManager;
   }
 }
