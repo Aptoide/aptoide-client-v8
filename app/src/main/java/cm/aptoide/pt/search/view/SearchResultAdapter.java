@@ -15,6 +15,7 @@ import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultItemView;
 import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
@@ -27,6 +28,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
+  private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
 
   public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
       PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
@@ -49,7 +51,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       }
 
       case SearchResultAdViewHolder.LAYOUT: {
-        return new SearchResultAdViewHolder(view, onAdClickRelay);
+        return new SearchResultAdViewHolder(view, onAdClickRelay, oneDecimalFormatter);
       }
 
       default: {

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search.model;
 
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
+import cm.aptoide.pt.ads.data.Payout;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import org.parceler.Parcel;
 
@@ -19,6 +20,7 @@ import org.parceler.Parcel;
   String appName;
   long appId;
   long networkId;
+  Payout payout;
 
   public SearchAdResult() {
   }
@@ -26,7 +28,7 @@ import org.parceler.Parcel;
   public SearchAdResult(long adId, String icon, long totalDownloads, float starRating,
       long modifiedDate, String packageName, String cpcUrl, String clickPerDownloadUrl,
       String clickPerInstallUrl, String clickUrl, String appName, long appId, long networkId,
-      boolean isAppc) {
+      boolean isAppc, Payout payout) {
     this.adId = adId;
     this.icon = icon;
     this.totalDownloads = totalDownloads;
@@ -41,6 +43,7 @@ import org.parceler.Parcel;
     this.appId = appId;
     this.networkId = networkId;
     this.isAppc = isAppc;
+    this.payout = payout;
   }
 
   public SearchAdResult(MinimalAd minimalAd) {
@@ -48,13 +51,15 @@ import org.parceler.Parcel;
         minimalAd.getStars(), minimalAd.getModified(), minimalAd.getPackageName(),
         minimalAd.getCpcUrl(), minimalAd.getCpdUrl(), minimalAd.getCpiUrl(),
         minimalAd.getClickUrl(), minimalAd.getName(), minimalAd.getAppId(),
-        minimalAd.getNetworkId(), false);
+        minimalAd.getNetworkId(), minimalAd.isHasAppc(),
+        new Payout(minimalAd.getAppcAmount(), minimalAd.getCurrencyAmount(),
+            minimalAd.getCurrency(), minimalAd.getCurrencySymbol()));
   }
 
   public SearchAdResult(AptoideNativeAd ad) {
     this(ad.getAdId(), ad.getIconUrl(), ad.getDownloads(), ad.getStars(), ad.getModified(),
         ad.getPackageName(), ad.getCpcUrl(), ad.getCpdUrl(), ad.getCpiUrl(), ad.getClickUrl(),
-        ad.getAdTitle(), ad.getAppId(), ad.getNetworkId(), false);
+        ad.getAdTitle(), ad.getAppId(), ad.getNetworkId(), ad.hasAppcPayout(), ad.getAppcPayout());
   }
 
   public long getAdId() {
@@ -111,5 +116,9 @@ import org.parceler.Parcel;
 
   public boolean isAppc() {
     return isAppc;
+  }
+
+  public Payout getPayout() {
+    return payout;
   }
 }

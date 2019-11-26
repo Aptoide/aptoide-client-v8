@@ -7,6 +7,7 @@ import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -147,10 +148,10 @@ public class MoreBundlePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
-            .map(homeEvent -> homeEvent.getAdClick())
-            .map(adMapper.mapAdToSearchAd())
+            .map(AdHomeEvent::getAdClick)
+            .map(adMapper::mapAdToSearchAd)
             .observeOn(viewScheduler)
-            .doOnNext(homeNavigator::navigateToAppView)
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.second, result.first))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
