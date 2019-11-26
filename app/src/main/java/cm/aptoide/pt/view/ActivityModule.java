@@ -193,7 +193,7 @@ import static android.content.Context.WINDOW_SERVICE;
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager);
+        autoUpdateManager, (PermissionService) activity);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

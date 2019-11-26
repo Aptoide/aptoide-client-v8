@@ -104,4 +104,14 @@ public abstract class PermissionServiceFragment extends BackButtonFragment
           + PermissionService.class.getName());
     }
   }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void hasDownloadAccess(@Nullable Action0 accessGranted, @Nullable Action0 accessDenied) {
+    try {
+      ((PermissionService) this.getActivity()).hasDownloadAccess(accessGranted, accessDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
 }

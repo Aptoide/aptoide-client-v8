@@ -248,6 +248,25 @@ import rx.functions.Action0;
     }
   }
 
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void hasDownloadAccess(@Nullable Action0 accessGranted, @Nullable Action0 accessDenied) {
+    int externalStoragePermission =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+    if (externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
+      if (!(AptoideUtils.SystemU.getConnectionType(connectivityManager)
+          .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
+        if (accessGranted != null) {
+          accessGranted.call();
+        }
+        return;
+      }
+    }
+    if (accessDenied != null) {
+      accessDenied.call();
+    }
+  }
+
   private void showMessageOKCancel(@StringRes int messageId,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
     showMessageOKCancel(getString(messageId), subscriber);

@@ -6,7 +6,8 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
-import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -25,7 +26,9 @@ import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
+import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 
@@ -50,6 +53,7 @@ public class MainPresenter implements Presenter {
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final UpdatesManager updatesManager;
   private final AutoUpdateManager autoUpdateManager;
+  private final PermissionService permissionService;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -59,7 +63,7 @@ public class MainPresenter implements Presenter {
       DeepLinkManager deepLinkManager, boolean firstCreated,
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
-      AutoUpdateManager autoUpdateManager) {
+      AutoUpdateManager autoUpdateManager, PermissionService permissionService) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -79,6 +83,7 @@ public class MainPresenter implements Presenter {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.updatesManager = updatesManager;
     this.autoUpdateManager = autoUpdateManager;
+    this.permissionService = permissionService;
   }
 
   @Override public void present() {
@@ -181,10 +186,9 @@ public class MainPresenter implements Presenter {
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
-    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)
-        && !AptoideApplication.isAutoUpdateWasCalled()) {
+    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)) {
       // only call auto update when the app was not on the background
-      handleAutoUpdate();
+      downloadAutoUpdate();
     }
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
@@ -196,18 +200,49 @@ public class MainPresenter implements Presenter {
     }
   }
 
-  private void handleAutoUpdate() {
+  private Single<Boolean> isAutoUpdateDownloaded() {
+    return autoUpdateManager.isDownloadComplete();
+  }
+
+  private void downloadAutoUpdate() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .observeOn(ioScheduler)
         .flatMap(lifecycleEvent -> autoUpdateManager.shouldUpdate())
         .observeOn(viewScheduler)
         .filter(shouldUpdate -> shouldUpdate)
-        .doOnNext(__ -> AptoideApplication.setAutoUpdateWasCalled(true))
-        .doOnNext(__ -> view.requestAutoUpdate())
+        .flatMapSingle(__ -> isAutoUpdateDownloaded())
+        .flatMap(isDownloaded -> {
+          if (isDownloaded) {
+            return handleAutoUpdateDialog();
+          } else {
+            return handleAutoUpdateDownload();
+          }
+        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
+        .subscribe(timeoutErrorsCleaned -> {
+        }, throwable -> {
+          handleErrorResult(throwable);
+          crashReport.log(throwable);
+        });
+  }
+
+  private Observable<Install> handleAutoUpdateDownload() {
+    return autoUpdateManager.hasDownloadPermissions(permissionService)
+        .filter(hasDownloadPermissions -> hasDownloadPermissions)
+        .doOnNext(__ -> autoUpdateManager.clearAutoUpdateShow())
+        .observeOn(ioScheduler)
+        .flatMap(success -> autoUpdateManager.startUpdate(false));
+  }
+
+  private Observable<Boolean> handleAutoUpdateDialog() {
+    autoUpdateManager.incrementeAutoUpdateShow();
+    return autoUpdateManager.shouldShowAutoUpdateDialog()
+        .doOnNext(show -> {
+          if (show) {
+            showAutoUpdate();
+          }
+        });
   }
 
   private void showWizard() {
@@ -218,6 +253,10 @@ public class MainPresenter implements Presenter {
     bottomNavigationNavigator.navigateToHome();
   }
 
+  private void showAutoUpdate() {
+    fragmentNavigator.navigateToDialogFragment(new AutoUpdateDialogFragment());
+  }
+
   private void handleAutoUpdateDialogAccepted() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
@@ -225,7 +264,7 @@ public class MainPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(autoUpdateManager::requestPermissions)
         .observeOn(ioScheduler)
-        .flatMap(success -> autoUpdateManager.startUpdate())
+        .flatMap(success -> autoUpdateManager.startUpdate(true))
         .observeOn(viewScheduler)
         .doOnNext(install -> handleAutoUpdateResult(install.isFailed()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

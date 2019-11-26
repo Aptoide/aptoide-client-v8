@@ -31,4 +31,7 @@ public interface PermissionService {
   @TargetApi(Build.VERSION_CODES.M) void requestAccessToExternalFileSystem(
       boolean forceShowRationale, @StringRes int rationaleMessage,
       @Nullable Action0 toRunWhenAccessIsGranted, @Nullable Action0 toRunWhenAccessIsDennied);
+
+  @TargetApi(Build.VERSION_CODES.M) void hasDownloadAccess(@Nullable Action0 accessGranted,
+      @Nullable Action0 accessDenied);
 }

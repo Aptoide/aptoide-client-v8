@@ -33,6 +33,8 @@ public interface MainView extends View {
 
   void requestAutoUpdate();
 
+  void showAutoUpdateDialog();
+
   void showUnknownErrorMessage();
 
   void dismissAutoUpdateDialog();

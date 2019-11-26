@@ -23,4 +23,8 @@ public class PermissionManager {
   public Observable<Void> requestDownloadAllowingMobileData(PermissionService permissionService) {
     return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, true));
   }
+
+  public Observable<Boolean> hasDownloadAccess(PermissionService permissionService) {
+    return Observable.create(new HasDownloadAccessOnSubscribe(permissionService));
+  }
 }

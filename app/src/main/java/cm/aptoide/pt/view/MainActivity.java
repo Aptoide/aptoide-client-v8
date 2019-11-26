@@ -197,6 +197,10 @@ public class MainActivity extends BottomNavigationActivity
     }
   }
 
+  @Override public void showAutoUpdateDialog() {
+
+  }
+
   @Override public void showUnknownErrorMessage() {
     Snackbar.make(findViewById(android.R.id.content), R.string.unknown_error, Snackbar.LENGTH_SHORT)
         .show();

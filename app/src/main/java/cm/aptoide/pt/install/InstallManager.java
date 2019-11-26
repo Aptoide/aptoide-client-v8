@@ -167,19 +167,23 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false, false);
+    return install(download, false, false, true);
+  }
+
+  public Completable install(Download download, boolean shouldInstall) {
+    return install(download, false, false, shouldInstall);
   }
 
   private Completable defaultInstall(Download download) {
-    return install(download, true, false);
+    return install(download, true, false, true);
   }
 
   public Completable splitInstall(Download download) {
-    return install(download, false, true);
+    return install(download, false, true, true);
   }
 
   private Completable install(Download download, boolean forceDefaultInstall,
-      boolean forceSplitInstall) {
+      boolean forceSplitInstall, boolean shouldInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -193,7 +197,8 @@ public class InstallManager {
         .flatMap(storedDownload -> getInstall(download.getMd5(), download.getPackageName(),
             download.getVersionCode()))
         .flatMap(install -> installInBackground(install, forceDefaultInstall,
-            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
+            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
+            shouldInstall))
         .first()
         .toCompletable();
   }
@@ -407,18 +412,18 @@ public class InstallManager {
   }
 
   private Observable<Install> installInBackground(Install install, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
+      boolean shouldSetPackageInstaller, boolean shouldInstall) {
     return getInstall(install.getMd5(), install.getPackageName(),
         install.getVersionCode()).mergeWith(
-        startBackgroundInstallationAndWait(install, forceDefaultInstall,
-            shouldSetPackageInstaller));
+        startBackgroundInstallationAndWait(install, forceDefaultInstall, shouldSetPackageInstaller,
+            shouldInstall));
   }
 
   @NonNull private Observable<Install> startBackgroundInstallationAndWait(Install install,
-      boolean forceDefaultInstall, boolean shouldSetPackageInstaller) {
+      boolean forceDefaultInstall, boolean shouldSetPackageInstaller, boolean shouldInstall) {
     return waitBackgroundInstallationResult(install.getMd5()).doOnSubscribe(
         () -> startBackgroundInstallation(install.getMd5(), forceDefaultInstall,
-            shouldSetPackageInstaller))
+            shouldSetPackageInstaller, shouldInstall))
         .map(aVoid -> install);
   }
 
@@ -432,12 +437,13 @@ public class InstallManager {
   }
 
   private void startBackgroundInstallation(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
+      boolean shouldSetPackageInstaller, boolean shouldInstall) {
     Intent intent = new Intent(context, InstallService.class);
     intent.setAction(InstallService.ACTION_START_INSTALL);
     intent.putExtra(InstallService.EXTRA_INSTALLATION_MD5, md5);
     intent.putExtra(InstallService.EXTRA_FORCE_DEFAULT_INSTALL, forceDefaultInstall);
     intent.putExtra(InstallService.EXTRA_SET_PACKAGE_INSTALLER, shouldSetPackageInstaller);
+    intent.putExtra(InstallService.EXTRA_SHOULD_INSTALL_DOWNLOAD, shouldInstall);
     if (installer instanceof DefaultInstaller) {
       intent.putExtra(InstallService.EXTRA_INSTALLER_TYPE, InstallService.INSTALLER_TYPE_DEFAULT);
     }
