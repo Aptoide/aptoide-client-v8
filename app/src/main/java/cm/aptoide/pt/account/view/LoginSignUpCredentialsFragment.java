@@ -256,7 +256,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showFacebookLogin() {
-    facebookLoginButton.setVisibility(View.VISIBLE);
+    facebookLoginButton.setVisibility(View.GONE);
   }
 
   @Override public void showFacebookPermissionsRequiredError(Throwable throwable) {
@@ -286,7 +286,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void showGoogleLogin() {
-    googleLoginButton.setVisibility(View.VISIBLE);
+    googleLoginButton.setVisibility(View.GONE);
   }
 
   @Override public void hideGoogleLogin() {
