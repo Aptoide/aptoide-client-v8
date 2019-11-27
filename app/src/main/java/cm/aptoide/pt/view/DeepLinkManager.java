@@ -140,10 +140,6 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
-    } else if (intent.hasExtra(
-        DeepLinkIntentReceiver.DeepLinksTargets.PAUSE_FROM_DOWNLOAD_NOTIFICATION)) {
-      String md5 = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY);
-      pauseDownloadFromNotification(md5);
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
@@ -190,7 +186,6 @@ public class DeepLinkManager {
 
   private void pauseDownloadFromNotification(String md5) {
     installManager.pauseInstall(md5)
-        .retry()
         .subscribe();
   }
 
