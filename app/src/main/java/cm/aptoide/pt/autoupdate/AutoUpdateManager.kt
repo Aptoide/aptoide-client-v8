@@ -19,7 +19,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
                              private val localVersionCode: Int,
                              private val autoUpdateRepository: AutoUpdateRepository,
                              private val localVersionSdk: Int,
-                             private val sharedPrefereneces: SharedPreferences) {
+                             private val sharedPreferences: SharedPreferences) {
 
   private val AUTO_UPDATE_SHOW = "showAutoUpdate"
 
@@ -48,18 +48,18 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
   }
 
   fun shouldShowAutoUpdateDialog(): Observable<Boolean> {
-    val result = sharedPrefereneces.getInt(AUTO_UPDATE_SHOW, 0)
+    val result = sharedPreferences.getInt(AUTO_UPDATE_SHOW, 0)
     return Observable.just(result % 5 == 0 || result == 1)
   }
 
-  fun incrementeAutoUpdateShow() {
-    val autoUpdateShow = sharedPrefereneces.getInt(AUTO_UPDATE_SHOW, 0)
+  fun incrementAutoUpdateShow() {
+    val autoUpdateShow = sharedPreferences.getInt(AUTO_UPDATE_SHOW, 0)
     val result = autoUpdateShow + 1
-    sharedPrefereneces.edit().putInt(AUTO_UPDATE_SHOW, result).apply()
+    sharedPreferences.edit().putInt(AUTO_UPDATE_SHOW, result).apply()
   }
 
   fun clearAutoUpdateShow() {
-    sharedPrefereneces.edit().putInt(AUTO_UPDATE_SHOW, 0).apply()
+    sharedPreferences.edit().putInt(AUTO_UPDATE_SHOW, 0).apply()
   }
 
   fun isDownloadComplete(): Single<Boolean> {

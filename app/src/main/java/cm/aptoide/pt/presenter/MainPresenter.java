@@ -98,6 +98,8 @@ public class MainPresenter implements Presenter {
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
 
+    downloadAutoUpdate();
+
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
@@ -110,7 +112,6 @@ public class MainPresenter implements Presenter {
           throw new OnErrorNotImplementedException(throwable);
         });
 
-    handleAutoUpdateDialogAccepted();
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
@@ -186,10 +187,6 @@ public class MainPresenter implements Presenter {
   // proper up/back navigation to home if needed
   private void navigate() {
     showHome();
-    if (ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences)) {
-      // only call auto update when the app was not on the background
-      downloadAutoUpdate();
-    }
     if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
     } else {
@@ -207,8 +204,9 @@ public class MainPresenter implements Presenter {
   private void downloadAutoUpdate() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .filter(__ -> ManagerPreferences.isCheckAutoUpdateEnable(sharedPreferences))
         .observeOn(ioScheduler)
-        .flatMap(lifecycleEvent -> autoUpdateManager.shouldUpdate())
+        .flatMap(__ -> autoUpdateManager.shouldUpdate())
         .observeOn(viewScheduler)
         .filter(shouldUpdate -> shouldUpdate)
         .flatMapSingle(__ -> isAutoUpdateDownloaded())
@@ -236,13 +234,10 @@ public class MainPresenter implements Presenter {
   }
 
   private Observable<Boolean> handleAutoUpdateDialog() {
-    autoUpdateManager.incrementeAutoUpdateShow();
+    autoUpdateManager.incrementAutoUpdateShow();
     return autoUpdateManager.shouldShowAutoUpdateDialog()
-        .doOnNext(show -> {
-          if (show) {
-            showAutoUpdate();
-          }
-        });
+        .filter(show -> show)
+        .doOnNext(__ -> showAutoUpdate());
   }
 
   private void showWizard() {
@@ -255,24 +250,6 @@ public class MainPresenter implements Presenter {
 
   private void showAutoUpdate() {
     fragmentNavigator.navigateToDialogFragment(new AutoUpdateDialogFragment());
-  }
-
-  private void handleAutoUpdateDialogAccepted() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(lifecycleEvent -> view.autoUpdateDialogCreated())
-        .observeOn(viewScheduler)
-        .flatMap(autoUpdateManager::requestPermissions)
-        .observeOn(ioScheduler)
-        .flatMap(success -> autoUpdateManager.startUpdate(true))
-        .observeOn(viewScheduler)
-        .doOnNext(install -> handleAutoUpdateResult(install.isFailed()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(timeoutErrorsCleaned -> {
-        }, throwable -> {
-          handleErrorResult(throwable);
-          crashReport.log(throwable);
-        });
   }
 
   private void watchInstalls(List<Install> installs) {

@@ -367,11 +367,13 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment, externalNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment,
+        externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -627,8 +629,8 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides AutoUpdateDialogPresenter providesAutoUpdateDialogPresenter(
       CrashReport crashReporter, AutoUpdateManager autoUpdateManager) {
-    return new AutoUpdateDialogPresenter((AutoUpdateDialogFragment) fragment,
-        AndroidSchedulers.mainThread(), crashReporter, autoUpdateManager);
+    return new AutoUpdateDialogPresenter((AutoUpdateDialogFragment) fragment, crashReporter,
+        autoUpdateManager);
   }
 
   @FragmentScope @Provides ExternalNavigator providesExternalNavigator(

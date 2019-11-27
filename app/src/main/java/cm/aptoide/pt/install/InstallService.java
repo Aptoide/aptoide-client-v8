@@ -183,7 +183,7 @@ public class InstallService extends BaseService implements DownloadsNotification
         .doOnNext(download -> installManager.moveCompletedDownloadFiles(download))
         .flatMap(download -> stopForegroundAndInstall(context, download, true, forceDefaultInstall,
             shouldSetPackageInstaller, shouldInstall).andThen(
-            sendBackgroundInstallFinishedBroadcast(download))
+            sendBackgroundInstallFinishedBroadcast(download, shouldInstall))
             .andThen(hasNextDownload()));
   }
 
@@ -204,11 +204,16 @@ public class InstallService extends BaseService implements DownloadsNotification
         .map(downloads -> downloads != null && !downloads.isEmpty());
   }
 
-  private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
-    return Completable.fromAction(() -> {
-      sendBroadcast(
-          new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5, download.getMd5()));
-    });
+  private Completable sendBackgroundInstallFinishedBroadcast(Download download,
+      boolean shouldInstall) {
+    if (shouldInstall) {
+      return Completable.fromAction(() -> {
+        sendBroadcast(new Intent(ACTION_INSTALL_FINISHED).putExtra(EXTRA_INSTALLATION_MD5,
+            download.getMd5()));
+      });
+    } else {
+      return Completable.complete();
+    }
   }
 
   private Completable stopForegroundAndInstall(Context context, Download download,

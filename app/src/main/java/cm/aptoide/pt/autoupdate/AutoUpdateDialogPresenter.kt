@@ -3,11 +3,9 @@ package cm.aptoide.pt.autoupdate
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
-import rx.Scheduler
 import rx.schedulers.Schedulers
 
 class AutoUpdateDialogPresenter(private val view: AutoUpdateDialogView,
-                                private val viewScheduler: Scheduler,
                                 private val crashReporter: CrashReport,
                                 private val autoUpdateManager: AutoUpdateManager) : Presenter {
 

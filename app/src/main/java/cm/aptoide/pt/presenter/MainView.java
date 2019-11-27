@@ -6,7 +6,6 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
-import cm.aptoide.pt.actions.PermissionService;
 import rx.Observable;
 
 /**
@@ -28,12 +27,6 @@ public interface MainView extends View {
   void showUpdatesNumber(Integer updates);
 
   void hideUpdatesBadge();
-
-  Observable<PermissionService> autoUpdateDialogCreated();
-
-  void requestAutoUpdate();
-
-  void showAutoUpdateDialog();
 
   void showUnknownErrorMessage();
 
