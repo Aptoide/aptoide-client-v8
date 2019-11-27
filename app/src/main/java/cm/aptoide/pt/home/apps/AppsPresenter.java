@@ -270,19 +270,6 @@ public class AppsPresenter implements Presenter {
             installedApps, appcApps, downloadApps));
   }
 
-  //private void handleAppcUpgradesSeeMoreClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-  //      .flatMap(list -> view.moreAppcClick()
-  //          .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc())
-  //          .retry())
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(__ -> {
-  //      }, throwable -> {
-  //        throw new OnErrorNotImplementedException(throwable);
-  //      });
-  //}
-
   private void loadUserImage() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
