@@ -2,7 +2,6 @@ package cm.aptoide.pt.install;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
-import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -26,7 +25,7 @@ public class DownloadsNotificationsPresenter implements Presenter {
   }
 
   private void handleCurrentInstallation() {
-    Subscription subscription = installManager.getCurrentInstallation()
+    subscriptions.add(installManager.getCurrentInstallation()
         .doOnError(throwable -> {
           throwable.printStackTrace();
           Logger.getInstance()
@@ -50,9 +49,7 @@ public class DownloadsNotificationsPresenter implements Presenter {
         }, throwable -> {
           service.removeNotificationAndStop();
           throwable.printStackTrace();
-        });
-
-    subscriptions.add(subscription);
+        }));
   }
 
   public void onDestroy() {
