@@ -19,7 +19,8 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />
 
-  <TextView
+
+  <TextSwitcher
     android:id="@+id/downloadState"
     style="@style/Aptoide.TextView.Medium.XS.Grey"
     android:layout_width="wrap_content"
@@ -27,8 +28,26 @@
     android:ellipsize="end"
     android:maxLines="1"
     android:text="@string/appview_short_downloading"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+    app:layout_constraintTop_toBottomOf="@+id/progressBar">
+
+    <TextView
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="1" />
+
+    <TextView
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:ellipsize="end"
+      android:maxLines="1" />
+
+  </TextSwitcher>
 
   <TextView
     android:id="@+id/downloadProgressNumber"

@@ -76,8 +76,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/secondary_icon"
       app:layout_constraintTop_toBottomOf="@+id/apps_app_name"
-      app:layout_constraintVertical_bias="0"
-      tools:text="1239123ojd" />
+      app:layout_constraintVertical_bias="0" />
 
     <ImageView
       android:id="@+id/apps_action_button"

@@ -34,6 +34,10 @@ class DownloadProgressView : FrameLayout {
 
   private var animationsEnabled = false
 
+  private var downloadingText: String = ""
+  private var pausedText: String = ""
+  private var installingText: String = ""
+
   private var stateMachine = StateMachine.create<State, Event, Any> {
     initialState(State.Queue)
     state<State.Queue> {
@@ -43,8 +47,8 @@ class DownloadProgressView : FrameLayout {
         progressBar.isIndeterminate = true
         cancelButton.visibility = View.INVISIBLE
         resumePauseButton.visibility = View.GONE
-        downloadProgressNumber.visibility = View.VISIBLE
-        downloadState.setText(R.string.appview_short_downloading)
+        downloadProgressNumber.visibility = View.GONE
+        downloadState.setText(downloadingText)
       }
       on<Event.DownloadStart> {
         debouncer.reset()
@@ -78,8 +82,8 @@ class DownloadProgressView : FrameLayout {
           cancelButton.visibility = View.VISIBLE
           resumePauseButton.visibility = View.GONE
         }
-        downloadProgressNumber.visibility = View.VISIBLE
-        downloadState.setText(R.string.appview_short_downloading)
+        downloadProgressNumber.visibility = View.GONE
+        downloadState.setText(downloadingText)
       }
       on<Event.Reset> {
         transitionTo(State.Queue)
@@ -107,7 +111,7 @@ class DownloadProgressView : FrameLayout {
         }
         resumePauseButton.play()
         downloadProgressNumber.visibility = View.VISIBLE
-        downloadState.setText(R.string.appview_short_downloading)
+        downloadState.setText(downloadingText)
       }
       on<Event.PauseClick> {
         eventListener?.onActionClick(
@@ -134,7 +138,7 @@ class DownloadProgressView : FrameLayout {
         resumePauseButton.visibility = View.VISIBLE
         resumePauseButton.playReverse()
         downloadProgressNumber.visibility = View.VISIBLE
-        downloadState.setText(R.string.appview_short_downloading)
+        downloadState.setText(pausedText)
       }
       on<Event.ResumeClick> {
         eventListener?.onActionClick(
@@ -159,7 +163,7 @@ class DownloadProgressView : FrameLayout {
         resumePauseButton.setReverseAsDefault()
         downloadProgressNumber.visibility = View.VISIBLE
         setProgress(currentProgress)
-        downloadState.setText(R.string.appview_short_downloading)
+        downloadState.setText(pausedText)
       }
       on<Event.ResumeClick> {
         eventListener?.onActionClick(
@@ -182,7 +186,7 @@ class DownloadProgressView : FrameLayout {
         cancelButton.visibility = View.INVISIBLE
         resumePauseButton.visibility = View.GONE
         downloadProgressNumber.visibility = View.GONE
-        downloadState.setText(R.string.appview_short_installing)
+        downloadState.setText(installingText)
       }
       on<Event.Reset> {
         transitionTo(State.Queue)
@@ -206,6 +210,15 @@ class DownloadProgressView : FrameLayout {
     setEnableAnimations(
         typedArray.getBoolean(R.styleable.DownloadProgressView_enableAnimations, true))
     isPausable = typedArray.getBoolean(R.styleable.DownloadProgressView_isPausable, true)
+    downloadingText =
+        typedArray.getString(R.styleable.DownloadProgressView_downloadingText) ?: context.getString(
+            R.string.appview_short_downloading)
+    pausedText =
+        typedArray.getString(R.styleable.DownloadProgressView_pausedText) ?: context.getString(
+            R.string.apps_short_download_paused)
+    installingText =
+        typedArray.getString(R.styleable.DownloadProgressView_installingText) ?: context.getString(
+            R.string.apps_short_installing)
     typedArray.recycle()
   }
 

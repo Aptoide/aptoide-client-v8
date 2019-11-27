@@ -85,6 +85,8 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:visibility="gone"
+      app:downloadingText="@string/apps_short_updating"
+      app:pausedText="@string/apps_short_update_paused"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="@+id/apps_app_name"

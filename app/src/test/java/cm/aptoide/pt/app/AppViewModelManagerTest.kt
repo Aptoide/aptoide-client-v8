@@ -77,7 +77,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedApp(1.toLong(), "anyString", "anyString")
 
-    //And a AppCardModel should be returned with a not null app, with no loading and no errors
+    //And a AppModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())

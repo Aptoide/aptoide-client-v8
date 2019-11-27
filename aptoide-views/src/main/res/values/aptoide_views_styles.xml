@@ -14,6 +14,9 @@
     <attr name="progressDrawable" format="reference" />
     <attr name="isPausable" format="boolean" />
     <attr name="enableAnimations" format="boolean" />
+    <attr name="installingText" format="reference" />
+    <attr name="pausedText" format="reference" />
+    <attr name="downloadingText" format="reference" />
   </declare-styleable>
   <declare-styleable name="AnimatedImageView">
     <attr name="animation" format="reference" />

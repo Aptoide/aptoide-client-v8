@@ -204,7 +204,6 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.updateAll()
             .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
             .retry())
-        //.doOnNext(__ -> view.showIndeterminateAllUpdates())
         .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
@@ -270,19 +269,6 @@ public class AppsPresenter implements Presenter {
         (downloadApps, installedApps, updateApps, appcApps) -> new AppsModel(updateApps,
             installedApps, appcApps, downloadApps));
   }
-
-  //private void handleAppcUpgradesSeeMoreClick() {
-  //  view.getLifecycleEvent()
-  //      .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-  //      .flatMap(list -> view.moreAppcClick()
-  //          .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc())
-  //          .retry())
-  //      .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-  //      .subscribe(__ -> {
-  //      }, throwable -> {
-  //        throw new OnErrorNotImplementedException(throwable);
-  //      });
-  //}
 
   private void loadUserImage() {
     view.getLifecycleEvent()
