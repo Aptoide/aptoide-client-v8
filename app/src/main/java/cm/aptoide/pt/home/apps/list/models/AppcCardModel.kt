@@ -24,8 +24,6 @@ abstract class AppcCardModel : EpoxyModelWithHolder<AppcCardModel.CardHolder>() 
     application?.let { app ->
       holder.name.text = app.name
       ImageLoader.with(holder.itemView.context).load(app.icon, holder.appIcon)
-      holder.version.text = app.version
-
       holder.actionButton.setOnClickListener {
         eventSubject?.onNext(AppClick(app, AppClick.ClickType.APPC_ACTION_CLICK))
       }
@@ -42,7 +40,6 @@ abstract class AppcCardModel : EpoxyModelWithHolder<AppcCardModel.CardHolder>() 
   class CardHolder : BaseViewHolder() {
     val name by bind<TextView>(R.id.apps_app_name)
     val appIcon by bind<ImageView>(R.id.apps_app_icon)
-    val version by bind<TextView>(R.id.apps_secondary_text)
     val actionButton by bind<ImageView>(R.id.apps_action_button)
   }
 }
