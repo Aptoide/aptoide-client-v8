@@ -47,7 +47,7 @@ class DownloadProgressView : FrameLayout {
         progressBar.isIndeterminate = true
         cancelButton.visibility = View.INVISIBLE
         resumePauseButton.visibility = View.GONE
-        downloadProgressNumber.visibility = View.VISIBLE
+        downloadProgressNumber.visibility = View.GONE
         downloadState.setText(downloadingText)
       }
       on<Event.DownloadStart> {
@@ -82,7 +82,7 @@ class DownloadProgressView : FrameLayout {
           cancelButton.visibility = View.VISIBLE
           resumePauseButton.visibility = View.GONE
         }
-        downloadProgressNumber.visibility = View.VISIBLE
+        downloadProgressNumber.visibility = View.GONE
         downloadState.setText(downloadingText)
       }
       on<Event.Reset> {
