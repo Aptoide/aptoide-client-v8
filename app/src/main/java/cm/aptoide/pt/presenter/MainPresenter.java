@@ -95,10 +95,9 @@ public class MainPresenter implements Presenter {
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> contentPuller.start())
         .doOnNext(__ -> navigate())
+        .doOnNext(__ -> downloadAutoUpdate())
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
-
-    downloadAutoUpdate();
 
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
@@ -256,13 +255,6 @@ public class MainPresenter implements Presenter {
     for (Install install : installs) {
       installCompletedNotifier.add(install.getPackageName(), install.getVersionCode(),
           install.getMd5());
-    }
-  }
-
-  private void handleAutoUpdateResult(boolean installFailed) {
-    view.dismissAutoUpdateDialog();
-    if (installFailed) {
-      view.showUnknownErrorMessage();
     }
   }
 
