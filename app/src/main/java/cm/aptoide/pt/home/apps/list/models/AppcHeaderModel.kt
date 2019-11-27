@@ -45,9 +45,9 @@ abstract class AppcHeaderModel : EpoxyModelWithHolder<AppcHeaderModel.Holder>() 
       val constraintSet = ConstraintSet()
       constraintSet.clone(holder.rootLayout)
       constraintSet.clear(R.id.appc_disclaimer_icon)
-      constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.LEFT, R.id.title_1,
+      constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.LEFT, R.id.title,
           ConstraintSet.LEFT)
-      constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.TOP, R.id.title_1,
+      constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.TOP, R.id.title,
           ConstraintSet.BOTTOM)
     }
 
@@ -55,8 +55,8 @@ abstract class AppcHeaderModel : EpoxyModelWithHolder<AppcHeaderModel.Holder>() 
 
   class Holder : BaseViewHolder() {
     val messageTextView by bind<TextView>(R.id.message)
-    val headerTitle by bind<TextView>(R.id.title_1)
-    val promotionTitle by bind<TextView>(R.id.title)
+    val headerTitle by bind<TextView>(R.id.title)
+    val promotionTitle by bind<TextView>(R.id.desc_title)
     val promotionMessage by bind<TextView>(R.id.message)
     val rootLayout by bind<ConstraintLayout>(R.id.root_layout)
   }
