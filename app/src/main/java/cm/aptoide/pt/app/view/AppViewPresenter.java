@@ -41,11 +41,9 @@ import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.exceptions.OnErrorNotImplementedException;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by franciscocalado on 08/05/18.
@@ -69,8 +67,6 @@ public class AppViewPresenter implements Presenter {
   private final CrashReport crashReport;
   private final SimilarAppsExperiment similarAppsExperiment;
   private final ExternalNavigator externalNavigator;
-  private CompositeSubscription compositeSubscription;
-
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
@@ -93,7 +89,6 @@ public class AppViewPresenter implements Presenter {
     this.promotionsNavigator = promotionsNavigator;
     this.similarAppsExperiment = similarAppsExperiment;
     this.externalNavigator = externalNavigator;
-    compositeSubscription = new CompositeSubscription();
   }
 
   @Override public void present() {
@@ -146,7 +141,6 @@ public class AppViewPresenter implements Presenter {
     handleDownloadingSimilarApp();
     handleSimilarAppsABTestingImpression();
     handleSimilarAppsABTestingConversion();
-    chaindestroy();
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -476,13 +470,13 @@ public class AppViewPresenter implements Presenter {
   }
 
   @VisibleForTesting public void handleFirstLoad() {
-    Subscription subscribe = view.getLifecycleEvent()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> view.showLoading())
         .flatMap(__ -> loadAppView())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
-    compositeSubscription.add(subscribe);
   }
 
   private void handleOnScroll() {
@@ -515,6 +509,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrollReviewsResponse())
         .flatMap(reviews -> scheduleAnimations(reviews))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
@@ -878,15 +873,15 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void handleClickOnRetry() {
-    Subscription subscribe = view.getLifecycleEvent()
+    view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.clickErrorRetry()
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
-    compositeSubscription.add(subscribe);
   }
 
   private void handleClickOnCatappultCard() {
@@ -993,7 +988,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private void cancelDownload() {
-    Subscription subscribe = view.getLifecycleEvent()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
             .flatMapSingle(__ -> appViewManager.getAppModel())
@@ -1002,11 +997,10 @@ public class AppViewPresenter implements Presenter {
                 app -> appViewManager.cancelDownload(app.getMd5(), app.getPackageName(),
                     app.getVersionCode()))
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
         });
-
-    compositeSubscription.add(subscribe);
   }
 
   private void resumeDownload() {
@@ -1025,23 +1019,24 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .toString()))
                 .retry()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
         });
   }
 
   private void pauseDownload() {
-    Subscription subscribe = view.getLifecycleEvent()
+    view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
             .flatMapSingle(__ -> appViewManager.getAppModel())
             .doOnNext(app -> appViewAnalytics.sendDownloadPauseEvent(app.getPackageName()))
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
         });
-    compositeSubscription.add(subscribe);
   }
 
   private void handleInstallButtonClick() {
@@ -1350,19 +1345,6 @@ public class AppViewPresenter implements Presenter {
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> appViewManager.downloadApp(walletApp))
         .toCompletable();
-  }
-
-  private void chaindestroy() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.DESTROY))
-        .doOnNext(lifecycleEvent -> Logger.getInstance()
-            .d(this.getClass()
-                .getName(), "destroy called "))
-        .doOnNext(lifecycleEvent -> {
-          compositeSubscription.unsubscribe();
-          compositeSubscription.clear();
-        })
-        .subscribe();
   }
 }
 
