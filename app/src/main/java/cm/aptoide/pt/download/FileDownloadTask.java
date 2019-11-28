@@ -40,11 +40,6 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override
   protected void progress(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
-    Logger.getInstance()
-        .d(TAG, "emitting progress from the download task: "
-            + soFarBytes
-            + "and the total is: "
-            + totalBytes);
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PROGRESS,
         new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
   }
