@@ -48,8 +48,6 @@ public class AppsPresenter implements Presenter {
 
     observeAppModelState();
 
-    //handleAppcUpgradesSeeMoreClick();
-
     handlePauseDownloadClick();
 
     handleResumeClick();
