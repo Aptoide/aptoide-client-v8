@@ -40,7 +40,6 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
   private fun setupListeners(holder: CardHolder, app: UpdateApp) {
     holder.actionButton.setOnClickListener {
       eventSubject?.onNext(AppClick(app, AppClick.ClickType.DOWNLOAD_ACTION_CLICK))
-      setDownloadViewVisibility(holder, app, true, false)
     }
     holder.itemView.setOnClickListener {
       eventSubject?.onNext(AppClick(app, AppClick.ClickType.CARD_CLICK))

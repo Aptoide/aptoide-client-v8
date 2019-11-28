@@ -118,6 +118,9 @@ class DownloadProgressView : FrameLayout {
             DownloadEventListener.Action(DownloadEventListener.Action.Type.PAUSE, payload))
         transitionTo(State.Paused)
       }
+      on<Event.PauseStart> {
+        transitionTo(State.Paused)
+      }
       on<Event.InstallStart> {
         transitionTo(State.Installing)
       }
