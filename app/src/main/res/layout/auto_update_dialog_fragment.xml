@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,57 +35,54 @@
 
         <TextView
             android:id="@+id/auto_update_title"
+            style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/auto_update_popup_title"
             android:textStyle="bold"
-            style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
             />
 
         <TextView
             android:id="@+id/auto_update_body"
+            style="@style/Aptoide.TextView.Regular.XS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/auto_update_title"
-            android:layout_marginEnd="25dp"
             android:layout_marginStart="25dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="25dp"
             android:gravity="center"
             android:text="@string/auto_update_popup_body"
-            style="@style/Aptoide.TextView.Regular.XS"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/auto_update_body"
-            android:layout_marginEnd="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
             android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
             >
           <Button
               android:id="@+id/not_now_button"
+              style="@style/Aptoide.Button.Ghost"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               android:layout_marginEnd="7dp"
               android:layout_marginRight="7dp"
               android:layout_weight="1"
-              android:padding="4dp"
               android:text="@string/not_now_button"
-              style="@style/Aptoide.Button.Ghost"
               />
 
           <Button
               android:id="@+id/update_button"
+              style="@style/Aptoide.Button.Install"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
               android:layout_marginBottom="25dp"
               android:layout_weight="1"
               android:text="@string/appview_button_update"
-              style="@style/Aptoide.Button.Install"
               />
         </LinearLayout>
       </RelativeLayout>
