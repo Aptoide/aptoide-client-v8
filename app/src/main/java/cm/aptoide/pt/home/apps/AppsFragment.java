@@ -29,6 +29,7 @@ import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.Single;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
@@ -185,6 +186,10 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void showIgnoreUpdate() {
     ignoreUpdateDialog.show();
+  }
+
+  @Override public Single<RxAlertDialog.Result> showIgnoreUpdateDialog() {
+    return ignoreUpdateDialog.showWithResult();
   }
 
   @Override public Observable<Void> ignoreUpdate() {

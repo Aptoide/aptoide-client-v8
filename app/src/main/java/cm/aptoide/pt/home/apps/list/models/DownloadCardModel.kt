@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home.apps.list.models
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView

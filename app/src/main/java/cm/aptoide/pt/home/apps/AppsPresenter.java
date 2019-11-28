@@ -9,8 +9,10 @@ import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
 /**
@@ -132,10 +134,14 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> view.updateLongClick())
-        .doOnNext(app -> view.showIgnoreUpdate())
-        .flatMap(app -> view.ignoreUpdate()
-            .observeOn(ioScheduler)
-            .flatMap(__ -> appsManager.excludeUpdate(app)))
+        .flatMapSingle(app -> view.showIgnoreUpdateDialog()
+            .flatMap(result -> {
+              if (result == RxAlertDialog.Result.POSITIVE) {
+                return appsManager.excludeUpdate(app)
+                    .toSingle();
+              }
+              return Single.just(null);
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {

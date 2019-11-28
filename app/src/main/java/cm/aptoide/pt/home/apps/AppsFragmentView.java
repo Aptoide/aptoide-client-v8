@@ -1,8 +1,9 @@
 package cm.aptoide.pt.home.apps;
 
 import cm.aptoide.pt.presenter.View;
-import java.util.List;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by filipegoncalves on 3/7/18.
@@ -29,6 +30,8 @@ public interface AppsFragmentView extends View {
   Observable<App> updateLongClick();
 
   void showIgnoreUpdate();
+
+  Single<RxAlertDialog.Result> showIgnoreUpdateDialog();
 
   Observable<Void> ignoreUpdate();
 
