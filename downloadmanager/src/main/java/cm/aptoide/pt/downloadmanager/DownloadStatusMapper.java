@@ -1,7 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -19,9 +18,6 @@ public class DownloadStatusMapper {
         downloadState = Download.INVALID_STATUS;
         break;
       case COMPLETED:
-        Logger.getInstance()
-            .d("DownloadStatusMapper",
-                "setting completed app download state to waiting to move files. So emittig a waiting to move files");
         downloadState = Download.WAITING_TO_MOVE_FILES;
         break;
       case PENDING:
@@ -40,7 +36,7 @@ public class DownloadStatusMapper {
         downloadState = Download.ERROR;
         break;
       default:
-        throw new IllegalArgumentException("Invalid app download state");
+        throw new IllegalArgumentException("Invalid app download state " + appDownloadState);
     }
     return downloadState;
   }

@@ -127,8 +127,6 @@ public class AptoideDownloadManager implements DownloadManager {
   @Override public Completable pauseDownload(String md5) {
     return downloadsRepository.getDownload(md5)
         .first()
-        .doOnNext(download -> Logger.getInstance()
-            .d("lol", "found the download"))
         .doOnError(throwable -> throwable.printStackTrace())
         .map(download -> {
           download.setOverallDownloadStatus(Download.PAUSED);

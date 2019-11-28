@@ -136,8 +136,6 @@ public class AppDownloadStatus {
   }
 
   private void refreshAppDownloadState() {
-    Logger.getInstance()
-        .d("lol", "refreshing app download state");
     appDownloadState = getAppDownloadState();
   }
 
