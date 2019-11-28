@@ -40,6 +40,7 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -240,7 +241,7 @@ public class DeepLinkManager {
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {
     bottomNavigationNavigator.navigateToSearch(
-        searchNavigator.resolveFragment(new SearchQueryModel(query)));
+        searchNavigator.resolveFragment(new SearchQueryModel(query, query, Source.DEEPLINK)));
     if (query == null || query.isEmpty()) {
       if (shortcutNavigation) {
         searchAnalytics.searchStart(SearchSource.SHORTCUT, false);
