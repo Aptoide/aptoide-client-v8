@@ -145,20 +145,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  private void sendDownloadCompletedEvent(Download download) {
-    String key = download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME;
-    DownloadEvent downloadEvent = cache.get(key);
-    if (downloadEvent.isHadProgress()) {
-      Map<String, Object> data = downloadEvent.getData();
-      Map<String, Object> result = new HashMap<>();
-      result.put(STATUS, SUCCESS);
-      data.put(RESULT, result);
-      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext());
-      cache.remove(key);
-    }
-  }
-
   private void sendDownloadCompletedEvent(String packageName, int versionCode) {
     String key = packageName + versionCode + DOWNLOAD_EVENT_NAME;
     DownloadEvent downloadEvent = cache.get(key);

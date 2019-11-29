@@ -191,6 +191,7 @@ public class AptoideDownloadManager implements DownloadManager {
             throwable -> removeDownloadFiles(download))
             .doOnNext(AppDownloader::startAppDownload)
             .flatMap(this::handleDownloadProgress))
+        .retry()
         .doOnError(throwable -> throwable.printStackTrace())
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -298,9 +299,9 @@ public class AptoideDownloadManager implements DownloadManager {
           }
         })
         .filter(download -> download.getOverallDownloadStatus() == Download.WAITING_TO_MOVE_FILES)
-        .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
             download.getPackageName(), download.getVersionCode()))
+        .doOnNext(download -> removeAppDownloader(download.getMd5()))
         .takeUntil(
             download -> download.getOverallDownloadStatus() == Download.WAITING_TO_MOVE_FILES);
   }
@@ -319,10 +320,6 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private Observable<Download> updateDownload(Download download,
       AppDownloadStatus appDownloadStatus) {
-    if (appDownloadStatus.getDownloadStatus()
-        .equals(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH)) {
-      removeDownloadFiles(download);
-    }
     download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
         downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
@@ -333,6 +330,10 @@ public class AptoideDownloadManager implements DownloadManager {
           appDownloadStatus.getFileDownloadStatus(fileToDownload.getMd5())));
       fileToDownload.setProgress(
           appDownloadStatus.getFileDownloadProgress(fileToDownload.getMd5()));
+    }
+    if (appDownloadStatus.getDownloadStatus()
+        .equals(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH)) {
+      removeDownloadFiles(download);
     }
     downloadsRepository.save(download);
     return Observable.just(download);
