@@ -307,6 +307,9 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
+    variant.buildConfigField "String", "INSTABUG_API_KEY",
+        "\"" + project.INSTABUG_API_KEY_BETA + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -454,6 +457,9 @@ dependencies {
 
   //Rakam
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
+
+  //InstaBug
+  implementation "com.instabug.library:instabug:${INSTABUG_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
