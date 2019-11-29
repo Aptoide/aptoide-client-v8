@@ -30,11 +30,7 @@ public class WalletAdsOfferManager {
   private boolean isWalletInstalled() {
     try {
       final PackageInfo packageInfo = packageManager.getPackageInfo(WALLET_PACKAGE_NAME, 0);
-      if (packageInfo != null) {
-        return true;
-      } else {
-        return false;
-      }
+      return packageInfo != null;
     } catch (PackageManager.NameNotFoundException e) {
       return false;
     }
