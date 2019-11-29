@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import rx.Single;
 
@@ -28,12 +28,12 @@ public class WalletAdsOfferManager {
   }
 
   private boolean isWalletInstalled() {
-    for (ApplicationInfo applicationInfo : packageManager.getInstalledApplications(0)) {
-      if (applicationInfo.packageName.equals(WALLET_PACKAGE_NAME)) {
-        return true;
-      }
+    try {
+      final PackageInfo packageInfo = packageManager.getPackageInfo(WALLET_PACKAGE_NAME, 0);
+      return packageInfo != null;
+    } catch (PackageManager.NameNotFoundException e) {
+      return false;
     }
-    return false;
   }
 
   public enum OfferResponseStatus {

@@ -80,9 +80,9 @@ public class InstallManager {
             download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
                 forceDefaultInstall, forceSplitInstall).andThen(
                 sendBackgroundInstallFinishedBroadcast(download)))
-        .doOnError(throwable -> throwable.printStackTrace())
         .toCompletable()
-        .subscribe();
+        .subscribe(() -> {
+        }, Throwable::printStackTrace);
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(Download download) {
