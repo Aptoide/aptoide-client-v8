@@ -7,6 +7,7 @@ package cm.aptoide.pt.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -124,6 +125,28 @@ public class GenericDialogs {
       // cleaning up
       subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
+    });
+  }
+
+  public static Observable<EResponse> createGenericOkCancelMessageWithColorButton(Context context,
+      String title, String message, String okButton, String cancelButton) {
+    return Observable.create((Subscriber<? super EResponse> subscriber) -> {
+      final AlertDialog dialog = new AlertDialog.Builder(context).setTitle(title)
+          .setMessage(message)
+          .setPositiveButton(okButton, (listener, which) -> {
+            subscriber.onNext(EResponse.YES);
+            subscriber.onCompleted();
+          })
+          .setNegativeButton(cancelButton, (dialogInterface, i) -> {
+            subscriber.onNext(EResponse.CANCEL);
+            subscriber.onCompleted();
+          })
+          .create();
+      // cleaning up
+      subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
+      dialog.show();
+      dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+          .setTextColor(Color.GRAY);
     });
   }
 
