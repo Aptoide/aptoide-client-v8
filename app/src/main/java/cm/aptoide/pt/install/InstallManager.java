@@ -649,4 +649,11 @@ public class InstallManager {
         .first()
         .map(download -> mapDownloadState(download));
   }
+
+  public Single<Boolean> hasNextDownload() {
+    return aptoideDownloadManager.getCurrentActiveDownloads()
+        .first()
+        .map(downloads -> downloads != null && !downloads.isEmpty())
+        .toSingle();
+  }
 }

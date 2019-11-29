@@ -2,6 +2,7 @@ package cm.aptoide.pt.install;
 
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
+import rx.Single;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -39,9 +40,19 @@ public class DownloadsNotificationsPresenter implements Presenter {
         .distinctUntilChanged(Install::getState)
         .flatMap(install -> installManager.getDownloadState(install.getMd5())
             .first())
-        .doOnNext(installationStatus -> {
+        .doOnNext(state -> Logger.getInstance()
+            .d(TAG, "Received the state " + state))
+        .flatMapSingle(installationStatus -> {
           if (installationStatus != Install.InstallationStatus.DOWNLOADING) {
-            service.removeNotificationAndStop();
+            return hasNextDownload().doOnSuccess(hasNext -> {
+              Logger.getInstance()
+                  .d(TAG, "Has next downloads: " + hasNext);
+              if (!hasNext) {
+                service.removeNotificationAndStop();
+              }
+            });
+          } else {
+            return Single.just(null);
           }
         })
         .subscribe(__ -> {
@@ -57,5 +68,9 @@ public class DownloadsNotificationsPresenter implements Presenter {
 
   @Override public void present() {
     handleCurrentInstallation();
+  }
+
+  private Single<Boolean> hasNextDownload() {
+    return installManager.hasNextDownload();
   }
 }
