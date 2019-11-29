@@ -11,16 +11,14 @@ import rx.subscriptions.CompositeSubscription;
 public class DownloadsNotificationsPresenter implements Presenter {
 
   private static final String TAG = DownloadsNotificationsPresenter.class.getSimpleName();
-  private final String action;
   private DownloadsNotification service;
   private InstallManager installManager;
   private CompositeSubscription subscriptions;
 
   public DownloadsNotificationsPresenter(DownloadsNotification service,
-      InstallManager installManager, String action) {
+      InstallManager installManager) {
     this.service = service;
     this.installManager = installManager;
-    this.action = action;
     subscriptions = new CompositeSubscription();
   }
 
@@ -39,7 +37,8 @@ public class DownloadsNotificationsPresenter implements Presenter {
           }
         })
         .distinctUntilChanged(Install::getState)
-        .flatMap(install -> installManager.getDownloadState(install.getMd5()))
+        .flatMap(install -> installManager.getDownloadState(install.getMd5())
+            .first())
         .doOnNext(installationStatus -> {
           if (installationStatus != Install.InstallationStatus.DOWNLOADING) {
             service.removeNotificationAndStop();
@@ -57,8 +56,6 @@ public class DownloadsNotificationsPresenter implements Presenter {
   }
 
   @Override public void present() {
-    if (action.equals(InstallService.DOWNLOAD_APP_ACTION)) {
-      handleCurrentInstallation();
-    }
+    handleCurrentInstallation();
   }
 }

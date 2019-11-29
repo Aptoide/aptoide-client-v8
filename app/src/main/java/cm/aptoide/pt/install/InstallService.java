@@ -55,17 +55,17 @@ public class InstallService extends BaseService implements DownloadsNotification
         .d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
+    downloadsNotificationsPresenter = new DownloadsNotificationsPresenter(this, installManager);
+    downloadsNotificationsPresenter.present();
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
 
-      if (DOWNLOAD_APP_ACTION.equals(intent.getAction())) {
-        downloadsNotificationsPresenter =
-            new DownloadsNotificationsPresenter(this, installManager, intent.getAction());
-        downloadsNotificationsPresenter.present();
-      } else if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
+      if (ACTION_STOP_INSTALL.equals(intent.getAction())) {
         String md5 = intent.getStringExtra(EXTRA_INSTALLATION_MD5);
+        Logger.getInstance()
+            .d(TAG, "received intent pausing download: " + md5);
         pauseDownload(md5);
       }
     }
@@ -166,6 +166,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   }
 
   @Override public void removeNotificationAndStop() {
+    downloadsNotificationsPresenter.onDestroy();
     notification = null;
     stopForeground(true);
     stopSelf();
