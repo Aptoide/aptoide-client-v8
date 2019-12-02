@@ -64,6 +64,7 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
   }
 
   private fun processDownload(holder: CardHolder, app: DownloadApp) {
+    holder.downloadProgressView.setProgress(app.progress)
     when (app.status) {
       StateApp.Status.ACTIVE -> {
         setDownloadViewVisibility(holder, false, false)
@@ -81,9 +82,11 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
         setDownloadViewVisibility(holder, false, true)
       }
       StateApp.Status.IN_QUEUE -> {
+        holder.downloadProgressView.reset()
         setDownloadViewVisibility(holder, false, false)
       }
       StateApp.Status.STANDBY -> {
+        holder.downloadProgressView.reset()
         setDownloadViewVisibility(holder, true, false)
       }
       else -> Unit
