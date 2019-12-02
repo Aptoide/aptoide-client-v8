@@ -108,7 +108,7 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
       holder.downloadProgressView.visibility = View.VISIBLE
       holder.secondaryIcon.visibility = View.GONE
       holder.secondaryText.visibility = View.GONE
-      holder.actionButton.visibility = View.GONE
+      holder.actionButton.visibility = View.INVISIBLE
     } else {
       holder.downloadProgressView.visibility = View.GONE
       holder.secondaryIcon.visibility = View.VISIBLE
