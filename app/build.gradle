@@ -310,6 +310,9 @@ android {
     variant.buildConfigField "String", "INSTABUG_API_KEY",
         "\"" + project.INSTABUG_API_KEY_BETA + "\""
 
+    variant.buildConfigField "String", "UXCAM_API_KEY",
+        "\"" + project.UXCAM_API_KEY + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -460,6 +463,9 @@ dependencies {
 
   //InstaBug
   implementation "com.instabug.library:instabug:${INSTABUG_VERSION}"
+
+  //UXCam
+  implementation files('libs/uxcam-3.1.10.jar')
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
