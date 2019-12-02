@@ -17,15 +17,18 @@ public class PermissionManager {
   }
 
   public Observable<Void> requestDownloadAccess(PermissionService permissionService) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, false, false, -1));
+    return Observable.create(
+        new RequestDownloadAccessOnSubscribe(permissionService, false, false, -1));
   }
 
   public Observable<Void> requestDownloadAccessWithWifiBypass(PermissionService permissionService,
       long size) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, false, true, size));
+    return Observable.create(
+        new RequestDownloadAccessOnSubscribe(permissionService, false, true, size));
   }
 
   public Observable<Void> requestDownloadAllowingMobileData(PermissionService permissionService) {
-    return Observable.create(new RequestDownloadAccessOnSubscribe(permissionService, true, false, -1));
+    return Observable.create(
+        new RequestDownloadAccessOnSubscribe(permissionService, true, false, -1));
   }
 }

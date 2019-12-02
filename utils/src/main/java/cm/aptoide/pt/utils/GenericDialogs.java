@@ -142,7 +142,6 @@ public class GenericDialogs {
             subscriber.onCompleted();
           })
           .create();
-      // cleaning up
       subscriber.add(Subscriptions.create(() -> dialog.dismiss()));
       dialog.show();
       dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
