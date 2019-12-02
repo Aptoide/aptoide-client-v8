@@ -26,7 +26,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
   fun shouldUpdate(): Observable<Boolean> {
     return loadAutoUpdateModel().toObservable().map { it.shouldUpdate }
   }
-  
+
   fun startUpdate(shouldInstall: Boolean): Observable<Install> {
     return getAutoUpdateModel().flatMap {
       Observable.just(downloadFactory.create(it.md5, it.versionCode, it.packageName, it.uri, false))
