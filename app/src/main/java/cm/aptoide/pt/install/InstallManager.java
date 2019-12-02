@@ -21,6 +21,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import rx.Completable;
@@ -145,14 +146,44 @@ public class InstallManager {
   }
 
   public Observable<List<Install>> getInstallations() {
-    return aptoideDownloadManager.getDownloadsList()
-        .observeOn(Schedulers.io())
-        .concatMap(downloadList -> Observable.from(downloadList)
-            .flatMap(download -> getInstall(download.getMd5(), download.getPackageName(),
-                download.getVersionCode()).first())
-            .toList())
-        .distinctUntilChanged()
-        .map(installs -> sortList(installs));
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
+        installedRepository.getAllInstalled(), this::createInstallList)
+        .distinctUntilChanged();
+    //.map(installs -> sortList(installs));
+  }
+
+  private List<Install> createInstallList(List<Download> downloads, List<Installed> installeds) {
+    List<Install> installList = new ArrayList<>();
+    for (Download download : downloads) {
+      for (Installed installed : installeds) {
+        if (download.getPackageName()
+            .equals(installed.getPackageName())) {
+          InstallationState installationState;
+          if (download.getVersionCode() == installed.getVersionCode()) {
+            installationState =
+                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                    installed.getVersionName(), installed.getStatus(), installed.getType(),
+                    installed.getName(), installed.getIcon());
+          } else {
+            installationState =
+                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                    Installed.STATUS_UNINSTALLED, Installed.TYPE_UNKNOWN);
+          }
+
+          Install.InstallationType type;
+          if (installed.getVersionCode() == download.getVersionCode()) {
+            type = Install.InstallationType.INSTALLED;
+          } else if (installed.getVersionCode() > download.getVersionCode()) {
+            type = Install.InstallationType.DOWNGRADE;
+          } else {
+            type = Install.InstallationType.UPDATE;
+          }
+          installList.add(createInstall(download, installationState, download.getMd5(),
+              download.getPackageName(), download.getVersionCode(), type));
+        }
+      }
+    }
+    return installList;
   }
 
   private List<Install> sortList(List<Install> installs) {
