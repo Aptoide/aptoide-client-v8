@@ -282,9 +282,9 @@ public class AppsManager {
                               .toLowerCase(), null, update.getStoreName(), "update_all");
                       setupUpdateEvents(download1, Origin.UPDATE_ALL, offerResponseStatus, null,
                           update.getTrustedBadge(), update.getStoreName(), "update_all");
-                    })
-                    .toList()
-                    .flatMap(installManager::startInstalls))))
+                    }))
+                .toList()
+                .flatMap(installManager::startInstalls)))
         .toCompletable();
   }
 

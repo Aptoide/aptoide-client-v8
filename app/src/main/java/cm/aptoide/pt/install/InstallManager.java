@@ -23,6 +23,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -522,9 +523,8 @@ public class InstallManager {
 
   public Observable<Boolean> startInstalls(List<Download> downloads) {
     return Observable.from(downloads)
-        .map(download -> install(download).toObservable())
-        .toList()
-        .flatMap(observables -> Observable.merge(observables))
+        .zipWith(Observable.interval(0, 1, TimeUnit.SECONDS), (download, along) -> download)
+        .flatMapCompletable(download -> install(download))
         .toList()
         .map(installs -> true)
         .onErrorReturn(throwable -> false);
