@@ -72,7 +72,6 @@ class WalletInstallPresenter(val view: WalletInstallView,
         .flatMap {
           showWalletInitialState()
         }
-        .filter { walletInitialState -> !walletInitialState.second.isInstalled }
         .observeOn(viewScheduler)
         .doOnNext { view.showIndeterminateDownload() }
         .flatMap { walletInitialState ->
@@ -120,11 +119,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
       Pair<String?, WalletApp>(appIcon, walletApp)
     }.first().observeOn(viewScheduler)
         .doOnNext { pair ->
-          if (pair.second.isInstalled) {
-            view.showWalletInstalledAlreadyView()
-          } else {
-            view.showWalletInstallationView(pair.first, pair.second)
-          }
+          view.showWalletInstallationView(pair.first, pair.second)
         }
   }
 
