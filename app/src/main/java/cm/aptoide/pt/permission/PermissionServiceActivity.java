@@ -110,28 +110,45 @@ import rx.functions.Action0;
   }
 
   @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDenied, boolean allowDownloadOnMobileData) {
+      @Nullable Action0 toRunWhenAccessIsDenied, boolean allowDownloadOnMobileData,
+      boolean canBypassWifi, long size) {
     int message;
 
     if (!allowDownloadOnMobileData && (AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
 
-      message = R.string.general_downloads_dialog_only_wifi_message;
-
-      showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
-
-        @Override public void onNext(GenericDialogs.EResponse eResponse) {
-          super.onNext(eResponse);
-          if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newSettingsFragment(), true);
-          } else {
-            if (toRunWhenAccessIsDenied != null) {
-              toRunWhenAccessIsDenied.call();
+      if (canBypassWifi) {
+        showBypassWifiMessage(size, new SimpleSubscriber<GenericDialogs.EResponse>() {
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse == GenericDialogs.EResponse.YES) {
+              if (toRunWhenAccessIsGranted != null) toRunWhenAccessIsGranted.call();
+            } else {
+              if (toRunWhenAccessIsDenied != null) {
+                toRunWhenAccessIsDenied.call();
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+
+        message = R.string.general_downloads_dialog_only_wifi_message;
+
+        showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse == GenericDialogs.EResponse.YES) {
+              getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+                  .newSettingsFragment(), true);
+            } else {
+              if (toRunWhenAccessIsDenied != null) {
+                toRunWhenAccessIsDenied.call();
+              }
+            }
+          }
+        });
+      }
       return;
     }
     if (toRunWhenAccessIsGranted != null) {
@@ -246,6 +263,15 @@ import rx.functions.Action0;
     if (toRunWhenAccessIsGranted != null) {
       toRunWhenAccessIsGranted.call();
     }
+  }
+
+  private void showBypassWifiMessage(long size,
+      SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
+    GenericDialogs.createGenericOkCancelMessageWithColorButton(this, "",
+        getString(R.string.general_downloads_dialog_only_wifi_message),
+        getString(R.string.general_downloads_dialog_only_wifi_install_button,
+            AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
+        .subscribe(subscriber);
   }
 
   private void showMessageOKCancel(@StringRes int messageId,

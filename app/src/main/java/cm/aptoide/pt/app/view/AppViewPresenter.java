@@ -1005,17 +1005,16 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapSingle(__1 -> appViewManager.getAppViewModel())
-                .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
-                    .getMd5(), app.getAppModel()
-                    .getAppId(), app.getDownloadModel()
-                    .getAction(), app.getAppModel()
-                    .getMalware()
-                    .getRank()
-                    .toString()))
+            .flatMap(
+                success -> permissionManager.requestExternalStoragePermission(permissionService))
+            .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+            .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
+                .getMd5(), app.getAppModel()
+                .getAppId(), app.getDownloadModel()
+                .getAction(), app.getAppModel()
+                .getMalware()
+                .getRank()
+                .toString())
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1167,7 +1166,8 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(action);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            appModel.getSize())
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
@@ -1256,14 +1256,12 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
-                        walletApp.getDownloadModel()
+            .flatMap(
+                walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
+                        walletApp.getId(), walletApp.getDownloadModel()
                             .getAction(), walletApp.getTrustedBadge()))
-                .retry()))
+                    .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1340,7 +1338,8 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(null);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            walletApp.getSize()))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> appViewManager.downloadApp(walletApp))
