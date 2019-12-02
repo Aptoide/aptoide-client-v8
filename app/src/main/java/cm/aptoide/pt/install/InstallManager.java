@@ -153,9 +153,11 @@ public class InstallManager {
   private List<Install> createInstallList(List<Download> downloads, List<Installed> installeds) {
     List<Install> installList = new ArrayList<>();
     for (Download download : downloads) {
+      boolean found = false;
       for (Installed installed : installeds) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
+          found = true;
           InstallationState installationState;
           if (download.getVersionCode() == installed.getVersionCode()) {
             installationState =
@@ -178,7 +180,16 @@ public class InstallManager {
           }
           installList.add(createInstall(download, installationState, download.getMd5(),
               download.getPackageName(), download.getVersionCode(), type));
+          break;
         }
+      }
+
+      if (!found) {
+        installList.add(createInstall(download,
+            new InstallationState(download.getPackageName(), download.getVersionCode(),
+                Installed.STATUS_UNINSTALLED, Installed.TYPE_UNKNOWN), download.getMd5(),
+            download.getPackageName(), download.getVersionCode(),
+            Install.InstallationType.INSTALL));
       }
     }
     return installList;
