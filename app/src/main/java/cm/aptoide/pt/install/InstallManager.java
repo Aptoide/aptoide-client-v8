@@ -22,7 +22,6 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -149,7 +148,6 @@ public class InstallManager {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
         installedRepository.getAllInstalled(), this::createInstallList)
         .distinctUntilChanged();
-    //.map(installs -> sortList(installs));
   }
 
   private List<Install> createInstallList(List<Download> downloads, List<Installed> installeds) {
@@ -184,31 +182,6 @@ public class InstallManager {
       }
     }
     return installList;
-  }
-
-  private List<Install> sortList(List<Install> installs) {
-    Collections.sort(installs, (install, t1) -> {
-      int toReturn;
-      if (install.getState() == Install.InstallationStatus.DOWNLOADING
-          && !install.isIndeterminate()) {
-        toReturn = 1;
-      } else if (t1.getState() == Install.InstallationStatus.DOWNLOADING && !t1.isIndeterminate()) {
-        toReturn = -1;
-      } else {
-        int diff = install.getState()
-            .ordinal() - t1.getState()
-            .ordinal();
-        if (diff == 0) {
-          toReturn = install.getPackageName()
-              .compareTo(t1.getPackageName());
-        } else {
-          toReturn = diff;
-        }
-      }
-      return toReturn;
-    });
-    Collections.reverse(installs);
-    return installs;
   }
 
   public Observable<Install> getCurrentInstallation() {
