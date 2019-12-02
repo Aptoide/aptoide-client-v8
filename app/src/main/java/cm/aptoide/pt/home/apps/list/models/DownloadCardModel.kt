@@ -3,6 +3,7 @@ package cm.aptoide.pt.home.apps.list.models
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import cm.aptoide.aptoideviews.common.Debouncer
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
 import cm.aptoide.pt.R
@@ -26,6 +27,8 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
   @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
   var eventSubject: PublishSubject<AppClick>? = null
 
+  private val debouncer = Debouncer(1250)
+
   override fun bind(holder: CardHolder) {
     application?.let { app ->
       holder.name.text = app.name
@@ -39,7 +42,9 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
 
   private fun setupListeners(holder: CardHolder, app: DownloadApp) {
     holder.itemView.setOnClickListener {
-      eventSubject?.onNext(AppClick(app, AppClick.ClickType.CARD_CLICK))
+      debouncer.execute {
+        eventSubject?.onNext(AppClick(app, AppClick.ClickType.CARD_CLICK))
+      }
     }
     holder.downloadProgressView.setEventListener(object : DownloadEventListener {
       override fun onActionClick(action: DownloadEventListener.Action) {
