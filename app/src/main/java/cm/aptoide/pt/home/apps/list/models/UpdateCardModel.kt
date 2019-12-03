@@ -71,7 +71,6 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
   }
 
   private fun processDownload(holder: CardHolder, app: UpdateApp) {
-    Log.i("DownloadProgressView_S", app.status.toString())
     when (app.status) {
       StateApp.Status.ACTIVE -> {
         setDownloadViewVisibility(holder, app, true, false)

@@ -245,8 +245,8 @@ class DownloadProgressView : FrameLayout {
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    setEventListener(null)
-    payload = null
+    cancelButton.setOnClickListener(null)
+    resumePauseButton.setOnClickListener(null)
   }
 
   override fun onAttachedToWindow() {
