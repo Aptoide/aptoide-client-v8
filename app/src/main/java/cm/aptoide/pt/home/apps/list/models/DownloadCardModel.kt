@@ -43,7 +43,13 @@ abstract class DownloadCardModel : EpoxyModelWithHolder<DownloadCardModel.CardHo
   private fun setupListeners(holder: CardHolder, app: DownloadApp) {
     holder.itemView.setOnClickListener {
       debouncer.execute {
-        eventSubject?.onNext(AppClick(app, AppClick.ClickType.CARD_CLICK))
+        var clickType = AppClick.ClickType.CARD_CLICK
+        app.status?.let { status ->
+          if (status == StateApp.Status.STANDBY) {
+            clickType = AppClick.ClickType.INSTALL_CLICK
+          }
+        }
+        eventSubject?.onNext(AppClick(app, clickType))
       }
     }
     holder.downloadProgressView.setEventListener(object : DownloadEventListener {
