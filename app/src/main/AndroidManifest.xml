@@ -409,6 +409,8 @@
 
     <service android:name=".install.InstalledIntentService" />
 
+    <service android:name="com.uxcam.service.HttpPostService"/>
+
     <receiver
         android:name=".widget.SearchWidgetProvider"
         android:label="Aptoide Search">

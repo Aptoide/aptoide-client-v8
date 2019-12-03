@@ -99,6 +99,8 @@ import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
+import com.instabug.library.Instabug;
+import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
@@ -109,6 +111,7 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
+import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import java.io.IOException;
@@ -291,6 +294,8 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
+        .andThen(initializeInstaBug())
+        .andThen(initializeUXCam())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
@@ -353,6 +358,24 @@ public abstract class AptoideApplication extends Application {
     return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())));
+  }
+
+  private Completable initializeUXCam() {
+
+    if (BuildConfig.FLAVOR_mode.equals("dev") && !BuildConfig.DEBUG) {
+      UXCam.startWithKey(BuildConfig.UXCAM_API_KEY);
+    }
+    return Completable.complete();
+  }
+
+  private Completable initializeInstaBug() {
+
+    if (!BuildConfig.FLAVOR_mode.equals("prod")) {
+      new Instabug.Builder(this, BuildConfig.INSTABUG_API_KEY).setInvocationEvents(
+          InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
+          .build();
+    }
+    return Completable.complete();
   }
 
   private void initializeRakam() {
