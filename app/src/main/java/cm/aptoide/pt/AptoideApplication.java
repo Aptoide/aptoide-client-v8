@@ -326,7 +326,15 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     startNotificationCleaner();
-    rootInstallationRetryHandler.start();
+
+    rootAvailabilityManager.isRootAvailable()
+        .doOnSuccess(isRootAvailable -> {
+          if (isRootAvailable) {
+            rootInstallationRetryHandler.start();
+          }
+        })
+        .subscribe(__ -> {
+        }, throwable -> throwable.printStackTrace());
 
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
@@ -338,7 +346,8 @@ public abstract class AptoideApplication extends Application {
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
     analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
-    aptoideDownloadManager.start();
+
+    installManager.start();
   }
 
   private Completable checkAdsUserProperty() {

@@ -31,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -81,6 +82,7 @@ public class DeepLinkManager {
   private final AdsRepository adsRepository;
   private final AppNavigator appNavigator;
   private final CompositeSubscription subscriptions;
+  private final InstallManager installManager;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
@@ -89,7 +91,8 @@ public class DeepLinkManager {
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator) {
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
+      InstallManager installManager) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -108,6 +111,7 @@ public class DeepLinkManager {
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
     this.appNavigator = appNavigator;
+    this.installManager = installManager;
     this.subscriptions = new CompositeSubscription();
   }
 
@@ -179,6 +183,11 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
+  }
+
+  private void pauseDownloadFromNotification(String md5) {
+    installManager.pauseInstall(md5)
+        .subscribe();
   }
 
   private void editorialDeepLinkFromSlug(String slug) {

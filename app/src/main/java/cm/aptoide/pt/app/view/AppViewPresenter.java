@@ -509,6 +509,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrollReviewsResponse())
         .flatMap(reviews -> scheduleAnimations(reviews))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
@@ -878,6 +879,7 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -1272,10 +1274,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelPromotionDownload()
-            .flatMapCompletable(walletApp -> {
-              return appViewManager.cancelDownload(walletApp.getMd5sum(),
-                  walletApp.getPackageName(), walletApp.getVersionCode());
-            })
+            .flatMapCompletable(walletApp -> appViewManager.cancelDownload(walletApp.getMd5sum(),
+                walletApp.getPackageName(), walletApp.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

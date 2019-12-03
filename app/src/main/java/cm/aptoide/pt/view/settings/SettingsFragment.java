@@ -283,6 +283,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void handleDeleteAccountVisibility() {
     subscriptions.add(accountManager.accountStatus()
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(account -> deleteAccount.setVisible(account.isLoggedIn()))
         .subscribe());
   }

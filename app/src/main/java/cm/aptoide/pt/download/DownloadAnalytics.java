@@ -111,6 +111,15 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
+  @Override public void startProgress(Download download) {
+    updateDownloadEventWithHasProgress(
+        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
+    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
+    updateDownloadEventWithHasProgress(
+        download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
+    updateDownloadEventWithHasProgress(download.getMd5() + RAKAM_DOWNLOAD_EVENT);
+  }
+
   private void sendRakamDownloadEvent(String downloadCacheKey) {
     DownloadEvent downloadEvent = cache.get(downloadCacheKey);
     if (downloadEvent != null && downloadEvent.isHadProgress()) {
@@ -133,20 +142,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
           downloadEvent.getContext());
       cache.remove(md5 + RAKAM_DOWNLOAD_EVENT);
-    }
-  }
-
-  private void sendDownloadCompletedEvent(Download download) {
-    String key = download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME;
-    DownloadEvent downloadEvent = cache.get(key);
-    if (downloadEvent.isHadProgress()) {
-      Map<String, Object> data = downloadEvent.getData();
-      Map<String, Object> result = new HashMap<>();
-      result.put(STATUS, SUCCESS);
-      data.put(RESULT, result);
-      analyticsManager.logEvent(data, downloadEvent.getEventName(), downloadEvent.getAction(),
-          downloadEvent.getContext());
-      cache.remove(key);
     }
   }
 
@@ -276,15 +271,6 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
     obb.put(URL, url);
     return obb;
-  }
-
-  public void startProgress(Download download) {
-    updateDownloadEventWithHasProgress(
-        download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
-    updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
-    updateDownloadEventWithHasProgress(
-        download.getMd5() + EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME);
-    updateDownloadEventWithHasProgress(download.getMd5() + RAKAM_DOWNLOAD_EVENT);
   }
 
   private void updateDownloadEventWithHasProgress(String key) {

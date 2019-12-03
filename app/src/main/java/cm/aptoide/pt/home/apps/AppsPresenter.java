@@ -5,11 +5,14 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.home.apps.model.StateApp;
+import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
 /**
@@ -45,19 +48,11 @@ public class AppsPresenter implements Presenter {
 
   @Override public void present() {
 
-    getAvailableUpdatesList();
-
-    getAvailableAppcUpgradesList();
-
-    getInstalledApps();
-
-    getDownloads();
-
-    handleAppcUpgradesSeeMoreClick();
+    observeAppModelState();
 
     handlePauseDownloadClick();
 
-    handleResumeDownloadClick();
+    handleResumeClick();
 
     handleCancelDownloadClick();
 
@@ -65,31 +60,15 @@ public class AppsPresenter implements Presenter {
 
     handleUpdateAllClick();
 
-    handleUpdateAppClick();
+    handleStartDownloadClick();
 
-    handlePauseUpdateClick();
-
-    handleCancelUpdateClick();
-
-    handleResumeUpdateClick();
-
-    handleUpdateCardClick();
-
-    observeUpdatesList();
-
-    observeAppcUpgradesList();
+    handleCardClick();
 
     handleUpdateCardLongClick();
-
-    observeExcludedUpdates();
-
-    observeExcludedAppcUpgrades();
 
     loadUserImage();
 
     handleUserAvatarClick();
-
-    observeDownloadInstallations();
 
     handleBottomNavigationEvents();
 
@@ -132,72 +111,22 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-  private void observeDownloadInstallations() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getInstalledDownloads())
-        .observeOn(viewScheduler)
-        .doOnNext(installedDownloadsList -> view.removeInstalledDownloads(installedDownloadsList))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void handleUpdateCardClick() {
+  private void handleCardClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> view.cardClick())
         .doOnNext(app -> {
-          if (app.getType() == App.Type.DOWNLOAD) {
-            appsNavigator.navigateToAppView(((DownloadApp) app).getMd5());
-          } else {
-            appsNavigator.navigateToAppView(((UpdateApp) app).getMd5());
-          }
-        })
-        .doOnNext(app -> {
-          if (app instanceof AppcUpdateApp) {
-            appsManager.setMigrationAppViewAnalyticsEvent();
-          } else {
+          if (app.getType() == App.Type.DOWNLOAD || app.getType() == App.Type.UPDATE) {
             appsManager.setAppViewAnalyticsEvent();
+          } else if (app.getType() == App.Type.APPC_MIGRATION) {
+            appsManager.setMigrationAppViewAnalyticsEvent();
           }
+          appsNavigator.navigateToAppView(((StateApp) app).getMd5());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void observeExcludedUpdates() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getUpdatesList(true))
-        .distinctUntilChanged()
-        .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
-        .observeOn(viewScheduler)
-        .doOnNext(excludedUpdatesList -> view.removeExcludedUpdates(excludedUpdatesList))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          crashReport.log(error);
-        });
-  }
-
-  private void observeExcludedAppcUpgrades() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getExcludedAppcUpgradesList())
-        .distinctUntilChanged()
-        .filter(excludedUpdatesList -> !excludedUpdatesList.isEmpty())
-        .observeOn(viewScheduler)
-        .doOnNext(excludedUpdatesList -> view.removeExcludedAppcUpgrades(excludedUpdatesList))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          crashReport.log(error);
-        });
+        }, crashReport::log);
   }
 
   private void handleUpdateCardLongClick() {
@@ -205,10 +134,14 @@ public class AppsPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
         .flatMap(__ -> view.updateLongClick())
-        .doOnNext(app -> view.showIgnoreUpdate())
-        .flatMap(app -> view.ignoreUpdate()
-            .observeOn(ioScheduler)
-            .flatMap(__ -> appsManager.excludeUpdate(app)))
+        .flatMapSingle(app -> view.showIgnoreUpdateDialog()
+            .flatMap(result -> {
+              if (result == RxAlertDialog.Result.POSITIVE) {
+                return appsManager.excludeUpdate(app)
+                    .toSingle();
+              }
+              return Single.just(null);
+            }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -217,107 +150,25 @@ public class AppsPresenter implements Presenter {
         });
   }
 
-  private void observeUpdatesList() {
+  private void handleResumeClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.onLoadUpdatesSection())
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getUpdateDownloadsList())
         .observeOn(viewScheduler)
-        .doOnNext(list -> view.showUpdatesDownloadList(list))
+        .flatMap(created -> view.resumeDownload())
+        .observeOn(ioScheduler)
+        .flatMapCompletable(app -> appsManager.resumeDownload(app, app.getType()
+            .toString()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
-        }, error -> crashReport.log(error));
+        }, crashReport::log);
   }
 
-  private void observeAppcUpgradesList() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> appsManager.migrationPromotionActive())
-        .filter(hasPromotion -> !hasPromotion.first)
-        .flatMap(created -> view.onLoadAppcUpgradesSection())
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getAppcUpgradeDownloadsList())
-        .observeOn(viewScheduler)
-        .doOnNext(list -> view.showAppcUpgradesDownloadList(list))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void handleResumeUpdateClick() {
+  private void handleStartDownloadClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.resumeUpdate())
-        .doOnNext(this::setStandbyState)
-        .observeOn(ioScheduler)
-        .flatMapCompletable(
-            appClickEventWrapper -> appsManager.resumeUpdate(appClickEventWrapper.getApp()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void setStandbyState(AppClickEventWrapper appClickEventWrapper) {
-    App app = appClickEventWrapper.getApp();
-    if (appClickEventWrapper.isAppcUpgrade()) {
-      view.setAppcStandbyState(app);
-    } else {
-      view.setStandbyState(app);
-    }
-  }
-
-  private void handleCancelUpdateClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
-        .flatMap(created -> view.cancelUpdate())
-        .doOnNext(this::removeCanceledAppDownload)
-        .observeOn(ioScheduler)
-        .doOnNext(appClickEventWrapper -> appsManager.cancelUpdate(appClickEventWrapper.getApp()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void removeCanceledAppDownload(AppClickEventWrapper appClickEventWrapper) {
-    App app = appClickEventWrapper.getApp();
-    if (appClickEventWrapper.isAppcUpgrade()) {
-      view.removeAppcCanceledAppDownload(app);
-    } else {
-      view.removeCanceledAppDownload(app);
-    }
-  }
-
-  private void handlePauseUpdateClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
-        .flatMap(created -> view.pauseUpdate())
-        .doOnNext(appClickEventWrapper -> {
-          App app = appClickEventWrapper.getApp();
-          if (appClickEventWrapper.isAppcUpgrade()) {
-            view.setAppcPausingDownloadState(app);
-          } else {
-            view.setPausingDownloadState(app);
-          }
-        })
-        .observeOn(ioScheduler)
-        .flatMapCompletable(
-            appClickEventWrapper -> appsManager.pauseUpdate(appClickEventWrapper.getApp()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void handleUpdateAppClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(viewScheduler)
-        .flatMap(created -> Observable.merge(view.updateApp(), view.retryUpdate())
-            .flatMap(appClickEventWrapper -> permissionManager.requestExternalStoragePermission(
-                permissionService)
+        .flatMap(created -> view.startDownload()
+            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
                 .flatMap(success -> {
                   if (appsManager.showWarning()) {
                     return view.showRootWarning()
@@ -326,10 +177,9 @@ public class AppsPresenter implements Presenter {
                   return Observable.just(true);
                 })
                 .flatMap(__2 -> permissionManager.requestDownloadAccess(permissionService))
-                .doOnNext(__ -> setStandbyState(appClickEventWrapper))
                 .observeOn(ioScheduler)
-                .flatMapCompletable(__3 -> appsManager.updateApp(appClickEventWrapper.getApp(),
-                    appClickEventWrapper.isAppcUpgrade())))
+                .flatMapCompletable(
+                    __3 -> appsManager.updateApp(app, app.getType() == App.Type.APPC_MIGRATION)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -358,7 +208,6 @@ public class AppsPresenter implements Presenter {
         .flatMap(created -> view.updateAll()
             .flatMap(__ -> permissionManager.requestExternalStoragePermission(permissionService))
             .retry())
-        .doOnNext(__ -> view.showIndeterminateAllUpdates())
         .observeOn(ioScheduler)
         .flatMapCompletable(app -> appsManager.updateAll())
         .observeOn(viewScheduler)
@@ -373,7 +222,7 @@ public class AppsPresenter implements Presenter {
         .observeOn(viewScheduler)
         .flatMap(created -> view.installApp())
         .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.installApp(app))
+        .flatMapCompletable(appsManager::installApp)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -383,28 +232,11 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.cancelDownload())
-        .observeOn(ioScheduler)
-        .doOnNext(app -> appsManager.cancelDownload(app))
-        .observeOn(viewScheduler)
-        .doOnNext(app -> view.removeCanceledAppDownload(app))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReport.log(error));
-  }
-
-  private void handleResumeDownloadClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> Observable.merge(view.resumeDownload(), view.retryDownload())
-            .doOnNext(app -> view.setStandbyState(app))
-            .observeOn(viewScheduler)
-            .flatMap(app -> permissionManager.requestExternalStoragePermission(permissionService)
-                .flatMap(success -> permissionManager.requestDownloadAccess(permissionService))
-                .observeOn(ioScheduler)
-                .flatMapCompletable(__ -> appsManager.resumeDownload(app, app.getType()
-                    .toString())))
+        .flatMap(created -> view.cancelDownload()
+            .observeOn(ioScheduler)
+            .flatMapCompletable(appsManager::cancelDownload)
             .retry())
+        .observeOn(viewScheduler)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
@@ -414,80 +246,32 @@ public class AppsPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(viewScheduler)
-        .flatMap(created -> view.pauseDownload())
-        .doOnNext(app -> view.setPausingDownloadState(app))
-        .observeOn(ioScheduler)
-        .flatMapCompletable(app -> appsManager.pauseDownload(app))
+        .flatMap(created -> view.pauseDownload()
+            .observeOn(ioScheduler)
+            .flatMapCompletable(appsManager::pauseDownload)
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> crashReport.log(error));
   }
 
-  private void getDownloads() {
+  private void observeAppModelState() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .observeOn(ioScheduler)
-        .doOnNext(installs -> Logger.getInstance()
-            .d("Apps", "getting download apps"))
-        .flatMap(__ -> appsManager.getDownloadApps())
+        .flatMap(__ -> getAppsModel())
         .observeOn(viewScheduler)
-        .doOnNext(list -> view.showDownloadsList(list))
+        .doOnNext(view::showModel)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> crashReport.log(err));
   }
 
-  private void getInstalledApps() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.getInstalledApps())
-        .observeOn(viewScheduler)
-        .doOnNext(installedApps -> view.showInstalledApps(installedApps))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void getAvailableUpdatesList() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .doOnNext(__ -> Logger.getInstance()
-            .d("Apps", "going to get available updates list"))
-        .flatMap(__ -> appsManager.getUpdatesList(false))
-        .observeOn(viewScheduler)
-        .doOnNext(list -> view.showUpdatesList(list))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void getAvailableAppcUpgradesList() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .observeOn(ioScheduler)
-        .flatMap(__ -> appsManager.migrationPromotionActive())
-        .flatMap(
-            response -> appsManager.getAppcUpgradesList(false, response.first, response.second))
-        .observeOn(viewScheduler)
-        .doOnNext(list -> view.showAppcUpgradesList(list))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleAppcUpgradesSeeMoreClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(list -> view.moreAppcClick()
-            .doOnNext(__ -> appsNavigator.navigateToSeeMoreAppc())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> {
-          throw new OnErrorNotImplementedException(throwable);
-        });
+  private Observable<AppsModel> getAppsModel() {
+    return Observable.combineLatest(appsManager.getDownloadApps(), appsManager.getInstalledApps(),
+        appsManager.getUpdatesList(), appsManager.getAppcUpgradesList(),
+        (downloadApps, installedApps, updateApps, appcApps) -> new AppsModel(updateApps,
+            installedApps, appcApps, downloadApps));
   }
 
   private void loadUserImage() {
