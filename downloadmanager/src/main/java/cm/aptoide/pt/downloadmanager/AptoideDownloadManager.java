@@ -7,6 +7,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Subscription;
@@ -176,6 +177,7 @@ public class AptoideDownloadManager implements DownloadManager {
     dispatchDownloadsSubscription = downloadsRepository.getInProgressDownloadsList()
         .doOnError(throwable -> throwable.printStackTrace())
         .retry()
+        .throttleLast(750, TimeUnit.MILLISECONDS)
         .doOnNext(downloads -> Logger.getInstance()
             .d(TAG, "Downloads in Progress " + downloads.size()))
         .filter(List::isEmpty)
