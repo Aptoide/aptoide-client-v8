@@ -139,16 +139,17 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Observable<Integer> getDownloadStatus(String md5) {
-    return getDownload(md5).map(download -> {
-      if (download != null) {
-        if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-          return getStateIfFileExists(download);
-        }
-        return download.getOverallDownloadStatus();
-      } else {
-        return Download.NOT_DOWNLOADED;
-      }
-    });
+    return getDownload(md5).onErrorReturn(throwable -> null)
+        .map(download -> {
+          if (download != null) {
+            if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+              return getStateIfFileExists(download);
+            }
+            return download.getOverallDownloadStatus();
+          } else {
+            return Download.NOT_DOWNLOADED;
+          }
+        });
   }
 
   @Override public Completable removeDownload(String md5) {
