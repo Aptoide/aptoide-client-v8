@@ -168,9 +168,8 @@ public class DownloadFactory {
     download.setAction(Download.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
     download.setSize(0);
-    download.setFilesToDownload(
-        createFileList(md5, packageName, downloadPaths.getPath(), md5, null, null, versionCode,
-            versionName, null)); // no splits : auto-update
+    download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
+        downloadPaths.getAltPath(), versionCode, versionName, null)); // no splits : auto-update
     return download;
   }
 
