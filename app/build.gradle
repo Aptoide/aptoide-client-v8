@@ -5,6 +5,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 buildscript {
 
@@ -307,6 +308,12 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
+    variant.buildConfigField "String", "INSTABUG_API_KEY",
+        "\"" + project.INSTABUG_API_KEY_BETA + "\""
+
+    variant.buildConfigField "String", "UXCAM_API_KEY",
+        "\"" + project.UXCAM_API_KEY + "\""
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -335,6 +342,10 @@ android {
     javaMaxHeapSize = project.APTOIDE_DEX_JAVA_MAX_HEAP_SIZE
   }
   sourceSets { release { java.srcDirs = ['src/release/java', 'src/release/java/'] } }
+}
+
+kapt {
+  correctErrorTypes = true
 }
 
 dependencies {
@@ -388,6 +399,9 @@ dependencies {
   implementation "androidx.legacy:legacy-support-v13:${LEGACY_SUPPORT_VERSION}"
   implementation "androidx.cardview:cardview:${CARD_VIEW_VERSION}"
   implementation "androidx.browser:browser:${BROWSER_VERSION}"
+
+  implementation "com.airbnb.android:epoxy:${EPOXY_VERSION}"
+  kapt "com.airbnb.android:epoxy-processor:${EPOXY_VERSION}"
 
   //Color Palette
   implementation "androidx.palette:palette:${PALETTE_VERSION}"
@@ -455,6 +469,12 @@ dependencies {
   //Rakam
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 
+  //InstaBug
+  implementation "com.instabug.library:instabug:${INSTABUG_VERSION}"
+
+  //UXCam
+  implementation files('libs/uxcam-3.1.10.jar')
+
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
   implementation 'org.slf4j:slf4j-api:1.7.21'
@@ -470,7 +490,7 @@ dependencies {
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
-  annotationProcessor "org.parceler:parceler:${PARCELER_VERSION}"
+  kapt "org.parceler:parceler:${PARCELER_VERSION}"
 
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-basement:${PLAY_SERVICES_BASEMENT_VERSION}"
@@ -491,11 +511,11 @@ dependencies {
 
   implementation("com.github.bumptech.glide:glide:${GLIDE_VERSION}")
 
-  annotationProcessor "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
+  kapt "com.github.bumptech.glide:compiler:${GLIDE_VERSION}"
 
   implementation "com.google.dagger:dagger:${DAGGER_VERSION}"
 
-  annotationProcessor "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+  kapt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
 
   implementation("com.asfoundation:appcoins-contract-proxy:${APPC_CONTRACT_PROXY_VERSION}") {
     exclude group: 'org.web3j'

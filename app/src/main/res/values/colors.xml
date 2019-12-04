@@ -53,8 +53,9 @@
   <!-- transparent -->
   <color name="transparent">#00000000</color>
 
-  <!-- Catappult -->
+  <!-- Catappult/Appc -->
   <color name="catappult_purple">#190056</color>
   <color name="catappult_pink">#ff057b</color>
+  <color name="appc_orange">#fd6363</color>
 
 </resources>

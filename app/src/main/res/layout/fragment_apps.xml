@@ -20,34 +20,10 @@
         android:layout_height="match_parent"
         >
 
-      <androidx.core.widget.NestedScrollView
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:scrollbars="vertical"
-          app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-          >
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-          <include
-              layout="@layout/appc_apps_section_item"
-              android:id="@+id/appc_apps_layout"
-              android:visibility="gone"
-              />
-
-          <androidx.recyclerview.widget.RecyclerView
-              android:id="@+id/fragment_apps_recycler_view"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@+id/appc_apps_layout"
-              android:visibility="gone"
-              />
-        </RelativeLayout>
-
-      </androidx.core.widget.NestedScrollView>
+      <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/fragment_apps_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

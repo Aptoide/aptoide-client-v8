@@ -376,7 +376,7 @@ public class AppViewPresenter implements Presenter {
   private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMap(__ -> downloadInRange(0, 100))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showDownloadingSimilarApps(
@@ -391,7 +391,7 @@ public class AppViewPresenter implements Presenter {
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMapSingle(__ -> appViewManager.getAppModel())
         .filter(appModel -> !(appModel.isAppCoinApp() || "com.appcoins.wallet".equals(
             appModel.getPackageName())))
@@ -509,6 +509,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrollReviewsResponse())
         .flatMap(reviews -> scheduleAnimations(reviews))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
@@ -878,6 +879,7 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -1005,17 +1007,16 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapSingle(__1 -> appViewManager.getAppViewModel())
-                .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
-                    .getMd5(), app.getAppModel()
-                    .getAppId(), app.getDownloadModel()
-                    .getAction(), app.getAppModel()
-                    .getMalware()
-                    .getRank()
-                    .toString()))
+            .flatMap(
+                success -> permissionManager.requestExternalStoragePermission(permissionService))
+            .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+            .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
+                .getMd5(), app.getAppModel()
+                .getAppId(), app.getDownloadModel()
+                .getAction(), app.getAppModel()
+                .getMalware()
+                .getRank()
+                .toString())
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1167,7 +1168,8 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(action);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            appModel.getSize())
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
@@ -1256,14 +1258,12 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
-                        walletApp.getDownloadModel()
+            .flatMap(
+                walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
+                        walletApp.getId(), walletApp.getDownloadModel()
                             .getAction(), walletApp.getTrustedBadge()))
-                .retry()))
+                    .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1274,10 +1274,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelPromotionDownload()
-            .flatMapCompletable(walletApp -> {
-              return appViewManager.cancelDownload(walletApp.getMd5sum(),
-                  walletApp.getPackageName(), walletApp.getVersionCode());
-            })
+            .flatMapCompletable(walletApp -> appViewManager.cancelDownload(walletApp.getMd5sum(),
+                walletApp.getPackageName(), walletApp.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1340,7 +1338,8 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(null);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            walletApp.getSize()))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> appViewManager.downloadApp(walletApp))

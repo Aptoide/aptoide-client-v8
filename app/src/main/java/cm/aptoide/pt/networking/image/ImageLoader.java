@@ -349,6 +349,7 @@ public class ImageLoader {
         return Glide.with(context)
             .load(uri)
             .apply(getRequestOptions())
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(imageView);
       } else {
         Log.e(TAG, "newImageUrl is null");
