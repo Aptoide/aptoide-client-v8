@@ -31,4 +31,8 @@ public class PermissionManager {
     return Observable.create(
         new RequestDownloadAccessOnSubscribe(permissionService, true, false, -1));
   }
+
+  public Observable<Boolean> hasDownloadAccess(PermissionService permissionService) {
+    return Observable.create(new HasDownloadAccessOnSubscribe(permissionService));
+  }
 }

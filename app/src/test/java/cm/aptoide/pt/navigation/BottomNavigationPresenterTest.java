@@ -1,6 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
@@ -45,6 +46,7 @@ public class BottomNavigationPresenterTest {
   @Mock private FragmentNavigator fragmentNavigator;
   @Mock private DeepLinkManager deepLinkManager;
   @Mock private BottomNavigationActivity bottomNavigationActivity;
+  @Mock private PermissionService permissionService;
   @Mock private MainActivity mainView;
   @Mock private BottomNavigationNavigator bottomNavigationNavigator;
   @Mock private UpdatesManager updatesManager;
@@ -64,7 +66,8 @@ public class BottomNavigationPresenterTest {
         CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
-        bottomNavigationNavigator, updatesManager, autoUpdateManager, rootAvailabilityManager);
+        bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
+        rootAvailabilityManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

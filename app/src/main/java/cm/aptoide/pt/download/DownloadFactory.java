@@ -156,7 +156,7 @@ public class DownloadFactory {
   public Download create(String md5, int versionCode, String packageName, String uri,
       boolean hasAppc) {
     ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, null);
+        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, uri);
     String versionName =
         "Auto-Update"; //This is needed since we're using the version name to compare installs
     Download download = new Download();

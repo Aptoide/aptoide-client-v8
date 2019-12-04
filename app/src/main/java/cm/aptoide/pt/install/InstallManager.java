@@ -206,19 +206,23 @@ public class InstallManager {
   }
 
   public Completable install(Download download) {
-    return install(download, false, false);
+    return install(download, false, false, true);
+  }
+
+  public Completable install(Download download, boolean shouldInstall) {
+    return install(download, false, false, shouldInstall);
   }
 
   private Completable defaultInstall(Download download) {
-    return install(download, true, false);
+    return install(download, true, false, true);
   }
 
   public Completable splitInstall(Download download) {
-    return install(download, false, true);
+    return install(download, false, true, true);
   }
 
   private Completable install(Download download, boolean forceDefaultInstall,
-      boolean forceSplitInstall) {
+      boolean forceSplitInstall, boolean shouldInstall) {
     return aptoideDownloadManager.getDownload(download.getMd5())
         .first()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
@@ -230,7 +234,8 @@ public class InstallManager {
           }
         })
         .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
-            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall))
+            packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
+            shouldInstall))
         .first()
         .toCompletable();
   }
@@ -451,18 +456,25 @@ public class InstallManager {
   }
 
   private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
+      boolean shouldSetPackageInstaller, boolean shouldInstall) {
     return waitBackgroundInstallationResult(md5).startWith(
-        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller));
+        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
+            shouldInstall));
   }
 
   private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller) {
-    waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
+      boolean shouldSetPackageInstaller, boolean shouldInstall) {
+    if (shouldInstall) {
+      waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
+    }
     return aptoideDownloadManager.getDownload(md5)
         .first()
         .doOnNext(download -> initInstallationProgress(download))
-        .doOnNext(__ -> startInstallService())
+        .doOnNext(__ -> {
+          if (shouldInstall) {
+            startInstallService();
+          }
+        })
         .flatMapCompletable(download -> {
           if (download.getOverallDownloadStatus() == Download.COMPLETED) {
             return Completable.fromAction(() -> {

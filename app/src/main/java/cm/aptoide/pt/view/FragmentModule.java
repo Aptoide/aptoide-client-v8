@@ -54,6 +54,9 @@ import cm.aptoide.pt.app.view.AppViewView;
 import cm.aptoide.pt.app.view.MoreBundleManager;
 import cm.aptoide.pt.app.view.MoreBundlePresenter;
 import cm.aptoide.pt.app.view.MoreBundleView;
+import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
+import cm.aptoide.pt.autoupdate.AutoUpdateDialogPresenter;
+import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -360,11 +363,13 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment, externalNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment,
+        externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -600,6 +605,12 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides ListAppsMoreManager providesListAppsMoreManager(
       ListAppsMoreRepository listAppsMoreRepository, AdsRepository adsRepository) {
     return new ListAppsMoreManager(listAppsMoreRepository, adsRepository);
+  }
+
+  @FragmentScope @Provides AutoUpdateDialogPresenter providesAutoUpdateDialogPresenter(
+      CrashReport crashReporter, AutoUpdateManager autoUpdateManager) {
+    return new AutoUpdateDialogPresenter((AutoUpdateDialogFragment) fragment, crashReporter,
+        autoUpdateManager);
   }
 
   @FragmentScope @Provides ExternalNavigator providesExternalNavigator(

@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -193,7 +194,7 @@ import static android.content.Context.WINDOW_SERVICE;
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, rootAvailabilityManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -322,7 +323,8 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("local-version-code") int localVersionCode,
       AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
-        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT,
+        ((AptoideApplication) activity.getApplication()).getDefaultSharedPreferences());
   }
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {

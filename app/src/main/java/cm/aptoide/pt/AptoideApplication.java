@@ -213,14 +213,6 @@ public abstract class AptoideApplication extends Application {
     return displayableWidgetMapping;
   }
 
-  public static boolean isAutoUpdateWasCalled() {
-    return autoUpdateWasCalled;
-  }
-
-  public static void setAutoUpdateWasCalled(boolean autoUpdateWasCalled) {
-    AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
-  }
-
   public LeakTool getLeakTool() {
     if (leakTool == null) {
       leakTool = new LeakTool();
