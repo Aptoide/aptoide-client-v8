@@ -20,7 +20,6 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
-import java.util.AbstractMap;
 import rx.Observable;
 
 /**
@@ -78,8 +77,8 @@ public class HomeNavigator {
         .getTitle(), "default", tag, StoreContext.home), true);
   }
 
-  public void navigateToAppView(AbstractMap.SimpleEntry<String, SearchAdResult> entry) {
-    appNavigator.navigateWithAdAndTag(entry.getValue(), entry.getKey());
+  public void navigateToAppView(String tag, SearchAdResult searchAdResult) {
+    appNavigator.navigateWithAdAndTag(searchAdResult, tag);
   }
 
   public Observable<Integer> bottomNavigation() {

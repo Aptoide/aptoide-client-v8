@@ -150,7 +150,7 @@ public class AppViewManagerTest {
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1);
+            (long) 1, false, -1, -1, "", "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -226,7 +226,7 @@ public class AppViewManagerTest {
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1);
+            (long) 1, false, -1, -1, "", "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
