@@ -135,11 +135,11 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
   }
 
   override fun getApps(refresh: Boolean): Observable<List<RewardApp>> {
-    return rewardAppsRepository.getAppCoinsRewardAppsFromHomeMore(refresh, "appcoins-ads")
+    return rewardAppsRepository.getFreshAppCoinsRewardAppsFromHomeMore("appcoins-ads")
   }
 
   override fun loadMoreApps(): Observable<List<RewardApp>> {
-    return rewardAppsRepository.getAppCoinsRewardAppsFromHomeMore(false, "appcoins-ads")
+    return rewardAppsRepository.getNextAppCoinsRewardAppsFromHomeMore("appcoins-ads")
   }
 
   override fun getTitle(): String {

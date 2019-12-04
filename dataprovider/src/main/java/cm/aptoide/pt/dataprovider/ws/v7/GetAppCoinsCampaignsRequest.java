@@ -29,8 +29,7 @@ public class GetAppCoinsCampaignsRequest
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
-        + "/api/7.20190808/";
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST + "/api/7.20191202/";
   }
 
   @Override protected Observable<ListAppCoinsCampaigns> loadDataFromNetwork(Interfaces interfaces,
