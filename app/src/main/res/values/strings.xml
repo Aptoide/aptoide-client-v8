@@ -562,7 +562,7 @@
   <!--Holidays AppCoins Craze-->
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
+  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
   <string name="holidayspromotion_button_install">Install to get %s</string>
   <string name="holidayspromotion_button_update">Update to get %s</string>
   <string name="holidayspromotion_button_claim">Claim your %s</string>
