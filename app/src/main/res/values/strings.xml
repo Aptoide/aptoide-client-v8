@@ -570,7 +570,7 @@
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
-  <string name="holidayspromotion_button_wallet_get">Do it magically</string>
+  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
   <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
