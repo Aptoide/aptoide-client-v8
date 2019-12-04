@@ -48,7 +48,7 @@ public class RewardAppCoinsAppsRepository {
   public Observable<List<RewardApp>> getFreshAppCoinsRewardAppsFromHomeMore(String tag) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(false)
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(true)
         .flatMap(response -> map(response.getDataList(), tag));
   }
 
