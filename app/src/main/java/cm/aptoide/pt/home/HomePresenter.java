@@ -464,7 +464,8 @@ public class HomePresenter implements Presenter {
             .doOnError(throwable -> Logger.getInstance()
                 .e(this.getClass()
                     .getCanonicalName(), throwable))
-            .doOnNext(pair -> homeNavigator.navigateToAppView(pair.second, pair.first))
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.getTag(),
+                result.getSearchAdResult()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

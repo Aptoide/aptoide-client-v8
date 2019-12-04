@@ -151,7 +151,8 @@ public class MoreBundlePresenter implements Presenter {
             .map(AdHomeEvent::getAdClick)
             .map(adMapper::mapAdToSearchAd)
             .observeOn(viewScheduler)
-            .doOnNext(result -> homeNavigator.navigateToAppView(result.second, result.first))
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.getTag(),
+                result.getSearchAdResult()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

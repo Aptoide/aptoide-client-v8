@@ -77,7 +77,7 @@ public class HomeNavigator {
         .getTitle(), "default", tag, StoreContext.home), true);
   }
 
-  public void navigateToAppView(SearchAdResult searchAdResult, String tag) {
+  public void navigateToAppView(String tag, SearchAdResult searchAdResult) {
     appNavigator.navigateWithAdAndTag(searchAdResult, tag);
   }
 

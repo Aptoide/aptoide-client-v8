@@ -28,16 +28,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
-  private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
+  private DecimalFormat oneDecimalFormatter;
 
   public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
       PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
-      List<SearchAdResult> searchAdResults, CrashReport crashReport) {
+      List<SearchAdResult> searchAdResults, CrashReport crashReport,
+      DecimalFormat decimalFormatter) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.searchResults = searchResults;
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
+    this.oneDecimalFormatter = decimalFormatter;
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {

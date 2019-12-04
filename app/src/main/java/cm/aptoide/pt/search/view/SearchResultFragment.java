@@ -66,6 +66,7 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.ViewBinder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -93,9 +94,9 @@ public class SearchResultFragment extends BackButtonFragment
       "followed_stores_search_list_state";
   private static final String TRENDING_LIST_STATE = "trending_list_state";
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
-
   @Inject SearchResultPresenter searchResultPresenter;
   @Inject @Named("aptoide-theme") String theme;
+  private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
@@ -682,7 +683,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
-            searchResultAdsFollowedStores, crashReport);
+            searchResultAdsFollowedStores, crashReport, oneDecimalFormatter);
 
     listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
@@ -691,7 +692,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
-            searchResultAdsAllStores, crashReport);
+            searchResultAdsAllStores, crashReport, oneDecimalFormatter);
 
     searchSuggestionsAdapter =
         new SearchSuggestionsAdapter(new ArrayList<>(), suggestionClickedPublishSubject);
