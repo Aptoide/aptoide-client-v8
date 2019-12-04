@@ -2,11 +2,13 @@ package cm.aptoide.pt;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -272,8 +274,9 @@ public abstract class AptoideApplication extends Application {
     //if (BuildConfig.DEBUG) {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
-
-    aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    analyticsManager.setup();
+    UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
+    aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
     //
     // async app initialization
@@ -289,7 +292,8 @@ public abstract class AptoideApplication extends Application {
         .andThen(initializeInstaBug())
         .andThen(initializeUXCam())
         .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics())
+        .andThen(sendAptoideApplicationStartAnalytics(
+            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
@@ -336,7 +340,6 @@ public abstract class AptoideApplication extends Application {
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.getInstance()
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
-    analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
@@ -632,10 +635,11 @@ public abstract class AptoideApplication extends Application {
         .build(context, flurryKey);
   }
 
-  private Completable sendAptoideApplicationStartAnalytics() {
+  private Completable sendAptoideApplicationStartAnalytics(boolean isTv) {
     return Completable.fromAction(() -> {
       aptoideApplicationAnalytics.setPackageDimension(getPackageName());
       aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+      aptoideApplicationAnalytics.sendIsTvEvent(isTv);
     });
   }
 

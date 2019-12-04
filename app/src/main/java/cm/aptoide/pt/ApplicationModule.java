@@ -1769,8 +1769,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList("apps", "catappult");
   }
 
-  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
-    return new AptoideApplicationAnalytics();
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new AptoideApplicationAnalytics(analyticsManager);
   }
 
   @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
@@ -1829,7 +1830,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
-        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME);
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
+        AptoideApplicationAnalytics.IS_ANDROID_TV);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
