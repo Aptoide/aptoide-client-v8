@@ -30,7 +30,6 @@ public class RewardAppCoinsAppsRepository {
   private SharedPreferences sharedPreferences;
   private InstallManager installManager;
 
-  private int offset = 0;
   private int total = 0;
   private int next = 0;
 
@@ -53,7 +52,7 @@ public class RewardAppCoinsAppsRepository {
   }
 
   public Observable<List<RewardApp>> getNextAppCoinsRewardAppsFromHomeMore(String tag) {
-    if (offset >= total) {
+    if (next >= total) {
       return Observable.just(Collections.emptyList());
     }
     return new GetAppCoinsCampaignsRequest(
@@ -63,7 +62,6 @@ public class RewardAppCoinsAppsRepository {
   }
 
   private Observable<List<RewardApp>> map(DataList<AppCoinsCampaign> list, String tag) {
-    this.offset = list.getOffset();
     this.total = list.getTotal();
     this.next = list.getNext();
     List<RewardApp> rewardAppsList = new ArrayList<>();
