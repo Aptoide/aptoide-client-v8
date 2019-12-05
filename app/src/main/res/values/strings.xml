@@ -559,14 +559,43 @@
   <string name="editorial_card_views_short">%s views</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
 
-  <!--Holidays AppCoins Craze-->
-  <string name="holidayspromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
-  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <!--Promotion in APPC-C (old)-->
+  <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
+  <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
   <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="holidayspromotion_button_install">Install to get %s</string>
-  <string name="holidayspromotion_button_update">Update to get %s</string>
-  <string name="holidayspromotion_button_claim">Claim your %s</string>
+  <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
+  <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
+  <string name="holidayspromotion_message_popup">>Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_button_popup">Check it out!</string>
+  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
+  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_update_button">Update now</string>
+  <string name="promotion_over_title">This promotion is over!</string>
+  <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
+
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
+  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="FIATpromotion_button_install">Install to get %s</string>
+  <string name="FIATpromotion_button_update">Update to get %s</string>
+  <string name="FIATpromotion_button_claim">Claim your %s</string>
+  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_title_error_claimed">Oops…</string>
+  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="FIATpromotion_button_popup">Check it out!</string>
+  <string name="FIATpromotion_notification_title">Get %s now!</string>
+  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
+  <string name="FIATpromotion_update_popup_title">Update Aptoide</string>
+  <string name="FIATpromotion_over_title">This promotion is over!</string>
+  <string name="FIATpromotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
+
+  <!--Get Wallet Address-->
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
   <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
@@ -584,15 +613,6 @@
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
-  <string name="holidayspromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="holidayspromotion_button_popup">Check it out!</string>
-  <string name="promotion_notification_title">Get %s now!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
-  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
-  <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">This promotion is over!</string>
-  <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
 
 
   <!--Apps Short Description for promotions-->
