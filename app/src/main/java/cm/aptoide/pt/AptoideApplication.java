@@ -111,7 +111,6 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
-import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import java.io.IOException;
@@ -287,7 +286,6 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeInstaBug())
-        .andThen(initializeUXCam())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
@@ -350,14 +348,6 @@ public abstract class AptoideApplication extends Application {
     return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())));
-  }
-
-  private Completable initializeUXCam() {
-
-    if (BuildConfig.FLAVOR_mode.equals("dev") && !BuildConfig.DEBUG) {
-      UXCam.startWithKey(BuildConfig.UXCAM_API_KEY);
-    }
-    return Completable.complete();
   }
 
   private Completable initializeInstaBug() {
