@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -66,6 +67,7 @@ public class AppViewPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private final SimilarAppsExperiment similarAppsExperiment;
+  private final ApkfyExperiment apkfyExperiment;
   private final ExternalNavigator externalNavigator;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
@@ -74,7 +76,7 @@ public class AppViewPresenter implements Presenter {
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
       PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
-      ExternalNavigator externalNavigator) {
+      ExternalNavigator externalNavigator, ApkfyExperiment apkfyExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -89,6 +91,7 @@ public class AppViewPresenter implements Presenter {
     this.promotionsNavigator = promotionsNavigator;
     this.similarAppsExperiment = similarAppsExperiment;
     this.externalNavigator = externalNavigator;
+    this.apkfyExperiment = apkfyExperiment;
   }
 
   @Override public void present() {
@@ -212,6 +215,7 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
+        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP, appViewModel.getAppModel()
         .isMature(), appViewModel.getAppModel()
         .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
         .isMature()))
@@ -222,8 +226,11 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
-    return appViewManager.shouldLoadInterstitialAd(packageName)
+  private Observable<Boolean> loadInterstitialAds(boolean isFromApkfy, boolean isMature,
+      String packageName) {
+    return shouldLoadInterstitialAdFromApky(isFromApkfy).filter(shouldLoad -> shouldLoad)
+        .toSingle()
+        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd(packageName))
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
@@ -234,6 +241,19 @@ public class AppViewPresenter implements Presenter {
         })
         .onErrorReturn(__ -> null)
         .toObservable();
+  }
+
+  private Observable<Boolean> shouldLoadInterstitialAdFromApky(boolean isFromApky) {
+    return Observable.just(isFromApky)
+        .flatMap(__ -> {
+          if (!isFromApky) {
+            return Observable.just(true);
+          }
+          return apkfyExperiment.shouldShowApkfyInterstital()
+              .flatMapObservable(shouldShow -> apkfyExperiment.recordImpression()
+                  .toObservable()
+                  .map(___ -> shouldShow));
+        });
   }
 
   private Observable<Boolean> loadBannerAds(boolean isMature) {

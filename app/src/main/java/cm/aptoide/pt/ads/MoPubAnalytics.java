@@ -50,7 +50,11 @@ public class MoPubAnalytics {
   }
 
   private JSONObject createRakamSuperProperties(String ads) {
-    JSONObject superProperties = new JSONObject();
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
     try {
       superProperties.put("ads", ads);
     } catch (JSONException e) {

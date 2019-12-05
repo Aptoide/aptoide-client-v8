@@ -39,6 +39,8 @@ public class AppViewAnalytics {
       "asv_2053_similar_apps_converting";
   public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
       "asv_2053_similar_apps_participating";
+  public static final String ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME =
+      "asv_2119_apkfy_ads_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -519,12 +521,19 @@ public class AppViewAnalytics {
   }
 
   @NotNull private HashMap<String, Object> getSimilarABTestData(boolean isControlGroup) {
+    return getABTestMap(isControlGroup ? "control" : "appc_bundle");
+  }
+
+  public void sendApkfyABTestImpressionEvent(String assignment) {
     HashMap<String, Object> data = new HashMap<>();
-    if (isControlGroup) {
-      data.put("group", "control");
-    } else {
-      data.put("group", "appc_bundle");
-    }
+    data.put("group", assignment);
+    analyticsManager.logEvent(data, ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
+        AnalyticsManager.Action.IMPRESSION, navigationTracker.getViewName(true));
+  }
+
+  private HashMap<String, Object> getABTestMap(String assignment) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("group", assignment);
     return data;
   }
 }
