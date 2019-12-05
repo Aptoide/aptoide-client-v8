@@ -128,9 +128,6 @@ ext {
   //Rakam
   RAKAM_VERSION = '2.7.14'
 
-  //InstaBug
-  INSTABUG_VERSION = '9.0.3'
-
   //MOPUB ADS
   MOPUB_SDK_VERSION = '5.7.1'
   APPLOVIN_SDK_VERSION = '8.1.4'

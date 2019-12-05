@@ -99,8 +99,6 @@ import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
 import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
@@ -285,7 +283,6 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeInstaBug())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics())
         .andThen(setUpFirstRunAnalytics())
@@ -348,16 +345,6 @@ public abstract class AptoideApplication extends Application {
     return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())));
-  }
-
-  private Completable initializeInstaBug() {
-
-    if (!BuildConfig.FLAVOR_mode.equals("prod")) {
-      new Instabug.Builder(this, BuildConfig.INSTABUG_API_KEY).setInvocationEvents(
-          InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
-          .build();
-    }
-    return Completable.complete();
   }
 
   private void initializeRakam() {
