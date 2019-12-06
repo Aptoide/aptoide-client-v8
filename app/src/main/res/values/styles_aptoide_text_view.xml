@@ -206,6 +206,10 @@
     <item name="android:textColor">@color/grey</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XS.AppcOrange">
+    <item name="android:textColor">@color/appc_orange</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.XS.GreyMedium">
     <item name="android:textColor">@color/grey_medium</item>
   </style>

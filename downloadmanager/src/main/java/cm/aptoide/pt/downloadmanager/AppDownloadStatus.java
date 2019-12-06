@@ -1,5 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 
 /**
@@ -106,6 +107,8 @@ public class AppDownloadStatus {
           return AppDownloadState.PROGRESS;
         } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
             == fileDownloadCallbackList.size() - 1) {
+          Logger.getInstance()
+              .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
           return AppDownloadState.COMPLETED;
         }
       } else if (fileDownloadCallback.getDownloadState()
@@ -166,6 +169,6 @@ public class AppDownloadStatus {
   }
 
   public enum AppDownloadState {
-    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, ERROR_FILE_NOT_FOUND, ERROR_NOT_ENOUGH_SPACE, ERROR_MD5_DOES_NOT_MATCH, PROGRESS
+    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, ERROR_FILE_NOT_FOUND, ERROR_NOT_ENOUGH_SPACE, ERROR_MD5_DOES_NOT_MATCH, PROGRESS, WAITING_TO_MOVE_FILES
   }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="104dp"
@@ -11,12 +10,12 @@
     >
 
   <RelativeLayout
+      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      android:paddingBottom="5dp"
       android:paddingTop="8dp"
-      style="?attr/backgroundCard"
+      android:paddingBottom="5dp"
       >
 
     <RelativeLayout
@@ -35,6 +34,7 @@
           android:background="@color/transparent"
           android:contentDescription="native_main_image"
           />
+
       <RelativeLayout
           android:id="@+id/primary_ad_view_layout"
           android:layout_width="1dp"
@@ -56,34 +56,35 @@
         android:layout_width="107dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon_wrapper"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         >
 
       <TextView
           android:id="@+id/name"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:lines="2"
-          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
 
       <LinearLayout
           android:id="@+id/app_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="1dp"
-          android:layout_marginLeft="1dp"
-          android:layout_marginRight="1dp"
           android:layout_marginStart="1dp"
+          android:layout_marginLeft="1dp"
           android:layout_marginTop="2dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginRight="1dp"
           android:gravity="center_vertical"
           android:orientation="horizontal"
+          android:visibility="visible"
           >
 
         <ImageView
@@ -91,38 +92,77 @@
             android:layout_height="10dp"
             android:src="@drawable/ic_star_black"
             />
+
         <TextView
             android:id="@+id/rating_label"
+            style="@style/Aptoide.TextView.Regular.XXS.Black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             tools:ignore="SmallSp"
             tools:text="2.3"
-            style="@style/Aptoide.TextView.Regular.XXS.Black"
             />
 
         <TextView
             android:id="@+id/ad_label"
+            style="@style/Aptoide.TextView.Regular.XXS.Black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/all_title_ad"
             tools:ignore="SmallSp"
-            style="@style/Aptoide.TextView.Regular.XXS.Black"
             />
 
       </LinearLayout>
 
       <LinearLayout
+          android:id="@+id/appc_earn_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="1dp"
+          android:layout_marginLeft="1dp"
+          android:layout_marginTop="2dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginRight="1dp"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:visibility="gone"
+          >
+
+        <ImageView
+            android:id="@+id/coins_image"
+            android:layout_width="17dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_get_appc"
+            />
+
+        <TextView
+            android:id="@+id/reward_textview"
+            style="@style/Aptoide.TextView.Medium.XXS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textColor="@color/curation_gold"
+            tools:text="EARN €0.78"
+            />
+
+
+      </LinearLayout>
+
+
+      <LinearLayout
           android:id="@+id/appc_info_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="1dp"
-          android:layout_marginLeft="1dp"
-          android:layout_marginRight="1dp"
           android:layout_marginStart="1dp"
+          android:layout_marginLeft="1dp"
           android:layout_marginTop="2dp"
+          android:layout_marginEnd="1dp"
+          android:layout_marginRight="1dp"
           android:gravity="center_vertical"
           android:orientation="horizontal"
           android:visibility="gone"
@@ -138,10 +178,10 @@
 
         <TextView
             android:id="@+id/appc_text"
+            style="@style/Aptoide.TextView.Medium.XXS.SpendAppc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/appc_card_short"
-            style="@style/Aptoide.TextView.Medium.XXS.SpendAppc"
             />
 
       </LinearLayout>

@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -48,7 +49,6 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
@@ -75,6 +75,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -170,13 +171,13 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      AdsRepository adsRepository, AppNavigator appNavigator, @Named("aptoide-theme") String theme,
+      InstallManager installManager) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository, appNavigator);
+        adsRepository, appNavigator, installManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -185,14 +186,15 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
-      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager) {
+      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
+      RootAvailabilityManager rootAvailabilityManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -321,7 +323,8 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("local-version-code") int localVersionCode,
       AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
-        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT,
+        ((AptoideApplication) activity.getApplication()).getDefaultSharedPreferences());
   }
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {
@@ -385,11 +388,6 @@ import static android.content.Context.WINDOW_SERVICE;
     return new WalletInstallConfiguration(
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
-  }
-
-  @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
-      AppNavigator appNavigator) {
-    return new SeeMoreAppcNavigator(appNavigator);
   }
 
   @ActivityScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(

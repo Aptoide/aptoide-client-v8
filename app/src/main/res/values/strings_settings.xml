@@ -52,7 +52,7 @@
 
   <!--Dialog: general rules to download-->
   <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
-  <string name="general_downloads_dialog_only_wifi_install_button">YES, INSTALL NOW</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
 
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">Would you like to set a pin to unlock adult content?</string>

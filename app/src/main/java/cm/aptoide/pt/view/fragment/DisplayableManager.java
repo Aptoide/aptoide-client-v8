@@ -1,6 +1,5 @@
 package cm.aptoide.pt.view.fragment;
 
-import androidx.annotation.Nullable;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import java.util.List;
 

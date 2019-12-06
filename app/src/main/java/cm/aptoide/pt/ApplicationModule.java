@@ -173,13 +173,13 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
@@ -327,22 +327,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
-      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
+      AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
       RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver,
-      PackageInstallerManager packageInstallerManager,
-      RootInstallerProvider rootInstallerProvider) {
-    return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils(), packageInstallerManager);
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+    return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
+  }
+
+  @Singleton @Provides ForegroundManager providesForegroundManager() {
+    return new ForegroundManager(getApplicationContext());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
@@ -412,7 +409,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider, downloadAnalytics);
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics, apkPath, obbPath,
+        new FileUtils());
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {

@@ -164,12 +164,11 @@ public class PromotionsManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {

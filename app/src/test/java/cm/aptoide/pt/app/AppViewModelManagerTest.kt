@@ -129,7 +129,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromMd5("md5")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -182,7 +182,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromUniqueName("uniqueName")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -235,7 +235,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedApp("packageName", "storeName")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -291,7 +291,7 @@ class AppViewModelManagerTest {
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
 
-    // Test our AppModel
+    // Test our AppCardModel
     verify(appCenter).loadDetailedApp("packageName", "storeName")
     Assert.assertEquals(-1, appViewModel.appModel.appId)
     Assert.assertEquals("packageName", appViewModel.appModel.packageName)
@@ -311,7 +311,7 @@ class AppViewModelManagerTest {
 
     // Repeat our test and verify caches
     appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
-    verifyZeroInteractions(appCenter) // AppModel
+    verifyZeroInteractions(appCenter) // AppCardModel
     verifyZeroInteractions(appCoinsManager) // AppCoinsModel
 
     // Still check that the result is the same

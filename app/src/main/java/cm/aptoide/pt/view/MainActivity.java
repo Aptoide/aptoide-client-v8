@@ -5,10 +5,7 @@
 
 package cm.aptoide.pt.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -167,34 +164,6 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void hideUpdatesBadge() {
     updatesBadge.setVisibility(View.GONE);
-  }
-
-  @Override public Observable<PermissionService> autoUpdateDialogCreated() {
-    return autoUpdateDialogSubject;
-  }
-
-  @Override public void requestAutoUpdate() {
-    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-    final AlertDialog updateSelfDialog = dialogBuilder.create();
-    updateSelfDialog.setTitle(getText(R.string.update_self_title));
-    updateSelfDialog.setIcon(R.mipmap.ic_launcher);
-    updateSelfDialog.setMessage(
-        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
-    updateSelfDialog.setCancelable(false);
-    updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
-        (arg0, arg1) -> {
-          autoUpdateDialog = new ProgressDialog(this);
-          autoUpdateDialog.setMessage(getString(R.string.retrieving_update));
-          autoUpdateDialog.show();
-          autoUpdateDialogSubject.onNext(this);
-        });
-    updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no),
-        (dialog, arg1) -> {
-          dialog.dismiss();
-        });
-    if (is_resumed()) {
-      updateSelfDialog.show();
-    }
   }
 
   @Override public void showUnknownErrorMessage() {
