@@ -24,7 +24,7 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
 
   public AptoideNativeAd(MinimalAd ad) {
     super(ad.getName(), ad.getIconPath(), 0f, ad.getDownloads(), ad.getPackageName(), ad.getAppId(),
-        "", false);
+        "", ad.isHasAppc());
     this.networkId = ad.getNetworkId();
     this.clickUrl = ad.getClickUrl();
     this.cpcUrl = ad.getCpcUrl();
@@ -42,7 +42,15 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
         .getIcon(), 0f, ad.getData()
         .getDownloads(), ad.getData()
         .getPackageName(), ad.getData()
-        .getId(), "", false);
+        .getId(), "", ad.getInfo()
+        .getPayout() != null
+        && ad.getInfo()
+        .getPayout()
+        .getFiat() != null
+        && ad.getInfo()
+        .getPayout()
+        .getFiat()
+        .getAmount() > 0);
     GetAdsResponse.Partner partner = ad.getPartner();
     int id = 0;
     String clickUrl = null;
@@ -98,7 +106,7 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
   }
 
   @Override public boolean hasAppcPayout() {
-    return payout != null;
+    return hasAppcBilling() && payout != null && payout.getFiatAmount() > 0;
   }
 
   @Override public Payout getAppcPayout() {
