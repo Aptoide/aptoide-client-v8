@@ -10,9 +10,9 @@ import org.json.JSONObject
 import rx.Completable
 import rx.Single
 
-class ApkfyExperiment(private val abTestManager: ABTestManager,
-                      private val appViewAnalytics: AppViewAnalytics,
-                      private val sharedPreferences: SharedPreferences) : RakamExperiment() {
+open class ApkfyExperiment(private val abTestManager: ABTestManager,
+                           private val appViewAnalytics: AppViewAnalytics,
+                           private val sharedPreferences: SharedPreferences) : RakamExperiment() {
   private val APKFY_EXPERIMENT_GROUP = "apkfy_experiment_group"
   private val EXPERIMENT_ID = "ASV-2119-apkfy"
 
