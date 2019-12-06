@@ -353,7 +353,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeUXCam() {
-
     if (BuildConfig.FLAVOR_mode.equals("dev") && !BuildConfig.DEBUG) {
       UXCam.startWithKey(BuildConfig.UXCAM_API_KEY);
     }
@@ -361,7 +360,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeInstaBug() {
-
     if (!BuildConfig.FLAVOR_mode.equals("prod")) {
       new Instabug.Builder(this, BuildConfig.INSTABUG_API_KEY).setInvocationEvents(
           InstabugInvocationEvent.SHAKE, InstabugInvocationEvent.SCREENSHOT)
@@ -371,7 +369,6 @@ public abstract class AptoideApplication extends Application {
   }
 
   private void initializeRakam() {
-
     RakamClient instance = Rakam.getInstance();
 
     try {
