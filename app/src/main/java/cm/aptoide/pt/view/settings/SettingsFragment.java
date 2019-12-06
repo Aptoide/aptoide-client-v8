@@ -371,6 +371,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
+    String densityValue =
+        getFormatedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
       AlertDialog.Builder alertDialogBuilder =
@@ -399,7 +401,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
               + "\n"
               + getString(R.string.cpuAbi)
               + ": "
-              + AptoideUtils.SystemU.getAbis())
+              + AptoideUtils.SystemU.getAbis()
+              + "\n"
+              + getString(R.string.setting_density)
+              + ": "
+              + densityValue)
 
           .setCancelable(false)
           .setNeutralButton(getString(android.R.string.ok), (dialog, id) -> {
@@ -471,6 +477,36 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }
     });
     setupAdultContentClickHandlers();
+  }
+
+  private String getFormatedDensity(int density) {
+    String densityType = "";
+    switch (density) {
+      case 120:
+        densityType = " ldpi";
+        break;
+      case 160:
+        densityType = " mdpi";
+        break;
+      case 213:
+        densityType = " tvdpi";
+        break;
+      case 240:
+        densityType = " hdpi";
+        break;
+      case 320:
+        densityType = " xhdpi";
+        break;
+      case 480:
+        densityType = " xxhdpi";
+        break;
+      case 640:
+        densityType = " xxxhdpi";
+        break;
+      default:
+        break;
+    }
+    return density + densityType;
   }
 
   private void setupAdultContentClickHandlers() {
