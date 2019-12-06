@@ -71,6 +71,9 @@ dependencies {
 
   //Rakam android sdk
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
+
+  //UXCam
+  implementation 'com.uxcam:uxcam:3.1.11@aar'
 }
 
 version = "1.0.3"

@@ -473,7 +473,7 @@ dependencies {
   implementation "com.instabug.library:instabug:${INSTABUG_VERSION}"
 
   //UXCam
-  implementation files('libs/uxcam-3.1.10.jar')
+  implementation 'com.uxcam:uxcam:3.1.11@aar'
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'
