@@ -25,11 +25,9 @@ public class NotificationApplicationView extends AptoideApplication implements N
 
   private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;
-  private NotificationManager notificationManager;
 
   @Override public void onCreate() {
     super.onCreate();
-    this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     lifecycleEventBehaviorSubject = BehaviorSubject.create();
     lifecycleEventBehaviorSubject.onNext(LifecycleEvent.CREATE);
     attachPresenter(getSystemNotificationShower());
@@ -37,10 +35,11 @@ public class NotificationApplicationView extends AptoideApplication implements N
 
   @NonNull @Override protected SystemNotificationShower getSystemNotificationShower() {
     if (systemNotificationShower == null) {
-      systemNotificationShower =
-          new SystemNotificationShower(this, notificationManager, new NotificationIdsMapper(),
-              getNotificationCenter(), getNotificationAnalytics(), CrashReport.getInstance(),
-              getNotificationProvider(), this, new CompositeSubscription(), getNavigationTracker());
+      systemNotificationShower = new SystemNotificationShower(this,
+          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
+          new NotificationIdsMapper(), getNotificationCenter(), getNotificationAnalytics(),
+          CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription(),
+          getNavigationTracker());
     }
     return systemNotificationShower;
   }
