@@ -308,9 +308,6 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
-    variant.buildConfigField "String", "INSTABUG_API_KEY",
-        "\"" + project.INSTABUG_API_KEY_BETA + "\""
-
     variant.buildConfigField "String", "UXCAM_API_KEY",
         "\"" + project.UXCAM_API_KEY + "\""
 
@@ -468,9 +465,6 @@ dependencies {
 
   //Rakam
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
-
-  //InstaBug
-  implementation "com.instabug.library:instabug:${INSTABUG_VERSION}"
 
   //UXCam
   implementation 'com.uxcam:uxcam:3.1.11@aar'
