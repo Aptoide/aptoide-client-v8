@@ -598,7 +598,7 @@
   <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
   <string name="video_reward_title">Video Reward</string>
   <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
-  <string name="video_reward_play_to_get_body">Play to get %s</string>
+  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
   <string name="video_reward_play_button">PLAY</string>
   <string name="install_to_get_body">Install to get %s</string>
   <string name="promotion_claim_button">CLAIM</string>
