@@ -372,7 +372,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
     String densityValue =
-        getFormatedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
+        getFormattedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
       AlertDialog.Builder alertDialogBuilder =
@@ -479,7 +479,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     setupAdultContentClickHandlers();
   }
 
-  private String getFormatedDensity(int density) {
+  private String getFormattedDensity(int density) {
     String densityType = "";
     switch (density) {
       case 120:
