@@ -457,7 +457,7 @@
   <string name="share_store">Share Store</string>
 
   <!-- Search Widget-->
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
+  <string name="no_search_results_message">There are no results for your search. \nTry using other words or change the filters in Settings.</string>
 
   <!-- Search Fragment -->
   <string name="all_stores">All stores</string>
