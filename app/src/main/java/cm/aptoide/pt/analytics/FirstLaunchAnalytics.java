@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
+import org.json.JSONException;
+import org.json.JSONObject;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -187,13 +189,30 @@ public class FirstLaunchAnalytics {
           .getUniqueIdentifier()));
       return null;
     })
+        .doOnNext(__ -> setupRakamFirstLaunchSuperProperty(
+            SecurePreferences.isFirstRun(sharedPreferences)))
         .doOnNext(__ -> sendPlayProtectEvent())
         .doOnNext(__ -> setupDimensions(application))
-        .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
+        .filter(__ -> SecurePreferences.isFirstRun(sharedPreferences))
         .doOnNext(
             __ -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign, utmContent, entryPoint))
         .toCompletable()
         .subscribeOn(Schedulers.io());
+  }
+
+  private void setupRakamFirstLaunchSuperProperty(boolean isFirstLaunch) {
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
+    try {
+      superProperties.put("first_session", isFirstLaunch);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    Rakam.getInstance()
+        .setSuperProperties(superProperties);
   }
 
   private void setupDimensions(android.app.Application application) {
