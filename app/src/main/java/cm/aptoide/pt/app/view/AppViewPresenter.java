@@ -250,9 +250,9 @@ public class AppViewPresenter implements Presenter {
             return Observable.just(true);
           }
           return apkfyExperiment.shouldShowApkfyInterstital()
-              .flatMapObservable(shouldShow -> apkfyExperiment.recordImpression()
-                  .toObservable()
-                  .map(___ -> shouldShow));
+              .flatMap(shouldShow -> apkfyExperiment.recordImpression()
+                  .toSingle(() -> shouldShow))
+              .toObservable();
         });
   }
 
