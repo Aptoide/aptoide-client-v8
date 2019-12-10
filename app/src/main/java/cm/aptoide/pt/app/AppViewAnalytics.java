@@ -54,6 +54,7 @@ public class AppViewAnalytics {
   private static final String IMPRESSION = "impression";
   private static final String TAP_ON_APP = "tap_on_app";
   private static final String APP_BUNDLE = "app_bundle";
+  private static final String IS_APKFY = "apkfy_app_install";
   private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
@@ -276,7 +277,7 @@ public class AppViewAnalytics {
 
   public void clickOnInstallButton(String packageName, String developerName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store) {
+      String origin, String store, boolean isApkfy) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -284,9 +285,10 @@ public class AppViewAnalytics {
     map.put(APPLICATION_PUBLISHER, developerName);
     map.put(APP_BUNDLE, hasSplits);
     map.put(CONTEXT, context);
+    map.put(IS_APKFY, isApkfy);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store);
+        rank, adsBlocked, origin, store, isApkfy);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 

@@ -72,6 +72,7 @@ public class InstallAnalytics {
   private static final String URL = "url";
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
+  private static final String IS_APKFY = "apkfy_app_install";
   private final CrashReport crashReport;
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -466,19 +467,19 @@ public class InstallAnalytics {
 
   public void clickOnInstallEvent(String packageName, String type, boolean hasSplits,
       boolean hasBilling, boolean isMigration, String rank, String adsBlocked, String origin,
-      String store) {
+      String store, boolean isApkfy) {
     String context = navigationTracker.getCurrentViewName();
 
     Map<String, Object> eventMap =
         createInstallClickEventMap(packageName, type, hasSplits, hasBilling, isMigration, rank,
-            adsBlocked, origin, store, context);
+            adsBlocked, origin, store, context, isApkfy);
 
     analyticsManager.logEvent(eventMap, CLICK_ON_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
   private Map<String, Object> createInstallClickEventMap(String packageName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store, String context) {
+      String origin, String store, String context, boolean isApkfy) {
     String previousContext = navigationTracker.getPreviousViewName();
 
     Map<String, Object> result = new HashMap<>();
@@ -489,6 +490,7 @@ public class InstallAnalytics {
     result.put(APP_MIGRATION, isMigration);
     result.put(APP_APPC, hasBilling);
     result.put(APP_AAB, hasSplits);
+    result.put(IS_APKFY, isApkfy);
     if (rank != null) result.put(TRUSTED_BADGE, rank.toLowerCase());
     result.put(ADS_BLOCKED, adsBlocked);
     if (origin != null) result.put(TAG, origin);

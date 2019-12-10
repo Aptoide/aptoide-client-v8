@@ -73,7 +73,7 @@ public class EditorialAnalytics {
     map.put(CONTEXT, context);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, "unknown", origin, store);
+        rank, "unknown", origin, store, false);
     analyticsManager.logEvent(map, installEvent, AnalyticsManager.Action.CLICK, context);
 
     analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

@@ -302,7 +302,8 @@ public class AppViewPresenter implements Presenter {
                     .getRank()
                     .name(), status.toString()
                     .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
-                    .getName()))
+                    .getName(),
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
             .flatMapCompletable(status -> downloadApp(action, appModel, status).onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
@@ -1088,7 +1089,7 @@ public class AppViewPresenter implements Presenter {
                                             .name(), status.toString()
                                             .toLowerCase(), appModel.getOriginTag(),
                                         appModel.getStore()
-                                            .getName());
+                                            .getName(), false);
 
                                     if (appViewManager.hasClaimablePromotion(
                                         Promotion.ClaimAction.INSTALL)) {
@@ -1117,7 +1118,7 @@ public class AppViewPresenter implements Presenter {
                                       .name(), status.toString()
                                       .toLowerCase(), appViewViewModel.getOriginTag(),
                                   appViewViewModel.getStore()
-                                      .getName()))));
+                                      .getName(), false))));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1139,7 +1140,7 @@ public class AppViewPresenter implements Presenter {
                                         .name(), status.toString()
                                         .toLowerCase(), appViewViewModel.getOriginTag(),
                                     appViewViewModel.getStore()
-                                        .getName());
+                                        .getName(), false);
                                 return migrateApp(action, appViewViewModel, status);
                               }));
                   break;

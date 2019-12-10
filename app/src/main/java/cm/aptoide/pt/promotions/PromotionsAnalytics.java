@@ -155,7 +155,7 @@ public class PromotionsAnalytics {
     if (downloadAction != null) {
       installAnalytics.clickOnInstallEvent(packageName, downloadAction, hasSplits, hasBilling,
           downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, "unknown", origin,
-          store);
+          store, false);
       analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
