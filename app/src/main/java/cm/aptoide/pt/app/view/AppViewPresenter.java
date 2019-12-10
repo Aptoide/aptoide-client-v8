@@ -295,16 +295,15 @@ public class AppViewPresenter implements Presenter {
     return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
         shouldDownload -> shouldDownload)
         .flatMapCompletable(__ -> appViewManager.getAdsVisibilityStatus()
-            .flatMapCompletable(status -> downloadApp(action, appModel, status).doOnCompleted(
-                () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
-                    appModel.getDeveloper()
-                        .getName(), action.toString(), appModel.hasSplits(), appModel.hasBilling(),
-                    action.equals(DownloadModel.Action.MIGRATE), appModel.getMalware()
-                        .getRank()
-                        .name(), status.toString()
-                        .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
-                        .getName()))
-                .onErrorComplete()))
+            .doOnSuccess(status -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+                appModel.getDeveloper()
+                    .getName(), action.toString(), appModel.hasSplits(), appModel.hasBilling(),
+                action.equals(DownloadModel.Action.MIGRATE), appModel.getMalware()
+                    .getRank()
+                    .name(), status.toString()
+                    .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
+                    .getName()))
+            .flatMapCompletable(status -> downloadApp(action, appModel, status).onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
