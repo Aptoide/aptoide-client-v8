@@ -567,7 +567,7 @@
   <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_popup">>Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
