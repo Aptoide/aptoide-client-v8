@@ -35,7 +35,7 @@ public class MoPubAnalytics {
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
       String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
       Rakam.getInstance()
-          .setSuperProperties(createRakamSuperProperties(rakamAds));
+          .setSuperProperties(createRakamAdsSuperProperties(rakamAds));
       if (!BuildConfig.DEBUG) {
         UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, rakamAds);
       }
@@ -55,8 +55,12 @@ public class MoPubAnalytics {
     }
   }
 
-  private JSONObject createRakamSuperProperties(String ads) {
-    JSONObject superProperties = new JSONObject();
+  private JSONObject createRakamAdsSuperProperties(String ads) {
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
     try {
       superProperties.put(ADS_STATUS_USER_PROPERTY, ads);
     } catch (JSONException e) {
