@@ -304,7 +304,9 @@ public class AppViewPresenter implements Presenter {
                     .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
                     .getName(),
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
-            .flatMapCompletable(status -> downloadApp(action, appModel, status).onErrorComplete()))
+            .flatMapCompletable(status -> downloadApp(action, appModel, status,
+                appModel.getOpenType()
+                    == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -1073,7 +1075,7 @@ public class AppViewPresenter implements Presenter {
                   completable = appViewManager.getAppModel()
                       .flatMapCompletable(appModel -> appViewManager.getAdsVisibilityStatus()
                           .flatMapCompletable(
-                              status -> downloadApp(action, appModel, status).observeOn(
+                              status -> downloadApp(action, appModel, status, false).observeOn(
                                   viewScheduler)
                                   .doOnCompleted(() -> {
                                     String conversionUrl = appModel.getCampaignUrl();
@@ -1164,13 +1166,13 @@ public class AppViewPresenter implements Presenter {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action, appModel, status))
+        .flatMapCompletable(__ -> downloadApp(action, appModel, status, false))
         .toCompletable();
   }
 
   private Completable migrateApp(DownloadModel.Action action, AppModel appModel,
       WalletAdsOfferManager.OfferResponseStatus status) {
-    return downloadApp(action, appModel, status);
+    return downloadApp(action, appModel, status, false);
   }
 
   private Completable openInstalledApp(String packageName) {
@@ -1178,7 +1180,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable downloadApp(DownloadModel.Action action, AppModel appModel,
-      WalletAdsOfferManager.OfferResponseStatus status) {
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -1196,7 +1198,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appModel.getAppId(),
                 appModel.getMalware()
                     .getRank()
-                    .name(), appModel.getEditorsChoice(), status)))
+                    .name(), appModel.getEditorsChoice(), status, isApkfy)))
         .toCompletable();
   }
 

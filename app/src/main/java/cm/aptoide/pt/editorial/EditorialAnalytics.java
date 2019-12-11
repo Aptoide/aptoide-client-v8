@@ -49,7 +49,7 @@ public class EditorialAnalytics {
         storeName, installType);
 
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.EDITORIAL, action, false);
+        DownloadAnalytics.AppContext.EDITORIAL, action, false, false);
   }
 
   public void sendDownloadPauseEvent(String packageName) {

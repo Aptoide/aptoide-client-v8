@@ -98,7 +98,7 @@ public class EditorialManager {
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        download.getTrustedBadge(), download.getStoreName(), false);
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,

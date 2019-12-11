@@ -211,7 +211,7 @@ public class AppViewManager {
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
       String trustedValue, String editorsChoicePosition,
-      WalletAdsOfferManager.OfferResponseStatus status) {
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
@@ -223,7 +223,7 @@ public class AppViewManager {
                 .getName())))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
-              status, download.getStoreName());
+              status, download.getStoreName(), isApkfy);
           if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
             setupMigratorUninstallEvent(download.getPackageName());
           }
@@ -259,22 +259,24 @@ public class AppViewManager {
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
       String trustedBadge) {
     setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
-        storeName);
+        storeName, false);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, String malwareRank, String editorsChoice,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
+      boolean isApkfy) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
+        isApkfy);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName);
+        storeName, isApkfy);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
