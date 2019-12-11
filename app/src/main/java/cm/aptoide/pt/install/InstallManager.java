@@ -236,7 +236,6 @@ public class InstallManager {
         .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
             shouldInstall))
-        .first()
         .toCompletable();
   }
 
@@ -455,14 +454,13 @@ public class InstallManager {
     });
   }
 
-  private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
+  private Observable<String> installInBackground(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
-    return waitBackgroundInstallationResult(md5).startWith(
-        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
-            shouldInstall));
+    return startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
+        shouldInstall);
   }
 
-  private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+  private Observable<String> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
     if (shouldInstall) {
       waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
@@ -487,7 +485,7 @@ public class InstallManager {
             return aptoideDownloadManager.startDownload(download);
           }
         })
-        .map(__ -> null);
+        .map(__ -> md5);
   }
 
   private void startInstallService() {
