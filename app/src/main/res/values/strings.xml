@@ -457,7 +457,7 @@
   <string name="share_store">Share Store</string>
 
   <!-- Search Widget-->
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
+  <string name="no_search_results_message">There are no results for your search. \nTry using other words or change the filters in Settings.</string>
 
   <!-- Search Fragment -->
   <string name="all_stores">All stores</string>
@@ -567,15 +567,15 @@
   <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
-  <string name="holidayspromotion_message_popup">>Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
   <string name="holidayspromotion_button_popup">Check it out!</string>
   <string name="promotion_notification_title">Get %s APPC Credits now!</string>
   <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
   <string name="promotion_update_popup_title">Update Aptoide</string>
   <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
   <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">This promotion is over!</string>
-  <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
+  <string name="promotion_over_title">You missed it!</string>
+  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
 
   <!--Promotion with FIAT-->
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
@@ -592,8 +592,17 @@
   <string name="FIATpromotion_notification_title">Get %s now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
   <string name="FIATpromotion_update_popup_title">Update Aptoide</string>
-  <string name="FIATpromotion_over_title">This promotion is over!</string>
-  <string name="FIATpromotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
+  <string name="FIATpromotion_over_title">You missed it!</string>
+  <string name="FIATpromotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
+  <string name="video_reward_title">Video Reward</string>
+  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
+  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">PLAY</string>
+  <string name="install_to_get_body">Install to get %s</string>
+  <string name="promotion_claim_button">CLAIM</string>
+
 
   <!--Get Wallet Address-->
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>

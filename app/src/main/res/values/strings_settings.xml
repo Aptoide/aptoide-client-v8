@@ -65,6 +65,7 @@
   <string name="setting_sdk_version">SDK version</string>
   <string name="setting_screen_size">Screen size</string>
   <string name="setting_esgl_version">ESGL version</string>
+  <string name="setting_density">Density</string>
   <string name="screenCode">Screen code</string>
   <string name="cpuAbi">CPU</string>
 

@@ -40,6 +40,7 @@ import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
+import cm.aptoide.analytics.implementation.loggers.UXCamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
@@ -1406,6 +1407,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RakamEventLogger(logger);
   }
 
+  @Singleton @Provides @Named("uxCamEventLogger") EventLogger providesUXCamEventLogger(
+      AnalyticsLogger logger) {
+    return new UXCamEventLogger(logger);
+  }
+
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
       @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
@@ -1465,13 +1471,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
-      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
+      @Named("rakamEvents") Collection<String> rakamEvents,
+      @Named("uxCamEventLogger") EventLogger uxCamEventLogger,
+      @Named("uxCamEvents") Collection<String> uxCamEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
+        .addLogger(uxCamEventLogger, uxCamEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
@@ -1487,6 +1496,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME);
+  }
+
+  @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1771,8 +1788,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList("apps", "catappult");
   }
 
-  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
-    return new AptoideApplicationAnalytics();
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new AptoideApplicationAnalytics(analyticsManager);
   }
 
   @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
@@ -1831,7 +1849,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
-        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME);
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
+        AptoideApplicationAnalytics.IS_ANDROID_TV);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
