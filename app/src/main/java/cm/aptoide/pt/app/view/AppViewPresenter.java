@@ -1091,7 +1091,8 @@ public class AppViewPresenter implements Presenter {
                                             .name(), status.toString()
                                             .toLowerCase(), appModel.getOriginTag(),
                                         appModel.getStore()
-                                            .getName(), false);
+                                            .getName(), appModel.getOpenType()
+                                            == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
 
                                     if (appViewManager.hasClaimablePromotion(
                                         Promotion.ClaimAction.INSTALL)) {
