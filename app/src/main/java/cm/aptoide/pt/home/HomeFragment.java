@@ -37,6 +37,7 @@ import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
@@ -195,6 +196,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     bundlesList.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     progressBar.setVisibility(View.VISIBLE);
+    Logger.getInstance().d("HomeTime", "Loading started");
   }
 
   @Override public void hideLoading() {

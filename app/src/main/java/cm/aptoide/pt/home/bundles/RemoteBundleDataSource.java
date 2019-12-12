@@ -23,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,6 +198,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
           .getList());
       boolean isComplete = isComplete(homeBundles);
       homeBundles = removeEmptyBundles(homeBundles);
+      logFirstLoad(homeBundles);
       int responseBundletotal = homeResponse.getDataList()
           .getTotal();
       total.put(key, responseBundletotal);
@@ -205,6 +207,22 @@ public class RemoteBundleDataSource implements BundleDataSource {
     }
     return Observable.error(
         new IllegalStateException("Could not obtain home bundles from server."));
+  }
+
+  private void logFirstLoad(List<HomeBundle> homeBundles) {
+    int loadCount = 0;
+    for (HomeBundle bundle : homeBundles) {
+      if (bundle.getContent() != null) {
+        loadCount++;
+      }
+      if (loadCount > 1) {
+        return;
+      }
+    }
+    if (loadCount == 1) {
+      Logger.getInstance()
+          .d("HomeTime", "First bundle loaded");
+    }
   }
 
   private boolean isComplete(List<HomeBundle> homeBundles) {
