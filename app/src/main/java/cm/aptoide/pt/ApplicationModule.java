@@ -1310,8 +1310,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
-  @Singleton @Provides Service providesAutoUpdateService(
-      @Named("retrofit-auto-update") Retrofit retrofit) {
+  @Singleton @Provides Service providesAutoUpdateService(@Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(Service.class);
   }
 
