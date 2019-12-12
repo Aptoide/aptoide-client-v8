@@ -43,7 +43,7 @@ class AnimatedImageView : ImageView {
     }
   }
 
-  fun playReverse(){
+  fun playReverse() {
     reverse?.let { anim ->
       setImageDrawable(anim as Drawable)
       if (isAnimationsEnabled) anim.start()

@@ -22,6 +22,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -188,6 +189,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
+  @Inject ApkfyExperiment apkfyExperiment;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -291,6 +293,7 @@ public abstract class AptoideApplication extends Application {
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
+        .andThen(checkApkfyUserProperty())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
@@ -344,6 +347,10 @@ public abstract class AptoideApplication extends Application {
 
   private Completable checkAdsUserProperty() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
+  }
+
+  private Completable checkApkfyUserProperty() {
+    return Completable.fromAction(() -> apkfyExperiment.setSuperProperties());
   }
 
   private Completable setUpFirstRunAnalytics() {

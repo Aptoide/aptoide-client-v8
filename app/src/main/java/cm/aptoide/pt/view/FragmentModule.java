@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -364,12 +365,12 @@ import rx.subscriptions.CompositeSubscription;
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
       PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
-      ExternalNavigator externalNavigator) {
+      ExternalNavigator externalNavigator, ApkfyExperiment apkfyExperiment) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), promotionsNavigator, similarAppsExperiment,
-        externalNavigator);
+        externalNavigator, apkfyExperiment);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {

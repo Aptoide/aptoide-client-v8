@@ -1912,8 +1912,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       dialogLayout.findViewById(R.id.positive_button)
           .setOnClickListener(listener -> {
             subscriber.onNext(GenericDialogs.EResponse.YES);
-            subscriber.onCompleted();
             apkfyDialogConfirmSubject.onNext(appName);
+            subscriber.onCompleted();
+            dialog.dismiss();
           });
       dialogLayout.findViewById(R.id.negative_button)
 

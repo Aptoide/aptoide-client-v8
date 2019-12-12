@@ -265,15 +265,6 @@ import rx.functions.Action0;
     }
   }
 
-  private void showBypassWifiMessage(long size,
-      SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericOkCancelMessageWithColorButton(this, "",
-        getString(R.string.general_downloads_dialog_only_wifi_message),
-        getString(R.string.general_downloads_dialog_only_wifi_install_button,
-            AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
-        .subscribe(subscriber);
-  }
-
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void hasDownloadAccess(@Nullable Action0 accessGranted, @Nullable Action0 accessDenied) {
     int externalStoragePermission =
@@ -291,6 +282,15 @@ import rx.functions.Action0;
     if (accessDenied != null) {
       accessDenied.call();
     }
+  }
+
+  private void showBypassWifiMessage(long size,
+      SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
+    GenericDialogs.createGenericOkCancelMessageWithColorButton(this, "",
+        getString(R.string.general_downloads_dialog_only_wifi_message),
+        getString(R.string.general_downloads_dialog_only_wifi_install_button,
+            AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
+        .subscribe(subscriber);
   }
 
   private void showMessageOKCancel(@StringRes int messageId,

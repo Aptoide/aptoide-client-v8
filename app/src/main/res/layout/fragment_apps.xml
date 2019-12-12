@@ -21,9 +21,10 @@
         >
 
       <com.airbnb.epoxy.EpoxyRecyclerView
-        android:id="@+id/fragment_apps_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+          android:id="@+id/fragment_apps_recycler_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          />
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

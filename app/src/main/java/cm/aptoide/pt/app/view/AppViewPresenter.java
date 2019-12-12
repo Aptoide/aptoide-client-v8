@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -66,6 +67,7 @@ public class AppViewPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private final SimilarAppsExperiment similarAppsExperiment;
+  private final ApkfyExperiment apkfyExperiment;
   private final ExternalNavigator externalNavigator;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
@@ -74,7 +76,7 @@ public class AppViewPresenter implements Presenter {
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
       PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
-      ExternalNavigator externalNavigator) {
+      ExternalNavigator externalNavigator, ApkfyExperiment apkfyExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -89,6 +91,7 @@ public class AppViewPresenter implements Presenter {
     this.promotionsNavigator = promotionsNavigator;
     this.similarAppsExperiment = similarAppsExperiment;
     this.externalNavigator = externalNavigator;
+    this.apkfyExperiment = apkfyExperiment;
   }
 
   @Override public void present() {
@@ -212,6 +215,7 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
+        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP, appViewModel.getAppModel()
         .isMature(), appViewModel.getAppModel()
         .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
         .isMature()))
@@ -222,8 +226,11 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
-    return appViewManager.shouldLoadInterstitialAd(packageName)
+  private Observable<Boolean> loadInterstitialAds(boolean isFromApkfy, boolean isMature,
+      String packageName) {
+    return shouldLoadInterstitialAdFromApky(isFromApkfy).filter(shouldLoad -> shouldLoad)
+        .toSingle()
+        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd(packageName))
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
@@ -234,6 +241,19 @@ public class AppViewPresenter implements Presenter {
         })
         .onErrorReturn(__ -> null)
         .toObservable();
+  }
+
+  private Observable<Boolean> shouldLoadInterstitialAdFromApky(boolean isFromApky) {
+    return Observable.just(isFromApky)
+        .flatMap(__ -> {
+          if (!isFromApky) {
+            return Observable.just(true);
+          }
+          return apkfyExperiment.shouldShowApkfyInterstital()
+              .flatMap(shouldShow -> apkfyExperiment.recordImpression()
+                  .toSingle(() -> shouldShow))
+              .toObservable();
+        });
   }
 
   private Observable<Boolean> loadBannerAds(boolean isMature) {
@@ -275,16 +295,18 @@ public class AppViewPresenter implements Presenter {
     return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
         shouldDownload -> shouldDownload)
         .flatMapCompletable(__ -> appViewManager.getAdsVisibilityStatus()
-            .flatMapCompletable(status -> downloadApp(action, appModel, status).doOnCompleted(
-                () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
-                    appModel.getDeveloper()
-                        .getName(), action.toString(), appModel.hasSplits(), appModel.hasBilling(),
-                    action.equals(DownloadModel.Action.MIGRATE), appModel.getMalware()
-                        .getRank()
-                        .name(), status.toString()
-                        .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
-                        .getName()))
-                .onErrorComplete()))
+            .doOnSuccess(status -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+                appModel.getDeveloper()
+                    .getName(), action.toString(), appModel.hasSplits(), appModel.hasBilling(),
+                action.equals(DownloadModel.Action.MIGRATE), appModel.getMalware()
+                    .getRank()
+                    .name(), status.toString()
+                    .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
+                    .getName(),
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+            .flatMapCompletable(status -> downloadApp(action, appModel, status,
+                appModel.getOpenType()
+                    == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -1016,7 +1038,8 @@ public class AppViewPresenter implements Presenter {
                 .getAction(), app.getAppModel()
                 .getMalware()
                 .getRank()
-                .toString())
+                .toString(), app.getAppModel()
+                .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1052,30 +1075,31 @@ public class AppViewPresenter implements Presenter {
                 case UPDATE:
                   completable = appViewManager.getAppModel()
                       .flatMapCompletable(appModel -> appViewManager.getAdsVisibilityStatus()
-                          .flatMapCompletable(
-                              status -> downloadApp(action, appModel, status).observeOn(
-                                  viewScheduler)
-                                  .doOnCompleted(() -> {
-                                    String conversionUrl = appModel.getCampaignUrl();
-                                    if (!conversionUrl.isEmpty()) {
-                                      campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
-                                          appModel.getPackageName(), appModel.getVersionCode());
-                                    }
-                                    appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
-                                        appModel.getDeveloper()
-                                            .getName(), action.toString(), appModel.hasSplits(),
-                                        appModel.hasBilling(), false, appModel.getMalware()
-                                            .getRank()
-                                            .name(), status.toString()
-                                            .toLowerCase(), appModel.getOriginTag(),
-                                        appModel.getStore()
-                                            .getName());
+                          .flatMapCompletable(status -> downloadApp(action, appModel, status,
+                              appModel.getOpenType()
+                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).observeOn(
+                              viewScheduler)
+                              .doOnCompleted(() -> {
+                                String conversionUrl = appModel.getCampaignUrl();
+                                if (!conversionUrl.isEmpty()) {
+                                  campaignAnalytics.sendCampaignConversionEvent(conversionUrl,
+                                      appModel.getPackageName(), appModel.getVersionCode());
+                                }
+                                appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+                                    appModel.getDeveloper()
+                                        .getName(), action.toString(), appModel.hasSplits(),
+                                    appModel.hasBilling(), false, appModel.getMalware()
+                                        .getRank()
+                                        .name(), status.toString()
+                                        .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
+                                        .getName(), appModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
 
-                                    if (appViewManager.hasClaimablePromotion(
-                                        Promotion.ClaimAction.INSTALL)) {
-                                      appViewAnalytics.sendInstallPromotionApp();
-                                    }
-                                  })));
+                                if (appViewManager.hasClaimablePromotion(
+                                    Promotion.ClaimAction.INSTALL)) {
+                                  appViewAnalytics.sendInstallPromotionApp();
+                                }
+                              })));
                   break;
                 case OPEN:
                   completable = appViewManager.getAppModel()
@@ -1088,17 +1112,23 @@ public class AppViewPresenter implements Presenter {
                       .flatMapCompletable(
                           appViewViewModel -> appViewManager.getAdsVisibilityStatus()
                               .observeOn(viewScheduler)
-                              .flatMapCompletable(status -> downgradeApp(action, appViewViewModel,
-                                  status).doOnCompleted(() -> appViewAnalytics.clickOnInstallButton(
-                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
-                                      .getName(), action.toString(), appViewViewModel.hasSplits(),
-                                  appViewViewModel.hasBilling(), false,
-                                  appViewViewModel.getMalware()
-                                      .getRank()
-                                      .name(), status.toString()
-                                      .toLowerCase(), appViewViewModel.getOriginTag(),
-                                  appViewViewModel.getStore()
-                                      .getName()))));
+                              .flatMapCompletable(
+                                  status -> downgradeApp(action, appViewViewModel, status,
+                                      appViewViewModel.getOpenType()
+                                          == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnCompleted(
+                                      () -> appViewAnalytics.clickOnInstallButton(
+                                          appViewViewModel.getPackageName(),
+                                          appViewViewModel.getDeveloper()
+                                              .getName(), action.toString(),
+                                          appViewViewModel.hasSplits(),
+                                          appViewViewModel.hasBilling(), false,
+                                          appViewViewModel.getMalware()
+                                              .getRank()
+                                              .name(), status.toString()
+                                              .toLowerCase(), appViewViewModel.getOriginTag(),
+                                          appViewViewModel.getStore()
+                                              .getName(), appViewViewModel.getOpenType()
+                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
@@ -1120,8 +1150,11 @@ public class AppViewPresenter implements Presenter {
                                         .name(), status.toString()
                                         .toLowerCase(), appViewViewModel.getOriginTag(),
                                     appViewViewModel.getStore()
-                                        .getName());
-                                return migrateApp(action, appViewViewModel, status);
+                                        .getName(), appViewViewModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                return migrateApp(action, appViewViewModel, status,
+                                    appViewViewModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
                               }));
                   break;
                 default:
@@ -1140,17 +1173,17 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable downgradeApp(DownloadModel.Action action, AppModel appModel,
-      WalletAdsOfferManager.OfferResponseStatus status) {
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action, appModel, status))
+        .flatMapCompletable(__ -> downloadApp(action, appModel, status, isApkfy))
         .toCompletable();
   }
 
   private Completable migrateApp(DownloadModel.Action action, AppModel appModel,
-      WalletAdsOfferManager.OfferResponseStatus status) {
-    return downloadApp(action, appModel, status);
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
+    return downloadApp(action, appModel, status, false);
   }
 
   private Completable openInstalledApp(String packageName) {
@@ -1158,7 +1191,7 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Completable downloadApp(DownloadModel.Action action, AppModel appModel,
-      WalletAdsOfferManager.OfferResponseStatus status) {
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -1176,7 +1209,7 @@ public class AppViewPresenter implements Presenter {
             .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appModel.getAppId(),
                 appModel.getMalware()
                     .getRank()
-                    .name(), appModel.getEditorsChoice(), status)))
+                    .name(), appModel.getEditorsChoice(), status, isApkfy)))
         .toCompletable();
   }
 
@@ -1262,7 +1295,7 @@ public class AppViewPresenter implements Presenter {
                 walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
                     .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
                         walletApp.getId(), walletApp.getDownloadModel()
-                            .getAction(), walletApp.getTrustedBadge()))
+                            .getAction(), walletApp.getTrustedBadge(), false))
                     .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

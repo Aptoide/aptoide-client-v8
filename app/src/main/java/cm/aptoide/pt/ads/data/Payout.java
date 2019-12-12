@@ -60,8 +60,8 @@ import org.parceler.Parcel;
     if (o == null || getClass() != o.getClass()) return false;
     Payout payout = (Payout) o;
     return Double.compare(payout.appcAmount, appcAmount) == 0
-        && Double.compare(payout.fiatAmount, fiatAmount) == 0 && fiatCurrency.equals(
-        payout.fiatCurrency)
+        && Double.compare(payout.fiatAmount, fiatAmount) == 0
+        && fiatCurrency.equals(payout.fiatCurrency)
         && fiatSymbol.equals(payout.fiatSymbol);
   }
 }

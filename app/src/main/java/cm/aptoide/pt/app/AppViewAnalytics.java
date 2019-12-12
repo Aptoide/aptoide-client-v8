@@ -39,6 +39,8 @@ public class AppViewAnalytics {
       "asv_2053_similar_apps_converting";
   public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
       "asv_2053_similar_apps_participating";
+  public static final String ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME =
+      "asv_2119_apkfy_ads_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -52,6 +54,7 @@ public class AppViewAnalytics {
   private static final String IMPRESSION = "impression";
   private static final String TAP_ON_APP = "tap_on_app";
   private static final String APP_BUNDLE = "app_bundle";
+  private static final String IS_APKFY = "apkfy_app_install";
   private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
@@ -274,7 +277,7 @@ public class AppViewAnalytics {
 
   public void clickOnInstallButton(String packageName, String developerName, String type,
       boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
-      String origin, String store) {
+      String origin, String store, boolean isApkfy) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
@@ -282,9 +285,10 @@ public class AppViewAnalytics {
     map.put(APPLICATION_PUBLISHER, developerName);
     map.put(APP_BUNDLE, hasSplits);
     map.put(CONTEXT, context);
+    map.put(IS_APKFY, isApkfy);
 
     installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
-        rank, adsBlocked, origin, store);
+        rank, adsBlocked, origin, store, isApkfy);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
@@ -301,19 +305,19 @@ public class AppViewAnalytics {
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      String storeName) {
+      String storeName, boolean isApkfy) {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName);
+          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, true);
+          DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName);
+          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, false);
+          DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }
   }
 
@@ -519,12 +523,19 @@ public class AppViewAnalytics {
   }
 
   @NotNull private HashMap<String, Object> getSimilarABTestData(boolean isControlGroup) {
+    return getABTestMap(isControlGroup ? "control" : "appc_bundle");
+  }
+
+  public void sendApkfyABTestImpressionEvent(String assignment) {
     HashMap<String, Object> data = new HashMap<>();
-    if (isControlGroup) {
-      data.put("group", "control");
-    } else {
-      data.put("group", "appc_bundle");
-    }
+    data.put("group", assignment);
+    analyticsManager.logEvent(data, ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
+        AnalyticsManager.Action.IMPRESSION, navigationTracker.getViewName(true));
+  }
+
+  private HashMap<String, Object> getABTestMap(String assignment) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("group", assignment);
     return data;
   }
 }

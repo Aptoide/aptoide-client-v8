@@ -482,6 +482,24 @@ public class GetAdsResponse {
       return other instanceof Info;
     }
 
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final long $adId = this.getAdId();
+      result = result * PRIME + (int) ($adId >>> 32 ^ $adId);
+      final Object $adType = this.getAdType();
+      result = result * PRIME + ($adType == null ? 43 : $adType.hashCode());
+      final Object $cpcUrl = this.getCpcUrl();
+      result = result * PRIME + ($cpcUrl == null ? 43 : $cpcUrl.hashCode());
+      final Object $cpiUrl = this.getCpiUrl();
+      result = result * PRIME + ($cpiUrl == null ? 43 : $cpiUrl.hashCode());
+      final Object $cpdUrl = this.getCpdUrl();
+      result = result * PRIME + ($cpdUrl == null ? 43 : $cpdUrl.hashCode());
+      final Object $payout = this.getPayout();
+      result = result * PRIME + ($payout == null ? 43 : $payout.hashCode());
+      return result;
+    }
+
     public boolean equals(Object o) {
       if (o == this) return true;
       if (!(o instanceof Info)) return false;
@@ -516,24 +534,6 @@ public class GetAdsResponse {
       return true;
     }
 
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final long $adId = this.getAdId();
-      result = result * PRIME + (int) ($adId >>> 32 ^ $adId);
-      final Object $adType = this.getAdType();
-      result = result * PRIME + ($adType == null ? 43 : $adType.hashCode());
-      final Object $cpcUrl = this.getCpcUrl();
-      result = result * PRIME + ($cpcUrl == null ? 43 : $cpcUrl.hashCode());
-      final Object $cpiUrl = this.getCpiUrl();
-      result = result * PRIME + ($cpiUrl == null ? 43 : $cpiUrl.hashCode());
-      final Object $cpdUrl = this.getCpdUrl();
-      result = result * PRIME + ($cpdUrl == null ? 43 : $cpdUrl.hashCode());
-      final Object $payout = this.getPayout();
-      result = result * PRIME + ($payout == null ? 43 : $payout.hashCode());
-      return result;
-    }
-
     public String toString() {
       return "GetAdsResponse.Info(adId="
           + this.getAdId()
@@ -544,9 +544,7 @@ public class GetAdsResponse {
           + ", cpiUrl="
           + this.getCpiUrl()
           + ", cpdUrl="
-          + this.getCpdUrl()
-          + ", payout="
-          + this.payout.toString()
+          + this.getCpdUrl() + ", payout=" + this.payout.toString()
           + ")";
     }
 

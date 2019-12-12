@@ -54,6 +54,7 @@ import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -1493,7 +1494,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         InstallAnalytics.RAKAM_INSTALL_EVENT,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK);
+        SearchAnalytics.SEARCH_RESULT_CLICK,
+        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
@@ -1977,6 +1979,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
       @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
     return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
+  }
+
+  @Singleton @Provides ApkfyExperiment providesApkfyExperiment(
+      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ApkfyExperiment(abTestManager, appViewAnalytics, sharedPreferences);
   }
 
   @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
