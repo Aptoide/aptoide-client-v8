@@ -249,7 +249,7 @@ public class AppViewManager {
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
                     .getAction(), walletApp.getId(), offerResponseStatus, walletApp.getStoreName(),
-                walletApp.getTrustedBadge()))
+                walletApp.getTrustedBadge(), false))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -257,9 +257,9 @@ public class AppViewManager {
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
-      String trustedBadge) {
+      String trustedBadge, boolean isApkfy) {
     setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
-        storeName, false);
+        storeName, isApkfy);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
@@ -298,11 +298,11 @@ public class AppViewManager {
   }
 
   public Completable resumeDownload(String md5, long appId, DownloadModel.Action action,
-      String trustedBadge) {
+      String trustedBadge, boolean isApkfy) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
-                offerResponseStatus, download.getStoreName(), trustedBadge))
+                offerResponseStatus, download.getStoreName(), trustedBadge, isApkfy))
             .map(__ -> download))
         .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
