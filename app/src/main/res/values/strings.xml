@@ -583,21 +583,18 @@
   <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
   <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
   <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
-  <string name="FIATpromotion_button_install">Install to get %s</string>
-  <string name="FIATpromotion_button_update">Update to get %s</string>
-  <string name="FIATpromotion_button_claim">Claim %s</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
   <string name="FIATpromotion_button_claimed">Claimed</string>
   <string name="FIATpromotion_title_error_claimed">Oops…</string>
   <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
-  <string name="FIATpromotion_button_popup">Check it out!</string>
-  <string name="FIATpromotion_notification_title">Get %s now!</string>
+  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
   <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
   <string name="video_reward_title">Video Reward</string>
   <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
   <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
   <string name="video_reward_play_button">PLAY</string>
-  <string name="install_to_get_body">Install to get %s</string>
   <string name="promotion_claim_button">CLAIM</string>
 
 
@@ -646,6 +643,9 @@
   <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
   <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
   <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
+  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
+  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
 
   <!--APPC install Promotion-->
