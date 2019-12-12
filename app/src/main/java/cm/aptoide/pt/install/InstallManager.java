@@ -7,7 +7,6 @@ package cm.aptoide.pt.install;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
@@ -20,7 +19,6 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -236,7 +234,6 @@ public class InstallManager {
         .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
             shouldInstall))
-        .first()
         .toCompletable();
   }
 
@@ -455,14 +452,13 @@ public class InstallManager {
     });
   }
 
-  private Observable<Void> installInBackground(String md5, boolean forceDefaultInstall,
+  private Observable<String> installInBackground(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
-    return waitBackgroundInstallationResult(md5).startWith(
-        startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
-            shouldInstall));
+    return startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
+        shouldInstall);
   }
 
-  private Observable<Void> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
+  private Observable<String> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
     if (shouldInstall) {
       waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
@@ -487,20 +483,11 @@ public class InstallManager {
             return aptoideDownloadManager.startDownload(download);
           }
         })
-        .map(__ -> null);
+        .map(__ -> md5);
   }
 
   private void startInstallService() {
     foregroundManager.startDownloadForeground();
-  }
-
-  private Observable<Void> waitBackgroundInstallationResult(String md5) {
-    return Observable.create(
-        new BroadcastRegisterOnSubscribe(context, new IntentFilter(ACTION_INSTALL_FINISHED), null,
-            null))
-        .filter(intent -> intent != null && ACTION_INSTALL_FINISHED.equals(intent.getAction()))
-        .first(intent -> md5.equals(intent.getStringExtra(EXTRA_INSTALLATION_MD5)))
-        .map(intent -> null);
   }
 
   private void initInstallationProgress(Download download) {
