@@ -308,8 +308,13 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
-    variant.buildConfigField "String", "UXCAM_API_KEY",
-        "\"" + project.UXCAM_API_KEY + "\""
+    if (flavors[1].name.contains('prod') && type == 'release') {
+      variant.buildConfigField "String", "UXCAM_API_KEY",
+          "\"" + project.UXCAM_API_KEY + "\""
+    } else {
+      variant.buildConfigField "String", "UXCAM_API_KEY",
+          "\"" + project.UXCAM_API_KEY_DEBUG + "\""
+    }
 
     variant.outputs.all { output ->
       def SEP = "_"

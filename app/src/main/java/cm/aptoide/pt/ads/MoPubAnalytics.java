@@ -32,14 +32,12 @@ public class MoPubAnalytics {
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty(ADS_STATUS_USER_PROPERTY, ads);
 
+    String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
     if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
       Rakam.getInstance()
-          .setSuperProperties(createRakamAdsSuperProperties(rakamAds));
-      if (!BuildConfig.DEBUG) {
-        UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, rakamAds);
-      }
+          .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
     }
+    UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, adsStatusByRakamValue);
   }
 
   private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {

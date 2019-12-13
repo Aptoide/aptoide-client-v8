@@ -360,10 +360,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeUXCam() {
-    if (BuildConfig.FLAVOR_mode.equals("dev") && !BuildConfig.DEBUG) {
-      UXCam.startWithKey(BuildConfig.UXCAM_API_KEY);
-    }
-    return Completable.complete();
+    return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
   }
 
   private void initializeRakam() {
