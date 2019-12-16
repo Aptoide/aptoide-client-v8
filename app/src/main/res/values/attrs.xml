@@ -90,6 +90,25 @@
   <attr format="reference|color" name="appviewRatingCardTextColor"/>
   <attr format="reference|color" name="textColorBlackAlpha"/>
 
+  <attr name="textColorWhite" format="reference|color" />
+  <attr name="textColorGreyFogDark" format="reference|color" />
+  <attr name="textColorGrey700" format="reference|color" />
+  <attr name="textColorGreyMedium" format="reference|color" />
+  <attr name="textColorGreyFogNormal" format="reference|color" />
+  <attr name="textColorGrey" format="reference|color" />
+  <attr name="textColorGrey900" format="reference|color" />
+  <attr name="textColorRed700" format="reference|color" />
+  <attr name="textColorOrange" format="reference|color" />
+  <attr name="textColorOrangeGradientEnd" format="reference|color" />
+  <attr name="textColorCurationGold" format="reference|color" />
+  <attr name="textColorAppcOrange" format="reference|color" />
+  <attr name="textColorSpendAppc" format="reference|color" />
+  <attr name="textColorAppcColor" format="reference|color" />
+  <attr name="textColorTwitter" format="reference|color" />
+  <attr name="textColorTwitch" format="reference|color" />
+  <attr name="textColorYoutube" format="reference|color" />
+  <attr name="textColorFacebook" format="reference|color" />
+
   <!--New styles attributes-->
   <attr format="reference" name="raisedButtonBackground"/>
   <attr format="reference" name="ghostButtonBackground"/>
