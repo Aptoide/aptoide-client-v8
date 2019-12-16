@@ -1072,10 +1072,10 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> accountManager.accountStatus())
         .first()
-        .doOnNext(__ -> Logger.getInstance()
-            .d("DownloadsTimeTest", "Clicked on Install Button"))
         .observeOn(viewScheduler)
         .flatMap(account -> view.installAppClick()
+            .doOnNext(__ -> Logger.getInstance()
+                .d("DownloadsTimeTest", "Clicked on Install Button"))
             .flatMapCompletable(action -> {
               Completable completable = null;
               switch (action) {
