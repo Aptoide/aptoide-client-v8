@@ -46,6 +46,8 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override
   protected void paused(BaseDownloadTask baseDownloadTask, long soFarBytes, long totalBytes) {
+    Logger.getInstance()
+        .d("DownloadsTimeTest", "Paused download progress");
     downloadStatus.onNext(new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.PAUSED,
         new FileDownloadProgressResult(soFarBytes, totalBytes), md5));
   }

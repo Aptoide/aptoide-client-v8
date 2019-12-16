@@ -111,7 +111,9 @@ public class InstallManager {
   }
 
   public Completable cancelInstall(String md5, String packageName, int versionCode) {
-    return pauseInstall(md5).andThen(installedRepository.remove(packageName, versionCode))
+    return pauseInstall(md5).doOnCompleted(() -> Logger.getInstance()
+        .d("DownloadsTimeTest", "canceled download progress"))
+        .andThen(installedRepository.remove(packageName, versionCode))
         .andThen(aptoideDownloadManager.removeDownload(md5))
         .doOnError(throwable -> throwable.printStackTrace());
   }

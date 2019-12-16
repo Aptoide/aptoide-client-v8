@@ -23,6 +23,7 @@ public class AppDownloadManager implements AppDownloader {
   private AppDownloadStatus appDownloadStatus;
   private Subscription subscribe;
   private DownloadAnalytics downloadAnalytics;
+  private boolean receivedProgress;
 
   public AppDownloadManager(RetryFileDownloaderProvider fileDownloaderProvider, DownloadApp app,
       HashMap<String, RetryFileDownloader> fileDownloaderPersistence,
@@ -45,6 +46,9 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public Completable pauseAppDownload() {
     return Observable.from(app.getDownloadFiles())
+        .doOnNext(__ -> {
+          receivedProgress = false;
+        })
         .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
         .filter(retryFileDownloader -> retryFileDownloader != null)
         .flatMapCompletable(fileDownloader -> fileDownloader.pauseDownload()
@@ -66,7 +70,15 @@ public class AppDownloadManager implements AppDownloader {
       return Observable.just(appDownloadStatus);
     })
         .doOnError(throwable -> throwable.printStackTrace())
-        .map(__ -> appDownloadStatus);
+        .map(__ -> appDownloadStatus)
+        .doOnNext(appDownloadStatus1 -> {
+          if (appDownloadStatus.getDownloadStatus() == AppDownloadStatus.AppDownloadState.PROGRESS
+              && !receivedProgress) {
+            Logger.getInstance()
+                .d("DownloadsTimeTest", "Progress started");
+            receivedProgress = true;
+          }
+        });
   }
 
   public void stop() {

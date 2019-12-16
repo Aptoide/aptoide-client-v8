@@ -1013,6 +1013,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelDownload()
+            .doOnNext(__ -> Logger.getInstance()
+                .d("DownloadsTimeTest", "Pressed the cancel download button"))
             .flatMapSingle(__ -> appViewManager.getAppModel())
             .doOnNext(app -> appViewAnalytics.sendDownloadCancelEvent(app.getPackageName()))
             .flatMapCompletable(
@@ -1029,6 +1031,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
+            .doOnNext(__ -> Logger.getInstance()
+                .d("DownloadsTimeTest", "Pressed resume download"))
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .flatMapSingle(__1 -> appViewManager.getAppViewModel())
@@ -1051,6 +1055,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.pauseDownload()
+            .doOnNext(__ -> Logger.getInstance()
+                .d("DownloadsTimeTest", "Pressed pause download button"))
             .flatMapSingle(__ -> appViewManager.getAppModel())
             .doOnNext(app -> appViewAnalytics.sendDownloadPauseEvent(app.getPackageName()))
             .flatMapCompletable(app -> appViewManager.pauseDownload(app.getMd5()))
@@ -1066,6 +1072,8 @@ public class AppViewPresenter implements Presenter {
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> accountManager.accountStatus())
         .first()
+        .doOnNext(__ -> Logger.getInstance()
+            .d("DownloadsTimeTest", "Clicked on Install Button"))
         .observeOn(viewScheduler)
         .flatMap(account -> view.installAppClick()
             .flatMapCompletable(action -> {

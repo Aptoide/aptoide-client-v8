@@ -302,6 +302,8 @@ public class AptoideDownloadManager implements DownloadManager {
           }
         })
         .filter(download -> download.getOverallDownloadStatus() == Download.WAITING_TO_MOVE_FILES)
+        .doOnNext(__ -> Logger.getInstance()
+            .d("DownloadsTimeTest", "Download completed, progress finished."))
         .doOnNext(download -> downloadAnalytics.onDownloadComplete(download.getMd5(),
             download.getPackageName(), download.getVersionCode()))
         .doOnNext(download -> removeAppDownloader(download.getMd5()))
