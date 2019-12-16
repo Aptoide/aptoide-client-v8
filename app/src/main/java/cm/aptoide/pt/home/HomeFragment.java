@@ -5,18 +5,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
@@ -27,11 +26,23 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.bundles.BundlesAdapter;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
+import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
+import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -295,7 +306,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   @Override public Observable<HomeEvent> infoBundleKnowMoreClicked() {
     return this.uiEventsListener.filter(homeEvent -> homeEvent.getType()
-        .equals(HomeEvent.Type.KNOW_MORE));
+        .equals(HomeEvent.Type.APPC_KNOW_MORE));
   }
 
   @Override public Observable<EditorialHomeEvent> reactionsButtonClicked() {
@@ -333,10 +344,10 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void setAdsTest(boolean showNatives) {
-    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), uiEventsListener,
-        oneDecimalFormatter, marketName,
+    adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
+        oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives), captionBackgroundPainter);
+            marketName, showNatives), captionBackgroundPainter, marketName);
     bundlesList.setAdapter(adapter);
   }
 
@@ -394,6 +405,24 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
         .show();
   }
 
+  @Override public void showLoadMoreError() {
+    adapter.showLoadMoreError();
+  }
+
+  @Override public void removeLoadMoreError() {
+    adapter.removeLoadMoreError();
+  }
+
+  @Override public Observable<HomeEvent> onLoadMoreRetryClicked() {
+    return uiEventsListener.filter(homeEvent -> homeEvent.getType()
+        .equals(HomeEvent.Type.LOAD_MORE_RETRY));
+  }
+
+  @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
+    hideLoading();
+    adapter.update(homeBundles.getList());
+  }
+
   @Override public boolean isAtTop() {
     LinearLayoutManager layoutManager = ((LinearLayoutManager) bundlesList.getLayoutManager());
     return layoutManager.findFirstVisibleItemPosition() == 0;
@@ -401,7 +430,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
 
   private boolean isEndReached() {
     return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition()
-        <= VISIBLE_THRESHOLD;
+        <= VISIBLE_THRESHOLD && adapter.isLoaded();
   }
 
   private EditorialBundleViewHolder getViewHolderForAdapterPosition(int placeHolderPosition) {

@@ -9,7 +9,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
-import cm.aptoide.pt.billing.view.login.PaymentLoginFragment;
+import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -17,7 +17,8 @@ import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
-import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.promotions.ClaimPromotionDialogFragment;
 import cm.aptoide.pt.promotions.PromotionsFragment;
@@ -93,8 +94,6 @@ public interface FragmentComponent {
 
   void inject(WizardFragment wizardFragment);
 
-  void inject(PaymentLoginFragment paymentLoginFragment);
-
   void inject(AppCoinsInfoFragment appCoinsInfoFragment);
 
   void inject(EditorialFragment editorialFragment);
@@ -121,5 +120,9 @@ public interface FragmentComponent {
 
   void inject(EditorialListFragment editorialListFragment);
 
-  void inject(SeeMoreAppcFragment seeMoreAppcFragment);
+  void inject(EarnAppcListFragment earnAppcListFragment);
+
+  void inject(ListAppsMoreFragment listAppsMoreFragment);
+
+  void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
 }

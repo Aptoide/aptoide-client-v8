@@ -4,11 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.annotation.LayoutRes;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import androidx.annotation.LayoutRes;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HorizontalHeaderItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -73,15 +73,15 @@ public class HorizontalHeaderItemDecoration extends RecyclerView.ItemDecoration 
     c.restore();
   }
 
-  private float getPercentage(float minimum, float maximum, float actualValue) {
-    return (actualValue - minimum) / (maximum - minimum);
-  }
-
   @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
       RecyclerView.State state) {
     outRect.set(margin, margin, 0, margin);
     if (parent.getChildAdapterPosition(view) == 0) {
       outRect.left = headerSize;
     }
+  }
+
+  private float getPercentage(float minimum, float maximum, float actualValue) {
+    return (actualValue - minimum) / (maximum - minimum);
   }
 }

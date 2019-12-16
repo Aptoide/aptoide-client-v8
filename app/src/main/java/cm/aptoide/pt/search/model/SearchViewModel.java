@@ -7,7 +7,8 @@ import org.parceler.Parcel;
 
 @SuppressWarnings("WeakerAccess") @Parcel public class SearchViewModel
     implements SearchResultView.Model {
-  String currentQuery;
+
+  SearchQueryModel searchQueryModel;
   String storeName;
   boolean onlyTrustedApps;
   boolean allStoresSelected;
@@ -31,12 +32,13 @@ import org.parceler.Parcel;
     this.followedStoresSearchAdResults = new LinkedList<>();
   }
 
-  public SearchViewModel(String currentQuery, String storeName, boolean onlyTrustedApps,
-      boolean allStoresSelected, List<SearchAppResult> allStoresSearchAppResults,
+  public SearchViewModel(SearchQueryModel searchQueryModel, String storeName,
+      boolean onlyTrustedApps, boolean allStoresSelected,
+      List<SearchAppResult> allStoresSearchAppResults,
       List<SearchAdResult> allStoresSearchAdResults,
       List<SearchAppResult> followedStoresSearchAppResults,
       List<SearchAdResult> followedStoresSearchAdResults, String storeTheme) {
-    this.currentQuery = currentQuery;
+    this.searchQueryModel = searchQueryModel;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
     this.allStoresSelected = allStoresSelected;
@@ -47,13 +49,13 @@ import org.parceler.Parcel;
     this.storeTheme = storeTheme;
   }
 
-  public SearchViewModel(String currentQuery, boolean onlyTrustedApps) {
-    this(currentQuery, null, onlyTrustedApps, true, new LinkedList<>(), new LinkedList<>(),
+  public SearchViewModel(SearchQueryModel searchQueryModel, boolean onlyTrustedApps) {
+    this(searchQueryModel, null, onlyTrustedApps, true, new LinkedList<>(), new LinkedList<>(),
         new LinkedList<>(), new LinkedList<>(), "");
   }
 
-  public SearchViewModel(String currentQuery, String storeName, String storeTheme) {
-    this(currentQuery, storeName, true, true, new LinkedList<>(), new LinkedList<>(),
+  public SearchViewModel(SearchQueryModel searchQueryModel, String storeName, String storeTheme) {
+    this(searchQueryModel, storeName, true, true, new LinkedList<>(), new LinkedList<>(),
         new LinkedList<>(), new LinkedList<>(), storeTheme);
   }
 
@@ -65,8 +67,8 @@ import org.parceler.Parcel;
     return followedStoresSearchAdResults;
   }
 
-  @Override public String getCurrentQuery() {
-    return currentQuery;
+  @Override public SearchQueryModel getSearchQueryModel() {
+    return searchQueryModel;
   }
 
   @Override public String getStoreName() {

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.search.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -8,6 +8,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
@@ -65,11 +66,12 @@ import rx.Single;
         .observeOn(viewScheduler)
         .doOnNext(data -> {
           view.collapseSearchBar(true);
-          navigator.navigate(data.getQuery());
+          SearchQueryModel searchQueryModel = new SearchQueryModel(data.getQuery());
+          navigator.navigate(searchQueryModel);
           if (data.isSuggestion()) {
-            searchAnalytics.searchFromSuggestion(data.getQuery(), data.getPosition(), "");
+            searchAnalytics.searchFromSuggestion(searchQueryModel, data.getPosition());
           } else {
-            searchAnalytics.search(data.getQuery());
+            searchAnalytics.search(searchQueryModel);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

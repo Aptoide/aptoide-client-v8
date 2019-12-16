@@ -425,6 +425,7 @@ public class GetAdsResponse {
     private String cpcUrl;
     private String cpiUrl;
     private String cpdUrl;
+    private Payout payout;
 
     public Info() {
     }
@@ -469,8 +470,34 @@ public class GetAdsResponse {
       this.cpdUrl = cpdUrl;
     }
 
+    public Payout getPayout() {
+      return payout;
+    }
+
+    public void setPayout(Payout payout) {
+      this.payout = payout;
+    }
+
     protected boolean canEqual(Object other) {
       return other instanceof Info;
+    }
+
+    public int hashCode() {
+      final int PRIME = 59;
+      int result = 1;
+      final long $adId = this.getAdId();
+      result = result * PRIME + (int) ($adId >>> 32 ^ $adId);
+      final Object $adType = this.getAdType();
+      result = result * PRIME + ($adType == null ? 43 : $adType.hashCode());
+      final Object $cpcUrl = this.getCpcUrl();
+      result = result * PRIME + ($cpcUrl == null ? 43 : $cpcUrl.hashCode());
+      final Object $cpiUrl = this.getCpiUrl();
+      result = result * PRIME + ($cpiUrl == null ? 43 : $cpiUrl.hashCode());
+      final Object $cpdUrl = this.getCpdUrl();
+      result = result * PRIME + ($cpdUrl == null ? 43 : $cpdUrl.hashCode());
+      final Object $payout = this.getPayout();
+      result = result * PRIME + ($payout == null ? 43 : $payout.hashCode());
+      return result;
     }
 
     public boolean equals(Object o) {
@@ -499,23 +526,12 @@ public class GetAdsResponse {
       if (this$cpdUrl == null ? other$cpdUrl != null : !this$cpdUrl.equals(other$cpdUrl)) {
         return false;
       }
+      final Object this$payout = this.getPayout();
+      final Object other$payout = other.getPayout();
+      if (this$payout == null ? other$payout != null : !this$payout.equals(other$payout)) {
+        return false;
+      }
       return true;
-    }
-
-    public int hashCode() {
-      final int PRIME = 59;
-      int result = 1;
-      final long $adId = this.getAdId();
-      result = result * PRIME + (int) ($adId >>> 32 ^ $adId);
-      final Object $adType = this.getAdType();
-      result = result * PRIME + ($adType == null ? 43 : $adType.hashCode());
-      final Object $cpcUrl = this.getCpcUrl();
-      result = result * PRIME + ($cpcUrl == null ? 43 : $cpcUrl.hashCode());
-      final Object $cpiUrl = this.getCpiUrl();
-      result = result * PRIME + ($cpiUrl == null ? 43 : $cpiUrl.hashCode());
-      final Object $cpdUrl = this.getCpdUrl();
-      result = result * PRIME + ($cpdUrl == null ? 43 : $cpdUrl.hashCode());
-      return result;
     }
 
     public String toString() {
@@ -528,8 +544,65 @@ public class GetAdsResponse {
           + ", cpiUrl="
           + this.getCpiUrl()
           + ", cpdUrl="
-          + this.getCpdUrl()
+          + this.getCpdUrl() + ", payout=" + this.payout.toString()
           + ")";
+    }
+
+    public static class Payout {
+      private double appc;
+      private Fiat fiat;
+
+      public Payout() {
+      }
+
+      public double getAppc() {
+        return appc;
+      }
+
+      public void setAppc(double appc) {
+        this.appc = appc;
+      }
+
+      public Fiat getFiat() {
+        return fiat;
+      }
+
+      public void setFiat(Fiat fiat) {
+        this.fiat = fiat;
+      }
+    }
+
+    public static class Fiat {
+      private double amount;
+      private String currency;
+      private String symbol;
+
+      public Fiat() {
+      }
+
+      public double getAmount() {
+        return amount;
+      }
+
+      public void setAmount(double amount) {
+        this.amount = amount;
+      }
+
+      public String getCurrency() {
+        return currency;
+      }
+
+      public void setCurrency(String currency) {
+        this.currency = currency;
+      }
+
+      public String getSymbol() {
+        return symbol;
+      }
+
+      public void setSymbol(String symbol) {
+        this.symbol = symbol;
+      }
     }
   }
 

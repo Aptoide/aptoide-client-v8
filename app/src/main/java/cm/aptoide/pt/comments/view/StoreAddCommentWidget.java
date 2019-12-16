@@ -1,10 +1,10 @@
 package cm.aptoide.pt.comments.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.Button;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;

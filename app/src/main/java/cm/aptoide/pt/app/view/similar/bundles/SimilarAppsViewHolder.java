@@ -3,11 +3,11 @@ package cm.aptoide.pt.app.view.similar.bundles;
 import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
@@ -52,18 +52,18 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
     });
 
     LinearLayoutManager similarLayout =
-        new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false);
 
     similarApps.setLayoutManager(similarLayout);
     SnapHelper similarSnap = new SnapToStartHelper();
     similarSnap.attachToRecyclerView(similarApps);
   }
 
-  private void setSimilarAdapter(boolean mopubAdapter) {
+  private void setSimilarAdapter(boolean loadMoPubAdapter, boolean isFromMatureApp) {
     this.adapter =
         new AppViewSimilarAppsAdapter(Collections.emptyList(), oneDecimalFormat, similarAppClick,
             AppViewSimilarAppsAdapter.SimilarAppType.SIMILAR_APPS);
-    if (mopubAdapter) {
+    if (loadMoPubAdapter) {
       moPubSimilarAppsRecyclerAdapter =
           new MoPubRecyclerAdapter((Activity) similarApps.getContext(), adapter);
       configureAdRenderers();
@@ -71,12 +71,20 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
 
       if (Build.VERSION.SDK_INT >= 21) {
         similarApps.setAdapter(moPubSimilarAppsRecyclerAdapter);
-        moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
+        loadAds(isFromMatureApp);
       } else {
         similarApps.setAdapter(adapter);
       }
     } else {
       similarApps.setAdapter(adapter);
+    }
+  }
+
+  private void loadAds(boolean isFromMatureApp) {
+    if (isFromMatureApp) {
+      moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_EXCLUSIVE_PLACEMENT_ID);
+    } else {
+      moPubSimilarAppsRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_APPVIEW_PLACEMENT_ID);
     }
   }
 
@@ -97,7 +105,8 @@ public class SimilarAppsViewHolder extends SimilarBundleViewHolder {
   @Override public void setBundle(SimilarAppsBundle bundle, int position) {
     if (adapter == null) {
       setSimilarAdapter(bundle.getContent()
-          .shouldLoadNativeAds());
+          .shouldLoadNativeAds(), bundle.getContent()
+          .isFromMatureApp());
     }
     adapter.update(mapToSimilar(bundle.getContent(), bundle.getContent()
         .hasAd()));

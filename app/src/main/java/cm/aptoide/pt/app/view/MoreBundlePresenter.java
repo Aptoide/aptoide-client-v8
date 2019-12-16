@@ -1,13 +1,14 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.home.AdMapper;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
-import cm.aptoide.pt.home.HomeBundlesModel;
 import cm.aptoide.pt.home.HomeNavigator;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.BundleEvent;
@@ -147,10 +148,11 @@ public class MoreBundlePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.adClicked()
-            .map(homeEvent -> homeEvent.getAdClick())
-            .map(adMapper.mapAdToSearchAd())
+            .map(AdHomeEvent::getAdClick)
+            .map(adMapper::mapAdToSearchAd)
             .observeOn(viewScheduler)
-            .doOnNext(homeNavigator::navigateToAppView)
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.getTag(),
+                result.getSearchAdResult()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

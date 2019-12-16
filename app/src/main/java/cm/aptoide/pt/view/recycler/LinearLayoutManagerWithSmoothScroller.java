@@ -7,9 +7,9 @@ package cm.aptoide.pt.view.recycler;
 
 import android.content.Context;
 import android.graphics.PointF;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created on 17/08/16.
@@ -19,7 +19,7 @@ import android.support.v7.widget.RecyclerView;
 public class LinearLayoutManagerWithSmoothScroller extends LinearLayoutManager {
 
   public LinearLayoutManagerWithSmoothScroller(Context context) {
-    super(context, VERTICAL, false);
+    super(context, RecyclerView.VERTICAL, false);
   }
 
   public LinearLayoutManagerWithSmoothScroller(Context context, int orientation,

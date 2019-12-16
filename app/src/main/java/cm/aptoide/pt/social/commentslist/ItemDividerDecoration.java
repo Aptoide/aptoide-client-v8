@@ -1,10 +1,10 @@
 package cm.aptoide.pt.social.commentslist;
 
 import android.graphics.Rect;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by jdandrade on 02/10/2017.

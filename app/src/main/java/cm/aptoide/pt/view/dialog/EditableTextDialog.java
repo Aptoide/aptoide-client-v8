@@ -2,11 +2,11 @@ package cm.aptoide.pt.view.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import rx.Observable;
 

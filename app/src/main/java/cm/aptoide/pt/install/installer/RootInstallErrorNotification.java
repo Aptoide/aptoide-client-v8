@@ -2,7 +2,7 @@ package cm.aptoide.pt.install.installer;
 
 import android.app.PendingIntent;
 import android.graphics.Bitmap;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 
 public class RootInstallErrorNotification {
 

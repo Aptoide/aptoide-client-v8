@@ -5,26 +5,30 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
-import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.palette.graphics.Palette;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CenterInside;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
@@ -33,7 +37,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutionException;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by neuro on 24-05-2016.
@@ -135,25 +138,12 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(getRequestOptions().transform(new CircleTransform())
+          .apply(getRequestOptions().transform(new CircleCrop())
               .placeholder(placeHolderDrawableId))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithCircleTransformAndPlaceHolder() Context is null");
-    }
-    return null;
-  }
-
-  public Target<Drawable> loadWithCircleTransform(@DrawableRes int drawableId,
-      ImageView imageView) {
-    Context context = weakContext.get();
-    if (context != null) {
-      return Glide.with(context)
-          .load(drawableId)
-          .apply(getRequestOptions().transform(new CircleTransform()))
-          .into(imageView);
-    } else {
-      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
     }
     return null;
   }
@@ -164,6 +154,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -179,6 +170,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context))
               .placeholder(drawable))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -194,6 +186,7 @@ public class ImageLoader {
           .load(url)
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, color, spaceBetween, strokeSize)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -208,6 +201,7 @@ public class ImageLoader {
       return Glide.with(context)
           .load(drawableId)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context, imageView)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -223,21 +217,7 @@ public class ImageLoader {
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, shadowColor)))
-          .into(imageView);
-    } else {
-      Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
-    }
-    return null;
-  }
-
-  public Target<Drawable> loadWithShadowCircleTransform(String url, ImageView imageView,
-      float strokeSize) {
-    Context context = weakContext.get();
-    if (context != null) {
-      return Glide.with(context)
-          .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
-          .apply(getRequestOptions().transform(
-              new ShadowCircleTransformation(context, imageView, strokeSize)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -254,6 +234,7 @@ public class ImageLoader {
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, strokeSize))
               .placeholder(drawable))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -269,6 +250,7 @@ public class ImageLoader {
           .load(drawableId)
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, shadowColor)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadWithShadowCircleTransform() Context is null");
@@ -312,6 +294,7 @@ public class ImageLoader {
           .load(
               AptoideUtils.IconSizeU.screenshotToThumb(url, orientation, windowManager, resources))
           .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadScreenshotToThumb() Context is null");
@@ -326,6 +309,30 @@ public class ImageLoader {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
+  public void loadWithPalettePlaceholder(String url, BitmapDrawable paletteSrcImage,
+      @ColorInt int defaultColor, ImageView targetImageView) {
+    Palette.from(paletteSrcImage.getBitmap())
+        .maximumColorCount(6)
+        .generate(palette -> loadWithColorPlaceholder(url, palette.getDominantColor(defaultColor),
+            targetImageView));
+  }
+
+  public Target<Drawable> loadWithColorPlaceholder(String url, @ColorInt int colorInt,
+      ImageView imageView) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .apply(getRequestOptions().placeholder(new ColorDrawable(colorInt)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
@@ -342,28 +349,11 @@ public class ImageLoader {
         return Glide.with(context)
             .load(uri)
             .apply(getRequestOptions())
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(imageView);
       } else {
         Log.e(TAG, "newImageUrl is null");
       }
-    } else {
-      Log.e(TAG, "::load() Context is null");
-    }
-    return null;
-  }
-
-  public Target<Drawable> loadWithCenterCrop(String url, ImageView imageView) {
-    return loadWithoutResizeCenterCrop(
-        AptoideUtils.IconSizeU.getNewImageUrl(url, resources, windowManager), imageView);
-  }
-
-  public Target<Drawable> loadWithoutResizeCenterCrop(String url, ImageView imageView) {
-    Context context = weakContext.get();
-    if (context != null) {
-      return Glide.with(context)
-          .load(url)
-          .apply(getRequestOptions().centerCrop())
-          .into(imageView);
     } else {
       Log.e(TAG, "::load() Context is null");
     }
@@ -429,7 +419,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(drawableId)
-          .apply(getRequestOptions().transform(new CircleTransform()))
+          .apply(getRequestOptions().transform(new CircleCrop()))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -443,7 +434,8 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(getRequestOptions().transform(new CircleTransform()))
+          .apply(getRequestOptions().transform(new CircleCrop()))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransform() Context is null");
@@ -457,26 +449,14 @@ public class ImageLoader {
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(getRequestOptions().transform(new CircleTransform())
+          .apply(getRequestOptions().transform(new CircleCrop())
               .placeholder(defaultImagePlaceholder))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
       Log.e(TAG, "::loadUsingCircleTransformAndPlaceholder() Context is null");
     }
     return null;
-  }
-
-  public void loadWithRoundCorners(String image, int radius, int margin, ImageView previewImage) {
-    Context context = weakContext.get();
-
-    if (context != null) {
-      Glide.with(context)
-          .load(image)
-          .apply(getRequestOptions().transforms(new CenterCrop(),
-              new RoundedCornersTransform(context, radius, margin,
-                  RoundedCornersTransform.CornerType.LEFT)))
-          .into(previewImage);
-    }
   }
 
   public void loadWithRoundCorners(String image, int radius, ImageView previewImage,
@@ -487,24 +467,26 @@ public class ImageLoader {
           .load(image)
           .apply(getRequestOptions().centerCrop()
               .placeholder(placeHolderDrawableId)
-              .transforms(new CenterCrop(), new RoundedCornersTransform(context, radius, 0,
-                  RoundedCornersTransform.CornerType.ALL)))
+              .transforms(new CenterInside(), new RoundedCorners(radius)))
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }
   }
 
-  public void loadWithRoundCornersWithoutCacheAndPlaceholder(String image, int radius,
-      ImageView previewImage) {
+  public Target<Drawable> loadWithRoundCorners(String image, int radius, ImageView previewImage,
+      @DrawableRes int placeHolderDrawableId, RequestListener<Drawable> requestListener) {
     Context context = weakContext.get();
     if (context != null) {
-      Glide.with(context)
+      return Glide.with(context)
           .load(image)
           .apply(getRequestOptions().centerCrop()
-              .diskCacheStrategy(DiskCacheStrategy.NONE)
-              .transforms(new CenterCrop(), new RoundedCornersTransform(context, radius, 0,
-                  RoundedCornersTransform.CornerType.ALL)))
+              .placeholder(placeHolderDrawableId)
+              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+          .listener(requestListener)
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
     }
+    return null;
   }
 
   public void loadIntoTarget(String imageUrl, SimpleTarget<Drawable> simpleTarget) {
@@ -513,6 +495,7 @@ public class ImageLoader {
       Glide.with(context)
           .load(imageUrl)
           .apply(getRequestOptions())
+          .transition(DrawableTransitionOptions.withCrossFade())
           .into(simpleTarget);
     }
   }

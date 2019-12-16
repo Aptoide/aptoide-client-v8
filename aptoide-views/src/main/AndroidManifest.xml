@@ -2,8 +2,7 @@
     package="cm.aptoide.aptoideviews">
 
 
-  <application
-      android:allowBackup="false">
+  <application>
     <activity android:name="cm.aptoide.aptoideviews.base.MockActivity"></activity>
   </application>
 </manifest>

@@ -6,16 +6,16 @@
 package cm.aptoide.pt.store.view;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -24,7 +24,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
-import cm.aptoide.pt.home.HomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.view.MainActivity;
@@ -68,7 +68,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   public static Fragment newInstance(Event event, HomeEvent.Type type, String title,
       String storeTheme, String tag, StoreContext storeContext) {
     Bundle args = buildBundle(event, type, title, storeTheme, tag, storeContext);
-    Fragment fragment = StoreTabFragmentChooser.choose(event.getName());
+    Fragment fragment = StoreTabFragmentChooser.choose(event, type);
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
       args.putAll(arguments);

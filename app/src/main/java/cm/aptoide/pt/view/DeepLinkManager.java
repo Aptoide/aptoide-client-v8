@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -30,6 +30,8 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -38,6 +40,8 @@ import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
+import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -78,6 +82,7 @@ public class DeepLinkManager {
   private final AdsRepository adsRepository;
   private final AppNavigator appNavigator;
   private final CompositeSubscription subscriptions;
+  private final InstallManager installManager;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
@@ -86,7 +91,8 @@ public class DeepLinkManager {
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator) {
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
+      InstallManager installManager) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -105,6 +111,7 @@ public class DeepLinkManager {
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
     this.appNavigator = appNavigator;
+    this.installManager = installManager;
     this.subscriptions = new CompositeSubscription();
   }
 
@@ -150,9 +157,17 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.PROMOTIONS_DEEPLINK)) {
       promotionsDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.EDITORIAL_DEEPLINK)) {
-      editorialDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID));
+      String cardId = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.CARD_ID);
+      String slug = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.SLUG);
+      if (cardId != null) {
+        editorialDeepLinkFromCardId(cardId);
+      } else if (slug != null) {
+        editorialDeepLinkFromSlug(slug);
+      }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_INFO_VIEW)) {
       appcInfoDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_ADS)) {
+      appcAdsDeepLink();
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -170,11 +185,30 @@ public class DeepLinkManager {
     return true;
   }
 
+  private void pauseDownloadFromNotification(String md5) {
+    installManager.pauseInstall(md5)
+        .subscribe();
+  }
+
+  private void editorialDeepLinkFromSlug(String slug) {
+    Bundle bundle = new Bundle();
+    bundle.putString(EditorialFragment.SLUG, slug);
+
+    EditorialFragment fragment = new EditorialFragment();
+    fragment.setArguments(bundle);
+    fragmentNavigator.navigateTo(fragment, true);
+  }
+
   private void appcInfoDeepLink() {
     fragmentNavigator.navigateTo(new AppCoinsInfoFragment(), true);
   }
 
-  private void editorialDeepLink(String cardId) {
+  private void appcAdsDeepLink() {
+    fragmentNavigator.navigateTo(
+        EarnAppcListFragment.Companion.newInstance("Earn AppCoins Credits", "appcoins-ads"), true);
+  }
+
+  private void editorialDeepLinkFromCardId(String cardId) {
     Bundle bundle = new Bundle();
     bundle.putString(EditorialFragment.CARD_ID, cardId);
 
@@ -215,7 +249,8 @@ public class DeepLinkManager {
   }
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {
-    bottomNavigationNavigator.navigateToSearch(searchNavigator.resolveFragment(query));
+    bottomNavigationNavigator.navigateToSearch(
+        searchNavigator.resolveFragment(new SearchQueryModel(query, query, Source.DEEPLINK)));
     if (query == null || query.isEmpty()) {
       if (shortcutNavigation) {
         searchAnalytics.searchStart(SearchSource.SHORTCUT, false);

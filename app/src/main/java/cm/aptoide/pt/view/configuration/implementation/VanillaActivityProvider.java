@@ -1,6 +1,6 @@
 package cm.aptoide.pt.view.configuration.implementation;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import cm.aptoide.pt.view.ActivityProvider;
 import cm.aptoide.pt.view.MainActivity;
 

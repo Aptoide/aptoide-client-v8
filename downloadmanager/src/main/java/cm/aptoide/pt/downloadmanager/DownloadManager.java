@@ -23,7 +23,6 @@ public interface DownloadManager {
 
   Observable<List<Download>> getDownloadsList();
 
-  //NOTIFICACOES
   Observable<Download> getCurrentInProgressDownload();
 
   Observable<List<Download>> getCurrentActiveDownloads();

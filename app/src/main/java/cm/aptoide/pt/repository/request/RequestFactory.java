@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -18,6 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import cm.aptoide.pt.utils.AptoideUtils;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -39,6 +41,8 @@ import retrofit2.Converter;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
   private final GetRecommendedRequestFactory getRecommendedRequestFactory;
   private final boolean googlePlayServicesAvailable;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager =
+      new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI());
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -54,7 +58,8 @@ import retrofit2.Converter;
             tokenInvalidator, sharedPreferences);
     listAppsRequestFactory =
         new ListAppsRequestFactory(bodyInterceptor, storeCredentialsProvider, httpClient,
-            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager);
+            converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
+            appBundlesVisibilityManager);
     listFullReviewsRequestFactory =
         new ListFullReviewsRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
@@ -65,11 +70,12 @@ import retrofit2.Converter;
         new GetStoreWidgetsRequestFactory(storeCredentialsProvider, bodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences, resources, windowManager,
             clientUniqueId, partnerId, accountManager, filters, connectivityManager,
-            versionCodeProvider);
+            versionCodeProvider, appBundlesVisibilityManager);
     getUserRequestFactory =
         new GetUserRequestFactory(bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
             sharedPreferences, resources, windowManager, storeCredentialsProvider, clientUniqueId,
-            partnerId, accountManager, filters, connectivityManager, versionCodeProvider);
+            partnerId, accountManager, filters, connectivityManager, versionCodeProvider,
+            appBundlesVisibilityManager);
 
     getStoreRecommendedRequestFactory =
         new GetStoreRecommendedRequestFactory(bodyInterceptor, httpClient, converterFactory,

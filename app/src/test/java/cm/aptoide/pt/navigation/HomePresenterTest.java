@@ -1,30 +1,30 @@
 package cm.aptoide.pt.navigation;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
-import cm.aptoide.pt.home.ActionBundle;
-import cm.aptoide.pt.home.ActionItem;
-import cm.aptoide.pt.home.AdBundle;
-import cm.aptoide.pt.home.AdClick;
-import cm.aptoide.pt.home.AdHomeEvent;
-import cm.aptoide.pt.home.AdMapper;
-import cm.aptoide.pt.home.AdsTagWrapper;
-import cm.aptoide.pt.home.AppHomeEvent;
-import cm.aptoide.pt.home.EditorialHomeEvent;
-import cm.aptoide.pt.home.FakeBundleDataSource;
 import cm.aptoide.pt.home.Home;
 import cm.aptoide.pt.home.HomeAnalytics;
-import cm.aptoide.pt.home.HomeBundle;
-import cm.aptoide.pt.home.HomeBundlesModel;
-import cm.aptoide.pt.home.HomeEvent;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.HomeNavigator;
 import cm.aptoide.pt.home.HomePresenter;
+import cm.aptoide.pt.home.bundles.FakeBundleDataSource;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdBundle;
+import cm.aptoide.pt.home.bundles.ads.AdClick;
+import cm.aptoide.pt.home.bundles.ads.AdHomeEvent;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.ActionItem;
+import cm.aptoide.pt.home.bundles.base.AppHomeEvent;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import rx.Completable;
+import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -113,7 +114,7 @@ public class HomePresenterTest {
         new Application("Aptoide", "http://via.placeholder.com/350x150", 0, 1000, "cm.aptoide.pt",
             300, "", false);
     FakeBundleDataSource fakeBundleDataSource = new FakeBundleDataSource();
-    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0);
+    bundlesModel = new HomeBundlesModel(fakeBundleDataSource.getFakeBundles(), false, 0, true);
     localTopAppsBundle = bundlesModel.getList()
         .get(1);
 
@@ -141,7 +142,7 @@ public class HomePresenterTest {
     presenter.onCreateLoadBundles();
     //When the user clicks the Home menu item
     //And loading of bundlesModel are requested
-    when(home.loadHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the progress indicator should be shown
@@ -158,7 +159,7 @@ public class HomePresenterTest {
     //When the loading of bundlesModel is requested
     //And an unexpected error occured
     when(home.loadHomeBundles()).thenReturn(
-        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
+        Observable.just(new HomeBundlesModel(HomeBundlesModel.Error.GENERIC)));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
@@ -171,7 +172,7 @@ public class HomePresenterTest {
     //When the loading of bundlesModel is requested
     //And an unexpected error occured
     when(home.loadHomeBundles()).thenReturn(
-        Single.just(new HomeBundlesModel(HomeBundlesModel.Error.NETWORK)));
+        Observable.just(new HomeBundlesModel(HomeBundlesModel.Error.NETWORK)));
     when(home.shouldLoadNativeAd()).thenReturn(Single.just(false));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //Then the generic error message should be shown in the UI
@@ -201,7 +202,7 @@ public class HomePresenterTest {
     //then it should navigate to the App's detail View
     verify(homeAnalytics).sendAdClickEvent(anyInt(), anyString(), anyInt(), anyString(),
         eq(HomeEvent.Type.AD), eq(ApplicationAd.Network.SERVER));
-    verify(homeNavigator).navigateToAppView(any());
+    verify(homeNavigator).navigateToAppView(any(), any());
   }
 
   @Test public void moreClicked_NavigateToActionView() {
@@ -222,7 +223,7 @@ public class HomePresenterTest {
   @Test public void bottomReached_ShowNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleBottomReached();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
@@ -243,7 +244,7 @@ public class HomePresenterTest {
   @Test public void bottomReached_NoMoreBundlesAvailableToShow() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleBottomReached();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     when(home.hasMore()).thenReturn(false);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
@@ -259,7 +260,7 @@ public class HomePresenterTest {
   @Test public void pullToRefresh_GetFreshBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handlePullToRefresh();
-    when(home.loadFreshHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadFreshHomeBundles()).thenReturn(Observable.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     pullToRefreshEvent.onNext(null);
@@ -272,7 +273,7 @@ public class HomePresenterTest {
   @Test public void retryClicked_LoadNextBundles() {
     //Given an initialised presenter with already loaded bundlesModel into the UI before
     presenter.handleRetryClick();
-    when(home.loadNextHomeBundles()).thenReturn(Single.just(bundlesModel));
+    when(home.loadNextHomeBundles()).thenReturn(Observable.just(bundlesModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When pull to refresh is done
     retryClickedEvent.onNext(null);
@@ -301,7 +302,7 @@ public class HomePresenterTest {
     presenter.handleKnowMoreClick();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When an user clicks on the KNOW MORE button in the AppCoins onboarding card
-    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.KNOW_MORE));
+    knowMoreEvent.onNext(new HomeEvent(getFakeActionBundle(), 4, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should navigate to the AppCoins wallet information view.
     verify(homeNavigator).navigateToAppCoinsInformationView();
   }
@@ -315,7 +316,8 @@ public class HomePresenterTest {
     ActionBundle bundle = getFakeActionBundle();
     when(home.remove(bundle)).thenReturn(Completable.complete());
     //When an user clicks on the dismiss button in the information bundle
-    dismissEvent.onNext(new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.KNOW_MORE));
+    dismissEvent.onNext(
+        new HomeEvent(bundle, bundlePositionToBeRemoved, HomeEvent.Type.APPC_KNOW_MORE));
     //Then it should remove the bundle from the cache and view.
     verify(home).remove(bundle);
     verify(view).hideBundle(bundlePositionToBeRemoved);
@@ -327,7 +329,7 @@ public class HomePresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //And an action bundle
     ActionBundle bundle = getFakeActionBundle();
-    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.KNOW_MORE);
+    HomeEvent event = new HomeEvent(bundle, 1, HomeEvent.Type.APPC_KNOW_MORE);
     when(home.actionBundleImpression(bundle)).thenReturn(Completable.complete());
     //When the bundle is visible to the user
     visibleBundleEvent.onNext(event);

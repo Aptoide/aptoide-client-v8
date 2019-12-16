@@ -137,7 +137,9 @@ public class PromotionsManager {
         promotionViewApp.getMd5(), promotionViewApp.getAppIcon(), promotionViewApp.getVersionName(),
         promotionViewApp.getVersionCode(), promotionViewApp.getDownloadPath(),
         promotionViewApp.getAlternativePath(), promotionViewApp.getObb(),
-        promotionViewApp.hasAppc(), promotionViewApp.getSize()))
+        promotionViewApp.hasAppc(), promotionViewApp.getSize(), promotionViewApp.getSplits(),
+        promotionViewApp.getRequiredSplits(), promotionViewApp.getRank(),
+        promotionViewApp.getStoreName()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 promotionViewApp.getPackageName(), promotionViewApp.getAppId(),
@@ -153,20 +155,20 @@ public class PromotionsManager {
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     promotionsAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
         AnalyticsManager.Action.CLICK, offerResponseStatus,
-        downloadStateParser.getOrigin(download.getAction()));
+        downloadStateParser.getOrigin(download.getAction()), download.hasSplits());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName(), false);
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {

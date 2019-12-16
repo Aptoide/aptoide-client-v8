@@ -6,11 +6,11 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.graphics.Rect;
-import android.support.annotation.CallSuper;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import androidx.annotation.CallSuper;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 

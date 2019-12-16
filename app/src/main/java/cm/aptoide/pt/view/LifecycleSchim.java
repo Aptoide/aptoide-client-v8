@@ -1,7 +1,7 @@
 package cm.aptoide.pt.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * Used to mock common components lifecycle

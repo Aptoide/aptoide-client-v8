@@ -470,5 +470,51 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
               FieldAttribute.REQUIRED);
       oldVersion++;
     }
+
+    if (oldVersion == 8102) {
+      realm.delete("RealmAuthorization");
+      oldVersion++;
+    }
+
+    if (oldVersion == 8103) {
+      RealmObjectSchema update = schema.get("Update");
+      if (!update.hasField("splits")) {
+        RealmObjectSchema splitsSchema = schema.create("Split")
+            .addField("md5", String.class, FieldAttribute.PRIMARY_KEY)
+            .addField("path", String.class)
+            .addField("type", String.class)
+            .addField("name", String.class)
+            .addField("fileSize", long.class);
+
+        RealmObjectSchema stringSchema;
+        if (schema.contains("RealmString")) {
+          stringSchema = schema.get("RealmString");
+        } else {
+          stringSchema = schema.create("RealmString")
+              .addField("id", String.class, FieldAttribute.PRIMARY_KEY)
+              .addField("string", String.class);
+        }
+        update.addRealmListField("splits", splitsSchema);
+        update.addRealmListField("requiredSplits", stringSchema);
+      }
+      oldVersion++;
+    }
+    if (oldVersion == 8104) {
+      schema.get("Update")
+          .addField("storeName", String.class);
+      schema.get("Download")
+          .addField("storeName", String.class)
+          .addField("trustedBadge", String.class);
+      oldVersion++;
+    }
+    if (oldVersion == 8105) {
+      schema.get("MinimalAd")
+          .addField("hasAppc", boolean.class)
+          .addField("appcAmount", double.class)
+          .addField("currencyAmount", double.class)
+          .addField("currency", String.class)
+          .addField("currencySymbol", String.class);
+      oldVersion++;
+    }
   }
 }

@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.Origin;
+import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,22 +36,24 @@ public class PromotionsAnalytics {
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
   private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
   private final String ACTION_OPEN = "open";
 
   public PromotionsAnalytics(AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
-      DownloadAnalytics downloadAnalytics) {
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics) {
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
     this.downloadAnalytics = downloadAnalytics;
+    this.installAnalytics = installAnalytics;
   }
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
-      Origin origin) {
+      Origin origin, boolean isAppBundle) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin);
+        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin, false);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
-        action, offerResponseStatus);
+        action, offerResponseStatus, isAppBundle);
   }
 
   public void sendOpenPromotionsFragmentEvent() {
@@ -133,7 +136,8 @@ public class PromotionsAnalytics {
   }
 
   public void sendPromotionsAppInteractInstallEvent(String packageName, float appcValue,
-      DownloadModel.Action action) {
+      DownloadModel.Action action, boolean hasSplits, boolean hasBilling, String rank,
+      String origin, String store) {
     String context = getViewName(true);
     String downloadAction = null;
 
@@ -149,6 +153,9 @@ public class PromotionsAnalytics {
     map.put(ACTION, downloadAction);
 
     if (downloadAction != null) {
+      installAnalytics.clickOnInstallEvent(packageName, downloadAction, hasSplits, hasBilling,
+          downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, "unknown", origin,
+          store, false);
       analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

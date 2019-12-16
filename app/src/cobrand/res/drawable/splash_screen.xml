@@ -7,9 +7,9 @@
         android:src="@drawable/ic_splashscreen_market_logo"/>
   </item>
   <item
-      android:bottom="50dp"
-      android:drawable="@drawable/ic_powered_aptoide"
-      android:gravity="bottom|center_horizontal"
-      >
+      android:bottom="50dp">
+    <bitmap
+        android:gravity="bottom|center_horizontal"
+        android:src="@drawable/powered_aptoide"/>
   </item>
 </layer-list>

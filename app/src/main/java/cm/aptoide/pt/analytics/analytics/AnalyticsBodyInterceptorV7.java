@@ -6,6 +6,7 @@ import cm.aptoide.analytics.implementation.network.AnalyticsBaseBody;
 import cm.aptoide.analytics.implementation.network.AnalyticsBodyInterceptor;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -15,7 +16,7 @@ import rx.schedulers.Schedulers;
 public class AnalyticsBodyInterceptorV7 implements AnalyticsBodyInterceptor<AnalyticsBaseBody> {
   private final IdsRepository idsRepository;
   private final AuthenticationPersistence authenticationPersistence;
-  private final String aptoideMd5sum;
+  private final AptoideMd5Manager aptoideMd5Manager;
   private final String aptoidePackage;
   private final Resources resources;
   private final int aptoideVersionCode;
@@ -23,12 +24,12 @@ public class AnalyticsBodyInterceptorV7 implements AnalyticsBodyInterceptor<Anal
   private final SharedPreferences sharedPreferences;
 
   public AnalyticsBodyInterceptorV7(IdsRepository idsRepository,
-      AuthenticationPersistence authenticationPersistence, String aptoideMd5sum,
+      AuthenticationPersistence authenticationPersistence, AptoideMd5Manager aptoideMd5Manager,
       String aptoidePackage, Resources resources, int aptoideVersionCode, QManager qManager,
       SharedPreferences sharedPreferences) {
     this.idsRepository = idsRepository;
     this.authenticationPersistence = authenticationPersistence;
-    this.aptoideMd5sum = aptoideMd5sum;
+    this.aptoideMd5Manager = aptoideMd5Manager;
     this.aptoidePackage = aptoidePackage;
     this.resources = resources;
     this.aptoideVersionCode = aptoideVersionCode;
@@ -47,7 +48,8 @@ public class AnalyticsBodyInterceptorV7 implements AnalyticsBodyInterceptor<Anal
           body.setAptoideVercode(aptoideVersionCode);
           body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
           body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
-          body.setAptoideMd5sum(aptoideMd5sum);
+          String md5 = aptoideMd5Manager.getAptoideMd5();
+          if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
           body.setAptoidePackage(aptoidePackage);
 
           return body;

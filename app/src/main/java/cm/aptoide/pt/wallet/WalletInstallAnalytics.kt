@@ -21,6 +21,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                              val navigationTracker: NavigationTracker) {
 
   private var shouldRegister: Boolean = true
+  private val APP_BUNDLE = "app_bundle"
   private val TYPE = "type"
   private val APPLICATION_NAME = "Application Name"
   private val APPLICATION_PUBLISHER = "Application Publisher"
@@ -33,14 +34,16 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
                                            action: AnalyticsManager.Action,
                                            offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false)
+        DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.md5, download.packageName,
-          action, offerResponseStatus, false, download.hasAppc())
+          action, offerResponseStatus, false, download.hasAppc(), download.hasSplits(),
+          download.trustedBadge, null, download.storeName, action.toString())
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
       downloadAnalytics.migrationClicked(download.md5, download.packageName, action,
-          offerResponseStatus)
+          offerResponseStatus, download.hasSplits(), download.trustedBadge, null,
+          download.storeName)
     }
   }
 
@@ -55,15 +58,20 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         AnalyticsManager.Action.INSTALL, AppContext.WALLET_INSTALL_ACTIVITY,
         downloadStateParser.getOrigin(download.action), campaignId, abTestGroup,
         downloadAction != null && downloadAction == DownloadModel.Action.MIGRATE,
-        download.hasAppc())
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.trustedBadge,
+        download.storeName,
+        false)
 
   }
 
-  fun sendClickOnInstallButtonEvent(packageName: String, applicationPublisher: String) {
+  fun sendClickOnInstallButtonEvent(packageName: String, applicationPublisher: String,
+                                    hasSplits: Boolean) {
     val map = HashMap<String, Any>()
     map[TYPE] = "Install"
     map[APPLICATION_NAME] = packageName
     map[APPLICATION_PUBLISHER] = applicationPublisher
+    map[APP_BUNDLE] = hasSplits
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
         VIEW_CONTEXT)
   }

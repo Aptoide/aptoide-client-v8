@@ -5,22 +5,15 @@
 
 package cm.aptoide.pt.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.internal.BottomNavigationItemView;
-import android.support.design.internal.BottomNavigationMenuView;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -31,7 +24,9 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
-import com.ironsource.mediationsdk.IronSource;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.common.MoPub;
 import javax.inject.Inject;
@@ -63,7 +58,6 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
 
-    initializeAdsMediation();
     setupUpdatesNotification();
 
     attachPresenter(presenter);
@@ -81,10 +75,6 @@ public class MainActivity extends BottomNavigationActivity
     MoPub.onDestroy(this);
   }
 
-  private void initializeAdsMediation() {
-    IronSource.init(this, BuildConfig.MOPUB_IRONSOURCE_APPLICATION_ID);
-  }
-
   @Override protected void onStart() {
     super.onStart();
     MoPub.onStart(this);
@@ -93,13 +83,11 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onResume() {
     super.onResume();
     MoPub.onResume(this);
-    IronSource.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
     MoPub.onPause(this);
-    IronSource.onPause(this);
   }
 
   @Override protected void onStop() {
@@ -176,34 +164,6 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void hideUpdatesBadge() {
     updatesBadge.setVisibility(View.GONE);
-  }
-
-  @Override public Observable<PermissionService> autoUpdateDialogCreated() {
-    return autoUpdateDialogSubject;
-  }
-
-  @Override public void requestAutoUpdate() {
-    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-    final AlertDialog updateSelfDialog = dialogBuilder.create();
-    updateSelfDialog.setTitle(getText(R.string.update_self_title));
-    updateSelfDialog.setIcon(R.mipmap.ic_launcher);
-    updateSelfDialog.setMessage(
-        marketResourceFormatter.formatString(getApplicationContext(), R.string.update_self_msg));
-    updateSelfDialog.setCancelable(false);
-    updateSelfDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes),
-        (arg0, arg1) -> {
-          autoUpdateDialog = new ProgressDialog(this);
-          autoUpdateDialog.setMessage(getString(R.string.retrieving_update));
-          autoUpdateDialog.show();
-          autoUpdateDialogSubject.onNext(this);
-        });
-    updateSelfDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(android.R.string.no),
-        (dialog, arg1) -> {
-          dialog.dismiss();
-        });
-    if (is_resumed()) {
-      updateSelfDialog.show();
-    }
   }
 
   @Override public void showUnknownErrorMessage() {

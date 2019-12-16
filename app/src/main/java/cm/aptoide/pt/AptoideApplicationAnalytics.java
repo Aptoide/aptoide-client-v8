@@ -1,15 +1,30 @@
 package cm.aptoide.pt;
 
 import android.os.Bundle;
+import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import io.rakam.api.Identify;
+import io.rakam.api.Rakam;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by trinkes on 28/09/2017.
  */
 
 public class AptoideApplicationAnalytics {
+
+  public static final String IS_ANDROID_TV = "Is_Android_Tv";
+  private static final String CONTEXT = "APPLICATION";
+  private static final String APTOIDE_PACKAGE = "aptoide_package";
+  private static final String IS_ANDROID_TV_FIELD = "is_android_tv";
+  private final AnalyticsManager analyticsManager;
+
+  public AptoideApplicationAnalytics(AnalyticsManager analyticsManager) {
+    this.analyticsManager = analyticsManager;
+  }
 
   public void updateDimension(boolean isLoggedIn) {
     Bundle bundle = new Bundle();
@@ -21,11 +36,15 @@ public class AptoideApplicationAnalytics {
 
   public void setPackageDimension(String packageName) {
     Bundle bundle = new Bundle();
-    bundle.putString("aptoide_package", packageName);
+    bundle.putString(APTOIDE_PACKAGE, packageName);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty("aptoide_package", packageName);
+    FlurryAgent.addSessionProperty(APTOIDE_PACKAGE, packageName);
 
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().set(APTOIDE_PACKAGE, packageName));
+    }
   }
 
   public void setVersionCodeDimension(String versionCode) {
@@ -34,5 +53,12 @@ public class AptoideApplicationAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty("version code", versionCode);
+  }
+
+  public void sendIsTvEvent(boolean isTv) {
+    Map<String, Object> data = new HashMap<>();
+    data.put(IS_ANDROID_TV_FIELD, isTv);
+
+    analyticsManager.logEvent(data, IS_ANDROID_TV, AnalyticsManager.Action.AUTO, CONTEXT);
   }
 }

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.promotions;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -135,7 +135,8 @@ public class PromotionsPresenter implements Presenter {
             .doOnNext(promotionViewApp -> promotionsAnalytics.sendPromotionsAppInteractInstallEvent(
                 promotionViewApp.getPackageName(), promotionViewApp.getAppcValue(),
                 promotionViewApp.getDownloadModel()
-                    .getAction()))
+                    .getAction(), promotionViewApp.hasSplits(), promotionViewApp.hasAppc(),
+                promotionViewApp.getRank(), null, promotionViewApp.getStoreName()))
             .flatMapCompletable(promotionViewApp -> downloadApp(promotionViewApp))
             .observeOn(viewScheduler)
             .doOnError(throwable -> throwable.printStackTrace())

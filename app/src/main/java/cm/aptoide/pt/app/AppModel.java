@@ -1,8 +1,8 @@
 package cm.aptoide.pt.app;
 
 import android.os.Build;
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.app.view.AppViewFragment.OpenType;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -25,12 +25,7 @@ public class AppModel {
   private final String modified;
   private final String appAdded;
   private final Obb obb;
-  private final GetAppMeta.Pay pay;
   private final String webUrls;
-  private final boolean isPaid;
-  private final boolean wasPaid;
-  private final String paidAppPath;
-  private final String paymentStatus;
   private final boolean isLatestTrustedVersion;
   private final String uniqueName;
   private final OpenType openType;
@@ -51,7 +46,6 @@ public class AppModel {
   private final List<String> usedPermissions;
   private final long fileSize;
   private final String md5;
-  private String path;
   private final String pathAlt;
   private final int versionCode;
   private final String versionName;
@@ -68,6 +62,9 @@ public class AppModel {
   private final DetailedAppRequestResult.Error error;
   private final String marketName;
   private final boolean isMature;
+  private final List<Split> splits;
+  private final List<String> requiredSplits;
+  private String path;
   private boolean hasBilling;
   private boolean hasAdvertising;
   private List<String> bdsFlags;
@@ -80,11 +77,11 @@ public class AppModel {
       int versionCode, String versionName, String packageName, long size, int downloads,
       AppRating globalRating, int packageDownloads, AppRating rating, AppDeveloper appDeveloper,
       String graphic, String icon, AppMedia media, String modified, String appAdded, Obb obb,
-      GetAppMeta.Pay pay, String webUrls, boolean isPaid, boolean wasPaid, String paidAppPath,
-      String paymentStatus, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
+      String webUrls, boolean isLatestTrustedVersion, String uniqueName, OpenType openType,
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
-      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature) {
+      List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
+      List<Split> splits, List<String> requiredSplits) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -114,12 +111,7 @@ public class AppModel {
     this.modified = modified;
     this.appAdded = appAdded;
     this.obb = obb;
-    this.pay = pay;
     this.webUrls = webUrls;
-    this.isPaid = isPaid;
-    this.wasPaid = wasPaid;
-    this.paidAppPath = paidAppPath;
-    this.paymentStatus = paymentStatus;
     this.isLatestTrustedVersion = isLatestTrustedVersion;
     this.uniqueName = uniqueName;
     this.openType = openType;
@@ -135,6 +127,8 @@ public class AppModel {
     this.campaignUrl = campaignUrl;
     this.signature = signature;
     this.isMature = isMature;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
     this.loading = false;
     this.error = null;
   }
@@ -170,12 +164,7 @@ public class AppModel {
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
-    this.pay = null;
     this.webUrls = null;
-    this.isPaid = false;
-    this.wasPaid = false;
-    this.paidAppPath = "";
-    this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.openType = null;
@@ -192,6 +181,8 @@ public class AppModel {
     this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
+    this.splits = null;
+    this.requiredSplits = null;
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -226,12 +217,7 @@ public class AppModel {
     this.modified = null;
     this.appAdded = null;
     this.obb = null;
-    this.pay = null;
     this.webUrls = null;
-    this.isPaid = false;
-    this.wasPaid = false;
-    this.paidAppPath = "";
-    this.paymentStatus = "";
     this.isLatestTrustedVersion = false;
     this.uniqueName = "";
     this.openType = null;
@@ -248,6 +234,8 @@ public class AppModel {
     this.isMature = false;
     this.bdsFlags = null;
     this.campaignUrl = "";
+    this.splits = null;
+    this.requiredSplits = null;
   }
 
   public boolean isMature() {
@@ -304,10 +292,6 @@ public class AppModel {
 
   public Obb getObb() {
     return obb;
-  }
-
-  public GetAppMeta.Pay getPay() {
-    return pay;
   }
 
   public int getDownloads() {
@@ -394,10 +378,6 @@ public class AppModel {
     return malware;
   }
 
-  public boolean isPaid() {
-    return isPaid;
-  }
-
   public String getUniqueName() {
     return uniqueName;
   }
@@ -422,24 +402,16 @@ public class AppModel {
     return editorsChoice;
   }
 
+  public boolean isFromEditorsChoice() {
+    return !editorsChoice.isEmpty();
+  }
+
   public String getOriginTag() {
     return originTag;
   }
 
   public boolean isLatestTrustedVersion() {
     return isLatestTrustedVersion;
-  }
-
-  public boolean wasPaid() {
-    return wasPaid;
-  }
-
-  public String getPaidAppPath() {
-    return paidAppPath;
-  }
-
-  public String getPaymentStatus() {
-    return paymentStatus;
   }
 
   public String getMarketName() {
@@ -475,5 +447,17 @@ public class AppModel {
 
   public String getSignature() {
     return signature;
+  }
+
+  public List<Split> getSplits() {
+    return splits;
+  }
+
+  public boolean hasSplits() {
+    return splits != null && !splits.isEmpty();
+  }
+
+  public List<String> getRequiredSplits() {
+    return requiredSplits;
   }
 }

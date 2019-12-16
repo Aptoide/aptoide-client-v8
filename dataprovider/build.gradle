@@ -42,6 +42,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_DEVELOPMENT + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_DEVELOPMENT + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
@@ -56,8 +58,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TEST_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['internal', 'prod']
     }
     prod {
@@ -68,6 +74,8 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_V7_HOST_PRODUCTION + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_V7_CACHE_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_V7_CACHE_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_APTWORDS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_APTWORDS_HOST_PRODUCTION + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_WRITE_V7_HOST",
@@ -82,8 +90,12 @@ android {
           "\"" + project.APTOIDE_WEB_SERVICES_SEARCH_SSL_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TESTING_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_AB_TESTING_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_AB_TEST_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_AB_TEST_HOST + "\""
       buildConfigField "String", "APTOIDE_WEB_SERVICES_REACTIONS_HOST",
           "\"" + project.APTOIDE_WEB_SERVICES_REACTIONS_HOST + "\""
+      buildConfigField "String", "APTOIDE_WEB_SERVICES_RAKAM_HOST",
+          "\"" + project.APTOIDE_WEB_SERVICES_RAKAM_HOST + "\""
       matchingFallbacks = ['prod', 'internal']
     }
   }
@@ -115,10 +127,9 @@ dependencies {
   testImplementation "com.squareup.okhttp3:mockwebserver:${MOCK_WEB_SERVER_VERSION}"
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"
-  testImplementation "com.android.support.test:testing-support-lib:0.1"
 
   //noinspection GradleDependency
-  implementation "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
+  implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
   //noinspection GradleDependency
   implementation "com.google.android.gms:play-services-base:${PLAY_SERVICES_BASEMENT_VERSION}"
 
@@ -132,7 +143,7 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
 
   // Parceler - https://github.com/johncarl81/parceler
   compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"

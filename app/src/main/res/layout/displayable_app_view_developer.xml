@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 16/08/2016.
-  -->
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -10,11 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
-
-  <!--
-      android:drawablePadding="18dp"
-      android:drawableRight="@drawable/ic_down_arrow"
-  -->
 
   <TextView
       android:layout_width="match_parent"

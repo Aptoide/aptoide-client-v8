@@ -1,8 +1,8 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
 import cm.aptoide.pt.account.view.exception.SocialLinkException;

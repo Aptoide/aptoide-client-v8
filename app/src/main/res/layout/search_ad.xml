@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,10 +9,12 @@
     android:foreground="?selectableItemBackground"
     app:cardCornerRadius="4dp"
     >
+
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
+
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="79dp"
@@ -21,8 +22,10 @@
         android:layout_margin="12dp"
         android:src="@mipmap/ic_launcher"
         />
+
     <TextView
         android:id="@+id/app_name"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/app_icon"
@@ -33,8 +36,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="Clash Royale"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
+
     <ImageView
         android:id="@+id/star_icon"
         android:layout_width="12dp"
@@ -45,22 +48,25 @@
         android:layout_toRightOf="@id/app_icon"
         android:src="@drawable/ic_star_black"
         />
+
     <TextView
         android:id="@+id/rating"
+        style="@style/Aptoide.TextView.Medium.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_name"
-        android:layout_marginLeft="5dp"
         android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@id/star_icon"
         android:layout_toRightOf="@id/star_icon"
         android:textSize="10sp"
         tools:text="4.2"
-        style="@style/Aptoide.TextView.Medium.S.Black"
         />
+
     <TextView
         android:id="@+id/downloads"
+        style="@style/Aptoide.TextView.Regular.XS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/rating"
@@ -69,20 +75,56 @@
         android:layout_toRightOf="@id/app_icon"
         android:textSize="12sp"
         tools:text="1M Downloads"
-        style="@style/Aptoide.TextView.Regular.XS.Grey"
         />
 
-
-    <TextView
+    <LinearLayout
+        android:id="@+id/appc_earn_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/downloads"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+
+      <ImageView
+          android:id="@+id/coins_image"
+          android:layout_width="17dp"
+          android:layout_height="15dp"
+          android:layout_marginEnd="5dp"
+          android:layout_marginRight="5dp"
+          android:scaleType="fitXY"
+          app:srcCompat="@drawable/ic_get_appc"
+          />
+
+      <TextView
+          android:id="@+id/reward_textview"
+          style="@style/Aptoide.TextView.Medium.XXS"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:maxLines="2"
+          android:textColor="@color/curation_gold"
+          tools:text="EARN €0.78"
+          />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/ad_label"
+        style="@style/Aptoide.TextView.Regular.XXS.Black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/downloads"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/all_title_ad"
-        style="@style/Aptoide.TextView.Regular.XXS.Black"
         />
 
     <ImageView
@@ -91,6 +133,7 @@
         android:layout_height="1dp"
         android:background="@color/transparent"
         />
+
     <RelativeLayout
         android:id="@+id/primary_ad_view_layout"
         android:layout_width="1dp"
@@ -99,4 +142,4 @@
         />
 
   </RelativeLayout>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

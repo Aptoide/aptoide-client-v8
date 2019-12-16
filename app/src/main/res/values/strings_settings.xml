@@ -12,8 +12,6 @@
   <string name="settings_beta_filter_summary">You\'ll also see beta apps.</string>
 
   <string name="setting_updates">Updates</string>
-  <string name="settings_updates_filter_setting_title">Beta versions</string>
-  <string name="settings_updates_filter_summary">You\'ll see updates for beta versions.</string>
   <string name="settings_include_system_apps_title">System apps</string>
   <string name="settings_include_system_apps_summary">You\'ll see updates for system apps</string>
   <string name="settings_excluded_updates">Excluded updates</string>
@@ -53,7 +51,8 @@
 
 
   <!--Dialog: general rules to download-->
-  <string name="general_downloads_dialog_only_wifi_message">You chose to download only on Wi-Fi. Change settings?</string>
+  <string name="general_downloads_dialog_only_wifi_message">You chose to download over Wi-Fi only. Do you want to install this app using your data allowance?</string>
+  <string name="general_downloads_dialog_only_wifi_install_button">Install (%s)</string>
 
   <!--Adult content dialogs-->
   <string name="asksetadultpinmessage">Would you like to set a pin to unlock adult content?</string>
@@ -66,6 +65,7 @@
   <string name="setting_sdk_version">SDK version</string>
   <string name="setting_screen_size">Screen size</string>
   <string name="setting_esgl_version">ESGL version</string>
+  <string name="setting_density">Density</string>
   <string name="screenCode">Screen code</string>
   <string name="cpuAbi">CPU</string>
 

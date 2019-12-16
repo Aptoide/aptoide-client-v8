@@ -2,8 +2,8 @@ package cm.aptoide.aptoideviews.base
 
 import android.content.Context
 import android.content.Intent
-import android.support.test.rule.ActivityTestRule
 import android.view.View
+import androidx.test.rule.ActivityTestRule
 import org.junit.Rule
 
 abstract class BaseTestView {

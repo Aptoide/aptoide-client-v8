@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import cm.aptoide.pt.editorial.ScrollEvent;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -11,6 +12,8 @@ public interface AppCoinsInfoView extends View {
 
   Observable<Void> cardViewClick();
 
+  Observable<Void> catappultButtonClick();
+
   Observable<Void> installButtonClick();
 
   Observable<Void> appCoinsWalletLinkClick();
@@ -18,4 +21,10 @@ public interface AppCoinsInfoView extends View {
   void openApp(String packageName);
 
   void setButtonText(boolean installState);
+
+  Observable<ScrollEvent> appItemVisibilityChanged();
+
+  void removeBottomCardAnimation();
+
+  void addBottomCardAnimation();
 }

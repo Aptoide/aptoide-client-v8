@@ -2,15 +2,15 @@ package cm.aptoide.pt.account.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.presenter.LoginSignUpView;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class LoginSignUpFragment extends BaseToolbarFragment
     implements LoginSignUpView, NotBottomNavigationView {

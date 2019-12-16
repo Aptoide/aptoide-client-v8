@@ -2,7 +2,7 @@ package cm.aptoide.pt.share;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import com.bumptech.glide.request.target.SimpleTarget;

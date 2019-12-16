@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.database.realm;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntDef;
+import androidx.annotation.IntRange;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -34,6 +34,7 @@ public class Download extends RealmObject {
   public static final int RETRY = 11;
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
+  public static final int WAITING_TO_MOVE_FILES = 14;
   //errors
   public static final int NO_ERROR = 0;
   public static final int GENERIC_ERROR = 1;
@@ -53,6 +54,8 @@ public class Download extends RealmObject {
   private String versionName;
   private boolean hasAppc;
   private long size;
+  private String storeName;
+  private String trustedBadge;
   @Download.DownloadError private int downloadError;
 
   public Download() {
@@ -223,9 +226,34 @@ public class Download extends RealmObject {
     this.size = size;
   }
 
+  public boolean hasSplits() {
+    for (FileToDownload fileToDownload : filesToDownload) {
+      if (fileToDownload.getFileType() == FileToDownload.SPLIT) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public String getStoreName() {
+    return storeName;
+  }
+
+  public void setStoreName(String storeName) {
+    this.storeName = storeName;
+  }
+
+  public String getTrustedBadge() {
+    return trustedBadge;
+  }
+
+  public void setTrustedBadge(String trustedBadge) {
+    this.trustedBadge = trustedBadge;
+  }
+
   @IntDef({
       INVALID_STATUS, COMPLETED, BLOCK_COMPLETE, CONNECTED, PENDING, PROGRESS, PAUSED, WARN,
-      STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE
+      STARTED, ERROR, FILE_MISSING, RETRY, NOT_DOWNLOADED, IN_QUEUE, WAITING_TO_MOVE_FILES
   })
 
   @Retention(RetentionPolicy.SOURCE)

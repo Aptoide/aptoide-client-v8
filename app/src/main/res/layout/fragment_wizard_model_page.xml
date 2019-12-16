@@ -1,54 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/transparent"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="56dp"
     >
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="380dp"
-      android:background="@color/transparent"
-      android:gravity="center"
-      >
-    <ImageView
-        android:id="@android:id/icon"
-        android:layout_width="292dp"
-        android:layout_height="284dp"
-        android:layout_gravity="center"
-        android:src="@drawable/wizard_1"
-        />
 
-  </LinearLayout>
-  <LinearLayout
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
+  <ImageView
+      android:id="@+id/wizard_icon"
+      android:layout_width="wrap_content"
+      android:layout_height="0dp"
+      android:layout_gravity="center"
+      android:src="@drawable/wizard_1"
+      app:layout_constraintBottom_toTopOf="@+id/message_group"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_chainStyle="spread"
+      app:layout_constraintVertical_weight="6"
+
+      />
+
+  <androidx.constraintlayout.widget.Group
+      android:id="@+id/message_group"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="20dp"
       android:background="@color/white"
       android:gravity="center"
-      android:orientation="vertical"
-      >
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/wizard_title_viewpager_one"
-        style="@style/OnBoarding.Title.TextView"
-        />
+      app:constraint_referenced_ids="title,description"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/wizard_icon"
+      app:layout_constraintVertical_weight="4"
+      />
 
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="216dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:gravity="center"
-        android:text="@string/wizard_sub_title_viewpager_one"
-        style="@style/OnBoarding.SubTitle.TextView"
-        />
+  <TextView
+      android:id="@+id/title"
+      style="@style/OnBoarding.Title.TextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/wizard_title_viewpager_one"
+      app:layout_constraintBottom_toTopOf="@+id/description"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toTopOf="@id/message_group"
+      app:layout_constraintVertical_bias="0.2"
+      app:layout_constraintVertical_chainStyle="packed"
+      />
+
+  <TextView
+      android:id="@+id/description"
+      style="@style/OnBoarding.SubTitle.TextView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="36dp"
+      android:layout_marginLeft="36dp"
+      android:layout_marginTop="12dp"
+      android:layout_marginEnd="36dp"
+      android:layout_marginRight="36dp"
+      android:gravity="center"
+      android:text="@string/wizard_sub_title_viewpager_one"
+      app:layout_constraintBottom_toBottomOf="@id/message_group"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/title"
+      />
 
 
-  </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

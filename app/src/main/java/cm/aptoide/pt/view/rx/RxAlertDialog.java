@@ -2,11 +2,13 @@ package cm.aptoide.pt.view.rx;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import com.jakewharton.rxrelay.PublishRelay;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 08/03/17.
@@ -75,6 +77,21 @@ public class RxAlertDialog implements DialogInterface {
   public Observable<DialogInterface> dismisses() {
     return dismissEvent.dismisses()
         .map(click -> this);
+  }
+
+  public Single<Result> showWithResult() {
+    return Completable.fromAction(dialog::show)
+        .andThen(Observable.merge(cancelEvent.cancels()
+            .map(__ -> Result.CANCEL), dismissEvent.dismisses()
+            .map(__ -> Result.DISMISS), positiveClick.clicks()
+            .map(__ -> Result.POSITIVE), negativeClick.clicks()
+            .map(__ -> Result.NEGATIVE)))
+        .first()
+        .toSingle();
+  }
+
+  public enum Result {
+    CANCEL, DISMISS, POSITIVE, NEGATIVE
   }
 
   public static class Builder {

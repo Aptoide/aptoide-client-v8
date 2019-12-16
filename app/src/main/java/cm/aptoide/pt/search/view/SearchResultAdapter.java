@@ -1,10 +1,10 @@
 package cm.aptoide.pt.search.view;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
@@ -15,6 +15,7 @@ import cm.aptoide.pt.search.view.item.SearchResultAdViewHolder;
 import cm.aptoide.pt.search.view.item.SearchResultItemView;
 import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
 import com.jakewharton.rxrelay.PublishRelay;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
@@ -27,15 +28,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
   private CrashReport crashReport;
+  private DecimalFormat oneDecimalFormatter;
 
   public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
       PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
-      List<SearchAdResult> searchAdResults, CrashReport crashReport) {
+      List<SearchAdResult> searchAdResults, CrashReport crashReport,
+      DecimalFormat decimalFormatter) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.searchResults = searchResults;
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
+    this.oneDecimalFormatter = decimalFormatter;
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -49,7 +53,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       }
 
       case SearchResultAdViewHolder.LAYOUT: {
-        return new SearchResultAdViewHolder(view, onAdClickRelay);
+        return new SearchResultAdViewHolder(view, onAdClickRelay, oneDecimalFormatter);
       }
 
       default: {

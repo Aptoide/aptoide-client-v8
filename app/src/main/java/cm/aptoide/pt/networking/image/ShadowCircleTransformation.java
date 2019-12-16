@@ -11,10 +11,10 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import java.security.MessageDigest;
@@ -23,6 +23,9 @@ import java.security.MessageDigest;
  * Created by marcelobenites on 7/26/16.
  */
 public class ShadowCircleTransformation extends BitmapTransformation {
+  private static final String ID = "cm.aptoide.pt.networking.image.ShadowCircleTransformation";
+  private static final byte[] ID_BYTES = ID.getBytes(CHARSET);
+
   @ColorInt private final int shadowColor;
   private final float strokeSize;
   private final float spaceBetween;
@@ -121,6 +124,10 @@ public class ShadowCircleTransformation extends BitmapTransformation {
   }
 
   @Override public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    messageDigest.update(ID_BYTES);
+  }
 
+  @Override public int hashCode() {
+    return ID.hashCode();
   }
 }

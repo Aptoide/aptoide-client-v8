@@ -1,11 +1,12 @@
 package cm.aptoide.pt.search.view;
 
-import android.support.v4.util.Pair;
 import android.view.MenuItem;
+import androidx.core.util.Pair;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
@@ -119,7 +120,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     List<SearchAdResult> getFollowedStoresSearchAdResults();
 
-    String getCurrentQuery();
+    SearchQueryModel getSearchQueryModel();
 
     String getStoreName();
 

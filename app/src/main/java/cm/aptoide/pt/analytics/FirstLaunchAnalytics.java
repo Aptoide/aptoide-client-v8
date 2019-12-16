@@ -6,6 +6,7 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -13,12 +14,16 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
+import io.rakam.api.Identify;
+import io.rakam.api.Rakam;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
+import org.json.JSONException;
+import org.json.JSONObject;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -33,6 +38,7 @@ public class FirstLaunchAnalytics {
   public static final String PLAY_PROTECT_EVENT = "Google_Play_Protect";
   public static final String FIRST_LAUNCH_BI = "FIRST_LAUNCH";
   private static final String GMS = "GMS";
+  private static final String GMS_RAKAM = "gms";
   private static final String HAS_HGMS = "Has GMS";
   private static final String NO_GMS = "No GMS";
   private static final String UNKNOWN = "unknown";
@@ -46,7 +52,11 @@ public class FirstLaunchAnalytics {
   private static final String IS_ACTIVE = "is_active";
   private static final String FLAGGED = "flagged";
   private static final String TAG = FirstLaunchAnalytics.class.getSimpleName();
-
+  private final static String UTM_CONTENT_RAKAM = "utm_content";
+  private final static String UTM_SOURCE_RAKAM = "utm_source";
+  private final static String UTM_CAMPAIGN_RAKAM = "utm_campaign";
+  private final static String UTM_MEDIUM_RAKAM = "utm_medium";
+  private final static String ENTRY_POINT_RAKAM = "entry_point";
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
   private final String packageName;
@@ -179,13 +189,30 @@ public class FirstLaunchAnalytics {
           .getUniqueIdentifier()));
       return null;
     })
+        .doOnNext(__ -> setupRakamFirstLaunchSuperProperty(
+            SecurePreferences.isFirstRun(sharedPreferences)))
         .doOnNext(__ -> sendPlayProtectEvent())
         .doOnNext(__ -> setupDimensions(application))
-        .filter(firstRun -> SecurePreferences.isFirstRun(sharedPreferences))
+        .filter(__ -> SecurePreferences.isFirstRun(sharedPreferences))
         .doOnNext(
             __ -> sendFirstLaunchEvent(utmSource, utmMedium, utmCampaign, utmContent, entryPoint))
         .toCompletable()
         .subscribeOn(Schedulers.io());
+  }
+
+  private void setupRakamFirstLaunchSuperProperty(boolean isFirstLaunch) {
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
+    try {
+      superProperties.put("first_session", isFirstLaunch);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+    Rakam.getInstance()
+        .setSuperProperties(superProperties);
   }
 
   private void setupDimensions(android.app.Application application) {
@@ -239,7 +266,16 @@ public class FirstLaunchAnalytics {
   }
 
   public void setGmsPresent(boolean isPlayServicesAvailable) {
-    setUserProperties(GMS, isPlayServicesAvailable ? HAS_HGMS : NO_GMS);
+    String gmsValue = isPlayServicesAvailable ? HAS_HGMS : NO_GMS;
+    setUserProperties(GMS, gmsValue);
+    sendRakamGMSUserProperty(gmsValue);
+  }
+
+  private void sendRakamGMSUserProperty(String gmsValue) {
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().set(GMS_RAKAM, gmsValue));
+    }
   }
 
   /**
@@ -256,7 +292,6 @@ public class FirstLaunchAnalytics {
   private void setUserPropertiesWithBundle(Bundle data) {
     AppEventsLogger.updateUserProperties(data,
         response -> logger.logDebug("Facebook Analytics: ", response.toString()));
-
   }
 
   private void setUserProperties(String utmSource, String utmMedium, String utmCampaign,
@@ -268,6 +303,15 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CAMPAIGN, utmCampaign);
     FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
     FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
+
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().set(UTM_CONTENT_RAKAM, utmContent)
+              .set(UTM_SOURCE_RAKAM, utmSource)
+              .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
+              .set(UTM_MEDIUM_RAKAM, utmMedium)
+              .set(ENTRY_POINT_RAKAM, entryPoint));
+    }
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -294,5 +338,14 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CAMPAIGN, UNKNOWN);
     FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
     FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
+
+    if (BuildConfig.FLAVOR_mode.equals("dev")) {
+      Rakam.getInstance()
+          .identify(new Identify().set(UTM_CONTENT_RAKAM, UNKNOWN)
+              .set(UTM_SOURCE_RAKAM, UNKNOWN)
+              .set(UTM_CAMPAIGN_RAKAM, UNKNOWN)
+              .set(UTM_MEDIUM_RAKAM, UNKNOWN)
+              .set(ENTRY_POINT_RAKAM, UNKNOWN));
+    }
   }
 }

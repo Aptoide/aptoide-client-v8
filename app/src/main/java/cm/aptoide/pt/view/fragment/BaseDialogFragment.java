@@ -1,9 +1,9 @@
 package cm.aptoide.pt.view.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.WindowManager;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.view.BaseActivity;

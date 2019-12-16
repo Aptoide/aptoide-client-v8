@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.database.realm;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -45,6 +46,7 @@ public class Update extends RealmObject {
   private boolean excluded;
   private String trustedBadge;
   private String alternativeApkPath;
+  private String storeName;
 
   private boolean appcUpgrade;
 
@@ -56,6 +58,10 @@ public class Update extends RealmObject {
   private String patchObbPath;
   private String patchObbMd5;
 
+  // Splits
+  private RealmList<Split> splits;
+  private RealmList<RealmString> requiredSplits;
+
   //appc
   private boolean hasAppc;
 
@@ -65,7 +71,8 @@ public class Update extends RealmObject {
   public Update(long id, String name, String icon, String packageName, String md5sum, String path,
       long size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
-      String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc) {
+      String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc,
+      RealmList<Split> splits, RealmList<RealmString> requiredSplits, String storeName) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -85,6 +92,9 @@ public class Update extends RealmObject {
     this.patchObbMd5 = patchObbMd5;
     this.hasAppc = hasAppc;
     this.appcUpgrade = appcUpgrade;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
+    this.storeName = storeName;
   }
 
   public long getAppId() {
@@ -257,5 +267,29 @@ public class Update extends RealmObject {
 
   public void setHasAppc(boolean hasAppc) {
     this.hasAppc = hasAppc;
+  }
+
+  public RealmList<Split> getSplits() {
+    return splits;
+  }
+
+  public void setSplits(RealmList<Split> splits) {
+    this.splits = splits;
+  }
+
+  public RealmList<RealmString> getRequiredSplits() {
+    return requiredSplits;
+  }
+
+  public void setRequiredSplits(RealmList<RealmString> requiredSplits) {
+    this.requiredSplits = requiredSplits;
+  }
+
+  public boolean hasSplits() {
+    return splits != null && !splits.isEmpty();
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 }

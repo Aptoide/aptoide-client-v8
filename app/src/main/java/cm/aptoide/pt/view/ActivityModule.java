@@ -6,13 +6,14 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -40,6 +41,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -47,8 +49,8 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
+import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallCompletedNotifier;
@@ -73,9 +75,11 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -167,13 +171,13 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      AdsRepository adsRepository, AppNavigator appNavigator, @Named("aptoide-theme") String theme,
+      InstallManager installManager) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
         searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository, appNavigator);
+        adsRepository, appNavigator, installManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -182,14 +186,15 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
-      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager) {
+      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
+      RootAvailabilityManager rootAvailabilityManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -318,7 +323,8 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("local-version-code") int localVersionCode,
       AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
-        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT,
+        ((AptoideApplication) activity.getApplication()).getDefaultSharedPreferences());
   }
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {
@@ -348,10 +354,11 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
-      WalletInstallNavigator walletInstallNavigator, WalletInstallManager walletInstallManager) {
+      WalletInstallConfiguration configuration, WalletInstallNavigator walletInstallNavigator,
+      WalletInstallManager walletInstallManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
         walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
-        AndroidSchedulers.mainThread(), Schedulers.io());
+        AndroidSchedulers.mainThread(), Schedulers.io(), configuration);
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(
@@ -360,14 +367,13 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides WalletInstallManager providesWalletInstallManager(
-      WalletInstallConfiguration configuration, InstallManager installManager,
-      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
-      MoPubAdsManager moPubAdsManager, WalletInstallAnalytics walletInstallAnalytics,
-      InstalledRepository installedRepository, WalletAppProvider walletAppProvider,
-      AppInstallerStatusReceiver appInstallerStatusReceiver) {
-    return new WalletInstallManager(configuration, activity.getPackageManager(), installManager,
-        downloadFactory, downloadStateParser, moPubAdsManager, walletInstallAnalytics,
-        installedRepository, walletAppProvider, appInstallerStatusReceiver);
+      InstallManager installManager, DownloadFactory downloadFactory,
+      DownloadStateParser downloadStateParser, MoPubAdsManager moPubAdsManager,
+      WalletInstallAnalytics walletInstallAnalytics, InstalledRepository installedRepository,
+      WalletAppProvider walletAppProvider, AppInstallerStatusReceiver appInstallerStatusReceiver) {
+    return new WalletInstallManager(activity.getPackageManager(), installManager, downloadFactory,
+        downloadStateParser, moPubAdsManager, walletInstallAnalytics, installedRepository,
+        walletAppProvider, appInstallerStatusReceiver);
   }
 
   @ActivityScope @Provides WalletInstallAnalytics providesWalletInstallAnalytics(
@@ -384,8 +390,14 @@ import static android.content.Context.WINDOW_SERVICE;
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
   }
 
-  @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
-      AppNavigator appNavigator) {
-    return new SeeMoreAppcNavigator(appNavigator);
+  @ActivityScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      Converter.Factory converterFactory, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+    return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
+        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
   }
 }

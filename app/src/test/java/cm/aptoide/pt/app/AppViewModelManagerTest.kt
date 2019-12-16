@@ -53,7 +53,8 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "")
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
+            null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration(1.toLong(), "anyString", "anyString", "", null, null, "", "", 0.0,
@@ -103,7 +104,8 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), "md5", null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "")
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
+            null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, "md5", "",
@@ -127,7 +129,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromMd5("md5")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -154,7 +156,9 @@ class AppViewModelManagerTest {
         DetailedApp(1.toLong(), "anyString", "anyString", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, "uniqueName", false, false, bdsFlags, false, "")
+            appStats, null, null, true, "uniqueName", false, false, bdsFlags, false, "",
+            null,
+            null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, null,
@@ -178,7 +182,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedAppFromUniqueName("uniqueName")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -205,7 +209,8 @@ class AppViewModelManagerTest {
         DetailedApp((-1).toLong(), "anyString", "packageName", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), null, null, null, 1, null, null, store, null,
-            appStats, null, null, null, true, true, null, false, false, bdsFlags, false, "")
+            appStats, null, null, true, null, false, false, bdsFlags, false, "", null,
+            null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
@@ -230,7 +235,7 @@ class AppViewModelManagerTest {
     //Then the correct loadDetailedApp should be called
     verify(appCenter).loadDetailedApp("packageName", "storeName")
 
-    //And a AppModel should be returned with a not null app, with no loading and no errors
+    //And a AppCardModel should be returned with a not null app, with no loading and no errors
     Assert.assertNotNull(appViewViewModel.getAppId())
     Assert.assertEquals(false, appViewViewModel.isLoading())
     Assert.assertEquals(false, appViewViewModel.hasError())
@@ -256,7 +261,8 @@ class AppViewModelManagerTest {
         DetailedApp((-1).toLong(), "anyString", "packageName", 1.toLong(), "anyString", "anyString",
             "anyString", "anyString", true, null,
             null, null, null, null, 1.toLong(), "anyString", null, null, 1, null, null, store, null,
-            appStats, null, null, null, false, true, null, false, true, bdsFlags, false, "")
+            appStats, null, null, true, null, false, true, bdsFlags, false, "", null,
+            null)
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
@@ -281,11 +287,11 @@ class AppViewModelManagerTest {
             Install(0, Install.InstallationStatus.INITIAL_STATE, Install.InstallationType.INSTALL,
                 false, 0, "anyString", "packageName", 1, "1", "anyString", "anyString")))
     `when`(appCoinsManager.getAdvertising("packageName", 1)).thenReturn(
-        Single.just(AppCoinsAdvertisingModel("1", true)))
+        Single.just(AppCoinsAdvertisingModel(1.0, true)))
 
     var appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
 
-    // Test our AppModel
+    // Test our AppCardModel
     verify(appCenter).loadDetailedApp("packageName", "storeName")
     Assert.assertEquals(-1, appViewModel.appModel.appId)
     Assert.assertEquals("packageName", appViewModel.appModel.packageName)
@@ -305,7 +311,7 @@ class AppViewModelManagerTest {
 
     // Repeat our test and verify caches
     appViewModel = appViewModelManager.getAppViewModel().toBlocking().value()
-    verifyZeroInteractions(appCenter) // AppModel
+    verifyZeroInteractions(appCenter) // AppCardModel
     verifyZeroInteractions(appCoinsManager) // AppCoinsModel
 
     // Still check that the result is the same

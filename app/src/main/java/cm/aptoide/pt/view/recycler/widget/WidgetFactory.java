@@ -6,11 +6,11 @@
 package cm.aptoide.pt.view.recycler.widget;
 
 import android.content.res.Resources;
-import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import androidx.annotation.LayoutRes;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;

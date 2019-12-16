@@ -11,6 +11,8 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
@@ -18,7 +20,6 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
-import java.util.AbstractMap;
 import rx.Observable;
 
 /**
@@ -65,14 +66,19 @@ public class HomeNavigator {
 
   public void navigateWithAction(HomeEvent click) {
 
+    String tag = click.getBundle()
+        .getTag();
+    if (click.getBundle() instanceof AppBundle) {
+      tag = ((AppBundle) click.getBundle()).getActionTag();
+    }
+
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getType(), click.getBundle()
-        .getTitle(), "default", click.getBundle()
-        .getTag(), StoreContext.home), true);
+        .getTitle(), "default", tag, StoreContext.home), true);
   }
 
-  public void navigateToAppView(AbstractMap.SimpleEntry<String, SearchAdResult> entry) {
-    appNavigator.navigateWithAdAndTag(entry.getValue(), entry.getKey());
+  public void navigateToAppView(String tag, SearchAdResult searchAdResult) {
+    appNavigator.navigateWithAdAndTag(searchAdResult, tag);
   }
 
   public Observable<Integer> bottomNavigation() {

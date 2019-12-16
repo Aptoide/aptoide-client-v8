@@ -3,7 +3,7 @@ package cm.aptoide.pt;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.notification.NotificationIdsMapper;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -21,14 +21,15 @@ import rx.subscriptions.CompositeSubscription;
  * Created by pedroribeiro on 20/11/17.
  */
 
-public abstract class NotificationApplicationView extends AptoideApplication
-    implements NotificationView {
+public class NotificationApplicationView extends AptoideApplication implements NotificationView {
 
   private BehaviorSubject<LifecycleEvent> lifecycleEventBehaviorSubject;
   private SystemNotificationShower systemNotificationShower;
+  private NotificationManager notificationManager;
 
   @Override public void onCreate() {
     super.onCreate();
+    this.notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     lifecycleEventBehaviorSubject = BehaviorSubject.create();
     lifecycleEventBehaviorSubject.onNext(LifecycleEvent.CREATE);
     attachPresenter(getSystemNotificationShower());
@@ -36,11 +37,10 @@ public abstract class NotificationApplicationView extends AptoideApplication
 
   @NonNull @Override protected SystemNotificationShower getSystemNotificationShower() {
     if (systemNotificationShower == null) {
-      systemNotificationShower = new SystemNotificationShower(this,
-          (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE),
-          new NotificationIdsMapper(), getNotificationCenter(), getNotificationAnalytics(),
-          CrashReport.getInstance(), getNotificationProvider(), this, new CompositeSubscription(),
-          getNavigationTracker());
+      systemNotificationShower =
+          new SystemNotificationShower(this, notificationManager, new NotificationIdsMapper(),
+              getNotificationCenter(), getNotificationAnalytics(), CrashReport.getInstance(),
+              getNotificationProvider(), this, new CompositeSubscription(), getNavigationTracker());
     }
     return systemNotificationShower;
   }

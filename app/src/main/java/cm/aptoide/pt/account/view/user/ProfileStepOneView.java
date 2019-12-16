@@ -1,6 +1,6 @@
 package cm.aptoide.pt.account.view.user;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.presenter.View;
 import rx.Completable;
 import rx.Observable;

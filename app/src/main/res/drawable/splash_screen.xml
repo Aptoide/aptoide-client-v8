@@ -1,7 +1,9 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
   <item android:drawable="@drawable/splash_screen_background"/>
-  <item
-      android:drawable="@drawable/ic_aptoide_icon"
-      android:gravity="center"/>
+  <item>
+    <bitmap
+        android:gravity="center"
+        android:src="@drawable/aptoide_icon"/>
+  </item>
 </layer-list>

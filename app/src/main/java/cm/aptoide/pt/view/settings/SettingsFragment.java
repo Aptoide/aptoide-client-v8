@@ -12,18 +12,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.EditTextPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -32,6 +20,18 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -283,6 +283,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void handleDeleteAccountVisibility() {
     subscriptions.add(accountManager.accountStatus()
+        .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(account -> deleteAccount.setVisible(account.isLoggedIn()))
         .subscribe());
   }
@@ -370,6 +371,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     Preference hwSpecs = findPreference(SettingsConstants.HARDWARE_SPECS);
+    String densityValue =
+        getFormattedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
       AlertDialog.Builder alertDialogBuilder =
@@ -398,7 +401,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
               + "\n"
               + getString(R.string.cpuAbi)
               + ": "
-              + AptoideUtils.SystemU.getAbis())
+              + AptoideUtils.SystemU.getAbis()
+              + "\n"
+              + getString(R.string.setting_density)
+              + ": "
+              + densityValue)
 
           .setCancelable(false)
           .setNeutralButton(getString(android.R.string.ok), (dialog, id) -> {
@@ -470,6 +477,36 @@ public class SettingsFragment extends PreferenceFragmentCompat
       }
     });
     setupAdultContentClickHandlers();
+  }
+
+  private String getFormattedDensity(int density) {
+    String densityType = "";
+    switch (density) {
+      case 120:
+        densityType = " ldpi";
+        break;
+      case 160:
+        densityType = " mdpi";
+        break;
+      case 213:
+        densityType = " tvdpi";
+        break;
+      case 240:
+        densityType = " hdpi";
+        break;
+      case 320:
+        densityType = " xhdpi";
+        break;
+      case 480:
+        densityType = " xxhdpi";
+        break;
+      case 640:
+        densityType = " xxxhdpi";
+        break;
+      default:
+        break;
+    }
+    return density + densityType;
   }
 
   private void setupAdultContentClickHandlers() {

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.logger.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,14 +46,17 @@ public class AppDownloadManager implements AppDownloader {
   @Override public Completable pauseAppDownload() {
     return Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
-        .flatMapCompletable(fileDownloader -> fileDownloader.pauseDownload())
+        .filter(retryFileDownloader -> retryFileDownloader != null)
+        .flatMapCompletable(fileDownloader -> fileDownloader.pauseDownload()
+            .onErrorComplete())
         .toCompletable();
   }
 
   @Override public Completable removeAppDownload() {
     return Observable.from(app.getDownloadFiles())
         .flatMap(downloadAppFile -> getFileDownloader(downloadAppFile.getMainDownloadPath()))
-        .flatMapCompletable(fileDownloader -> fileDownloader.removeDownloadFile())
+        .flatMapCompletable(fileDownloader -> fileDownloader.removeDownloadFile()
+            .onErrorComplete())
         .toCompletable();
   }
 
@@ -70,6 +73,8 @@ public class AppDownloadManager implements AppDownloader {
     if (subscribe != null && !subscribe.isUnsubscribed()) {
       subscribe.unsubscribe();
       fileDownloadSubject = null;
+      fileDownloaderPersistence.clear();
+      fileDownloaderPersistence = null;
     }
   }
 
@@ -113,7 +118,7 @@ public class AppDownloadManager implements AppDownloader {
               == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
             handleErrorFileDownload();
             if (fileDownloadCallback.hasError()) {
-              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+              downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(), app.getMd5(),
                   fileDownloadCallback.getError());
             }
           }

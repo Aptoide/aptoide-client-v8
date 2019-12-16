@@ -7,8 +7,8 @@ package cm.aptoide.pt.permission;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.view.BackButtonFragment;
 import rx.functions.Action0;
@@ -46,10 +46,11 @@ public abstract class PermissionServiceFragment extends BackButtonFragment
 
   @TargetApi(Build.VERSION_CODES.M) @Override
   public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDenied, boolean shouldValidateMobileData) {
+      @Nullable Action0 toRunWhenAccessIsDenied, boolean shouldValidateMobileData,
+      boolean canBypassWifi, long size) {
     try {
       ((PermissionService) this.getActivity()).requestDownloadAccess(toRunWhenAccessIsGranted,
-          toRunWhenAccessIsDenied, shouldValidateMobileData);
+          toRunWhenAccessIsDenied, shouldValidateMobileData, canBypassWifi, size);
     } catch (ClassCastException e) {
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionService.class.getName());
@@ -99,6 +100,16 @@ public abstract class PermissionServiceFragment extends BackButtonFragment
     try {
       ((PermissionService) this.getActivity()).requestAccessToExternalFileSystem(forceShowRationale,
           rationaleMessage, toRunWhenAccessIsGranted, toRunWhenAccessIsDenied);
+    } catch (ClassCastException e) {
+      throw new IllegalStateException("Containing activity of this fragment must implement "
+          + PermissionService.class.getName());
+    }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void hasDownloadAccess(@Nullable Action0 accessGranted, @Nullable Action0 accessDenied) {
+    try {
+      ((PermissionService) this.getActivity()).hasDownloadAccess(accessGranted, accessDenied);
     } catch (ClassCastException e) {
       throw new IllegalStateException("Containing activity of this fragment must implement "
           + PermissionService.class.getName());

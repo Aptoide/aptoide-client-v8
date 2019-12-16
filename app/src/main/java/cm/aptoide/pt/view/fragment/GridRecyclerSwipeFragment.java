@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.view.fragment;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.view.ReloadInterface;
 import cm.aptoide.pt.view.recycler.BaseAdapter;

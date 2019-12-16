@@ -6,15 +6,16 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
-import cm.aptoide.pt.billing.BillingAnalytics;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
+import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
 import java.util.HashMap;
 import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by pedroribeiro on 10/05/17.
@@ -34,6 +35,12 @@ public class AppViewAnalytics {
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
   public static final String BONUS_MIGRATION_APPVIEW = "Bonus_Migration_19_App_View";
   public static final String BONUS_GAME_WALLET_OFFER_19 = "Bonus_Game_Wallet_Offer_19_App_View";
+  public static final String ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME =
+      "asv_2053_similar_apps_converting";
+  public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
+      "asv_2053_similar_apps_participating";
+  public static final String ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME =
+      "asv_2119_apkfy_ads_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -46,22 +53,24 @@ public class AppViewAnalytics {
   private static final String PACKAGE_NAME = "Package_name";
   private static final String IMPRESSION = "impression";
   private static final String TAP_ON_APP = "tap_on_app";
+  private static final String APP_BUNDLE = "app_bundle";
+  private static final String IS_APKFY = "apkfy_app_install";
   private final String INTERSTITIAL_NETWORK_MOPUB = "MoPub";
 
   private final DownloadAnalytics downloadAnalytics;
+  private final InstallAnalytics installAnalytics;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
-  private BillingAnalytics billingAnalytics;
   private StoreAnalytics storeAnalytics;
 
   public AppViewAnalytics(DownloadAnalytics downloadAnalytics, AnalyticsManager analyticsManager,
-      NavigationTracker navigationTracker, BillingAnalytics billingAnalytics,
-      StoreAnalytics storeAnalytics) {
+      NavigationTracker navigationTracker, StoreAnalytics storeAnalytics,
+      InstallAnalytics installAnalytics) {
     this.downloadAnalytics = downloadAnalytics;
     this.analyticsManager = analyticsManager;
     this.navigationTracker = navigationTracker;
-    this.billingAnalytics = billingAnalytics;
     this.storeAnalytics = storeAnalytics;
+    this.installAnalytics = installAnalytics;
   }
 
   public void sendEditorsChoiceClickEvent(String packageName, String editorsBrickPosition) {
@@ -266,28 +275,20 @@ public class AppViewAnalytics {
         AnalyticsManager.Action.INSTALL, getViewName(true));
   }
 
-  public void clickOnInstallButton(GetAppMeta.App app) {
-    try {
-      HashMap<String, Object> map = new HashMap<>();
-
-      map.put(APPLICATION_NAME, app.getPackageName());
-      map.put(APPLICATION_PUBLISHER, app.getDeveloper()
-          .getName());
-
-      analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK,
-          getViewName(true));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  public void clickOnInstallButton(String packageName, String developerName, String type) {
+  public void clickOnInstallButton(String packageName, String developerName, String type,
+      boolean hasSplits, boolean hasBilling, boolean isMigration, String rank, String adsBlocked,
+      String origin, String store, boolean isApkfy) {
     String context = getViewName(true);
     HashMap<String, Object> map = new HashMap<>();
     map.put(TYPE, type);
     map.put(APPLICATION_NAME, packageName);
     map.put(APPLICATION_PUBLISHER, developerName);
+    map.put(APP_BUNDLE, hasSplits);
     map.put(CONTEXT, context);
+    map.put(IS_APKFY, isApkfy);
+
+    installAnalytics.clickOnInstallEvent(packageName, type, hasSplits, hasBilling, isMigration,
+        rank, adsBlocked, origin, store, isApkfy);
     analyticsManager.logEvent(map, CLICK_INSTALL, AnalyticsManager.Action.CLICK, context);
   }
 
@@ -303,19 +304,20 @@ public class AppViewAnalytics {
 
   public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
-      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
+      String storeName, boolean isApkfy) {
     if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
       downloadAnalytics.migrationClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, InstallType.UPDATE_TO_APPC, action, offerResponseStatus,
-          download.hasAppc());
+          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, true);
+          DownloadAnalytics.AppContext.APPVIEW, action, true, isApkfy);
     } else {
       downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), trustedValue,
           editorsChoice, mapDownloadAction(downloadAction), action, offerResponseStatus,
-          download.hasAppc());
+          download.hasAppc(), download.hasSplits(), storeName, isApkfy);
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-          DownloadAnalytics.AppContext.APPVIEW, action, false);
+          DownloadAnalytics.AppContext.APPVIEW, action, false, isApkfy);
     }
   }
 
@@ -331,7 +333,6 @@ public class AppViewAnalytics {
       case UPDATE:
         installType = InstallType.UPDATE;
         break;
-      case PAY:
       case MIGRATE:
       case OPEN:
         throw new IllegalStateException(
@@ -346,10 +347,6 @@ public class AppViewAnalytics {
 
   public void sendDownloadCancelEvent(String packageName) {
     downloadAnalytics.downloadInteractEvent(packageName, "cancel");
-  }
-
-  public void sendPaymentViewShowEvent() {
-    billingAnalytics.sendPaymentViewShowEvent();
   }
 
   public void sendStoreOpenEvent(Store store) {
@@ -506,5 +503,39 @@ public class AppViewAnalytics {
       return BONUS_GAME_WALLET_OFFER_19;
     }
     return "N/A";
+  }
+
+  public void sendSimilarABTestGroupEvent(boolean isControlGroup) {
+    Logger.getInstance()
+        .d("AppViewAnalytics", "similar_apps_control_group: " + isControlGroup);
+  }
+
+  public void sendSimilarABTestConversionEvent(boolean isControlGroup) {
+    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
+        ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, AnalyticsManager.Action.CLICK,
+        navigationTracker.getViewName(true));
+  }
+
+  public void sendSimilarABTestImpressionEvent(boolean isControlGroup) {
+    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
+        ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME, AnalyticsManager.Action.IMPRESSION,
+        navigationTracker.getViewName(true));
+  }
+
+  @NotNull private HashMap<String, Object> getSimilarABTestData(boolean isControlGroup) {
+    return getABTestMap(isControlGroup ? "control" : "appc_bundle");
+  }
+
+  public void sendApkfyABTestImpressionEvent(String assignment) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("group", assignment);
+    analyticsManager.logEvent(data, ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
+        AnalyticsManager.Action.IMPRESSION, navigationTracker.getViewName(true));
+  }
+
+  private HashMap<String, Object> getABTestMap(String assignment) {
+    HashMap<String, Object> data = new HashMap<>();
+    data.put("group", assignment);
+    return data;
   }
 }

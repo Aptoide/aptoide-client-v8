@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorial;
 
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.List;
 
@@ -32,11 +33,16 @@ public class EditorialContent {
   private final String url;
   private final int position;
   private final boolean isPlaceHolder;
+  private final List<Split> splits;
+  private final List<String> requiredSplits;
+  private boolean hasAppc;
+  private String rank;
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
-      String pathAlt, String md5sum, String actionTitle, String url, int position) {
+      String pathAlt, String md5sum, String actionTitle, String url, int position,
+      List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -59,7 +65,11 @@ public class EditorialContent {
     this.actionTitle = actionTitle;
     this.url = url;
     this.position = position;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
+    this.rank = rank;
     this.isPlaceHolder = true;
+    this.hasAppc = hasAppc;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -87,12 +97,17 @@ public class EditorialContent {
     path = "";
     pathAlt = "";
     md5sum = "";
+    splits = null;
+    requiredSplits = null;
+    hasAppc = false;
+    rank = "";
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
       long id, String name, String icon, float avg, String packageName, long size, String graphic,
       Obb obb, long storeId, String storeName, String verName, int verCode, String path,
-      String pathAlt, String md5sum, int position) {
+      String pathAlt, String md5sum, int position, List<Split> splits, List<String> requiredSplits,
+      boolean hasAppc, String rank) {
     this.title = title;
     this.media = media;
     this.message = message;
@@ -113,6 +128,10 @@ public class EditorialContent {
     this.pathAlt = pathAlt;
     this.md5sum = md5sum;
     this.position = position;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
+    this.hasAppc = hasAppc;
+    this.rank = rank;
     this.isPlaceHolder = true;
     actionTitle = "";
     url = "";
@@ -143,6 +162,10 @@ public class EditorialContent {
     md5sum = "";
     actionTitle = "";
     url = "";
+    this.splits = null;
+    this.requiredSplits = null;
+    hasAppc = false;
+    rank = "";
   }
 
   public String getMessage() {
@@ -264,5 +287,21 @@ public class EditorialContent {
 
   public int getPosition() {
     return position;
+  }
+
+  public List<Split> getSplits() {
+    return this.splits;
+  }
+
+  public List<String> getRequiredSplits() {
+    return this.requiredSplits;
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
+  }
+
+  public String getRank() {
+    return rank;
   }
 }

@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.download;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
@@ -69,7 +69,11 @@ public class DownloadInstallationProvider implements InstallationProvider {
                       }, Throwable::printStackTrace);
                 });
           }
-          return Observable.error(new InstallationException("Installation file not available."));
+          return Observable.error(new InstallationException(
+              "Installation file not available. download is "
+                  + download.getMd5()
+                  + " and the state is : "
+                  + download.getOverallDownloadStatus()));
         });
   }
 

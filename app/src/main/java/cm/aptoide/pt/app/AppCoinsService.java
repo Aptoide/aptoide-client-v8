@@ -40,9 +40,38 @@ public class AppCoinsService {
         .isEmpty()) {
       return new AppCoinsAdvertisingModel();
     } else {
-      return new AppCoinsAdvertisingModel(listAppCoinsCampaigns.getList()
+      double appcReward = listAppCoinsCampaigns.getList()
           .get(0)
-          .getReward(), true);
+          .getReward()
+          .getAppc();
+
+      double fiatReward = listAppCoinsCampaigns.getList()
+          .get(0)
+          .getReward()
+          .getFiat()
+          .getAmount();
+
+      String fiatCurrency = listAppCoinsCampaigns.getList()
+          .get(0)
+          .getReward()
+          .getFiat()
+          .getSymbol();
+
+      double appcBudget = listAppCoinsCampaigns.getList()
+          .get(0)
+          .getBudget() != null ? listAppCoinsCampaigns.getList()
+          .get(0)
+          .getBudget()
+          .getAppc() : -1.0;
+
+      String endDate = listAppCoinsCampaigns.getList()
+          .get(0)
+          .getEndDate() != null ? listAppCoinsCampaigns.getList()
+          .get(0)
+          .getEndDate() : "";
+
+      return new AppCoinsAdvertisingModel(appcReward, true, fiatReward, fiatCurrency, appcBudget,
+          endDate);
     }
   }
 }

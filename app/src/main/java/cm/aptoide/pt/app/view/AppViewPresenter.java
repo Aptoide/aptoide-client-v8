@@ -1,14 +1,17 @@
 package cm.aptoide.pt.app.view;
 
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
+import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.AppModel;
@@ -23,6 +26,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimDialogResultWrapper;
@@ -53,22 +57,26 @@ public class AppViewPresenter implements Presenter {
   private final PermissionManager permissionManager;
   private final PermissionService permissionService;
   private final PromotionsNavigator promotionsNavigator;
-  private AppViewView view;
-  private AccountNavigator accountNavigator;
-  private AppViewAnalytics appViewAnalytics;
-  private CampaignAnalytics campaignAnalytics;
-  private AppViewNavigator appViewNavigator;
-  private AppViewManager appViewManager;
-  private AptoideAccountManager accountManager;
-  private Scheduler viewScheduler;
-  private CrashReport crashReport;
+  private final AppViewView view;
+  private final AccountNavigator accountNavigator;
+  private final AppViewAnalytics appViewAnalytics;
+  private final CampaignAnalytics campaignAnalytics;
+  private final AppViewNavigator appViewNavigator;
+  private final AppViewManager appViewManager;
+  private final AptoideAccountManager accountManager;
+  private final Scheduler viewScheduler;
+  private final CrashReport crashReport;
+  private final SimilarAppsExperiment similarAppsExperiment;
+  private final ApkfyExperiment apkfyExperiment;
+  private final ExternalNavigator externalNavigator;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator) {
+      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
+      ExternalNavigator externalNavigator, ApkfyExperiment apkfyExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -81,6 +89,9 @@ public class AppViewPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
+    this.similarAppsExperiment = similarAppsExperiment;
+    this.externalNavigator = externalNavigator;
+    this.apkfyExperiment = apkfyExperiment;
   }
 
   @Override public void present() {
@@ -102,9 +113,11 @@ public class AppViewPresenter implements Presenter {
     handleClickFlags();
     handleClickLoginSnack();
     handleClickOnAppcInfo();
+    handleClickOnAppcIabInfo();
     handleClickOnSimilarApps();
     handleClickOnToolbar();
     handleClickOnRetry();
+    handleClickOnCatappultCard();
     handleOnScroll();
     handleOnSimilarAppsVisible();
 
@@ -112,7 +125,6 @@ public class AppViewPresenter implements Presenter {
     pauseDownload();
     resumeDownload();
     cancelDownload();
-    handleAppBought();
     handleApkfyDialogPositiveClick();
     handleClickOnTopDonorsDonate();
     handleDonateCardImpressions();
@@ -130,6 +142,8 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
+    handleSimilarAppsABTestingImpression();
+    handleSimilarAppsABTestingConversion();
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -165,6 +179,7 @@ public class AppViewPresenter implements Presenter {
       view.handleError(appViewModel.getAppModel()
           .getError());
     } else {
+      view.setInstallButton(appViewModel.getAppCoinsViewModel());
       view.showAppView(appViewModel.getAppModel());
       view.showDownloadAppModel(appViewModel.getDownloadModel(),
           appViewModel.getAppCoinsViewModel());
@@ -179,16 +194,17 @@ public class AppViewPresenter implements Presenter {
 
   private void sendAppViewLoadAnalytics(AppViewModel appViewModel) {
     AppModel appModel = appViewModel.getAppModel();
-    if (!appModel.getEditorsChoice()
-        .isEmpty()) {
-      appViewManager.sendEditorsChoiceClickEvent(appModel.getPackageName(),
-          appModel.getEditorsChoice());
+    if (appModel.isFromEditorsChoice()) {
+      appViewManager.sendEditorsAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising(), appModel.getEditorsChoice());
+    } else {
+      appViewManager.sendAppOpenAnalytics(appModel.getPackageName(), appModel.getDeveloper()
+          .getName(), appModel.getMalware()
+          .getRank()
+          .name(), appModel.hasBilling(), appModel.hasAdvertising());
     }
-    appViewManager.sendAppViewOpenedFromEvent(appModel.getPackageName(), appModel.getDeveloper()
-        .getName(), appModel.getMalware()
-        .getRank()
-        .name(), appModel.hasBilling(), appModel.hasAdvertising());
-
     if (appViewModel.getDownloadModel()
         .getAction()
         .equals(DownloadModel.Action.MIGRATE) && !appViewManager.isMigrationImpressionSent()) {
@@ -198,8 +214,11 @@ public class AppViewPresenter implements Presenter {
   }
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
-    return Observable.mergeDelayError(loadInterstitialAds(), loadOrganicAds(appViewModel),
-        loadBannerAds())
+    return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
+        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP, appViewModel.getAppModel()
+        .isMature(), appViewModel.getAppModel()
+        .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
+        .isMature()))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -207,12 +226,15 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds() {
-    return appViewManager.shouldLoadInterstitialAd()
+  private Observable<Boolean> loadInterstitialAds(boolean isFromApkfy, boolean isMature,
+      String packageName) {
+    return shouldLoadInterstitialAdFromApky(isFromApkfy).filter(shouldLoad -> shouldLoad)
+        .toSingle()
+        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd(packageName))
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
-            view.initInterstitialAd();
+            view.initInterstitialAd(isMature);
             return handleConsentDialog();
           }
           return Single.just(false);
@@ -221,12 +243,25 @@ public class AppViewPresenter implements Presenter {
         .toObservable();
   }
 
-  private Observable<Boolean> loadBannerAds() {
+  private Observable<Boolean> shouldLoadInterstitialAdFromApky(boolean isFromApky) {
+    return Observable.just(isFromApky)
+        .flatMap(__ -> {
+          if (!isFromApky) {
+            return Observable.just(true);
+          }
+          return apkfyExperiment.shouldShowApkfyInterstital()
+              .flatMap(shouldShow -> apkfyExperiment.recordImpression()
+                  .toSingle(() -> shouldShow))
+              .toObservable();
+        });
+  }
+
+  private Observable<Boolean> loadBannerAds(boolean isMature) {
     return appViewManager.shouldLoadBannerAd()
         .observeOn(viewScheduler)
         .doOnSuccess(shouldLoadBanner -> {
           if (shouldLoadBanner) {
-            view.showBannerAd();
+            view.showBannerAd(isMature);
           }
         })
         .onErrorReturn(__ -> null)
@@ -259,11 +294,19 @@ public class AppViewPresenter implements Presenter {
         .getAction();
     return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
         shouldDownload -> shouldDownload)
-        .flatMapCompletable(__ -> downloadApp(action, appModel).doOnCompleted(
-            () -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
+        .flatMapCompletable(__ -> appViewManager.getAdsVisibilityStatus()
+            .doOnSuccess(status -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
-                    .getName(), action.toString()))
-            .onErrorComplete())
+                    .getName(), action.toString(), appModel.hasSplits(), appModel.hasBilling(),
+                action.equals(DownloadModel.Action.MIGRATE), appModel.getMalware()
+                    .getRank()
+                    .name(), status.toString()
+                    .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
+                    .getName(),
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
+            .flatMapCompletable(status -> downloadApp(action, appModel, status,
+                appModel.getOpenType()
+                    == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -355,7 +398,7 @@ public class AppViewPresenter implements Presenter {
   private void handleDownloadingSimilarApp() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMap(__ -> downloadInRange(0, 100))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showDownloadingSimilarApps(
@@ -370,9 +413,10 @@ public class AppViewPresenter implements Presenter {
   private void showInterstitial() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> Observable.merge(view.installAppClick(), view.apkfyDialogPositiveClick()))
         .flatMapSingle(__ -> appViewManager.getAppModel())
-        .filter(appModel -> !appModel.isAppCoinApp())
+        .filter(appModel -> !(appModel.isAppCoinApp() || "com.appcoins.wallet".equals(
+            appModel.getPackageName())))
         .flatMap(__ -> Observable.zip(downloadInRange(5, 100), view.interstitialAdLoaded(),
             (downloadAppViewModel, moPubInterstitialAdClickType) -> Observable.just(
                 downloadAppViewModel)))
@@ -487,6 +531,7 @@ public class AppViewPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.scrollReviewsResponse())
         .flatMap(reviews -> scheduleAnimations(reviews))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
   }
@@ -555,6 +600,17 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendAppcInfoInteractEvent();
           appViewNavigator.navigateToAppCoinsInfo();
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnAppcIabInfo() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.iabInfoClick())
+        .doOnNext(click -> appViewNavigator.navigateToAppCoinsInfo())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
@@ -749,6 +805,27 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
+  private void handleSimilarAppsABTestingImpression() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.similarAppsVisibility())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordImpression())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
+  private void handleSimilarAppsABTestingConversion() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.installAppClick())
+        .flatMap(__ -> view.clickSimilarApp())
+        .flatMapCompletable(__ -> similarAppsExperiment.recordConversion())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
   private void handleClickOnSimilarApps() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -824,8 +901,20 @@ public class AppViewPresenter implements Presenter {
             .doOnNext(__1 -> view.showLoading())
             .flatMap(__2 -> loadAppView())
             .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
+  }
+
+  private void handleClickOnCatappultCard() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.clickCatappultCard())
+        .observeOn(viewScheduler)
+        .doOnNext(__ -> externalNavigator.navigateToCatappultWebsite())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private Observable<Integer> scheduleAnimations(int topReviewsCount) {
@@ -855,9 +944,11 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> sortSuggestedApps(AppModel appModel,
       List<SimilarAppsBundle> list) {
     return Observable.just(list)
-        .map(__ -> {
+        .flatMapSingle(
+            similarAppsBundles -> similarAppsExperiment.shouldShowAppCoinsSimilarBundleFirst())
+        .map(shouldShowAppcBundleFirst -> {
           if (list.size() >= 2) {
-            if (appModel.isAppCoinApp()) {
+            if (appModel.isAppCoinApp() || shouldShowAppcBundleFirst) {
               if (list.get(0)
                   .getType() == SimilarAppsBundle.BundleType.APPS) {
                 Collections.swap(list, 0, 1);
@@ -876,8 +967,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> updateSuggestedAppcApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
     return appViewManager.loadAppcSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
+        appViewModel.isMature())
         .map(appcAppsViewModel -> {
           if (appcAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -890,12 +980,10 @@ public class AppViewPresenter implements Presenter {
 
   private Observable<List<SimilarAppsBundle>> updateSuggestedApps(AppModel appViewModel,
       List<SimilarAppsBundle> list) {
-    return appViewManager.loadSimilarAppsViewModel(appViewModel.getPackageName(),
-        appViewModel.getMedia()
-            .getKeywords())
-        .flatMap(similarAppsViewModel -> appViewManager.shouldLoadNativeAds()
-            .doOnSuccess(similarAppsViewModel::setShouldLoadNativeAds)
-            .map(__ -> similarAppsViewModel))
+    return appViewManager.shouldLoadNativeAds()
+        .flatMap(shouldLoadNativeAds -> appViewManager.loadSimilarAppsViewModel(
+            appViewModel.getPackageName(), appViewModel.getMedia()
+                .getKeywords(), appViewModel.isMature(), shouldLoadNativeAds))
         .map(similarAppsViewModel -> {
           if (similarAppsViewModel.hasSimilarApps()) {
             list.add(
@@ -941,14 +1029,17 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumeDownload()
-            .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapSingle(__1 -> appViewManager.getAppViewModel())
-                .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
-                    .getMd5(), app.getAppModel()
-                    .getAppId(), app.getDownloadModel()
-                    .getAction()))
+            .flatMap(
+                success -> permissionManager.requestExternalStoragePermission(permissionService))
+            .flatMapSingle(__1 -> appViewManager.getAppViewModel())
+            .flatMapCompletable(app -> appViewManager.resumeDownload(app.getAppModel()
+                .getMd5(), app.getAppModel()
+                .getAppId(), app.getDownloadModel()
+                .getAction(), app.getAppModel()
+                .getMalware()
+                .getRank()
+                .toString(), app.getAppModel()
+                .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP)
                 .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -983,8 +1074,11 @@ public class AppViewPresenter implements Presenter {
                 case INSTALL:
                 case UPDATE:
                   completable = appViewManager.getAppModel()
-                      .flatMapCompletable(
-                          appModel -> downloadApp(action, appModel).observeOn(viewScheduler)
+                      .flatMapCompletable(appModel -> appViewManager.getAdsVisibilityStatus()
+                          .flatMapCompletable(status -> downloadApp(action, appModel, status,
+                              appModel.getOpenType()
+                                  == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).observeOn(
+                              viewScheduler)
                               .doOnCompleted(() -> {
                                 String conversionUrl = appModel.getCampaignUrl();
                                 if (!conversionUrl.isEmpty()) {
@@ -993,13 +1087,19 @@ public class AppViewPresenter implements Presenter {
                                 }
                                 appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                                     appModel.getDeveloper()
-                                        .getName(), action.toString());
+                                        .getName(), action.toString(), appModel.hasSplits(),
+                                    appModel.hasBilling(), false, appModel.getMalware()
+                                        .getRank()
+                                        .name(), status.toString()
+                                        .toLowerCase(), appModel.getOriginTag(), appModel.getStore()
+                                        .getName(), appModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
 
                                 if (appViewManager.hasClaimablePromotion(
                                     Promotion.ClaimAction.INSTALL)) {
                                   appViewAnalytics.sendInstallPromotionApp();
                                 }
-                              }));
+                              })));
                   break;
                 case OPEN:
                   completable = appViewManager.getAppModel()
@@ -1009,30 +1109,53 @@ public class AppViewPresenter implements Presenter {
                   break;
                 case DOWNGRADE:
                   completable = appViewManager.getAppModel()
-                      .observeOn(viewScheduler)
                       .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(action, appViewViewModel).doOnCompleted(
-                              () -> appViewAnalytics.clickOnInstallButton(
-                                  appViewViewModel.getPackageName(), appViewViewModel.getDeveloper()
-                                      .getName(), action.toString())));
-                  break;
-                case PAY:
-                  completable = appViewManager.getAppModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> payApp(appViewViewModel.getAppId()));
+                          appViewViewModel -> appViewManager.getAdsVisibilityStatus()
+                              .observeOn(viewScheduler)
+                              .flatMapCompletable(
+                                  status -> downgradeApp(action, appViewViewModel, status,
+                                      appViewViewModel.getOpenType()
+                                          == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnCompleted(
+                                      () -> appViewAnalytics.clickOnInstallButton(
+                                          appViewViewModel.getPackageName(),
+                                          appViewViewModel.getDeveloper()
+                                              .getName(), action.toString(),
+                                          appViewViewModel.hasSplits(),
+                                          appViewViewModel.hasBilling(), false,
+                                          appViewViewModel.getMalware()
+                                              .getRank()
+                                              .name(), status.toString()
+                                              .toLowerCase(), appViewViewModel.getOriginTag(),
+                                          appViewViewModel.getStore()
+                                              .getName(), appViewViewModel.getOpenType()
+                                              == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))));
                   break;
                 case MIGRATE:
                   completable = appViewManager.getAppModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> {
-                        if (appViewManager.hasClaimablePromotion(Promotion.ClaimAction.MIGRATE)) {
-                          appViewAnalytics.sendAppcMigrationUpdateClick();
-                        }
-                        appViewAnalytics.clickOnInstallButton(appViewViewModel.getPackageName(),
-                            appViewViewModel.getDeveloper()
-                                .getName(), "UPDATE TO APPC");
-                        return migrateApp(action, appViewViewModel);
-                      });
+                      .flatMapCompletable(
+                          appViewViewModel -> appViewManager.getAdsVisibilityStatus()
+                              .observeOn(viewScheduler)
+                              .flatMapCompletable(status -> {
+                                if (appViewManager.hasClaimablePromotion(
+                                    Promotion.ClaimAction.MIGRATE)) {
+                                  appViewAnalytics.sendAppcMigrationUpdateClick();
+                                }
+                                appViewAnalytics.clickOnInstallButton(
+                                    appViewViewModel.getPackageName(),
+                                    appViewViewModel.getDeveloper()
+                                        .getName(), "UPDATE TO APPC", appViewViewModel.hasSplits(),
+                                    appViewViewModel.hasBilling(), true,
+                                    appViewViewModel.getMalware()
+                                        .getRank()
+                                        .name(), status.toString()
+                                        .toLowerCase(), appViewViewModel.getOriginTag(),
+                                    appViewViewModel.getStore()
+                                        .getName(), appViewViewModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                                return migrateApp(action, appViewViewModel, status,
+                                    appViewViewModel.getOpenType()
+                                        == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+                              }));
                   break;
                 default:
                   completable =
@@ -1049,30 +1172,26 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Completable payApp(long appId) {
-    return Completable.fromAction(() -> {
-      appViewAnalytics.sendPaymentViewShowEvent();
-      appViewNavigator.buyApp(appId);
-    });
-  }
-
-  private Completable downgradeApp(DownloadModel.Action action, AppModel appModel) {
+  private Completable downgradeApp(DownloadModel.Action action, AppModel appModel,
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return view.showDowngradeMessage()
         .filter(downgrade -> downgrade)
         .doOnNext(__ -> view.showDowngradingMessage())
-        .flatMapCompletable(__ -> downloadApp(action, appModel))
+        .flatMapCompletable(__ -> downloadApp(action, appModel, status, isApkfy))
         .toCompletable();
   }
 
-  private Completable migrateApp(DownloadModel.Action action, AppModel appModel) {
-    return downloadApp(action, appModel);
+  private Completable migrateApp(DownloadModel.Action action, AppModel appModel,
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
+    return downloadApp(action, appModel, status, false);
   }
 
   private Completable openInstalledApp(String packageName) {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  private Completable downloadApp(DownloadModel.Action action, AppModel appModel) {
+  private Completable downloadApp(DownloadModel.Action action, AppModel appModel,
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return Observable.defer(() -> {
       if (appViewManager.shouldShowRootInstallWarningPopup()) {
         return view.showRootInstallWarningPopup()
@@ -1082,39 +1201,16 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(action);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService)
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            appModel.getSize())
             .flatMap(
                 success -> permissionManager.requestExternalStoragePermission(permissionService))
             .observeOn(Schedulers.io())
             .flatMapCompletable(__1 -> appViewManager.downloadApp(action, appModel.getAppId(),
                 appModel.getMalware()
                     .getRank()
-                    .name(), appModel.getEditorsChoice())))
+                    .name(), appModel.getEditorsChoice(), status, isApkfy)))
         .toCompletable();
-  }
-
-  private void handleAppBought() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.appBought()
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .toObservable()
-                .filter(appViewViewModel -> appViewViewModel.getAppId()
-                    == appBoughClickEvent.getAppId())
-                .map(__2 -> appBoughClickEvent))
-            .first()
-            .observeOn(viewScheduler)
-            .flatMap(appBoughClickEvent -> appViewManager.getAppModel()
-                .flatMapCompletable(
-                    appViewViewModel -> appViewManager.appBought(appBoughClickEvent.getPath())
-                        .andThen(downloadApp(DownloadModel.Action.INSTALL, appViewViewModel)))
-                .toObservable())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new OnErrorNotImplementedException(error);
-        });
   }
 
   private void handleApkfyDialogPositiveClick() {
@@ -1195,14 +1291,12 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.resumePromotionDownload()
-            .flatMap(walletApp -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(
-                    __ -> appViewManager.resumeDownload(walletApp.getMd5sum(), walletApp.getId(),
-                        walletApp.getDownloadModel()
-                            .getAction()))
-                .retry()))
+            .flatMap(
+                walletApp -> permissionManager.requestExternalStoragePermission(permissionService)
+                    .flatMapCompletable(__ -> appViewManager.resumeDownload(walletApp.getMd5sum(),
+                        walletApp.getId(), walletApp.getDownloadModel()
+                            .getAction(), walletApp.getTrustedBadge(), false))
+                    .retry()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, error -> {
@@ -1213,10 +1307,8 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
         .flatMap(create -> view.cancelPromotionDownload()
-            .flatMapCompletable(walletApp -> {
-              return appViewManager.cancelDownload(walletApp.getMd5sum(),
-                  walletApp.getPackageName(), walletApp.getVersionCode());
-            })
+            .flatMapCompletable(walletApp -> appViewManager.cancelDownload(walletApp.getMd5sum(),
+                walletApp.getPackageName(), walletApp.getVersionCode()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
@@ -1279,7 +1371,8 @@ public class AppViewPresenter implements Presenter {
       return Observable.just(null);
     })
         .observeOn(viewScheduler)
-        .flatMap(__ -> permissionManager.requestDownloadAccess(permissionService))
+        .flatMap(__ -> permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
+            walletApp.getSize()))
         .flatMap(success -> permissionManager.requestExternalStoragePermission(permissionService))
         .observeOn(Schedulers.io())
         .flatMapCompletable(__1 -> appViewManager.downloadApp(walletApp))

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.editorial;
 
+import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,11 @@ public class EditorialViewModel {
   private final boolean loading;
   private final Error error;
   private final String captionColor;
+  private final List<Split> splits;
+  private final List<String> requiredSplits;
+  private final boolean hasAppc;
+  private final String rank;
+  private final String storeName;
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
       String caption, String background, List<Integer> placeHolderPositions,
@@ -61,6 +67,11 @@ public class EditorialViewModel {
     obb = null;
     loading = false;
     error = null;
+    splits = null;
+    requiredSplits = null;
+    hasAppc = false;
+    rank = "";
+    storeName = "";
   }
 
   public EditorialViewModel(boolean loading) {
@@ -87,6 +98,11 @@ public class EditorialViewModel {
     shouldHaveAnimation = false;
     error = null;
     captionColor = "";
+    splits = null;
+    requiredSplits = null;
+    hasAppc = false;
+    rank = "";
+    storeName = "";
   }
 
   public EditorialViewModel(Error error) {
@@ -113,6 +129,11 @@ public class EditorialViewModel {
     obb = null;
     shouldHaveAnimation = false;
     captionColor = "";
+    splits = null;
+    requiredSplits = null;
+    hasAppc = false;
+    rank = "";
+    storeName = "";
   }
 
   public EditorialViewModel(List<EditorialContent> editorialContentList, String title,
@@ -120,7 +141,8 @@ public class EditorialViewModel {
       List<EditorialContent> placeHolderContent, String appName, String icon, long id,
       String packageName, String md5sum, int versionCode, String versionName, String path,
       String pathAlt, Obb obb, boolean shouldHaveAnimation, String cardId, String groupId,
-      long size, String captionColor) {
+      long size, String captionColor, List<Split> splits, List<String> requiredSplits,
+      boolean hasAppc, String rank, String storeName) {
     contentList = editorialContentList;
     this.title = title;
     this.caption = caption;
@@ -142,6 +164,11 @@ public class EditorialViewModel {
     this.cardId = cardId;
     this.groupId = groupId;
     this.captionColor = captionColor;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
+    this.hasAppc = hasAppc;
+    this.rank = rank;
+    this.storeName = storeName;
     error = null;
     loading = false;
   }
@@ -252,6 +279,30 @@ public class EditorialViewModel {
 
   public String getCaptionColor() {
     return this.captionColor;
+  }
+
+  public List<Split> getBottomCardSplits() {
+    return this.splits;
+  }
+
+  public List<String> getBottomCardRequiredSplits() {
+    return this.requiredSplits;
+  }
+
+  public boolean hasSplits() {
+    return splits != null && !splits.isEmpty();
+  }
+
+  public boolean hasAppc() {
+    return hasAppc;
+  }
+
+  public String getRank() {
+    return rank;
+  }
+
+  public String getStoreName() {
+    return storeName;
   }
 
   public enum Error {

@@ -1,9 +1,16 @@
 package cm.aptoide.pt.home;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.bundles.HomeBundlesModel;
+import cm.aptoide.pt.home.bundles.ads.AdMapper;
+import cm.aptoide.pt.home.bundles.apps.RewardApp;
+import cm.aptoide.pt.home.bundles.base.ActionBundle;
+import cm.aptoide.pt.home.bundles.base.HomeBundle;
+import cm.aptoide.pt.home.bundles.base.HomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -16,9 +23,9 @@ import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
 
-import static cm.aptoide.pt.home.HomeBundle.BundleType.APPCOINS_ADS;
-import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORIAL;
-import static cm.aptoide.pt.home.HomeBundle.BundleType.EDITORS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.APPCOINS_ADS;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORIAL;
+import static cm.aptoide.pt.home.bundles.base.HomeBundle.BundleType.EDITORS;
 
 /**
  * Created by jdandrade on 07/03/2018.
@@ -81,6 +88,20 @@ public class HomePresenter implements Presenter {
     handleSnackLogInClick();
 
     handleMoPubConsentDialog();
+
+    handleLoadMoreErrorRetry();
+  }
+
+  private void handleLoadMoreErrorRetry() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> view.onLoadMoreRetryClicked())
+        .doOnNext(__ -> view.removeLoadMoreError())
+        .doOnNext(__ -> view.showLoadMore())
+        .flatMap(__ -> loadNextBundlesAndReactions())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, throwable -> crashReporter.log(throwable));
   }
 
   private void handleMoPubConsentDialog() {
@@ -138,6 +159,13 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
+  private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId,
+      HomeBundlesModel homeBundlesModel) {
+    return home.loadReactionModel(cardId, groupId, homeBundlesModel)
+        .observeOn(viewScheduler)
+        .doOnSuccess(homeBundles -> view.updateEditorialCards());
+  }
+
   private Single<List<HomeBundle>> loadReactionModel(String cardId, String groupId) {
     return home.loadReactionModel(cardId, groupId)
         .observeOn(viewScheduler)
@@ -145,18 +173,19 @@ public class HomePresenter implements Presenter {
   }
 
   private Observable<List<HomeBundle>> loadHomeAndReactions() {
-    return loadHome().toObservable()
-        .flatMapIterable(HomeBundlesModel::getList)
-        .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
-        .filter(homeBundle -> homeBundle instanceof ActionBundle)
-        .cast(ActionBundle.class)
-        .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
-            .getCardId(), actionBundle.getActionItem()
-            .getType()));
+    return loadHome().
+        flatMap(homeBundlesModel -> Observable.from(homeBundlesModel.getList())
+            .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
+            .filter(homeBundle -> homeBundle instanceof ActionBundle)
+            .cast(ActionBundle.class)
+            .filter(actionBundle -> actionBundle.getActionItem() != null)
+            .flatMapSingle(actionBundle -> loadReactionModel(actionBundle.getActionItem()
+                .getCardId(), actionBundle.getActionItem()
+                .getType(), homeBundlesModel)));
   }
 
   private Observable<List<HomeBundle>> loadFreshBundlesAndReactions() {
-    return loadFreshBundles().toObservable()
+    return loadFreshBundles().first()
         .flatMapIterable(HomeBundlesModel::getList)
         .filter(actionBundle -> actionBundle.getType() == EDITORIAL)
         .filter(homeBundle -> homeBundle instanceof ActionBundle)
@@ -192,12 +221,14 @@ public class HomePresenter implements Presenter {
                 .getTag(), homeEvent.getBundlePosition());
           } else {
             ActionBundle actionBundle = (ActionBundle) homeEvent.getBundle();
-            homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
-            homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
-                homeEvent.getBundlePosition(), actionBundle.getActionItem()
-                    .getCardId());
+            if (actionBundle.getActionItem() != null) {
+              homeAnalytics.sendEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+              homeAnalytics.sendActionItemEditorialImpressionEvent(actionBundle.getTag(),
+                  homeEvent.getBundlePosition(), actionBundle.getActionItem()
+                      .getCardId());
+            }
           }
         })
         .filter(homeEvent -> homeEvent.getBundle()
@@ -316,20 +347,25 @@ public class HomePresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private Single<Boolean> showNativeAds() {
+  private Observable<Boolean> showNativeAds() {
     return home.shouldLoadNativeAd()
+        .toObservable()
         .observeOn(viewScheduler)
-        .doOnSuccess(showNatives -> view.setAdsTest(showNatives));
+        .doOnNext(showNatives -> view.setAdsTest(showNatives))
+        .onErrorReturn(__ -> {
+          view.setAdsTest(false);
+          return false;
+        });
   }
 
-  private Single<HomeBundlesModel> loadHome() {
-    return Single.zip(showNativeAds(), loadBundles(), (aBoolean, bundlesModel) -> bundlesModel)
+  private Observable<HomeBundlesModel> loadHome() {
+    return showNativeAds().flatMap(__ -> home.loadHomeBundles())
+        .cast(HomeBundlesModel.class)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> handleBundlesResult(bundlesModel));
-  }
-
-  @NonNull private Single<HomeBundlesModel> loadBundles() {
-    return home.loadHomeBundles();
+        .doOnNext(view::showBundlesSkeleton)
+        .filter(HomeBundlesModel::isComplete)
+        .observeOn(viewScheduler)
+        .doOnNext(bundlesModel -> handleBundlesResult(bundlesModel));
   }
 
   private void handleBundlesResult(HomeBundlesModel bundlesModel) {
@@ -380,7 +416,8 @@ public class HomePresenter implements Presenter {
                 homeAnalytics.convertAppcAdClick(rewardApp.getClickUrl());
                 homeNavigator.navigateWithDownloadUrlAndReward(rewardApp.getAppId(),
                     rewardApp.getPackageName(), rewardApp.getTag(), rewardApp.getDownloadUrl(),
-                    rewardApp.getReward());
+                    (float) rewardApp.getReward()
+                        .getAppc());
               } else {
                 homeNavigator.navigateToAppView(app.getAppId(), app.getPackageName(), app.getTag());
               }
@@ -422,12 +459,13 @@ public class HomePresenter implements Presenter {
                 .getPackageName(), adHomeEvent.getBundlePosition(), adHomeEvent.getBundle()
                 .getTag(), adHomeEvent.getType(), ApplicationAd.Network.SERVER))
             .map(adHomeEvent -> adHomeEvent.getAdClick())
-            .map(adMapper.mapAdToSearchAd())
+            .map(adMapper::mapAdToSearchAd)
             .observeOn(viewScheduler)
             .doOnError(throwable -> Logger.getInstance()
                 .e(this.getClass()
                     .getCanonicalName(), throwable))
-            .doOnNext(homeNavigator::navigateToAppView)
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.getTag(),
+                result.getSearchAdResult()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {
@@ -491,11 +529,13 @@ public class HomePresenter implements Presenter {
 
   @NonNull private Single<HomeBundlesModel> loadNextBundles() {
     return home.loadNextHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
+        .toSingle()
         .observeOn(viewScheduler)
         .doOnSuccess(bundlesModel -> {
           homeAnalytics.sendLoadMoreInteractEvent();
           if (bundlesModel.hasErrors()) {
-            handleError(bundlesModel.getError());
+            handleLoadMoreError();
           } else {
             if (!bundlesModel.isLoading()) {
               view.showMoreHomeBundles(bundlesModel.getList());
@@ -504,6 +544,10 @@ public class HomePresenter implements Presenter {
           }
           view.hideShowMore();
         });
+  }
+
+  private void handleLoadMoreError() {
+    view.showLoadMoreError();
   }
 
   @VisibleForTesting public void handlePullToRefresh() {
@@ -520,10 +564,11 @@ public class HomePresenter implements Presenter {
         });
   }
 
-  @NonNull private Single<HomeBundlesModel> loadFreshBundles() {
+  @NonNull private Observable<HomeBundlesModel> loadFreshBundles() {
     return home.loadFreshHomeBundles()
+        .filter(HomeBundlesModel::isComplete)
         .observeOn(viewScheduler)
-        .doOnSuccess(bundlesModel -> {
+        .doOnNext(bundlesModel -> {
           view.hideRefresh();
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());

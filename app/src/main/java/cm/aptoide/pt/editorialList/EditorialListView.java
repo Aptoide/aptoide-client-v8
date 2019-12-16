@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorialList;
 
-import cm.aptoide.pt.home.EditorialHomeEvent;
+import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import java.util.List;

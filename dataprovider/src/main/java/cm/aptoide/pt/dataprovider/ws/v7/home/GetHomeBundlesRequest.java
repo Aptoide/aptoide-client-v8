@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -41,6 +42,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
   private final ConnectivityManager connectivityManager;
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final List<String> packageNames;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private boolean bypassServerCache;
 
   private GetHomeBundlesRequest(Body body, OkHttpClient httpClient,
@@ -50,7 +52,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
     this.widgetsUtils = widgetsUtils;
@@ -66,6 +69,7 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
     this.connectivityManager = connectivityManager;
     this.versionCodeProvider = versionCodeProvider;
     this.packageNames = packageNames;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static GetHomeBundlesRequest of(int limit, int offset, OkHttpClient httpClient,
@@ -75,12 +79,14 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, List<String> packageNames,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new GetHomeBundlesRequest(
         new Body(limit, offset, WidgetsArgs.createDefault(resources, windowManager)), httpClient,
         converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences, widgetsUtils,
         storeCredentials, clientUniqueId, isGooglePlayServicesAvailable, partnerId, accountMature,
-        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames);
+        filters, resources, windowManager, connectivityManager, versionCodeProvider, packageNames,
+        appBundlesVisibilityManager);
   }
 
   private Observable<List<GetStoreWidgets.WSWidget>> loadAppsInBundles(
@@ -93,7 +99,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames))
+            Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
+            appBundlesVisibilityManager))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())
@@ -109,9 +116,8 @@ public class GetHomeBundlesRequest extends V7<GetStoreWidgets, GetHomeBundlesReq
 
   @Override protected Observable<GetStoreWidgets> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getHomeBundles(body, bypassCache)
-        .flatMap(getStoreWidgets -> loadAppsInBundles(getStoreWidgets, bypassCache).map(
-            wsWidgets -> getStoreWidgets));
+    return Observable.just(null)
+        .flatMap(__ -> interfaces.getHomeBundles(body, bypassCache));
   }
 
   public static class Body extends BaseBody implements Endless {

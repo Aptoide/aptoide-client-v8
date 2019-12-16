@@ -5,7 +5,6 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.LoadReactionModel;
 import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import cm.aptoide.pt.view.EditorialConfiguration;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -25,7 +25,7 @@ import rx.Single;
 public class EditorialManager {
 
   private final EditorialRepository editorialRepository;
-  private final String cardId;
+  private final EditorialConfiguration editorialConfiguration;
   private final InstallManager installManager;
   private final DownloadFactory downloadFactory;
   private final NotificationAnalytics notificationAnalytics;
@@ -35,14 +35,15 @@ public class EditorialManager {
   private final MoPubAdsManager moPubAdsManager;
   private DownloadStateParser downloadStateParser;
 
-  public EditorialManager(EditorialRepository editorialRepository, String cardId,
-      InstallManager installManager, DownloadFactory downloadFactory,
-      DownloadStateParser downloadStateParser, NotificationAnalytics notificationAnalytics,
-      InstallAnalytics installAnalytics, EditorialAnalytics editorialAnalytics,
-      ReactionsManager reactionsManager, MoPubAdsManager moPubAdsManager) {
+  public EditorialManager(EditorialRepository editorialRepository,
+      EditorialConfiguration editorialConfiguration, InstallManager installManager,
+      DownloadFactory downloadFactory, DownloadStateParser downloadStateParser,
+      NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics,
+      EditorialAnalytics editorialAnalytics, ReactionsManager reactionsManager,
+      MoPubAdsManager moPubAdsManager) {
 
     this.editorialRepository = editorialRepository;
-    this.cardId = cardId;
+    this.editorialConfiguration = editorialConfiguration;
     this.installManager = installManager;
     this.downloadFactory = downloadFactory;
     this.downloadStateParser = downloadStateParser;
@@ -54,7 +55,7 @@ public class EditorialManager {
   }
 
   public Single<EditorialViewModel> loadEditorialViewModel() {
-    return editorialRepository.loadEditorialViewModel(cardId);
+    return editorialRepository.loadEditorialViewModel(editorialConfiguration.getLoadSource());
   }
 
   public boolean shouldShowRootInstallWarningPopup() {
@@ -72,53 +73,57 @@ public class EditorialManager {
         editorialDownloadEvent.getMd5(), editorialDownloadEvent.getIcon(),
         editorialDownloadEvent.getVerName(), editorialDownloadEvent.getVerCode(),
         editorialDownloadEvent.getPath(), editorialDownloadEvent.getPathAlt(),
-        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize()))
+        editorialDownloadEvent.getObb(), false, editorialDownloadEvent.getSize(),
+        editorialDownloadEvent.getSplits(), editorialDownloadEvent.getRequiredSplits(),
+        editorialDownloadEvent.getTrustedBadge(), editorialDownloadEvent.getTrustedBadge()))
         .flatMapSingle(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 editorialDownloadEvent.getPackageName(), editorialDownloadEvent.getAppId(),
-                offerResponseStatus))
+                offerResponseStatus, editorialDownloadEvent.getTrustedBadge(),
+                editorialDownloadEvent.getStoreName(), editorialDownloadEvent.getAction()
+                    .toString()))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
   }
 
   private void setupDownloadEvents(Download download, String packageName, long appId,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
+      String storeName, String installType) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(packageName, appId);
     editorialAnalytics.setupDownloadEvents(download, campaignId, abTestGroup,
-        AnalyticsManager.Action.CLICK, offerResponseStatus);
+        AnalyticsManager.Action.CLICK, offerResponseStatus, trustedBadge, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
-        download.hasAppc());
+        download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
+        download.getTrustedBadge(), download.getStoreName(), false);
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
-      int versionCode, boolean paidApp, GetAppMeta.Pay pay, int position) {
+      int versionCode, int position) {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new EditorialDownloadModel(
-            downloadStateParser.parseDownloadType(install.getType(), paidApp,
-                pay != null && pay.isPaid(), false), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), pay, position));
+            downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
+            downloadStateParser.parseDownloadState(install.getState()), position));
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
-  public Completable resumeDownload(String md5, String packageName, long appId) {
+  public Completable resumeDownload(String md5, String packageName, long appId, String action) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, packageName, appId,
-                offerResponseStatus))
+                offerResponseStatus, download.getTrustedBadge(), download.getStoreName(), action))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {

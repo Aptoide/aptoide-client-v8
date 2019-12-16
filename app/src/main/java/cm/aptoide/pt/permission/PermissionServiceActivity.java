@@ -12,11 +12,11 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
@@ -110,28 +110,45 @@ import rx.functions.Action0;
   }
 
   @Override public void requestDownloadAccess(@Nullable Action0 toRunWhenAccessIsGranted,
-      @Nullable Action0 toRunWhenAccessIsDenied, boolean allowDownloadOnMobileData) {
+      @Nullable Action0 toRunWhenAccessIsDenied, boolean allowDownloadOnMobileData,
+      boolean canBypassWifi, long size) {
     int message;
 
     if (!allowDownloadOnMobileData && (AptoideUtils.SystemU.getConnectionType(connectivityManager)
         .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
 
-      message = R.string.general_downloads_dialog_only_wifi_message;
-
-      showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
-
-        @Override public void onNext(GenericDialogs.EResponse eResponse) {
-          super.onNext(eResponse);
-          if (eResponse == GenericDialogs.EResponse.YES) {
-            getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
-                .newSettingsFragment(), true);
-          } else {
-            if (toRunWhenAccessIsDenied != null) {
-              toRunWhenAccessIsDenied.call();
+      if (canBypassWifi) {
+        showBypassWifiMessage(size, new SimpleSubscriber<GenericDialogs.EResponse>() {
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse == GenericDialogs.EResponse.YES) {
+              if (toRunWhenAccessIsGranted != null) toRunWhenAccessIsGranted.call();
+            } else {
+              if (toRunWhenAccessIsDenied != null) {
+                toRunWhenAccessIsDenied.call();
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+
+        message = R.string.general_downloads_dialog_only_wifi_message;
+
+        showMessageOKCancel(message, new SimpleSubscriber<GenericDialogs.EResponse>() {
+
+          @Override public void onNext(GenericDialogs.EResponse eResponse) {
+            super.onNext(eResponse);
+            if (eResponse == GenericDialogs.EResponse.YES) {
+              getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
+                  .newSettingsFragment(), true);
+            } else {
+              if (toRunWhenAccessIsDenied != null) {
+                toRunWhenAccessIsDenied.call();
+              }
+            }
+          }
+        });
+      }
       return;
     }
     if (toRunWhenAccessIsGranted != null) {
@@ -246,6 +263,34 @@ import rx.functions.Action0;
     if (toRunWhenAccessIsGranted != null) {
       toRunWhenAccessIsGranted.call();
     }
+  }
+
+  @TargetApi(Build.VERSION_CODES.M) @Override
+  public void hasDownloadAccess(@Nullable Action0 accessGranted, @Nullable Action0 accessDenied) {
+    int externalStoragePermission =
+        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+    if (externalStoragePermission == PackageManager.PERMISSION_GRANTED) {
+      if (!(AptoideUtils.SystemU.getConnectionType(connectivityManager)
+          .equals("mobile") && !ManagerPreferences.getDownloadsWifiOnly(sharedPreferences))) {
+        if (accessGranted != null) {
+          accessGranted.call();
+        }
+        return;
+      }
+    }
+    if (accessDenied != null) {
+      accessDenied.call();
+    }
+  }
+
+  private void showBypassWifiMessage(long size,
+      SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
+    GenericDialogs.createGenericOkCancelMessageWithColorButton(this, "",
+        getString(R.string.general_downloads_dialog_only_wifi_message),
+        getString(R.string.general_downloads_dialog_only_wifi_install_button,
+            AptoideUtils.StringU.formatBytes(size, false)), getString(R.string.cancel))
+        .subscribe(subscriber);
   }
 
   private void showMessageOKCancel(@StringRes int messageId,

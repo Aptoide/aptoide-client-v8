@@ -343,7 +343,9 @@ public class GetAdsRequest extends Aptwords<GetAdsResponse> {
     parameters.put("type", "1-3");
     parameters.put("partners", "1-3,5-10");
     parameters.put("keywords", keyword);
-    parameters.put("oem_id", oemid);
+    if (oemid != null && !oemid.isEmpty()) {
+      parameters.put("oem_id", oemid);
+    }
     parameters.put("country", forcedCountry);
     parameters.put("group_package_name", groupPackageName);
 

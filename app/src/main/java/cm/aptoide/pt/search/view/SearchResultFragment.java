@@ -6,19 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.util.Pair;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +18,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
@@ -45,6 +45,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -65,6 +66,7 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.ViewBinder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,9 +94,9 @@ public class SearchResultFragment extends BackButtonFragment
       "followed_stores_search_list_state";
   private static final String TRENDING_LIST_STATE = "trending_list_state";
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
-
   @Inject SearchResultPresenter searchResultPresenter;
   @Inject @Named("aptoide-theme") String theme;
+  private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
   private ImageView noResultsSearchButton;
@@ -134,16 +136,17 @@ public class SearchResultFragment extends BackButtonFragment
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private ErrorView errorView;
 
-  public static SearchResultFragment newInstance(String currentQuery) {
-    return newInstance(currentQuery, false);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
+    return newInstance(searchQueryModel, false);
   }
 
   public static SearchResultFragment newInstance(boolean focusInSearchBar) {
-    return newInstance("", false, focusInSearchBar);
+    return newInstance(new SearchQueryModel(), false, focusInSearchBar);
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      boolean onlyTrustedApps) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -151,9 +154,9 @@ public class SearchResultFragment extends BackButtonFragment
     return fragment;
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, boolean onlyTrustedApps,
-      boolean focusInSearchBar) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, onlyTrustedApps);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      boolean onlyTrustedApps, boolean focusInSearchBar) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, onlyTrustedApps);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     args.putBoolean(FOCUS_IN_SEARCH, focusInSearchBar);
@@ -162,9 +165,9 @@ public class SearchResultFragment extends BackButtonFragment
     return fragment;
   }
 
-  public static SearchResultFragment newInstance(String currentQuery, String storeName,
-      String storeTheme) {
-    SearchViewModel viewModel = new SearchViewModel(currentQuery, storeName, storeTheme);
+  public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel,
+      String storeName, String storeTheme) {
+    SearchViewModel viewModel = new SearchViewModel(searchQueryModel, storeName, storeTheme);
     Bundle args = new Bundle();
     args.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
     SearchResultFragment fragment = new SearchResultFragment();
@@ -657,7 +660,10 @@ public class SearchResultFragment extends BackButtonFragment
       focusInSearchBar = getArguments().getBoolean(FOCUS_IN_SEARCH);
     }
 
-    if (viewModel != null) currentQuery = viewModel.getCurrentQuery();
+    if (viewModel != null) {
+      currentQuery = viewModel.getSearchQueryModel()
+          .getFinalQuery();
+    }
 
     final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
 
@@ -677,7 +683,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
-            searchResultAdsFollowedStores, crashReport);
+            searchResultAdsFollowedStores, crashReport, oneDecimalFormatter);
 
     listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
@@ -686,7 +692,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
-            searchResultAdsAllStores, crashReport);
+            searchResultAdsAllStores, crashReport, oneDecimalFormatter);
 
     searchSuggestionsAdapter =
         new SearchSuggestionsAdapter(new ArrayList<>(), suggestionClickedPublishSubject);
@@ -956,16 +962,15 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupToolbar() {
-
-    if (viewModel.getCurrentQuery()
-        .isEmpty() && !noResults) {
+    String query = viewModel.getSearchQueryModel()
+        .getFinalQuery();
+    if (query.isEmpty() && !noResults) {
       toolbar.setTitle(R.string.search_hint_title);
       toolbar.setTitleMarginStart(100);
-    } else if (viewModel.getCurrentQuery()
-        .isEmpty()) {
+    } else if (query.isEmpty()) {
       toolbar.setTitle(R.string.search_hint_title);
     } else {
-      toolbar.setTitle(viewModel.getCurrentQuery());
+      toolbar.setTitle(query);
     }
 
     final AppCompatActivity activity = (AppCompatActivity) getActivity();

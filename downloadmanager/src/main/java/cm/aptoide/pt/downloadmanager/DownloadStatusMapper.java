@@ -1,7 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
 import cm.aptoide.pt.database.realm.Download;
-import java.util.List;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -19,7 +18,7 @@ public class DownloadStatusMapper {
         downloadState = Download.INVALID_STATUS;
         break;
       case COMPLETED:
-        downloadState = Download.COMPLETED;
+        downloadState = Download.WAITING_TO_MOVE_FILES;
         break;
       case PENDING:
         downloadState = Download.PENDING;
@@ -31,12 +30,13 @@ public class DownloadStatusMapper {
         downloadState = Download.WARN;
         break;
       case ERROR:
+      case ERROR_MD5_DOES_NOT_MATCH:
       case ERROR_NOT_ENOUGH_SPACE:
       case ERROR_FILE_NOT_FOUND:
         downloadState = Download.ERROR;
         break;
       default:
-        throw new IllegalArgumentException("Invalid app download state");
+        throw new IllegalArgumentException("Invalid app download state " + appDownloadState);
     }
     return downloadState;
   }
@@ -45,6 +45,8 @@ public class DownloadStatusMapper {
     int downloadError;
     switch (appDownloadState) {
       case ERROR:
+      case ERROR_MD5_DOES_NOT_MATCH:
+      case ERROR_FILE_NOT_FOUND:
         downloadError = Download.GENERIC_ERROR;
         break;
       case ERROR_NOT_ENOUGH_SPACE:

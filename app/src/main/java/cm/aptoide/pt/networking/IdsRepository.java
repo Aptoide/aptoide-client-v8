@@ -7,8 +7,8 @@ package cm.aptoide.pt.networking;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
+import androidx.annotation.WorkerThread;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;

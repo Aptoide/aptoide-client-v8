@@ -1,6 +1,6 @@
 package cm.aptoide.pt.notification;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import io.realm.Sort;

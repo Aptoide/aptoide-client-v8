@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.view.WindowManager;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
@@ -46,6 +47,7 @@ public class GetStoreWidgetsRequest
   private final AdsApplicationVersionCodeProvider versionCodeProvider;
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private boolean bypassServerCache;
 
   public GetStoreWidgetsRequest(String url, Body body, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -55,7 +57,8 @@ public class GetStoreWidgetsRequest
       boolean isGooglePlayServicesAvailable, String partnerId, boolean accountMature,
       String filters, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils) {
+      AdsApplicationVersionCodeProvider versionCodeProvider, WSWidgetsUtils widgetsUtils,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences);
     this.url = url;
     this.storeCredentials = storeCredentials;
@@ -70,6 +73,7 @@ public class GetStoreWidgetsRequest
     this.versionCodeProvider = versionCodeProvider;
     this.sharedPreferences = sharedPreferences;
     this.widgetsUtils = widgetsUtils;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
@@ -78,7 +82,8 @@ public class GetStoreWidgetsRequest
       SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
       String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
       boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider) {
+      AdsApplicationVersionCodeProvider versionCodeProvider,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
 
     final Body body =
         new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager));
@@ -87,27 +92,7 @@ public class GetStoreWidgetsRequest
         .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
         sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
         partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
-  }
-
-  public static GetStoreWidgetsRequest ofAction(String url, StoreCredentials storeCredentials,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, Resources resources, WindowManager windowManager,
-      String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
-      boolean accountMature, String filters, ConnectivityManager connectivityManager,
-      AdsApplicationVersionCodeProvider versionCodeProvider, String storeName,
-      StoreContext storeContext) {
-
-    final Body body =
-        new Body(storeCredentials, WidgetsArgs.createDefault(resources, windowManager),
-            storeContext, storeName);
-
-    return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
-        .get(), body, bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
-        partnerId, accountMature, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils());
+        versionCodeProvider, new WSWidgetsUtils(), appBundlesVisibilityManager);
   }
 
   public String getUrl() {
@@ -137,7 +122,8 @@ public class GetStoreWidgetsRequest
             ((BodyInterceptor<BaseBody>) bodyInterceptor), getHttpClient(), converterFactory,
             filters, getTokenInvalidator(), sharedPreferences, resources, windowManager,
             connectivityManager, versionCodeProvider, bypassServerCache,
-            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList()))
+            Type.ADS.getPerLineCount(resources, windowManager), Collections.emptyList(),
+            appBundlesVisibilityManager))
         .toList()
         .flatMapIterable(wsWidgets -> getStoreWidgets.getDataList()
             .getList())

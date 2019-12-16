@@ -1,9 +1,9 @@
 package cm.aptoide.pt.app.view.screenshots;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.view.app.AppScreenshot;
 import cm.aptoide.pt.view.app.AppVideo;
 import java.util.ArrayList;

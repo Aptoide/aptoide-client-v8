@@ -28,6 +28,7 @@ public class EditorialCard extends BaseV7Response {
 
   //2nd level
   public static class Data {
+    private String id;
     private List<Content> content;
     private String type;
     private String title;
@@ -85,6 +86,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setAppearance(Appearance appearance) {
       this.appearance = appearance;
+    }
+
+    public String getId() {
+      return id;
+    }
+
+    public void setId(String id) {
+      this.id = id;
     }
 
     //3rd level
@@ -157,6 +166,7 @@ public class EditorialCard extends BaseV7Response {
     private String description;
     private String thumbnail;
     private String image;
+    private String url;
 
     public String getType() {
       return type;
@@ -188,6 +198,14 @@ public class EditorialCard extends BaseV7Response {
 
     public void setThumbnail(String thumbnail) {
       this.thumbnail = thumbnail;
+    }
+
+    public String getUrl() {
+      return url;
+    }
+
+    public void setUrl(String url) {
+      this.url = url;
     }
   }
 

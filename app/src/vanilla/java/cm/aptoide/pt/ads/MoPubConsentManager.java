@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import cm.aptoide.pt.logger.Logger;
 import com.mopub.common.MoPub;
 import com.mopub.common.privacy.ConsentDialogListener;

@@ -36,12 +36,19 @@ public class MinimalAd extends RealmObject implements Parcelable {
   private Integer stars;
   private Long modified;
 
+  private boolean hasAppc;
+  private double appcAmount;
+  private double currencyAmount;
+  private String currency;
+  private String currencySymbol;
+
   public MinimalAd() {
   }
 
   public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl,
       String cpdUrl, long appId, long adId, String cpiUrl, String name, String iconPath,
-      String description, int downloads, int stars, Long modified) {
+      String description, int downloads, int stars, Long modified, boolean hasAppc,
+      double appcAmount, double currencyAmount, String currency, String currencySymbol) {
     this.packageName = packageName;
     this.networkId = networkId;
     this.clickUrl = clickUrl;
@@ -56,6 +63,11 @@ public class MinimalAd extends RealmObject implements Parcelable {
     this.downloads = downloads;
     this.stars = stars;
     this.modified = modified;
+    this.hasAppc = hasAppc;
+    this.appcAmount = appcAmount;
+    this.currencyAmount = currencyAmount;
+    this.currency = currency;
+    this.currencySymbol = currencySymbol;
   }
 
   protected MinimalAd(Parcel in) {
@@ -73,6 +85,11 @@ public class MinimalAd extends RealmObject implements Parcelable {
     this.downloads = in.readInt();
     this.stars = in.readInt();
     this.modified = in.readLong();
+    this.hasAppc = in.readInt() == 1;
+    this.appcAmount = in.readDouble();
+    this.currencyAmount = in.readDouble();
+    this.currency = in.readString();
+    this.currencySymbol = in.readString();
   }
 
   public String getCpdUrl() {
@@ -135,6 +152,26 @@ public class MinimalAd extends RealmObject implements Parcelable {
     return modified;
   }
 
+  public boolean isHasAppc() {
+    return hasAppc;
+  }
+
+  public String getCurrency() {
+    return currency;
+  }
+
+  public String getCurrencySymbol() {
+    return currencySymbol;
+  }
+
+  public double getCurrencyAmount() {
+    return currencyAmount;
+  }
+
+  public double getAppcAmount() {
+    return appcAmount;
+  }
+
   @Override public int describeContents() {
     return 0;
   }
@@ -154,5 +191,10 @@ public class MinimalAd extends RealmObject implements Parcelable {
     dest.writeInt(this.downloads);
     dest.writeInt(this.stars);
     dest.writeLong(this.modified);
+    dest.writeInt(this.hasAppc ? 1 : 0);
+    dest.writeDouble(this.appcAmount);
+    dest.writeDouble(this.currencyAmount);
+    dest.writeString(this.currency);
+    dest.writeString(this.currencySymbol);
   }
 }

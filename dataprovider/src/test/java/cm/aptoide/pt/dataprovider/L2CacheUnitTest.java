@@ -53,6 +53,7 @@ public class L2CacheUnitTest {
         .build());
     responseBuilder.protocol(Protocol.HTTP_1_1);
     responseBuilder.body(ResponseBody.create(MediaType.parse("application/json"), responseData));
+    responseBuilder.message("");
 
     response = responseBuilder.build();
   }

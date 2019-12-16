@@ -12,7 +12,7 @@
       android:paddingTop="25dp"
       />
 
-  <android.support.v7.widget.RecyclerView
+  <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/similar_appc_list"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

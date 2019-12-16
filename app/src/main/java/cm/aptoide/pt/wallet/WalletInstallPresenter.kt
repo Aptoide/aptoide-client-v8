@@ -16,7 +16,9 @@ class WalletInstallPresenter(val view: WalletInstallView,
                              val navigator: WalletInstallNavigator,
                              val permissionManager: PermissionManager,
                              val permissionService: PermissionService,
-                             val viewScheduler: Scheduler, val io: Scheduler) : Presenter {
+                             val viewScheduler: Scheduler,
+                             val io: Scheduler,
+                             val configuration: WalletInstallConfiguration) : Presenter {
 
   override fun present() {
     loadWalletInstall()
@@ -113,7 +115,7 @@ class WalletInstallPresenter(val view: WalletInstallView,
   }
 
   private fun showWalletInitialState(): Observable<Pair<String?, WalletApp>>? {
-    return Observable.zip(walletInstallManager.getAppIcon(),
+    return Observable.zip(walletInstallManager.getAppIcon(configuration.appPackageName),
         walletInstallManager.getWallet()) { appIcon, walletApp ->
       Pair<String?, WalletApp>(appIcon, walletApp)
     }.first().observeOn(viewScheduler)

@@ -1,7 +1,7 @@
 package cm.aptoide.pt.app.view.similar;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.view.app.Application;
