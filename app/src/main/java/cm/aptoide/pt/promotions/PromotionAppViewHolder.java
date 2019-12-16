@@ -1,10 +1,8 @@
 package cm.aptoide.pt.promotions;
 
-import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -88,21 +86,9 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
           .getResources()
           .getColor(R.color.grey_fog_light));
     } else {
-      TypedValue resultValue = new TypedValue();
-      itemView.getContext()
-          .getTheme()
-          .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
-
-      promotionAction.setTextColor(Color.WHITE);
-
-      promotionAction.setEnabled(true);
-      if (resultValue.resourceId != 0) {
-        promotionAction.setBackgroundResource(resultValue.resourceId);
-      } else {
-        promotionAction.setBackgroundDrawable(itemView.getContext()
-            .getResources()
-            .getDrawable(R.drawable.card_border_rounded_orange));
-      }
+      promotionAction.setBackgroundDrawable(itemView.getContext()
+          .getResources()
+          .getDrawable(R.drawable.appc_gradient_rounded));
     }
   }
 
