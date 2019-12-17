@@ -127,6 +127,7 @@
   <attr format="color" name="colorControlHighlight"/>
   <attr format="color" name="bnItemColorState"/>
   <attr format="color" name="wizard3Color"/>
+  <attr format="color" name="reactionsPopUpBackgroundColor"/>
 
   <declare-styleable name="CustomTextInputLayout">
     <attr format="string" name="helperText"/>
