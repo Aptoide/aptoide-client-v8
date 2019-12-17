@@ -291,8 +291,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void updateClaimStatus(String packageName) {
     if (packageName.equals(WALLET_PACKAGE_NAME)) {
       promotionAction.setEnabled(false);
-      promotionAction.setBackgroundColor(getContext().getResources()
-          .getColor(R.color.grey_fog_light));
+      promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
+      promotionAction.setTextColor(getResources().getColor(R.color.black));
+      promotionAction.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_promotion_claimed_check,
+          0, 0, 0);
+      promotionAction.setPadding(330, 0, 360, 0);
       promotionsAdapter.isWalletInstalled(true);
       promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
