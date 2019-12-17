@@ -11,9 +11,6 @@ public abstract class ThemedActivityView extends ActivityView {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
-    //ThemeUtils.setStatusBarThemeColor(this, theme);
-    //ThemeUtils.setAptoideTheme(this, "dark");
-
     setSystemTheme(getResources().getConfiguration());
   }
 
@@ -21,11 +18,9 @@ public abstract class ThemedActivityView extends ActivityView {
     int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
     switch (currentNightMode) {
       case Configuration.UI_MODE_NIGHT_NO:
-        // Night mode is not active, we're using the light theme
         setLightTheme();
         break;
       case Configuration.UI_MODE_NIGHT_YES:
-        // Night mode is active, we're using dark theme
         setDarkTheme();
         break;
     }
@@ -38,6 +33,6 @@ public abstract class ThemedActivityView extends ActivityView {
 
   private void setDarkTheme() {
     ThemeUtils.setStatusBarThemeColor(this, theme);
-    ThemeUtils.setAptoideTheme(this, "dark");
+    ThemeUtils.setAptoideTheme(this, ThemeUtils.DARK_THEME);
   }
 }

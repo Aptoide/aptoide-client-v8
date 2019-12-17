@@ -1,11 +1,9 @@
 package cm.aptoide.pt.view;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreTheme;
@@ -14,6 +12,9 @@ import cm.aptoide.pt.store.StoreTheme;
  * Created by pedroribeiro on 23/06/16.
  */
 public class ThemeUtils {
+
+  static final String DARK_THEME = "dark_theme";
+  private static final String TAG = "ThemeUtils";
 
   /**
    * Responsible for changing status bar color
@@ -33,24 +34,13 @@ public class ThemeUtils {
    * Used to set Default themes
    */
   public static void setAptoideTheme(Activity activity, String theme) {
-
-    SharedPreferences sPref =
-        ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences();
-
-    if (sPref.getString("theme", "light")
-        .equals("dark")) {
-      sPref.edit()
-          .putString("theme", "default_dark")
-          .apply();
-      Logger.getInstance()
-          .d("theme", "setting dark theme");
+    if (theme.equals(DARK_THEME)) {
       activity.setTheme(R.style.AptoideThemeDefaultDark);
-    } else {
-      sPref.edit()
-          .putString("theme", theme)
-          .apply();
       Logger.getInstance()
-          .d("theme", "setting default light theme");
+          .d(TAG, "Setting dark theme");
+    } else {
+      Logger.getInstance()
+          .d(TAG, "Setting default light theme");
       activity.setTheme(R.style.AptoideThemeDefault);
     }
   }
