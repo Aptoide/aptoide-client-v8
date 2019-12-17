@@ -10,6 +10,8 @@ public class GetPromotionsResponse
 
   public static class PromotionModel {
     private String title;
+    private String dialogDescription;
+    private String description;
     private String promotionId;
     private String type;
     private String background;
@@ -47,6 +49,22 @@ public class GetPromotionsResponse
 
     public void setBackground(String background) {
       this.background = background;
+    }
+
+    public String getDialogDescription() {
+      return dialogDescription;
+    }
+
+    public void setDialogDescription(String dialogDescription) {
+      this.dialogDescription = dialogDescription;
+    }
+
+    public String getDescription() {
+      return description;
+    }
+
+    public void setDescription(String description) {
+      this.description = description;
     }
   }
 }

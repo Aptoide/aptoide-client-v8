@@ -196,7 +196,7 @@ public class PromotionsPresenter implements Presenter {
       view.showPromotionOverDialog();
       return Observable.empty();
     } else {
-      view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
+      view.setPromotionMessage((appsModel.getDescription()));
       view.showPromotionTitle(appsModel.getTitle());
       view.showPromotionFeatureGraphic(appsModel.getFeatureGraphic());
       return handlePromotionApps(appsModel);

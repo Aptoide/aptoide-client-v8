@@ -21,6 +21,7 @@
   <color name="curation_default">@color/default_orange_gradient_end</color>
   <color name="curation_gold">#f19c23</color>
   <color name="appc_spend">#e74258</color>
+  <color name="promotions_reward">#ff6b6d</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
