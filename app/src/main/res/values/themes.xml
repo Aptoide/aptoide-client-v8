@@ -66,6 +66,25 @@
     <item name="appviewRatingCardTextColor">@color/white</item>
     <item name="textColorBlackAlpha">@color/black_87_alpha</item>
 
+    <item name="textColorWhite">@color/white</item>
+    <item name="textColorGreyFogDark">@color/grey_fog_dark</item>
+    <item name="textColorGrey700">@color/grey_700</item>
+    <item name="textColorGreyMedium">@color/grey_medium</item>
+    <item name="textColorGreyFogNormal">@color/grey_fog_normal</item>
+    <item name="textColorGrey">@color/grey</item>
+    <item name="textColorGrey900">@color/grey_900</item>
+    <item name="textColorRed700">@color/red_700</item>
+    <item name="textColorOrange">@color/orange</item>
+    <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorCurationGold">@color/curation_gold</item>
+    <item name="textColorAppcOrange">@color/appc_orange</item>
+    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorAppcColor">#ff7867</item>
+    <item name="textColorTwitter">@color/twitter_color</item>
+    <item name="textColorTwitch">@color/twitch</item>
+    <item name="textColorYoutube">@color/youtube</item>
+    <item name="textColorFacebook">@color/facebook</item>
+
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
     <item name="customButton">@style/WidgetButtonCustomAptoide</item>
@@ -136,8 +155,7 @@
 
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme">
-  </style>
+  <style name="AptoideThemeDefault" parent="AppBaseTheme"></style>
 
   <style name="AppBaseTheme.NoTitle">
     <item name="android:windowNoTitle">true</item>
@@ -219,6 +237,24 @@
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
     <item name="textColorBlackAlpha">@color/white</item>
 
+    <item name="textColorWhite">@color/white</item>
+    <item name="textColorGreyFogDark">@color/grey_fog_dark</item>
+    <item name="textColorGrey700">@color/grey_700</item>
+    <item name="textColorGreyMedium">@color/grey_medium</item>
+    <item name="textColorGreyFogNormal">@color/grey_fog_normal</item>
+    <item name="textColorGrey">@color/grey</item>
+    <item name="textColorGrey900">@color/grey_900</item>
+    <item name="textColorRed700">@color/red_700</item>
+    <item name="textColorOrange">@color/orange</item>
+    <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorCurationGold">@color/curation_gold</item>
+    <item name="textColorAppcOrange">@color/appc_orange</item>
+    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorAppcColor">#ff7867</item>
+    <item name="textColorTwitter">@color/twitter_color</item>
+    <item name="textColorTwitch">@color/twitch</item>
+    <item name="textColorYoutube">@color/youtube</item>
+    <item name="textColorFacebook">@color/facebook</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
@@ -290,7 +326,7 @@
 
   </style>
 
-  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark"/>
+  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />
 
   <!-- Non-default themes -->
 
