@@ -32,7 +32,7 @@ public abstract class ThemedActivityView extends ActivityView {
   }
 
   private void setDarkTheme() {
-    ThemeUtils.setStatusBarThemeColor(this, theme);
+    ThemeUtils.setStatusBarThemeColor(this, ThemeUtils.DARK_THEME);
     ThemeUtils.setAptoideTheme(this, ThemeUtils.DARK_THEME);
   }
 }
