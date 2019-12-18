@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
@@ -168,12 +170,20 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
+      reactButton.setImageResource(getReactionInputDrawable().resourceId);
     }
   }
 
+  @NotNull private TypedValue getReactionInputDrawable() {
+    TypedValue value = new TypedValue();
+    itemView.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.reactionInputDrawable, value, true);
+    return value;
+  }
+
   private void clearReactions() {
-    reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
+    reactButton.setImageResource(getReactionInputDrawable().resourceId);
     topReactionsPreview.clearReactions();
   }
 }

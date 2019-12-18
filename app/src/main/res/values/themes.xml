@@ -55,6 +55,7 @@
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="reactionsButtonColor">@color/black_87_alpha</item>
 
     <!--text-->
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
@@ -226,6 +227,7 @@
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="reactionsButtonColor">@android:color/white</item>
 
     <!--text-->
     <item name="android:textColorPrimary">@android:color/primary_text_dark</item>
