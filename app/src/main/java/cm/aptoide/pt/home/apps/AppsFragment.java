@@ -72,8 +72,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     setupRecyclerView();
 
     swipeRefreshLayout = view.findViewById(R.id.fragment_apps_swipe_container);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     progressBar = view.findViewById(R.id.progress_bar);
     progressBar.setVisibility(View.VISIBLE);
     buildIgnoreUpdatesDialog();

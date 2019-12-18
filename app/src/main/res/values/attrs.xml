@@ -109,6 +109,11 @@
   <attr name="textColorYoutube" format="reference|color" />
   <attr name="textColorFacebook" format="reference|color" />
 
+  <!--Swipe Refresh-->
+  <attr name="swipeProgressColor1" format="reference|color" />
+  <attr name="swipeProgressColor2" format="reference|color" />
+  <attr name="swipeBackgroundColor" format="reference|color" />
+
   <!--New styles attributes-->
   <attr format="reference" name="raisedButtonBackground"/>
   <attr format="reference" name="ghostButtonBackground"/>

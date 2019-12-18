@@ -22,4 +22,9 @@
     <attr name="animation" format="reference" />
     <attr name="reverseAnimation" format="reference" />
   </declare-styleable>
+  <declare-styleable name="AptoideSwipeRefresh">
+    <attr name="progressPrimaryColor" format="reference|color" />
+    <attr name="progressSecondaryColor" format="reference|color" />
+    <attr name="progressBackgroundColor" format="reference|color" />
+  </declare-styleable>
 </resources>

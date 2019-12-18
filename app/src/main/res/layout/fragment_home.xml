@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     >
 
@@ -11,10 +12,13 @@
       android:layout_height="match_parent"
       >
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:progressBackgroundColor="?attr/swipeBackgroundColor"
+        app:progressPrimaryColor="?attr/swipeProgressColor1"
+        app:progressSecondaryColor="?attr/swipeProgressColor2"
         >
 
       <androidx.recyclerview.widget.RecyclerView
@@ -23,7 +27,7 @@
           android:layout_height="match_parent"
           android:clipChildren="false"
           />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh>
     <cm.aptoide.aptoideviews.errors.ErrorView
         android:id="@+id/error_view"
         android:layout_width="match_parent"

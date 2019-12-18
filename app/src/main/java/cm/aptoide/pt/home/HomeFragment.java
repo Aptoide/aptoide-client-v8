@@ -133,8 +133,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
