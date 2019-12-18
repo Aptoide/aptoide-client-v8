@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -573,7 +575,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
+      reactButton.setImageResource(getReactionInputDrawable().resourceId);
     }
   }
 
@@ -596,6 +598,14 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
+  }
+
+  @NotNull private TypedValue getReactionInputDrawable() {
+    TypedValue value = new TypedValue();
+    this.getActivity()
+        .getTheme()
+        .resolveAttribute(R.attr.reactionInputDrawable, value, true);
+    return value;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
