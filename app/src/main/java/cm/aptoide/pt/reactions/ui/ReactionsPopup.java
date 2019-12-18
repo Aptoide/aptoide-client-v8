@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.reactions.data.ReactionType;
 
@@ -41,8 +42,8 @@ public class ReactionsPopup {
     popup.setContentView(reactionsView);
     popup.setFocusable(true);
     popup.setClippingEnabled(true);
-    popup.setBackgroundDrawable(context.getResources()
-        .getDrawable(R.drawable.rounded_corners_white));
+    popup.setBackgroundDrawable(
+        ContextCompat.getDrawable(context, R.drawable.rounded_corners_white));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       popup.setElevation(10);
     }
