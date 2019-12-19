@@ -12,7 +12,7 @@
   <ImageView
       android:id="@+id/featured_graphic"
       android:layout_width="match_parent"
-    android:layout_height="144dp"
+      android:layout_height="144dp"
       android:adjustViewBounds="true"
       android:contentDescription="@null"
       android:scaleType="fitXY"
@@ -28,27 +28,27 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:background="?attr/backgroundCardColor"
+        android:background="?attr/backgroundSecondary"
         android:orientation="horizontal"
         >
 
       <TextView
           android:id="@+id/app_name"
+          style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
-          android:layout_marginEnd="55dp"
-          android:layout_marginLeft="55dp"
-          android:layout_marginRight="55dp"
           android:layout_marginStart="55dp"
+          android:layout_marginLeft="55dp"
+          android:layout_marginEnd="55dp"
+          android:layout_marginRight="55dp"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Little Commander world world II"
-          style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
           />
 
       <ImageView
@@ -56,26 +56,26 @@
           android:layout_width="12dp"
           android:layout_height="12dp"
           android:layout_centerVertical="true"
-          android:layout_toLeftOf="@+id/rating_label"
           android:layout_toStartOf="@+id/rating_label"
+          android:layout_toLeftOf="@+id/rating_label"
           android:adjustViewBounds="true"
           android:src="?attr/ratingDrawable"
           />
 
       <TextView
           android:id="@+id/rating_label"
+          style="@style/Aptoide.TextView.Medium.XS.Black"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
           android:layout_alignParentRight="true"
           android:layout_centerVertical="true"
-          android:layout_marginEnd="12dp"
-          android:layout_marginLeft="5dp"
-          android:layout_marginRight="12dp"
           android:layout_marginStart="5dp"
+          android:layout_marginLeft="5dp"
+          android:layout_marginEnd="12dp"
+          android:layout_marginRight="12dp"
           tools:ignore="SmallSp"
           tools:text="2.3"
-          style="@style/Aptoide.TextView.Medium.XS.Black"
           />
     </RelativeLayout>
 
@@ -84,8 +84,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="52dp"
+        android:layout_marginRight="8dp"
         tools:src="@color/red"
         />
   </RelativeLayout>

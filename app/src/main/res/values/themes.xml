@@ -215,7 +215,7 @@
 
     <!--background-->
     <item name="backgroundMain">@color/black</item>
-    <item name="backgroundSecondary">@color/dark_gray</item>
+    <item name="backgroundSecondary">@color/grey_900</item>
     <item name="backgroundInverse">@android:color/white</item>
     <item name="backgroundTabs">@color/dark_gray</item>
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>

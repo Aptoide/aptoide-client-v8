@@ -2,15 +2,16 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/root_cardview"
+    android:id="@+id/root_cardview"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="240dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
     android:layout_marginTop="15dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="5dp"
     app:cardCornerRadius="4dp"
     >
 
@@ -38,13 +39,14 @@
 
     <TextView
         android:id="@+id/editorial_title"
+        style="@style/Aptoide.TextView.Medium"
         android:layout_width="290dp"
         android:layout_height="168dp"
         android:layout_above="@id/editorial_date"
-        android:layout_marginEnd="13dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
         android:layout_marginStart="13dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginEnd="13dp"
+        android:layout_marginRight="13dp"
         android:gravity="bottom"
         android:shadowColor="#80000000"
         android:shadowDy="1"
@@ -53,45 +55,44 @@
         android:textSize="29sp"
         android:textStyle="bold"
         tools:text="Game of the week"
-        style="@style/Aptoide.TextView.Medium"
         />
 
     <TextView
         android:id="@+id/editorial_date"
+        style="@style/Aptoide.TextView.Medium.XS.White"
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_alignBottom="@id/background_image"
-        android:layout_marginBottom="42dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
         android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="42dp"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="TESTING SOME STUFF"
-        style="@style/Aptoide.TextView.Medium.XS.White"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignBottom="@id/background_image"
-        android:background="?attr/backgroundCardColor"
-        android:paddingBottom="2dp"
+        android:background="?attr/backgroundSecondary"
         android:paddingTop="7dp"
+        android:paddingBottom="2dp"
         >
 
       <include
           layout="@layout/reactions_layout_white"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="16dp"
           android:layout_marginStart="16dp"
+          android:layout_marginLeft="16dp"
           />
 
       <include
-          layout="@layout/views_layout"
           android:id="@+id/views_layout"
+          layout="@layout/views_layout"
 
           />
     </RelativeLayout>
@@ -108,8 +109,8 @@
         android:id="@+id/curation_type_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="#3c3c3c"
         app:cardCornerRadius="12dp"
@@ -117,20 +118,20 @@
         >
       <TextView
           android:id="@+id/curation_type_bubble_text"
+          style="@style/Aptoide.TextView.Regular.XXS"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:paddingBottom="5dp"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
           android:paddingStart="10dp"
+          android:paddingLeft="10dp"
           android:paddingTop="5dp"
+          android:paddingEnd="10dp"
+          android:paddingRight="10dp"
+          android:paddingBottom="5dp"
           android:textAllCaps="true"
           android:textColor="@color/white"
           android:textStyle="bold"
           tools:text="Game of the Week"
-          style="@style/Aptoide.TextView.Regular.XXS"
           />
     </androidx.cardview.widget.CardView>
   </LinearLayout>
