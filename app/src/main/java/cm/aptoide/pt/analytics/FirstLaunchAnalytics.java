@@ -272,10 +272,8 @@ public class FirstLaunchAnalytics {
   }
 
   private void sendRakamGMSUserProperty(String gmsValue) {
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      Rakam.getInstance()
-          .identify(new Identify().set(GMS_RAKAM, gmsValue));
-    }
+    Rakam.getInstance()
+        .identify(new Identify().set(GMS_RAKAM, gmsValue));
   }
 
   /**
@@ -304,14 +302,12 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
     FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
 
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      Rakam.getInstance()
-          .identify(new Identify().set(UTM_CONTENT_RAKAM, utmContent)
-              .set(UTM_SOURCE_RAKAM, utmSource)
-              .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
-              .set(UTM_MEDIUM_RAKAM, utmMedium)
-              .set(ENTRY_POINT_RAKAM, entryPoint));
-    }
+    Rakam.getInstance()
+        .identify(new Identify().set(UTM_CONTENT_RAKAM, utmContent)
+            .set(UTM_SOURCE_RAKAM, utmSource)
+            .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
+            .set(UTM_MEDIUM_RAKAM, utmMedium)
+            .set(ENTRY_POINT_RAKAM, entryPoint));
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -339,13 +335,11 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
     FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
 
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      Rakam.getInstance()
-          .identify(new Identify().set(UTM_CONTENT_RAKAM, UNKNOWN)
-              .set(UTM_SOURCE_RAKAM, UNKNOWN)
-              .set(UTM_CAMPAIGN_RAKAM, UNKNOWN)
-              .set(UTM_MEDIUM_RAKAM, UNKNOWN)
-              .set(ENTRY_POINT_RAKAM, UNKNOWN));
-    }
+    Rakam.getInstance()
+        .identify(new Identify().set(UTM_CONTENT_RAKAM, UNKNOWN)
+            .set(UTM_SOURCE_RAKAM, UNKNOWN)
+            .set(UTM_CAMPAIGN_RAKAM, UNKNOWN)
+            .set(UTM_MEDIUM_RAKAM, UNKNOWN)
+            .set(ENTRY_POINT_RAKAM, UNKNOWN));
   }
 }
