@@ -291,22 +291,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void updateClaimStatus(String packageName) {
     if (packageName.equals(WALLET_PACKAGE_NAME)) {
-      promotionAction.setEnabled(false);
-      promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
-      promotionAction.setTextColor(getResources().getColor(R.color.black));
-
-      int screenWidth = (int) (Resources.getSystem()
-          .getDisplayMetrics().widthPixels * 0.5);
-
-      int screeWidthEnd = screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
-
-      int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
-          .length() * 10, getResources());
-
-      promotionAction.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_promotion_claimed_check,
-          0, 0, 0);
-      promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
-          screeWidthEnd - textPaddingOffset, 0);
+      setClaimedButton();
       promotionsAdapter.isWalletInstalled(true);
       promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
@@ -494,23 +479,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.INSTALL_APP)));
         } else {
-          promotionAction.setEnabled(false);
-          promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
-          promotionAction.setTextColor(getResources().getColor(R.color.black));
 
-          int screenWidth = (int) (Resources.getSystem()
-              .getDisplayMetrics().widthPixels * 0.5);
-
-          int screeWidthEnd =
-              screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
-
-          int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
-              .length() * 10, getResources());
-
-          promotionAction.setCompoundDrawablesWithIntrinsicBounds(
-              R.drawable.ic_promotion_claimed_check, 0, 0, 0);
-          promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
-              screeWidthEnd - textPaddingOffset, 0);
+          setClaimedButton();
         }
         promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
@@ -532,6 +502,25 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
     }
+  }
+
+  private void setClaimedButton() {
+    promotionAction.setEnabled(false);
+    promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
+    promotionAction.setTextColor(getResources().getColor(R.color.black));
+
+    int screenWidth = (int) (Resources.getSystem()
+        .getDisplayMetrics().widthPixels * 0.5);
+
+    int screeWidthEnd = screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
+
+    int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
+        .length() * 10, getResources());
+
+    promotionAction.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_promotion_claimed_check,
+        0, 0, 0);
+    promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
+        screeWidthEnd - textPaddingOffset, 0);
   }
 
   private SpannableString handleRewardMessage(float appcValue, String fiatSymbol, double fiatValue,

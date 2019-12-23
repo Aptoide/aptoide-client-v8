@@ -49,7 +49,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     promotionAction.setText(itemView.getContext()
         .getString(getButtonMessage(appState), app.getAppcValue()));
 
-    if (!isWalletInstalled) {
+    if (!isWalletInstalled && appState != CLAIMED) {
       lockInstallButton(true);
     } else {
 
