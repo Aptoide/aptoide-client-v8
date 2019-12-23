@@ -6,7 +6,6 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -57,6 +56,7 @@ public class FirstLaunchAnalytics {
   private final static String UTM_CAMPAIGN_RAKAM = "utm_campaign";
   private final static String UTM_MEDIUM_RAKAM = "utm_medium";
   private final static String ENTRY_POINT_RAKAM = "entry_point";
+  private static final String APTOIDE_PACKAGE = "aptoide_package";
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
   private final String packageName;
@@ -66,6 +66,7 @@ public class FirstLaunchAnalytics {
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
   private SafetyNetClient safetyNetClient;
+  private String rakamGmsValueCache;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName) {
@@ -218,8 +219,12 @@ public class FirstLaunchAnalytics {
   private void setupDimensions(android.app.Application application) {
     if (!checkForUTMFileInMetaINF(application)) {
       setUTMDimensionsToUnknown();
+      sendRakamUserProperties(UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN,
+          application.getPackageName());
     } else {
       setUserProperties(utmSource, utmMedium, utmCampaign, utmContent, entryPoint);
+      sendRakamUserProperties(utmContent, utmSource, utmCampaign, utmMedium, entryPoint,
+          application.getPackageName());
     }
   }
 
@@ -267,13 +272,8 @@ public class FirstLaunchAnalytics {
 
   public void setGmsPresent(boolean isPlayServicesAvailable) {
     String gmsValue = isPlayServicesAvailable ? HAS_HGMS : NO_GMS;
+    this.rakamGmsValueCache = gmsValue;
     setUserProperties(GMS, gmsValue);
-    sendRakamGMSUserProperty(gmsValue);
-  }
-
-  private void sendRakamGMSUserProperty(String gmsValue) {
-    Rakam.getInstance()
-        .identify(new Identify().set(GMS_RAKAM, gmsValue));
   }
 
   /**
@@ -301,13 +301,6 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CAMPAIGN, utmCampaign);
     FlurryAgent.addSessionProperty(UTM_CONTENT, utmContent);
     FlurryAgent.addSessionProperty(ENTRY_POINT, entryPoint);
-
-    Rakam.getInstance()
-        .identify(new Identify().set(UTM_CONTENT_RAKAM, utmContent)
-            .set(UTM_SOURCE_RAKAM, utmSource)
-            .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
-            .set(UTM_MEDIUM_RAKAM, utmMedium)
-            .set(ENTRY_POINT_RAKAM, entryPoint));
   }
 
   private Bundle createUserPropertiesBundle(String utmSource, String utmMedium, String utmCampaign,
@@ -334,12 +327,23 @@ public class FirstLaunchAnalytics {
     FlurryAgent.addSessionProperty(UTM_CAMPAIGN, UNKNOWN);
     FlurryAgent.addSessionProperty(UTM_CONTENT, UNKNOWN);
     FlurryAgent.addSessionProperty(ENTRY_POINT, UNKNOWN);
+  }
+
+  private void sendRakamUserProperties(String utmContent, String utmSource, String utmCampaign,
+      String utmMedium, String entryPoint, String packageName) {
+    Identify rakamProperties = new Identify();
+
+    rakamProperties.set(GMS_RAKAM, rakamGmsValueCache);
+
+    rakamProperties.set(UTM_CONTENT_RAKAM, utmContent)
+        .set(UTM_SOURCE_RAKAM, utmSource)
+        .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
+        .set(UTM_MEDIUM_RAKAM, utmMedium)
+        .set(ENTRY_POINT_RAKAM, entryPoint);
+
+    rakamProperties.set(APTOIDE_PACKAGE, packageName);
 
     Rakam.getInstance()
-        .identify(new Identify().set(UTM_CONTENT_RAKAM, UNKNOWN)
-            .set(UTM_SOURCE_RAKAM, UNKNOWN)
-            .set(UTM_CAMPAIGN_RAKAM, UNKNOWN)
-            .set(UTM_MEDIUM_RAKAM, UNKNOWN)
-            .set(ENTRY_POINT_RAKAM, UNKNOWN));
+        .identify(rakamProperties);
   }
 }
