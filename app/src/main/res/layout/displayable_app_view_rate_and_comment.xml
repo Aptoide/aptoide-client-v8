@@ -30,9 +30,8 @@
         android:fontFamily="@string/font_family_medium"
         android:text="@string/appview_button_read_all"
         android:textAllCaps="true"
-        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
-        style="@style/Aptoide.Button.Ghost.S.Grey"
+        style="?attr/appview_button_style"
         />
 
     <TextView
@@ -45,7 +44,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/top_comments"
-        android:textColor="@color/grey_900"
+        android:textColor="?attr/textColorGrey900"
         android:textSize="16sp"
         />
 
@@ -118,8 +117,7 @@
           android:lines="2"
           android:paddingTop="10dp"
           android:text="@string/appview_rate_this_app"
-          android:textColor="@color/silver_dark"
-          android:textSize="@dimen/text_size_medium_large"
+          style="@style/Aptoide.TextView.Regular.M.Secondary"
           />
 
     </LinearLayout>
@@ -135,10 +133,9 @@
       android:gravity="center"
       android:text="@string/appview_rate_this_app"
       android:textAllCaps="true"
-      android:textColor="@color/silver_dark"
       android:textSize="@dimen/text_size_small"
       tools:visibility="gone"
-      style="@style/Aptoide.Button.Ghost.S.Grey"
+      style="?attr/appview_button_style"
       />
   <RelativeLayout
       android:id="@+id/rating_layout"
@@ -157,10 +154,9 @@
         android:gravity="center"
         android:text="@string/appview_rate_this_app"
         android:textAllCaps="true"
-        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         android:visibility="visible"
-        style="@style/Aptoide.Button.Ghost.S.Grey"
+        style="?attr/appview_button_style"
         />
 
     <RelativeLayout
@@ -185,8 +181,8 @@
           >
 
         <ImageView
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_user_shape"
             />
@@ -201,8 +197,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical|left|start"
             android:text="@string/zero"
-            android:textColor="@color/grey"
-            android:textSize="10.6sp"
+            style="@style/Aptoide.TextView.Regular.XXS.Secondary"
             />
       </LinearLayout>
 

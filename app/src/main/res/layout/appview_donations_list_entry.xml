@@ -15,7 +15,7 @@
       android:layout_marginStart="3dp"
       android:background="@drawable/donation_list_place_border"
       android:gravity="center"
-      android:textColor="#4c000000"
+      android:textColor="?android:textColorSecondary"
       tools:text="3"
       style="@style/Aptoide.TextView.Medium.XS"
       />

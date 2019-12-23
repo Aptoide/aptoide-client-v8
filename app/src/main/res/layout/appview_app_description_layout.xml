@@ -30,7 +30,7 @@
       android:layout_marginTop="16dp"
       android:text="@string/appview_read_more"
       android:textSize="@dimen/text_size_small"
-      style="@style/Aptoide.Button.Ghost.Grey"
+      style="?attr/appview_button_style"
       />
 
 </LinearLayout>

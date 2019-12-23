@@ -85,7 +85,6 @@
         android:lines="4"
         android:maxLines="5"
         android:text="@string/appview_good_app_description"
-        android:textColor="@color/dark_custom_gray"
         android:textSize="@dimen/text_size_medium_small"
         />
 

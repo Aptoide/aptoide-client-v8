@@ -5,7 +5,7 @@
     android:id="@+id/coordinator_layout_appview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundMain"
+    android:background="?attr/appview_background"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     >
@@ -113,8 +113,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="20sp"
+            style="@style/Aptoide.TextView.Regular.L"
             tools:text="Clash Royale"
             />
         <LinearLayout

@@ -70,7 +70,7 @@
       android:id="@+id/donate_button"
       android:layout_width="match_parent"
       android:text="@string/appview_button_donations"
-      style="@style/Aptoide.Button.Ghost.S.Grey"
+      style="?attr/appview_button_style"
       />
 
 </LinearLayout>

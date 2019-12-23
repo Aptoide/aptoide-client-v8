@@ -78,7 +78,7 @@
           android:layout_toEndOf="@id/user_shape"
           android:layout_toRightOf="@id/user_shape"
           tools:text="348 K"
-          style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
+          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           />
 
       <ImageView
@@ -106,7 +106,7 @@
           android:layout_toEndOf="@id/downloads_shape"
           android:layout_toRightOf="@id/downloads_shape"
           tools:text="348 K"
-          style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
+          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           />
     </RelativeLayout>
 

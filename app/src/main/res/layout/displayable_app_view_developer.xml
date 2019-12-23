@@ -123,7 +123,7 @@
           android:layout_marginStart="19dp"
           android:gravity="center_vertical"
           android:text="@string/permissions"
-          android:textColor="@color/black"
+          android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
           />
     </LinearLayout>

@@ -47,6 +47,7 @@
         android:id="@+id/toolbar_background_arc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:arcColor="?attr/appview_background"
         />
   </com.google.android.material.appbar.CollapsingToolbarLayout>
 </com.google.android.material.appbar.AppBarLayout>
