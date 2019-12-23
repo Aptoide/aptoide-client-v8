@@ -32,6 +32,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
+import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -293,9 +294,19 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       promotionAction.setEnabled(false);
       promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
       promotionAction.setTextColor(getResources().getColor(R.color.black));
+
+      int screenWidth = (int) (Resources.getSystem()
+          .getDisplayMetrics().widthPixels * 0.5);
+
+      int screeWidthEnd = screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
+
+      int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
+          .length() * 10, getResources());
+
       promotionAction.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_promotion_claimed_check,
           0, 0, 0);
-      promotionAction.setPadding(330, 0, 360, 0);
+      promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
+          screeWidthEnd - textPaddingOffset, 0);
       promotionsAdapter.isWalletInstalled(true);
       promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
@@ -487,9 +498,19 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
           promotionAction.setTextColor(getResources().getColor(R.color.black));
 
+          int screenWidth = (int) (Resources.getSystem()
+              .getDisplayMetrics().widthPixels * 0.5);
+
+          int screeWidthEnd =
+              screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
+
+          int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
+              .length() * 10, getResources());
+
           promotionAction.setCompoundDrawablesWithIntrinsicBounds(
               R.drawable.ic_promotion_claimed_check, 0, 0, 0);
-          promotionAction.setPadding(330, 0, 360, 0);
+          promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
+              screeWidthEnd - textPaddingOffset, 0);
         }
         promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
