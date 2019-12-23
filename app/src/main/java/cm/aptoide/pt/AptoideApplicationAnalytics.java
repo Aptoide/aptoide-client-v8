@@ -5,8 +5,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import io.rakam.api.Identify;
-import io.rakam.api.Rakam;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,9 +38,6 @@ public class AptoideApplicationAnalytics {
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
     FlurryAgent.addSessionProperty(APTOIDE_PACKAGE, packageName);
-
-    Rakam.getInstance()
-        .identify(new Identify().set(APTOIDE_PACKAGE, packageName));
   }
 
   public void setVersionCodeDimension(String versionCode) {
