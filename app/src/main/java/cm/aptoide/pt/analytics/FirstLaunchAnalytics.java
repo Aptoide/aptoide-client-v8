@@ -6,6 +6,7 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.GmsStatusValueProvider;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -38,8 +39,6 @@ public class FirstLaunchAnalytics {
   public static final String FIRST_LAUNCH_BI = "FIRST_LAUNCH";
   private static final String GMS = "GMS";
   private static final String GMS_RAKAM = "gms";
-  private static final String HAS_HGMS = "Has GMS";
-  private static final String NO_GMS = "No GMS";
   private static final String UNKNOWN = "unknown";
   private static final String CONTEXT = "APPLICATION";
   private static final String UTM_SOURCE = "UTM Source";
@@ -60,20 +59,22 @@ public class FirstLaunchAnalytics {
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
   private final String packageName;
+  private final GmsStatusValueProvider gmsStatusValueProvider;
   private String utmSource = UNKNOWN;
   private String utmMedium = UNKNOWN;
   private String utmCampaign = UNKNOWN;
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
   private SafetyNetClient safetyNetClient;
-  private String rakamGmsValueCache;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
-      SafetyNetClient safetyNetClient, String packageName) {
+      SafetyNetClient safetyNetClient, String packageName,
+      GmsStatusValueProvider gmsStatusValueProvider) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
     this.safetyNetClient = safetyNetClient;
     this.packageName = packageName;
+    this.gmsStatusValueProvider = gmsStatusValueProvider;
   }
 
   private void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -270,10 +271,8 @@ public class FirstLaunchAnalytics {
     return true;
   }
 
-  public void setGmsPresent(boolean isPlayServicesAvailable) {
-    String gmsValue = isPlayServicesAvailable ? HAS_HGMS : NO_GMS;
-    this.rakamGmsValueCache = gmsValue;
-    setUserProperties(GMS, gmsValue);
+  public void setGmsPresent() {
+    setUserProperties(GMS, gmsStatusValueProvider.getGmsValue());
   }
 
   /**
@@ -333,7 +332,7 @@ public class FirstLaunchAnalytics {
       String utmMedium, String entryPoint, String packageName) {
     Identify rakamProperties = new Identify();
 
-    rakamProperties.set(GMS_RAKAM, rakamGmsValueCache);
+    rakamProperties.set(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
 
     rakamProperties.set(UTM_CONTENT_RAKAM, utmContent)
         .set(UTM_SOURCE_RAKAM, utmSource)

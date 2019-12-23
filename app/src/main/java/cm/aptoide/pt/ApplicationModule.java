@@ -1372,9 +1372,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
-      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient) {
+      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
+      GmsStatusValueProvider gmsStatusValueProvider) {
     return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
-        application.getPackageName());
+        application.getPackageName(), gmsStatusValueProvider);
+  }
+
+  @Singleton @Provides GmsStatusValueProvider providesGmsStatusValueProvider() {
+    return new GmsStatusValueProvider(application.getApplicationContext());
   }
 
   @Singleton @Provides SafetyNetClient providesSafetyNetClient() {
