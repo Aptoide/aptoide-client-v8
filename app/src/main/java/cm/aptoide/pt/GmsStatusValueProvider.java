@@ -5,7 +5,7 @@ import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 
 public class GmsStatusValueProvider {
 
-  private static final String HAS_HGMS = "Has GMS";
+  private static final String HAS_GMS = "Has GMS";
   private static final String NO_GMS = "No GMS";
   private Context context;
   private String gmsValue = "";
@@ -16,7 +16,7 @@ public class GmsStatusValueProvider {
 
   public String getGmsValue() {
     if (gmsValue == null || gmsValue.isEmpty()) {
-      gmsValue = AdNetworkUtils.isGooglePlayServicesAvailable(context) ? HAS_HGMS : NO_GMS;
+      gmsValue = AdNetworkUtils.isGooglePlayServicesAvailable(context) ? HAS_GMS : NO_GMS;
     }
     return gmsValue;
   }
