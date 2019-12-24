@@ -2,6 +2,7 @@ package cm.aptoide.pt.app.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
@@ -14,6 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -1136,8 +1138,16 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void setupAppcAppView() {
-    TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
-        R.drawable.appc_gradient_transition);
+    TypedValue typedValue = new TypedValue();
+    requireContext().getTheme()
+        .resolveAttribute(android.R.attr.textAppearanceLarge, typedValue, true);
+    TypedArray a = requireContext().obtainStyledAttributes(typedValue.data,
+        new int[] { R.attr.appview_toolbar_bg_appc });
+    int drawableId = a.getResourceId(0, R.drawable.appc_gradient_transition);
+    a.recycle();
+
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
     collapsingToolbarLayout.setBackgroundDrawable(transition);
     transition.startTransition(APPC_TRANSITION_MS);
 
