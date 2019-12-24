@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +59,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -600,7 +600,7 @@ public class EditorialFragment extends NavigationTrackFragment
         .show();
   }
 
-  @NotNull private TypedValue getReactionInputDrawable() {
+  @NonNull private TypedValue getReactionInputDrawable() {
     TypedValue value = new TypedValue();
     this.getActivity()
         .getTheme()

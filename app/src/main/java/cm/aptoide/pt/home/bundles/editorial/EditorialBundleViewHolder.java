@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
@@ -26,7 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import rx.subjects.PublishSubject;
 
 import static cm.aptoide.pt.editorial.ViewsFormatter.formatNumberOfViews;
@@ -174,7 +174,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     }
   }
 
-  @NotNull private TypedValue getReactionInputDrawable() {
+  @NonNull private TypedValue getReactionInputDrawable() {
     TypedValue value = new TypedValue();
     itemView.getContext()
         .getTheme()
