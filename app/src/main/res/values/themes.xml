@@ -86,6 +86,11 @@
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
 
+    <!--Swipe Refresh-->
+    <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
+    <item name="swipeProgressColor2">@color/default_color</item>
+    <item name="swipeBackgroundColor">@color/white</item>
+
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
     <item name="customButton">@style/WidgetButtonCustomAptoide</item>
@@ -257,6 +262,11 @@
     <item name="textColorTwitch">@color/twitch</item>
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
+
+    <!--Swipe Refresh-->
+    <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
+    <item name="swipeProgressColor2">@color/default_color</item>
+    <item name="swipeBackgroundColor">@color/white</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>

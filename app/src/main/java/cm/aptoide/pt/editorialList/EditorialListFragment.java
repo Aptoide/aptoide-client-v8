@@ -86,8 +86,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .setChangeDuration(0);
 
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
 
     errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);

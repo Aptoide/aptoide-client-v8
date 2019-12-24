@@ -1,18 +1,20 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-  <include layout="@layout/action_bar_stores"/>
+  <include layout="@layout/action_bar_stores" />
 
-  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+  <cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh
       android:id="@+id/swipe_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      app:progressBackgroundColor="?attr/swipeBackgroundColor"
+      app:progressPrimaryColor="?attr/swipeProgressColor1"
+      app:progressSecondaryColor="?attr/swipeProgressColor2"
       >
 
     <androidx.recyclerview.widget.RecyclerView
@@ -21,10 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingEnd="@dimen/recycler_margin"
-        android:paddingLeft="@dimen/recycler_margin"
-        android:paddingRight="@dimen/recycler_margin"
         android:paddingStart="@dimen/recycler_margin"
+        android:paddingLeft="@dimen/recycler_margin"
+        android:paddingEnd="@dimen/recycler_margin"
+        android:paddingRight="@dimen/recycler_margin"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,7 +39,7 @@
         android:visibility="gone"
         />
 
-  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+  </cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh>
 
 
   <cm.aptoide.aptoideviews.errors.ErrorView
@@ -50,7 +52,7 @@
       tools:visibility="gone"
       />
 
-  <include layout="@layout/partial_view_progress_bar"/>
+  <include layout="@layout/partial_view_progress_bar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
