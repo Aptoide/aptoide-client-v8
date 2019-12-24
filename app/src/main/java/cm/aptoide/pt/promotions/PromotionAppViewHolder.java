@@ -71,21 +71,6 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         string.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         promotionAction.setTransformationMethod(null);
         promotionAction.setText(string);
-        //int screenWidth = (int) (Resources.getSystem()
-        //    .getDisplayMetrics().widthPixels * 0.5);
-        //
-        //int screeWidthEnd =
-        //    screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, itemView.getResources());
-        //
-        //Paint paint = new Paint();
-        //int width = (int)paint.measureText(itemView.getResources().getText(R.string.holidayspromotion_button_claimed).toString());
-        //
-        //int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(width, itemView.getResources());
-
-        //promotionAction.setCompoundDrawablesWithIntrinsicBounds(
-        //    R.drawable.ic_promotion_claimed_check, 0, 0, 0);
-        //promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
-        //   screeWidthEnd - textPaddingOffset, 0);
       } else if (appState == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundDrawable(itemView.getContext()
