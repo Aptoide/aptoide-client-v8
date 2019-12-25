@@ -147,7 +147,7 @@ public class Home {
         promotionsModel.getFeatureGraphic(), !apps.isEmpty(), unclaimedPromotions,
         unclaimedAppcValue,
         (promotionsPreferencesManager.shouldShowPromotionsDialog() && unclaimedAppcValue > 0),
-        promotionsModel.getTotalAppcValue());
+        promotionsModel.getDialogDescription());
   }
 
   public Single<Boolean> shouldLoadNativeAd() {

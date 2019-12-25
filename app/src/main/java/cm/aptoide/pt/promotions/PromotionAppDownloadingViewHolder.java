@@ -1,5 +1,8 @@
 package cm.aptoide.pt.promotions;
 
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,44 +12,37 @@ import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
 
 class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
-  private final DecimalFormat decimalFormat;
   private TextView appName;
   private TextView appDescription;
   private ImageView appIcon;
-  private TextView appSize;
-  private TextView numberOfDownloads;
-  private TextView rating;
   private ProgressBar downloadProgressBar;
   private TextView downloadProgressValue;
   private ImageView pauseDownload;
   private ImageView cancelDownload;
   private ImageView resumeDownload;
+  private TextView appRewardMessage;
   private LinearLayout downloadControlsLayout;
 
   public PromotionAppDownloadingViewHolder(View itemView,
-      PublishSubject<PromotionAppClick> promotionAppClick, DecimalFormat decimalFormat) {
+      PublishSubject<PromotionAppClick> promotionAppClick) {
     super(itemView);
     this.appIcon = itemView.findViewById(R.id.app_icon);
     this.appName = itemView.findViewById(R.id.app_name);
     this.appDescription = itemView.findViewById(R.id.app_description);
-    this.numberOfDownloads = itemView.findViewById(R.id.number_of_downloads);
-    this.appSize = itemView.findViewById(R.id.app_size);
-    this.rating = itemView.findViewById(R.id.rating);
     this.downloadProgressBar = itemView.findViewById(R.id.promotions_download_progress_bar);
     this.downloadProgressValue = itemView.findViewById(R.id.promotions_download_progress_number);
     this.pauseDownload = itemView.findViewById(R.id.promotions_download_pause_download);
     this.cancelDownload = itemView.findViewById(R.id.promotions_download_cancel_button);
     this.resumeDownload = itemView.findViewById(R.id.promotions_download_resume_download);
     this.downloadControlsLayout = itemView.findViewById(R.id.install_controls_layout);
+    this.appRewardMessage = itemView.findViewById(R.id.app_reward);
     this.promotionAppClick = promotionAppClick;
-    this.decimalFormat = decimalFormat;
   }
 
   public void setApp(PromotionViewApp app) {
@@ -60,13 +56,11 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
         .load(app.getAppIcon(), appIcon);
     appName.setText(app.getName());
     appDescription.setText(app.getDescription());
-    appSize.setText(AptoideUtils.StringU.formatBytes(app.getSize(), false));
-    if (app.getRating() == 0) {
-      rating.setText(R.string.appcardview_title_no_stars);
-    } else {
-      rating.setText(decimalFormat.format(app.getRating()));
-    }
-    numberOfDownloads.setText(String.valueOf(app.getNumberOfDownloads()));
+    appRewardMessage.setText(
+        handleRewardMessage(app.getAppcValue(), app.getFiatSymbol(), app.getFiatValue(),
+            app.getDownloadModel()
+                .getAction()
+                .equals(DownloadModel.Action.UPDATE)));
   }
 
   private void setDownloadState(int progress, PromotionViewApp promotionViewApp) {
@@ -126,5 +120,29 @@ class PromotionAppDownloadingViewHolder extends RecyclerView.ViewHolder {
         downloadControlsLayout.setLayoutParams(pauseShowing);
         break;
     }
+  }
+
+  private SpannableString handleRewardMessage(float appcValue, String fiatSymbol, double fiatValue,
+      boolean isUpdate) {
+    DecimalFormat fiatDecimalFormat = new DecimalFormat("0.00");
+    String message = "";
+    String appc = Double.toString(Math.floor(appcValue));
+    if (isUpdate) {
+      message = itemView.getContext()
+          .getString(R.string.FIATpromotion_update_to_get_short, appc,
+              fiatSymbol + fiatDecimalFormat.format(fiatValue));
+    } else {
+      message = itemView.getContext()
+          .getString(R.string.FIATpromotion_install_to_get_short, appc,
+              fiatSymbol + fiatDecimalFormat.format(fiatValue));
+    }
+
+    SpannableString spannable = new SpannableString(message);
+    spannable.setSpan(new ForegroundColorSpan(itemView.getContext()
+            .getResources()
+            .getColor(R.color.promotions_reward)), message.indexOf(appc), message.length(),
+        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spannable;
   }
 }

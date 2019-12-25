@@ -28,12 +28,15 @@ public class PromotionApp {
   private final List<String> requiredSplits;
   private final String rank;
   private final String storeName;
+  private final double fiatValue;
+  private final String fiatSymbol;
 
   public PromotionApp(String name, String packageName, long appId, String downloadPath,
       String alternativePath, String appIcon, String description, long size, float rating,
       int numberOfDownloads, String md5, int versionCode, boolean isClaimed, String versionName,
       Obb obb, float appcValue, String signature, boolean hasAppc, List<Split> splits,
-      List<String> requiredSplits, String rank, String storeName) {
+      List<String> requiredSplits, String rank, String storeName, double fiatValue,
+      String fiatSymbol) {
     this.name = name;
     this.packageName = packageName;
     this.appId = appId;
@@ -56,6 +59,8 @@ public class PromotionApp {
     this.requiredSplits = requiredSplits;
     this.rank = rank;
     this.storeName = storeName;
+    this.fiatValue = fiatValue;
+    this.fiatSymbol = fiatSymbol;
   }
 
   public String getName() {
@@ -144,5 +149,13 @@ public class PromotionApp {
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public double getFiatValue() {
+    return fiatValue;
+  }
+
+  public String getFiatSymbol() {
+    return fiatSymbol;
   }
 }

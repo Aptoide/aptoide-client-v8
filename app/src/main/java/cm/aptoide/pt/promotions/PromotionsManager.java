@@ -70,9 +70,9 @@ public class PromotionsManager {
           }
           PromotionMeta meta = promotions.get(0);
           return getPromotionApps(meta.getPromotionId()).map(
-              appsList -> new PromotionsModel(meta.getPromotionId(), appsList,
-                  getTotalAppc(appsList), meta.getTitle(), meta.getBackground(),
-                  isWalletInstalled(), false));
+              appsList -> new PromotionsModel(meta.getPromotionId(), appsList, meta.getTitle(),
+                  meta.getBackground(), isWalletInstalled(), false, meta.getDescription(),
+                  meta.getDialogDescription()));
         });
   }
 

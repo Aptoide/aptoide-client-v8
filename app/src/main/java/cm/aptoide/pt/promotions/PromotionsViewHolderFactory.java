@@ -32,39 +32,32 @@ public class PromotionsViewHolderFactory {
     switch (viewType) {
       case DOWNGRADE:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), DOWNGRADE, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), DOWNGRADE, promotionAppClick);
         break;
       case UPDATE:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), UPDATE, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), UPDATE, promotionAppClick);
         break;
       case DOWNLOAD:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), DOWNLOAD, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), DOWNLOAD, promotionAppClick);
         break;
       case INSTALL:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), INSTALL, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), INSTALL, promotionAppClick);
         break;
       case CLAIM:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), CLAIM, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), CLAIM, promotionAppClick);
         break;
       case CLAIMED:
         promotionAppViewHolder = new PromotionAppViewHolder(LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.promotion_app_inactive, parent, false), CLAIMED, promotionAppClick,
-            decimalFormat);
+            .inflate(R.layout.promotion_app_inactive, parent, false), CLAIMED, promotionAppClick);
         break;
       case DOWNLOADING:
         promotionAppViewHolder = new PromotionAppDownloadingViewHolder(
             LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.promotion_app_active_download, parent, false), promotionAppClick,
-            decimalFormat);
+                .inflate(R.layout.promotion_app_active_download, parent, false), promotionAppClick);
         break;
       default:
         throw new IllegalArgumentException("Wrong view type of promotion app");

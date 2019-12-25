@@ -65,9 +65,7 @@ public class PromotionsHomeDialog {
   public void showDialog(HomePromotionsWrapper promotions) {
     dialog.show();
     TextView description = dialogView.findViewById(R.id.description);
-    description.setText(dialogView.getContext()
-        .getString(R.string.holidayspromotion_message_popup,
-            String.valueOf(promotions.getTotalAppcValue())));
+    description.setText(promotions.getDescription());
     TextView titleView = dialog.findViewById(R.id.promotion_title);
     ImageView promotionGraphicView = dialog.findViewById(R.id.promotion_graphic);
     titleView.setText(promotions.getTitle());
