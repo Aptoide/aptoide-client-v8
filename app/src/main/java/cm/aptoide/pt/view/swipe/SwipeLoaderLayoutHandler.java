@@ -32,8 +32,6 @@ public class SwipeLoaderLayoutHandler extends LoaderLayoutHandler {
   @Override public void bindViews(View view) {
     super.bindViews(view);
     swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
-    swipeContainer.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     swipeContainer.setOnRefreshListener(() -> ((ReloadInterface) loadInterface).reload());
   }
 

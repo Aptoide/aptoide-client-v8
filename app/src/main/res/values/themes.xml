@@ -55,6 +55,7 @@
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
 
     <!--text-->
@@ -85,6 +86,11 @@
     <item name="textColorTwitch">@color/twitch</item>
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
+
+    <!--Swipe Refresh-->
+    <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
+    <item name="swipeProgressColor2">@color/default_color</item>
+    <item name="swipeBackgroundColor">@color/white</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
@@ -227,6 +233,7 @@
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
 
     <!--text-->
@@ -257,6 +264,11 @@
     <item name="textColorTwitch">@color/twitch</item>
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
+
+    <!--Swipe Refresh-->
+    <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
+    <item name="swipeProgressColor2">@color/default_color</item>
+    <item name="swipeBackgroundColor">@color/white</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>

@@ -4,23 +4,26 @@
     android:layout_height="match_parent"
     >
 
-  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+  <cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh
       android:id="@+id/swipe_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      app:progressBackgroundColor="?attr/swipeBackgroundColor"
+      app:progressPrimaryColor="?attr/swipeProgressColor1"
+      app:progressSecondaryColor="?attr/swipeProgressColor2"
       >
 
     <cm.aptoide.aptoideviews.recyclerview.GridRecyclerView
         android:id="@+id/apps_list"
-        android:layoutAnimation="@anim/grid_list_apps_anim"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:layoutAnimation="@anim/grid_list_apps_anim"
         />
 
-
-  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+  </cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh>
 
   <cm.aptoide.aptoideviews.errors.ErrorView
       android:id="@+id/error_view"
@@ -32,8 +35,8 @@
       />
 
   <include
-      layout="@layout/app_bar_layout"
       android:id="@+id/action_bar"
+      layout="@layout/app_bar_layout"
       />
 
   <include layout="@layout/partial_view_progress_bar" />

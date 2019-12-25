@@ -101,8 +101,6 @@ public class MoreBundleFragment extends NavigationTrackFragment
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.more_refresh_layout);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
         oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,

@@ -109,6 +109,11 @@
   <attr name="textColorYoutube" format="reference|color" />
   <attr name="textColorFacebook" format="reference|color" />
 
+  <!--Swipe Refresh-->
+  <attr name="swipeProgressColor1" format="reference|color" />
+  <attr name="swipeProgressColor2" format="reference|color" />
+  <attr name="swipeBackgroundColor" format="reference|color" />
+
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
@@ -127,6 +132,7 @@
   <attr name="colorControlHighlight" format="color" />
   <attr name="bnItemColorState" format="color" />
   <attr name="wizard3Color" format="color" />
+  <attr name="reactionsPopUpBackgroundColor" format="color" />
   <attr name="reactionsButtonColor" format="color" />
 
 
