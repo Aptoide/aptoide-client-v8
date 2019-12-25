@@ -1,5 +1,6 @@
 package cm.aptoide.pt.promotions;
 
+import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
 
@@ -47,7 +49,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     promotionAction.setText(itemView.getContext()
         .getString(getButtonMessage(appState), app.getAppcValue()));
 
-    if (!isWalletInstalled) {
+    if (!isWalletInstalled && appState != CLAIMED) {
       lockInstallButton(true);
     } else {
 
@@ -58,9 +60,19 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
         promotionAction.setTextColor(itemView.getResources()
             .getColor(R.color.black));
 
+        int screenWidth = (int) (Resources.getSystem()
+            .getDisplayMetrics().widthPixels * 0.5);
+
+        int screeWidthEnd =
+            screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, itemView.getResources());
+
+        int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
+            .length() * 10, itemView.getResources());
+
         promotionAction.setCompoundDrawablesWithIntrinsicBounds(
             R.drawable.ic_promotion_claimed_check, 0, 0, 0);
-        promotionAction.setPadding(330, 0, 360, 0);
+        promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
+            screeWidthEnd - textPaddingOffset, 0);
       } else if (appState == CLAIM) {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundDrawable(itemView.getContext()
