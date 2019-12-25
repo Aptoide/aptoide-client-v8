@@ -61,7 +61,10 @@ public class SearchResultAdViewHolder extends SearchResultItemView<SearchAdResul
     setDownloadsCount(searchAd, resources);
     setRatingStars(searchAd);
 
-    if (searchAd.getPayout() != null) {
+    if (searchAd.isAppc()
+        && searchAd.getPayout() != null
+        && searchAd.getPayout()
+        .getFiatAmount() > 0) {
       adTextView.setVisibility(View.GONE);
       appcEarnLayout.setVisibility(View.VISIBLE);
       Payout payout = searchAd.getPayout();

@@ -33,10 +33,8 @@ public class MoPubAnalytics {
     FlurryAgent.addSessionProperty(ADS_STATUS_USER_PROPERTY, ads);
 
     String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      Rakam.getInstance()
-          .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
-    }
+    Rakam.getInstance()
+        .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
     UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, adsStatusByRakamValue);
   }
 

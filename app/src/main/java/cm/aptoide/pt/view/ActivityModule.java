@@ -134,10 +134,10 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(Service service,
+  @ActivityScope @Provides AutoUpdateService providesAutoUpdateService(Service service,
       @Named("package-name") String packageName,
-      @Named("auto-update-store-name") String storeName) {
-    return new AutoUpdateService(service, packageName, storeName);
+      @Named("client-sdk-version") int clientSdkVersion) {
+    return new AutoUpdateService(service, packageName, clientSdkVersion);
   }
 
   @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
@@ -329,6 +329,10 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {
     return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("client-sdk-version") int provideClientSdkVersion() {
+    return Build.VERSION.SDK_INT;
   }
 
   @ActivityScope @Provides @Named("local-version-code") int provideLocalVersionCode(

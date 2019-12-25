@@ -16,9 +16,9 @@
         android:id="@+id/app_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         />
 
     <LinearLayout
@@ -33,92 +33,31 @@
 
       <TextView
           android:id="@+id/app_name"
+          style="@style/Aptoide.TextView.Medium.M"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:maxLines="1"
           tools:text="Snapchat"
-          style="@style/Aptoide.TextView.Regular.M"
           />
 
-      <LinearLayout
-          android:layout_width="match_parent"
+      <TextView
+          android:id="@+id/app_reward"
+          style="@style/Aptoide.TextView.Medium.S"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="8dp"
-          android:layout_marginTop="4dp"
-          android:orientation="horizontal"
-          >
+          tools:text="Install to get 15 Appc Credits (€0.38)"
+          />
 
-        <ImageView
-            android:layout_width="12dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_appview_download_icon"
-            android:tint="@color/grey"
-            />
-
-        <TextView
-            android:id="@+id/number_of_downloads"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            tools:text="5 M"
-            style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
-            />
-
-        <ImageView
-            android:layout_width="12dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_dimension"
-            android:tint="@color/grey"
-            />
-
-        <TextView
-            android:id="@+id/app_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            tools:text="90.7 MB"
-            style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
-            />
-
-        <ImageView
-            android:layout_width="12dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_star_black"
-            android:tint="@color/grey"
-            />
-
-        <TextView
-            android:id="@+id/rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginRight="12dp"
-            tools:text="4.2"
-            style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
-            />
-
-      </LinearLayout>
     </LinearLayout>
   </RelativeLayout>
 
   <TextView
       android:id="@+id/app_description"
+      style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="1dp"
       android:layout_marginStart="1dp"
+      android:layout_marginLeft="1dp"
       tools:text="Snapchat is the easiest way to share a memorable moment with your friends. Snappity snap snapchat!"
-      style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
       />
 </LinearLayout>
