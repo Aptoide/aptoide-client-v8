@@ -63,7 +63,8 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
             .getColor(R.color.black));
 
         SpannableString string = new SpannableString(" " + itemView.getResources()
-            .getString(R.string.holidayspromotion_button_claimed).toUpperCase());
+            .getString(R.string.holidayspromotion_button_claimed)
+            .toUpperCase());
         Drawable image = AppCompatResources.getDrawable(itemView.getContext(),
             R.drawable.ic_promotion_claimed_check);
         image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
