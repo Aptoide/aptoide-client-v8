@@ -1,9 +1,11 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
@@ -168,12 +170,20 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
+      reactButton.setImageResource(getReactionInputDrawable().resourceId);
     }
   }
 
+  @NonNull private TypedValue getReactionInputDrawable() {
+    TypedValue value = new TypedValue();
+    itemView.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.reactionInputDrawable, value, true);
+    return value;
+  }
+
   private void clearReactions() {
-    reactButton.setImageResource(R.drawable.ic_reaction_emoticon_black);
+    reactButton.setImageResource(getReactionInputDrawable().resourceId);
     topReactionsPreview.clearReactions();
   }
 }

@@ -126,7 +126,7 @@
             android:layout_marginBottom="64dp"
             android:nestedScrollingEnabled="false" />
         <include
-            layout="@layout/reactions_layout_white"
+            layout="@layout/reactions_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
