@@ -1,7 +1,6 @@
 package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
