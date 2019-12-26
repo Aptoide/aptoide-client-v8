@@ -512,7 +512,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionAction.setTextColor(getResources().getColor(R.color.black));
 
     SpannableString string = new SpannableString(
-        " " + getResources().getString(R.string.holidayspromotion_button_claimed)
+        "  " + getResources().getString(R.string.holidayspromotion_button_claimed)
             .toUpperCase());
     Drawable image =
         AppCompatResources.getDrawable(getContext(), R.drawable.ic_promotion_claimed_check);
