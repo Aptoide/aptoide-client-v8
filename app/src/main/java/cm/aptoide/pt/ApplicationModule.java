@@ -1311,8 +1311,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
-  @Singleton @Provides Service providesAutoUpdateService(
-      @Named("retrofit-auto-update") Retrofit retrofit) {
+  @Singleton @Provides Service providesAutoUpdateService(@Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(Service.class);
   }
 
@@ -1373,9 +1372,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
-      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient) {
+      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
+      GmsStatusValueProvider gmsStatusValueProvider) {
     return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
-        application.getPackageName());
+        application.getPackageName(), gmsStatusValueProvider);
+  }
+
+  @Singleton @Provides GmsStatusValueProvider providesGmsStatusValueProvider() {
+    return new GmsStatusValueProvider(application.getApplicationContext());
   }
 
   @Singleton @Provides SafetyNetClient providesSafetyNetClient() {

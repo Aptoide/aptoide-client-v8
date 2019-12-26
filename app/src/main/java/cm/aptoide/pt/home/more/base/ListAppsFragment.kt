@@ -73,9 +73,6 @@ abstract class ListAppsFragment<T : Application, V : ListAppsViewHolder<T>> :
     apps_list.setPadding(padding.left, padding.top, padding.right, padding.bottom)
     apps_list.adapter = adapter
 
-    swipe_container.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color)
-
     setupToolbar()
   }
 

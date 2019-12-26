@@ -78,7 +78,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsAndDialog_checkForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, true, 40f);
+        new HomePromotionsWrapper("", "", true, 2, 20f, true, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();
@@ -93,7 +93,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void hasPromotionAppsNoDialog_CheckForPromotionAppsTest() {
     HomePromotionsWrapper homePromotionsWrapper =
-        new HomePromotionsWrapper("", "", true, 2, 20f, false, 40f);
+        new HomePromotionsWrapper("", "", true, 2, 20f, false, "");
     when(home.hasPromotionApps()).thenReturn(Single.just(homePromotionsWrapper));
 
     presenter.checkForPromotionApps();

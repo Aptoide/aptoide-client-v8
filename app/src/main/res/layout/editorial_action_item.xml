@@ -82,7 +82,7 @@
         >
 
       <include
-          layout="@layout/reactions_layout_white"
+          layout="@layout/reactions_layout"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginLeft="16dp"

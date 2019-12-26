@@ -19,12 +19,12 @@
 
     <Button
         android:id="@+id/promotion_app_action_button"
+        style="@style/Aptoide.Button.Install.Appc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
-      android:layout_marginTop="16dp"
-        style="@style/Aptoide.Button.Install"
+        android:layout_marginTop="16dp"
         />
   </LinearLayout>
 </androidx.cardview.widget.CardView>
