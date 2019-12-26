@@ -125,7 +125,8 @@
   </style>
 
   <style name="backgroundCardStyleLight">
-    <item name="android:background">?attr/backgroundCardColor</item>
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
   </style>
 
   <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
@@ -161,7 +162,7 @@
 
   <style name="backgroundCardStyleDark">
     <item name="android:foreground">?selectableItemBackground</item>
-    <item name="cardBackgroundColor">?attr/backgroundSecondary</item>
+    <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
   </style>
 
   <style name="headerSeparatorButtonStyle">
