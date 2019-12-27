@@ -48,6 +48,8 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
   public void setApp(PromotionViewApp app, boolean isWalletInstalled) {
     setAppCardHeader(app);
+    itemView.setOnClickListener(__ -> promotionAppClick.onNext(
+        new PromotionAppClick(app, PromotionAppClick.ClickType.NAVIGATE)));
     promotionAction.setText(itemView.getContext()
         .getString(getButtonMessage(appState), app.getAppcValue()));
 
@@ -97,6 +99,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
           .getResources()
           .getColor(R.color.grey_fog_light));
     } else {
+      promotionAction.setEnabled(true);
       promotionAction.setBackgroundDrawable(itemView.getContext()
           .getResources()
           .getDrawable(R.drawable.appc_gradient_rounded));

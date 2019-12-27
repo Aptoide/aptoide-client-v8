@@ -353,8 +353,9 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new PromotionsNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AppNavigator appNavigator) {
+    return new PromotionsNavigator(fragmentNavigator, appNavigator);
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(

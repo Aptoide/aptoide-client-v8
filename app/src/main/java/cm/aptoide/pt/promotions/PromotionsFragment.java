@@ -230,6 +230,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (promotionViewApp.getPackageName()
         .equals("com.appcoins.wallet")) {
       showWallet(promotionViewApp, isWalletInstalled);
+      setWalletItemClickListener(promotionViewApp);
     } else {
       if (promotionViewApp.getDownloadModel()
           .hasError()) {
@@ -295,7 +296,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (packageName.equals(WALLET_PACKAGE_NAME)) {
       setClaimedButton();
       promotionsAdapter.isWalletInstalled(true);
-      promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
       promotionsAdapter.updateClaimStatus(packageName);
     }
@@ -348,6 +348,18 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void showPromotionFeatureGraphic(String background) {
     ImageLoader.with(getContext())
         .load(background, toolbarImage);
+  }
+
+  @Override public Observable<PromotionAppClick> appCardClick() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        .equals(PromotionAppClick.ClickType.NAVIGATE));
+  }
+
+  private void setWalletItemClickListener(PromotionViewApp promotionViewApp) {
+    View.OnClickListener listener = __ -> promotionAppClick.onNext(
+        new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.NAVIGATE));
+    walletInactiveView.setOnClickListener(listener);
+    walletActiveView.setOnClickListener(listener);
   }
 
   private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
@@ -492,7 +504,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
-        promotionsAdapter.isWalletInstalled(isWalletInstalled);
+        promotionsAdapter.isWalletInstalled(true);
       } else {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundDrawable(getContext().getResources()
