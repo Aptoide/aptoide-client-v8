@@ -1,6 +1,8 @@
 package cm.aptoide.pt.home;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,23 +75,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
     appsChip = view.findViewById(R.id.apps_chip);
     appBarLayout = view.findViewById(R.id.app_bar_layout);
 
-    gamesChip.setOnCheckedChangeListener((__, isChecked) -> {
-      if (isChecked) {
-        gamesChip.setTextColor(getResources().getColor(R.color.white));
-      } else {
-        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
-            .getDarkerColor()));
-      }
-    });
-
-    appsChip.setOnCheckedChangeListener((__, isChecked) -> {
-      if (isChecked) {
-        appsChip.setTextColor(getResources().getColor(R.color.white));
-      } else {
-        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
-            .getDarkerColor()));
-      }
-    });
+    setupChipsListeners();
     attachPresenter(presenter);
   }
 
@@ -105,6 +91,47 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName(), "", StoreContext.home.name());
+  }
+
+  private void showChipCancelButton(CheckBox chip) {
+    Drawable cancelButton = getResources().getDrawable(R.drawable.ic_cancel_white_24dp);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      chip.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, cancelButton, null);
+    } else {
+      chip.setCompoundDrawablesWithIntrinsicBounds(null, null, cancelButton, null);
+    }
+  }
+
+  private void hideChipCancelButton(CheckBox chip) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      chip.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+    } else {
+      chip.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+    }
+  }
+
+  private void setupChipsListeners() {
+    gamesChip.setOnCheckedChangeListener((__, isChecked) -> {
+      if (isChecked) {
+        gamesChip.setTextColor(getResources().getColor(R.color.white));
+        showChipCancelButton(gamesChip);
+      } else {
+        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+            .getDarkerColor()));
+        hideChipCancelButton(gamesChip);
+      }
+    });
+
+    appsChip.setOnCheckedChangeListener((__, isChecked) -> {
+      if (isChecked) {
+        appsChip.setTextColor(getResources().getColor(R.color.white));
+        showChipCancelButton(appsChip);
+      } else {
+        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+            .getDarkerColor()));
+        hideChipCancelButton(appsChip);
+      }
+    });
   }
 
   @Nullable @Override
