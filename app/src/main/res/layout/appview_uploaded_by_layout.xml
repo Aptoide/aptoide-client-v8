@@ -7,10 +7,10 @@
     >
 
   <TextView
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/appview_uploaded_by"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <include
@@ -32,8 +32,8 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="18dp"
         android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
         tools:src="@mipmap/ic_launcher"
         />
 
@@ -41,20 +41,20 @@
         android:layout_width="137dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_toEndOf="@id/store_icon"
         android:layout_toRightOf="@id/store_icon"
         >
 
       <TextView
           android:id="@+id/store_name"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Dead Pirates store"
-          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
       <ImageView
@@ -69,16 +69,16 @@
 
       <TextView
           android:id="@+id/user_count"
+          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/store_name"
-          android:layout_marginLeft="3dp"
           android:layout_marginStart="3dp"
+          android:layout_marginLeft="3dp"
           android:layout_marginTop="3dp"
           android:layout_toEndOf="@id/user_shape"
           android:layout_toRightOf="@id/user_shape"
           tools:text="348 K"
-          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           />
 
       <ImageView
@@ -86,8 +86,8 @@
           android:layout_width="9dp"
           android:layout_height="10dp"
           android:layout_below="@id/store_name"
-          android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
+          android:layout_marginLeft="8dp"
           android:layout_marginTop="5dp"
           android:layout_toEndOf="@id/user_count"
           android:layout_toRightOf="@id/user_count"
@@ -97,21 +97,22 @@
 
       <TextView
           android:id="@+id/download_count"
+          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/store_name"
-          android:layout_marginLeft="3dp"
           android:layout_marginStart="3dp"
+          android:layout_marginLeft="3dp"
           android:layout_marginTop="3dp"
           android:layout_toEndOf="@id/downloads_shape"
           android:layout_toRightOf="@id/downloads_shape"
           tools:text="348 K"
-          style="@style/Aptoide.TextView.Regular.XXS.Secondary"
           />
     </RelativeLayout>
 
     <Button
         android:id="@+id/follow_button"
+        style="@style/Aptoide.Button.Ghost"
         android:layout_width="96dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -120,7 +121,6 @@
         android:layout_marginRight="16dp"
         android:text="@string/follow"
         android:textSize="?attr/buttonTextSizeSmall"
-        style="@style/Aptoide.Button.Ghost"
         />
   </RelativeLayout>
 

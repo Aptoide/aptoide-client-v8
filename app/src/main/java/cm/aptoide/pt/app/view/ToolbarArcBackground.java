@@ -50,7 +50,8 @@ public class ToolbarArcBackground extends View {
 
   private void retrievePreferences(AttributeSet attrs, int defStyleAttr) {
     TypedArray typedArray =
-        getContext().obtainStyledAttributes(attrs, R.styleable.ToolbarArcBackground, defStyleAttr, 0);
+        getContext().obtainStyledAttributes(attrs, R.styleable.ToolbarArcBackground, defStyleAttr,
+            0);
 
     int color = typedArray.getColor(R.styleable.ToolbarArcBackground_arcColor, Color.WHITE);
     paint.setColor(color);

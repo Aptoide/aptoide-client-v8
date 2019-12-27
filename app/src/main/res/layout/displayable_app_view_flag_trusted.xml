@@ -5,13 +5,12 @@
   ~ Modified on 25/08/2016.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/good_app_layout"
+    style="@style/AppViewWidget"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    style="@style/AppViewWidget"
     >
 
 
@@ -27,11 +26,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
         android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="29dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
         android:gravity="center"
         android:lines="2"
         android:maxLines="2"
@@ -56,12 +55,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="5dp"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="1dp"
         android:gravity="center"
         android:lines="1"
         android:maxLines="1"
@@ -75,12 +74,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="5dp"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="1dp"
         android:layout_marginTop="1dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="1dp"
         android:gravity="left"
         android:lines="4"
         android:maxLines="5"

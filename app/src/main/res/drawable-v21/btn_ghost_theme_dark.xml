@@ -7,13 +7,11 @@
       android:left="6dp"
       android:right="6dp"
       android:top="6dp">
-    <shape
-        android:shape="rectangle">
+    <shape android:shape="rectangle">
 
-      <solid android:color="@color/light_grey"/>
-      <corners
-          android:radius="4dp"/>
+      <solid android:color="@color/light_grey" />
+      <corners android:radius="4dp" />
     </shape>
   </item>
-  <item android:drawable="@drawable/btn_ghost_theme_normal_dark"/>
+  <item android:drawable="@drawable/btn_ghost_theme_normal_dark" />
 </ripple>
