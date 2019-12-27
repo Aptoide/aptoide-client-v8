@@ -228,12 +228,12 @@
 
     <!--background-->
     <item name="backgroundMain">@color/grey_dark</item>
-    <item name="backgroundSecondary">@color/dark_gray</item>
+    <item name="backgroundSecondary">@color/grey_900</item>
     <item name="backgroundInverse">@android:color/white</item>
     <item name="backgroundTabs">@color/dark_gray</item>
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleDark</item>
-    <item name="backgroundCardColor">@color/black</item>
+    <item name="backgroundCardColor">@color/grey_900</item>
     <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
