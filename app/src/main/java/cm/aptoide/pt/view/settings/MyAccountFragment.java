@@ -318,7 +318,7 @@ public class MyAccountFragment extends BackButtonFragment
       userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, myAccountAvatar, STROKE_SIZE,
-              R.drawable.my_account_placeholder);
+              R.attr.placeholder_myaccount);
     }
   }
 
@@ -327,7 +327,7 @@ public class MyAccountFragment extends BackButtonFragment
       myStoreName.setText(storeName);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(storeAvatar, this.myStoreAvatar,
-              STROKE_SIZE, R.drawable.my_account_placeholder);
+              STROKE_SIZE, R.attr.placeholder_myaccount);
     }
   }
 

@@ -64,6 +64,14 @@
     <item name="appview_toolbar_bg_default">@drawable/aptoide_gradient</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition</item>
 
+    <!--placeholders-->
+    <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
+    <item name="placeholder_9_16">@drawable/placeholder_9_16</item>
+    <item name="placeholder_16_9">@drawable/placeholder_16_9</item>
+    <item name="placeholder_square">@drawable/placeholder_square</item>
+    <item name="placeholder_brick">@drawable/placeholder_brick</item>
+
+
     <!--text-->
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
     <item name="android:textColorPrimary">@android:color/black</item>
@@ -244,9 +252,16 @@
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
-    <item name="appview_background">@color/dark_gray</item>
+    <item name="appview_background">@color/grey_900</item>
     <item name="appview_toolbar_bg_default">@color/grey_dark</item>
-    <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition</item>
+    <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition_dark</item>
+
+    <!--placeholders-->
+    <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>
+    <item name="placeholder_9_16">@drawable/placeholder_9_16_dark</item>
+    <item name="placeholder_16_9">@drawable/placeholder_16_9_dark</item>
+    <item name="placeholder_square">@drawable/placeholder_square_dark</item>
+    <item name="placeholder_brick">@drawable/placeholder_brick_dark</item>
 
     <!--text-->
     <item name="android:textColorPrimary">@color/light_grey</item>

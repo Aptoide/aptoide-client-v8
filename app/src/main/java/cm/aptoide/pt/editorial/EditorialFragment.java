@@ -602,7 +602,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @NonNull private TypedValue getReactionInputDrawable() {
     TypedValue value = new TypedValue();
-    this.getActivity()
+    this.getContext()
         .getTheme()
         .resolveAttribute(R.attr.reactionInputDrawable, value, true);
     return value;

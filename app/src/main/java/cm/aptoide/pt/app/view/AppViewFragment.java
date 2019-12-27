@@ -1138,13 +1138,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void setupAppcAppView() {
-    TypedValue typedValue = new TypedValue();
-    requireContext().getTheme()
-        .resolveAttribute(android.R.attr.textAppearanceLarge, typedValue, true);
-    TypedArray a = requireContext().obtainStyledAttributes(typedValue.data,
-        new int[] { R.attr.appview_toolbar_bg_appc });
-    int drawableId = a.getResourceId(0, R.drawable.appc_gradient_transition);
-    a.recycle();
+    TypedValue value = new TypedValue();
+    this.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
+    int drawableId = value.resourceId;
 
     TransitionDrawable transition =
         (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);

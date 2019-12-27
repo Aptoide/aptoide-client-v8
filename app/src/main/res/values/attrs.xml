@@ -119,6 +119,12 @@
   <attr name="appview_toolbar_bg_default" format="reference|color" />
   <attr name="appview_toolbar_bg_appc" format="reference|color" />
 
+  <attr name="placeholder_myaccount" format="reference" />
+  <attr name="placeholder_9_16" format="reference" />
+  <attr name="placeholder_16_9" format="reference" />
+  <attr name="placeholder_square" format="reference" />
+  <attr name="placeholder_brick" format="reference" />
+
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />

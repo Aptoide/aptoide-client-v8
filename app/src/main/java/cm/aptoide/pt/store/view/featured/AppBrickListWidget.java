@@ -44,10 +44,10 @@ public class AppBrickListWidget extends Widget<AppBrickListDisplayable> {
     App app = displayable.getPojo();
 
     ImageLoader.with(getContext())
-        .load(app.getIcon(), R.drawable.placeholder_square, appIcon);
+        .load(app.getIcon(), R.attr.placeholder_square, appIcon);
 
     ImageLoader.with(getContext())
-        .load(app.getGraphic(), R.drawable.placeholder_brick, graphic);
+        .load(app.getGraphic(), R.attr.placeholder_brick, graphic);
     name.setText(app.getName());
 
     float rating = app.getStats()
