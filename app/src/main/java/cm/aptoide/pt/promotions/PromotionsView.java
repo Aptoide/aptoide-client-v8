@@ -38,4 +38,6 @@ public interface PromotionsView extends View {
   void showPromotionTitle(String title);
 
   void showPromotionFeatureGraphic(String background);
+
+  Observable<PromotionAppClick> appCardClick();
 }
