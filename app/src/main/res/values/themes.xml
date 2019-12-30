@@ -64,6 +64,10 @@
     <item name="appview_toolbar_bg_default">@drawable/aptoide_gradient</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition</item>
 
+    <item name="download_progress_resume">@drawable/ic_play_arrow_action_black</item>
+    <item name="download_progress_pause">@drawable/ic_pause_action_black</item>
+    <item name="download_progress_cancel">@drawable/ic_clear_action_black</item>
+
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
     <item name="placeholder_9_16">@drawable/placeholder_9_16</item>
@@ -255,6 +259,10 @@
     <item name="appview_background">@color/grey_900</item>
     <item name="appview_toolbar_bg_default">@color/grey_dark</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition_dark</item>
+
+    <item name="download_progress_resume">@drawable/ic_play_arrow_action_light</item>
+    <item name="download_progress_pause">@drawable/ic_pause_action_light</item>
+    <item name="download_progress_cancel">@drawable/ic_clear_action_light</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>

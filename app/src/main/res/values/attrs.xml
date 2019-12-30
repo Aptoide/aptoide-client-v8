@@ -125,6 +125,10 @@
   <attr name="placeholder_square" format="reference" />
   <attr name="placeholder_brick" format="reference" />
 
+  <attr name="download_progress_resume" format="reference" />
+  <attr name="download_progress_pause" format="reference" />
+  <attr name="download_progress_cancel" format="reference" />
+
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
