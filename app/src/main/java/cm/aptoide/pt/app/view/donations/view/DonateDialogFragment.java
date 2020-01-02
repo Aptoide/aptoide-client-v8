@@ -5,9 +5,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -34,7 +31,6 @@ import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import cm.aptoide.pt.app.view.donations.utils.GenericPaymentIntentBuilder;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.MainActivity;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
@@ -185,16 +181,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     appcSlider.setMax(SEEKBAR_MAX);
     appcSlider.setProgress(SEEKBAR_START);
     appcSlider.incrementProgressBy(1);
-    appcSlider.getProgressDrawable()
-        .setColorFilter(new PorterDuffColorFilter(getContext().getResources()
-            .getColor(StoreTheme.get(theme)
-                .getDarkerColor()), PorterDuff.Mode.SRC_IN));
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      appcSlider.getThumb()
-          .setColorFilter(getContext().getResources()
-              .getColor(StoreTheme.get(theme)
-                  .getDarkerColor()), PorterDuff.Mode.SRC_IN);
-    }
     appcSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         sliderUpdate = false;
