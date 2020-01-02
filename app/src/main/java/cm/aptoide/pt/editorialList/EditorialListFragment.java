@@ -16,6 +16,7 @@ import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
@@ -34,6 +35,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
@@ -49,6 +51,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.CURATION;
   @Inject public EditorialListPresenter presenter;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
+  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
   private BottomNavigationActivity bottomNavigationActivity;
   private RecyclerView editorialList;
   private EditorialListAdapter adapter;
@@ -78,7 +81,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
     layoutManager = new ScrollControlLinearLayoutManager(getContext());
     adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener,
-        captionBackgroundPainter);
+        captionBackgroundPainter, themeAttributeProvider);
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
     editorialList.setAdapter(adapter);
