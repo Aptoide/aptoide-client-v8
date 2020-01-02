@@ -42,6 +42,7 @@
     <item name="preferenceSummaryTextSize">14dp</item>
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
+    <item name="dialogsTheme">@style/Aptoide.DialogTheme</item>
     <!--background-->
     <item name="backgroundMain">@color/default_background_color_light</item>
     <item name="backgroundSecondary">@color/light_custom_gray</item>
@@ -187,6 +188,8 @@
   <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
     <item name="android:windowBackground">@color/default_background_color_dark</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
+
+    <item name="dialogsTheme">@style/Aptoide.DialogTheme.Dark</item>
 
     <item name="colorPrimary">@color/aptoide_orange</item>
     <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
