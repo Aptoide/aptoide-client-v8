@@ -189,7 +189,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     ThemeUtils.setStoreTheme(getActivity(), theme);
     super.onDestroyView();
   }
@@ -197,7 +196,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
     }
   }

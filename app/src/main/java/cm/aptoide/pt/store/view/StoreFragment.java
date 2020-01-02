@@ -258,7 +258,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     ThemeUtils.setAptoideTheme(getActivity(), theme);
     ThemeUtils.setStoreTheme(getActivity(), theme);
 
@@ -376,7 +375,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

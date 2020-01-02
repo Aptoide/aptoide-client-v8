@@ -238,7 +238,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       bar.setBackgroundDrawable(getActivity().getResources()

@@ -744,7 +744,6 @@ public class SearchResultFragment extends BackButtonFragment
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -764,7 +763,6 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupDefaultTheme() {
     if (storeThemeExists(theme)) {
       ThemeUtils.setStoreTheme(getActivity(), theme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),

@@ -3,7 +3,7 @@
   ~ Modified on 25/08/2016.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
 
@@ -14,6 +14,9 @@
     <item name="colorPrimaryDark">@color/default_orange_gradient_end</item>
     <item name="colorAccent">@color/aptoide_color_focused</item>
     <item name="customColor">@color/default_orange_gradient_start</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">
+      @color/default_orange_gradient_end
+    </item>
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
@@ -162,7 +165,7 @@
 
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme"></style>
+  <style name="AptoideThemeDefault" parent="AppBaseTheme" />
 
   <style name="AppBaseTheme.NoTitle">
     <item name="android:windowNoTitle">true</item>
@@ -192,6 +195,7 @@
     <item name="colorPrimaryDark">@color/aptoide_color_focused</item>
     <item name="colorAccent">@color/aptoide_color_focused</item>
     <item name="customColor">@color/aptoide_orange</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
@@ -350,6 +354,7 @@
     <item name="colorAccent">@color/grey_700</item>
     <item name="colorButtonNormal">@color/grey</item>
     <item name="customColor">@color/grey</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/grey_gradient</item>
@@ -375,6 +380,8 @@
     <item name="colorAccent">@color/teal_700</item>
     <item name="colorButtonNormal">@color/teal</item>
     <item name="customColor">@color/teal</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/teal_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/teal_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/teal_gradient</item>
@@ -399,6 +406,8 @@
     <item name="colorAccent">@color/brown_700</item>
     <item name="colorButtonNormal">@color/brown</item>
     <item name="customColor">@color/brown</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/brown_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/brown_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/brown_gradient</item>
@@ -424,6 +433,8 @@
     <item name="colorAccent">@color/blue_grey_700</item>
     <item name="colorButtonNormal">@color/blue_grey</item>
     <item name="customColor">@color/blue_grey</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/blue_grey_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/blue_grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/blue_grey_gradient</item>
@@ -451,6 +462,9 @@
     <item name="colorAccent">@color/light_green_700</item>
     <item name="colorButtonNormal">@color/light_green</item>
     <item name="customColor">@color/light_green</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/light_green_gradient_end
+    </item>
+
 
     <item name="raisedButtonBackground">@drawable/light_green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_green_gradient</item>
@@ -476,6 +490,8 @@
     <item name="colorAccent">@color/light_blue_700</item>
     <item name="colorButtonNormal">@color/light_blue</item>
     <item name="customColor">@color/light_blue</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/light_blue_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/light_blue_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_blue_gradient</item>
@@ -501,6 +517,7 @@
     <item name="colorAccent">@color/amber_700</item>
     <item name="colorButtonNormal">@color/amber</item>
     <item name="customColor">@color/amber</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/amber_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/amber_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/amber_gradient</item>
@@ -525,6 +542,7 @@
     <item name="colorAccent">@color/lime_700</item>
     <item name="colorButtonNormal">@color/lime</item>
     <item name="customColor">@color/lime</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/lime_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/lime_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/lime_gradient</item>
@@ -550,6 +568,8 @@
     <item name="colorAccent">@color/orange_700</item>
     <item name="colorButtonNormal">@color/orange</item>
     <item name="customColor">@color/orange</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/orange_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/orange_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/orange_gradient</item>
@@ -575,6 +595,7 @@
     <item name="colorAccent">@color/pink_700</item>
     <item name="colorButtonNormal">@color/pink</item>
     <item name="customColor">@color/pink</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/pink_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/pink_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/pink_gradient</item>
@@ -601,6 +622,7 @@
     <item name="colorAccent">@color/indigo_700</item>
     <item name="colorButtonNormal">@color/indigo</item>
     <item name="customColor">@color/indigo</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/indigo_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/indigo_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/indigo_gradient</item>
@@ -629,6 +651,7 @@
     <item name="colorAccent">@color/red_700</item>
     <item name="colorButtonNormal">@color/red</item>
     <item name="customColor">@color/red</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/red_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/red_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/red_gradient</item>
@@ -654,6 +677,7 @@
     <item name="colorAccent">@color/green_700</item>
     <item name="colorButtonNormal">@color/green</item>
     <item name="customColor">@color/green</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/green_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/green_gradient</item>
@@ -683,6 +707,8 @@
     <item name="colorAccent">@color/deep_purple_700</item>
     <item name="colorButtonNormal">@color/deep_purple</item>
     <item name="customColor">@color/deep_purple</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/deep_purple_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/deep_purple_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/deep_purple_gradient</item>
@@ -707,6 +733,7 @@
     <item name="colorAccent">@color/black</item>
     <item name="colorButtonNormal">@color/black</item>
     <item name="customColor">@color/black</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey</item>
 
     <item name="raisedButtonBackground">@drawable/black_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/black_gradient</item>
