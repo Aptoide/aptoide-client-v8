@@ -32,6 +32,7 @@ import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import cm.aptoide.pt.app.view.donations.utils.GenericPaymentIntentBuilder;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.ThemeUtils;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -79,7 +80,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     DonateDialogFragment fragment = new DonateDialogFragment();
     args.putString(PACKAGE_NAME, packageName);
     args.putBoolean(HAS_WALLET, hasWallet);
-    fragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Aptoide_DialogTheme_Dark);
     fragment.setArguments(args);
     return fragment;
   }
@@ -88,6 +88,11 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     super.onCreate(savedInstanceState);
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
+    if (ThemeUtils.DARK_THEME.equals(theme)) {
+      setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Aptoide_DialogTheme_Dark);
+    } else {
+      setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+    }
     packageName = getArguments().getString(PACKAGE_NAME);
     presenter = new DonateDialogPresenter(this, walletService, new CompositeSubscription(),
         AndroidSchedulers.mainThread(), appNavigator, donationsAnalytics);
