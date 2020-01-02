@@ -83,7 +83,7 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     DonateDialogFragment fragment = new DonateDialogFragment();
     args.putString(PACKAGE_NAME, packageName);
     args.putBoolean(HAS_WALLET, hasWallet);
-    fragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+    fragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Aptoide_DialogTheme_Dark);
     fragment.setArguments(args);
     return fragment;
   }

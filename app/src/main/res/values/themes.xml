@@ -337,7 +337,6 @@
     <item name="homeChips">@drawable/default_home_chips_background</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
-
   </style>
 
   <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />
