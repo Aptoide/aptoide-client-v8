@@ -30,6 +30,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.DownloadStateParser;
+import cm.aptoide.pt.app.ThemeAttributeProvider;
 import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -403,5 +404,10 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
+  }
+
+  @ActivityScope @Provides @Named("theme-attribute-provider")
+  ThemeAttributeProvider providesThemeAttributeProvider() {
+    return new ThemeAttributeProvider(activity.getTheme());
   }
 }

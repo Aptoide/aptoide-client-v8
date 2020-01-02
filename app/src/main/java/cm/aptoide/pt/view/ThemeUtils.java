@@ -1,9 +1,7 @@
 package cm.aptoide.pt.view;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Build;
-import android.util.TypedValue;
 import android.view.Window;
 import android.view.WindowManager;
 import cm.aptoide.pt.R;
@@ -54,11 +52,5 @@ public class ThemeUtils {
 
     StoreTheme storeTheme = StoreTheme.get(theme);
     activity.setTheme(storeTheme.getThemeResource());
-  }
-
-  public static TypedValue getThemeAttribute(Resources.Theme theme, int attributeResourceId) {
-    TypedValue value = new TypedValue();
-    theme.resolveAttribute(attributeResourceId, value, true);
-    return value;
   }
 }
