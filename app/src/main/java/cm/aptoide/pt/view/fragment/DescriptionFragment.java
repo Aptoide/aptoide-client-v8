@@ -29,7 +29,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import javax.inject.Inject;
-import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -43,7 +42,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
   @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
-  @Inject @Named("aptoide-theme") String theme;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
