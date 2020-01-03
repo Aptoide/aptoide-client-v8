@@ -25,7 +25,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -203,12 +202,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void onDestroyView() {
-    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    if (bar != null) {
-      bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.get(theme)
-              .getGradientDrawable()));
-    }
     super.onDestroyView();
   }
 
