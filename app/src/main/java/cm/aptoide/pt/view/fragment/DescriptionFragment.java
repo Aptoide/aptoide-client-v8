@@ -9,7 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -30,7 +29,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
@@ -43,7 +41,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String APP_ID = "app_id";
   private static final String PACKAGE_NAME = "packageName";
   private static final String STORE_NAME = "store_name";
-  private static final String STORE_THEME = "store_theme";
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
   @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
@@ -54,7 +51,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private TextView emptyData;
   private TextView descriptionContainer;
   private String storeName;
-  private String storeTheme;
   private String description;
   private String appName;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
@@ -63,25 +59,11 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private Converter.Factory converterFactory;
   private String partnerId;
 
-  public static DescriptionFragment newInstance(String appName, String description,
-      String storeTheme) {
+  public static DescriptionFragment newInstance(String appName, String description) {
     DescriptionFragment fragment = new DescriptionFragment();
     Bundle args = new Bundle();
     args.putString(APP_NAME, appName);
-    args.putString(STORE_THEME, storeTheme);
     args.putString(DESCRIPTION, description);
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  public static DescriptionFragment newInstance(long appId, String packageName, String storeName,
-      String storeTheme) {
-    DescriptionFragment fragment = new DescriptionFragment();
-    Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(STORE_THEME, storeTheme);
     fragment.setArguments(args);
     return fragment;
   }
@@ -117,10 +99,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       storeName = args.getString(STORE_NAME);
     }
 
-    if (args.containsKey(STORE_THEME)) {
-      storeTheme = args.getString(STORE_THEME);
-    }
-
     if (args.containsKey(DESCRIPTION)) {
       description = args.getString(DESCRIPTION);
     }
@@ -143,7 +121,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-
     if (!TextUtils.isEmpty(description) && !TextUtils.isEmpty(appName)) {
 
       descriptionContainer.setText(AptoideUtils.HtmlU.parse(description));
@@ -219,18 +196,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     return true;
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    if (storeTheme != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      if (bar != null) {
-        bar.setBackgroundDrawable(getActivity().getResources()
-            .getDrawable(StoreTheme.get(storeTheme)
-                .getGradientDrawable()));
-      }
-    }
-  }
-
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = view.findViewById(R.id.empty_data);
@@ -238,7 +203,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       bar.setBackgroundDrawable(getActivity().getResources()

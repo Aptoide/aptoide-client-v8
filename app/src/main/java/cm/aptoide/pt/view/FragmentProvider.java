@@ -59,8 +59,7 @@ public interface FragmentProvider {
   @Deprecated Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
-  @Deprecated Fragment newDescriptionFragment(String appName, String description,
-      String storeTheme);
+  @Deprecated Fragment newDescriptionFragment(String appName, String description);
 
   @Deprecated Fragment newSettingsFragment();
 

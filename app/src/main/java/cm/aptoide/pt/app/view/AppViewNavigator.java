@@ -53,9 +53,9 @@ public class AppViewNavigator {
     appNavigator.navigateWithAd(new SearchAdResult(ad), tag);
   }
 
-  public void navigateToDescriptionReadMore(String name, String description, String theme) {
+  public void navigateToDescriptionReadMore(String name, String description) {
     Fragment fragment = AptoideApplication.getFragmentProvider()
-        .newDescriptionFragment(name, description, theme);
+        .newDescriptionFragment(name, description);
     fragmentNavigator.navigateTo(fragment, true);
   }
 

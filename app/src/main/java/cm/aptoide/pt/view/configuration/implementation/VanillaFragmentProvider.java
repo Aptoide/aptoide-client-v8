@@ -130,9 +130,8 @@ public class VanillaFragmentProvider implements FragmentProvider {
     return RateAndReviewsFragment.newInstance(appId, appName, storeName, packageName, reviewId);
   }
 
-  @Override
-  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
-    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  @Override public Fragment newDescriptionFragment(String appName, String description) {
+    return DescriptionFragment.newInstance(appName, description);
   }
 
   @Override public Fragment newSettingsFragment() {
