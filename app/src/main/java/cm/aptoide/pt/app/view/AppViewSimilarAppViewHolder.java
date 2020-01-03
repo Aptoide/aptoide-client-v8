@@ -51,7 +51,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
           .getAdTitle());
       ImageLoader.with(itemView.getContext())
           .loadWithRoundCorners(app.getAd()
-              .getIconUrl(), 8, iconView, R.drawable.placeholder_square);
+              .getIconUrl(), 8, iconView, R.attr.placeholder_square);
       app.getAd()
           .registerClickableView(itemView);
       float rating = app.getAd()
@@ -69,7 +69,7 @@ public class AppViewSimilarAppViewHolder extends RecyclerView.ViewHolder {
           .getName());
       ImageLoader.with(itemView.getContext())
           .loadWithRoundCorners(app.getApp()
-              .getIcon(), 8, iconView, R.drawable.placeholder_square);
+              .getIcon(), 8, iconView, R.attr.placeholder_square);
       if (app.getApp()
           .hasAppcBilling()) {
         appcInfoLayout.setVisibility(View.VISIBLE);

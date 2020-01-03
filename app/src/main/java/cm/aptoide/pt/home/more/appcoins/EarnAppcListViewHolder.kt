@@ -26,9 +26,9 @@ class EarnAppcListViewHolder(val view: View,
             fiat?.symbol + decimalFormatter.format(fiat?.amount))
     itemView.app_title_textview.text = app.name
     ImageLoader.with(itemView.context)
-        .load(app.featureGraphic, R.drawable.placeholder_square, itemView.app_feature_graphic)
+        .load(app.featureGraphic, R.attr.placeholder_square, itemView.app_feature_graphic)
     ImageLoader.with(itemView.context)
-        .loadWithRoundCorners(app.icon, 8, itemView.app_image, R.drawable.placeholder_square,
+        .loadWithRoundCorners(app.icon, 8, itemView.app_image, R.attr.placeholder_square,
             object : RequestListener<Drawable> {
               override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
                                         isFirstResource: Boolean): Boolean {

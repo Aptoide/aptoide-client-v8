@@ -89,7 +89,7 @@
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:src="@drawable/ic_star_black"
+            android:src="?attr/ratingDrawable"
             />
 
         <TextView
