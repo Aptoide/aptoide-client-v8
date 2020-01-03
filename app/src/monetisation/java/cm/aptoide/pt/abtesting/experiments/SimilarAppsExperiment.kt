@@ -10,7 +10,7 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
                                  private val appViewAnalytics: AppViewAnalytics) :
     RakamExperiment() {
   private val EXPERIMENT_ID = "ASV-2053-SimilarApps"
-  private var isControlGroup: Boolean = true
+  private var isControlGroup: Boolean? = null
 
   fun shouldShowAppCoinsSimilarBundleFirst(): Single<Boolean> {
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
@@ -45,15 +45,17 @@ open class SimilarAppsExperiment(private val abTestManager: ABTestManager,
 
   fun recordImpression(): Completable {
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
-        .filter { !it.isExperimentOver && it.isPartOfExperiment }
+        .filter { !it.isExperimentOver && it.isPartOfExperiment && isControlGroup != null }
         .toCompletable()
-        .doOnCompleted { appViewAnalytics.sendSimilarABTestImpressionEvent(isControlGroup) }
+        .doOnCompleted {
+          appViewAnalytics.sendSimilarABTestImpressionEvent(isControlGroup!!)
+        }
   }
 
   fun recordConversion(): Completable {
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
-        .filter { !it.isExperimentOver && it.isPartOfExperiment }
+        .filter { !it.isExperimentOver && it.isPartOfExperiment && isControlGroup != null }
         .toCompletable()
-        .doOnCompleted { appViewAnalytics.sendSimilarABTestConversionEvent(isControlGroup) }
+        .doOnCompleted { appViewAnalytics.sendSimilarABTestConversionEvent(isControlGroup!!) }
   }
 }
