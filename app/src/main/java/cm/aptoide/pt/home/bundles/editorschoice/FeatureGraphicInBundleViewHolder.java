@@ -40,10 +40,10 @@ public class FeatureGraphicInBundleViewHolder extends RecyclerView.ViewHolder {
       HomeBundle homeBundle, int bundlePosition, int graphicPosition) {
     nameTextView.setText(featureGraphicApplication.getName());
     ImageLoader.with(itemView.getContext())
-        .load(featureGraphicApplication.getFeatureGraphic(), R.drawable.placeholder_brick,
+        .load(featureGraphicApplication.getFeatureGraphic(), R.attr.placeholder_brick,
             featureGraphic);
     ImageLoader.with(itemView.getContext())
-        .load(featureGraphicApplication.getIcon(), R.drawable.placeholder_square, appIcon);
+        .load(featureGraphicApplication.getIcon(), R.attr.placeholder_square, appIcon);
     float rating = featureGraphicApplication.getRating();
     if (rating == 0) {
       this.rating.setText(R.string.appcardview_title_no_stars);

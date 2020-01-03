@@ -33,7 +33,7 @@ public class AppInBundleViewHolder extends AppViewHolder {
   public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
     nameTextView.setText(app.getName());
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(app.getIcon(), 8, iconView, R.drawable.placeholder_square);
+        .loadWithRoundCorners(app.getIcon(), 8, iconView, R.attr.placeholder_square);
 
     appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true, false);
 

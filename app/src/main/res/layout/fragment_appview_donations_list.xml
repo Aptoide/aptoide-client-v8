@@ -6,11 +6,11 @@
     >
 
   <TextView
+      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="8dp"
       android:text="@string/appview_title_donations_leaderboard"
-      style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
   <FrameLayout
       android:id="@+id/donations_list_layout"
@@ -48,29 +48,29 @@
           android:src="@drawable/illustration_donations"
           />
       <TextView
+          style="@style/Aptoide.TextView.Regular.M.Grey700"
           android:layout_width="188dp"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:gravity="center"
           android:text="@string/appview_message_donations_empty"
-          style="@style/Aptoide.TextView.Regular.M.Grey700"
           />
     </LinearLayout>
   </FrameLayout>
 
   <TextView
+      style="@style/Aptoide.TextView.Regular.XS"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="16dp"
       android:text="@string/appview_message_donations_leaderboard"
       android:textColor="@color/silver_dark"
-      style="@style/Aptoide.TextView.Regular.XS"
       />
   <Button
       android:id="@+id/donate_button"
+      style="?attr/appview_button_style"
       android:layout_width="match_parent"
       android:text="@string/appview_button_donations"
-      style="@style/Aptoide.Button.Ghost.S.Grey"
       />
 
 </LinearLayout>

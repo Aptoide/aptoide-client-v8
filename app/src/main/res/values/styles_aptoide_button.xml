@@ -149,6 +149,12 @@
     <item name="android:textColor">@color/grey_medium</item>
   </style>
 
+  <style name="Aptoide.Button.Flat.S.DarkBG">
+    <item name="android:textColor">@color/silver_dark</item>
+    <item name="android:background">@color/grey_dark</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
   <style name="Aptoide.Button.Flat.White">
     <item name="android:textColor">@color/white</item>
   </style>

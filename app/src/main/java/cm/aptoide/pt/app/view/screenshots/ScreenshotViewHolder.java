@@ -48,7 +48,7 @@ public class ScreenshotViewHolder extends RecyclerView.ViewHolder {
     }
 
     ImageLoader.with(context)
-        .load(item.getThumbnail(), R.drawable.placeholder_square, screenshot);
+        .load(item.getThumbnail(), R.attr.placeholder_square, screenshot);
 
     if (isLollipopOrHigher()) {
       media_layout.setForeground(context.getResources()
@@ -88,9 +88,9 @@ public class ScreenshotViewHolder extends RecyclerView.ViewHolder {
 
   private int getPlaceholder(String orient) {
     if (viewIsInPortrait(orient)) {
-      return R.drawable.placeholder_9_16;
+      return R.attr.placeholder_9_16;
     }
-    return R.drawable.placeholder_16_9;
+    return R.attr.placeholder_16_9;
   }
 
   private boolean viewIsInPortrait(String orient) {

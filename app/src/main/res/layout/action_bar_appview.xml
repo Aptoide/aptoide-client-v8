@@ -13,7 +13,7 @@
       android:id="@+id/collapsing_toolbar_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="?attr/toolbarBackground"
+      android:background="?attr/appview_toolbar_bg_default"
       android:fitsSystemWindows="false"
       app:expandedTitleGravity="top"
       app:layout_scrollFlags="scroll|exitUntilCollapsed"
@@ -42,11 +42,12 @@
         android:minHeight="112dp"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        ></androidx.appcompat.widget.Toolbar>
+        />
     <cm.aptoide.pt.app.view.ToolbarArcBackground
         android:id="@+id/toolbar_background_arc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:arcColor="?attr/appview_background"
         />
   </com.google.android.material.appbar.CollapsingToolbarLayout>
 </com.google.android.material.appbar.AppBarLayout>

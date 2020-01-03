@@ -44,7 +44,7 @@ class AdInBundleViewHolder extends RecyclerView.ViewHolder {
         .getAdTitle());
     ImageLoader.with(itemView.getContext())
         .loadWithRoundCorners(adClick.getAd()
-            .getIconUrl(), 8, iconView, R.drawable.placeholder_square);
+            .getIconUrl(), 8, iconView, R.attr.placeholder_square);
     if (adClick.getAd()
         .hasAppcPayout()) {
       Payout payout = adClick.getAd()

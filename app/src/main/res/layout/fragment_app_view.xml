@@ -5,12 +5,12 @@
     android:id="@+id/coordinator_layout_appview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundMain"
+    android:background="?attr/appview_background"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical"
     >
 
-  <include layout="@layout/action_bar_appview"/>
+  <include layout="@layout/action_bar_appview" />
   <ImageView
       android:id="@+id/app_icon"
       android:layout_width="104dp"
@@ -90,12 +90,11 @@
 
             <TextView
                 android:id="@+id/trusted_text"
+                style="@style/Aptoide.TextView.Medium.XXS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/appview_header_trusted_text"
                 android:textAllCaps="true"
-                android:textColor="#4a4a4a"
-                style="@style/Aptoide.TextView.Medium.XXS"
                 />
           </LinearLayout>
 
@@ -104,17 +103,16 @@
 
         <TextView
             android:id="@+id/app_name"
+            style="@style/Aptoide.TextView.Regular.L"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:textColor="@color/black"
-            android:textSize="20sp"
             tools:text="Clash Royale"
             />
         <LinearLayout
@@ -137,8 +135,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
-              android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
+              android:layout_marginLeft="3dp"
               android:textColor="@color/grey"
               android:textSize="10sp"
               tools:text="5 M"
@@ -147,8 +145,8 @@
               android:layout_width="12dp"
               android:layout_height="16dp"
               android:layout_gravity="center_vertical"
-              android:layout_marginLeft="15dp"
               android:layout_marginStart="15dp"
+              android:layout_marginLeft="15dp"
               android:src="@drawable/ic_dimension"
               android:tint="@color/grey"
               />
@@ -158,8 +156,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
-              android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
+              android:layout_marginLeft="3dp"
               android:textColor="@color/grey"
               android:textSize="10sp"
               tools:text="90.7 MB"
@@ -169,8 +167,8 @@
               android:layout_width="12dp"
               android:layout_height="16dp"
               android:layout_gravity="center_vertical"
-              android:layout_marginLeft="15dp"
               android:layout_marginStart="15dp"
+              android:layout_marginLeft="15dp"
               android:src="@drawable/ic_star_black"
               android:tint="@color/grey"
               />
@@ -180,8 +178,8 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
-              android:layout_marginLeft="3dp"
               android:layout_marginStart="3dp"
+              android:layout_marginLeft="3dp"
               android:textColor="@color/grey"
               android:textSize="10sp"
               tools:text="4.2"
@@ -206,16 +204,16 @@
               />
 
           <include
-              layout="@layout/appview_apkfy_layout_element"
               android:id="@+id/apkfy_element"
+              layout="@layout/appview_apkfy_layout_element"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginBottom="14dp"
-              android:layout_marginEnd="8dp"
-              android:layout_marginLeft="8dp"
-              android:layout_marginRight="8dp"
               android:layout_marginStart="8dp"
+              android:layout_marginLeft="8dp"
               android:layout_marginTop="15dp"
+              android:layout_marginEnd="8dp"
+              android:layout_marginRight="8dp"
+              android:layout_marginBottom="14dp"
               android:visibility="gone"
               tools:visibility="visible"
               />
@@ -230,13 +228,13 @@
                 android:animateLayoutChanges="true"
                 >
               <include
-                  layout="@layout/appview_poa_layout"
                   android:id="@+id/poa_appc_layout"
+                  layout="@layout/appview_poa_layout"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center_horizontal"
-                  android:layout_marginEnd="32dp"
                   android:layout_marginStart="32dp"
+                  android:layout_marginEnd="32dp"
                   android:visibility="gone"
                   tools:visibility="visible"
                   />
@@ -252,8 +250,8 @@
                 />
           </FrameLayout>
           <include
-              layout="@layout/appview_migration_warning"
               android:id="@+id/migration_warning"
+              layout="@layout/appview_migration_warning"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center_horizontal"
@@ -262,8 +260,8 @@
               />
 
           <include
-              layout="@layout/appview_wallet_promotion_install_layout"
               android:id="@+id/wallet_install_promotion"
+              layout="@layout/appview_wallet_promotion_install_layout"
               android:visibility="gone"
               tools:visibility="visible"
               />
@@ -277,19 +275,19 @@
 
         </LinearLayout>
         <include
-            layout="@layout/separator_horizontal"
             android:id="@+id/other_versions_top_separator"
+            layout="@layout/separator_horizontal"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             />
 
         <include
-            layout="@layout/appview_app_versions_layout"
             android:id="@+id/versions_layout"
+            layout="@layout/appview_app_versions_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -298,16 +296,16 @@
 
         <TextView
             android:id="@+id/appview_reward_app_versions_element"
+            style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:ellipsize="end"
             android:gravity="center_horizontal"
             android:maxLines="1"
             android:visibility="gone"
             tools:text="Latest Version 1.7.1"
-            style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
             />
 
         <com.mopub.mobileads.MoPubView
@@ -322,45 +320,45 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/screenshots_list"
+            style="@style/AppViewWidget"
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_marginTop="9dp"
             android:nestedScrollingEnabled="false"
-            android:paddingEnd="0dp"
-            android:paddingLeft="0dp"
-            android:paddingRight="0dp"
             android:paddingStart="0dp"
-            style="@style/AppViewWidget"
+            android:paddingLeft="0dp"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
             />
 
         <include
-            layout="@layout/appview_app_description_layout"
             android:id="@+id/description_layout"
+            layout="@layout/appview_app_description_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="28dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             />
 
         <include
-            layout="@layout/fragment_appview_donations_list"
             android:id="@+id/donations_element"
+            layout="@layout/fragment_appview_donations_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
             android:visibility="gone"
             tools:visibility="visible"
             />
 
         <include
-            layout="@layout/displayable_app_view_rate_and_comment"
             android:id="@+id/reviews_layout"
+            layout="@layout/displayable_app_view_rate_and_comment"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginTop="5dp"
@@ -373,15 +371,15 @@
             />
 
         <include
-            layout="@layout/appview_uploaded_by_layout"
             android:id="@+id/store_uploaded_layout"
+            layout="@layout/appview_uploaded_by_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="28dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             />
 
         <View
@@ -398,20 +396,20 @@
             />
 
         <include
-            layout="@layout/appview_catappult_card"
             android:id="@+id/catappult_card"
+            layout="@layout/appview_catappult_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginRight="7dp"
             android:layout_marginStart="7dp"
+            android:layout_marginLeft="7dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
             />
 
         <include
-            layout="@layout/displayable_app_view_developer"
             android:id="@+id/dev_info_layout"
+            layout="@layout/displayable_app_view_developer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
