@@ -5,7 +5,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/dialog_bg"
     android:orientation="vertical"
     >
 
@@ -27,11 +26,11 @@
         />
 
     <TextView
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/trusted_app"
-        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -53,11 +52,11 @@
         />
 
     <TextView
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/warning"
-        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -79,11 +78,11 @@
         />
 
     <TextView
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="@string/unknown"
-        style="@style/TextAppearance.AppCompat.Medium"
         />
   </LinearLayout>
 
@@ -108,10 +107,10 @@
           />
 
       <TextView
+          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/appviewbadge_message_signature_matches"
-          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -133,9 +132,9 @@
 
       <TextView
           android:id="@+id/tv_reason_signature_validation"
+          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -157,9 +156,9 @@
 
       <TextView
           android:id="@+id/message_virus_no"
+          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -181,9 +180,9 @@
 
       <TextView
           android:id="@+id/message_virus_no_manual"
+          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -197,10 +196,10 @@
         >
 
       <TextView
+          style="@style/badgeReasonStyle"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/appviewbadge_message_virus_in_analyses"
-          style="@style/badgeReasonStyle"
           />
     </TableRow>
 
@@ -213,10 +212,9 @@
       android:layout_height="wrap_content"
       android:layout_gravity="end"
       android:background="?attr/selectableItemBackground"
-      android:paddingBottom="8dp"
       android:paddingTop="8dp"
+      android:paddingBottom="8dp"
       android:text="@android:string/ok"
-      android:textColor="@android:color/darker_gray"
       android:textSize="@dimen/text_size_medium"
       />
 
