@@ -7,11 +7,9 @@ package cm.aptoide.pt.view.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -45,15 +43,6 @@ public class DialogBadgeV7 extends BaseDialogFragment {
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    Window window = getDialog().getWindow();
-    if (window != null) {
-      window.setBackgroundDrawable(
-          new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-    }
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
