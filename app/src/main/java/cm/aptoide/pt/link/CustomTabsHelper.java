@@ -63,7 +63,7 @@ public class CustomTabsHelper {
     PendingIntent pendingIntent =
         PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent, 0);
     return new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context,
-        StoreTheme.get(theme)
+        StoreTheme.get(theme, false)
             .getPrimaryColor()))
         .setShowTitle(true)
         .setCloseButtonIcon(

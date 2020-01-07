@@ -187,12 +187,12 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     appcSlider.incrementProgressBy(1);
     appcSlider.getProgressDrawable()
         .setColorFilter(new PorterDuffColorFilter(getContext().getResources()
-            .getColor(StoreTheme.get(theme)
+            .getColor(StoreTheme.get(theme, false)
                 .getDarkerColor()), PorterDuff.Mode.SRC_IN));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       appcSlider.getThumb()
           .setColorFilter(getContext().getResources()
-              .getColor(StoreTheme.get(theme)
+              .getColor(StoreTheme.get(theme, false)
                   .getDarkerColor()), PorterDuff.Mode.SRC_IN);
     }
     appcSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

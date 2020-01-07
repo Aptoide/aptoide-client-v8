@@ -197,8 +197,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      ThemeUtils.setStatusBarThemeColor(getActivity(), null);
+      ThemeUtils.setStoreTheme(getActivity(), null);
+      view.setBackgroundColor(getResources().getColor(R.color.black));
     }
   }
 

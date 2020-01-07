@@ -84,7 +84,7 @@ public class DisplayablesFactory {
       NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
       FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor,
       BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, boolean isDarkTheme) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -138,7 +138,7 @@ public class DisplayablesFactory {
                       .getApplicationContext()).getDatabase(),
                   cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory,
               fragmentNavigator, storeAccessor, bodyInterceptorV7, client, converter,
-              tokenInvalidator, sharedPreferences));
+              tokenInvalidator, sharedPreferences, isDarkTheme));
 
         case MY_STORE_META:
           return Observable.from(
@@ -164,7 +164,7 @@ public class DisplayablesFactory {
           String message = dataObj.getMessage();
           return Observable.just(
               new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()),
-                  StoreTheme.get(storeTheme)));
+                  StoreTheme.get(storeTheme, false)));
       }
     }
     return Observable.empty();
@@ -466,7 +466,7 @@ public class DisplayablesFactory {
                   .getList()));
     } else {
       displayables.add(new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(),
-          StoreTheme.get(storeTheme)));
+          StoreTheme.get(storeTheme, false)));
     }
 
     return displayables;

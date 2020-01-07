@@ -175,7 +175,7 @@ public class ManageUserFragment extends BackButtonFragment
           setupCalendar(calendar, year, monthNumber, day);
           setupCalendarDateString(year, monthNumber, day);
         };
-    datePickerDialog = new DatePickerDialog(getContext(), StoreTheme.get(theme)
+    datePickerDialog = new DatePickerDialog(getContext(), StoreTheme.get(theme, false)
         .getDatePickerStyle(), datePickerDialogListener, calendar.get(Calendar.YEAR),
         calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
   }

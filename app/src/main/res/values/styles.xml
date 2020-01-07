@@ -194,6 +194,10 @@
     <item name="android:colorControlNormal">@color/white</item>
   </style>
 
+  <style name="Toolbar.Reviews" parent="@style/Toolbar">
+    <item name="android:background">?attr/toolbarReviewsColor</item>
+  </style>
+
   <style name="ToolbarDark" parent="@style/Theme.AppCompat">
     <!--<item name="pstsIndicatorColor">@color/aptoide_orange</item>-->
   </style>
@@ -471,6 +475,7 @@
     <item name="android:drawablePadding">6dp</item>
     <item name="android:gravity">center</item>
     <item name="android:textSize">8.3sp</item>
+    <item name="android:textColor">?attr/ratingTextColor</item>
   </style>
 
   <style name="FragmentRateAndReviewsCount">
@@ -480,6 +485,7 @@
     <item name="android:text">@string/zero</item>
     <item name="android:textSize">8.3sp</item>
     <item name="android:gravity">right</item>
+    <item name="android:textColor">?attr/ratingTextColor</item>
   </style>
 
   <style name="RateAndReviews.Custom.ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
@@ -492,7 +498,7 @@
     <item name="android:indeterminate">false</item>
     <item name="android:max">100</item>
     <item name="android:progress">0</item>
-    <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
+    <item name="android:progressDrawable">?attr/ratingBarDrawable</item>
   </style>
 
   <style name="WidgetButtonCustomAptoideTwoLines" parent="WidgetButtonCustomAptoide">

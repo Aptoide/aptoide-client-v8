@@ -135,11 +135,11 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     Context context = getContext();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       return context.getResources()
-          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME)
+          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME, false)
               .getDarkerColor(), context.getTheme());
     } else {
       return context.getResources()
-          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME)
+          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME, false)
               .getDarkerColor());
     }
   }

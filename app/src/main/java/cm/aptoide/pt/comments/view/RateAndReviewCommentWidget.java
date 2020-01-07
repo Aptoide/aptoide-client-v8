@@ -8,6 +8,7 @@ package cm.aptoide.pt.comments.view;
 import android.content.res.Resources;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -196,14 +197,20 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 
     final Resources.Theme theme = context.getTheme();
     final Resources res = context.getResources();
+    TypedValue primaryBackground = new TypedValue();
+    TypedValue secondaryBackground = new TypedValue();
+    theme.resolveAttribute(R.attr.widgetBackgroundColorPrimary, primaryBackground, true);
+    theme.resolveAttribute(R.attr.widgetBackgroundColorSecondary, secondaryBackground, true);
+
     int color =
-        getItemId() % 2 == 0 ? R.color.white : R.color.displayable_rate_and_review_background;
+        getItemId() % 2 == 0 ? primaryBackground.resourceId : secondaryBackground.resourceId;
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       itemView.setBackgroundColor(res.getColor(color, theme));
     } else {
       itemView.setBackgroundColor(res.getColor(color));
     }
+
     int numberComments = displayable.getNumberComments();
     if (numberComments > 0) {
       showHideReplies.setVisibility(View.VISIBLE);

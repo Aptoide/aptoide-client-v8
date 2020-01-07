@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/widgetBackgroundColorPrimary"
     >
   <RelativeLayout
       android:id="@+id/outer_layout"
@@ -42,6 +43,7 @@
         android:textSize="@dimen/text_size_extra_small"
         android:textStyle="bold"
         tools:text="Mary Pollaki"
+        style="@style/Aptoide.TextView.Medium.XXS.Theme"
         />
 
     <TextView
@@ -59,6 +61,7 @@
         android:visibility="gone"
         tools:text="28 days ago"
         tools:visibility="visible"
+        style="@style/Aptoide.TextView.Medium.XXS.Theme"
         />
 
     <TextView
@@ -74,6 +77,7 @@
         android:visibility="gone"
         tools:text="31 days ago"
         tools:visibility="visible"
+        style="@style/Aptoide.TextView.Medium.XXS.Theme"
         />
 
     <LinearLayout
@@ -101,6 +105,7 @@
           android:text="@string/reply"
           android:textAllCaps="true"
           android:textSize="10sp"
+          style="@style/Aptoide.TextView.Medium.XXS.Theme"
           />
 
     </LinearLayout>
@@ -116,6 +121,7 @@
         android:ellipsize="end"
         android:paddingBottom="6dp"
         android:textSize="@dimen/text_size_medium_small"
+        style="@style/Aptoide.TextView.Medium.XXS.Theme"
         tools:text="O Lorem Ipsum é um texto modelo da indústria tipográfica e de impressão. O Lorem Ipsum tem vindo a ser o texto padrão usado por estas indústrias desde o ano de 1500, quando uma misturou os caracteres de um texto para criar um espécime de livro."
         />
 

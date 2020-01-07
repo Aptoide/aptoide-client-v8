@@ -42,6 +42,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   private Converter.Factory converter;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
+  private boolean isDarkTheme;
 
   public GridStoreMetaDisplayable() {
   }
@@ -51,7 +52,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
       BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
       StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
       Converter.Factory converter, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, boolean isDarkTheme) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAnalytics = storeAnalytics;
@@ -63,6 +64,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     this.converter = converter;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.isDarkTheme = isDarkTheme;
   }
 
   @Override protected Configs getConfig() {
@@ -179,7 +181,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     Store store = getStore();
     return StoreTheme.get(store == null || store.getAppearance() == null ? "default"
         : store.getAppearance()
-            .getTheme());
+            .getTheme(), isDarkTheme);
   }
 
   public long getStoreId() {

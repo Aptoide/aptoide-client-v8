@@ -18,8 +18,8 @@
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"
       android:orientation="vertical"
+      android:background="?attr/widgetBackgroundColorPrimary"
       >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -37,10 +37,10 @@
           android:id="@+id/toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
-          android:background="@color/white"
           app:layout_collapseMode="pin"
           app:layout_scrollFlags="scroll|enterAlways"
           app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          style="@style/Toolbar.Reviews"
           />
 
     </com.google.android.material.appbar.AppBarLayout>
