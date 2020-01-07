@@ -76,8 +76,8 @@
 
   <!-- Colors-->
   <style name="Aptoide.TextView.Regular.M.White">
-  <item name="android:textColor">?attr/textColorWhite</item>
-</style>
+    <item name="android:textColor">?attr/textColorWhite</item>
+  </style>
 
   <style name="Aptoide.TextView.Regular.M.Secondary">
     <item name="android:textColor">?android:attr/textColorSecondary</item>
@@ -178,6 +178,10 @@
 
   <style name="Aptoide.TextView.Medium.M.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.M.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.M.White">
