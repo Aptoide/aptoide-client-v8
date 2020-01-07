@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.ads.AdClick;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
@@ -51,12 +52,14 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<HomeBundle> bundles;
   private ErrorHomeBundle errorBundle;
+  private ThemeAttributeProvider themeAttributeProvider;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       ErrorHomeBundle errorBundle, DecimalFormat oneDecimalFormatter,
       PublishSubject<HomeEvent> uiEventsListener,
       AdsBundlesViewHolderFactory adsBundlesViewHolderFactory,
-      CaptionBackgroundPainter captionBackgroundPainter, String marketName) {
+      CaptionBackgroundPainter captionBackgroundPainter, String marketName,
+      ThemeAttributeProvider themeAttributeProvider) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.errorBundle = errorBundle;
@@ -65,6 +68,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     this.marketName = marketName;
     this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
     this.captionBackgroundPainter = captionBackgroundPainter;
+    this.themeAttributeProvider = themeAttributeProvider;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -85,7 +89,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener,
-            captionBackgroundPainter);
+            captionBackgroundPainter, themeAttributeProvider);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));

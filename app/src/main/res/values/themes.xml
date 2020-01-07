@@ -45,6 +45,7 @@
     <item name="preferenceSummaryTextSize">14dp</item>
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
+    <item name="dialogsTheme">@style/Aptoide.DialogTheme</item>
     <!--background-->
     <item name="backgroundMain">@color/default_background_color_light</item>
     <item name="backgroundSecondary">@color/light_custom_gray</item>
@@ -215,9 +216,11 @@
     <item name="android:windowBackground">@color/default_background_color_dark</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
+    <item name="dialogsTheme">@style/Aptoide.DialogTheme.Dark</item>
+
     <item name="colorPrimary">@color/aptoide_orange</item>
     <item name="colorPrimaryDark">@color/light_grey</item>
-    <item name="colorAccent">@color/aptoide_color_focused</item>
+    <item name="colorAccent">@color/white</item>
     <item name="customColor">@color/aptoide_orange</item>
     <item name="widgetBackgroundColorPrimary">@color/default_background_color_dark</item>
     <item name="widgetBackgroundColorSecondary">@color/grey_900</item>
@@ -290,6 +293,8 @@
     <item name="tertiaryTextColor">@android:color/white</item>
     <item name="inverseTextColor">@android:color/black</item>
     <item name="storesTextColor">@color/white</item>
+    <item name="android:textColorHighlight">@android:color/tertiary_text_light</item>
+    <item name="android:textCursorDrawable">@null</item>
     <item name="appviewRatingCardTextColor">@color/white</item>
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
     <item name="textColorBlackAlpha">@color/light_grey</item>

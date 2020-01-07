@@ -157,6 +157,7 @@
   <attr name="ratingBarDrawable" format="reference" />
   <attr name="commentTitleColor" format="color"/>
 
+  <attr name="dialogsTheme" format="reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />
