@@ -284,10 +284,11 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter) {
+      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
+      @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName, marketResourceFormatter);
+        marketName, marketResourceFormatter, themeAttributeProvider);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(
