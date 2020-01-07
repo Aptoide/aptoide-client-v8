@@ -59,7 +59,7 @@ public class WizardFragmentProvider {
     int lastPageColor = R.color.wizard_color_3_orange;
     if (!theme.equals(StoreTheme.DEFAULT.toString()
         .toLowerCase())) {
-      lastPageColor = StoreTheme.get(theme)
+      lastPageColor = StoreTheme.get(theme, false)
           .getPrimaryColor();
     }
     return new Integer[] {
