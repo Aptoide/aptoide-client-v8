@@ -189,16 +189,6 @@ public class DonateDialogFragment extends BaseDialogFragment implements DonateDi
     appcSlider.setMax(SEEKBAR_MAX);
     appcSlider.setProgress(SEEKBAR_START);
     appcSlider.incrementProgressBy(1);
-    appcSlider.getProgressDrawable()
-        .setColorFilter(new PorterDuffColorFilter(getContext().getResources()
-            .getColor(StoreTheme.get(theme, false)
-                .getDarkerColor()), PorterDuff.Mode.SRC_IN));
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      appcSlider.getThumb()
-          .setColorFilter(getContext().getResources()
-              .getColor(StoreTheme.get(theme, false)
-                  .getDarkerColor()), PorterDuff.Mode.SRC_IN);
-    }
     appcSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         sliderUpdate = false;
