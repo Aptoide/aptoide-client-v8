@@ -15,7 +15,7 @@ import cm.aptoide.pt.store.StoreTheme;
  */
 public class ThemeUtils {
 
-  static final String DARK_THEME = "dark_theme";
+  public static final String DARK_THEME = "dark_theme";
   private static final String TAG = "ThemeUtils";
 
   /**

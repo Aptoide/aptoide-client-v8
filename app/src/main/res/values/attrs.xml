@@ -114,6 +114,21 @@
   <attr name="swipeProgressColor2" format="reference|color" />
   <attr name="swipeBackgroundColor" format="reference|color" />
 
+  <attr name="appview_button_style" format="reference" />
+  <attr name="appview_background" format="reference" />
+  <attr name="appview_toolbar_bg_default" format="reference|color" />
+  <attr name="appview_toolbar_bg_appc" format="reference|color" />
+
+  <attr name="placeholder_myaccount" format="reference" />
+  <attr name="placeholder_9_16" format="reference" />
+  <attr name="placeholder_16_9" format="reference" />
+  <attr name="placeholder_square" format="reference" />
+  <attr name="placeholder_brick" format="reference" />
+
+  <attr name="download_progress_resume" format="reference" />
+  <attr name="download_progress_pause" format="reference" />
+  <attr name="download_progress_cancel" format="reference" />
+
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
@@ -134,11 +149,14 @@
   <attr name="wizard3Color" format="color" />
   <attr name="reactionsPopUpBackgroundColor" format="color" />
   <attr name="reactionsButtonColor" format="color" />
-
+  <attr name="dialogsTheme" format="reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />
     <attr name="helperTextColor" format="color|reference" />
+  </declare-styleable>
+  <declare-styleable name="ToolbarArcBackground">
+    <attr name="arcColor" format="color|reference" />
   </declare-styleable>
 
 </resources>

@@ -14,6 +14,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -1136,8 +1137,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void setupAppcAppView() {
-    TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
-        R.drawable.appc_gradient_transition);
+    TypedValue value = new TypedValue();
+    this.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
+    int drawableId = value.resourceId;
+
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
     collapsingToolbarLayout.setBackgroundDrawable(transition);
     transition.startTransition(APPC_TRANSITION_MS);
 

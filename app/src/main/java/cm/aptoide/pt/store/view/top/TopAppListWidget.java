@@ -43,7 +43,7 @@ public class TopAppListWidget extends Widget<TopAppListDisplayable> {
   @Override public void bindView(TopAppListDisplayable displayable, int position) {
     App app = displayable.getPojo();
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
+        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.attr.placeholder_square);
     name.setText(app.getName());
     topNumber.setText(String.valueOf(position + 1));
     appInfoViewHolder.setInfo(app.getAppcoins()

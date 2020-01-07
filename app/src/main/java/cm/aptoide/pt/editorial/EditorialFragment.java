@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -84,6 +83,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
   @Inject @Named("aptoide-theme") String theme;
+  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private Toolbar toolbar;
   private ImageView appImage;
@@ -575,7 +575,8 @@ public class EditorialFragment extends NavigationTrackFragment
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(getReactionInputDrawable().resourceId);
+      reactButton.setImageResource(
+          themeAttributeProvider.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     }
   }
 
@@ -598,14 +599,6 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public void showNetworkErrorToast() {
     Snackbar.make(getView(), getString(R.string.connection_error), Snackbar.LENGTH_LONG)
         .show();
-  }
-
-  @NonNull private TypedValue getReactionInputDrawable() {
-    TypedValue value = new TypedValue();
-    this.getActivity()
-        .getTheme()
-        .resolveAttribute(R.attr.reactionInputDrawable, value, true);
-    return value;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {

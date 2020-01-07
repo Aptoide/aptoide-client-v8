@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppViewWidget"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:paddingBottom="7.3dp"
     android:paddingTop="15dp"
-    style="@style/AppViewWidget"
+    android:paddingBottom="7.3dp"
     >
 
   <RelativeLayout
       android:id="@+id/comments_layout"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
       android:layout_toEndOf="@+id/separator"
       android:layout_toRightOf="@+id/separator"
       android:visibility="gone"
@@ -23,29 +22,28 @@
 
     <Button
         android:id="@+id/read_all_button"
+        style="?attr/appview_button_style"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:fontFamily="@string/font_family_medium"
         android:text="@string/appview_button_read_all"
         android:textAllCaps="true"
-        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
-        style="@style/Aptoide.Button.Ghost.S.Grey"
         />
 
     <TextView
         android:id="@+id/top_comments_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/top_comments"
-        android:textColor="@color/grey_900"
+        android:textColor="?attr/textColorGrey900"
         android:textSize="16sp"
         />
 
@@ -53,11 +51,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/read_all_button"
+        android:layout_below="@id/top_comments_title"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/top_comments_title"
-        android:layout_marginBottom="12dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
         >
 
       <androidx.recyclerview.widget.RecyclerView
@@ -71,24 +69,24 @@
 
   <androidx.core.widget.ContentLoadingProgressBar
       android:id="@+id/top_comments_progress"
+      style="@style/Widget.AppCompat.ProgressBar"
       android:layout_width="match_parent"
       android:layout_height="113dp"
-      android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
       android:layout_toEndOf="@+id/rating_layout"
       android:layout_toRightOf="@+id/rating_layout"
       android:indeterminate="true"
       android:padding="8dp"
       android:visibility="visible"
-      style="@style/Widget.AppCompat.ProgressBar"
       />
 
   <RelativeLayout
       android:id="@+id/empty_reviews_layout"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
       android:layout_toEndOf="@+id/rating_layout"
       android:layout_toRightOf="@+id/rating_layout"
       android:visibility="gone"
@@ -100,8 +98,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="33dp"
         android:layout_marginTop="13dp"
+        android:layout_marginBottom="33dp"
         android:orientation="vertical"
         >
 
@@ -112,14 +110,13 @@
           />
       <TextView
           android:id="@+id/empty_review_text"
+          style="@style/Aptoide.TextView.Regular.M.Secondary"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="top|center_horizontal"
           android:lines="2"
           android:paddingTop="10dp"
           android:text="@string/appview_rate_this_app"
-          android:textColor="@color/silver_dark"
-          android:textSize="@dimen/text_size_medium_large"
           />
 
     </LinearLayout>
@@ -128,6 +125,7 @@
 
   <Button
       android:id="@+id/rate_this_button2"
+      style="?attr/appview_button_style"
       android:layout_width="match_parent"
       android:layout_alignParentBottom="true"
       android:layout_centerHorizontal="true"
@@ -135,44 +133,41 @@
       android:gravity="center"
       android:text="@string/appview_rate_this_app"
       android:textAllCaps="true"
-      android:textColor="@color/silver_dark"
       android:textSize="@dimen/text_size_small"
       tools:visibility="gone"
-      style="@style/Aptoide.Button.Ghost.S.Grey"
       />
   <RelativeLayout
       android:id="@+id/rating_layout"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
       android:layout_alignParentTop="true"
       android:orientation="vertical"
       >
 
     <Button
         android:id="@+id/rate_this_button"
+        style="?attr/appview_button_style"
         android:layout_width="127.7dp"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:text="@string/appview_rate_this_app"
         android:textAllCaps="true"
-        android:textColor="@color/silver_dark"
         android:textSize="@dimen/text_size_small"
         android:visibility="visible"
-        style="@style/Aptoide.Button.Ghost.S.Grey"
         />
 
     <RelativeLayout
         android:layout_width="113dp"
         android:layout_height="113dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="12dp"
         >
 
       <LinearLayout
@@ -185,29 +180,29 @@
           >
 
         <ImageView
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_user_shape"
             />
 
         <TextView
             android:id="@+id/users_voted"
+            style="@style/Aptoide.TextView.Regular.XXS.Secondary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:gravity="center_vertical|left|start"
             android:text="@string/zero"
-            android:textColor="@color/grey"
-            android:textSize="10.6sp"
             />
       </LinearLayout>
 
       <TextView
           android:id="@+id/rating_value"
+          style="@style/Widget.Aptoide.defaultDarkColorText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_below="@id/users_icon_layout"
@@ -217,11 +212,11 @@
           android:maxLines="1"
           android:text="@string/zero"
           android:textSize="52sp"
-          style="@style/Widget.Aptoide.defaultDarkColorText"
           />
 
       <RatingBar
           android:id="@+id/rating_bar"
+          style="@style/RatingBarSmall"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_below="@id/rating_value"
@@ -230,19 +225,18 @@
           android:numStars="5"
           android:rating="0"
           android:stepSize="0.5"
-          style="@style/RatingBarSmall"
           />
 
     </RelativeLayout>
 
   </RelativeLayout>
   <include
-      layout="@layout/separator_vertical"
       android:id="@+id/separator"
+      layout="@layout/separator_vertical"
       android:layout_width="1dp"
       android:layout_height="73dp"
-      android:layout_marginLeft="10dp"
       android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
       android:layout_marginTop="32dp"
       android:layout_toEndOf="@id/rating_layout"
       android:layout_toRightOf="@id/rating_layout"

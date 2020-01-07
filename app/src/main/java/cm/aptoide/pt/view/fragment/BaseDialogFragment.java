@@ -4,16 +4,34 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.FragmentComponent;
 import cm.aptoide.pt.view.FragmentModule;
+import cm.aptoide.pt.view.MainActivity;
 import com.trello.rxlifecycle.components.support.RxDialogFragment;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class BaseDialogFragment extends RxDialogFragment {
 
+  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
   private FragmentComponent fragmentComponent;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ((MainActivity) getContext()).getActivityComponent()
+        .inject(this);
+
+    if (this.getActivity() != null) {
+      setStyle(DialogFragment.STYLE_NO_TITLE,
+          themeAttributeProvider.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+    }
+  }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);

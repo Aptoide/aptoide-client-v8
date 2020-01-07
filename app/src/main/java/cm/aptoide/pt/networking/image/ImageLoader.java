@@ -11,15 +11,18 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.palette.graphics.Palette;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -163,13 +166,13 @@ public class ImageLoader {
   }
 
   public Target<Drawable> loadWithShadowCircleTransformWithPlaceholder(String url,
-      ImageView imageView, int drawable) {
+      ImageView imageView, @DrawableRes int drawablePlaceholder) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
           .load(url)
           .apply(getRequestOptions().transform(new ShadowCircleTransformation(context))
-              .placeholder(drawable))
+              .placeholder(drawablePlaceholder))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
@@ -226,14 +229,14 @@ public class ImageLoader {
   }
 
   public Target<Drawable> loadWithShadowCircleTransformWithPlaceholder(String url,
-      ImageView imageView, float strokeSize, int drawable) {
+      ImageView imageView, float strokeSize, @AttrRes int placeHolderDrawable) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
           .load(AptoideUtils.IconSizeU.generateSizeStoreString(url, resources, windowManager))
           .apply(getRequestOptions().transform(
               new ShadowCircleTransformation(context, imageView, strokeSize))
-              .placeholder(drawable))
+              .placeholder(getAttrDrawable(placeHolderDrawable)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
@@ -287,13 +290,13 @@ public class ImageLoader {
   }
 
   public Target<Drawable> loadScreenshotToThumb(String url, String orientation,
-      @DrawableRes int loadingPlaceHolder, ImageView imageView) {
+      @AttrRes int loadingPlaceHolder, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
           .load(
               AptoideUtils.IconSizeU.screenshotToThumb(url, orientation, windowManager, resources))
-          .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .apply(getRequestOptions().placeholder(getAttrDrawable(loadingPlaceHolder)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
@@ -302,13 +305,12 @@ public class ImageLoader {
     return null;
   }
 
-  public Target<Drawable> load(String url, @DrawableRes int loadingPlaceHolder,
-      ImageView imageView) {
+  public Target<Drawable> load(String url, @AttrRes int loadingPlaceHolder, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
           .load(url)
-          .apply(getRequestOptions().placeholder(loadingPlaceHolder))
+          .apply(getRequestOptions().placeholder(getAttrDrawable(loadingPlaceHolder)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(imageView);
     } else {
@@ -328,6 +330,7 @@ public class ImageLoader {
   public Target<Drawable> loadWithColorPlaceholder(String url, @ColorInt int colorInt,
       ImageView imageView) {
     Context context = weakContext.get();
+
     if (context != null) {
       return Glide.with(context)
           .load(url)
@@ -444,7 +447,7 @@ public class ImageLoader {
   }
 
   public Target<Drawable> loadUsingCircleTransformAndPlaceholder(String url, ImageView imageView,
-      int defaultImagePlaceholder) {
+      @DrawableRes int defaultImagePlaceholder) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
@@ -460,13 +463,13 @@ public class ImageLoader {
   }
 
   public void loadWithRoundCorners(String image, int radius, ImageView previewImage,
-      @DrawableRes int placeHolderDrawableId) {
+      @AttrRes int placeHolderDrawableId) {
     Context context = weakContext.get();
     if (context != null) {
       Glide.with(context)
           .load(image)
           .apply(getRequestOptions().centerCrop()
-              .placeholder(placeHolderDrawableId)
+              .placeholder(getAttrDrawable(placeHolderDrawableId))
               .transforms(new CenterInside(), new RoundedCorners(radius)))
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(previewImage);
@@ -474,13 +477,13 @@ public class ImageLoader {
   }
 
   public Target<Drawable> loadWithRoundCorners(String image, int radius, ImageView previewImage,
-      @DrawableRes int placeHolderDrawableId, RequestListener<Drawable> requestListener) {
+      @AttrRes int placeHolderDrawableId, RequestListener<Drawable> requestListener) {
     Context context = weakContext.get();
     if (context != null) {
       return Glide.with(context)
           .load(image)
           .apply(getRequestOptions().centerCrop()
-              .placeholder(placeHolderDrawableId)
+              .placeholder(getAttrDrawable(placeHolderDrawableId))
               .transforms(new CenterCrop(), new RoundedCorners(radius)))
           .listener(requestListener)
           .transition(DrawableTransitionOptions.withCrossFade())
@@ -511,5 +514,17 @@ public class ImageLoader {
     }
     return requestOptions.format(decodeFormat)
         .diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+  }
+
+  private @DrawableRes int getAttrDrawable(@AttrRes int attrId) {
+    Context context = weakContext.get();
+    if (context != null) {
+      TypedValue value = new TypedValue();
+      weakContext.get()
+          .getTheme()
+          .resolveAttribute(attrId, value, true);
+      return value.resourceId;
+    }
+    return R.drawable.placeholder_square;
   }
 }
