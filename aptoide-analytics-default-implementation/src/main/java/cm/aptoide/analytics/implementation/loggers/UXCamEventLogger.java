@@ -3,11 +3,10 @@ package cm.aptoide.analytics.implementation.loggers;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.analytics.SessionLogger;
 import com.uxcam.UXCam;
 import java.util.Map;
 
-public class UXCamEventLogger implements EventLogger, SessionLogger {
+public class UXCamEventLogger implements EventLogger {
 
   private static final String TAG = "UXCamEventLogger";
   private final AnalyticsLogger logger;
@@ -40,13 +39,5 @@ public class UXCamEventLogger implements EventLogger, SessionLogger {
 
   @Override public void setup() {
     //Started on Aptoide Application
-  }
-
-  @Override public void startSession() {
-
-  }
-
-  @Override public void endSession() {
-
   }
 }
