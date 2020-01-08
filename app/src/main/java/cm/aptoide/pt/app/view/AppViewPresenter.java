@@ -118,7 +118,6 @@ public class AppViewPresenter implements Presenter {
     handleClickOnToolbar();
     handleClickOnRetry();
     handleClickOnCatappultCard();
-    handleOnScroll();
     handleOnSimilarAppsVisible();
 
     handleInstallButtonClick();
@@ -460,20 +459,6 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleOnSimilarAppsVisible() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.similarAppsVisibility())
-        .observeOn(Schedulers.io())
-        .doOnNext(similarAppsVisible -> {
-          sendSimilarAppsAdImpressionEvent(appViewManager.getCachedSimilarAppsViewModel());
-          sendSimilarAppcAppsImpressionEvent(appViewManager.getCachedAppcSimilarAppsViewModel());
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
   private void sendSimilarAppcAppsImpressionEvent(SimilarAppsViewModel appcSimilarAppsViewModel) {
     if (appcSimilarAppsViewModel != null) {
       appViewAnalytics.similarAppcAppBundleImpression();
@@ -501,11 +486,12 @@ public class AppViewPresenter implements Presenter {
         }, throwable -> crashReport.log(throwable));
   }
 
-  private void handleOnScroll() {
+  private void handleOnSimilarAppsVisible() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(lifecycleEvent -> view.scrollVisibleSimilarApps())
-        .takeUntil(__ -> view.isSimilarAppsVisible())
+        .flatMap(lifecycleEvent -> Observable.merge(view.scrollVisibleSimilarApps()
+            .map(__ -> true), view.similarAppsVisibilityFromInstallClick()))
+        .first()
         .observeOn(Schedulers.io())
         .doOnNext(__ -> {
           sendSimilarAppInteractEvent(appViewManager.getCachedSimilarAppsViewModel());
@@ -808,7 +794,7 @@ public class AppViewPresenter implements Presenter {
   private void handleSimilarAppsABTestingImpression() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.similarAppsVisibility())
+        .flatMap(__ -> view.similarAppsVisibilityFromInstallClick())
         .flatMapCompletable(__ -> similarAppsExperiment.recordImpression())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
