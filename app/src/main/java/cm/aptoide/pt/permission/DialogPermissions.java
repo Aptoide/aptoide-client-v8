@@ -7,8 +7,6 @@ package cm.aptoide.pt.permission;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +25,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hsousa on 18/11/15.
- * <p>
- * TODO: fix size of scrollview to shrink when not enough permissions on screen
- * <p>
- */
 public class DialogPermissions extends DialogFragment {
 
   private String appName;
@@ -57,18 +49,6 @@ public class DialogPermissions extends DialogFragment {
     super.onPause();
   }
 
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_Dialog_Alert);
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light);
-    } else {
-      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Dialog);
-    }
-  }
-
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
 
     @SuppressLint("InflateParams") final View v = LayoutInflater.from(getActivity())
@@ -79,17 +59,17 @@ public class DialogPermissions extends DialogFragment {
     v.findViewById(R.id.dialog_ok_button)
         .setOnClickListener(v1 -> dismiss());
 
-    TextView tvAppInfo = (TextView) v.findViewById(R.id.dialog_app_info);
+    TextView tvAppInfo = v.findViewById(R.id.dialog_app_info);
     tvAppInfo.setText(getString(R.string.dialog_version_size, versionName, size));
 
-    TextView tvAppName = (TextView) v.findViewById(R.id.dialog_app_name);
+    TextView tvAppName = v.findViewById(R.id.dialog_app_name);
     tvAppName.setText(appName);
 
     Glide.with(this)
         .load(icon)
         .into((ImageView) v.findViewById(R.id.dialog_appview_icon));
 
-    final TableLayout tableLayout = (TableLayout) v.findViewById(R.id.dialog_table_permissions);
+    final TableLayout tableLayout = v.findViewById(R.id.dialog_table_permissions);
 
     List<ApkPermission> apkPermissions =
         AptoideUtils.SystemU.parsePermissions(getContext(), usedPermissions);
@@ -103,10 +83,6 @@ public class DialogPermissions extends DialogFragment {
     } else {
       AppUtils.fillPermissionsForTableLayout(getContext(), tableLayout, apkPermissionsGroup);
     }
-
-    builder.getWindow()
-        .setBackgroundDrawable(
-            new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
     return builder;
   }
