@@ -17,6 +17,8 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">
       @color/default_orange_gradient_end
     </item>
+    <item name="widgetBackgroundColorPrimary">@color/white</item>
+    <item name="widgetBackgroundColorSecondary">@color/comment_gray</item>
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/default_orange_gradient_start</item>
@@ -26,6 +28,7 @@
     <item name="toolbarTheme">@style/Toolbar</item>
     <item name="toolbarBackground">@drawable/aptoide_gradient</item>
     <item name="toolbarTextColor">@color/white</item>
+    <item name="toolbarReviewsColor">@color/white</item>
     <item name="actionMenuTextColor">@color/white</item>
 
     <!--Buttons-->
@@ -79,6 +82,7 @@
     <item name="placeholder_square">@drawable/placeholder_square</item>
     <item name="placeholder_brick">@drawable/placeholder_brick</item>
 
+    <item name="commentBackgroundColor">@color/comment_gray</item>
 
     <!--text-->
     <item name="defaultTextStyle">@style/Widget.Aptoide.defaultColorText</item>
@@ -108,6 +112,9 @@
     <item name="textColorTwitch">@color/twitch</item>
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
+    <item name="ratingTextColor">@color/silver_dark</item>
+    <item name="commentTitleColor">@color/black</item>
+
 
     <!--Swipe Refresh-->
     <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
@@ -181,6 +188,8 @@
     <item name="homeChips">@drawable/default_home_chips_background</item>
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
+    <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
+
 
   </style>
 
@@ -217,6 +226,8 @@
     <item name="colorAccent">@color/white</item>
     <item name="customColor">@color/aptoide_orange</item>
     <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
+    <item name="widgetBackgroundColorPrimary">@color/default_background_color_dark</item>
+    <item name="widgetBackgroundColorSecondary">@color/grey_900</item>
 
     <!--bottomNavigation-->
     <item name="colorControlHighlight">@color/light_grey</item>
@@ -226,6 +237,7 @@
     <item name="toolbarTheme">@style/ToolbarDark</item>
     <item name="toolbarBackground">@color/grey_900</item>
     <item name="toolbarTextColor">@color/white</item>
+    <item name="toolbarReviewsColor">?attr/toolbarBackground</item>
     <item name="actionMenuTextColor">@color/white</item>
 
     <!--Buttons-->
@@ -277,6 +289,7 @@
     <item name="placeholder_16_9">@drawable/placeholder_16_9_dark</item>
     <item name="placeholder_square">@drawable/placeholder_square_dark</item>
     <item name="placeholder_brick">@drawable/placeholder_brick_dark</item>
+    <item name="commentBackgroundColor">@color/grey_900</item>
 
     <!--text-->
     <item name="android:textColorPrimary">@color/light_grey</item>
@@ -308,6 +321,8 @@
     <item name="textColorTwitch">@color/twitch</item>
     <item name="textColorYoutube">@color/youtube</item>
     <item name="textColorFacebook">@color/facebook</item>
+    <item name="ratingTextColor">@color/white</item>
+    <item name="commentTitleColor">@color/white</item>
 
     <!--Swipe Refresh-->
     <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
@@ -381,13 +396,15 @@
     <item name="homeChips">@drawable/default_home_chips_background</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
+    <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
+
   </style>
 
   <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />
 
   <!-- Non-default themes -->
 
-  <style name="AptoideThemeDefaultGrey" parent="AppBaseTheme">
+  <style name="AptoideThemeDefaultGrey">
     <item name="colorPrimary">@color/grey</item>
     <item name="colorPrimaryDark">@color/grey_700</item>
     <item name="colorAccent">@color/grey_700</item>
@@ -411,6 +428,10 @@
 
     <item name="toolbarTheme">@style/ToolbarGreyTransparent</item>
   </style>
+
+  <style name="AptoideThemeDefaultGrey.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultGrey.Light" parent="AppBaseTheme" />
 
 
   <style name="AptoideThemeDefaultTeal" parent="AppBaseTheme">
@@ -439,6 +460,10 @@
     <item name="toolbarTheme">@style/ToolbarTealTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultTeal.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultTeal.Light" parent="AppBaseTheme" />
+
   <style name="AptoideThemeDefaultBrown" parent="AppBaseTheme">
     <item name="colorPrimary">@color/brown</item>
     <item name="colorPrimaryDark">@color/brown_700</item>
@@ -465,6 +490,10 @@
     <item name="toolbarTheme">@style/ToolbarBrownTransparent</item>
 
   </style>
+
+  <style name="AptoideThemeDefaultBrown.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultBrown.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
     <item name="colorPrimary">@color/blue_grey</item>
@@ -494,6 +523,9 @@
 
   </style>
 
+  <style name="AptoideThemeDefaultBluegrey.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultBluegrey.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
     <item name="colorPrimary">@color/light_green</item>
@@ -522,6 +554,9 @@
     <item name="toolbarTheme">@style/ToolbarLightgreenTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultLightgreen.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultLightgreen.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
     <item name="colorPrimary">@color/light_blue</item>
@@ -549,6 +584,9 @@
     <item name="toolbarTheme">@style/ToolbarLightblueTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultLightblue.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultLightblue.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultAmber" parent="AppBaseTheme">
     <item name="colorPrimary">@color/amber</item>
@@ -575,6 +613,10 @@
     <item name="toolbarTheme">@style/ToolbarAmberTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultAmber.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultAmber.Light" parent="AppBaseTheme" />
+
   <style name="AptoideThemeDefaultLime" parent="AppBaseTheme">
     <item name="colorPrimary">@color/lime</item>
     <item name="colorPrimaryDark">@color/lime_700</item>
@@ -600,6 +642,9 @@
     <item name="toolbarTheme">@style/ToolbarLimeTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultLime.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultLime.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
     <item name="colorPrimary">@color/orange</item>
@@ -628,6 +673,10 @@
     <item name="toolbarTheme">@style/ToolbarOrangeTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultOrange.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultOrange.Light" parent="AppBaseTheme" />
+
   <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
     <item name="colorPrimary">@color/pink</item>
     <item name="colorPrimaryDark">@color/pink_700</item>
@@ -654,6 +703,9 @@
     <item name="toolbarTheme">@style/ToolbarPinkTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultPink.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultPink.Light" parent="AppBaseTheme" />
 
   <style name="AptoideThemeDefaultIndigo" parent="AppBaseTheme">
     <item name="colorPrimary">@color/indigo</item>
@@ -680,6 +732,9 @@
     <item name="toolbarTheme">@style/ToolbarIndigoTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultIndigo.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultIndigo.Light" parent="AppBaseTheme" />
 
   <!-- v6 Blue theme updated to v7 Indigo -->
 
@@ -710,6 +765,10 @@
     <item name="toolbarTheme">@style/ToolbarRedTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultRed.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultRed.Light" parent="AppBaseTheme" />
+
   <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
     <item name="colorPrimary">@color/green</item>
     <item name="colorPrimaryDark">@color/green_700</item>
@@ -736,6 +795,9 @@
     <item name="toolbarTheme">@style/ToolbarGreenTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultGreen.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultGreen.Light" parent="AppBaseTheme" />
 
   <!-- v6 SeaGreen theme updated to Green theme -->
 
@@ -766,6 +828,10 @@
     <item name="toolbarTheme">@style/ToolbarDeeppurpleTransparent</item>
   </style>
 
+  <style name="AptoideThemeDefaultDeepPurple.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultDeepPurple.Light" parent="AppBaseTheme" />
+
   <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
     <item name="colorPrimary">@color/black</item>
     <item name="colorPrimaryDark">@color/black</item>
@@ -790,4 +856,9 @@
 
     <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
   </style>
+
+  <style name="AptoideThemeDefaultBlack.Dark" parent="AppBaseThemeDark" />
+
+  <style name="AptoideThemeDefaultBlack.Light" parent="AppBaseTheme" />
+
 </resources>

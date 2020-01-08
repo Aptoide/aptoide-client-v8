@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/comment_gray"
+    android:background="?attr/commentBackgroundColor"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     >
@@ -85,7 +85,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textAllCaps="true"
-        android:textColor="@color/black"
+        android:textColor="?attr/commentTitleColor"
         android:textSize="@dimen/text_size_small"
         android:textStyle="bold"
         tools:text="Super Gameplay !!"

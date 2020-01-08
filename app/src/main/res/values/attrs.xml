@@ -149,6 +149,14 @@
   <attr name="wizard3Color" format="color" />
   <attr name="reactionsPopUpBackgroundColor" format="color" />
   <attr name="reactionsButtonColor" format="color" />
+  <attr name="widgetBackgroundColorPrimary" format="color" />
+  <attr name="widgetBackgroundColorSecondary" format="color" />
+  <attr name="commentBackgroundColor" format="color" />
+  <attr name="toolbarReviewsColor" format="color" />
+  <attr name="ratingTextColor" format="color" />
+  <attr name="ratingBarDrawable" format="reference" />
+  <attr name="commentTitleColor" format="color" />
+
   <attr name="dialogsTheme" format="reference" />
 
   <declare-styleable name="CustomTextInputLayout">

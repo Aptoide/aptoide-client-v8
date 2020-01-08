@@ -102,7 +102,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     Store store = getPojo().getStore();
     if (store != null && store.getAppearance() != null) {
       return StoreTheme.get(store.getAppearance()
-          .getTheme())
+          .getTheme(), false)
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     } else {
       return storeColor;
