@@ -490,7 +490,6 @@ public class AppViewPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(lifecycleEvent -> Observable.merge(view.scrollVisibleSimilarApps()
-            .takeUntil(__ -> view.isSimilarAppsVisible())
             .map(__ -> true), view.similarAppsVisibilityFromInstallClick()))
         .first()
         .observeOn(Schedulers.io())
