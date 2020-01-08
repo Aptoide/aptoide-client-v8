@@ -1,6 +1,7 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import androidx.fragment.app.Fragment;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -31,15 +32,12 @@ public class BottomNavigationNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
-  private final String theme;
   private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
-      String theme) {
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
-    this.theme = theme;
     bottomNavigationItems = new ArrayList<>();
     this.fragmentNavigator = fragmentNavigator;
   }
@@ -82,7 +80,8 @@ public class BottomNavigationNavigator {
 
   public void navigateToStore() {
     MyStoresFragment myStoresFragment =
-        MyStoresFragment.newInstance(getStoreEvent(), theme, "stores", StoreContext.home);
+        MyStoresFragment.newInstance(getStoreEvent(), BuildConfig.APTOIDE_THEME, "stores",
+            StoreContext.home);
     navigateToSelectedFragment(STORES_POSITION, myStoresFragment);
   }
 

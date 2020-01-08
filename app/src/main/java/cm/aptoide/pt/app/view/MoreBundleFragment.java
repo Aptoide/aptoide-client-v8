@@ -20,7 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.ScrollableView;
@@ -64,7 +64,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
   @Inject MoreBundlePresenter presenter;
   @Inject @Named("marketName") String marketName;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
-  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
+  @Inject ThemeManager themeAttributeProvider;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;

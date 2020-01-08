@@ -24,7 +24,6 @@ public abstract class ActivityResultNavigator extends BaseActivity implements Ac
 
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;

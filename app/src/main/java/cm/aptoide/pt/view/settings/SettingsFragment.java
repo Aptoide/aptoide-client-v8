@@ -38,6 +38,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.SettingsManager;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.file.FileManager;
@@ -91,8 +92,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject SupportEmailProvider supportEmailProvider;
+  @Inject ThemeManager themeManager;
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
@@ -324,12 +325,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
       subscriptions.add(RxPreference.clicks(termsAndConditions)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
-                  theme)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).data)));
 
       subscriptions.add(RxPreference.clicks(privacyPolicy)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
-                  theme)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).data)));
     }
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
@@ -638,7 +639,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void openDeleteAccountView(String accessToken) {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
-            getContext(), theme);
+            getContext(), themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
   }
 
   private void handleSocialNotifications(Boolean isChecked) {

@@ -12,6 +12,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
@@ -42,7 +43,6 @@ import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.util.MarketResourceFormatter;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -67,7 +67,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject AppNavigator appNavigator;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private SharedPreferences preferences;
   private DialogUtils dialogUtils;
   private long reviewId;
@@ -189,14 +189,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStoreTheme(getActivity(), theme);
+    themeManager.resetToBaseTheme();
     super.onDestroyView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
     }
   }
 

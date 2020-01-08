@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -19,16 +20,15 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
   private boolean isLike;
-  private String defaultTheme;
+  private int storeColor;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike,
-      String defaultTheme) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor) {
     super(pojo);
     this.isLike = isLike;
-    this.defaultTheme = defaultTheme;
+    this.storeColor = storeColor;
   }
 
   @Override protected Configs getConfig() {
@@ -105,8 +105,7 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
           .getTheme())
           .getStoreHeaderColorResource(context.getResources(), context.getTheme());
     } else {
-      return StoreTheme.get(defaultTheme)
-          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
+      return storeColor;
     }
   }
 
@@ -138,10 +137,10 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
     String theme;
     if (store != null && store.getAppearance() != null) {
       theme = store.getAppearance()
-          .getTheme() == null ? defaultTheme : store.getAppearance()
+          .getTheme() == null ? BuildConfig.APTOIDE_THEME : store.getAppearance()
           .getTheme();
     } else {
-      theme = defaultTheme;
+      theme = BuildConfig.APTOIDE_THEME;
     }
     return theme;
   }

@@ -36,6 +36,7 @@ import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -51,7 +52,6 @@ import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.BackButtonFragment;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
@@ -71,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -95,7 +94,7 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String TRENDING_LIST_STATE = "trending_list_state";
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
   @Inject SearchResultPresenter searchResultPresenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
   private EditText noSearchLayoutSearchQuery;
@@ -743,7 +742,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupTheme() {
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
       toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -761,20 +760,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupDefaultTheme() {
-    if (storeThemeExists(theme)) {
-      ThemeUtils.setStoreTheme(getActivity(), theme);
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
-        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(theme)
-                .getPrimaryColor()));
-        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
-      } else {
-        progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(theme)
-                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
-      }
-    }
+    themeManager.resetToBaseTheme();
   }
 
   @Override public void onDestroyView() {

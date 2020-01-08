@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.store.StoreTheme;
 
 /**
  * Created by jdandrade on 02/09/16.
@@ -49,22 +48,20 @@ public class CustomTabsHelper {
    * @param url Url to be launched in the Custom Chrome Tab
    * @param context Context
    */
-  public void openInChromeCustomTab(String url, Context context, String theme) {
-    CustomTabsIntent.Builder builder = getBuilder(context, theme);
+  public void openInChromeCustomTab(String url, Context context, int color) {
+    CustomTabsIntent.Builder builder = getBuilder(context, color);
     CustomTabsIntent customTabsIntent = builder.build();
     addRefererHttpHeader(context, customTabsIntent);
     customTabsIntent.intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     customTabsIntent.launchUrl(context, Uri.parse(url));
   }
 
-  @NonNull private CustomTabsIntent.Builder getBuilder(Context context, String theme) {
+  @NonNull private CustomTabsIntent.Builder getBuilder(Context context, int color) {
     Intent openInNativeIntent =
         new Intent(context.getApplicationContext(), CustomTabNativeReceiver.class);
     PendingIntent pendingIntent =
         PendingIntent.getBroadcast(context.getApplicationContext(), 0, openInNativeIntent, 0);
-    return new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context,
-        StoreTheme.get(theme)
-            .getPrimaryColor()))
+    return new CustomTabsIntent.Builder().setToolbarColor(ContextCompat.getColor(context, color))
         .setShowTitle(true)
         .setCloseButtonIcon(
             BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_arrow_back))

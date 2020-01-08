@@ -13,17 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -31,7 +30,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
 
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.HOME;
   @Inject HomeContainerPresenter presenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private BottomNavigationActivity bottomNavigationActivity;
   private CheckBox gamesChip;
   private CheckBox appsChip;
@@ -116,8 +115,9 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         gamesChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(gamesChip);
       } else {
-        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
-            .getDarkerColor()));
+
+        gamesChip.setTextColor(
+            themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data);
         hideChipCancelButton(gamesChip);
       }
     });
@@ -127,8 +127,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         appsChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(appsChip);
       } else {
-        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
-            .getDarkerColor()));
+        appsChip.setTextColor(getResources().getColor(
+            themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data));
         hideChipCancelButton(appsChip);
       }
     });

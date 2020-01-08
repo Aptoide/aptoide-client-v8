@@ -18,6 +18,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import java.util.LinkedList;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by neuro on 05-05-2016.
@@ -296,6 +297,11 @@ public enum StoreTheme {
     }
     // default case
     return StoreTheme.DEFAULT;
+  }
+
+  //TODO: Remove
+  @NotNull public static StoreTheme get(@NotNull String theme, boolean hasDarkMode) {
+    return null;
   }
 
   public int getVersion() {

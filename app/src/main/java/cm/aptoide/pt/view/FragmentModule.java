@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -275,10 +276,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
+      AccountNavigator accountNavigator, ThemeManager themeManager) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
-        accountNavigator);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()),
+        accountNavigator, themeManager);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
@@ -614,8 +615,7 @@ import rx.subscriptions.CompositeSubscription;
         autoUpdateManager);
   }
 
-  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(
-      @Named("aptoide-theme") String theme) {
-    return new ExternalNavigator(fragment.getContext(), theme);
+  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
+    return new ExternalNavigator(fragment.getContext(), themeManager);
   }
 }

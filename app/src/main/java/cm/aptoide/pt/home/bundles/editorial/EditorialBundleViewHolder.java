@@ -8,7 +8,7 @@ import androidx.cardview.widget.CardView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
@@ -47,13 +47,12 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final CardView curationTypeCaption;
   private final TextView curationTypeCaptionText;
   private final CaptionBackgroundPainter captionBackgroundPainter;
-  private final ThemeAttributeProvider themeAttributeProvider;
+  private final ThemeManager themeAttributeProvider;
   private TopReactionsPreview topReactionsPreview;
   private Skeleton skeleton;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter,
-      ThemeAttributeProvider themeAttributeProvider) {
+      CaptionBackgroundPainter captionBackgroundPainter, ThemeManager themeAttributeProvider) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);

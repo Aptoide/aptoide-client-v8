@@ -29,6 +29,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
@@ -62,7 +63,6 @@ import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.astuetz.PagerSlidingTabStrip;
@@ -89,8 +89,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject AppNavigator appNavigator;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("marketName") String marketName;
+  @Inject ThemeManager themeManager;
   @Inject MarketResourceFormatter marketResourceFormatter;
   private AptoideAccountManager accountManager;
   private String storeName;
@@ -184,7 +184,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -258,8 +257,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setAptoideTheme(getActivity(), theme);
-    ThemeUtils.setStoreTheme(getActivity(), theme);
+    themeManager.resetToBaseTheme();
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
@@ -374,7 +372,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);

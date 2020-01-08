@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.view.ImagePickerErrorHandler;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
@@ -53,7 +54,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 
@@ -67,7 +67,7 @@ public class ManageStoreFragment extends BackButtonFragment
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
   @Inject ScreenOrientationManager orientationManager;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -228,8 +228,7 @@ public class ManageStoreFragment extends BackButtonFragment
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-    int color = StoreTheme.get(theme)
-        .getPrimaryColor();
+    int color = themeManager.getAttributeForTheme(R.attr.colorPrimary).data;
     ImageLoader.with(getActivity())
         .loadWithShadowCircleTransform(pictureUri, storeImage, getResources().getColor(color),
             SPACE_BETWEEN, STROKE_SIZE);

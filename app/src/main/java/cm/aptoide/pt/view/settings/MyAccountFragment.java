@@ -24,6 +24,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.MyAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -60,7 +61,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject AccountAnalytics accountAnalytics;
   @Inject MyAccountManager myAccountManager;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -265,7 +266,8 @@ public class MyAccountFragment extends BackButtonFragment
 
   @Override public void startAptoideTvWebView() {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(), theme);
+        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
   }
 
   @Override public void refreshUI(Store store) {

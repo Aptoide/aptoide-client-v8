@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -19,7 +20,6 @@ import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.MessageWhiteBgDisplayable;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -29,7 +29,8 @@ import retrofit2.Converter;
 
 public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
+
   private Long userId;
   private Long storeId;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
@@ -100,7 +101,8 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false, theme);
+    return new FollowUserDisplayable(user, false,
+        themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
   }
 
   @Override

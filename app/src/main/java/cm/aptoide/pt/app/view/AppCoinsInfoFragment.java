@@ -25,8 +25,8 @@ import androidx.core.widget.NestedScrollView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.editorial.ScrollEvent;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -47,9 +47,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
+  @Inject ThemeManager themeManager;
   private Toolbar toolbar;
   private View appCardView;
   private View appCardViewLayout;
@@ -73,8 +73,8 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = view.findViewById(R.id.toolbar);
-    spannableColor = StoreTheme.get(theme)
-        .getPrimaryColor();
+    spannableColor = themeManager.getAttributeForTheme(R.attr.colorPrimary).data;
+
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);

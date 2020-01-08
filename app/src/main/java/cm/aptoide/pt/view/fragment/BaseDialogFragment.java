@@ -8,18 +8,17 @@ import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
+import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.FragmentComponent;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.MainActivity;
 import com.trello.rxlifecycle.components.support.RxDialogFragment;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 public class BaseDialogFragment extends RxDialogFragment {
 
-  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
+  @Inject ThemeManager themeAttributeProvider;
   private FragmentComponent fragmentComponent;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
