@@ -25,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
@@ -36,7 +35,6 @@ import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -50,7 +48,7 @@ import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
@@ -175,28 +173,26 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout = (CardView) view.findViewById(
+    allAndFollowedStoresButtonsLayout = view.findViewById(
         R.id.fragment_search_result_all_followed_stores_buttons_layout);
-    allStoresResultList =
-        (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
+    allStoresResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
-    suggestionsResultList = (RecyclerView) view.findViewById(R.id.suggestions_list);
+    suggestionsResultList = view.findViewById(R.id.suggestions_list);
 
-    trendingResultList = (RecyclerView) view.findViewById(R.id.trending_list);
+    trendingResultList = view.findViewById(R.id.trending_list);
 
     followedStoresResultList =
-        (RecyclerView) view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
-    allStoresButton = (Button) view.findViewById(R.id.fragment_search_result_all_stores_button);
-    followedStoresButton =
-        (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
+        view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
+    allStoresButton = view.findViewById(R.id.fragment_search_result_all_stores_button);
+    followedStoresButton = view.findViewById(R.id.fragment_search_result_followed_stores_button);
 
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
-    noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    noSearchLayoutSearchQuery = view.findViewById(R.id.search_text);
+    noResultsSearchButton = view.findViewById(R.id.ic_search_button);
+    progressBar = view.findViewById(R.id.progress_bar);
+    toolbar = view.findViewById(R.id.toolbar);
 
     bannerAd = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
@@ -599,8 +595,8 @@ public class SearchResultFragment extends BackButtonFragment
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(StoreTheme.get(theme, false)
-          .getRoundGradientButtonDrawable());
+      followedStoresButton.setBackgroundResource(
+          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -609,8 +605,8 @@ public class SearchResultFragment extends BackButtonFragment
     viewModel.setAllStoresSelected(false);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme, false)
-          .getRoundGradientButtonDrawable());
+      followedStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.roundGradientButtonBackground).resourceId);
     }
   }
 
@@ -621,14 +617,14 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(StoreTheme.get(theme, false)
-          .getRoundGradientButtonDrawable());
+      allStoresButton.setBackgroundResource(
+          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }
     viewModel.setAllStoresSelected(true);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme, false)
-          .getRoundGradientButtonDrawable());
+      allStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.roundGradientButtonBackground).resourceId);
     }
   }
 
@@ -743,18 +739,17 @@ public class SearchResultFragment extends BackButtonFragment
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
       themeManager.setTheme(storeTheme);
-      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
-          .getGradientDrawable());
+      toolbar.setBackgroundResource(
+          themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
-        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(storeTheme, false)
-                .getPrimaryColor()));
+        DrawableCompat.setTint(wrapDrawable,
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme, false)
-                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+            .setColorFilter(themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
+                PorterDuff.Mode.SRC_IN);
       }
     }
   }
@@ -802,8 +797,7 @@ public class SearchResultFragment extends BackButtonFragment
     searchMenuItem = menu.findItem(R.id.menu_item_search);
     searchView = (SearchView) searchMenuItem.getActionView();
     searchView.setMaxWidth(Integer.MAX_VALUE);
-    AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
+    AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
     MenuItemCompat.setOnActionExpandListener(searchMenuItem,
         new MenuItemCompat.OnActionExpandListener() {

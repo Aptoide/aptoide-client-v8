@@ -24,8 +24,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.StoreTheme;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -67,19 +67,19 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   @Override protected void assignViews(View itemView) {
-    socialChannelsLayout = (LinearLayout) itemView.findViewById(R.id.social_channels);
-    mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
-    secondaryIcon = (ImageView) itemView.findViewById(R.id.secondary_icon);
-    mainName = (TextView) itemView.findViewById(R.id.main_name);
-    secondaryName = (TextView) itemView.findViewById(R.id.secondary_name);
-    description = (TextView) itemView.findViewById(R.id.description);
-    followStoreButton = (Button) itemView.findViewById(R.id.follow_store_button);
+    socialChannelsLayout = itemView.findViewById(R.id.social_channels);
+    mainIcon = itemView.findViewById(R.id.main_icon);
+    secondaryIcon = itemView.findViewById(R.id.secondary_icon);
+    mainName = itemView.findViewById(R.id.main_name);
+    secondaryName = itemView.findViewById(R.id.secondary_name);
+    description = itemView.findViewById(R.id.description);
+    followStoreButton = itemView.findViewById(R.id.follow_store_button);
     editStoreButton = itemView.findViewById(R.id.edit_store_button);
-    badgeIcon = (ImageView) itemView.findViewById(R.id.medal_icon);
-    appsCountTv = (TextView) itemView.findViewById(R.id.apps_text_view);
-    followingCountTv = (TextView) itemView.findViewById(R.id.following_text_view);
+    badgeIcon = itemView.findViewById(R.id.medal_icon);
+    appsCountTv = itemView.findViewById(R.id.apps_text_view);
+    followingCountTv = itemView.findViewById(R.id.following_text_view);
     buttonsLayout = itemView.findViewById(R.id.action_button_layout);
-    followersCountTv = (TextView) itemView.findViewById(R.id.followers_text_view);
+    followersCountTv = itemView.findViewById(R.id.followers_text_view);
     separator = itemView.findViewById(R.id.separator);
   }
 
@@ -124,7 +124,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
           setupActionButton(homeMeta.isShowButton(), homeMeta.isOwner(), homeMeta.getStoreId(),
               homeMeta.getStoreTheme(), homeMeta.getMainName(), homeMeta.getDescription(),
               homeMeta.getMainIcon(), homeMeta.isFollowingStore(), homeMeta.getSocialChannels(),
-              displayable.getRequestCode());
+              displayable.getRequestCode(), displayable.getRaisedButtonBackground());
           showSocialChannels(homeMeta.getSocialChannels());
           showAppsCount(homeMeta.getAppsCount(), textStyle, homeMeta.isShowApps(),
               homeMeta.getStoreId());
@@ -174,13 +174,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     if (displayable.hasStore()) {
       fragmentNavigator.navigateTo(
           TimeLineFollowingFragment.newInstanceUsingStoreId(displayable.getStoreId(),
-              displayable.getStoreTheme()
-                  .getThemeName(), screenTitle, StoreContext.meta), true);
+              displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     } else {
       fragmentNavigator.navigateTo(
           TimeLineFollowingFragment.newInstanceUsingUserId(displayable.getUserId(),
-              displayable.getStoreTheme()
-                  .getThemeName(), screenTitle, StoreContext.meta), true);
+              displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     }
   }
 
@@ -193,13 +191,11 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     if (displayable.hasStore()) {
       fragmentNavigator.navigateTo(
           TimeLineFollowersFragment.newInstanceUsingStore(displayable.getStoreId(),
-              displayable.getStoreTheme()
-                  .getThemeName(), screenTitle, StoreContext.meta), true);
+              displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     } else {
       fragmentNavigator.navigateTo(
           TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(),
-              displayable.getStoreTheme()
-                  .getThemeName(), screenTitle, StoreContext.meta), true);
+              displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     }
   }
 
@@ -260,25 +256,24 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
       StoreTheme storeTheme, String storeName, String storeDescription, String storeImagePath,
       boolean isFollowed,
       List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannel> socialChannels,
-      int requestCode) {
+      int requestCode, int raisedButtonBackground) {
     if (shouldShow) {
       buttonsLayout.setVisibility(View.VISIBLE);
       if (owner) {
         setupEditButton(storeId, storeTheme, storeName, storeDescription, storeImagePath,
             socialChannels, requestCode);
       } else {
-        setupFollowButton(storeName, isFollowed, storeTheme);
+        setupFollowButton(storeName, isFollowed, raisedButtonBackground);
       }
     } else {
       buttonsLayout.setVisibility(View.GONE);
     }
   }
 
-  private void setupFollowButton(String storeName, boolean isFollowed, StoreTheme theme) {
+  private void setupFollowButton(String storeName, boolean isFollowed, int raisedButtonBackground) {
     editStoreButton.setVisibility(View.GONE);
     followStoreButton.setVisibility(View.VISIBLE);
-    followStoreButton.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(theme.getRaisedButtonDrawable()));
+    followStoreButton.setBackgroundResource(raisedButtonBackground);
     if (isFollowed) {
       setupUnfollowButton(storeName);
     } else {

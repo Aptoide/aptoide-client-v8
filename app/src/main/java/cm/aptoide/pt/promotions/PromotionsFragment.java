@@ -29,9 +29,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -391,8 +391,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.VISIBLE);
           pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
@@ -413,8 +413,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.GONE);
           cancelDownload.setVisibility(View.VISIBLE);
           cancelDownload.setOnClickListener(__ -> promotionAppClick.onNext(

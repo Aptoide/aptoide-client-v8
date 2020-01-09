@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -27,8 +26,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import javax.inject.Inject;
@@ -224,8 +223,8 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       themeManager.setStatusBarThemeColor(storeTheme);
       if (bar != null) {
         bar.setBackgroundDrawable(getActivity().getResources()
-            .getDrawable(StoreTheme.get(storeTheme, false)
-                .getGradientDrawable()));
+            .getDrawable(themeManager.getAttributeForTheme(storeTheme,
+                R.attr.toolbarBackground).resourceId));
       }
     }
   }
@@ -240,8 +239,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.get(theme, false)
-              .getGradientDrawable()));
+          .getDrawable(themeManager.getAttributeForTheme(R.attr.toolbarBackground).resourceId));
     }
     super.onDestroyView();
   }

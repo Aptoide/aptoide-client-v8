@@ -17,7 +17,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -82,6 +81,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
@@ -250,8 +250,8 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator);
+      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {

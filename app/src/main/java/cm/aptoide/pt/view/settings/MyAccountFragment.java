@@ -24,7 +24,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.MyAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -37,6 +36,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -111,7 +111,7 @@ public class MyAccountFragment extends BackButtonFragment
 
     ((TextView) view.findViewById(R.id.sign_in_message)).setText(
         getString(R.string.newaccount_signin_message, marketName));
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
     notificationHistory = view.findViewById(R.id.notifications_history);
     settings = view.findViewById(R.id.settings);
     myAccountProductCardTitle = view.findViewById(R.id.my_account_product_card_title);
@@ -339,27 +339,27 @@ public class MyAccountFragment extends BackButtonFragment
     accountView = view.findViewById(R.id.account_displayables);
     loginView = view.findViewById(R.id.login_register_container);
 
-    myAccountAvatar = (ImageView) myProfileView.findViewById(R.id.user_icon);
-    myAccountName = (TextView) myProfileView.findViewById(R.id.description);
-    myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
-    myStoreName = (TextView) myStoreView.findViewById(R.id.description);
+    myAccountAvatar = myProfileView.findViewById(R.id.user_icon);
+    myAccountName = myProfileView.findViewById(R.id.description);
+    myStoreAvatar = myStoreView.findViewById(R.id.user_icon);
+    myStoreName = myStoreView.findViewById(R.id.description);
 
-    TextView myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
+    TextView myStoreTitle = myStoreView.findViewById(R.id.name);
     myStoreTitle.setText(R.string.newaccount_my_store);
 
-    TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
+    TextView myAccountTitle = myProfileView.findViewById(R.id.name);
     myAccountTitle.setText(R.string.newaccount_my_profile);
 
-    loginButton = (Button) view.findViewById(R.id.login_button);
-    logoutButton = (Button) view.findViewById(R.id.logout_button);
-    createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
-    createStoreButton = (Button) view.findViewById(R.id.create_store_button);
-    editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
-    editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+    loginButton = view.findViewById(R.id.login_button);
+    logoutButton = view.findViewById(R.id.logout_button);
+    createStoreMessage = view.findViewById(R.id.create_store_message);
+    createStoreButton = view.findViewById(R.id.create_store_button);
+    editStoreButton = myStoreView.findViewById(R.id.edit_button);
+    editProfileButton = myProfileView.findViewById(R.id.edit_button);
 
-    aptoideTvCardView = (CardView) view.findViewById(R.id.product_aptoideTv_cardview);
-    aptoideUploaderCardView = (CardView) view.findViewById(R.id.product_uploader_cardview);
-    aptoideBackupAppsCardView = (CardView) view.findViewById(R.id.product_backup_cardview);
+    aptoideTvCardView = view.findViewById(R.id.product_aptoideTv_cardview);
+    aptoideUploaderCardView = view.findViewById(R.id.product_uploader_cardview);
+    aptoideBackupAppsCardView = view.findViewById(R.id.product_backup_cardview);
   }
 
   private void setupToolbar() {

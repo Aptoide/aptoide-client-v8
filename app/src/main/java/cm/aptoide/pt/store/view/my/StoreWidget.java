@@ -1,7 +1,5 @@
 package cm.aptoide.pt.store.view.my;
 
-import android.content.Context;
-import android.os.Build;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -9,17 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.ColorInt;
 import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
@@ -117,7 +112,8 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
   private void showStats(StoreDisplayable displayable) {
     SpannableFactory spannableFactory = new SpannableFactory();
     ParcelableSpan[] textStyle = {
-        new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
+        new StyleSpan(android.graphics.Typeface.BOLD),
+        new ForegroundColorSpan(displayable.getTextColor())
     };
     String firstStatsText = String.format(getContext().getString(displayable.getFirstStatsLabel()),
         String.valueOf(displayable.getFirstStatsNumber()));
@@ -129,18 +125,5 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
             String.valueOf(displayable.getSecondStatsNumber()));
     secondStat.setText(spannableFactory.createMultiSpan(secondStatsText, textStyle,
         String.valueOf(displayable.getSecondStatsNumber())));
-  }
-
-  private @ColorInt int getTextColor() {
-    Context context = getContext();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources()
-          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME, false)
-              .getDarkerColor(), context.getTheme());
-    } else {
-      return context.getResources()
-          .getColor(StoreTheme.get(BuildConfig.APTOIDE_THEME, false)
-              .getDarkerColor());
-    }
   }
 }

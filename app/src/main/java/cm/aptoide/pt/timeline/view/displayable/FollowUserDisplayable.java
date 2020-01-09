@@ -1,7 +1,6 @@
 package cm.aptoide.pt.timeline.view.displayable;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -9,7 +8,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
@@ -21,14 +19,17 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   private boolean isLike;
   private int storeColor;
+  private int buttonThemeBackground;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor,
+      int buttonThemeColor) {
     super(pojo);
     this.isLike = isLike;
     this.storeColor = storeColor;
+    this.buttonThemeBackground = buttonThemeColor;
   }
 
   @Override protected Configs getConfig() {
@@ -99,25 +100,11 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public int getStoreColor(Context context) {
-    Store store = getPojo().getStore();
-    if (store != null && store.getAppearance() != null) {
-      return StoreTheme.get(store.getAppearance()
-          .getTheme(), false)
-          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
-    } else {
-      return storeColor;
-    }
+    return storeColor;
   }
 
-  public Drawable getButtonBackgroundStoreThemeColor(Context context) {
-    Store store = getPojo().getStore();
-    StoreTheme storeTheme;
-    if (store.getAppearance() != null) {
-      storeTheme = StoreTheme.get(store);
-    } else {
-      storeTheme = StoreTheme.ORANGE;
-    }
-    return storeTheme.getButtonLayoutDrawable(context.getResources(), context.getTheme());
+  public int getButtonBackgroundStoreThemeColor(Context context) {
+    return buttonThemeBackground;
   }
 
   public void viewClicked(FragmentNavigator navigator) {

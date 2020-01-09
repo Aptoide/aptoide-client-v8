@@ -159,6 +159,12 @@
 
   <attr name="dialogsTheme" format="reference" />
 
+  <!--store theme specific attributes-->
+  <attr name="datePickerStyle" format="reference" />
+  <attr name="roundGradientButtonBackground" format="reference" />
+  <attr name="themeSelectorItemBackground" format="reference" />
+  <attr name="themeTextColor" format="color|reference" />
+
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />
     <attr name="helperTextColor" format="color|reference" />

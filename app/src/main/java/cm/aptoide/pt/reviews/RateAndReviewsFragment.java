@@ -12,7 +12,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
@@ -42,6 +41,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -177,8 +177,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
+    final FloatingActionButton floatingActionButton = view.findViewById(R.id.fab);
 
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))

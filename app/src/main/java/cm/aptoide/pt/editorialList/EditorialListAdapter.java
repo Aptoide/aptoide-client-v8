@@ -4,11 +4,11 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.bundles.editorial.EditorialViewHolder;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.util.List;
 import rx.subjects.PublishSubject;
 

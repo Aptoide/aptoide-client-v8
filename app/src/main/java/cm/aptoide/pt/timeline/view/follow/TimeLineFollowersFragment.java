@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowersRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -102,7 +102,8 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
     return new FollowUserDisplayable(user, false,
-        themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
+        themeManager.getAttributeForTheme(storeTheme, R.attr.colorPrimary).data,
+        themeManager.getAttributeForTheme(storeTheme, R.attr.ghostButtonBackground).resourceId);
   }
 
   @Override

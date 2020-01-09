@@ -1,4 +1,4 @@
-package cm.aptoide.pt
+package cm.aptoide.pt.themes
 
 import android.app.Activity
 import android.content.res.Configuration
@@ -6,7 +6,8 @@ import android.os.Build
 import android.util.TypedValue
 import android.view.WindowManager
 import androidx.annotation.ColorInt
-import cm.aptoide.pt.store.StoreTheme
+import cm.aptoide.pt.BuildConfig
+
 
 class ThemeManager(private val activity: Activity) {
 
@@ -17,11 +18,19 @@ class ThemeManager(private val activity: Activity) {
   }
 
   fun setTheme(theme: String) {
-    val hasDarkMode =
-        activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-    val storeTheme = StoreTheme.get(theme, hasDarkMode)
+    val storeTheme = StoreTheme.get(theme, isThemeDark())
     activity.setTheme(storeTheme.themeResource)
-    setStatusBarThemeColor(getAttributeForTheme(android.R.attr.statusBarColor).data)
+    setStatusBarThemeColor(theme)
+  }
+
+  fun getAttributeForTheme(themeName: String, attributeResourceId: Int): TypedValue {
+    return activity.theme.obtainStyledAttributes(
+        StoreTheme.get(themeName, isThemeDark()).themeResource,
+        intArrayOf(attributeResourceId)).peekValue(0)
+  }
+
+  fun getStoreTheme(storeThemeName: String): StoreTheme {
+    return StoreTheme.get(storeThemeName, isThemeDark())
   }
 
   fun resetToBaseTheme() {
@@ -33,8 +42,7 @@ class ThemeManager(private val activity: Activity) {
   }
 
   fun setStatusBarThemeColor(theme: String) {
-    val storeTheme = StoreTheme.get(theme)
-    setStatusBarThemeColor(activity.resources.getColor(storeTheme.darkerColor))
+    setStatusBarThemeColor(getAttributeForTheme(theme, android.R.attr.statusBarColor).data)
   }
 
   fun setStatusBarThemeColor(@ColorInt color: Int) {
@@ -44,6 +52,10 @@ class ThemeManager(private val activity: Activity) {
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
       window.statusBarColor = color
     }
+  }
+
+  private fun isThemeDark(): Boolean {
+    return activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
   }
 
 }

@@ -29,7 +29,6 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
@@ -59,8 +58,8 @@ import cm.aptoide.pt.share.ShareStoreHelper;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
@@ -270,9 +269,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
-    pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
-    pagerSlidingTabStrip.setBackgroundResource(StoreTheme.get(storeTheme, false)
-        .getGradientDrawable());
+    pagerSlidingTabStrip = getView().findViewById(R.id.tabs);
+    pagerSlidingTabStrip.setBackgroundResource(
+        themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setViewPager(viewPager);
@@ -557,8 +556,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(title);
-    toolbar.setBackgroundResource(StoreTheme.get(storeTheme, false)
-        .getGradientDrawable());
+    toolbar.setBackgroundResource(
+        themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
     if (userId != null) {
       toolbar.setLogo(R.drawable.ic_user_shape_white);
     } else {

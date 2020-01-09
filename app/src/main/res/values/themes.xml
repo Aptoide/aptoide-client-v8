@@ -190,30 +190,15 @@
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
+    <item name="themeTextColor">@color/default_text</item>
 
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme" />
-
-  <style name="AppBaseTheme.NoTitle">
-    <item name="android:windowNoTitle">true</item>
-  </style>
-
-  <style name="AppBaseTheme.Splash">
-    <item name="android:windowBackground">@drawable/splash_screen</item>
-  </style>
-
-  <style name="AppBaseTheme.NoTitle.Transparent">
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowIsFloating">false</item>
-    <item name="android:backgroundDimEnabled">false</item>
-  </style>
-
-  <style name="AppBaseTheme.NoTitle.Transparent.Green">
-    <item name="colorAccent">@color/activity_payment_green</item>
-  </style>
+  <style name="AptoideThemeLight" parent="AppBaseTheme" />
 
   <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
     <item name="android:windowBackground">@color/default_background_color_dark</item>
@@ -398,13 +383,39 @@
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
+    <item name="themeTextColor">@color/default_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeDark" parent="AppBaseThemeDark" />
+
+  <style name="AppBaseTheme.NoTitle">
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
+  <style name="AppBaseTheme.Splash">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
+
+  <style name="AppBaseTheme.NoTitle.Transparent">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+
+  <style name="AppBaseTheme.NoTitle.Transparent.Green">
+    <item name="colorAccent">@color/activity_payment_green</item>
+  </style>
+
 
   <!-- Non-default themes -->
 
-  <style name="AptoideThemeDefaultGrey">
+  <style name="AptoideThemeGrey">
     <item name="colorPrimary">@color/grey</item>
     <item name="colorPrimaryDark">@color/grey_700</item>
     <item name="colorAccent">@color/grey_700</item>
@@ -427,14 +438,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
 
     <item name="toolbarTheme">@style/ToolbarGreyTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/GreyDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/grey_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_grey</item>
+    <item name="themeTextColor">@color/grey_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultGrey.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Grey" parent="AptoideThemeGrey" />
 
-  <style name="AptoideThemeDefaultGrey.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey" />
 
-
-  <style name="AptoideThemeDefaultTeal" parent="AppBaseTheme">
+  <style name="AptoideThemeTeal">
     <item name="colorPrimary">@color/teal</item>
     <item name="colorPrimaryDark">@color/teal_700</item>
     <item name="colorAccent">@color/teal_700</item>
@@ -458,13 +474,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
 
     <item name="toolbarTheme">@style/ToolbarTealTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/TealDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/teal_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_teal</item>
+    <item name="themeTextColor">@color/teal_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultTeal.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Teal" parent="AptoideThemeTeal" />
 
-  <style name="AptoideThemeDefaultTeal.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal" />
 
-  <style name="AptoideThemeDefaultBrown" parent="AppBaseTheme">
+  <style name="AptoideThemeBrown">
     <item name="colorPrimary">@color/brown</item>
     <item name="colorPrimaryDark">@color/brown_700</item>
     <item name="colorAccent">@color/brown_700</item>
@@ -489,13 +511,18 @@
 
     <item name="toolbarTheme">@style/ToolbarBrownTransparent</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BrownDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/brown_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_brown</item>
+    <item name="themeTextColor">@color/brown_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBrown.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Brown" parent="AptoideThemeBrown" />
 
-  <style name="AptoideThemeDefaultBrown.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown" />
 
-  <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
+  <style name="AptoideThemeBlueGrey">
     <item name="colorPrimary">@color/blue_grey</item>
     <item name="colorPrimaryDark">@color/blue_grey_700</item>
     <item name="colorAccent">@color/blue_grey_700</item>
@@ -521,13 +548,18 @@
 
     <item name="toolbarTheme">@style/ToolbarBluegreyTransparent</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BlueGreyDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/blue_grey_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_blue_grey</item>
+    <item name="themeTextColor">@color/blue_grey_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBluegrey.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.BlueGrey" parent="AptoideThemeBlueGrey" />
 
-  <style name="AptoideThemeDefaultBluegrey.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey" />
 
-  <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
+  <style name="AptoideThemeLightGreen">
     <item name="colorPrimary">@color/light_green</item>
     <item name="colorPrimaryDark">@color/light_green_700</item>
     <item name="colorAccent">@color/light_green_700</item>
@@ -552,13 +584,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
 
     <item name="toolbarTheme">@style/ToolbarLightgreenTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LightGreenDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/light_green_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_light_green</item>
+    <item name="themeTextColor">@color/light_green_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLightgreen.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.LightGreen" parent="AptoideThemeLightGreen" />
 
-  <style name="AptoideThemeDefaultLightgreen.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.LightGreen" parent="AptoideThemeLightGreen" />
 
-  <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
+  <style name="AptoideThemeLightBlue">
     <item name="colorPrimary">@color/light_blue</item>
     <item name="colorPrimaryDark">@color/light_blue_700</item>
     <item name="colorAccent">@color/light_blue_700</item>
@@ -582,13 +620,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
 
     <item name="toolbarTheme">@style/ToolbarLightblueTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LightBlueDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/light_blue_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_lightblue</item>
+    <item name="themeTextColor">@color/light_blue_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLightblue.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.LightBlue" parent="AptoideThemeLightBlue" />
 
-  <style name="AptoideThemeDefaultLightblue.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.LightBlue" parent="AptoideThemeLightBlue" />
 
-  <style name="AptoideThemeDefaultAmber" parent="AppBaseTheme">
+  <style name="AptoideThemeAmber">
     <item name="colorPrimary">@color/amber</item>
     <item name="colorPrimaryDark">@color/amber_700</item>
     <item name="colorAccent">@color/amber_700</item>
@@ -611,13 +655,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
 
     <item name="toolbarTheme">@style/ToolbarAmberTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/AmberDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/amber_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_amber</item>
+    <item name="themeTextColor">@color/amber_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultAmber.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Amber" parent="AptoideThemeAmber" />
 
-  <style name="AptoideThemeDefaultAmber.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Amber" parent="AptoideThemeAmber" />
 
-  <style name="AptoideThemeDefaultLime" parent="AppBaseTheme">
+  <style name="AptoideThemeLime">
     <item name="colorPrimary">@color/lime</item>
     <item name="colorPrimaryDark">@color/lime_700</item>
     <item name="colorAccent">@color/lime_700</item>
@@ -640,13 +690,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
 
     <item name="toolbarTheme">@style/ToolbarLimeTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LimeDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/lime_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_lime</item>
+    <item name="themeTextColor">@color/lime_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLime.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Lime" parent="AptoideThemeLime" />
 
-  <style name="AptoideThemeDefaultLime.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Lime" parent="AptoideThemeLime" />
 
-  <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
+  <style name="AptoideThemeOrange">
     <item name="colorPrimary">@color/orange</item>
     <item name="colorPrimaryDark">@color/orange_700</item>
     <item name="colorAccent">@color/orange_700</item>
@@ -671,13 +727,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
 
     <item name="toolbarTheme">@style/ToolbarOrangeTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/OrangeDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/orange_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_orange</item>
+    <item name="themeTextColor">@color/orange_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultOrange.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Orange" parent="AptoideThemeOrange" />
 
-  <style name="AptoideThemeDefaultOrange.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Orange" parent="AptoideThemeOrange" />
 
-  <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
+  <style name="AptoideThemePink">
     <item name="colorPrimary">@color/pink</item>
     <item name="colorPrimaryDark">@color/pink_700</item>
     <item name="colorAccent">@color/pink_700</item>
@@ -701,13 +763,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
 
     <item name="toolbarTheme">@style/ToolbarPinkTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/PinkDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/pink_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_pink</item>
+    <item name="themeTextColor">@color/pink_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultPink.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Pink" parent="AptoideThemePink" />
 
-  <style name="AptoideThemeDefaultPink.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Pink" parent="AptoideThemePink" />
 
-  <style name="AptoideThemeDefaultIndigo" parent="AppBaseTheme">
+  <style name="AptoideThemeIndigo">
     <item name="colorPrimary">@color/indigo</item>
     <item name="colorPrimaryDark">@color/indigo_700</item>
     <item name="colorAccent">@color/indigo_700</item>
@@ -730,16 +798,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
 
     <item name="toolbarTheme">@style/ToolbarIndigoTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/IndigoDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/indigo_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_indigo</item>
+    <item name="themeTextColor">@color/indigo_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultIndigo.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Indigo" parent="AptoideThemeIndigo" />
 
-  <style name="AptoideThemeDefaultIndigo.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo" />
 
-  <!-- v6 Blue theme updated to v7 Indigo -->
-
-
-  <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
+  <style name="AptoideThemeRed">
     <item name="colorPrimary">@color/red</item>
     <item name="colorPrimaryDark">@color/red_700</item>
     <item name="colorAccent">@color/red_700</item>
@@ -763,13 +834,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
 
     <item name="toolbarTheme">@style/ToolbarRedTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/RedDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/red_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_red</item>
+    <item name="themeTextColor">@color/red_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultRed.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Red" parent="AptoideThemeRed" />
 
-  <style name="AptoideThemeDefaultRed.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Red" parent="AptoideThemeRed" />
 
-  <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
+  <style name="AptoideThemeGreen">
     <item name="colorPrimary">@color/green</item>
     <item name="colorPrimaryDark">@color/green_700</item>
     <item name="colorAccent">@color/green_700</item>
@@ -793,16 +870,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
 
     <item name="toolbarTheme">@style/ToolbarGreenTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/GreenDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/green_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_green</item>
+    <item name="themeTextColor">@color/green_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultGreen.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Green" parent="AptoideThemeGreen" />
 
-  <style name="AptoideThemeDefaultGreen.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Green" parent="AptoideThemeGreen" />
 
-  <!-- v6 SeaGreen theme updated to Green theme -->
-
-
-  <style name="AptoideThemeDefaultDeepPurple" parent="AppBaseTheme">
+  <style name="AptoideThemeDeepPurple">
     <item name="colorPrimary">@color/deep_purple</item>
     <item name="colorPrimaryDark">@color/deep_purple_700</item>
     <item name="colorAccent">@color/deep_purple_700</item>
@@ -826,13 +906,19 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
 
     <item name="toolbarTheme">@style/ToolbarDeeppurpleTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DeepPurpleDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/deep_purple_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_deep_purple</item>
+    <item name="themeTextColor">@color/deep_purple_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultDeepPurple.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.DeepPurple" parent="AptoideThemeDeepPurple" />
 
-  <style name="AptoideThemeDefaultDeepPurple.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple" />
 
-  <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
+  <style name="AptoideThemeBlack">
     <item name="colorPrimary">@color/black</item>
     <item name="colorPrimaryDark">@color/black</item>
     <item name="colorAccent">@color/black</item>
@@ -855,10 +941,16 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
 
     <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BlackDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/black_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_black</item>
+    <item name="themeTextColor">@color/black_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBlack.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Black" parent="AptoideThemeBlack" />
 
-  <style name="AptoideThemeDefaultBlack.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Black" parent="AptoideThemeBlack" />
 
 </resources>

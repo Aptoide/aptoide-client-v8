@@ -25,8 +25,8 @@ import androidx.core.widget.NestedScrollView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.editorial.ScrollEvent;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -90,7 +90,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     appCardViewLayout = view.findViewById(R.id.app_card_layout);
     appCardView = appCardViewLayout.findViewById(R.id.app_cardview);
-    installButton = (Button) appCardViewLayout.findViewById(R.id.appview_install_button);
+    installButton = appCardViewLayout.findViewById(R.id.appview_install_button);
 
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
@@ -99,8 +99,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     bottomAppCardViewLayout = view.findViewById(R.id.app_cardview_layout);
     bottomAppCardView = bottomAppCardViewLayout.findViewById(R.id.app_cardview);
-    bottomInstallButton =
-        (Button) bottomAppCardViewLayout.findViewById(R.id.appview_install_button);
+    bottomInstallButton = bottomAppCardViewLayout.findViewById(R.id.appview_install_button);
 
     ((TextView) bottomAppCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));

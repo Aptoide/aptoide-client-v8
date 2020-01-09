@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.FragmentComponent;
 import cm.aptoide.pt.view.FragmentModule;

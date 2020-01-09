@@ -2,7 +2,6 @@ package cm.aptoide.pt.home;
 
 import android.os.Bundle;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.app.AppNavigator;
@@ -20,6 +19,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import rx.Observable;
 
