@@ -54,6 +54,11 @@
     <item name="android:lineSpacingExtra">4dp</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XL">
+    <item name="android:textSize">24sp</item>
+    <item name="android:lineSpacingExtra">4dp</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.M">
     <item name="android:textSize">16sp</item>
     <item name="android:lineSpacingExtra">4dp</item>
@@ -272,6 +277,10 @@
 
   <style name="Aptoide.TextView.Regular.XL.Black">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
+  </style>
+
+  <style name="Aptoide.TextView.Medium.XL.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
 
