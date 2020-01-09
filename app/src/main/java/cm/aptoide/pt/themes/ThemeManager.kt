@@ -33,6 +33,10 @@ class ThemeManager(private val activity: Activity) {
     return StoreTheme.get(storeThemeName, isThemeDark())
   }
 
+  fun getBaseTheme(): StoreTheme {
+    return StoreTheme.get(BuildConfig.APTOIDE_THEME, isThemeDark());
+  }
+
   fun resetToBaseTheme() {
     setTheme(BuildConfig.APTOIDE_THEME)
   }
