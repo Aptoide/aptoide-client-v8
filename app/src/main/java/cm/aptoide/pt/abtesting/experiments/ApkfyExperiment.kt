@@ -76,7 +76,7 @@ open class ApkfyExperiment(private val abTestManager: ABTestManager,
         .doOnCompleted {
           appViewAnalytics.sendApkfyABTestImpressionEvent(assignment)
           setSuperProperties()
-          sharedPreferences.edit().putString(APKFY_EXPERIMENT_GROUP, assignment)
+          sharedPreferences.edit().putString(APKFY_EXPERIMENT_GROUP, assignment).apply()
         }
   }
 
