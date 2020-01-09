@@ -199,7 +199,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     if (storeTheme != null) {
       ThemeUtils.setStatusBarThemeColor(getActivity(), null);
       ThemeUtils.setStoreTheme(getActivity(), null);
-      view.setBackgroundColor(getResources().getColor(R.color.black));
     }
   }
 

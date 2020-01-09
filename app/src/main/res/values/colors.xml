@@ -69,8 +69,4 @@
   <color name="catappult_pink">#ff057b</color>
   <color name="appc_orange">#fd6363</color>
 
-  <!--Widgets-->
-  <color name="comment_primary_background">?attr/widgetBackgroundColorPrimary</color>
-  <color name="comment_secondary_background">?attr/widgetBackgroundColorSecondary</color>
-
 </resources>
