@@ -1,6 +1,7 @@
 package cm.aptoide.pt.view;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
@@ -21,7 +22,8 @@ public class ThemeUtils {
    */
   public static void setStatusBarThemeColor(Activity activity, String theme) {
     if (Build.VERSION.SDK_INT >= 21) {
-      StoreTheme storeTheme = StoreTheme.get(theme);
+      StoreTheme storeTheme = StoreTheme.get(theme, isDarkTheme(activity.getResources()
+          .getConfiguration()));
       Window window = activity.getWindow();
       window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
       window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -49,8 +51,19 @@ public class ThemeUtils {
    * Sets Store themes
    */
   public static void setStoreTheme(Activity activity, String theme) {
-
-    StoreTheme storeTheme = StoreTheme.get(theme);
+    StoreTheme storeTheme = StoreTheme.get(theme, isDarkTheme(activity.getResources()
+        .getConfiguration()));
     activity.setTheme(storeTheme.getThemeResource());
+  }
+
+  private static boolean isDarkTheme(Configuration configuration) {
+    int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    switch (currentNightMode) {
+      default:
+      case Configuration.UI_MODE_NIGHT_NO:
+        return false;
+      case Configuration.UI_MODE_NIGHT_YES:
+        return true;
+    }
   }
 }

@@ -225,7 +225,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
       if (bar != null) {
         bar.setBackgroundDrawable(getActivity().getResources()
-            .getDrawable(StoreTheme.get(storeTheme)
+            .getDrawable(StoreTheme.get(storeTheme, false)
                 .getGradientDrawable()));
       }
     }
@@ -242,7 +242,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     if (bar != null) {
       bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.get(theme)
+          .getDrawable(StoreTheme.get(theme, false)
               .getGradientDrawable()));
     }
     super.onDestroyView();

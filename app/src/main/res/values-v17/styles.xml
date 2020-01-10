@@ -22,7 +22,6 @@
     <item name="android:indeterminate">false</item>
     <item name="android:max">100</item>
     <item name="android:progress">0</item>
-    <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
+    <item name="android:progressDrawable">?attr/ratingBarDrawable</item>
   </style>
-
 </resources>

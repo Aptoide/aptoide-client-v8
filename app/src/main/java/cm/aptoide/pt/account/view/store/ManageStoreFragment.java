@@ -228,7 +228,7 @@ public class ManageStoreFragment extends BackButtonFragment
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-    int color = StoreTheme.get(theme)
+    int color = StoreTheme.get(theme, false)
         .getPrimaryColor();
     ImageLoader.with(getActivity())
         .loadWithShadowCircleTransform(pictureUri, storeImage, getResources().getColor(color),
