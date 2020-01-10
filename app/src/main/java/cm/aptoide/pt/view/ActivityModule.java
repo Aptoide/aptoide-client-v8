@@ -17,6 +17,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -403,5 +404,10 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
+  }
+
+  @ActivityScope @Provides @Named("theme-attribute-provider")
+  ThemeAttributeProvider providesThemeAttributeProvider() {
+    return new ThemeAttributeProvider(activity.getTheme());
   }
 }

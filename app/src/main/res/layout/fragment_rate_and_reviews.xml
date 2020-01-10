@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified on 29/08/2016.
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,12 +11,11 @@
     android:fitsSystemWindows="true"
     >
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"
+      android:background="?attr/widgetBackgroundColorPrimary"
       android:orientation="vertical"
       >
 
@@ -31,13 +28,12 @@
           android:theme="?attr/toolbarTheme"
           -->
 
-      <androidx.appcompat.widget.Toolbar
-          xmlns:android="http://schemas.android.com/apk/res/android"
+      <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
           android:id="@+id/toolbar"
+          style="@style/Toolbar.Reviews"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
-          android:background="@color/white"
           app:layout_collapseMode="pin"
           app:layout_scrollFlags="scroll|enterAlways"
           app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -47,11 +43,11 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:indeterminate="true"
         android:visibility="visible"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         />
 
     <RelativeLayout
@@ -99,8 +95,8 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/rounded_corners_dark_gray"
             android:drawableEnd="@drawable/ic_up_arrow"
-            android:drawablePadding="10dp"
             android:drawableRight="@drawable/ic_up_arrow"
+            android:drawablePadding="10dp"
             android:drawableTint="@color/dark_gray"
             android:text="Highest ranking"
             android:textColor="@color/dark_gray"
@@ -110,8 +106,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/rounded_corners_dark_gray"
             android:text="@string/just_reviews"
             android:textColor="@color/dark_gray"

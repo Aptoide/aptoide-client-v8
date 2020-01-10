@@ -116,7 +116,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         gamesChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(gamesChip);
       } else {
-        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+        gamesChip.setTextColor(getResources().getColor(StoreTheme.get(theme, false)
             .getDarkerColor()));
         hideChipCancelButton(gamesChip);
       }
@@ -127,7 +127,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         appsChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(appsChip);
       } else {
-        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme)
+        appsChip.setTextColor(getResources().getColor(StoreTheme.get(theme, false)
             .getDarkerColor()));
         hideChipCancelButton(appsChip);
       }

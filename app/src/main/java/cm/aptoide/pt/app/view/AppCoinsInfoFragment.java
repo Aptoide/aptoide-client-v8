@@ -73,7 +73,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = view.findViewById(R.id.toolbar);
-    spannableColor = StoreTheme.get(theme)
+    spannableColor = StoreTheme.get(theme, false)
         .getPrimaryColor();
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);

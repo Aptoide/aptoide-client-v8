@@ -600,7 +600,7 @@ public class SearchResultFragment extends BackButtonFragment
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
       followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(StoreTheme.get(theme)
+      followedStoresButton.setBackgroundResource(StoreTheme.get(theme, false)
           .getRoundGradientButtonDrawable());
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
@@ -610,7 +610,7 @@ public class SearchResultFragment extends BackButtonFragment
     viewModel.setAllStoresSelected(false);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
+      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme, false)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -622,13 +622,13 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(StoreTheme.get(theme)
+      allStoresButton.setBackgroundResource(StoreTheme.get(theme, false)
           .getRoundGradientButtonDrawable());
     }
     viewModel.setAllStoresSelected(true);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
+      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme, false)
           .getRoundGradientButtonDrawable());
     }
   }
@@ -745,17 +745,17 @@ public class SearchResultFragment extends BackButtonFragment
       String storeTheme = viewModel.getStoreTheme();
       ThemeUtils.setStoreTheme(getActivity(), storeTheme);
       ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
+      toolbar.setBackgroundResource(StoreTheme.get(storeTheme, false)
           .getGradientDrawable());
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(storeTheme)
+            StoreTheme.get(storeTheme, false)
                 .getPrimaryColor()));
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme)
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme, false)
                 .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
       }
     }
@@ -768,12 +768,12 @@ public class SearchResultFragment extends BackButtonFragment
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
         DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(theme)
+            StoreTheme.get(theme, false)
                 .getPrimaryColor()));
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(theme)
+            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(theme, false)
                 .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
       }
     }

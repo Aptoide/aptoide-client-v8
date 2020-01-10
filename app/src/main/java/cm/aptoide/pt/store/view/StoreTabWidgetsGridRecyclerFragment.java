@@ -6,6 +6,7 @@
 package cm.aptoide.pt.store.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
@@ -77,6 +78,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   }
 
   public Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+    int currentNightMode = getContext().getResources()
+        .getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+    boolean isDarkTheme = currentNightMode == Configuration.UI_MODE_NIGHT_YES;
+
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .concatMapEager(wsWidget -> {
@@ -91,7 +97,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
-              application.getDefaultSharedPreferences());
+              application.getDefaultSharedPreferences(), isDarkTheme);
         })
         .toList()
         .first();

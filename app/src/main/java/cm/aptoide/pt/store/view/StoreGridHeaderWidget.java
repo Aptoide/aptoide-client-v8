@@ -41,7 +41,7 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
         marketName));
     StoreGridHeaderDisplayable.Model model = displayable.getModel();
     more.setTextColor(getContext().getResources()
-        .getColor(StoreTheme.get(model.getStoreTheme())
+        .getColor(StoreTheme.get(model.getStoreTheme(), false)
             .getColorLetters()));
     more.setVisibility(moreIsVisible && model.isMoreVisible() ? View.VISIBLE : View.GONE);
 

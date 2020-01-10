@@ -1,15 +1,14 @@
 package cm.aptoide.pt.home.bundles.editorial;
 
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.editorialList.CurationCard;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
@@ -48,12 +47,13 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final CardView curationTypeCaption;
   private final TextView curationTypeCaptionText;
   private final CaptionBackgroundPainter captionBackgroundPainter;
+  private final ThemeAttributeProvider themeAttributeProvider;
   private TopReactionsPreview topReactionsPreview;
-
   private Skeleton skeleton;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter) {
+      CaptionBackgroundPainter captionBackgroundPainter,
+      ThemeAttributeProvider themeAttributeProvider) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
@@ -65,6 +65,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     this.curationTypeCaption = view.findViewById(R.id.curation_type_bubble);
     this.curationTypeCaptionText = view.findViewById(R.id.curation_type_bubble_text);
     this.captionBackgroundPainter = captionBackgroundPainter;
+    this.themeAttributeProvider = themeAttributeProvider;
     topReactionsPreview = new TopReactionsPreview();
     topReactionsPreview.initialReactionsSetup(view);
 
@@ -170,20 +171,14 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(getReactionInputDrawable().resourceId);
+      reactButton.setImageResource(
+          themeAttributeProvider.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     }
   }
 
-  @NonNull private TypedValue getReactionInputDrawable() {
-    TypedValue value = new TypedValue();
-    itemView.getContext()
-        .getTheme()
-        .resolveAttribute(R.attr.reactionInputDrawable, value, true);
-    return value;
-  }
-
   private void clearReactions() {
-    reactButton.setImageResource(getReactionInputDrawable().resourceId);
+    reactButton.setImageResource(
+        themeAttributeProvider.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     topReactionsPreview.clearReactions();
   }
 }
