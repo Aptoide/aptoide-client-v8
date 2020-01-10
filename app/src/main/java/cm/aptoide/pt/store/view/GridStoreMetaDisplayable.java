@@ -217,7 +217,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
                 getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
                 getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
                 getDescription(), themeManager.getStoreTheme(getStoreThemeName()),
-                themeManager.getAttributeForTheme(R.attr.colorPrimary).data, getStoreId(),
+                themeManager.getAttributeForTheme(R.attr.themeTextColor).data, getStoreId(),
                 hasStore(), getBadge())));
   }
 

@@ -2,40 +2,40 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
     >
-  <RelativeLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
       android:gravity="center_vertical|center"
       android:padding="10dp"
-      style="?attr/backgroundCard"
       >
 
     <!-- can be follow or open?! -->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/recommended_store_action"
+        style="@style/Aptoide.Button.S"
         android:layout_width="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textAllCaps="true"
+        android:textColor="?attr/inverseTextColor"
         tools:text="follow"
-        style="@style/Aptoide.Button.S"
         />
 
     <ImageView
         android:id="@+id/store_avatar_row"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_marginLeft="2dp"
         android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
         android:layout_marginTop="2dp"
         android:contentDescription="@null"
         android:scaleType="fitCenter"
@@ -46,23 +46,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="9dp"
         android:layout_marginStart="9dp"
-        android:layout_toEndOf="@id/store_avatar_row"
-        android:layout_toLeftOf="@id/recommended_store_action"
-        android:layout_toRightOf="@+id/store_avatar_row"
+        android:layout_marginLeft="9dp"
         android:layout_toStartOf="@id/recommended_store_action"
+        android:layout_toLeftOf="@id/recommended_store_action"
+        android:layout_toEndOf="@id/store_avatar_row"
+        android:layout_toRightOf="@+id/store_avatar_row"
         android:orientation="vertical"
         >
 
 
       <TextView
           android:id="@+id/recommended_store_name"
+          style="@style/Aptoide.TextView.Medium.S.Black"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:maxLines="1"
           android:text="@string/apps"
-          style="@style/Aptoide.TextView.Medium.S.Black"
           />
 
 
@@ -81,12 +81,12 @@
 
         <TextView
             android:id="@+id/recommended_store_users"
+            style="@style/Aptoide.TextView.Regular.S.Grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             tools:text="xxx"
-            style="@style/Aptoide.TextView.Regular.S.Grey"
             />
 
       </LinearLayout>
@@ -106,12 +106,12 @@
 
         <TextView
             android:id="@+id/recommended_store_apps"
+            style="@style/Aptoide.TextView.Regular.S.Grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
             tools:text="xxxx"
-            style="@style/Aptoide.TextView.Regular.S.Grey"
             />
 
       </LinearLayout>

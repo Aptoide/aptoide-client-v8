@@ -156,6 +156,8 @@
   <attr name="ratingTextColor" format="color" />
   <attr name="ratingBarDrawable" format="reference" />
   <attr name="commentTitleColor" format="color" />
+  <attr name="addCircleButtonDrawable" format="reference" />
+
 
   <attr name="dialogsTheme" format="reference" />
 

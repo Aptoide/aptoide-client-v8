@@ -40,6 +40,7 @@
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -226,14 +227,16 @@
     <item name="actionMenuTextColor">@color/white</item>
 
     <!--Buttons-->
-    <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
-    <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
+    <item name="raisedButtonBackground">@drawable/aptoide_rounded_dark</item>
+    <item name="flatButtonBackground">@color/white</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme_dark</item>
     <item name="raisedButtonTextColor">@color/white</item>
     <item name="buttonTextFont">roboto-medium</item>
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
+
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -387,7 +390,7 @@
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
     <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
-    <item name="themeTextColor">@color/default_text</item>
+    <item name="themeTextColor">@color/white</item>
   </style>
 
   <style name="AptoideThemeDark" parent="AppBaseThemeDark" />
@@ -448,7 +451,9 @@
 
   <style name="AptoideThemeLight.Grey" parent="AptoideThemeGrey" />
 
-  <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey" />
+  <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeTeal">
     <item name="colorPrimary">@color/teal</item>
@@ -484,7 +489,9 @@
 
   <style name="AptoideThemeLight.Teal" parent="AptoideThemeTeal" />
 
-  <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal" />
+  <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeBrown">
     <item name="colorPrimary">@color/brown</item>
@@ -520,7 +527,9 @@
 
   <style name="AptoideThemeLight.Brown" parent="AptoideThemeBrown" />
 
-  <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown" />
+  <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeBlueGrey">
     <item name="colorPrimary">@color/blue_grey</item>
@@ -557,7 +566,9 @@
 
   <style name="AptoideThemeLight.BlueGrey" parent="AptoideThemeBlueGrey" />
 
-  <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey" />
+  <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeLightGreen">
     <item name="colorPrimary">@color/light_green</item>
@@ -594,7 +605,9 @@
 
   <style name="AptoideThemeLight.LightGreen" parent="AptoideThemeLightGreen" />
 
-  <style name="AptoideThemeDark.LightGreen" parent="AptoideThemeLightGreen" />
+  <style name="AptoideThemeDark.LightGreen" parent="AptoideThemeLightGreen">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeLightBlue">
     <item name="colorPrimary">@color/light_blue</item>
@@ -630,7 +643,9 @@
 
   <style name="AptoideThemeLight.LightBlue" parent="AptoideThemeLightBlue" />
 
-  <style name="AptoideThemeDark.LightBlue" parent="AptoideThemeLightBlue" />
+  <style name="AptoideThemeDark.LightBlue" parent="AptoideThemeLightBlue">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeAmber">
     <item name="colorPrimary">@color/amber</item>
@@ -665,7 +680,9 @@
 
   <style name="AptoideThemeLight.Amber" parent="AptoideThemeAmber" />
 
-  <style name="AptoideThemeDark.Amber" parent="AptoideThemeAmber" />
+  <style name="AptoideThemeDark.Amber" parent="AptoideThemeAmber">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeLime">
     <item name="colorPrimary">@color/lime</item>
@@ -700,7 +717,9 @@
 
   <style name="AptoideThemeLight.Lime" parent="AptoideThemeLime" />
 
-  <style name="AptoideThemeDark.Lime" parent="AptoideThemeLime" />
+  <style name="AptoideThemeDark.Lime" parent="AptoideThemeLime">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeOrange">
     <item name="colorPrimary">@color/orange</item>
@@ -737,7 +756,9 @@
 
   <style name="AptoideThemeLight.Orange" parent="AptoideThemeOrange" />
 
-  <style name="AptoideThemeDark.Orange" parent="AptoideThemeOrange" />
+  <style name="AptoideThemeDark.Orange" parent="AptoideThemeOrange">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemePink">
     <item name="colorPrimary">@color/pink</item>
@@ -773,7 +794,9 @@
 
   <style name="AptoideThemeLight.Pink" parent="AptoideThemePink" />
 
-  <style name="AptoideThemeDark.Pink" parent="AptoideThemePink" />
+  <style name="AptoideThemeDark.Pink" parent="AptoideThemePink">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeIndigo">
     <item name="colorPrimary">@color/indigo</item>
@@ -808,7 +831,9 @@
 
   <style name="AptoideThemeLight.Indigo" parent="AptoideThemeIndigo" />
 
-  <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo" />
+  <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeRed">
     <item name="colorPrimary">@color/red</item>
@@ -844,7 +869,9 @@
 
   <style name="AptoideThemeLight.Red" parent="AptoideThemeRed" />
 
-  <style name="AptoideThemeDark.Red" parent="AptoideThemeRed" />
+  <style name="AptoideThemeDark.Red" parent="AptoideThemeRed">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeGreen">
     <item name="colorPrimary">@color/green</item>
@@ -880,7 +907,9 @@
 
   <style name="AptoideThemeLight.Green" parent="AptoideThemeGreen" />
 
-  <style name="AptoideThemeDark.Green" parent="AptoideThemeGreen" />
+  <style name="AptoideThemeDark.Green" parent="AptoideThemeGreen">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeDeepPurple">
     <item name="colorPrimary">@color/deep_purple</item>
@@ -916,7 +945,9 @@
 
   <style name="AptoideThemeLight.DeepPurple" parent="AptoideThemeDeepPurple" />
 
-  <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple" />
+  <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
   <style name="AptoideThemeBlack">
     <item name="colorPrimary">@color/black</item>
@@ -951,6 +982,8 @@
 
   <style name="AptoideThemeLight.Black" parent="AptoideThemeBlack" />
 
-  <style name="AptoideThemeDark.Black" parent="AptoideThemeBlack" />
+  <style name="AptoideThemeDark.Black" parent="AptoideThemeBlack">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
 </resources>
