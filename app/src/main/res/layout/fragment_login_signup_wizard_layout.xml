@@ -6,7 +6,7 @@ android:fitsSystemWindows="true"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundMain"
+    android:background="?attr/wizard3Color"
     android:orientation="vertical"
     >
 
@@ -42,7 +42,7 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.XL.Primary"
+          style="@style/Aptoide.TextView.Medium.XL.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
@@ -52,7 +52,7 @@ android:fitsSystemWindows="true"
 
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.M.Primary"
+          style="@style/Aptoide.TextView.Medium.M.White"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:gravity="center"

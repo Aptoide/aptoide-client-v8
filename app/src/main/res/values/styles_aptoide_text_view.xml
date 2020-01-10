@@ -283,6 +283,9 @@
     <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XL.White">
+    <item name="android:textColor">?attr/textColorWhite</item>
+  </style>
 
   <!-- Text Style -->
   <style name="Aptoide.TextView.Regular.XXS.GreyFog.AllCaps">
