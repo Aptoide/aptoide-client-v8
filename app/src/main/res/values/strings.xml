@@ -771,7 +771,7 @@
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
   
   <!--Settings-->
-  <string name="settings_dark_them_title">Dark Them</string>
+  <string name="settings_dark_them_title">Dark Theme</string>
   <string name="settings_dark_them_body">It helps to relieve eye strain when using your device in the dark.</string>
     
   
