@@ -5,7 +5,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_bg"
     android:orientation="vertical"
     >
 
@@ -35,6 +34,7 @@
 
       <TextView
           android:id="@+id/dialog_app_name"
+          style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
@@ -42,17 +42,16 @@
           android:maxLines="1"
           android:paddingBottom="4dp"
           android:textStyle="bold"
-          style="?android:attr/textAppearanceMedium"
           />
 
       <TextView
           android:id="@+id/dialog_app_info"
+          style="@style/Aptoide.TextView.Regular.M.Secondary"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
           android:ellipsize="end"
           android:maxLines="1"
-          android:textColor="?android:attr/textColorSecondary"
           />
 
     </LinearLayout>
@@ -75,19 +74,18 @@
 
   <TextView
       android:id="@+id/dialog_ok_button"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="right|end"
       android:background="?attr/selectableItemBackground"
-      android:paddingBottom="8dp"
-      android:paddingEnd="24dp"
-      android:paddingLeft="24dp"
-      android:paddingRight="24dp"
       android:paddingStart="24dp"
+      android:paddingLeft="24dp"
       android:paddingTop="8dp"
+      android:paddingEnd="24dp"
+      android:paddingRight="24dp"
+      android:paddingBottom="8dp"
       android:text="@android:string/ok"
-      android:textColor="@android:color/darker_gray"
-      android:textStyle="bold"
       />
 
 
