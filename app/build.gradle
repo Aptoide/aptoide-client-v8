@@ -316,6 +316,15 @@ android {
           "\"" + project.UXCAM_API_KEY_DEBUG + "\""
     }
 
+    //Sentry
+    if (flavors[0].name.contains("vanilla") && flavors[1].name.contains('prod') &&
+        type ==
+        'release') {
+      buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY + "\""
+    } else {
+      buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY_DEBUG + "\""
+    }
+
     variant.outputs.all { output ->
       def SEP = "_"
       def dimension = variant.productFlavors[0].name
@@ -473,6 +482,9 @@ dependencies {
 
   //UXCam
   implementation 'com.uxcam:uxcam:3.1.11@aar'
+
+  //Sentry
+  implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
 
   // Remote install
   implementation 'org.slf4j:slf4j-simple:1.7.21'

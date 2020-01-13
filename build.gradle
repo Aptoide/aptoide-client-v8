@@ -129,6 +129,10 @@ ext {
   //Rakam
   RAKAM_VERSION = '2.7.14'
 
+
+  //Sentry
+  SENTRY_VERSION = '1.7.29'
+
   //MOPUB ADS
   MOPUB_SDK_VERSION = '5.7.1'
   APPLOVIN_SDK_VERSION = '8.1.4'
