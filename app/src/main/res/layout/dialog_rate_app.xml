@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified on 29/08/2016.
   -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,7 +12,6 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/white"
       android:orientation="vertical"
       android:padding="24dp"
       >
@@ -25,17 +22,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:textColor="@color/grey_900"
         android:textSize="@dimen/text_size_large"
         tools:text="Rate Boom Beach"
         />
 
-    <include
-        layout="@layout/separator_horizontal"
-        />
+    <include layout="@layout/separator_horizontal" />
 
     <RatingBar
         android:id="@+id/rating_bar"
+        style="@style/RatingBarReviewDialog"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_gravity="center"
@@ -45,7 +40,6 @@
         android:numStars="5"
         android:rating="0.0"
         android:stepSize="1.0"
-        style="@style/RatingBarReviewDialog"
         />
 
     <TextView
@@ -85,8 +79,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
         android:orientation="vertical"
         >
 
@@ -99,23 +93,23 @@
           android:id="@+id/highlighted_reviews_explanation_2"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="8sp"
           android:layout_marginStart="8sp"
+          android:layout_marginLeft="8sp"
           android:layout_marginTop="4dp"
           />
       <TextView
           android:id="@+id/highlighted_reviews_explanation_3"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
+          android:layout_marginLeft="8dp"
           />
       <TextView
           android:id="@+id/highlighted_reviews_explanation_4"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
+          android:layout_marginLeft="8dp"
           />
 
     </LinearLayout>
@@ -145,8 +139,8 @@
           android:layout_height="wrap_content"
           android:layout_marginEnd="24dp"
           android:layout_marginRight="24dp"
-          android:layout_toLeftOf="@id/rate_button"
           android:layout_toStartOf="@id/rate_button"
+          android:layout_toLeftOf="@id/rate_button"
           android:background="@null"
           android:padding="6dp"
           android:text="@string/cancel"

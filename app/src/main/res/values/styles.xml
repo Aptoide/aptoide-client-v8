@@ -137,7 +137,7 @@
   </style>
 
   <style name="RatingBarReviewDialog">
-    <item name="android:progressDrawable">@drawable/rating_bar_review</item>
+    <item name="android:progressDrawable">?attr/rating_bar_progress</item>
     <item name="android:minHeight">36dp</item>
     <item name="android:maxHeight">36dp</item>
   </style>
