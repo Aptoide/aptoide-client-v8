@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -56,7 +55,7 @@
           android:layout_marginStart="16dp"
           android:layout_marginTop="16dp"
           android:text="@string/newaccount_signin"
-          style="@style/Aptoide.Button"
+          style="?attr/login_button_style"
           />
 
     </LinearLayout>
@@ -70,6 +69,7 @@
         android:layout_marginStart="16dp"
         android:orientation="vertical"
         android:visibility="gone"
+        tools:visibility="visible"
         >
       <include
           layout="@layout/store_profile_account_displayable"
@@ -107,7 +107,8 @@
           android:layout_marginTop="16dp"
           android:text="@string/newaccount_create_store"
           android:visibility="gone"
-          style="@style/Aptoide.Button"
+          tools:visibility="visible"
+          style="?attr/login_button_style"
           />
       <Button
           android:id="@+id/logout_button"
@@ -115,7 +116,7 @@
           android:layout_gravity="center_horizontal"
           android:layout_marginTop="8dp"
           android:text="@string/newaccount_log_out"
-          style="@style/Aptoide.Button"
+          style="?attr/login_button_style"
           />
     </LinearLayout>
 
@@ -136,7 +137,7 @@
           android:layout_marginLeft="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="16dp"
-          android:src="@drawable/ic_notification_history"
+          android:src="?attr/notificationDrawable"
           />
 
       <TextView
@@ -155,11 +156,7 @@
         android:id="@+id/card_custom_view_line_separator"
         android:layout_width="match_parent"
         android:layout_height="0.7dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginStart="12dp"
-        android:background="#f7f7f7"
+        android:background="?attr/backgroundSecondary"
         />
 
     <LinearLayout
@@ -178,7 +175,7 @@
           android:layout_marginLeft="16dp"
           android:layout_marginStart="16dp"
           android:layout_marginTop="16dp"
-          android:src="@drawable/ic_settings_account_black"
+          android:src="?attr/icSettingsDrawable"
           />
       <TextView
           android:layout_width="wrap_content"
@@ -193,6 +190,12 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/card_custom_view_line_separator_2"
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="?attr/backgroundSecondary"
+        />
 
     <TextView
         android:id="@+id/my_account_product_card_title"
