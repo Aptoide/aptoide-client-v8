@@ -321,6 +321,8 @@ android {
         type ==
         'release') {
       buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY + "\""
+    } else if (flavors[0].name.contains("cobrand")) {
+      buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY_COBRAND + "\""
     } else {
       buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY_DEBUG + "\""
     }
