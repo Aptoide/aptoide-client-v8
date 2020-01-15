@@ -1,74 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="?attr/backgroundMain"
-  android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundMain"
+    android:orientation="vertical"
+    >
 
   <com.google.android.material.appbar.AppBarLayout
-    android:id="@+id/appbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/toolbarBackground"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-    <androidx.appcompat.widget.Toolbar
-      android:id="@+id/toolbar"
+      android:id="@+id/appbar"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+      android:background="?attr/toolbarBackground"
+      app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
 
   </com.google.android.material.appbar.AppBarLayout>
 
   <ScrollView
-    android:id="@+id/scroll_view"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    android:fillViewport="true">
+      android:id="@+id/scroll_view"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:fillViewport="true"
+      >
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <RelativeLayout
-        android:id="@+id/create_store_image_action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginTop="@dimen/padding_medium"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:gravity="center">
-
-        <ImageView
-          android:id="@+id/create_store_image"
-          android:layout_width="@dimen/store_picture_large_size"
-          android:layout_height="@dimen/store_picture_large_size"
-          android:src="@drawable/create_store_avatar" />
-
-        <ImageView
-          android:layout_width="@dimen/select_picture_camera_icon_size"
-          android:layout_height="@dimen/select_picture_camera_icon_size"
-          android:layout_alignEnd="@+id/create_store_image"
-          android:layout_alignRight="@+id/create_store_image"
-          android:layout_alignBottom="@+id/create_store_image"
-          android:background="@drawable/create_user_camera_background_shape"
-          android:padding="@dimen/padding_very_small"
-          android:src="@drawable/create_user_camera" />
-
-      </RelativeLayout>
+        android:orientation="vertical"
+        >
 
       <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-          android:id="@+id/linearLayout"
+          android:id="@+id/create_store_image_action"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/padding_small"
@@ -76,308 +48,379 @@
           android:layout_marginTop="@dimen/padding_medium"
           android:layout_marginEnd="@dimen/padding_small"
           android:layout_marginRight="@dimen/padding_small"
-          android:orientation="vertical">
+          android:gravity="center"
+          >
+
+        <ImageView
+            android:id="@+id/create_store_image"
+            android:layout_width="@dimen/store_picture_large_size"
+            android:layout_height="@dimen/store_picture_large_size"
+            android:src="@drawable/create_store_avatar"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/select_picture_camera_icon_size"
+            android:layout_height="@dimen/select_picture_camera_icon_size"
+            android:layout_alignEnd="@+id/create_store_image"
+            android:layout_alignRight="@+id/create_store_image"
+            android:layout_alignBottom="@+id/create_store_image"
+            android:background="@drawable/create_user_camera_background_shape"
+            android:padding="@dimen/padding_very_small"
+            android:src="@drawable/create_user_camera"
+            />
+
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          >
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
+            android:orientation="vertical"
+            >
 
           <TextView
-            android:id="@+id/create_store_choose_name_title"
-            style="@style/Aptoide.TextView.Medium.S"
-            android:layout_width="match_parent"
-            android:text="@string/create_store_name" />
+              android:id="@+id/create_store_choose_name_title"
+              style="@style/Aptoide.TextView.Medium.S"
+              android:layout_width="match_parent"
+              android:text="@string/create_store_name"
+              />
 
           <EditText
-            android:id="@+id/create_store_name"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="match_parent"
-            android:hint="@string/create_store_name_inserted" />
+              android:id="@+id/create_store_name"
+              style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+              android:layout_width="match_parent"
+              android:hint="@string/create_store_name_inserted"
+              />
 
           <EditText
-            android:id="@+id/edit_store_description"
-            style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/create_store_description_hint"
-            android:visibility="gone"
-            tools:visibility="gone" />
-
-          <LinearLayout
-            android:id="@+id/edit_store_social_channels"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <TextView
-              style="@style/Aptoide.TextView.Regular.M.Grey700"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/edit_store_title_social_networks" />
-
-            <RelativeLayout
-              android:id="@+id/edit_store_facebook"
+              android:id="@+id/edit_store_description"
+              style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:layout_marginTop="22dp"
+              android:hint="@string/create_store_description_hint"
+              android:visibility="gone"
+              tools:visibility="gone"
+              />
+
+          <LinearLayout
+              android:id="@+id/edit_store_social_channels"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="20dp"
               android:layout_marginBottom="16dp"
-              android:orientation="horizontal"
-              tools:visibility="visible">
+              android:orientation="vertical"
+              android:visibility="gone"
+              tools:visibility="visible"
+              >
 
-              <ImageView
-                android:id="@+id/edit_store_facebook_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/logo_facebook" />
-
-              <RelativeLayout
-                android:id="@+id/edit_store_facebook_text_plus_wrapper"
+            <TextView
+                style="@style/Aptoide.TextView.Regular.M.Grey700"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@+id/edit_store_facebook_icon"
-                android:layout_toRightOf="@+id/edit_store_facebook_icon">
+                android:text="@string/edit_store_title_social_networks"
+                />
+
+            <RelativeLayout
+                android:id="@+id/edit_store_facebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                tools:visibility="visible"
+                >
+
+              <ImageView
+                  android:id="@+id/edit_store_facebook_icon"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
+                  android:layout_centerVertical="true"
+                  android:src="@drawable/logo_facebook"
+                  />
+
+              <RelativeLayout
+                  android:id="@+id/edit_store_facebook_text_plus_wrapper"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:layout_gravity="center"
+                  android:layout_toEndOf="@+id/edit_store_facebook_icon"
+                  android:layout_toRightOf="@+id/edit_store_facebook_icon"
+                  >
 
                 <TextView
-                  android:id="@+id/edit_store_facebook_title"
-                  style="@style/Aptoide.TextView.Regular.XS.Facebook"
-                  android:layout_width="wrap_content"
+                    android:id="@+id/edit_store_facebook_title"
+                    style="@style/Aptoide.TextView.Regular.XS.Facebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/facebook"
+                    />
+
+                <ImageView
+                    android:id="@+id/edit_store_facebook_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/follow_add_icon"
+                    />
+              </RelativeLayout>
+
+              <cm.aptoide.pt.view.CustomTextInputLayout
+                  android:id="@+id/edit_store_facebook_username_wrapper"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_centerVertical="true"
                   android:layout_marginStart="16dp"
                   android:layout_marginLeft="16dp"
-                  android:text="@string/facebook" />
-
-                <ImageView
-                  android:id="@+id/edit_store_facebook_plus"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentEnd="true"
-                  android:layout_alignParentRight="true"
-                  android:src="@drawable/follow_add_icon" />
-              </RelativeLayout>
-
-              <cm.aptoide.pt.view.CustomTextInputLayout
-                android:id="@+id/edit_store_facebook_username_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toEndOf="@+id/edit_store_facebook_icon"
-                android:layout_toRightOf="@+id/edit_store_facebook_icon"
-                android:visibility="gone"
-                app:helperText="@string/edit_store_facebook_helper_text">
+                  android:layout_toEndOf="@+id/edit_store_facebook_icon"
+                  android:layout_toRightOf="@+id/edit_store_facebook_icon"
+                  android:visibility="gone"
+                  app:helperText="@string/edit_store_facebook_helper_text"
+                  >
 
                 <EditText
-                  android:id="@+id/edit_store_facebook_username"
-                  style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+                    android:id="@+id/edit_store_facebook_username"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
               </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-              android:id="@+id/edit_store_twitch"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="16dp"
-              android:orientation="horizontal"
-              tools:visibility="gone">
-
-              <ImageView
-                android:id="@+id/edit_store_twitch_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/logo_twitch" />
-
-              <RelativeLayout
-                android:id="@+id/edit_store_twitch_text_plus_wrapper"
+                android:id="@+id/edit_store_twitch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@+id/edit_store_twitch_icon"
-                android:layout_toRightOf="@+id/edit_store_twitch_icon">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                tools:visibility="gone"
+                >
 
-                <TextView
-                  android:id="@+id/edit_store_twitch_title"
-                  style="@style/Aptoide.TextView.Regular.XS.Twitch"
+              <ImageView
+                  android:id="@+id/edit_store_twitch_icon"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
+                  android:layout_centerVertical="true"
+                  android:src="@drawable/logo_twitch"
+                  />
+
+              <RelativeLayout
+                  android:id="@+id/edit_store_twitch_text_plus_wrapper"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_centerVertical="true"
-                  android:layout_marginStart="16dp"
-                  android:layout_marginLeft="16dp"
-                  android:text="@string/twitch" />
+                  android:layout_gravity="center"
+                  android:layout_toEndOf="@+id/edit_store_twitch_icon"
+                  android:layout_toRightOf="@+id/edit_store_twitch_icon"
+                  >
+
+                <TextView
+                    android:id="@+id/edit_store_twitch_title"
+                    style="@style/Aptoide.TextView.Regular.XS.Twitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/twitch"
+                    />
 
                 <ImageView
-                  android:id="@+id/edit_store_twitch_plus"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentEnd="true"
-                  android:layout_alignParentRight="true"
-                  android:src="@drawable/follow_add_icon" />
+                    android:id="@+id/edit_store_twitch_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/follow_add_icon"
+                    />
 
               </RelativeLayout>
 
 
               <cm.aptoide.pt.view.CustomTextInputLayout
-                android:id="@+id/edit_store_twitch_username_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toEndOf="@+id/edit_store_twitch_icon"
-                android:layout_toRightOf="@+id/edit_store_twitch_icon"
-                android:visibility="gone"
-                app:helperText="@string/edit_store_short_enter_username">
+                  android:id="@+id/edit_store_twitch_username_wrapper"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginLeft="16dp"
+                  android:layout_toEndOf="@+id/edit_store_twitch_icon"
+                  android:layout_toRightOf="@+id/edit_store_twitch_icon"
+                  android:visibility="gone"
+                  app:helperText="@string/edit_store_short_enter_username"
+                  >
 
                 <EditText
-                  android:id="@+id/edit_store_twitch_username"
-                  style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+                    android:id="@+id/edit_store_twitch_username"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
               </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-              android:id="@+id/edit_store_twitter"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="16dp"
-              android:orientation="horizontal">
-
-              <ImageView
-                android:id="@+id/edit_store_twitter_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/logo_twitter" />
-
-              <RelativeLayout
-                android:id="@+id/edit_store_twitter_text_plus_wrapper"
+                android:id="@+id/edit_store_twitter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@+id/edit_store_twitter_icon"
-                android:layout_toRightOf="@+id/edit_store_twitter_icon">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                >
+
+              <ImageView
+                  android:id="@+id/edit_store_twitter_icon"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
+                  android:layout_centerVertical="true"
+                  android:src="@drawable/logo_twitter"
+                  />
+
+              <RelativeLayout
+                  android:id="@+id/edit_store_twitter_text_plus_wrapper"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:layout_gravity="center"
+                  android:layout_toEndOf="@+id/edit_store_twitter_icon"
+                  android:layout_toRightOf="@+id/edit_store_twitter_icon"
+                  >
 
                 <TextView
-                  android:id="@+id/edit_store_twitter_title"
-                  style="@style/Aptoide.TextView.Regular.XS.Twitter"
-                  android:layout_width="wrap_content"
+                    android:id="@+id/edit_store_twitter_title"
+                    style="@style/Aptoide.TextView.Regular.XS.Twitter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/twitter"
+                    />
+
+                <ImageView
+                    android:id="@+id/edit_store_twitter_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/follow_add_icon"
+                    />
+              </RelativeLayout>
+
+              <cm.aptoide.pt.view.CustomTextInputLayout
+                  android:id="@+id/edit_store_twitter_username_wrapper"
+                  android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_centerVertical="true"
                   android:layout_marginStart="16dp"
                   android:layout_marginLeft="16dp"
-                  android:text="@string/twitter" />
-
-                <ImageView
-                  android:id="@+id/edit_store_twitter_plus"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentEnd="true"
-                  android:layout_alignParentRight="true"
-                  android:src="@drawable/follow_add_icon" />
-              </RelativeLayout>
-
-              <cm.aptoide.pt.view.CustomTextInputLayout
-                android:id="@+id/edit_store_twitter_username_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toEndOf="@+id/edit_store_twitter_icon"
-                android:layout_toRightOf="@+id/edit_store_twitter_icon"
-                android:visibility="gone"
-                app:helperText="@string/edit_store_short_enter_username"
-                tools:visibility="visible">
+                  android:layout_toEndOf="@+id/edit_store_twitter_icon"
+                  android:layout_toRightOf="@+id/edit_store_twitter_icon"
+                  android:visibility="gone"
+                  app:helperText="@string/edit_store_short_enter_username"
+                  tools:visibility="visible"
+                  >
 
                 <EditText
-                  android:id="@+id/edit_store_twitter_username"
-                  style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+                    android:id="@+id/edit_store_twitter_username"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
               </cm.aptoide.pt.view.CustomTextInputLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-              android:id="@+id/edit_store_youtube"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="16dp"
-              android:layout_marginBottom="16dp"
-              android:orientation="horizontal"
-              tools:visibility="gone">
-
-              <ImageView
-                android:id="@+id/edit_store_youtube_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/logo_youtube" />
-
-              <RelativeLayout
-                android:id="@+id/edit_store_youtube_text_plus_wrapper"
+                android:id="@+id/edit_store_youtube"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_toEndOf="@+id/edit_store_youtube_icon"
-                android:layout_toRightOf="@+id/edit_store_youtube_icon">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                tools:visibility="gone"
+                >
 
-                <TextView
-                  android:id="@+id/edit_store_youtube_title"
-                  style="@style/Aptoide.TextView.Regular.XS.Youtube"
+              <ImageView
+                  android:id="@+id/edit_store_youtube_icon"
+                  android:layout_width="16dp"
+                  android:layout_height="16dp"
+                  android:layout_centerVertical="true"
+                  android:src="@drawable/logo_youtube"
+                  />
+
+              <RelativeLayout
+                  android:id="@+id/edit_store_youtube_text_plus_wrapper"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:layout_centerVertical="true"
-                  android:layout_marginStart="16dp"
-                  android:layout_marginLeft="16dp"
-                  android:text="@string/youtube" />
+                  android:layout_gravity="center"
+                  android:layout_toEndOf="@+id/edit_store_youtube_icon"
+                  android:layout_toRightOf="@+id/edit_store_youtube_icon"
+                  >
+
+                <TextView
+                    android:id="@+id/edit_store_youtube_title"
+                    style="@style/Aptoide.TextView.Regular.XS.Youtube"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/youtube"
+                    />
 
                 <ImageView
-                  android:id="@+id/edit_store_youtube_plus"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_alignParentEnd="true"
-                  android:layout_alignParentRight="true"
-                  android:src="@drawable/follow_add_icon" />
+                    android:id="@+id/edit_store_youtube_plus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/follow_add_icon"
+                    />
 
               </RelativeLayout>
 
 
               <cm.aptoide.pt.view.CustomTextInputLayout
-                android:id="@+id/edit_store_youtube_username_wrapper"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_toEndOf="@+id/edit_store_youtube_icon"
-                android:layout_toRightOf="@+id/edit_store_youtube_icon"
-                android:visibility="gone"
-                app:helperText="@string/edit_store_youtube_helper_text">
+                  android:id="@+id/edit_store_youtube_username_wrapper"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginLeft="16dp"
+                  android:layout_toEndOf="@+id/edit_store_youtube_icon"
+                  android:layout_toRightOf="@+id/edit_store_youtube_icon"
+                  android:visibility="gone"
+                  app:helperText="@string/edit_store_youtube_helper_text"
+                  >
 
                 <EditText
-                  android:id="@+id/edit_store_youtube_username"
-                  style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
+                    android:id="@+id/edit_store_youtube_username"
+                    style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
 
               </cm.aptoide.pt.view.CustomTextInputLayout>
 
@@ -388,72 +431,78 @@
         </LinearLayout>
 
         <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_below="@+id/linearLayout"
-          android:layout_alignParentStart="true"
-          android:layout_alignParentLeft="true"
-          android:orientation="vertical">
-
-          <TextView
-            style="@style/Aptoide.TextView.Regular.M"
-            android:layout_width="match_parent"
-            android:layout_marginStart="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginTop="@dimen/padding_medium_default"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
-            android:text="@string/create_store_theme" />
-
-          <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/theme_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_very_small"
-            android:layout_marginBottom="@dimen/padding_very_small"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:orientation="horizontal" />
+            android:layout_below="@+id/linearLayout"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical"
+            >
+
+          <TextView
+              style="@style/Aptoide.TextView.Regular.M"
+              android:layout_width="match_parent"
+              android:layout_marginStart="@dimen/padding_small"
+              android:layout_marginLeft="@dimen/padding_small"
+              android:layout_marginTop="@dimen/padding_medium_default"
+              android:layout_marginEnd="@dimen/padding_small"
+              android:layout_marginRight="@dimen/padding_small"
+              android:text="@string/create_store_theme"
+              />
+
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/theme_selector"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/padding_very_small"
+              android:layout_marginBottom="@dimen/padding_very_small"
+              tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+              tools:orientation="horizontal"
+              />
         </LinearLayout>
 
       </RelativeLayout>
 
       <LinearLayout
-        android:id="@+id/bottom_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/padding_small"
-        android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginTop="@dimen/padding_medium"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_weight="1"
-        android:gravity="center|bottom"
-        android:orientation="horizontal"
-        android:weightSum="2">
+          android:id="@+id/bottom_buttons"
+          android:layout_width="match_parent"
+          android:layout_height="0dp"
+          android:layout_marginStart="@dimen/padding_small"
+          android:layout_marginLeft="@dimen/padding_small"
+          android:layout_marginTop="@dimen/padding_medium"
+          android:layout_marginEnd="@dimen/padding_small"
+          android:layout_marginRight="@dimen/padding_small"
+          android:layout_marginBottom="@dimen/padding_medium_small"
+          android:layout_weight="1"
+          android:gravity="center|bottom"
+          android:orientation="horizontal"
+          android:weightSum="2"
+          >
 
         <Button
-          android:id="@+id/create_store_skip"
-          style="@style/Aptoide.Button.Ghost"
-          android:layout_width="8dp"
-          android:layout_height="60dp"
-          android:layout_marginEnd="@dimen/padding_smaller"
-          android:layout_marginRight="@dimen/padding_smaller"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/skip" />
+            android:id="@+id/create_store_skip"
+            style="@style/Aptoide.Button.Ghost"
+            android:layout_width="8dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="@dimen/padding_smaller"
+            android:layout_marginRight="@dimen/padding_smaller"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/skip"
+            />
 
         <Button
-          android:id="@+id/create_store_action"
-          style="@style/Aptoide.Button"
-          android:layout_width="0dp"
-          android:layout_marginStart="@dimen/padding_smaller"
-          android:layout_marginLeft="@dimen/padding_smaller"
-          android:layout_marginEnd="5dp"
-          android:layout_marginRight="5dp"
-          android:layout_weight="1"
-          android:gravity="center"
-          android:text="@string/create_store_create" />
+            android:id="@+id/create_store_action"
+            style="@style/Aptoide.Button"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/padding_smaller"
+            android:layout_marginLeft="@dimen/padding_smaller"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/create_store_create"
+            />
 
       </LinearLayout>
 

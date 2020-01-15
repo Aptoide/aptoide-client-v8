@@ -173,8 +173,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout = view.findViewById(
-        R.id.fragment_search_result_all_followed_stores_buttons_layout);
+    allAndFollowedStoresButtonsLayout =
+        view.findViewById(R.id.fragment_search_result_all_followed_stores_buttons_layout);
     allStoresResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
     suggestionsResultList = view.findViewById(R.id.suggestions_list);
