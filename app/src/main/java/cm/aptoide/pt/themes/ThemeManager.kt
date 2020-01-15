@@ -17,19 +17,19 @@ class ThemeManager(private val activity: Activity) {
     return value
   }
 
-  fun setTheme(theme: String) {
+  fun setTheme(theme: String?) {
     val storeTheme = StoreTheme.get(theme, isThemeDark())
     activity.setTheme(storeTheme.themeResource)
     setStatusBarThemeColor(theme)
   }
 
-  fun getAttributeForTheme(themeName: String, attributeResourceId: Int): TypedValue {
+  fun getAttributeForTheme(themeName: String?, attributeResourceId: Int): TypedValue {
     return activity.theme.obtainStyledAttributes(
         StoreTheme.get(themeName, isThemeDark()).themeResource,
         intArrayOf(attributeResourceId)).peekValue(0)
   }
 
-  fun getStoreTheme(storeThemeName: String): StoreTheme {
+  fun getStoreTheme(storeThemeName: String?): StoreTheme {
     return StoreTheme.get(storeThemeName, isThemeDark())
   }
 
@@ -45,7 +45,7 @@ class ThemeManager(private val activity: Activity) {
     setStatusBarThemeColor(getAttributeForTheme(android.R.attr.statusBarColor).data)
   }
 
-  fun setStatusBarThemeColor(theme: String) {
+  fun setStatusBarThemeColor(theme: String?) {
     setStatusBarThemeColor(getAttributeForTheme(theme, android.R.attr.statusBarColor).data)
   }
 
