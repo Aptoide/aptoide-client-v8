@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="4dp"
-    style="?android:attr/buttonStyle"
+    style="?attr/backgroundCard"
     >
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,6 @@
       android:layout_height="match_parent"
       android:paddingBottom="5dp"
       android:paddingTop="8dp"
-      style="?attr/backgroundCard"
       >
 
     <TextView

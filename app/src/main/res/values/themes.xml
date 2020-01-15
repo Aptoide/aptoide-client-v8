@@ -61,6 +61,7 @@
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="backgroundButton">@style/backgroundButtonWhite</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
@@ -395,6 +396,7 @@
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
+    <item name="backgroundButton">@style/backgroundButtonBlack</item>
 
   </style>
 
