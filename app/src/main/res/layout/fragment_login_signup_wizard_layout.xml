@@ -6,7 +6,7 @@ android:fitsSystemWindows="true"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:background="?attr/wizard3Color"
     android:orientation="vertical"
     >
 
@@ -42,25 +42,25 @@ android:fitsSystemWindows="true"
           />
 
       <TextView
+          style="@style/Aptoide.TextView.Medium.XL.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
+          android:gravity="center"
           android:text="@string/login_sign_up_title"
-          android:textColor="@color/white"
-          style="@style/OnBoarding.Title.TextView"
           />
 
 
       <TextView
+          style="@style/Aptoide.TextView.Medium.M.White"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:paddingEnd="10dp"
-          android:paddingLeft="10dp"
-          android:paddingRight="10dp"
+          android:gravity="center"
           android:paddingStart="10dp"
+          android:paddingLeft="10dp"
+          android:paddingEnd="10dp"
+          android:paddingRight="10dp"
           android:text="@string/wizard_sub_title_viewpager_three"
-          android:textColor="@color/white"
-          style="@style/OnBoarding.SubTitle.TextView"
           />
 
     </LinearLayout>

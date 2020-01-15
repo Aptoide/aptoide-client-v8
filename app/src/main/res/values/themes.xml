@@ -65,12 +65,17 @@
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="skeletonColor">@color/grey_fog_light_medium</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
+    <item name="earnAppcoinsCardBg">@color/white</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
     <item name="appview_background">@color/default_background_color_light</item>
     <item name="appview_toolbar_bg_default">@drawable/aptoide_gradient</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition</item>
+    <item name="rating_bar_progress">@drawable/rating_bar_review</item>
 
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_black</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_black</item>
@@ -257,15 +262,21 @@
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-    <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="wizard3Color">@color/grey_dark</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
+    <item name="skeletonColor">@color/grey_dark</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
+    <item name="earnAppcoinsCardBg">@color/grey_dark</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
     <item name="appview_background">@color/grey_900</item>
     <item name="appview_toolbar_bg_default">@color/grey_dark</item>
     <item name="appview_toolbar_bg_appc">@drawable/appc_gradient_transition_dark</item>
+    <item name="rating_bar_progress">@drawable/rating_bar_review_dark</item>
 
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_light</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_light</item>

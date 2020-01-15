@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="?attr/backgroundCard"
     android:layout_width="104dp"
-    android:layout_height="wrap_content"
+    android:layout_height="165dp"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="4dp"

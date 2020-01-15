@@ -36,7 +36,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
@@ -68,8 +67,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeManager themeManager;
+  @Inject DialogUtils dialogUtils;
   private SharedPreferences preferences;
-  private DialogUtils dialogUtils;
   private long reviewId;
   private String storeName;
   private String appName;
@@ -208,11 +207,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void onViewCreated() {
     super.onViewCreated();
-    dialogUtils = new DialogUtils(accountManager,
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
-        httpClient, converterFactory, installedRepository, tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources(), marketName, marketResourceFormatter);
   }
 
   private void fetchRating(boolean refresh) {
