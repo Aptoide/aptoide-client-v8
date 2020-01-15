@@ -86,7 +86,7 @@
   <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
     <item name="android:paddingRight">20dp</item>
     <item name="android:paddingLeft">20dp</item>
-    <item name="background">@color/white</item>
+    <item name="android:background">@drawable/google_button_rounded</item>
     <item name="android:drawableLeft">@drawable/google_icon_copy</item>
     <item name="android:text">@string/google</item>
     <item name="android:textColor">@color/google_grey</item>
@@ -96,7 +96,7 @@
   <style name="Aptoide.Button.Ghost.GreyFogLight.GoogleFull">
     <item name="android:paddingRight">50dp</item>
     <item name="android:paddingLeft">50dp</item>
-    <item name="background">@color/white</item>
+    <item name="android:background">@drawable/google_button_rounded</item>
     <item name="android:drawableLeft">@drawable/google_icon_copy</item>
     <item name="android:text">@string/connect_google</item>
     <item name="android:textColor">@color/google_grey</item>
@@ -152,6 +152,12 @@
   <style name="Aptoide.Button.Flat.S.DarkBG">
     <item name="android:textColor">@color/silver_dark</item>
     <item name="android:background">@color/grey_dark</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
+  <style name="Aptoide.Button.DarkBG">
+    <item name="android:textColor">?attr/raisedButtonTextColor</item>
+    <item name="android:background">@color/grey_900</item>
     <item name="android:foreground">?attr/selectableItemBackground</item>
   </style>
 
