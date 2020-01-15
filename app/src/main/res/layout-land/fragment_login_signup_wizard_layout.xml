@@ -4,7 +4,7 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/wizard3Color"
+    android:background="?attr/wizardThirdColor"
     android:orientation="vertical"
     android:paddingBottom="@dimen/bottom_skip_bar_height"
     >

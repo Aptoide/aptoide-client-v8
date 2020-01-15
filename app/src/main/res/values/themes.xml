@@ -58,7 +58,9 @@
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-    <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="wizardFirstColor">@color/wizard_color_1_blue</item>
+    <item name="wizardSecondColor">@color/wizard_color_2_green</item>
+    <item name="wizardThirdColor">@color/wizard_color_3_orange</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
 
@@ -266,7 +268,9 @@
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-    <item name="wizard3Color">@color/grey_dark</item>
+    <item name="wizardFirstColor">@color/grey_dark</item>
+    <item name="wizardSecondColor">@color/grey_dark</item>
+    <item name="wizardThirdColor">@color/grey_dark</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
 
@@ -416,7 +420,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
     <item name="bnItemColorState">@drawable/grey_nav_item_color_state</item>
-    <item name="wizard3Color">@color/grey</item>
+    <item name="wizardThirdColor">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
     <item name="homeChips">@drawable/grey_home_chips_background</item>
 
@@ -445,7 +449,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_teal</item>
     <item name="colorControlHighlight">@color/teal_gradient_end</item>
     <item name="bnItemColorState">@drawable/teal_nav_item_color_state</item>
-    <item name="wizard3Color">@color/teal</item>
+    <item name="wizardThirdColor">@color/teal</item>
     <item name="loggedInIcon">@drawable/teal_ic_logged_in</item>
     <item name="homeChips">@drawable/teal_home_chips_background</item>
 
@@ -473,7 +477,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_brown</item>
     <item name="colorControlHighlight">@color/brown_gradient_end</item>
     <item name="bnItemColorState">@drawable/brown_nav_item_color_state</item>
-    <item name="wizard3Color">@color/brown</item>
+    <item name="wizardThirdColor">@color/brown</item>
     <item name="loggedInIcon">@drawable/brown_ic_logged_in</item>
     <item name="homeChips">@drawable/brown_home_chips_background</item>
 
@@ -502,7 +506,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_bluegrey</item>
     <item name="colorControlHighlight">@color/blue_grey_gradient_end</item>
     <item name="bnItemColorState">@drawable/blue_grey_nav_item_color_state</item>
-    <item name="wizard3Color">@color/blue_grey</item>
+    <item name="wizardThirdColor">@color/blue_grey</item>
     <item name="loggedInIcon">@drawable/blue_grey_ic_logged_in</item>
     <item name="homeChips">@drawable/blue_grey_home_chips_background</item>
 
@@ -532,7 +536,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lightgreen</item>
     <item name="colorControlHighlight">@color/light_green_gradient_end</item>
     <item name="bnItemColorState">@drawable/light_green_nav_item_color_state</item>
-    <item name="wizard3Color">@color/light_green</item>
+    <item name="wizardThirdColor">@color/light_green</item>
     <item name="loggedInIcon">@drawable/light_green_ic_logged_in</item>
     <item name="homeChips">@drawable/light_green_home_chips_background</item>
 
@@ -560,7 +564,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lightblue</item>
     <item name="colorControlHighlight">@color/light_blue_gradient_end</item>
     <item name="bnItemColorState">@drawable/light_blue_nav_item_color_state</item>
-    <item name="wizard3Color">@color/light_blue</item>
+    <item name="wizardThirdColor">@color/light_blue</item>
     <item name="loggedInIcon">@drawable/light_blue_ic_logged_in</item>
     <item name="homeChips">@drawable/light_blue_home_chips_background</item>
 
@@ -588,7 +592,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_amber</item>
     <item name="colorControlHighlight">@color/amber_gradient_end</item>
     <item name="bnItemColorState">@drawable/amber_nav_item_color_state</item>
-    <item name="wizard3Color">@color/amber</item>
+    <item name="wizardThirdColor">@color/amber</item>
     <item name="loggedInIcon">@drawable/amber_ic_logged_in</item>
     <item name="homeChips">@drawable/amber_home_chips_background</item>
 
@@ -616,7 +620,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lime</item>
     <item name="colorControlHighlight">@color/lime_gradient_end</item>
     <item name="bnItemColorState">@drawable/lime_nav_item_color_state</item>
-    <item name="wizard3Color">@color/lime</item>
+    <item name="wizardThirdColor">@color/lime</item>
     <item name="loggedInIcon">@drawable/lime_ic_logged_in</item>
     <item name="homeChips">@drawable/lime_home_chips_background</item>
 
@@ -644,7 +648,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_orange</item>
     <item name="colorControlHighlight">@color/orange_gradient_end</item>
     <item name="bnItemColorState">@drawable/orange_nav_item_color_state</item>
-    <item name="wizard3Color">@color/orange</item>
+    <item name="wizardThirdColor">@color/orange</item>
     <item name="loggedInIcon">@drawable/orange_ic_logged_in</item>
     <item name="homeChips">@drawable/orange_home_chips_background</item>
 
@@ -673,7 +677,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_pink</item>
     <item name="colorControlHighlight">@color/pink_gradient_end</item>
     <item name="bnItemColorState">@drawable/pink_nav_item_color_state</item>
-    <item name="wizard3Color">@color/pink</item>
+    <item name="wizardThirdColor">@color/pink</item>
     <item name="loggedInIcon">@drawable/pink_ic_logged_in</item>
     <item name="homeChips">@drawable/pink_home_chips_background</item>
 
@@ -702,7 +706,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_indigo</item>
     <item name="colorControlHighlight">@color/indigo_gradient_end</item>
     <item name="bnItemColorState">@drawable/indigo_nav_item_color_state</item>
-    <item name="wizard3Color">@color/indigo</item>
+    <item name="wizardThirdColor">@color/indigo</item>
     <item name="loggedInIcon">@drawable/indigo_ic_logged_in</item>
     <item name="homeChips">@drawable/indigo_home_chips_background</item>
 
@@ -733,7 +737,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_red</item>
     <item name="colorControlHighlight">@color/red_gradient_end</item>
     <item name="bnItemColorState">@drawable/red_nav_item_color_state</item>
-    <item name="wizard3Color">@color/red</item>
+    <item name="wizardThirdColor">@color/red</item>
     <item name="loggedInIcon">@drawable/red_ic_logged_in</item>
     <item name="homeChips">@drawable/red_home_chips_background</item>
 
@@ -762,7 +766,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_green</item>
     <item name="colorControlHighlight">@color/green_gradient_end</item>
     <item name="bnItemColorState">@drawable/green_nav_item_color_state</item>
-    <item name="wizard3Color">@color/green</item>
+    <item name="wizardThirdColor">@color/green</item>
     <item name="loggedInIcon">@drawable/green_ic_logged_in</item>
     <item name="homeChips">@drawable/green_home_chips_background</item>
 
@@ -794,7 +798,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_deeppurple</item>
     <item name="colorControlHighlight">@color/deep_purple_gradient_end</item>
     <item name="bnItemColorState">@drawable/deep_purple_nav_item_color_state</item>
-    <item name="wizard3Color">@color/deep_purple</item>
+    <item name="wizardThirdColor">@color/deep_purple</item>
     <item name="loggedInIcon">@drawable/deep_purple_ic_logged_in</item>
     <item name="homeChips">@drawable/deep_purple_home_chips_background</item>
 
@@ -822,7 +826,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_black</item>
     <item name="colorControlHighlight">@color/black_gradient_end</item>
     <item name="bnItemColorState">@drawable/black_nav_item_color_state</item>
-    <item name="wizard3Color">@color/black</item>
+    <item name="wizardThirdColor">@color/black</item>
     <item name="loggedInIcon">@drawable/black_ic_logged_in</item>
     <item name="homeChips">@drawable/black_home_chips_background</item>
 
