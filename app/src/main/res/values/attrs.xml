@@ -46,6 +46,7 @@
   <attr name="earnAppcoinsBg" format="reference" />
   <attr name="earnAppcoinsCardBg" format="color|reference" />
   <attr name="backgroundCardSecondaryColor" format="color|reference" />
+  <attr name="editorialPlaceholderCard" format="reference" />
 
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
@@ -147,6 +148,7 @@
   <attr name="buttonTextSizeSmall" format="dimension" />
   <attr name="installButtonBackground" format="reference" />
   <attr name="toolbarBackground" format="reference" />
+  <attr name="toolbarBackgroundSecondary" format="color" />
   <attr name="toolbarTextColor" format="color" />
   <attr name="preferenceTitleColor" format="color" />
   <attr name="preferenceTitleTextSize" format="dimension" />

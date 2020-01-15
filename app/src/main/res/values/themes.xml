@@ -24,7 +24,8 @@
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
     <item name="toolbarBackground">@drawable/aptoide_gradient</item>
-    <item name="toolbarTextColor">@color/white</item>
+    <item name="toolbarBackgroundSecondary">@color/white</item>
+    <item name="toolbarTextColor">@color/black_87_alpha</item>
     <item name="toolbarReviewsColor">@color/white</item>
     <item name="actionMenuTextColor">@color/white</item>
 
@@ -79,6 +80,9 @@
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button</item>
+
+    <!--editorial-->
+    <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_normal</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
@@ -240,6 +244,7 @@
     <!--toolbar-->
     <item name="toolbarTheme">@style/ToolbarDark</item>
     <item name="toolbarBackground">@color/grey_900</item>
+    <item name="toolbarBackgroundSecondary">@color/grey_900</item>
     <item name="toolbarTextColor">@color/white</item>
     <item name="toolbarReviewsColor">?attr/toolbarBackground</item>
     <item name="actionMenuTextColor">@color/white</item>
@@ -295,6 +300,9 @@
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button.DarkBG</item>
+
+    <!--editorial-->
+    <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_wallet_promotion</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>

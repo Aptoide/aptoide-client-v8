@@ -226,8 +226,9 @@ public class EditorialFragment extends NavigationTrackFragment
             break;
           case COLLAPSED:
             movingCollapseSubject.onNext(isItemShown());
-            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
-                resources.getColor(R.color.black), true);
+            configureAppBarLayout(resources.getDrawable(
+                themeAttributeProvider.getAttributeForTheme(R.attr.toolbarBackgroundSecondary).resourceId),
+                resources.getColor(themeAttributeProvider.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId), true);
             break;
         }
       }
@@ -311,7 +312,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.editorial_layout, container, false);
+    return inflater.inflate(R.layout.fragment_editorial, container, false);
   }
 
   @Override public void showLoading() {
