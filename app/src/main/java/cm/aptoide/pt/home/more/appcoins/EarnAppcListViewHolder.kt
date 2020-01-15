@@ -12,7 +12,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import kotlinx.android.synthetic.main.earn_appcoins_item.view.*
+import kotlinx.android.synthetic.main.earn_appcoins_item_layout.view.*
 import java.text.DecimalFormat
 
 class EarnAppcListViewHolder(val view: View,
@@ -26,9 +26,10 @@ class EarnAppcListViewHolder(val view: View,
             fiat?.symbol + decimalFormatter.format(fiat?.amount))
     itemView.app_title_textview.text = app.name
     ImageLoader.with(itemView.context)
-        .load(app.featureGraphic, R.attr.placeholder_square, itemView.app_feature_graphic)
+        .loadWithColorAttrPlaceholder(app.featureGraphic, R.attr.skeletonColor,
+            itemView.app_feature_graphic)
     ImageLoader.with(itemView.context)
-        .loadWithRoundCorners(app.icon, 8, itemView.app_image, R.attr.placeholder_square,
+        .loadWithColorPlaceholderRoundCorners(app.icon, 8, itemView.app_image, R.attr.skeletonColor,
             object : RequestListener<Drawable> {
               override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?,
                                         isFirstResource: Boolean): Boolean {

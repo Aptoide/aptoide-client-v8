@@ -343,6 +343,22 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<Drawable> loadWithColorAttrPlaceholder(String url, @AttrRes int colorResource,
+      ImageView imageView) {
+    Context context = weakContext.get();
+
+    if (context != null) {
+      return Glide.with(context)
+          .load(url)
+          .apply(getRequestOptions().placeholder(new ColorDrawable(getAttrColor(colorResource))))
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(imageView);
+    } else {
+      Log.e(TAG, "::load() Context is null");
+    }
+    return null;
+  }
+
   public Target<Drawable> load(String url, ImageView imageView) {
     Context context = weakContext.get();
     if (context != null) {
@@ -492,6 +508,24 @@ public class ImageLoader {
     return null;
   }
 
+  public Target<Drawable> loadWithColorPlaceholderRoundCorners(String image, int radius,
+      ImageView previewImage, @AttrRes int colorResource,
+      RequestListener<Drawable> requestListener) {
+    Context context = weakContext.get();
+    if (context != null) {
+      return Glide.with(context)
+          .load(image)
+          .apply(getRequestOptions().centerCrop()
+              .placeholder(new ColorDrawable(getAttrColor(colorResource)))
+              .transforms(new CenterCrop(), new RoundedCorners(radius)))
+          .listener(requestListener)
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(previewImage);
+    }
+    return null;
+  }
+
+
   public void loadIntoTarget(String imageUrl, SimpleTarget<Drawable> simpleTarget) {
     Context context = weakContext.get();
     if (context != null) {
@@ -526,5 +560,17 @@ public class ImageLoader {
       return value.resourceId;
     }
     return R.drawable.placeholder_square;
+  }
+
+  private @DrawableRes int getAttrColor(@AttrRes int attrId) {
+    Context context = weakContext.get();
+    if (context != null) {
+      TypedValue value = new TypedValue();
+      weakContext.get()
+          .getTheme()
+          .resolveAttribute(attrId, value, true);
+      return value.data;
+    }
+    return 0;
   }
 }
