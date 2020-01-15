@@ -77,6 +77,9 @@
     <item name="download_progress_pause">@drawable/ic_pause_action_black</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_black</item>
 
+    <!--account-->
+    <item name="login_button_style">@style/Aptoide.Button</item>
+
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
     <item name="placeholder_9_16">@drawable/placeholder_9_16</item>
@@ -172,7 +175,7 @@
     <item name="icErrorDrawable">@drawable/cross</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
-    <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_black</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
     <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -191,7 +194,7 @@
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
-
+    <item name="notificationDrawable">@drawable/ic_notification_history</item>
 
   </style>
 
@@ -290,6 +293,9 @@
     <item name="download_progress_pause">@drawable/ic_pause_action_light</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_light</item>
 
+    <!--account-->
+    <item name="login_button_style">@style/Aptoide.Button.DarkBG</item>
+
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>
     <item name="placeholder_9_16">@drawable/placeholder_9_16_dark</item>
@@ -385,7 +391,7 @@
     <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
-    <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_white</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
     <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -404,6 +410,7 @@
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
+    <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
 
   </style>
 

@@ -155,6 +155,12 @@
     <item name="android:foreground">?attr/selectableItemBackground</item>
   </style>
 
+  <style name="Aptoide.Button.DarkBG">
+    <item name="android:textColor">?attr/raisedButtonTextColor</item>
+    <item name="android:background">@color/grey_900</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
   <style name="Aptoide.Button.Flat.White">
     <item name="android:textColor">@color/white</item>
   </style>
