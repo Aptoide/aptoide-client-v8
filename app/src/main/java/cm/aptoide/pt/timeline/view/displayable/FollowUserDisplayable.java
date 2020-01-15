@@ -3,7 +3,6 @@ package cm.aptoide.pt.timeline.view.displayable;
 import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -20,16 +19,18 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   private boolean isLike;
   private int storeColor;
   private int buttonThemeBackground;
+  private String theme;
 
   public FollowUserDisplayable() {
   }
 
   public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor,
-      int buttonThemeColor) {
+      int buttonThemeColor, String theme) {
     super(pojo);
     this.isLike = isLike;
     this.storeColor = storeColor;
     this.buttonThemeBackground = buttonThemeColor;
+    this.theme = theme;
   }
 
   @Override protected Configs getConfig() {
@@ -109,7 +110,6 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public void viewClicked(FragmentNavigator navigator) {
     Store store = getPojo().getStore();
-    String theme = getStoreTheme(store);
 
     if (store != null) {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
@@ -118,18 +118,6 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome), true);
     }
-  }
-
-  private String getStoreTheme(Store store) {
-    String theme;
-    if (store != null && store.getAppearance() != null) {
-      theme = store.getAppearance()
-          .getTheme() == null ? BuildConfig.APTOIDE_THEME : store.getAppearance()
-          .getTheme();
-    } else {
-      theme = BuildConfig.APTOIDE_THEME;
-    }
-    return theme;
   }
 
   public boolean isLike() {

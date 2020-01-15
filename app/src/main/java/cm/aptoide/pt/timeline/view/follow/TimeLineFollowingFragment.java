@@ -105,7 +105,7 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
     return new FollowUserDisplayable(user, false,
         themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
-        themeManager.getAttributeForTheme(R.attr.ghostButtonBackground).resourceId);
+        themeManager.getAttributeForTheme(R.attr.ghostButtonBackground).resourceId, storeTheme);
   }
 
   @Override
