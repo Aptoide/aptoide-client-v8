@@ -61,6 +61,10 @@
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="skeletonColor">@color/grey_fog_light_medium</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
+    <item name="earnAppcoinsCardBg">@color/white</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
@@ -269,6 +273,11 @@
     <item name="wizard3Color">@color/grey_dark</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
+    <item name="skeletonColor">@color/grey_dark</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
+    <item name="earnAppcoinsCardBg">@color/grey_dark</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>

@@ -221,7 +221,7 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
   override fun createViewHolder(): (ViewGroup, Int) -> EarnAppcListViewHolder {
     return { parent, viewType ->
       EarnAppcListViewHolder(
-          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_item, parent,
+          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_item_more, parent,
               false), DecimalFormat("0.00"))
     }
   }

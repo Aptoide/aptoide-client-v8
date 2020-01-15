@@ -7,6 +7,7 @@
     android:layout_height="180dp"
     app:cardCornerRadius="4dp"
     app:cardUseCompatPadding="true"
+    style="?attr/backgroundCard"
     >
 
   <ImageView
@@ -16,6 +17,7 @@
       android:adjustViewBounds="true"
       android:contentDescription="@null"
       android:scaleType="fitXY"
+      android:background="@color/transparent"
       />
 
   <RelativeLayout
