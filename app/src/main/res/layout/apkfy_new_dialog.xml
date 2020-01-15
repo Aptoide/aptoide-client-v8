@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    style="?attr/dialogsTheme"
     >
 
   <TextView
@@ -31,7 +32,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        tools:src="@mipmap/ic_launcher"
+        tools:src="@drawable/orange_gradient"
         />
 
     <LinearLayout
@@ -65,7 +66,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:src="@drawable/ic_star_black"
+            android:src="?attr/ratingDrawable"
             />
         <TextView
             android:id="@+id/app_rating"
@@ -79,9 +80,8 @@
           android:id="@+id/app_downloads"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:textColor="@color/bottom_nav_non_selected_item_color"
           tools:text="1M Downloads"
-          style="@style/Aptoide.TextView.Regular.XXS"
+          style="@style/Aptoide.TextView.Regular.XXS.GreyFog"
           />
     </LinearLayout>
 
