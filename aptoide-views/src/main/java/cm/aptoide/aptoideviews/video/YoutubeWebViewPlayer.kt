@@ -18,6 +18,7 @@ class YoutubeWebViewPlayer : WebView {
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
       defStyleAttr) {
     webViewClient = youtubeWebViewClient
+    webChromeClient = WebChromeClientWithoutPlayerPlaceholder()
     getSettings().setJavaScriptEnabled(true)
   }
 
