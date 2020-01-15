@@ -42,6 +42,9 @@
   <attr name="backgroundCard" format="reference" />
   <attr name="appviewRatingCardBarckground" format="reference" />
   <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="skeletonColor" format="color|reference" />
+  <attr name="earnAppcoinsBg" format="reference" />
+  <attr name="backgroundCardSecondaryColor" format="color|reference" />
 
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
