@@ -36,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/wizard_title_viewpager_one"
-        android:textColor="@color/white"
         />
     <TextView
         android:id="@+id/description"
@@ -46,8 +45,6 @@
         android:layout_marginTop="10dp"
         android:text="@string/wizard_sub_title_viewpager_one"
         />
-
-
   </LinearLayout>
 
 </LinearLayout>
