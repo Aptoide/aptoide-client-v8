@@ -26,7 +26,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
-import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -49,7 +48,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
-  @Inject ThemeManager themeManager;
   private Toolbar toolbar;
   private View appCardView;
   private View appCardViewLayout;
@@ -63,7 +61,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button bottomInstallButton;
   private Button catappultDevButton;
   private NestedScrollView scrollView;
-  private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,7 +70,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = view.findViewById(R.id.toolbar);
-    spannableColor = themeManager.getAttributeForTheme(R.attr.colorPrimary).data;
 
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
