@@ -4,18 +4,17 @@
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/flatButtonBackground"
+    android:background="?attr/wizard3Color"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/bottom_skip_bar_height"
+    android:paddingBottom="24dp"
     >
 
-  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"
       >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -33,10 +32,37 @@
 
       <ImageView
           android:layout_width="200dp"
-          android:layout_height="50dp"
+          android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
+          android:layout_marginStart="20dp"
+          android:layout_marginLeft="20dp"
           android:layout_marginTop="14dp"
-          android:src="@drawable/app_logo_colourful"
+          android:layout_marginEnd="20dp"
+          android:layout_marginRight="20dp"
+          android:layout_marginBottom="10dp"
+          android:src="@drawable/wizard_3"
+          />
+
+      <TextView
+          style="@style/Aptoide.TextView.Medium.XL.White"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="10dp"
+          android:gravity="center"
+          android:text="@string/login_sign_up_title"
+          />
+
+
+      <TextView
+          style="@style/Aptoide.TextView.Medium.M.White"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:gravity="center"
+          android:paddingStart="10dp"
+          android:paddingLeft="10dp"
+          android:paddingEnd="10dp"
+          android:paddingRight="10dp"
+          android:text="@string/wizard_sub_title_viewpager_three"
           />
 
     </LinearLayout>
@@ -46,12 +72,12 @@
   <FrameLayout
       android:id="@+id/login_signup_layout"
       android:layout_width="match_parent"
-      android:layout_height="360dp"
+      android:layout_height="270dp"
       android:elevation="16dp"
       android:visibility="visible"
       app:behavior_hideable="false"
-      app:behavior_peekHeight="270dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+      app:behavior_peekHeight="188dp"
+      app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
       />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
