@@ -260,9 +260,10 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics) {
+      BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
+      ThemeManager themeManager) {
     return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
-        searchAnalytics);
+        searchAnalytics, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
