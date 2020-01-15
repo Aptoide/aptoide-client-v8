@@ -22,7 +22,7 @@ public class CustomArcView extends RelativeLayout {
     super.onSizeChanged(w, h, oldw, oldh);
     TypedValue value = new TypedValue();
     getContext().getTheme()
-        .resolveAttribute(R.attr.backgroundSecondary, value, true);
+        .resolveAttribute(R.attr.wizardBackgroundBottom, value, true);
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     paint.setStyle(Paint.Style.FILL);
     paint.setColor(getContext().getResources()

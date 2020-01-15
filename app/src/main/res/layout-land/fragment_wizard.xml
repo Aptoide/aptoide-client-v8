@@ -34,7 +34,7 @@
       android:layout_width="match_parent"
       android:layout_height="48dp"
       android:layout_alignParentBottom="true"
-      android:background="?attr/backgroundMain"
+      android:background="?attr/wizardBackgroundBottom"
       android:measureWithLargestChild="false"
       android:minHeight="82dp"
       android:orientation="horizontal"

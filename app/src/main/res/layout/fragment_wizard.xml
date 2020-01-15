@@ -36,7 +36,7 @@
       android:id="@+id/skip_next_layout"
       android:layout_width="0dp"
       android:layout_height="56dp"
-      android:background="?attr/backgroundMain"
+      android:background="?attr/wizardBackgroundBottom"
       android:measureWithLargestChild="false"
       android:minHeight="48dp"
       android:visibility="visible"
@@ -44,7 +44,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toBottomOf="@id/view_pager"
-      tools:background="@color/white"
+      tools:background="?attr/wizardBackgroundBottom"
       >
 
     <RadioGroup

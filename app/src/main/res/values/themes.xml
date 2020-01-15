@@ -61,6 +61,7 @@
     <item name="wizardFirstColor">@color/wizard_color_1_blue</item>
     <item name="wizardSecondColor">@color/wizard_color_2_green</item>
     <item name="wizardThirdColor">@color/wizard_color_3_orange</item>
+    <item name="wizardBackgroundBottom">@color/white</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
 
@@ -271,6 +272,7 @@
     <item name="wizardFirstColor">@color/grey_dark</item>
     <item name="wizardSecondColor">@color/grey_dark</item>
     <item name="wizardThirdColor">@color/grey_dark</item>
+    <item name="wizardBackgroundBottom">@color/grey_900</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
 
