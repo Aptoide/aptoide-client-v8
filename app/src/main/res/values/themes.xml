@@ -63,6 +63,7 @@
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
     <item name="skeletonColor">@color/grey_fog_light_medium</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
+    <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
     <!--appview-->
@@ -273,6 +274,7 @@
     <item name="reactionsButtonColor">@android:color/white</item>
     <item name="skeletonColor">@color/grey_dark</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
+    <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
 
 

@@ -4,7 +4,7 @@
     style="?attr/backgroundCard"
     android:layout_width="168dp"
     android:layout_height="158dp"
-    app:cardBackgroundColor="?attr/backgroundCardSecondaryColor"
+    app:cardBackgroundColor="?attr/earnAppcoinsCardBg"
     app:cardCornerRadius="4dp"
     >
 
