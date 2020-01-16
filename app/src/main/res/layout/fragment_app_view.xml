@@ -17,7 +17,7 @@
       android:layout_height="104dp"
       app:layout_anchor="@id/app_bar_layout"
       app:layout_anchorGravity="bottom|center"
-      tools:src="@mipmap/ic_launcher"
+      tools:src="@drawable/orange_gradient"
       />
 
   <androidx.core.widget.NestedScrollView
