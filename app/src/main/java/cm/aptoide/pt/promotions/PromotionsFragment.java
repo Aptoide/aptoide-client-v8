@@ -8,9 +8,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +36,6 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
@@ -227,6 +229,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (promotionViewApp.getPackageName()
         .equals("com.appcoins.wallet")) {
       showWallet(promotionViewApp, isWalletInstalled);
+      setWalletItemClickListener(promotionViewApp);
     } else {
       if (promotionViewApp.getDownloadModel()
           .hasError()) {
@@ -292,7 +295,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     if (packageName.equals(WALLET_PACKAGE_NAME)) {
       setClaimedButton();
       promotionsAdapter.isWalletInstalled(true);
-      promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
       promotionsAdapter.updateClaimStatus(packageName);
     }
@@ -345,6 +347,18 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override public void showPromotionFeatureGraphic(String background) {
     ImageLoader.with(getContext())
         .load(background, toolbarImage);
+  }
+
+  @Override public Observable<PromotionAppClick> appCardClick() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        .equals(PromotionAppClick.ClickType.NAVIGATE));
+  }
+
+  private void setWalletItemClickListener(PromotionViewApp promotionViewApp) {
+    View.OnClickListener listener = __ -> promotionAppClick.onNext(
+        new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.NAVIGATE));
+    walletInactiveView.setOnClickListener(listener);
+    walletActiveView.setOnClickListener(listener);
   }
 
   private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
@@ -489,7 +503,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
-        promotionsAdapter.isWalletInstalled(isWalletInstalled);
+        promotionsAdapter.isWalletInstalled(true);
       } else {
         promotionAction.setEnabled(true);
         promotionAction.setBackgroundDrawable(getContext().getResources()
@@ -508,18 +522,16 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
     promotionAction.setTextColor(getResources().getColor(R.color.black));
 
-    int screenWidth = (int) (Resources.getSystem()
-        .getDisplayMetrics().widthPixels * 0.5);
-
-    int screeWidthEnd = screenWidth + AptoideUtils.ScreenU.getPixelsForDip(20, getResources());
-
-    int textPaddingOffset = AptoideUtils.ScreenU.getPixelsForDip(promotionAction.getText()
-        .length() * 10, getResources());
-
-    promotionAction.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_promotion_claimed_check,
-        0, 0, 0);
-    promotionAction.setPadding(screenWidth - textPaddingOffset, 0,
-        screeWidthEnd - textPaddingOffset, 0);
+    SpannableString string = new SpannableString(
+        "  " + getResources().getString(R.string.holidayspromotion_button_claimed)
+            .toUpperCase());
+    Drawable image =
+        AppCompatResources.getDrawable(getContext(), R.drawable.ic_promotion_claimed_check);
+    image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
+    ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BASELINE);
+    string.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+    promotionAction.setTransformationMethod(null);
+    promotionAction.setText(string);
   }
 
   private SpannableString handleRewardMessage(float appcValue, String fiatSymbol, double fiatValue,

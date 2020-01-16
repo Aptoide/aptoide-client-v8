@@ -805,7 +805,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .filter(__ -> isSimilarAppsVisible());
   }
 
-  @Override public Observable<Boolean> similarAppsVisibility() {
+  @Override public Observable<Boolean> similarAppsVisibilityFromInstallClick() {
     return similarAppsVisibilitySubject;
   }
 
