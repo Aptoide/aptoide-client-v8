@@ -19,7 +19,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -21,6 +21,7 @@
 
   <androidx.cardview.widget.CardView
       android:id="@+id/card_info_layout"
+      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="39.5dp"
@@ -32,10 +33,10 @@
       >
 
     <LinearLayout
+        style="?attr/backgroundCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        style="?attr/backgroundCard"
         >
       <RelativeLayout
           android:id="@+id/store_layout"
@@ -49,30 +50,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:orientation="vertical"
             >
           <TextView
               android:id="@+id/store_name"
+              style="@style/Aptoide.TextView.Medium.S.Black"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:textStyle="normal"
               tools:text="Sameveda store"
-              style="@style/Aptoide.TextView.Medium.S.Black"
               />
           <TextView
               android:id="@+id/create_store_text"
+              style="@style/Aptoide.TextView.Regular.XS"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginTop="7dp"
               android:text="@string/create_store_displayable_explore_message"
               android:textAlignment="center"
-              style="@style/Aptoide.TextView.Regular.XS"
               />
 
         </LinearLayout>
@@ -86,28 +87,28 @@
           >
         <TextView
             android:id="@+id/first_stat"
+            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:paddingEnd="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingStart="16dp"
+            android:paddingLeft="16dp"
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/leftSeparator"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/leftSeparator"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
             />
 
         <View
             android:id="@+id/leftSeparator"
             android:layout_width="1dp"
             android:layout_height="36dp"
-            android:background="@color/light_custom_gray"
+            android:background="?separatorColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/second_stat"
             app:layout_constraintLeft_toRightOf="@id/first_stat"
@@ -119,28 +120,28 @@
 
         <TextView
             android:id="@+id/second_stat"
+            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:gravity="center"
-            android:paddingEnd="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
             android:paddingStart="16dp"
+            android:paddingLeft="16dp"
+            android:paddingEnd="16dp"
+            android:paddingRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/rightSeparator"
             app:layout_constraintLeft_toRightOf="@+id/leftSeparator"
             app:layout_constraintRight_toLeftOf="@+id/rightSeparator"
             app:layout_constraintStart_toEndOf="@+id/leftSeparator"
             app:layout_constraintTop_toTopOf="parent"
-            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
             />
 
         <View
             android:id="@+id/rightSeparator"
             android:layout_width="1dp"
             android:layout_height="36dp"
-            android:background="@color/light_custom_gray"
+            android:background="?separatorColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/explore_button"
             app:layout_constraintLeft_toRightOf="@id/second_stat"
@@ -151,6 +152,7 @@
 
         <Button
             android:id="@+id/explore_button"
+            style="@style/Widget.Aptoide.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -164,7 +166,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toEndOf="@id/rightSeparator"
             app:layout_constraintTop_toTopOf="parent"
-            style="@style/Widget.Aptoide.Button.Borderless.Colored"
             />
       </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>

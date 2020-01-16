@@ -71,7 +71,6 @@ public class DeepLinkManager {
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
-  private final String defaultTheme;
   private final NavigationTracker navigationTracker;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
@@ -87,7 +86,7 @@ public class DeepLinkManager {
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
       SearchNavigator searchNavigator, DeepLinkMessages deepLinkMessages,
-      SharedPreferences sharedPreferences, StoreAccessor storeAccessor, String defaultTheme,
+      SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
@@ -101,7 +100,6 @@ public class DeepLinkManager {
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
-    this.defaultTheme = defaultTheme;
     this.navigationTracker = navigationTracker;
     this.notificationAnalytics = notificationAnalytics;
     this.searchAnalytics = searchAnalytics;
@@ -348,8 +346,8 @@ public class DeepLinkManager {
         fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                defaultTheme, StoreContext.home, true), true);
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME), "",
+                StoreContext.home, true), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

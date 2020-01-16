@@ -19,6 +19,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import rx.Observable;
 
@@ -33,20 +34,20 @@ public class HomeNavigator {
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AppNavigator appNavigator;
   private final ActivityNavigator activityNavigator;
-  private final String theme;
   private final AccountNavigator accountNavigator;
+  private final ThemeManager themeManager;
 
   public HomeNavigator(FragmentNavigator fragmentNavigator,
       AptoideBottomNavigator aptoideBottomNavigator, BottomNavigationMapper bottomNavigationMapper,
-      AppNavigator appNavigator, ActivityNavigator activityNavigator, String theme,
-      AccountNavigator accountNavigator) {
+      AppNavigator appNavigator, ActivityNavigator activityNavigator,
+      AccountNavigator accountNavigator, ThemeManager themeManager) {
     this.fragmentNavigator = fragmentNavigator;
     this.aptoideBottomNavigator = aptoideBottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.appNavigator = appNavigator;
     this.activityNavigator = activityNavigator;
-    this.theme = theme;
     this.accountNavigator = accountNavigator;
+    this.themeManager = themeManager;
   }
 
   public void navigateToAppView(long appId, String packageName, String tag) {
@@ -107,13 +108,15 @@ public class HomeNavigator {
   public void navigateToTermsAndConditions() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(), theme);
+                .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(), theme);
+                .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
   }
 
   public void navigateToPromotions() {

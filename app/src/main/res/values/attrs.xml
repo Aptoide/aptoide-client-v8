@@ -140,6 +140,8 @@
 
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
+  <attr name="raisedButtonSecondaryBackground" format="reference" />
+  <attr name="raisedButtonForeground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
   <attr name="raisedButtonTextColor" format="color" />
   <attr name="flatButtonBackground" format="color" />
@@ -166,8 +168,16 @@
   <attr name="ratingBarDrawable" format="reference" />
   <attr name="notificationDrawable" format="reference" />
   <attr name="commentTitleColor" format="color" />
+  <attr name="followStoreCardBackground" format="reference" />
+  <attr name="addCircleButtonDrawable" format="reference" />
 
   <attr name="dialogsTheme" format="reference" />
+
+  <!--store theme specific attributes-->
+  <attr name="datePickerStyle" format="reference" />
+  <attr name="roundGradientButtonBackground" format="reference" />
+  <attr name="themeSelectorItemBackground" format="reference" />
+  <attr name="themeTextColor" format="color|reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />

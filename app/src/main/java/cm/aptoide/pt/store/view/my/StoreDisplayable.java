@@ -23,13 +23,14 @@ public class StoreDisplayable extends Displayable {
   private int secondStatsLabel;
   private boolean statsClickable;
   private String message;
+  private int textColor;
 
   public StoreDisplayable() {
   }
 
   public StoreDisplayable(Store store, StoreContext storeContext, long firstStatsNumber,
       long secondStatsNumber, int firstStatsLabelStringId, int secondStatsLabelStringId,
-      boolean statsClickable, String message) {
+      boolean statsClickable, String message, int textColor) {
     this.store = store;
     this.storeContext = storeContext;
     this.firstStatsNumber = firstStatsNumber;
@@ -38,6 +39,7 @@ public class StoreDisplayable extends Displayable {
     this.secondStatsLabel = secondStatsLabelStringId;
     this.statsClickable = statsClickable;
     this.message = message;
+    this.textColor = textColor;
     Calendar aWeekBefore = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     aWeekBefore.add(Calendar.DAY_OF_MONTH, -Calendar.DAY_OF_WEEK);
     Date added = store.getAdded();
@@ -98,5 +100,9 @@ public class StoreDisplayable extends Displayable {
 
   public boolean isStatsClickable() {
     return statsClickable;
+  }
+
+  public int getTextColor() {
+    return textColor;
   }
 }
