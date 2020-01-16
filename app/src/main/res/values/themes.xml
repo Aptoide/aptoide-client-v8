@@ -64,6 +64,11 @@
     <item name="wizardBackgroundBottom">@color/white</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="backgroundButton">@style/backgroundButtonWhite</item>
+    <item name="skeletonColor">@color/grey_fog_light_medium</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
+    <item name="earnAppcoinsCardBg">@color/white</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
@@ -75,6 +80,9 @@
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_black</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_black</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_black</item>
+
+    <!--account-->
+    <item name="login_button_style">@style/Aptoide.Button</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
@@ -171,7 +179,7 @@
     <item name="icErrorDrawable">@drawable/cross</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
-    <item name="icSettingsDrawable">@drawable/ic_action_settings_light</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_black</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
     <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -190,6 +198,7 @@
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
+    <item name="notificationDrawable">@drawable/ic_notification_history</item>
     <item name="wizardRadioBackgroundColor">@color/fragment_payment_light_gray</item>
 
 
@@ -276,6 +285,11 @@
     <item name="wizardBackgroundBottom">@color/grey_900</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
+    <item name="skeletonColor">@color/grey_dark</item>
+    <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
+    <item name="earnAppcoinsCardBg">@color/grey_dark</item>
+    <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
@@ -287,6 +301,9 @@
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_light</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_light</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_light</item>
+
+    <!--account-->
+    <item name="login_button_style">@style/Aptoide.Button.DarkBG</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>
@@ -383,7 +400,7 @@
     <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
     <item name="icMyAccountDrawable">@drawable/ic_action_accounts</item>
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
-    <item name="icSettingsDrawable">@drawable/ic_action_settings_dark</item>
+    <item name="icSettingsDrawable">@drawable/ic_action_settings_white</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
     <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
@@ -403,6 +420,9 @@
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
     <item name="wizardRadioBackgroundColor">@color/silver_dark</item>
+    <item name="backgroundButton">@style/backgroundButtonBlack</item>
+    <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
+
   </style>
 
   <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />

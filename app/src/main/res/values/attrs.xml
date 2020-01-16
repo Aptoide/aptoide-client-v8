@@ -42,6 +42,11 @@
   <attr name="backgroundCard" format="reference" />
   <attr name="appviewRatingCardBarckground" format="reference" />
   <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="backgroundButton" format="color|reference" />
+  <attr name="skeletonColor" format="color|reference" />
+  <attr name="earnAppcoinsBg" format="reference" />
+  <attr name="earnAppcoinsCardBg" format="color|reference" />
+  <attr name="backgroundCardSecondaryColor" format="color|reference" />
 
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
@@ -120,6 +125,9 @@
   <attr name="appview_toolbar_bg_appc" format="reference|color" />
   <attr name="rating_bar_progress" format="reference" />
 
+  <!-- account -->
+  <attr name="login_button_style" format="reference" />
+
   <attr name="placeholder_myaccount" format="reference" />
   <attr name="placeholder_9_16" format="reference" />
   <attr name="placeholder_16_9" format="reference" />
@@ -158,6 +166,7 @@
   <attr name="toolbarReviewsColor" format="color" />
   <attr name="ratingTextColor" format="color" />
   <attr name="ratingBarDrawable" format="reference" />
+  <attr name="notificationDrawable" format="reference" />
   <attr name="commentTitleColor" format="color" />
   <attr name="dialogsTheme" format="reference" />
   <attr name="wizardBackgroundBottom" format="color" />
