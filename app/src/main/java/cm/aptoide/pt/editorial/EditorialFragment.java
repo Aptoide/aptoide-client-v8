@@ -224,8 +224,10 @@ public class EditorialFragment extends NavigationTrackFragment
           case COLLAPSED:
             movingCollapseSubject.onNext(isItemShown());
             configureAppBarLayout(resources.getDrawable(
-                themeAttributeProvider.getAttributeForTheme(R.attr.toolbarBackgroundSecondary).resourceId),
-                resources.getColor(themeAttributeProvider.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId), true);
+                themeManager.getAttributeForTheme(R.attr.toolbarBackgroundSecondary).resourceId),
+                resources.getColor(
+                    themeManager.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId),
+                true);
             break;
         }
       }
@@ -726,26 +728,21 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  private void handleStatusBar(boolean collapseState) {
-    if (collapseState) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(getResources().getColor(R.color.white));
+  private void handleStatusBar(boolean isCollapsed) {
+    if (isCollapsed) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && !themeManager.isThemeDark()) {
+          window.getDecorView()
+              .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        window.setStatusBarColor(getResources().getColor(
+            themeManager.getAttributeForTheme(R.attr.statusBarColorSecondary).resourceId));
       }
     } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
         window.getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
       }
     }
   }

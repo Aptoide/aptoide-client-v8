@@ -76,6 +76,9 @@
     <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
+    <!-- status bar -->
+    <item name="statusBarColorSecondary">@color/white</item>
+
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
     <item name="appview_background">@color/default_background_color_light</item>
@@ -286,6 +289,10 @@
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+
+
+    <!-- status bar -->
+    <item name="statusBarColorSecondary">@color/black</item>
 
 
     <!--appview-->

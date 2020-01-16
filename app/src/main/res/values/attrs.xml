@@ -48,6 +48,7 @@
   <attr name="earnAppcoinsCardBg" format="color|reference" />
   <attr name="backgroundCardSecondaryColor" format="color|reference" />
   <attr name="editorialPlaceholderCard" format="reference" />
+  <attr name="statusBarColorSecondary" format="color" />
 
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
