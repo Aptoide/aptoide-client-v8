@@ -137,6 +137,6 @@
       android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
       android:text="@string/cancel"
-      style="@style/Aptoide.Button.Flat.GreyMedium"
+      style="@style/Aptoide.Button.Flat.SilverMedium"
       />
 </LinearLayout>
