@@ -167,8 +167,8 @@
     <item name="sectionListView.listItemBackground">@drawable/list_selector_background</item>
 
     <!--icons-->
-    <item name="icRatingGoodDrawable">@drawable/thumbs_up</item>
-    <item name="icRatingBadDrawable">@drawable/thumbs_down</item>
+    <item name="icRatingGoodDrawable">@drawable/thumbs_up_grey</item>
+    <item name="icRatingBadDrawable">@drawable/thumbs_down_grey</item>
     <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
     <item name="icEmailDrawable">@drawable/ic_email</item>
     <item name="icCancelDrawable">@drawable/cross</item>
@@ -177,8 +177,8 @@
     <item name="icUpdateDrawable">@drawable/ic_action_update</item>
     <item name="icAboutDrawable">@drawable/ic_action_about</item>
     <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
-    <item name="icLikeDrawable">@drawable/thumbs_up</item>
-    <item name="icDontLikeDrawable">@drawable/thumbs_down</item>
+    <item name="icLikeDrawable">@drawable/thumbs_up_grey</item>
+    <item name="icDontLikeDrawable">@drawable/thumbs_down_grey</item>
     <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
     <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
     <item name="icErrorDrawable">@drawable/cross</item>
@@ -205,6 +205,8 @@
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
     <item name="notificationDrawable">@drawable/ic_notification_history</item>
     <item name="penDrawable">@drawable/ic_pen_white</item>
+    <item name="thumbsUpDrawable">@drawable/thumbs_up_grey</item>
+    <item name="thumbsDownDrawable">@drawable/thumbs_down_grey</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
@@ -376,8 +378,8 @@
 
 
     <!--icons-->
-    <item name="icRatingGoodDrawable">@drawable/thumbs_up</item>
-    <item name="icRatingBadDrawable">@drawable/thumbs_down</item>
+    <item name="icRatingGoodDrawable">@drawable/thumbs_up_grey</item>
+    <item name="icRatingBadDrawable">@drawable/thumbs_down_grey</item>
     <item name="icWebSiteDrawable">@drawable/ic_web_site</item>
     <item name="icEmailDrawable">@drawable/ic_email</item>
     <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
@@ -386,8 +388,8 @@
     <item name="icUpdateDrawable">@drawable/ic_action_update</item>
     <item name="icAboutDrawable">@drawable/ic_action_about</item>
     <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
-    <item name="icLikeDrawable">@drawable/thumbs_up</item>
-    <item name="icDontLikeDrawable">@drawable/thumbs_down</item>
+    <item name="icLikeDrawable">@drawable/thumbs_up_grey</item>
+    <item name="icDontLikeDrawable">@drawable/thumbs_down_grey</item>
     <item name="icStoreInfoDrawable">@drawable/ic_action_accept</item>
     <item name="icRatingFloatDrawable">@drawable/ic_action_important</item>
     <item name="icErrorDrawable">@drawable/ic_action_cancel</item>
@@ -415,6 +417,8 @@
     <item name="backgroundButton">@style/backgroundButtonBlack</item>
     <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
     <item name="penDrawable">@drawable/ic_pen_black</item>
+    <item name="thumbsUpDrawable">@drawable/thumbs_up_light_grey</item>
+    <item name="thumbsDownDrawable">@drawable/thumbs_down_light_grey</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
