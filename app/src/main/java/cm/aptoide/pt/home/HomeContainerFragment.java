@@ -126,8 +126,7 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
         appsChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(appsChip);
       } else {
-        appsChip.setTextColor(getResources().getColor(
-            themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data));
+        appsChip.setTextColor(themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data);
         hideChipCancelButton(appsChip);
       }
     });
