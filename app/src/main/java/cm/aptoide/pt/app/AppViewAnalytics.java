@@ -418,6 +418,8 @@ public class AppViewAnalytics {
   public void similarAppcAppBundleImpression() {
     Map<String, Object> data = new HashMap<>();
     data.put(IS_AD, false);
+    data.put(ACTION.toLowerCase(), AnalyticsManager.Action.IMPRESSION.name()
+        .toLowerCase());
     analyticsManager.logEvent(data, APPC_SIMILAR_APP_INTERACT, AnalyticsManager.Action.IMPRESSION,
         navigationTracker.getViewName(true));
   }

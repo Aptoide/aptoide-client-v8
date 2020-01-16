@@ -766,6 +766,14 @@
   <string name="auto_update_popup_title">Update Ready to Install!</string>
   <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
 
+  <!--Google Play Services-->
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+  
+  <!--Settings-->
+  <string name="settings_dark_them_title">Dark Theme</string>
+  <string name="settings_dark_them_body">It helps to relieve eye strain when using your device in the dark.</string>
+    
+  
+  
 </resources>
