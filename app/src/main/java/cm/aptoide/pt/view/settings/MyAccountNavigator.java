@@ -10,8 +10,8 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.view.InboxFragment;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import rx.Observable;
 
 /**
@@ -23,15 +23,17 @@ public class MyAccountNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final AccountNavigator navigator;
   private final AppNavigator appNavigator;
+  private final ThemeManager themeManager;
 
   private final String UPLOADER_UNAME = "aptoide-uploader";
   private final String BACKUP_APPS_UNAME = "aptoide-backup-apps";
 
   public MyAccountNavigator(FragmentNavigator fragmentNavigator, AccountNavigator navigator,
-      AppNavigator appNavigator) {
+      AppNavigator appNavigator, ThemeManager themeManager) {
     this.fragmentNavigator = fragmentNavigator;
     this.navigator = navigator;
     this.appNavigator = appNavigator;
+    this.themeManager = themeManager;
   }
 
   public void navigateToAppView(String uname) {
@@ -47,8 +49,8 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store, int requestCode) {
-    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(), StoreTheme.fromName(
-        store.getAppearance()
+    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(),
+        themeManager.getStoreTheme(store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
         .getDescription(), store.getAvatar(), store.getSocialChannels());
     fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),

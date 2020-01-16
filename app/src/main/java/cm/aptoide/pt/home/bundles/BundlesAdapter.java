@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.ads.AdClick;
 import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
@@ -24,6 +23,7 @@ import cm.aptoide.pt.home.bundles.misc.LoadingBundleViewHolder;
 import cm.aptoide.pt.home.bundles.misc.LoadingMoreErrorViewHolder;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.home.bundles.top.TopBundleViewHolder;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.text.DecimalFormat;
 import java.util.List;
 import rx.subjects.PublishSubject;
@@ -52,14 +52,14 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private List<HomeBundle> bundles;
   private ErrorHomeBundle errorBundle;
-  private ThemeAttributeProvider themeAttributeProvider;
+  private ThemeManager themeManager;
 
   public BundlesAdapter(List<HomeBundle> bundles, ProgressBundle homeBundle,
       ErrorHomeBundle errorBundle, DecimalFormat oneDecimalFormatter,
       PublishSubject<HomeEvent> uiEventsListener,
       AdsBundlesViewHolderFactory adsBundlesViewHolderFactory,
       CaptionBackgroundPainter captionBackgroundPainter, String marketName,
-      ThemeAttributeProvider themeAttributeProvider) {
+      ThemeManager themeManager) {
     this.bundles = bundles;
     this.progressBundle = homeBundle;
     this.errorBundle = errorBundle;
@@ -68,7 +68,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
     this.marketName = marketName;
     this.adsBundlesViewHolderFactory = adsBundlesViewHolderFactory;
     this.captionBackgroundPainter = captionBackgroundPainter;
-    this.themeAttributeProvider = themeAttributeProvider;
+    this.themeManager = themeManager;
   }
 
   @Override public AppBundleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -89,7 +89,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
       case EDITORIAL:
         return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.editorial_action_item, parent, false), uiEventsListener,
-            captionBackgroundPainter, themeAttributeProvider);
+            captionBackgroundPainter, themeManager);
       case LOADING:
         return new LoadingBundleViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.progress_item, parent, false));

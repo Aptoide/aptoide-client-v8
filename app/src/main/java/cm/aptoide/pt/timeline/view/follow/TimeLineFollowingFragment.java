@@ -13,13 +13,13 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetFollowingRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.MessageWhiteBgDisplayable;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -29,7 +29,7 @@ import retrofit2.Converter;
 
 public class TimeLineFollowingFragment extends TimeLineFollowFragment {
 
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private Long userId;
   private Long storeId;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
@@ -103,7 +103,9 @@ public class TimeLineFollowingFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false, theme);
+    return new FollowUserDisplayable(user, false,
+        themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
+        themeManager.getAttributeForTheme(R.attr.ghostButtonBackground).resourceId, storeTheme);
   }
 
   @Override

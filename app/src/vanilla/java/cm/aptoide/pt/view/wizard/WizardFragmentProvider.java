@@ -3,8 +3,8 @@ package cm.aptoide.pt.view.wizard;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.account.view.LoginSignUpFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 
 import static cm.aptoide.pt.view.fragment.NavigationTrackFragment.SHOULD_REGISTER_VIEW;
 
@@ -17,10 +17,10 @@ public class WizardFragmentProvider {
   private static final int WIZARD_STEP_ONE_POSITION = 0;
   private static final int WIZARD_STEP_TWO_POSITION = 1;
   private static final int WIZARD_LOGIN_POSITION = 2;
-  private ThemeAttributeProvider themeAttributeProvider;
+  private ThemeManager themeManager;
 
-  public WizardFragmentProvider(ThemeAttributeProvider themeAttributeProvider) {
-    this.themeAttributeProvider = themeAttributeProvider;
+  public WizardFragmentProvider(ThemeManager themeManager) {
+    this.themeManager = themeManager;
   }
 
   public Fragment getItem(int position) {
@@ -61,9 +61,9 @@ public class WizardFragmentProvider {
 
   public Integer[] getTransitionColors() {
     return new Integer[] {
-        themeAttributeProvider.getAttributeForTheme(R.attr.wizardFirstColor).resourceId,
-        themeAttributeProvider.getAttributeForTheme(R.attr.wizardSecondColor).resourceId,
-        themeAttributeProvider.getAttributeForTheme(R.attr.wizardThirdColor).resourceId
+        themeManager.getAttributeForTheme(R.attr.wizardFirstColor).resourceId,
+        themeManager.getAttributeForTheme(R.attr.wizardSecondColor).resourceId,
+        themeManager.getAttributeForTheme(R.attr.wizardThirdColor).resourceId
     };
   }
 }

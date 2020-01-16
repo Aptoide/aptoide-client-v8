@@ -1,10 +1,10 @@
 package cm.aptoide.pt;
 
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.FragmentScope;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
 
 @Module public class FlavourFragmentModule {
 
@@ -12,7 +12,7 @@ import javax.inject.Named;
   }
 
   @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider(
-      @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider) {
-    return new WizardFragmentProvider(themeAttributeProvider);
+      ThemeManager themeManager) {
+    return new WizardFragmentProvider(themeManager);
   }
 }

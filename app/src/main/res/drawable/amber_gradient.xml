@@ -4,7 +4,7 @@
 
   <gradient
       android:angle="0"
-      android:endColor="?attr/widgetBackgroundColorPrimary"
-      android:startColor="?attr/widgetBackgroundColorSecondary"
-      android:type="linear"/>
+      android:endColor="@color/amber_gradient_end"
+      android:startColor="@color/amber"
+      android:type="linear" />
 </shape>

@@ -26,6 +26,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import javax.inject.Inject;
