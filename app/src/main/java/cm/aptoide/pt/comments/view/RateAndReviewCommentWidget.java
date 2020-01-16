@@ -7,7 +7,6 @@ package cm.aptoide.pt.comments.view;
 
 import android.content.res.Resources;
 import android.os.Build;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,7 +41,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.List;
-import java.util.Locale;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -51,12 +49,8 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
 
   public static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
-  private static final Locale LOCALE = Locale.getDefault();
-  private static final int DEFAULT_LIMIT = 3;
   private TextView reply;
   private TextView showHideReplies;
-  private TextView flagHelfull;
-  private TextView flagNotHelfull;
 
   private AppCompatRatingBar ratingBar;
   private TextView reviewTitle;
@@ -67,8 +61,8 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
   private TextView username;
 
   private boolean isCommentsCollapsed = false;
-  private View notHelpfullButtonLayout;
-  private View helpfullButtonLayout;
+  private ImageView helpfulButton;
+  private ImageView notHelpfulButton;
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyInterceptor;
@@ -81,21 +75,19 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
   }
 
   @Override protected void assignViews(View itemView) {
-    reply = (TextView) itemView.findViewById(R.id.write_reply_btn);
-    showHideReplies = (TextView) itemView.findViewById(R.id.show_replies_btn);
-    flagHelfull = (TextView) itemView.findViewById(R.id.helpful_btn);
-    flagNotHelfull = (TextView) itemView.findViewById(R.id.not_helpful_btn);
+    reply = itemView.findViewById(R.id.write_reply_btn);
+    showHideReplies = itemView.findViewById(R.id.show_replies_btn);
 
-    ratingBar = (AppCompatRatingBar) itemView.findViewById(R.id.rating_bar);
-    reviewTitle = (TextView) itemView.findViewById(R.id.comment_title);
-    reviewDate = (TextView) itemView.findViewById(R.id.added_date);
-    reviewText = (TextView) itemView.findViewById(R.id.comment);
+    ratingBar = itemView.findViewById(R.id.rating_bar);
+    reviewTitle = itemView.findViewById(R.id.comment_title);
+    reviewDate = itemView.findViewById(R.id.added_date);
+    reviewText = itemView.findViewById(R.id.comment);
 
-    userImage = (ImageView) itemView.findViewById(R.id.user_icon);
-    username = (TextView) itemView.findViewById(R.id.user_name);
+    userImage = itemView.findViewById(R.id.user_icon);
+    username = itemView.findViewById(R.id.user_name);
 
-    helpfullButtonLayout = itemView.findViewById(R.id.helpful_layout);
-    notHelpfullButtonLayout = itemView.findViewById(R.id.not_helpful_layout);
+    helpfulButton = itemView.findViewById(R.id.helpful_button);
+    notHelpfulButton = itemView.findViewById(R.id.not_helpful_button);
   }
 
   @Override public void bindView(RateAndReviewCommentDisplayable displayable, int position) {
@@ -127,12 +119,6 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
     reviewDate.setText(AptoideUtils.DateTimeU.getInstance(getContext())
         .getTimeDiffString(context, review.getAdded()
             .getTime(), getContext().getResources()));
-
-    if (DisplayMetrics.DENSITY_300 > context.getResources()
-        .getDisplayMetrics().densityDpi) {
-      flagHelfull.setText("");
-      flagNotHelfull.setText("");
-    }
 
     final CommentAdder commentAdder = displayable.getCommentAdder();
     final long reviewId = review.getId();
@@ -168,12 +154,12 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
               .log(err);
         }));
 
-    compositeSubscription.add(RxView.clicks(helpfullButtonLayout)
+    compositeSubscription.add(RxView.clicks(helpfulButton)
         .subscribe(a -> {
           setReviewRating(review.getId(), true);
         }));
 
-    compositeSubscription.add(RxView.clicks(notHelpfullButtonLayout)
+    compositeSubscription.add(RxView.clicks(notHelpfulButton)
         .subscribe(a -> {
           setReviewRating(review.getId(), false);
         }));
@@ -234,12 +220,12 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
           } else {
             Logger.getInstance()
                 .e(TAG, "error loading comments");
-            ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+            ShowMessage.asSnack(helpfulButton, R.string.unknown_error);
           }
         }, err -> {
           Logger.getInstance()
               .e(TAG, err);
-          ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+          ShowMessage.asSnack(helpfulButton, R.string.unknown_error);
         }, true);
   }
 
@@ -278,9 +264,9 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
                 .d(TAG, String.format("review %d was marked as %s", reviewId,
                     positive ? "positive" : "negative"));
             setHelpButtonsClickable(true);
-            ShowMessage.asSnack(flagHelfull, R.string.thank_you_for_your_opinion);
+            ShowMessage.asSnack(helpfulButton, R.string.thank_you_for_your_opinion);
           }, err -> {
-            ShowMessage.asSnack(flagHelfull, R.string.unknown_error);
+            ShowMessage.asSnack(helpfulButton, R.string.unknown_error);
             Logger.getInstance()
                 .e(TAG, err);
             setHelpButtonsClickable(true);
@@ -295,9 +281,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
   }
 
   private void setHelpButtonsClickable(boolean clickable) {
-    flagHelfull.setClickable(clickable);
-    flagNotHelfull.setClickable(clickable);
-    notHelpfullButtonLayout.setClickable(clickable);
-    helpfullButtonLayout.setClickable(clickable);
+    notHelpfulButton.setClickable(clickable);
+    helpfulButton.setClickable(clickable);
   }
 }
