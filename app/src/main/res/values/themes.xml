@@ -190,6 +190,7 @@
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
+    <item name="wizardRadioBackgroundColor">@color/fragment_payment_light_gray</item>
 
 
   </style>
@@ -401,7 +402,7 @@
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
-
+    <item name="wizardRadioBackgroundColor">@color/silver_dark</item>
   </style>
 
   <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />

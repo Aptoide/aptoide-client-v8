@@ -161,6 +161,7 @@
   <attr name="commentTitleColor" format="color" />
   <attr name="dialogsTheme" format="reference" />
   <attr name="wizardBackgroundBottom" format="color" />
+  <attr name="wizardRadioBackgroundColor" format="color" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />
