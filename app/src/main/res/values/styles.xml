@@ -161,9 +161,16 @@
     <item name="android:textColor">@color/dark_custom_gray</item>
   </style>
 
-  <!--
-  <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
-    -->
+  <style name="backgroundButtonWhite">
+    <item name="android:background">@drawable/white_card</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
+  <style name="backgroundButtonBlack">
+    <item name="android:background">@drawable/black_card</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+  
   <style name="WidgetButtonCustom" parent="@style/Widget.Aptoide.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
