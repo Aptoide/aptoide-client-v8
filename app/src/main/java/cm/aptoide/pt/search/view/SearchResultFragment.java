@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
@@ -98,8 +96,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Inject @Named("aptoide-theme") String theme;
   private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
-  private EditText noSearchLayoutSearchQuery;
-  private ImageView noResultsSearchButton;
+  private Button noSearchSettingsButton;
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private CardView allAndFollowedStoresButtonsLayout;
@@ -194,8 +191,7 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
-    noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
+    noSearchSettingsButton = view.findViewById(R.id.no_search_settings_button);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
@@ -271,10 +267,8 @@ public class SearchResultFragment extends BackButtonFragment
     return RxView.clicks(allStoresButton);
   }
 
-  @Override public Observable<String> clickNoResultsSearchButton() {
-    return RxView.clicks(noResultsSearchButton)
-        .map(__ -> noSearchLayoutSearchQuery.getText()
-            .toString());
+  @Override public Observable<Void> clickNoResultsSearchButton() {
+    return RxView.clicks(noSearchSettingsButton);
   }
 
   @Override public Observable<Void> retryClicked() {
