@@ -61,6 +61,7 @@
     <item name="wizard3Color">@color/wizard_color_3_orange</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="backgroundButton">@style/backgroundButtonWhite</item>
     <item name="skeletonColor">@color/grey_fog_light_medium</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
     <item name="earnAppcoinsCardBg">@color/white</item>
@@ -410,6 +411,7 @@
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
+    <item name="backgroundButton">@style/backgroundButtonBlack</item>
     <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
 
   </style>
