@@ -12,6 +12,11 @@
     <item name="colorControlHighlight">?attr/colorPrimaryDark</item>
   </style>
 
+  <style name="Aptoide.Button.Secondary">
+    <item name="android:background">?attr/raisedButtonSecondaryBackground</item>
+    <item name="android:textColor">?attr/storesTextColor</item>
+  </style>
+
   <!-- Ghost button-->
   <style name="Aptoide.Button.Ghost">
     <item name="android:layout_width">wrap_content</item>
@@ -37,6 +42,11 @@
   <!--Small buttons-->
   <!--Raised button-->
   <style name="Aptoide.Button.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
+
+  <style name="Aptoide.Button.Secondary.S">
     <item name="android:layout_height">@dimen/button_small_height</item>
     <item name="android:textSize">?attr/buttonTextSizeSmall</item>
   </style>
@@ -154,6 +164,7 @@
     <item name="android:background">@color/grey_dark</item>
     <item name="android:foreground">?attr/selectableItemBackground</item>
   </style>
+
 
   <style name="Aptoide.Button.Flat.White">
     <item name="android:textColor">@color/white</item>

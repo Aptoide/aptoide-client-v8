@@ -1,13 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/store_main_layout_row"
     style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="110dp"
     app:cardCornerRadius="4dp"
     >
   <LinearLayout
-      android:id="@+id/store_main_layout_row"
       android:layout_width="match_parent"
       android:layout_height="110dp"
       android:gravity="center"

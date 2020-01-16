@@ -124,6 +124,9 @@
   <attr name="appview_toolbar_bg_appc" format="reference|color" />
   <attr name="rating_bar_progress" format="reference" />
 
+  <!-- account -->
+  <attr name="login_button_style" format="reference" />
+
   <attr name="placeholder_myaccount" format="reference" />
   <attr name="placeholder_9_16" format="reference" />
   <attr name="placeholder_16_9" format="reference" />
@@ -136,6 +139,8 @@
 
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
+  <attr name="raisedButtonSecondaryBackground" format="reference" />
+  <attr name="raisedButtonForeground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
   <attr name="raisedButtonTextColor" format="color" />
   <attr name="flatButtonBackground" format="color" />
@@ -160,9 +165,10 @@
   <attr name="toolbarReviewsColor" format="color" />
   <attr name="ratingTextColor" format="color" />
   <attr name="ratingBarDrawable" format="reference" />
+  <attr name="notificationDrawable" format="reference" />
   <attr name="commentTitleColor" format="color" />
+  <attr name="followStoreCardBackground" format="reference" />
   <attr name="addCircleButtonDrawable" format="reference" />
-
 
   <attr name="dialogsTheme" format="reference" />
 

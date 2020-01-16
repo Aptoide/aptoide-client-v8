@@ -1,13 +1,15 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/store_tab_follow_store_layout"
+    style="?attr/followStoreCardBackground"
     android:layout_width="match_parent"
     android:layout_height="110dp"
+    app:cardCornerRadius="4dp"
     >
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_gravity="center"
-      android:background="?attr/flatButtonBackground"
       android:gravity="center"
       android:orientation="vertical"
       >
@@ -30,7 +32,7 @@
         android:maxLines="1"
         android:text="@string/follow_store"
         android:textAllCaps="true"
-        android:textColor="?attr/inverseTextColor"
+        android:textColor="?attr/colorAccent"
         />
   </LinearLayout>
 

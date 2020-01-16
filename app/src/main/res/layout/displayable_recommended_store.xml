@@ -20,13 +20,12 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/recommended_store_action"
-        style="@style/Aptoide.Button.S"
+        style="@style/Aptoide.Button.Secondary.S"
         android:layout_width="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textAllCaps="true"
-        android:textColor="?attr/inverseTextColor"
         tools:text="follow"
         />
 
