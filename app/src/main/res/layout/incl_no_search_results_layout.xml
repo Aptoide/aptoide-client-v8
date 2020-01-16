@@ -38,43 +38,7 @@
         android:gravity="center"
         android:text="@string/no_search_results_message"
         />
-    <!--
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/search_background"
-            android:orientation="horizontal"
-            >
-          <EditText
-              android:id="@+id/search_text"
-              android:layout_width="250dp"
-              android:layout_height="50dp"
-              android:layout_marginEnd="5dp"
-              android:layout_marginLeft="5dp"
-              android:layout_marginRight="5dp"
-              android:layout_marginStart="5dp"
-              android:background="@null"
-              android:imeOptions="actionSearch"
-              android:inputType="text"
-              tools:text="search query"
-              />
-
-          <ImageButton
-              android:id="@+id/ic_search_button"
-              android:layout_width="60dp"
-              android:layout_height="50dp"
-              android:background="?attr/raisedButtonBackground"
-              android:paddingEnd="15dp"
-              android:paddingLeft="15dp"
-              android:paddingRight="15dp"
-              android:paddingStart="15dp"
-              android:src="@drawable/ic_search_icon"
-              />
-
-    </LinearLayout>
--->
     <Button
         android:id="@+id/no_search_settings_button"
         style="@style/Aptoide.Button.Ghost"
