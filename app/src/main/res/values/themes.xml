@@ -204,6 +204,7 @@
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
     <item name="notificationDrawable">@drawable/ic_notification_history</item>
+    <item name="penDrawable">@drawable/ic_pen_white</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
@@ -413,6 +414,7 @@
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
     <item name="backgroundButton">@style/backgroundButtonBlack</item>
     <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
+    <item name="penDrawable">@drawable/ic_pen_black</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
