@@ -47,7 +47,7 @@ import rx.Observable;
 
 public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDisplayable> {
 
-  public static final int FULL_COMMENTS_LIMIT = 3;
+  private static final int FULL_COMMENTS_LIMIT = 3;
   private static final String TAG = RateAndReviewCommentWidget.class.getSimpleName();
   private TextView reply;
   private TextView showHideReplies;
@@ -149,20 +149,15 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
                 .toObservable();
           }
         })
-        .subscribe(a -> { /* do nothing */ }, err -> {
-          CrashReport.getInstance()
-              .log(err);
-        }));
+        .subscribe(a -> {
+        }, err -> CrashReport.getInstance()
+            .log(err)));
 
     compositeSubscription.add(RxView.clicks(helpfulButton)
-        .subscribe(a -> {
-          setReviewRating(review.getId(), true);
-        }));
+        .subscribe(a -> setReviewRating(review.getId(), true)));
 
     compositeSubscription.add(RxView.clicks(notHelpfulButton)
-        .subscribe(a -> {
-          setReviewRating(review.getId(), false);
-        }));
+        .subscribe(a -> setReviewRating(review.getId(), false)));
 
     compositeSubscription.add(RxView.clicks(showHideReplies)
         .subscribe(a -> {
