@@ -26,7 +26,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.video.YoutubePlayer;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.editorial.ScrollEvent;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.AppCoinsInfoPresenter;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -47,7 +46,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     implements AppCoinsInfoView, NotBottomNavigationView {
 
   @Inject AppCoinsInfoPresenter appCoinsInfoPresenter;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
   private Toolbar toolbar;
@@ -63,7 +61,6 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button bottomInstallButton;
   private Button catappultDevButton;
   private NestedScrollView scrollView;
-  private int spannableColor;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -73,8 +70,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     toolbar = view.findViewById(R.id.toolbar);
-    spannableColor = StoreTheme.get(theme, false)
-        .getPrimaryColor();
+
     catappultDevButton = view.findViewById(R.id.catappult_dev_button);
     scrollView = view.findViewById(R.id.about_appcoins_scroll);
     appcMessageAppcoinsSection2a = view.findViewById(R.id.appc_message_appcoins_section_2a);
@@ -90,7 +86,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     appCardViewLayout = view.findViewById(R.id.app_card_layout);
     appCardView = appCardViewLayout.findViewById(R.id.app_cardview);
-    installButton = (Button) appCardViewLayout.findViewById(R.id.appview_install_button);
+    installButton = appCardViewLayout.findViewById(R.id.appview_install_button);
 
     ((TextView) appCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));
@@ -99,8 +95,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     bottomAppCardViewLayout = view.findViewById(R.id.app_cardview_layout);
     bottomAppCardView = bottomAppCardViewLayout.findViewById(R.id.app_cardview);
-    bottomInstallButton =
-        (Button) bottomAppCardViewLayout.findViewById(R.id.appview_install_button);
+    bottomInstallButton = bottomAppCardViewLayout.findViewById(R.id.appview_install_button);
 
     ((TextView) bottomAppCardView.findViewById(R.id.app_title_textview)).setText(
         getString(R.string.appc_title_settings_appcoins_wallet));

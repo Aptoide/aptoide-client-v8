@@ -36,7 +36,8 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
@@ -53,7 +54,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 
@@ -67,7 +67,7 @@ public class ManageStoreFragment extends BackButtonFragment
   @Inject ImagePickerPresenter imagePickerPresenter;
   @Inject ManageStorePresenter manageStorePresenter;
   @Inject ScreenOrientationManager orientationManager;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private TextView chooseStoreNameTitle;
   private View selectStoreImageButton;
   private ImageView storeImage;
@@ -228,11 +228,9 @@ public class ManageStoreFragment extends BackButtonFragment
   }
 
   @Override public void loadImageStateless(String pictureUri) {
-    int color = StoreTheme.get(theme, false)
-        .getPrimaryColor();
+    int color = themeManager.getAttributeForTheme(R.attr.colorPrimary).data;
     ImageLoader.with(getActivity())
-        .loadWithShadowCircleTransform(pictureUri, storeImage, getResources().getColor(color),
-            SPACE_BETWEEN, STROKE_SIZE);
+        .loadWithShadowCircleTransform(pictureUri, storeImage, color, SPACE_BETWEEN, STROKE_SIZE);
     currentModel.setPictureUri(pictureUri);
   }
 
@@ -429,7 +427,8 @@ public class ManageStoreFragment extends BackButtonFragment
         new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
     PublishRelay<StoreTheme> storeThemePublishRelay = PublishRelay.create();
     themeSelectorAdapter =
-        new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8));
+        new ThemeSelectorViewAdapter(storeThemePublishRelay, StoreTheme.getThemesFromVersion(8),
+            themeManager);
     themeSelectorView.setAdapter(themeSelectorAdapter);
 
     themeSelectorAdapter.storeThemeSelection()
@@ -452,52 +451,44 @@ public class ManageStoreFragment extends BackButtonFragment
   }
 
   public void bindViews(View view) {
-    chooseStoreNameTitle = (TextView) view.findViewById(R.id.create_store_choose_name_title);
+    chooseStoreNameTitle = view.findViewById(R.id.create_store_choose_name_title);
     selectStoreImageButton = view.findViewById(R.id.create_store_image_action);
-    storeImage = (ImageView) view.findViewById(R.id.create_store_image);
-    storeName = (EditText) view.findViewById(R.id.create_store_name);
-    storeDescription = (EditText) view.findViewById(R.id.edit_store_description);
-    cancelChangesButton = (Button) view.findViewById(R.id.create_store_skip);
-    saveDataButton = (Button) view.findViewById(R.id.create_store_action);
-    themeSelectorView = (RecyclerView) view.findViewById(R.id.theme_selector);
-    socialChannels = (LinearLayout) view.findViewById(R.id.edit_store_social_channels);
+    storeImage = view.findViewById(R.id.create_store_image);
+    storeName = view.findViewById(R.id.create_store_name);
+    storeDescription = view.findViewById(R.id.edit_store_description);
+    cancelChangesButton = view.findViewById(R.id.create_store_skip);
+    saveDataButton = view.findViewById(R.id.create_store_action);
+    themeSelectorView = view.findViewById(R.id.theme_selector);
+    socialChannels = view.findViewById(R.id.edit_store_social_channels);
     facebookRow = view.findViewById(R.id.edit_store_facebook);
-    facebookTextAndPlus =
-        (RelativeLayout) view.findViewById(R.id.edit_store_facebook_text_plus_wrapper);
-    facebookUsernameWrapper =
-        (CustomTextInputLayout) view.findViewById(R.id.edit_store_facebook_username_wrapper);
-    facebookUser = (EditText) view.findViewById(R.id.edit_store_facebook_username);
-    facebookText = (TextView) view.findViewById(R.id.edit_store_facebook_title);
-    facebookEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_facebook_plus);
-    twitchEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_twitch_plus);
-    twitchTextAndPlus =
-        (RelativeLayout) view.findViewById(R.id.edit_store_twitch_text_plus_wrapper);
-    twitchUsernameWrapper =
-        (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitch_username_wrapper);
-    twitchUser = (EditText) view.findViewById(R.id.edit_store_twitch_username);
-    twitchText = (TextView) view.findViewById(R.id.edit_store_twitch_title);
+    facebookTextAndPlus = view.findViewById(R.id.edit_store_facebook_text_plus_wrapper);
+    facebookUsernameWrapper = view.findViewById(R.id.edit_store_facebook_username_wrapper);
+    facebookUser = view.findViewById(R.id.edit_store_facebook_username);
+    facebookText = view.findViewById(R.id.edit_store_facebook_title);
+    facebookEndRowIcon = view.findViewById(R.id.edit_store_facebook_plus);
+    twitchEndRowIcon = view.findViewById(R.id.edit_store_twitch_plus);
+    twitchTextAndPlus = view.findViewById(R.id.edit_store_twitch_text_plus_wrapper);
+    twitchUsernameWrapper = view.findViewById(R.id.edit_store_twitch_username_wrapper);
+    twitchUser = view.findViewById(R.id.edit_store_twitch_username);
+    twitchText = view.findViewById(R.id.edit_store_twitch_title);
     twitchRow = view.findViewById(R.id.edit_store_twitch);
     twitterRow = view.findViewById(R.id.edit_store_twitter);
-    twitterTextAndPlus =
-        (RelativeLayout) view.findViewById(R.id.edit_store_twitter_text_plus_wrapper);
-    twitterUsernameWrapper =
-        (CustomTextInputLayout) view.findViewById(R.id.edit_store_twitter_username_wrapper);
-    twitterUser = (EditText) view.findViewById(R.id.edit_store_twitter_username);
-    twitterText = (TextView) view.findViewById(R.id.edit_store_twitter_title);
-    twitterEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_twitter_plus);
+    twitterTextAndPlus = view.findViewById(R.id.edit_store_twitter_text_plus_wrapper);
+    twitterUsernameWrapper = view.findViewById(R.id.edit_store_twitter_username_wrapper);
+    twitterUser = view.findViewById(R.id.edit_store_twitter_username);
+    twitterText = view.findViewById(R.id.edit_store_twitter_title);
+    twitterEndRowIcon = view.findViewById(R.id.edit_store_twitter_plus);
     youtubeRow = view.findViewById(R.id.edit_store_youtube);
-    youtubeTextAndPlus =
-        (RelativeLayout) view.findViewById(R.id.edit_store_youtube_text_plus_wrapper);
-    youtubeUsernameWrapper =
-        (CustomTextInputLayout) view.findViewById(R.id.edit_store_youtube_username_wrapper);
-    youtubeUser = (EditText) view.findViewById(R.id.edit_store_youtube_username);
-    youtubeText = (TextView) view.findViewById(R.id.edit_store_youtube_title);
-    youtubeEndRowIcon = (ImageView) view.findViewById(R.id.edit_store_youtube_plus);
+    youtubeTextAndPlus = view.findViewById(R.id.edit_store_youtube_text_plus_wrapper);
+    youtubeUsernameWrapper = view.findViewById(R.id.edit_store_youtube_username_wrapper);
+    youtubeUser = view.findViewById(R.id.edit_store_youtube_username);
+    youtubeText = view.findViewById(R.id.edit_store_youtube_title);
+    youtubeEndRowIcon = view.findViewById(R.id.edit_store_youtube_plus);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
         getActivity().getApplicationContext()
             .getString(R.string.please_wait_upload));
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
   }
 
   private ManageStoreViewModel updateAndGetStoreModel() {

@@ -56,17 +56,17 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    userNameTv = (TextView) itemView.findViewById(R.id.user_name);
-    storeNameTv = (TextView) itemView.findViewById(R.id.store_name);
-    followingNumber = (TextView) itemView.findViewById(R.id.following_number);
-    followersNumber = (TextView) itemView.findViewById(R.id.followers_number);
-    followingTv = (TextView) itemView.findViewById(R.id.following_tv);
-    followedTv = (TextView) itemView.findViewById(R.id.followers_tv);
-    mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
-    secondaryIcon = (ImageView) itemView.findViewById(R.id.secondary_icon);
-    follow = (Button) itemView.findViewById(R.id.follow_btn);
-    followNumbers = (LinearLayout) itemView.findViewById(R.id.followers_following_numbers);
-    followLayout = (LinearLayout) itemView.findViewById(R.id.follow_store_layout);
+    userNameTv = itemView.findViewById(R.id.user_name);
+    storeNameTv = itemView.findViewById(R.id.store_name);
+    followingNumber = itemView.findViewById(R.id.following_number);
+    followersNumber = itemView.findViewById(R.id.followers_number);
+    followingTv = itemView.findViewById(R.id.following_tv);
+    followedTv = itemView.findViewById(R.id.followers_tv);
+    mainIcon = itemView.findViewById(R.id.main_icon);
+    secondaryIcon = itemView.findViewById(R.id.secondary_icon);
+    follow = itemView.findViewById(R.id.follow_btn);
+    followNumbers = itemView.findViewById(R.id.followers_following_numbers);
+    followLayout = itemView.findViewById(R.id.follow_store_layout);
     separatorView = itemView.findViewById(R.id.separator_vertical);
   }
 
@@ -186,13 +186,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   }
 
   private void setFollowColor(FollowUserDisplayable displayable) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      follow.setBackground(
-          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
-    } else {
-      follow.setBackgroundDrawable(
-          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
-    }
+    follow.setBackgroundResource(
+        displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
     follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
   }
 

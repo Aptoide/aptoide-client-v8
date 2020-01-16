@@ -11,6 +11,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -31,17 +32,17 @@ public class BottomNavigationNavigator {
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationAnalytics bottomNavigationAnalytics;
   private final SearchAnalytics searchAnalytics;
-  private final String theme;
+  private final ThemeManager themeManager;
   private ArrayList<Integer> bottomNavigationItems;
 
   public BottomNavigationNavigator(FragmentNavigator fragmentNavigator,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
-      String theme) {
+      ThemeManager themeManager) {
     this.bottomNavigationAnalytics = bottomNavigationAnalytics;
     this.searchAnalytics = searchAnalytics;
-    this.theme = theme;
     bottomNavigationItems = new ArrayList<>();
     this.fragmentNavigator = fragmentNavigator;
+    this.themeManager = themeManager;
   }
 
   public void navigateToBottomNavigationItem(int bottomNavigationPosition) {
@@ -81,8 +82,9 @@ public class BottomNavigationNavigator {
   }
 
   public void navigateToStore() {
-    MyStoresFragment myStoresFragment =
-        MyStoresFragment.newInstance(getStoreEvent(), theme, "stores", StoreContext.home);
+    MyStoresFragment myStoresFragment = MyStoresFragment.newInstance(getStoreEvent(),
+        themeManager.getBaseTheme()
+            .getThemeName(), "stores", StoreContext.home);
     navigateToSelectedFragment(STORES_POSITION, myStoresFragment);
   }
 

@@ -40,8 +40,8 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -66,7 +66,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject AppNavigator appNavigator;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   @Inject DialogUtils dialogUtils;
   private SharedPreferences preferences;
   private long reviewId;
@@ -176,8 +176,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
+    final FloatingActionButton floatingActionButton = view.findViewById(R.id.fab);
 
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
@@ -188,16 +187,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
-    ThemeUtils.setStoreTheme(getActivity(), theme);
+    themeManager.resetToBaseTheme();
     super.onDestroyView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
     }
   }
 

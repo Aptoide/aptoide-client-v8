@@ -1,11 +1,11 @@
 package cm.aptoide.pt;
 
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.FragmentScope;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
 
 @Module public class FlavourFragmentModule {
 
@@ -17,7 +17,7 @@ import javax.inject.Named;
   }
 
   @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider(
-      @Named("aptoide-theme") String theme) {
-    return new WizardFragmentProvider(theme);
+      ThemeManager themeManager) {
+    return new WizardFragmentProvider(themeManager);
   }
 }

@@ -20,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.ScrollableView;
@@ -33,6 +32,7 @@ import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -64,7 +64,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
   @Inject MoreBundlePresenter presenter;
   @Inject @Named("marketName") String marketName;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
-  @Inject @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider;
+  @Inject ThemeManager themeAttributeProvider;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -97,12 +97,12 @@ public class MoreBundleFragment extends NavigationTrackFragment
         savedInstanceState.putParcelable(MORE_LIST_STATE_KEY, null);
       }
     }
-    bundlesList = (RecyclerView) view.findViewById(R.id.more_bundles_list);
+    bundlesList = view.findViewById(R.id.more_bundles_list);
     toolbarElement = view.findViewById(R.id.action_bar);
     errorView = view.findViewById(R.id.error_view);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.more_refresh_layout);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    progressBar = view.findViewById(R.id.progress_bar);
+    swipeRefreshLayout = view.findViewById(R.id.more_refresh_layout);
+    toolbar = view.findViewById(R.id.toolbar);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
         oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,

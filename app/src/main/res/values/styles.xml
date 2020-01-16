@@ -195,6 +195,11 @@
     <item name="cardBackgroundColor">@color/grey_dark</item>
   </style>
 
+  <style name="backgroundCardAccentStyle">
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="android:background">@drawable/aptoide_gradient</item>
+  </style>
+
   <style name="headerSeparatorButtonStyle">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

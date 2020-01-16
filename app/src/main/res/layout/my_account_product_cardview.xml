@@ -2,13 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="63dp"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="4dp"
-    style="?attr/backgroundCard"
     >
 
   <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,10 +20,10 @@
         android:id="@+id/product_icon_imageview"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ad_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,32 +33,32 @@
 
     <TextView
         android:id="@+id/product_title_textview"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/product_icon_imageview"
         app:layout_constraintStart_toEndOf="@+id/product_icon_imageview"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Aptoide TV"
-        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         />
 
 
     <TextView
         android:id="@+id/product_subtitle_textview"
+        style="@style/Aptoide.TextView.Regular.XXS.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/product_title_textview"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="1dp"
         android:layout_toRightOf="@+id/product_icon_imageview"
         app:layout_constraintStart_toEndOf="@+id/product_icon_imageview"
         app:layout_constraintTop_toBottomOf="@+id/product_title_textview"
         tools:text="The best solution for your Set Top Box and Smart TV"
-        style="@style/Aptoide.TextView.Regular.XXS.Secondary"
         />
 
 
