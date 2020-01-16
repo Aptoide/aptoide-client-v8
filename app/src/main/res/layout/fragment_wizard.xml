@@ -62,7 +62,7 @@
         android:id="@+id/skip_button"
         style="@style/Aptoide.Button.Flat"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|center"
         android:layout_marginEnd="28dp"
         android:layout_marginRight="28dp"
