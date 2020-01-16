@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?attr/backgroundCard"
     android:layout_width="104dp"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?selectableItemBackground"
     app:cardCornerRadius="4dp"
     >
 
@@ -14,9 +13,8 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
-      android:paddingBottom="5dp"
       android:paddingTop="8dp"
-      style="?attr/backgroundCard"
+      android:paddingBottom="5dp"
       >
 
     <ImageView
@@ -32,20 +30,20 @@
         android:layout_width="107dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:orientation="vertical"
         >
 
       <TextView
           android:id="@+id/name"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:lines="2"
-          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
 
       <FrameLayout
@@ -56,8 +54,8 @@
             layout="@layout/rating_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="1dp"
             android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
             />
         <include
             layout="@layout/appc_label"

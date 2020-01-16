@@ -28,6 +28,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
@@ -48,6 +49,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected NavigationTracker navigationTracker;
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
+  @Inject ThemeManager themeManager;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,7 +99,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
-              application.getDefaultSharedPreferences(), isDarkTheme);
+              application.getDefaultSharedPreferences(), themeManager);
         })
         .toList()
         .first();

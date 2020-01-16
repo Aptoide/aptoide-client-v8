@@ -58,11 +58,10 @@ import cm.aptoide.pt.share.ShareStoreHelper;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.AptoideViewPager;
 import cm.aptoide.pt.view.fragment.BasePagerToolbarFragment;
 import com.astuetz.PagerSlidingTabStrip;
@@ -89,8 +88,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject AppNavigator appNavigator;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("marketName") String marketName;
+  @Inject ThemeManager themeManager;
   @Inject MarketResourceFormatter marketResourceFormatter;
   private AptoideAccountManager accountManager;
   private String storeName;
@@ -184,7 +183,6 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -258,9 +256,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
     // reset to default theme in the toolbar
     // TODO re-do this ThemeUtils methods and avoid loading resources using
     // execution-time generated ids for the desired resource
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
-    ThemeUtils.setAptoideTheme(getActivity(), theme);
-    ThemeUtils.setStoreTheme(getActivity(), theme);
+    themeManager.resetToBaseTheme();
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setOnTabReselectedListener(null);
@@ -273,9 +269,9 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupViewPager() {
     super.setupViewPager();
-    pagerSlidingTabStrip = (PagerSlidingTabStrip) getView().findViewById(R.id.tabs);
-    pagerSlidingTabStrip.setBackgroundResource(StoreTheme.get(storeTheme, false)
-        .getGradientDrawable());
+    pagerSlidingTabStrip = getView().findViewById(R.id.tabs);
+    pagerSlidingTabStrip.setBackgroundResource(
+        themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
 
     if (pagerSlidingTabStrip != null) {
       pagerSlidingTabStrip.setViewPager(viewPager);
@@ -375,8 +371,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     if (storeTheme != null) {
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
     }
 
     return super.onCreateView(inflater, container, savedInstanceState);
@@ -561,8 +556,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   @Override protected void setupToolbarDetails(Toolbar toolbar) {
     toolbar.setTitle(title);
-    toolbar.setBackgroundResource(StoreTheme.get(storeTheme, false)
-        .getGradientDrawable());
+    toolbar.setBackgroundResource(
+        themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
     if (userId != null) {
       toolbar.setLogo(R.drawable.ic_user_shape_white);
     } else {

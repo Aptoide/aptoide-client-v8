@@ -33,7 +33,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    commentStore = (Button) itemView.findViewById(R.id.comment_store_button);
+    commentStore = itemView.findViewById(R.id.comment_store_button);
   }
 
   @Override public void bindView(StoreAddCommentDisplayable displayable, int position) {
@@ -43,10 +43,7 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
-    commentStore.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(displayable.getStoreTheme()
-            .getRaisedButtonDrawable()));
-
+    commentStore.setBackgroundResource(displayable.getRaisedButtonDrawable());
     compositeSubscription.add(RxView.clicks(commentStore)
         .flatMap(a -> showStoreCommentFragment(displayable.getStoreId(), displayable.getStoreName(),
             getContext().getSupportFragmentManager(), commentStore))

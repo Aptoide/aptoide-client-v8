@@ -17,7 +17,6 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -82,6 +81,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
@@ -172,13 +172,12 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator, @Named("aptoide-theme") String theme,
-      InstallManager installManager) {
+      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
-        sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
-        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository, appNavigator, installManager);
+        sharedPreferences, storeAccessor, notificationAnalytics, navigationTracker, searchAnalytics,
+        appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
+        appNavigator, installManager);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -202,11 +201,11 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       AptoideAccountManager accountManager, CallbackManager callbackManager,
       GoogleApiClient googleApiClient, AccountAnalytics accountAnalytics,
-      BottomNavigationNavigator bottomNavigationNavigator, @Named("aptoide-theme") String theme) {
+      BottomNavigationNavigator bottomNavigationNavigator, ThemeManager themeManager) {
     return new AccountNavigator(bottomNavigationNavigator, fragmentNavigator, accountManager,
         ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager,
         googleApiClient, PublishRelay.create(), "http://m.aptoide.com/account/password-recovery",
-        accountAnalytics, theme);
+        accountAnalytics, themeManager);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -251,8 +250,8 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator);
+      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
@@ -262,9 +261,9 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
-      @Named("aptoide-theme") String theme) {
+      ThemeManager themeManager) {
     return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
-        searchAnalytics, theme);
+        searchAnalytics, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
@@ -285,10 +284,10 @@ import static android.content.Context.WINDOW_SERVICE;
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
       @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
-      @Named("theme-attribute-provider") ThemeAttributeProvider themeAttributeProvider) {
+      ThemeManager themeManager) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName, marketResourceFormatter, themeAttributeProvider);
+        marketName, marketResourceFormatter, themeManager);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(
@@ -408,8 +407,7 @@ import static android.content.Context.WINDOW_SERVICE;
         activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
   }
 
-  @ActivityScope @Provides @Named("theme-attribute-provider")
-  ThemeAttributeProvider providesThemeAttributeProvider() {
-    return new ThemeAttributeProvider(activity.getTheme());
+  @ActivityScope @Provides ThemeManager providesThemeManager() {
+    return new ThemeManager(activity);
   }
 }
