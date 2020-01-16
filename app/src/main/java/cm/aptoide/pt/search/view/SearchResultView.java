@@ -22,7 +22,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<Void> clickEverywhereSearchButton();
 
-  Observable<String> clickNoResultsSearchButton();
+  Observable<Void> clickNoResultsSearchButton();
 
   Observable<Void> retryClicked();
 
