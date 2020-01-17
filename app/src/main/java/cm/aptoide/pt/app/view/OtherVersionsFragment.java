@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
@@ -176,8 +175,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
       getToolbar().setTitle(title);
       collapsingToolbarLayout.setTitle(title);
       collapsingToolbarLayout.setExpandedTitleColor(getView().getResources()
-          .getColor(new ThemeAttributeProvider(getView().getContext()
-              .getTheme()).getAttributeForTheme(R.attr.textColorGrey900).resourceId));
+          .getColor(themeManager.getAttributeForTheme(R.attr.textColorGrey900).resourceId));
     }
   }
 
