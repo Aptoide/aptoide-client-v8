@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?selectableItemBackground"
     app:cardCornerRadius="4dp"
+    style="?attr/backgroundCard"
     >
 
   <RelativeLayout
@@ -20,7 +20,7 @@
         android:layout_width="79dp"
         android:layout_height="79dp"
         android:layout_margin="12dp"
-        android:src="@mipmap/ic_launcher"
+        tools:src="@drawable/ad_icon"
         />
 
     <TextView
@@ -46,7 +46,7 @@
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/app_icon"
         android:layout_toRightOf="@id/app_icon"
-        android:src="@drawable/ic_star_black"
+        android:src="?attr/ratingDrawable"
         />
 
     <TextView

@@ -67,6 +67,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
         android:layout_width="match_parent"
+        style="?attr/backgroundCardColorSecondary"
         android:layout_height="56dp"
         >
 
@@ -75,7 +76,7 @@
           android:layout_height="26.6dp"
           android:layout_centerHorizontal="true"
           android:layout_gravity="center"
-          android:background="@drawable/search_buttons_background"
+          android:background="?attr/searchStoresSwitchBackground"
           android:gravity="center_horizontal"
           android:orientation="horizontal"
           >

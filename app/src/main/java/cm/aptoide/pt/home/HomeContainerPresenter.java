@@ -3,7 +3,6 @@ package cm.aptoide.pt.home;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
@@ -14,7 +13,6 @@ public class HomeContainerPresenter implements Presenter {
 
   private final HomeContainerView view;
   private final Scheduler viewScheduler;
-  private final CrashReport crashReport;
   private final AptoideAccountManager accountManager;
   private final HomeContainerNavigator homeContainerNavigator;
   private final HomeNavigator homeNavigator;
@@ -23,12 +21,11 @@ public class HomeContainerPresenter implements Presenter {
   private final ChipManager chipManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
-      CrashReport crashReport, AptoideAccountManager accountManager,
-      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
+      AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
+      ChipManager chipManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
-    this.crashReport = crashReport;
     this.accountManager = accountManager;
     this.homeContainerNavigator = homeContainerNavigator;
     this.homeNavigator = homeNavigator;

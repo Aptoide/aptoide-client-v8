@@ -534,8 +534,7 @@ import rx.subscriptions.CompositeSubscription;
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
       HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
-        chipManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {

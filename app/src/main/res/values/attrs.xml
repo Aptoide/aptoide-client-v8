@@ -49,6 +49,8 @@
   <attr name="earnAppcoinsCardBg" format="color|reference" />
   <attr name="backgroundCardSecondaryColor" format="color|reference" />
 
+  <attr name="searchStoresSwitchBackground" format="reference" />
+
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
   <attr name="customRowForeground" format="reference" />
