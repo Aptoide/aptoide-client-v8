@@ -3,8 +3,6 @@ package cm.aptoide.pt.store.view;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import androidx.annotation.ColorInt;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -18,7 +16,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +40,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   private Converter.Factory converter;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
-  private boolean isDarkTheme;
+  private ThemeManager themeManager;
 
   public GridStoreMetaDisplayable() {
   }
@@ -52,7 +50,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
       BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
       StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
       Converter.Factory converter, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, boolean isDarkTheme) {
+      SharedPreferences sharedPreferences, ThemeManager themeManager) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAnalytics = storeAnalytics;
@@ -64,7 +62,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     this.converter = converter;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.isDarkTheme = isDarkTheme;
+    this.themeManager = themeManager;
   }
 
   @Override protected Configs getConfig() {
@@ -177,13 +175,6 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return null;
   }
 
-  public StoreTheme getStoreTheme() {
-    Store store = getStore();
-    return StoreTheme.get(store == null || store.getAppearance() == null ? "default"
-        : store.getAppearance()
-            .getTheme(), isDarkTheme);
-  }
-
   public long getStoreId() {
     return getStore() == null ? 0 : getStore().getId();
   }
@@ -225,8 +216,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
                 getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
                 getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
-                getDescription(), getStoreTheme(), getColorOrDefault(getStoreTheme(), context),
-                getStoreId(), hasStore(), getBadge())));
+                getDescription(), themeManager.getStoreTheme(getStoreThemeName()),
+                themeManager.getAttributeForTheme(R.attr.themeTextColor).data, getStoreId(),
+                hasStore(), getBadge())));
   }
 
   private Observable<GetHomeMeta> updateStoreMeta() {
@@ -236,16 +228,6 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
             bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences)
             .observe(true, true))
         .doOnNext(pojo -> setPojo(pojo));
-  }
-
-  private @ColorInt int getColorOrDefault(StoreTheme theme, Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor(), context.getTheme());
-    } else {
-      return context.getResources()
-          .getColor(theme.getPrimaryColor());
-    }
   }
 
   public Observable<Boolean> isFollowingStore(StoreAccessor storeAccessor) {
@@ -275,5 +257,16 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   public int getRequestCode() {
     return REQUEST_CODE;
+  }
+
+  public int getRaisedButtonBackground() {
+    return themeManager.getAttributeForTheme(getStoreThemeName(),
+        R.attr.raisedButtonBackground).resourceId;
+  }
+
+  public String getStoreThemeName() {
+    Store store = getStore();
+    return store == null || store.getAppearance() == null ? "default" : store.getAppearance()
+        .getTheme();
   }
 }

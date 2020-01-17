@@ -6,7 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.List;
@@ -17,12 +18,14 @@ public class ThemeSelectorViewAdapter
 
   private final PublishRelay<StoreTheme> storeThemePublishRelay;
   private final List<StoreTheme> themes;
+  private final ThemeManager themeManager;
   private StoreTheme selectedStoreTheme;
 
   public ThemeSelectorViewAdapter(PublishRelay<StoreTheme> storeThemePublishRelay,
-      List<StoreTheme> themes) {
+      List<StoreTheme> themes, ThemeManager themeManager) {
     this.storeThemePublishRelay = storeThemePublishRelay;
     this.themes = themes;
+    this.themeManager = themeManager;
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -32,7 +35,9 @@ public class ThemeSelectorViewAdapter
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    holder.update(themes.get(position), selectedStoreTheme);
+    holder.update(themes.get(position), selectedStoreTheme, themeManager.getAttributeForTheme(
+        themes.get(position)
+            .getThemeName(), R.attr.themeSelectorItemBackground).resourceId);
   }
 
   @Override public int getItemCount() {
@@ -67,16 +72,16 @@ public class ThemeSelectorViewAdapter
     }
 
     private void bind(View view) {
-      storeThemeImage = (ImageView) view.findViewById(R.id.theme_color);
-      storeThemeCheckMark = (ImageView) view.findViewById(R.id.theme_checked);
+      storeThemeImage = view.findViewById(R.id.theme_color);
+      storeThemeCheckMark = view.findViewById(R.id.theme_checked);
       RxView.clicks(view)
           .doOnNext(__ -> storeThemePublishRelay.call(storeTheme))
           .subscribe();
     }
 
-    public void update(StoreTheme storeTheme, StoreTheme selectedStoreTheme) {
+    public void update(StoreTheme storeTheme, StoreTheme selectedStoreTheme, int backgroundColor) {
       this.storeTheme = storeTheme;
-      storeThemeImage.setBackgroundResource(storeTheme.getRoundDrawable());
+      storeThemeImage.setBackgroundResource(backgroundColor);
       if (storeTheme == selectedStoreTheme) {
         storeThemeCheckMark.setVisibility(View.VISIBLE);
       } else {

@@ -42,6 +42,8 @@
   <attr name="backgroundCard" format="reference" />
   <attr name="appviewRatingCardBarckground" format="reference" />
   <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="backgroundCardColorSecondary" format="color|reference" />
+  <attr name="backgroundButton" format="color|reference" />
   <attr name="skeletonColor" format="color|reference" />
   <attr name="earnAppcoinsBg" format="reference" />
   <attr name="earnAppcoinsCardBg" format="color|reference" />
@@ -139,6 +141,8 @@
 
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
+  <attr name="raisedButtonSecondaryBackground" format="reference" />
+  <attr name="raisedButtonForeground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
   <attr name="raisedButtonTextColor" format="color" />
   <attr name="flatButtonBackground" format="color" />
@@ -154,7 +158,9 @@
   <attr name="preferenceSummaryTextSize" format="dimension" />
   <attr name="colorControlHighlight" format="color" />
   <attr name="bnItemColorState" format="color" />
-  <attr name="wizard3Color" format="color" />
+  <attr name="wizardFirstColor" format="color" />
+  <attr name="wizardSecondColor" format="color" />
+  <attr name="wizardThirdColor" format="color" />
   <attr name="reactionsPopUpBackgroundColor" format="color" />
   <attr name="reactionsButtonColor" format="color" />
   <attr name="widgetBackgroundColorPrimary" format="color" />
@@ -165,8 +171,18 @@
   <attr name="ratingBarDrawable" format="reference" />
   <attr name="notificationDrawable" format="reference" />
   <attr name="commentTitleColor" format="color" />
+  <attr name="followStoreCardBackground" format="reference" />
+  <attr name="addCircleButtonDrawable" format="reference" />
 
   <attr name="dialogsTheme" format="reference" />
+  <attr name="wizardBackgroundBottom" format="color" />
+  <attr name="wizardRadioBackgroundColor" format="color" />
+
+  <!--store theme specific attributes-->
+  <attr name="datePickerStyle" format="reference" />
+  <attr name="roundGradientButtonBackground" format="reference" />
+  <attr name="themeSelectorItemBackground" format="reference" />
+  <attr name="themeTextColor" format="color|reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />

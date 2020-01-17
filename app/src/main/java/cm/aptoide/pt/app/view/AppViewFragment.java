@@ -137,7 +137,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   private Menu menu;
@@ -806,7 +805,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .filter(__ -> isSimilarAppsVisible());
   }
 
-  @Override public Observable<Boolean> similarAppsVisibility() {
+  @Override public Observable<Boolean> similarAppsVisibilityFromInstallClick() {
     return similarAppsVisibilitySubject;
   }
 

@@ -28,7 +28,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.CompositePresenter;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -43,7 +43,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
 import rx.Completable;
@@ -60,7 +59,7 @@ public class ManageUserFragment extends BackButtonFragment
   @Inject ManageUserPresenter manageUserPresenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject NewsletterManager newsletterManager;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private ImageView userPicture;
   private RelativeLayout userPictureLayout;
   private EditText userName;
@@ -175,9 +174,10 @@ public class ManageUserFragment extends BackButtonFragment
           setupCalendar(calendar, year, monthNumber, day);
           setupCalendarDateString(year, monthNumber, day);
         };
-    datePickerDialog = new DatePickerDialog(getContext(), StoreTheme.get(theme, false)
-        .getDatePickerStyle(), datePickerDialogListener, calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+    datePickerDialog = new DatePickerDialog(getContext(),
+        themeManager.getAttributeForTheme(R.attr.datePickerStyle).resourceId,
+        datePickerDialogListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH));
   }
 
   private void setupCalendarDateString(int year, int month, int day) {
@@ -222,17 +222,17 @@ public class ManageUserFragment extends BackButtonFragment
   }
 
   private void bindViews(View view) {
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    userPictureLayout = (RelativeLayout) view.findViewById(R.id.create_user_image_action);
-    userName = (EditText) view.findViewById(R.id.create_user_username_inserted);
-    createUserButton = (Button) view.findViewById(R.id.create_user_create_profile);
-    cancelUserProfile = (Button) view.findViewById(R.id.create_user_cancel_button);
-    userPicture = (ImageView) view.findViewById(R.id.create_user_image);
+    toolbar = view.findViewById(R.id.toolbar);
+    userPictureLayout = view.findViewById(R.id.create_user_image_action);
+    userName = view.findViewById(R.id.create_user_username_inserted);
+    createUserButton = view.findViewById(R.id.create_user_create_profile);
+    cancelUserProfile = view.findViewById(R.id.create_user_cancel_button);
+    userPicture = view.findViewById(R.id.create_user_image);
     birthdayLayout = view.findViewById(R.id.birthday_layout);
     newsLetterLayout = view.findViewById(R.id.newsletter_layout);
     calendarLayout = view.findViewById(R.id.calendar_layout);
-    calendarDateView = (TextView) view.findViewById(R.id.calendar_date);
-    newsletterCheckBox = (CheckBox) view.findViewById(R.id.newsletter_checkbox);
+    calendarDateView = view.findViewById(R.id.calendar_date);
+    newsletterCheckBox = view.findViewById(R.id.newsletter_checkbox);
   }
 
   private void setupToolbar() {

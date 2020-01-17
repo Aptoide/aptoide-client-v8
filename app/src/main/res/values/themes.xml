@@ -3,7 +3,7 @@
   ~ Modified on 25/08/2016.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
 
@@ -14,6 +14,9 @@
     <item name="colorPrimaryDark">@color/default_orange_gradient_end</item>
     <item name="colorAccent">@color/aptoide_color_focused</item>
     <item name="customColor">@color/default_orange_gradient_start</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">
+      @color/default_orange_gradient_end
+    </item>
     <item name="widgetBackgroundColorPrimary">@color/white</item>
     <item name="widgetBackgroundColorSecondary">@color/comment_gray</item>
 
@@ -30,6 +33,8 @@
 
     <!--Buttons-->
     <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="raisedButtonForeground">@null</item>
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
     <item name="raisedButtonTextColor">@color/white</item>
@@ -37,6 +42,9 @@
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="followStoreCardBackground">@style/backgroundCardAccentStyle</item>
+    <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
+
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -54,13 +62,18 @@
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleLight</item>
     <item name="backgroundCardColor">@color/white</item>
+    <item name="backgroundCardColorSecondary">@color/white</item>
     <item name="appviewRatingCardBarckground">@drawable/black_card</item>
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-    <item name="wizard3Color">@color/wizard_color_3_orange</item>
+    <item name="wizardFirstColor">@color/wizard_color_1_blue</item>
+    <item name="wizardSecondColor">@color/wizard_color_2_green</item>
+    <item name="wizardThirdColor">@color/wizard_color_3_orange</item>
+    <item name="wizardBackgroundBottom">@color/white</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
     <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="backgroundButton">@style/backgroundButtonWhite</item>
     <item name="skeletonColor">@color/grey_fog_light_medium</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
     <item name="earnAppcoinsCardBg">@color/white</item>
@@ -195,30 +208,18 @@
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
     <item name="notificationDrawable">@drawable/ic_notification_history</item>
+    <item name="wizardRadioBackgroundColor">@color/fragment_payment_light_gray</item>
 
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
+    <item name="themeTextColor">@color/default_text</item>
   </style>
 
-  <style name="AptoideThemeDefault" parent="AppBaseTheme"></style>
 
-  <style name="AppBaseTheme.NoTitle">
-    <item name="android:windowNoTitle">true</item>
-  </style>
-
-  <style name="AppBaseTheme.Splash">
-    <item name="android:windowBackground">@drawable/splash_screen</item>
-  </style>
-
-  <style name="AppBaseTheme.NoTitle.Transparent">
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="android:windowIsFloating">false</item>
-    <item name="android:backgroundDimEnabled">false</item>
-  </style>
-
-  <style name="AppBaseTheme.NoTitle.Transparent.Green">
-    <item name="colorAccent">@color/activity_payment_green</item>
-  </style>
+  <style name="AptoideThemeLight" parent="AppBaseTheme" />
 
   <style name="AppBaseThemeDark" parent="@style/Theme.AppCompat.NoActionBar">
     <item name="android:windowBackground">@color/default_background_color_dark</item>
@@ -230,6 +231,7 @@
     <item name="colorPrimaryDark">@color/light_grey</item>
     <item name="colorAccent">@color/white</item>
     <item name="customColor">@color/aptoide_orange</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
     <item name="widgetBackgroundColorPrimary">@color/default_background_color_dark</item>
     <item name="widgetBackgroundColorSecondary">@color/grey_900</item>
 
@@ -245,7 +247,9 @@
     <item name="actionMenuTextColor">@color/white</item>
 
     <!--Buttons-->
-    <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="raisedButtonBackground">@color/grey_900</item>
+    <item name="raisedButtonSecondaryBackground">@color/grey_dark</item>
+    <item name="raisedButtonForeground">?attr/selectableItemBackground</item>
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme_dark</item>
     <item name="raisedButtonTextColor">@color/white</item>
@@ -253,6 +257,9 @@
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="followStoreCardBackground">@style/backgroundCardStyleDark</item>
+    <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
+
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -269,11 +276,15 @@
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleDark</item>
     <item name="backgroundCardColor">@color/grey_900</item>
+    <item name="backgroundCardColorSecondary">@style/backgroundCardStyleBlack</item>
     <item name="appviewRatingCardBarckground">@drawable/dark_card</item>
     <item name="backgroundHomeSeparator">@color/background_window</item>
     <item name="backgroundAddStoreButton">@android:color/white</item>
     <item name="appManualReviewedMessageBackground">@drawable/shape_gray_border</item>
-    <item name="wizard3Color">@color/grey_dark</item>
+    <item name="wizardFirstColor">@color/grey_dark</item>
+    <item name="wizardSecondColor">@color/grey_dark</item>
+    <item name="wizardThirdColor">@color/grey_dark</item>
+    <item name="wizardBackgroundBottom">@color/grey_900</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
     <item name="reactionsButtonColor">@android:color/white</item>
     <item name="skeletonColor">@color/grey_dark</item>
@@ -294,7 +305,7 @@
     <item name="download_progress_cancel">@drawable/ic_clear_action_light</item>
 
     <!--account-->
-    <item name="login_button_style">@style/Aptoide.Button.DarkBG</item>
+    <item name="login_button_style">@style/Aptoide.Button</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>
@@ -410,20 +421,49 @@
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
+    <item name="wizardRadioBackgroundColor">@color/silver_dark</item>
+    <item name="backgroundButton">@style/backgroundButtonBlack</item>
     <item name="notificationDrawable">@drawable/ic_notification_history_white</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
+    <item name="themeTextColor">@color/white</item>
   </style>
 
-  <style name="AptoideThemeDefaultDark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeDark" parent="AppBaseThemeDark" />
+
+  <style name="AppBaseTheme.NoTitle">
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
+  <style name="AppBaseTheme.Splash">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
+
+  <style name="AppBaseTheme.NoTitle.Transparent">
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowIsFloating">false</item>
+    <item name="android:backgroundDimEnabled">false</item>
+  </style>
+
+  <style name="AppBaseTheme.NoTitle.Transparent.Green">
+    <item name="colorAccent">@color/activity_payment_green</item>
+  </style>
+
 
   <!-- Non-default themes -->
 
-  <style name="AptoideThemeDefaultGrey">
+  <style name="AptoideThemeGrey">
     <item name="colorPrimary">@color/grey</item>
     <item name="colorPrimaryDark">@color/grey_700</item>
     <item name="colorAccent">@color/grey_700</item>
     <item name="colorButtonNormal">@color/grey</item>
     <item name="customColor">@color/grey</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/grey_gradient</item>
@@ -432,7 +472,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
     <item name="bnItemColorState">@drawable/grey_nav_item_color_state</item>
-    <item name="wizard3Color">@color/grey</item>
+    <item name="wizardThirdColor">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
     <item name="homeChips">@drawable/grey_home_chips_background</item>
 
@@ -440,19 +480,28 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGrey</item>
 
     <item name="toolbarTheme">@style/ToolbarGreyTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/GreyDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/grey_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_grey</item>
+    <item name="themeTextColor">@color/grey_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultGrey.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Grey" parent="AptoideThemeGrey" />
 
-  <style name="AptoideThemeDefaultGrey.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-
-  <style name="AptoideThemeDefaultTeal" parent="AppBaseTheme">
+  <style name="AptoideThemeTeal">
     <item name="colorPrimary">@color/teal</item>
     <item name="colorPrimaryDark">@color/teal_700</item>
     <item name="colorAccent">@color/teal_700</item>
     <item name="colorButtonNormal">@color/teal</item>
     <item name="customColor">@color/teal</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/teal_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/teal_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/teal_gradient</item>
@@ -461,7 +510,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_teal</item>
     <item name="colorControlHighlight">@color/teal_gradient_end</item>
     <item name="bnItemColorState">@drawable/teal_nav_item_color_state</item>
-    <item name="wizard3Color">@color/teal</item>
+    <item name="wizardThirdColor">@color/teal</item>
     <item name="loggedInIcon">@drawable/teal_ic_logged_in</item>
     <item name="homeChips">@drawable/teal_home_chips_background</item>
 
@@ -469,18 +518,28 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideTeal</item>
 
     <item name="toolbarTheme">@style/ToolbarTealTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/TealDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/teal_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_teal</item>
+    <item name="themeTextColor">@color/teal_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultTeal.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Teal" parent="AptoideThemeTeal" />
 
-  <style name="AptoideThemeDefaultTeal.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultBrown" parent="AppBaseTheme">
+  <style name="AptoideThemeBrown">
     <item name="colorPrimary">@color/brown</item>
     <item name="colorPrimaryDark">@color/brown_700</item>
     <item name="colorAccent">@color/brown_700</item>
     <item name="colorButtonNormal">@color/brown</item>
     <item name="customColor">@color/brown</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/brown_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/brown_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/brown_gradient</item>
@@ -489,7 +548,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_brown</item>
     <item name="colorControlHighlight">@color/brown_gradient_end</item>
     <item name="bnItemColorState">@drawable/brown_nav_item_color_state</item>
-    <item name="wizard3Color">@color/brown</item>
+    <item name="wizardThirdColor">@color/brown</item>
     <item name="loggedInIcon">@drawable/brown_ic_logged_in</item>
     <item name="homeChips">@drawable/brown_home_chips_background</item>
 
@@ -498,18 +557,27 @@
 
     <item name="toolbarTheme">@style/ToolbarBrownTransparent</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BrownDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/brown_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_brown</item>
+    <item name="themeTextColor">@color/brown_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBrown.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Brown" parent="AptoideThemeBrown" />
 
-  <style name="AptoideThemeDefaultBrown.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultBluegrey" parent="AppBaseTheme">
+  <style name="AptoideThemeBlueGrey">
     <item name="colorPrimary">@color/blue_grey</item>
     <item name="colorPrimaryDark">@color/blue_grey_700</item>
     <item name="colorAccent">@color/blue_grey_700</item>
     <item name="colorButtonNormal">@color/blue_grey</item>
     <item name="customColor">@color/blue_grey</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/blue_grey_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/blue_grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/blue_grey_gradient</item>
@@ -518,7 +586,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_bluegrey</item>
     <item name="colorControlHighlight">@color/blue_grey_gradient_end</item>
     <item name="bnItemColorState">@drawable/blue_grey_nav_item_color_state</item>
-    <item name="wizard3Color">@color/blue_grey</item>
+    <item name="wizardThirdColor">@color/blue_grey</item>
     <item name="loggedInIcon">@drawable/blue_grey_ic_logged_in</item>
     <item name="homeChips">@drawable/blue_grey_home_chips_background</item>
 
@@ -528,18 +596,28 @@
 
     <item name="toolbarTheme">@style/ToolbarBluegreyTransparent</item>
 
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BlueGreyDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/blue_grey_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_blue_grey</item>
+    <item name="themeTextColor">@color/blue_grey_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBluegrey.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.BlueGrey" parent="AptoideThemeBlueGrey" />
 
-  <style name="AptoideThemeDefaultBluegrey.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultLightgreen" parent="AppBaseTheme">
+  <style name="AptoideThemeLightGreen">
     <item name="colorPrimary">@color/light_green</item>
     <item name="colorPrimaryDark">@color/light_green_700</item>
     <item name="colorAccent">@color/light_green_700</item>
     <item name="colorButtonNormal">@color/light_green</item>
     <item name="customColor">@color/light_green</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/light_green_gradient_end
+    </item>
+
 
     <item name="raisedButtonBackground">@drawable/light_green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_green_gradient</item>
@@ -548,7 +626,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lightgreen</item>
     <item name="colorControlHighlight">@color/light_green_gradient_end</item>
     <item name="bnItemColorState">@drawable/light_green_nav_item_color_state</item>
-    <item name="wizard3Color">@color/light_green</item>
+    <item name="wizardThirdColor">@color/light_green</item>
     <item name="loggedInIcon">@drawable/light_green_ic_logged_in</item>
     <item name="homeChips">@drawable/light_green_home_chips_background</item>
 
@@ -556,18 +634,28 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightgreen</item>
 
     <item name="toolbarTheme">@style/ToolbarLightgreenTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LightGreenDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/light_green_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_light_green</item>
+    <item name="themeTextColor">@color/light_green_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLightgreen.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.LightGreen" parent="AptoideThemeLightGreen" />
 
-  <style name="AptoideThemeDefaultLightgreen.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.LightGreen" parent="AptoideThemeLightGreen">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultLightblue" parent="AppBaseTheme">
+  <style name="AptoideThemeLightBlue">
     <item name="colorPrimary">@color/light_blue</item>
     <item name="colorPrimaryDark">@color/light_blue_700</item>
     <item name="colorAccent">@color/light_blue_700</item>
     <item name="colorButtonNormal">@color/light_blue</item>
     <item name="customColor">@color/light_blue</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/light_blue_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/light_blue_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_blue_gradient</item>
@@ -576,7 +664,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lightblue</item>
     <item name="colorControlHighlight">@color/light_blue_gradient_end</item>
     <item name="bnItemColorState">@drawable/light_blue_nav_item_color_state</item>
-    <item name="wizard3Color">@color/light_blue</item>
+    <item name="wizardThirdColor">@color/light_blue</item>
     <item name="loggedInIcon">@drawable/light_blue_ic_logged_in</item>
     <item name="homeChips">@drawable/light_blue_home_chips_background</item>
 
@@ -584,18 +672,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLightblue</item>
 
     <item name="toolbarTheme">@style/ToolbarLightblueTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LightBlueDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/light_blue_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_lightblue</item>
+    <item name="themeTextColor">@color/light_blue_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLightblue.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.LightBlue" parent="AptoideThemeLightBlue" />
 
-  <style name="AptoideThemeDefaultLightblue.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.LightBlue" parent="AptoideThemeLightBlue">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultAmber" parent="AppBaseTheme">
+  <style name="AptoideThemeAmber">
     <item name="colorPrimary">@color/amber</item>
     <item name="colorPrimaryDark">@color/amber_700</item>
     <item name="colorAccent">@color/amber_700</item>
     <item name="colorButtonNormal">@color/amber</item>
     <item name="customColor">@color/amber</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/amber_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/amber_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/amber_gradient</item>
@@ -604,7 +701,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_amber</item>
     <item name="colorControlHighlight">@color/amber_gradient_end</item>
     <item name="bnItemColorState">@drawable/amber_nav_item_color_state</item>
-    <item name="wizard3Color">@color/amber</item>
+    <item name="wizardThirdColor">@color/amber</item>
     <item name="loggedInIcon">@drawable/amber_ic_logged_in</item>
     <item name="homeChips">@drawable/amber_home_chips_background</item>
 
@@ -612,18 +709,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideAmber</item>
 
     <item name="toolbarTheme">@style/ToolbarAmberTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/AmberDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/amber_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_amber</item>
+    <item name="themeTextColor">@color/amber_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultAmber.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Amber" parent="AptoideThemeAmber" />
 
-  <style name="AptoideThemeDefaultAmber.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Amber" parent="AptoideThemeAmber">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultLime" parent="AppBaseTheme">
+  <style name="AptoideThemeLime">
     <item name="colorPrimary">@color/lime</item>
     <item name="colorPrimaryDark">@color/lime_700</item>
     <item name="colorAccent">@color/lime_700</item>
     <item name="colorButtonNormal">@color/lime</item>
     <item name="customColor">@color/lime</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/lime_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/lime_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/lime_gradient</item>
@@ -632,7 +738,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_lime</item>
     <item name="colorControlHighlight">@color/lime_gradient_end</item>
     <item name="bnItemColorState">@drawable/lime_nav_item_color_state</item>
-    <item name="wizard3Color">@color/lime</item>
+    <item name="wizardThirdColor">@color/lime</item>
     <item name="loggedInIcon">@drawable/lime_ic_logged_in</item>
     <item name="homeChips">@drawable/lime_home_chips_background</item>
 
@@ -640,18 +746,28 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideLime</item>
 
     <item name="toolbarTheme">@style/ToolbarLimeTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/LimeDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/lime_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_lime</item>
+    <item name="themeTextColor">@color/lime_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultLime.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Lime" parent="AptoideThemeLime" />
 
-  <style name="AptoideThemeDefaultLime.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Lime" parent="AptoideThemeLime">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultOrange" parent="AppBaseTheme">
+  <style name="AptoideThemeOrange">
     <item name="colorPrimary">@color/orange</item>
     <item name="colorPrimaryDark">@color/orange_700</item>
     <item name="colorAccent">@color/orange_700</item>
     <item name="colorButtonNormal">@color/orange</item>
     <item name="customColor">@color/orange</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/orange_gradient_end</item>
+
 
     <item name="raisedButtonBackground">@drawable/orange_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/orange_gradient</item>
@@ -660,7 +776,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_orange</item>
     <item name="colorControlHighlight">@color/orange_gradient_end</item>
     <item name="bnItemColorState">@drawable/orange_nav_item_color_state</item>
-    <item name="wizard3Color">@color/orange</item>
+    <item name="wizardThirdColor">@color/orange</item>
     <item name="loggedInIcon">@drawable/orange_ic_logged_in</item>
     <item name="homeChips">@drawable/orange_home_chips_background</item>
 
@@ -669,18 +785,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideOrange</item>
 
     <item name="toolbarTheme">@style/ToolbarOrangeTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/OrangeDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/orange_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_orange</item>
+    <item name="themeTextColor">@color/orange_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultOrange.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Orange" parent="AptoideThemeOrange" />
 
-  <style name="AptoideThemeDefaultOrange.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Orange" parent="AptoideThemeOrange">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultPink" parent="AppBaseTheme">
+  <style name="AptoideThemePink">
     <item name="colorPrimary">@color/pink</item>
     <item name="colorPrimaryDark">@color/pink_700</item>
     <item name="colorAccent">@color/pink_700</item>
     <item name="colorButtonNormal">@color/pink</item>
     <item name="customColor">@color/pink</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/pink_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/pink_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/pink_gradient</item>
@@ -689,7 +814,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_pink</item>
     <item name="colorControlHighlight">@color/pink_gradient_end</item>
     <item name="bnItemColorState">@drawable/pink_nav_item_color_state</item>
-    <item name="wizard3Color">@color/pink</item>
+    <item name="wizardThirdColor">@color/pink</item>
     <item name="loggedInIcon">@drawable/pink_ic_logged_in</item>
     <item name="homeChips">@drawable/pink_home_chips_background</item>
 
@@ -698,18 +823,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoidePink</item>
 
     <item name="toolbarTheme">@style/ToolbarPinkTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/PinkDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/pink_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_pink</item>
+    <item name="themeTextColor">@color/pink_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultPink.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Pink" parent="AptoideThemePink" />
 
-  <style name="AptoideThemeDefaultPink.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Pink" parent="AptoideThemePink">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultIndigo" parent="AppBaseTheme">
+  <style name="AptoideThemeIndigo">
     <item name="colorPrimary">@color/indigo</item>
     <item name="colorPrimaryDark">@color/indigo_700</item>
     <item name="colorAccent">@color/indigo_700</item>
     <item name="colorButtonNormal">@color/indigo</item>
     <item name="customColor">@color/indigo</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/indigo_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/indigo_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/indigo_gradient</item>
@@ -718,7 +852,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_indigo</item>
     <item name="colorControlHighlight">@color/indigo_gradient_end</item>
     <item name="bnItemColorState">@drawable/indigo_nav_item_color_state</item>
-    <item name="wizard3Color">@color/indigo</item>
+    <item name="wizardThirdColor">@color/indigo</item>
     <item name="loggedInIcon">@drawable/indigo_ic_logged_in</item>
     <item name="homeChips">@drawable/indigo_home_chips_background</item>
 
@@ -726,21 +860,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideIndigo</item>
 
     <item name="toolbarTheme">@style/ToolbarIndigoTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/IndigoDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/indigo_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_indigo</item>
+    <item name="themeTextColor">@color/indigo_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultIndigo.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Indigo" parent="AptoideThemeIndigo" />
 
-  <style name="AptoideThemeDefaultIndigo.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <!-- v6 Blue theme updated to v7 Indigo -->
-
-
-  <style name="AptoideThemeDefaultRed" parent="AppBaseTheme">
+  <style name="AptoideThemeRed">
     <item name="colorPrimary">@color/red</item>
     <item name="colorPrimaryDark">@color/red_700</item>
     <item name="colorAccent">@color/red_700</item>
     <item name="colorButtonNormal">@color/red</item>
     <item name="customColor">@color/red</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/red_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/red_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/red_gradient</item>
@@ -749,7 +889,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_red</item>
     <item name="colorControlHighlight">@color/red_gradient_end</item>
     <item name="bnItemColorState">@drawable/red_nav_item_color_state</item>
-    <item name="wizard3Color">@color/red</item>
+    <item name="wizardThirdColor">@color/red</item>
     <item name="loggedInIcon">@drawable/red_ic_logged_in</item>
     <item name="homeChips">@drawable/red_home_chips_background</item>
 
@@ -758,18 +898,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideRed</item>
 
     <item name="toolbarTheme">@style/ToolbarRedTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/RedDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/red_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_red</item>
+    <item name="themeTextColor">@color/red_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultRed.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Red" parent="AptoideThemeRed" />
 
-  <style name="AptoideThemeDefaultRed.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Red" parent="AptoideThemeRed">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultGreen" parent="AppBaseTheme">
+  <style name="AptoideThemeGreen">
     <item name="colorPrimary">@color/green</item>
     <item name="colorPrimaryDark">@color/green_700</item>
     <item name="colorAccent">@color/green_700</item>
     <item name="colorButtonNormal">@color/green</item>
     <item name="customColor">@color/green</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/green_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/green_gradient</item>
@@ -778,7 +927,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_green</item>
     <item name="colorControlHighlight">@color/green_gradient_end</item>
     <item name="bnItemColorState">@drawable/green_nav_item_color_state</item>
-    <item name="wizard3Color">@color/green</item>
+    <item name="wizardThirdColor">@color/green</item>
     <item name="loggedInIcon">@drawable/green_ic_logged_in</item>
     <item name="homeChips">@drawable/green_home_chips_background</item>
 
@@ -787,21 +936,28 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideGreen</item>
 
     <item name="toolbarTheme">@style/ToolbarGreenTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/GreenDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/green_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_green</item>
+    <item name="themeTextColor">@color/green_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultGreen.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Green" parent="AptoideThemeGreen" />
 
-  <style name="AptoideThemeDefaultGreen.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Green" parent="AptoideThemeGreen">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <!-- v6 SeaGreen theme updated to Green theme -->
-
-
-  <style name="AptoideThemeDefaultDeepPurple" parent="AppBaseTheme">
+  <style name="AptoideThemeDeepPurple">
     <item name="colorPrimary">@color/deep_purple</item>
     <item name="colorPrimaryDark">@color/deep_purple_700</item>
     <item name="colorAccent">@color/deep_purple_700</item>
     <item name="colorButtonNormal">@color/deep_purple</item>
     <item name="customColor">@color/deep_purple</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/deep_purple_gradient_end
+    </item>
 
     <item name="raisedButtonBackground">@drawable/deep_purple_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/deep_purple_gradient</item>
@@ -810,7 +966,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_deeppurple</item>
     <item name="colorControlHighlight">@color/deep_purple_gradient_end</item>
     <item name="bnItemColorState">@drawable/deep_purple_nav_item_color_state</item>
-    <item name="wizard3Color">@color/deep_purple</item>
+    <item name="wizardThirdColor">@color/deep_purple</item>
     <item name="loggedInIcon">@drawable/deep_purple_ic_logged_in</item>
     <item name="homeChips">@drawable/deep_purple_home_chips_background</item>
 
@@ -818,18 +974,27 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideDeepPurple</item>
 
     <item name="toolbarTheme">@style/ToolbarDeeppurpleTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/DeepPurpleDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/deep_purple_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_deep_purple</item>
+    <item name="themeTextColor">@color/deep_purple_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultDeepPurple.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.DeepPurple" parent="AptoideThemeDeepPurple" />
 
-  <style name="AptoideThemeDefaultDeepPurple.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
-  <style name="AptoideThemeDefaultBlack" parent="AppBaseTheme">
+  <style name="AptoideThemeBlack">
     <item name="colorPrimary">@color/black</item>
     <item name="colorPrimaryDark">@color/black</item>
     <item name="colorAccent">@color/black</item>
     <item name="colorButtonNormal">@color/black</item>
     <item name="customColor">@color/black</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey</item>
 
     <item name="raisedButtonBackground">@drawable/black_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/black_gradient</item>
@@ -838,7 +1003,7 @@
     <item name="ghostButtonBackground">@drawable/button_border_black</item>
     <item name="colorControlHighlight">@color/black_gradient_end</item>
     <item name="bnItemColorState">@drawable/black_nav_item_color_state</item>
-    <item name="wizard3Color">@color/black</item>
+    <item name="wizardThirdColor">@color/black</item>
     <item name="loggedInIcon">@drawable/black_ic_logged_in</item>
     <item name="homeChips">@drawable/black_home_chips_background</item>
 
@@ -846,10 +1011,18 @@
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBlack</item>
 
     <item name="toolbarTheme">@style/ToolbarBlackTransparent</item>
+
+    <!--store theme specific attributes-->
+    <item name="datePickerStyle">@style/BlackDatePickerDialog</item>
+    <item name="roundGradientButtonBackground">@drawable/black_search_button_background</item>
+    <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_black</item>
+    <item name="themeTextColor">@color/black_text</item>
   </style>
 
-  <style name="AptoideThemeDefaultBlack.Dark" parent="AppBaseThemeDark" />
+  <style name="AptoideThemeLight.Black" parent="AptoideThemeBlack" />
 
-  <style name="AptoideThemeDefaultBlack.Light" parent="AppBaseTheme" />
+  <style name="AptoideThemeDark.Black" parent="AptoideThemeBlack">
+    <item name="themeTextColor">@color/white</item>
+  </style>
 
 </resources>

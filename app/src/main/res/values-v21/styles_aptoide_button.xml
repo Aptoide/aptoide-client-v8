@@ -10,8 +10,18 @@
     <item name="android:textAllCaps">true</item>
     <item name="android:background">?attr/raisedButtonBackground</item>
     <item name="colorControlHighlight">?attr/colorPrimaryDark</item>
+    <item name="android:foreground">?attr/raisedButtonForeground</item>
   </style>
 
+  <style name="Aptoide.Button.Secondary">
+    <item name="android:background">?attr/raisedButtonSecondaryBackground</item>
+    <item name="android:textColor">?attr/storesTextColor</item>
+  </style>
+
+  <style name="Aptoide.Button.Secondary.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
 
   <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
     <item name="android:paddingRight">20dp</item>

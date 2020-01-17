@@ -22,7 +22,6 @@ import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.fragment.app.DialogFragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -36,6 +35,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -69,14 +69,14 @@ import rx.subscriptions.Subscriptions;
   private final Resources resources;
   private final String marketName;
   private final MarketResourceFormatter marketResourceFormatter;
-  private final ThemeAttributeProvider themeAttributeProvider;
+  private final ThemeManager themeManager;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
       String marketName, MarketResourceFormatter marketResourceFormatter,
-      ThemeAttributeProvider themeAttributeProvider) {
+      ThemeManager themeManager) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -88,7 +88,7 @@ import rx.subscriptions.Subscriptions;
     this.resources = resources;
     this.marketName = marketName;
     this.marketResourceFormatter = marketResourceFormatter;
-    this.themeAttributeProvider = themeAttributeProvider;
+    this.themeManager = themeManager;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -97,7 +97,7 @@ import rx.subscriptions.Subscriptions;
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
 
       ContextThemeWrapper context = new ContextThemeWrapper(activity,
-          themeAttributeProvider.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {

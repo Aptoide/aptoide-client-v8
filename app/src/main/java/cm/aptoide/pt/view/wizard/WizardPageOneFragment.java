@@ -24,11 +24,7 @@ public class WizardPageOneFragment extends BackButtonFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    clickHandler = new ClickHandler() {
-      @Override public boolean handle() {
-        return false;
-      }
-    };
+    clickHandler = () -> false;
     registerClickHandler(clickHandler);
   }
 

@@ -1,14 +1,12 @@
 package cm.aptoide.pt.timeline.view.displayable;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.GetFollowers;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
@@ -19,16 +17,20 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
   private boolean isLike;
-  private String defaultTheme;
+  private int storeColor;
+  private int buttonThemeBackground;
+  private String theme;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike,
-      String defaultTheme) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor,
+      int buttonThemeColor, String theme) {
     super(pojo);
     this.isLike = isLike;
-    this.defaultTheme = defaultTheme;
+    this.storeColor = storeColor;
+    this.buttonThemeBackground = buttonThemeColor;
+    this.theme = theme;
   }
 
   @Override protected Configs getConfig() {
@@ -99,31 +101,15 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
   }
 
   public int getStoreColor(Context context) {
-    Store store = getPojo().getStore();
-    if (store != null && store.getAppearance() != null) {
-      return StoreTheme.get(store.getAppearance()
-          .getTheme(), false)
-          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
-    } else {
-      return StoreTheme.get(defaultTheme, false)
-          .getStoreHeaderColorResource(context.getResources(), context.getTheme());
-    }
+    return storeColor;
   }
 
-  public Drawable getButtonBackgroundStoreThemeColor(Context context) {
-    Store store = getPojo().getStore();
-    StoreTheme storeTheme;
-    if (store.getAppearance() != null) {
-      storeTheme = StoreTheme.get(store);
-    } else {
-      storeTheme = StoreTheme.ORANGE;
-    }
-    return storeTheme.getButtonLayoutDrawable(context.getResources(), context.getTheme());
+  public int getButtonBackgroundStoreThemeColor(Context context) {
+    return buttonThemeBackground;
   }
 
   public void viewClicked(FragmentNavigator navigator) {
     Store store = getPojo().getStore();
-    String theme = getStoreTheme(store);
 
     if (store != null) {
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
@@ -132,18 +118,6 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome), true);
     }
-  }
-
-  private String getStoreTheme(Store store) {
-    String theme;
-    if (store != null && store.getAppearance() != null) {
-      theme = store.getAppearance()
-          .getTheme() == null ? defaultTheme : store.getAppearance()
-          .getTheme();
-    } else {
-      theme = defaultTheme;
-    }
-    return theme;
   }
 
   public boolean isLike() {
