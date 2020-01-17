@@ -39,7 +39,6 @@
     <Button
         android:id="@+id/logged_in_private_button"
         android:layout_width="8dp"
-        android:layout_height="60dp"
         android:layout_marginEnd="@dimen/padding_smaller"
         android:layout_marginRight="@dimen/padding_smaller"
         android:layout_weight="1"
@@ -91,7 +90,7 @@
           android:layout_marginTop="@dimen/padding_medium_small"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri"
-          style="@style/Aptoide.TextView.Medium.L.Theme"
+          style="@style/Aptoide.TextView.Medium.L"
           />
 
       <TextView
