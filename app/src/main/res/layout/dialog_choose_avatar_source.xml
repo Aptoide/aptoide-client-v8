@@ -20,8 +20,6 @@
       android:drawableStart="@drawable/ic_camera"
       android:gravity="center_vertical"
       android:text="@string/upload_dialog_photo"
-      android:textColor="@color/create_store_title_color"
-      android:textSize="@dimen/text_size_medium_small"
       style="@style/Aptoide.TextView.Regular.XS"
       />
 
@@ -35,8 +33,6 @@
       android:drawableStart="@drawable/ic_gallery"
       android:gravity="center"
       android:text="@string/upload_dialog_gallery"
-      android:textColor="@color/create_store_title_color"
-      android:textSize="@dimen/text_size_medium_small"
       style="@style/Aptoide.TextView.Regular.XS"
       />
 
