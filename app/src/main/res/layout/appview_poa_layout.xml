@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_info_layout"
+    style="?attr/backgroundCardColorSecondary"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
@@ -22,36 +23,36 @@
         android:layout_height="63dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-      android:src="@drawable/ic_get_appc"
+        android:src="@drawable/ic_get_appc"
         />
 
     <TextView
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/poa_app_view_card_body_1"
         android:textStyle="bold"
-        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         />
     <TextView
         android:id="@+id/offer_value"
+        style="@style/Aptoide.TextView.Regular.M.AppcColor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:textStyle="bold"
         tools:text="20 AppCoins Credits (€0.79)"
-        style="@style/Aptoide.TextView.Regular.M.AppcColor"
         />
 
     <include
-        layout="@layout/appview_poa_countdown_element"
         android:id="@+id/countdown_element"
+        layout="@layout/appview_poa_countdown_element"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:visibility="gone"
         />
 
@@ -80,10 +81,10 @@
           android:src="@drawable/appcoins_icon_gradient"
           />
       <TextView
+          style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/appc_message_appview_appcoins_iab"
-          style="@style/Aptoide.TextView.Medium.XXS.GreyMedium"
           />
     </LinearLayout>
 
@@ -91,30 +92,31 @@
         android:id="@+id/budget_element"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f7f7f7"
+        android:background="?attr/backgroundMain"
         android:visibility="gone"
+        tools:visibility="visible"
         >
       <ImageView
           android:layout_width="34dp"
           android:layout_height="39dp"
-          android:layout_marginBottom="5dp"
-          android:layout_marginLeft="8dp"
           android:layout_marginStart="8dp"
+          android:layout_marginLeft="8dp"
           android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
           android:src="@drawable/ic_poa_clock"
           />
       <TextView
           android:id="@+id/budget_left_message"
+          style="@style/Aptoide.TextView.Regular.XS"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="8dp"
-          android:layout_marginLeft="12dp"
-          android:layout_marginRight="8dp"
           android:layout_marginStart="12dp"
+          android:layout_marginLeft="12dp"
           android:layout_marginTop="8dp"
+          android:layout_marginEnd="8dp"
+          android:layout_marginRight="8dp"
           android:textStyle="bold"
           tools:text="Hurry up! We only have 190 AppCoins to give away."
-          style="@style/Aptoide.TextView.Regular.XS"
           />
     </LinearLayout>
   </LinearLayout>
