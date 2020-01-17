@@ -85,7 +85,7 @@
 
       <TextView
           android:id="@+id/create_profile_title"
-          style="@style/Aptoide.TextView.Medium.L"
+          style="@style/Aptoide.TextView.Medium.L.Black"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_medium_small"
@@ -94,7 +94,7 @@
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Regular.S"
+          style="@style/Aptoide.TextView.Regular.S.Primary"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"
@@ -103,7 +103,7 @@
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Regular.S"
+          style="@style/Aptoide.TextView.Regular.S.Primary"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"
@@ -112,7 +112,7 @@
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Regular.S"
+          style="@style/Aptoide.TextView.Regular.S.Primary"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"

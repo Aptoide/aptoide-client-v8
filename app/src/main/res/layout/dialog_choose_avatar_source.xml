@@ -12,7 +12,7 @@
 
   <TextView
       android:id="@+id/button_camera"
-      style="@style/Aptoide.TextView.Regular.XS"
+      style="@style/Aptoide.TextView.Regular.XS.Primary"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:drawableStart="@drawable/ic_camera"
@@ -24,7 +24,7 @@
 
   <TextView
       android:id="@+id/button_gallery"
-      style="@style/Aptoide.TextView.Regular.XS"
+      style="@style/Aptoide.TextView.Regular.XS.Primary"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/padding_medium_small"
