@@ -9,13 +9,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import androidx.annotation.WorkerThread;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import java.security.SecureRandom;
 import java.util.UUID;
+import rx.Single;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 11-07-2016.
@@ -43,95 +44,92 @@ public class IdsRepository {
     this.androidId = androidId;
   }
 
-  public synchronized String getUniqueIdentifier() {
+  public synchronized Single<String> getUniqueIdentifier() {
     String aptoideId = sharedPreferences.getString(APTOIDE_CLIENT_UUID, null);
+
     if (!TextUtils.isEmpty(aptoideId)) {
       // if we already have the aptoide client uuid, return it
       Logger.getInstance()
           .v(TAG, "getUniqueIdentifier: in sharedPreferences: " + aptoideId);
-      return aptoideId;
+      return Single.just(aptoideId);
     }
-    // else, we generate a aptoide client uuid and save it locally for further use
 
-    // preferred UUID
-    aptoideId = getGoogleAdvertisingId();
-
-    // if preferred UUID is null or empty use android id
-    if (TextUtils.isEmpty(aptoideId)) {
-      aptoideId = getAndroidId();
-      if (!TextUtils.isEmpty(aptoideId)) {
-        Logger.getInstance()
-            .v(TAG, "getUniqueIdentifier: getAndroidId: " + aptoideId);
+    return getGoogleAdvertisingId().map(id -> {
+      if (!TextUtils.isEmpty(id)) {
+        return id;
+      } else {
+        return "";
       }
-    } else {
-      Logger.getInstance()
-          .v(TAG, "getUniqueIdentifier: getGoogleAdvertisingId: " + aptoideId);
-    }
-
-    // if android id is null or empty use random generated UUID
-    if (TextUtils.isEmpty(aptoideId)) {
-      aptoideId = UUID.randomUUID()
-          .toString();
-      Logger.getInstance()
-          .v(TAG, "getUniqueIdentifier: randomUUID: " + aptoideId);
-    }
-
-    sharedPreferences.edit()
-        .putString(APTOIDE_CLIENT_UUID, aptoideId)
-        .apply();
-    return aptoideId;
+    })
+        .map(id -> {
+          if (!TextUtils.isEmpty(id)) {
+            return id;
+          } else {
+            return UUID.randomUUID()
+                .toString();
+          }
+        })
+        .doOnSuccess(id -> sharedPreferences.edit()
+            .putString(APTOIDE_CLIENT_UUID, id)
+            .apply());
   }
 
-  @WorkerThread public synchronized String getGoogleAdvertisingId() {
+  @WorkerThread public synchronized Single<String> getGoogleAdvertisingId() {
 
-    String googleAdvertisingId = sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null);
-    if (!TextUtils.isEmpty(googleAdvertisingId)) {
-      return googleAdvertisingId;
-    }
-
-    if (AptoideUtils.ThreadU.isUiThread()) {
-      throw new IllegalStateException("You cannot run this method from the main thread");
-    }
-
-    if (AdNetworkUtils.isGooglePlayServicesAvailable(context)) {
-      try {
-        googleAdvertisingId = AdvertisingIdClient.getAdvertisingIdInfo(context)
-            .getId();
-      } catch (Exception e) {
-        CrashReport.getInstance()
-            .log(e);
-      }
-    }
-
-    sharedPreferences.edit()
-        .putString(GOOGLE_ADVERTISING_ID_CLIENT, googleAdvertisingId)
-        .apply();
-    sharedPreferences.edit()
-        .putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true)
-        .apply();
-
-    return googleAdvertisingId;
+    return Single.just(sharedPreferences.getString(GOOGLE_ADVERTISING_ID_CLIENT, null))
+        .map(id -> {
+          if (!TextUtils.isEmpty(id)) {
+            return id;
+          } else if (AptoideUtils.ThreadU.isUiThread()) {
+            throw new IllegalStateException("You cannot run this method from the main thread");
+          } else if (!AdNetworkUtils.isGooglePlayServicesAvailable(context)) {
+            return "";
+          } else {
+            try {
+              return AdvertisingIdClient.getAdvertisingIdInfo(context)
+                  .getId();
+            } catch (Exception e) {
+              throw new IllegalStateException(e);
+            }
+          }
+        })
+        .doOnSuccess(id -> {
+          if (!id.equals("")) {
+            sharedPreferences.edit()
+                .putString(GOOGLE_ADVERTISING_ID_CLIENT, id)
+                .apply();
+            sharedPreferences.edit()
+                .putBoolean(GOOGLE_ADVERTISING_ID_CLIENT_SET, true)
+                .apply();
+          }
+        })
+        .subscribeOn(Schedulers.newThread());
   }
 
-  public synchronized String getAdvertisingId() {
+  public synchronized Single<String> getAdvertisingId() {
     String advertisingId = sharedPreferences.getString(ADVERTISING_ID_CLIENT, null);
     if (!TextUtils.isEmpty(advertisingId)) {
       // if we already have an advertising id, return it
-      return advertisingId;
+      return Single.just(advertisingId);
     }
 
-    // else, generate using google advertising id
-    advertisingId = getGoogleAdvertisingId();
-    if (TextUtils.isEmpty(advertisingId)) {
-      // if google advertising id is not available use a random id
-      advertisingId = generateRandomAdvertisingId();
-    }
-
-    // save the generated advertising id for this user and return it
-    sharedPreferences.edit()
-        .putString(ADVERTISING_ID_CLIENT, advertisingId)
-        .apply();
-    return advertisingId;
+    return getGoogleAdvertisingId().map(id -> {
+      if (!TextUtils.isEmpty(id)) {
+        return id;
+      } else {
+        return "";
+      }
+    })
+        .map(id -> {
+          if (!TextUtils.isEmpty(id)) {
+            return id;
+          } else {
+            return generateRandomAdvertisingId();
+          }
+        })
+        .doOnSuccess(id -> sharedPreferences.edit()
+            .putString(ADVERTISING_ID_CLIENT, advertisingId)
+            .apply());
   }
 
   public synchronized String getAndroidId() {
