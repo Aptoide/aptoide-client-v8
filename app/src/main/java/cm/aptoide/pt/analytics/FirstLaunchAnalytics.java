@@ -25,7 +25,6 @@ import java.util.zip.ZipFile;
 import org.json.JSONException;
 import org.json.JSONObject;
 import rx.Completable;
-import rx.Observable;
 import rx.schedulers.Schedulers;
 
 /**
@@ -186,11 +185,9 @@ public class FirstLaunchAnalytics {
     FacebookSdk.sdkInitialize(application);
     AppEventsLogger.activateApp(application);
     AppEventsLogger.newLogger(application);
-    return Observable.fromCallable(() -> {
-      AppEventsLogger.setUserID((((AptoideApplication) application).getIdsRepository()
-          .getUniqueIdentifier()));
-      return null;
-    })
+    return (((AptoideApplication) application).getIdsRepository()
+        .getUniqueIdentifier()).doOnSuccess(AppEventsLogger::setUserID)
+        .toObservable()
         .doOnNext(__ -> setupRakamFirstLaunchSuperProperty(
             SecurePreferences.isFirstRun(sharedPreferences)))
         .doOnNext(__ -> sendPlayProtectEvent())

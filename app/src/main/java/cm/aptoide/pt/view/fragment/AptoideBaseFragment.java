@@ -47,10 +47,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), application.getPartnerId(), accountManager,
-        application.getQManager()
-            .getFilters(ManagerPreferences.getHWSpecsFilter(
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+            .getUniqueIdentifier()
+            .toBlocking()
+            .value(), application.getPartnerId(), accountManager, application.getQManager()
+        .getFilters(ManagerPreferences.getHWSpecsFilter(
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));
@@ -67,10 +68,11 @@ public abstract class AptoideBaseFragment<T extends BaseAdapter> extends GridRec
         getContext().getResources(),
         (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
         application.getIdsRepository()
-            .getUniqueIdentifier(), application.getPartnerId(), accountManager,
-        application.getQManager()
-            .getFilters(ManagerPreferences.getHWSpecsFilter(
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+            .getUniqueIdentifier()
+            .toBlocking()
+            .value(), application.getPartnerId(), accountManager, application.getQManager()
+        .getFilters(ManagerPreferences.getHWSpecsFilter(
+            ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE),
         application.getVersionCodeProvider(),
         AdNetworkUtils.isGooglePlayServicesAvailable(getContext()));

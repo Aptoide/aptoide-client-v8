@@ -42,31 +42,33 @@ public class BodyInterceptorV7 implements BodyInterceptor<BaseBody> {
 
   public Single<BaseBody> intercept(BaseBody body) {
     return authenticationPersistence.getAuthentication()
-        .map(authentication -> {
+        .flatMap(authentication -> idsRepository.getUniqueIdentifier()
+            .map(id -> {
 
-          if (authentication.isAuthenticated()) {
-            body.setAccessToken(authentication.getAccessToken());
-          } else {
-            body.setAccessToken(null);
-          }
+              if (authentication.isAuthenticated()) {
+                body.setAccessToken(authentication.getAccessToken());
+              } else {
+                body.setAccessToken(null);
+              }
 
-          body.setAptoideId(idsRepository.getUniqueIdentifier());
-          body.setAptoideVercode(aptoideVersionCode);
-          body.setCdn(cdn.name()
-              .toLowerCase());
-          body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
+              body.setAptoideId(id);
+              body.setAptoideVercode(aptoideVersionCode);
+              body.setCdn(cdn.name()
+                  .toLowerCase());
+              body.setLang(AptoideUtils.SystemU.getCountryCode(resources));
 
-          body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
-          String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
-          if (!TextUtils.isEmpty(forceCountry)) {
-            body.setCountry(forceCountry);
-          }
-          String md5 = aptoideMd5Manager.getAptoideMd5();
-          if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
-          body.setAptoidePackage(aptoidePackage);
+              body.setQ(
+                  qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
+              String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
+              if (!TextUtils.isEmpty(forceCountry)) {
+                body.setCountry(forceCountry);
+              }
+              String md5 = aptoideMd5Manager.getAptoideMd5();
+              if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
+              body.setAptoidePackage(aptoidePackage);
 
-          return body;
-        })
+              return body;
+            }))
         .subscribeOn(Schedulers.computation());
   }
 }

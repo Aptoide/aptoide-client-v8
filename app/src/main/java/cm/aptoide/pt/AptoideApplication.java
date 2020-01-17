@@ -363,7 +363,7 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
   }
 
-  private void initializeRakam() {
+  private void initializeRakam(String id) {
     RakamClient instance = Rakam.getInstance();
 
     try {
@@ -377,7 +377,7 @@ public abstract class AptoideApplication extends Application {
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-    instance.setUserId(idsRepository.getUniqueIdentifier());
+    instance.setUserId(id);
   }
 
   public void initializeMoPub() {
@@ -643,12 +643,12 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
-        .subscribeOn(Schedulers.newThread());
+    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier());
   }
 
   private Completable initializeRakamSdk() {
-    return Completable.fromAction(() -> initializeRakam())
+    return idsRepository.getUniqueIdentifier()
+        .flatMapCompletable(id -> Completable.fromAction(() -> initializeRakam(id)))
         .subscribeOn(Schedulers.newThread());
   }
 

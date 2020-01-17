@@ -26,8 +26,7 @@ public class UserAgentInterceptorV8 implements Interceptor {
   public UserAgentInterceptorV8(IdsRepository idsRepository, String androidVersion, int apiLevel,
       String model, String productCode, String architecture, DisplayMetrics displayMetrics,
       String versionName, String aptoidePackage, AptoideMd5Manager aptoideMd5Manager,
-      int aptoideVersionCode,
-      AuthenticationPersistence authenticationPersistence) {
+      int aptoideVersionCode, AuthenticationPersistence authenticationPersistence) {
     this.idsRepository = idsRepository;
     this.androidVersion = androidVersion;
     this.apiLevel = apiLevel;
@@ -101,12 +100,15 @@ public class UserAgentInterceptorV8 implements Interceptor {
         + aptoidePackage
         + "; "
         + aptoideVersionCode
-        + "; " + aptoideMd5Manager.getAptoideMd5()
+        + "; "
+        + aptoideMd5Manager.getAptoideMd5()
         + "; "
         + myscr
         + "; ");
 
-    String uniqueIdentifier = idsRepository.getUniqueIdentifier();
+    String uniqueIdentifier = idsRepository.getUniqueIdentifier()
+        .toBlocking()
+        .value();
     if (uniqueIdentifier != null) {
       sb.append(uniqueIdentifier);
     }

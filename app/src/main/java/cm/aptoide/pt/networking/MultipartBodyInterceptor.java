@@ -24,17 +24,17 @@ public class MultipartBodyInterceptor
   @Override public Single<HashMapNotNull<String, RequestBody>> intercept(
       HashMapNotNull<String, RequestBody> body) {
     return authenticationPersistence.getAuthentication()
-        .flatMap(authentication -> {
-          if (authentication.isAuthenticated()) {
-            body.put("access_token",
-                requestBodyFactory.createBodyPartFromString(authentication.getAccessToken()));
-          }
+        .flatMap(authentication -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> {
+              if (authentication.isAuthenticated()) {
+                body.put("access_token",
+                    requestBodyFactory.createBodyPartFromString(authentication.getAccessToken()));
+              }
 
-          body.put("aptoide_uid",
-              requestBodyFactory.createBodyPartFromString(idsRepository.getUniqueIdentifier()));
+              body.put("aptoide_uid", requestBodyFactory.createBodyPartFromString(id));
 
-          return Single.just(body);
-        })
+              return Single.just(body);
+            }))
         .subscribeOn(Schedulers.computation());
   }
 }

@@ -62,7 +62,9 @@ public class UserAgentInterceptor implements Interceptor {
     final StringBuilder sb =
         new StringBuilder(versionName + ";" + terminalInfo + ";" + screen + ";id:");
 
-    String uniqueIdentifier = idsRepository.getUniqueIdentifier();
+    String uniqueIdentifier = idsRepository.getUniqueIdentifier()
+        .toBlocking()
+        .value();
     if (uniqueIdentifier != null) {
       sb.append(uniqueIdentifier);
     }

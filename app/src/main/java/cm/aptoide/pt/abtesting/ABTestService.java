@@ -79,8 +79,8 @@ public class ABTestService {
   }
 
   private Observable<String> getAptoideId() {
-    return Observable.fromCallable(() -> idsRepository.getUniqueIdentifier())
-        .subscribeOn(scheduler);
+    return idsRepository.getUniqueIdentifier()
+        .toObservable();
   }
 
   public interface ABTestingService {

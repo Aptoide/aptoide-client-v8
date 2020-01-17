@@ -96,7 +96,11 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
         final IdsRepository idsRepository =
             ((AptoideApplication) context.getApplicationContext()).getIdsRepository();
         internalClickUrl[0] = AdNetworkUtils.parseMacros(clickUrl, idsRepository.getAndroidId(),
-            idsRepository.getUniqueIdentifier(), idsRepository.getAdvertisingId());
+            idsRepository.getUniqueIdentifier()
+                .toBlocking()
+                .value(), idsRepository.getAdvertisingId()
+                .toBlocking()
+                .value());
         clickUrlFuture.set(internalClickUrl[0]);
         Logger.getInstance()
             .d("ExtractReferrer", "Parsed clickUrl: " + internalClickUrl[0]);

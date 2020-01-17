@@ -85,13 +85,13 @@ public class AdsRepository {
   public Observable<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName,
-            idsRepository.getUniqueIdentifier(),
-            googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
-            account.isAdultContentEnabled(), httpClient, converterFactory,
-            qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
-            sharedPreferences, connectivityManager, resources, versionCodeProvider)
-            .observe()));
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAd(GetAdsRequest.ofAppviewOrganic(packageName, storeName, id,
+                googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
+                account.isAdultContentEnabled(), httpClient, converterFactory,
+                qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
+                sharedPreferences, connectivityManager, resources, versionCodeProvider)
+                .observe()).toSingle()));
   }
 
   private Observable<MinimalAd> mapToMinimalAd(
@@ -109,13 +109,13 @@ public class AdsRepository {
   public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAds(
-            GetAdsRequest.ofHomepageMore(idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAds(GetAdsRequest.ofHomepageMore(id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe(refresh)));
+                .observe(refresh)).toSingle()));
   }
 
   private Observable<List<MinimalAd>> mapToMinimalAds(
@@ -140,61 +140,62 @@ public class AdsRepository {
       List<String> keywords) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAds(
-            GetAdsRequest.ofAppviewSuggested(keywords, idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAds(GetAdsRequest.ofAppviewSuggested(keywords, id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), packageName, partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe()).subscribeOn(Schedulers.io()));
+                .observe()).toSingle()
+                .subscribeOn(Schedulers.io())));
   }
 
   public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAd(
-            GetAdsRequest.ofSearch(query, idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAd(GetAdsRequest.ofSearch(query, id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe()));
+                .observe()).toSingle()));
   }
 
   public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAd(
-            GetAdsRequest.ofSecondInstall(packageName, idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAd(GetAdsRequest.ofSecondInstall(packageName, id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe()));
+                .observe()).toSingle()));
   }
 
   public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapToMinimalAd(
-            GetAdsRequest.ofSecondTry(packageName, idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapToMinimalAd(GetAdsRequest.ofSecondTry(packageName, id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe()));
+                .observe()).toSingle()));
   }
 
   public Observable<MinimalAd> getAdForShortcut() {
     return accountManager.accountStatus()
         .first()
-        .flatMap(account -> mapRandomAd(
-            GetAdsRequest.of(Location.homepage, "__NULL__", 10, idsRepository.getUniqueIdentifier(),
+        .flatMapSingle(account -> idsRepository.getUniqueIdentifier()
+            .flatMap(id -> mapRandomAd(GetAdsRequest.of(Location.homepage, "__NULL__", 10, id,
                 googlePlayServicesAvailabilityChecker.isAvailable(context), partnerId,
                 account.isAdultContentEnabled(), httpClient, converterFactory,
                 qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)),
                 sharedPreferences, connectivityManager, resources, versionCodeProvider)
-                .observe()));
+                .observe()).toSingle()));
   }
 
   private Observable<MinimalAd> mapRandomAd(Observable<GetAdsResponse> getAdsResponseObservable) {
