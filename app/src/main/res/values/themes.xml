@@ -89,6 +89,8 @@
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_black</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_black</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_black</item>
+    <item name="resume_to_pause">@drawable/ic_resume_to_pause</item>
+    <item name="pause_to_resume">@drawable/ic_pause_to_resume</item>
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button</item>
@@ -178,7 +180,8 @@
     <item name="icCancelDrawable">@drawable/cross</item>
     <item name="icPlayDrawable">@drawable/media_play</item>
     <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
-    <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+    <item name="icUpdateDrawable">@drawable/ic_refresh_action_black</item>
+    <item name="version_refresh_icon">@drawable/ic_refresh_orange</item>
     <item name="icAboutDrawable">@drawable/ic_action_about</item>
     <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
     <item name="icLikeDrawable">@drawable/thumbs_up_grey</item>
@@ -305,6 +308,8 @@
     <item name="download_progress_resume">@drawable/ic_play_arrow_action_light</item>
     <item name="download_progress_pause">@drawable/ic_pause_action_light</item>
     <item name="download_progress_cancel">@drawable/ic_clear_action_light</item>
+    <item name="resume_to_pause">@drawable/ic_resume_to_pause_white</item>
+    <item name="pause_to_resume">@drawable/ic_pause_to_resume_white</item>
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button</item>
@@ -394,7 +399,8 @@
     <item name="icCancelDrawable">@drawable/ic_action_cancel_dark</item>
     <item name="icPlayDrawable">@drawable/ic_action_play</item>
     <item name="icUninstallDrawable">@drawable/ic_action_discard</item>
-    <item name="icUpdateDrawable">@drawable/ic_action_update</item>
+    <item name="icUpdateDrawable">@drawable/ic_refresh_action_white</item>
+    <item name="version_refresh_icon">@drawable/ic_refresh_action_white</item>
     <item name="icAboutDrawable">@drawable/ic_action_about</item>
     <item name="icDownloadsDrawable">@drawable/ic_action_download</item>
     <item name="icLikeDrawable">@drawable/thumbs_up_grey</item>

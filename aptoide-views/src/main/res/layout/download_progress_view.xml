@@ -84,8 +84,8 @@
         android:padding="12dp"
         android:scaleType="fitCenter"
         android:visibility="gone"
-        app:animation="@drawable/ic_resume_to_pause"
-        app:reverseAnimation="@drawable/ic_pause_to_resume"
+        app:animation="?attr/resume_to_pause"
+        app:reverseAnimation="?attr/pause_to_resume"
         tools:visibility="visible"
         />
 
@@ -103,7 +103,7 @@
       app:layout_constraintEnd_toStartOf="@+id/frameLayout"
       app:layout_constraintStart_toEndOf="@+id/progressBar"
       app:layout_constraintTop_toTopOf="parent"
-      app:srcCompat="@drawable/ic_clear_action_black"
+      app:srcCompat="?attr/download_progress_cancel"
       tools:visibility="visible"
       />
 

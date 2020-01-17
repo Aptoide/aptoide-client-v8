@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home.apps.list.models
 
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +10,7 @@ import cm.aptoide.pt.home.apps.AppClick
 import cm.aptoide.pt.home.apps.model.StateApp
 import cm.aptoide.pt.home.apps.model.UpdateApp
 import cm.aptoide.pt.networking.image.ImageLoader
+import cm.aptoide.pt.themes.ThemeManager
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyModelClass
@@ -25,6 +25,9 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
 
   @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
   var eventSubject: PublishSubject<AppClick>? = null
+
+  @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+  var themeManager: ThemeManager? = null
 
   override fun bind(holder: CardHolder) {
     application?.let { app ->
@@ -120,7 +123,8 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
       holder.secondaryText.setTextAppearance(holder.itemView.context,
           R.style.Aptoide_TextView_Medium_XS_Red700)
     } else {
-      holder.secondaryIcon.setImageResource(R.drawable.ic_refresh_orange)
+      holder.secondaryIcon.setImageResource(
+          themeManager!!.getAttributeForTheme(R.attr.version_refresh_icon).resourceId)
       holder.secondaryText.text = app.version
       holder.secondaryText.setTextAppearance(holder.itemView.context,
           R.style.Aptoide_TextView_Medium_XS_Grey)

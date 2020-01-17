@@ -75,6 +75,7 @@
   <attr name="icTimelineDrawable" format="reference" />
   <attr name="icUninstallDrawable" format="reference" />
   <attr name="icUpdateDrawable" format="reference" />
+  <attr name="version_refresh_icon" format="reference" />
   <attr name="icViewMoreComments" format="reference" />
   <attr name="icWebSiteDrawable" format="reference" />
   <attr name="icAppviewsPencil" format="reference" />
@@ -141,6 +142,8 @@
   <attr name="download_progress_resume" format="reference" />
   <attr name="download_progress_pause" format="reference" />
   <attr name="download_progress_cancel" format="reference" />
+  <attr name="resume_to_pause" format="reference" />
+  <attr name="pause_to_resume" format="reference" />
 
   <!--New styles attributes-->
   <attr name="raisedButtonBackground" format="reference" />
