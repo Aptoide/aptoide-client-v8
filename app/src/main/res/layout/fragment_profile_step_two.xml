@@ -26,11 +26,11 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:layout_marginBottom="@dimen/padding_medium"
-      android:layout_marginEnd="@dimen/padding_small"
-      android:layout_marginLeft="@dimen/padding_small"
-      android:layout_marginRight="@dimen/padding_small"
       android:layout_marginStart="@dimen/padding_small"
+      android:layout_marginLeft="@dimen/padding_small"
+      android:layout_marginEnd="@dimen/padding_small"
+      android:layout_marginRight="@dimen/padding_small"
+      android:layout_marginBottom="@dimen/padding_medium"
       android:gravity="center|bottom"
       android:orientation="horizontal"
       android:weightSum="2"
@@ -38,26 +38,26 @@
 
     <Button
         android:id="@+id/logged_in_private_button"
+        style="@style/Aptoide.Button.Ghost"
         android:layout_width="8dp"
         android:layout_marginEnd="@dimen/padding_smaller"
         android:layout_marginRight="@dimen/padding_smaller"
         android:layout_weight="1"
         android:text="@string/create_profile_pub_pri_make_priv"
         android:textSize="@dimen/text_size_small"
-        style="@style/Aptoide.Button.Ghost"
         />
 
     <Button
         android:id="@+id/logged_in_continue"
+        style="@style/Aptoide.Button"
         android:layout_width="0dp"
-        android:layout_marginEnd="@dimen/padding_tiny"
-        android:layout_marginLeft="@dimen/padding_smaller"
-        android:layout_marginRight="@dimen/padding_tiny"
         android:layout_marginStart="@dimen/padding_smaller"
+        android:layout_marginLeft="@dimen/padding_smaller"
+        android:layout_marginEnd="@dimen/padding_tiny"
+        android:layout_marginRight="@dimen/padding_tiny"
         android:layout_weight="1"
         android:gravity="center"
         android:text="@string/continue_option"
-        style="@style/Aptoide.Button"
         />
 
   </LinearLayout>
@@ -68,10 +68,10 @@
       android:layout_height="match_parent"
       android:layout_above="@id/bottom_buttons"
       android:layout_marginTop="?android:actionBarSize"
-      android:paddingEnd="@dimen/padding_very_small"
-      android:paddingLeft="@dimen/padding_very_small"
-      android:paddingRight="@dimen/padding_very_small"
       android:paddingStart="@dimen/padding_very_small"
+      android:paddingLeft="@dimen/padding_very_small"
+      android:paddingEnd="@dimen/padding_very_small"
+      android:paddingRight="@dimen/padding_very_small"
       >
 
     <LinearLayout
@@ -85,39 +85,39 @@
 
       <TextView
           android:id="@+id/create_profile_title"
+          style="@style/Aptoide.TextView.Medium.L"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_medium_small"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri"
-          style="@style/Aptoide.TextView.Medium.L"
           />
 
       <TextView
+          style="@style/Aptoide.TextView.Regular.S"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri_sub_text_1"
-          style="@style/Aptoide.TextView.Regular.S"
           />
 
       <TextView
+          style="@style/Aptoide.TextView.Regular.S"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri_sub_text_2"
-          style="@style/Aptoide.TextView.Regular.S"
           />
 
       <TextView
+          style="@style/Aptoide.TextView.Regular.S"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/padding_smaller"
           android:gravity="center_horizontal"
           android:text="@string/create_profile_pub_pri_sub_text_3"
-          style="@style/Aptoide.TextView.Regular.S"
           />
 
     </LinearLayout>
