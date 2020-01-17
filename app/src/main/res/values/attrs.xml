@@ -78,6 +78,9 @@
   <attr name="icViewMoreComments" format="reference" />
   <attr name="icWebSiteDrawable" format="reference" />
   <attr name="icAppviewsPencil" format="reference" />
+  <attr name="penDrawable" format="reference" />
+  <attr name="thumbsUpDrawable" format="reference" />
+  <attr name="thumbsDownDrawable" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
   <attr name="ratingDrawable" format="reference" />
