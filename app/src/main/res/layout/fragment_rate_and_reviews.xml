@@ -11,8 +11,7 @@
     android:fitsSystemWindows="true"
     >
 
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="?attr/widgetBackgroundColorPrimary"
@@ -24,19 +23,14 @@
         android:layout_height="wrap_content"
         >
 
-      <!--
-          android:theme="?attr/toolbarTheme"
-          -->
-
-      <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:app="http://schemas.android.com/apk/res-auto"
+      <androidx.appcompat.widget.Toolbar
           android:id="@+id/toolbar"
           style="@style/Toolbar.Reviews"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
           app:layout_collapseMode="pin"
           app:layout_scrollFlags="scroll|enterAlways"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          app:theme="?attr/actionBarTheme"
           />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -56,13 +50,6 @@
         android:paddingTop="10dp"
         >
 
-
-      <!--
-
-      error views
-
-      -->
-
       <cm.aptoide.aptoideviews.errors.ErrorView
           android:id="@+id/error_view"
           android:layout_width="match_parent"
@@ -70,12 +57,6 @@
           android:visibility="gone"
           tools:visibility="gone"
           />
-
-      <!--
-
-      ordering buttons
-
-      -->
 
       <LinearLayout
           android:id="@+id/ordering_buttons_layout"

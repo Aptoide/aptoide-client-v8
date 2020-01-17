@@ -86,17 +86,13 @@
         app:expandedTitleTextAppearance="@style/OtherVersionsHeaderTextAppView"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
-
-      <!--
-      android:theme="?attr/toolbarTheme"
-      -->
       <androidx.appcompat.widget.Toolbar
           android:id="@+id/toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
           app:layout_collapseMode="pin"
           app:layout_scrollFlags="scroll|enterAlways"
-          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          app:theme="?attr/actionBarTheme"
           />
       <RelativeLayout
           android:layout_width="match_parent"
