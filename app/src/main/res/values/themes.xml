@@ -476,7 +476,7 @@
     <item name="toolbarBackground">@drawable/grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
-    <item name="bnItemColorState">@drawable/grey_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/default_nav_item_color_state_dark</item>
     <item name="wizardThirdColor">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
     <item name="homeChips">@drawable/grey_home_chips_background</item>
