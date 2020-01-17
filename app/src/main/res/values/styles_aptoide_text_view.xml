@@ -218,6 +218,10 @@
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.L.White">
+    <item name="android:textColor">@color/white</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S.Black">
     <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
@@ -282,6 +286,15 @@
   <style name="Aptoide.TextView.Medium.XL.Primary">
     <item name="android:textColor">?android:attr/textColorPrimary</item>
   </style>
+
+  <style name="Aptoide.TextView.Medium.L.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+  </style>
+
+  <style name="Aptoide.TextView.Regular.M.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+  </style>
+
 
   <style name="Aptoide.TextView.Medium.XL.White">
     <item name="android:textColor">?attr/textColorWhite</item>

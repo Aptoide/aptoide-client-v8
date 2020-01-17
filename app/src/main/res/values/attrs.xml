@@ -158,7 +158,9 @@
   <attr name="preferenceSummaryTextSize" format="dimension" />
   <attr name="colorControlHighlight" format="color" />
   <attr name="bnItemColorState" format="color" />
-  <attr name="wizard3Color" format="color" />
+  <attr name="wizardFirstColor" format="color" />
+  <attr name="wizardSecondColor" format="color" />
+  <attr name="wizardThirdColor" format="color" />
   <attr name="reactionsPopUpBackgroundColor" format="color" />
   <attr name="reactionsButtonColor" format="color" />
   <attr name="widgetBackgroundColorPrimary" format="color" />
@@ -173,6 +175,8 @@
   <attr name="addCircleButtonDrawable" format="reference" />
 
   <attr name="dialogsTheme" format="reference" />
+  <attr name="wizardBackgroundBottom" format="color" />
+  <attr name="wizardRadioBackgroundColor" format="color" />
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />
