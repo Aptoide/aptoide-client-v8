@@ -60,9 +60,9 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void bindView(OtherVersionDisplayable displayable, int position) {
+    this.displayable = displayable;
     setItemBackgroundColor(itemView);
     try {
-      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()
