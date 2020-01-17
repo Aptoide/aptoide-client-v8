@@ -1,169 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
 
   <com.google.android.material.appbar.AppBarLayout
-    android:id="@+id/app_bar_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/transparent">
+      android:id="@+id/app_bar_layout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/transparent"
+      >
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
-      android:id="@+id/collapsing_toolbar_layout"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:collapsedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
-      app:expandedTitleMarginBottom="80dp"
-      app:expandedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewExpanded"
-      app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-      <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_collapseMode="parallax"
-        app:layout_collapseParallaxMultiplier="0.2">
+        app:collapsedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
+        app:expandedTitleMarginBottom="80dp"
+        app:expandedTitleTextAppearance="@style/AppcInfoHeaderTextAppViewExpanded"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+        >
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          app:layout_collapseMode="parallax"
+          app:layout_collapseParallaxMultiplier="0.2"
+          >
 
         <ImageView
-          android:id="@+id/app_graphic"
-          android:layout_width="match_parent"
-          android:layout_height="248dp"
-          android:scaleType="fitXY"
-          android:src="@drawable/appc_gradient"
-          app:layout_collapseMode="parallax"
-          app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/app_graphic"
+            android:layout_width="match_parent"
+            android:layout_height="248dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/appc_gradient"
+            app:layout_collapseMode="parallax"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <View
-          android:id="@+id/app_graphic_guy_ref"
-          android:layout_width="132dp"
-          android:layout_height="154dp"
-          android:layout_marginTop="40dp"
-          android:layout_marginRight="16dp"
-          app:layout_collapseMode="parallax"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/app_graphic_guy_ref"
+            android:layout_width="132dp"
+            android:layout_height="154dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="16dp"
+            app:layout_collapseMode="parallax"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <TextView
-          android:id="@+id/appc_header_text"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom"
-          android:paddingBottom="40dp"
-          android:text="@string/appc_info_view_title_1"
-          android:textAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
-          app:layout_constraintBottom_toBottomOf="@+id/app_graphic"
-          app:layout_constraintEnd_toStartOf="@+id/app_graphic_guy_ref"
-          app:layout_constraintStart_toStartOf="@+id/header_guideline"
-          app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/appc_header_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:paddingBottom="40dp"
+            android:text="@string/appc_info_view_title_1"
+            android:textAppearance="@style/AppcInfoHeaderTextAppViewCollapsed"
+            app:layout_constraintBottom_toBottomOf="@+id/app_graphic"
+            app:layout_constraintEnd_toStartOf="@+id/app_graphic_guy_ref"
+            app:layout_constraintStart_toStartOf="@+id/header_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            />
 
         <androidx.constraintlayout.widget.Guideline
-          android:id="@+id/header_guideline"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="vertical"
-          app:layout_constraintGuide_begin="20dp" />
+            android:id="@+id/header_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            />
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <ImageView
-        android:id="@+id/app_graphic_guy"
-        android:layout_width="132dp"
-        android:layout_height="154dp"
-        android:layout_gravity="right"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="16dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/appc_info_app_bar_guy"
-        app:layout_collapseMode="parallax"
+          android:id="@+id/app_graphic_guy"
+          android:layout_width="132dp"
+          android:layout_height="154dp"
+          android:layout_gravity="right"
+          android:layout_marginTop="40dp"
+          android:layout_marginRight="16dp"
+          android:scaleType="fitXY"
+          android:src="@drawable/appc_info_app_bar_guy"
+          app:layout_collapseMode="parallax"
 
-        />
+          />
 
       <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:gravity="center"
-        app:layout_collapseMode="pin"
-        app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:titleTextColor="@color/white">
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:gravity="center"
+          app:layout_collapseMode="pin"
+          app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+          app:titleTextColor="@color/white"
+          >
 
       </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.CollapsingToolbarLayout>
   </com.google.android.material.appbar.AppBarLayout>
 
   <androidx.core.widget.NestedScrollView
-    android:id="@+id/about_appcoins_scroll"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@id/app_cardview_layout"
-    android:layout_below="@id/app_bar_layout"
-    android:scrollbars="none"
-    app:behavior_overlapTop="84dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-    <LinearLayout
+      android:id="@+id/about_appcoins_scroll"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical">
+      android:layout_above="@id/app_cardview_layout"
+      android:layout_below="@id/app_bar_layout"
+      android:scrollbars="none"
+      app:behavior_overlapTop="84dp"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      >
 
-      <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:cardCornerRadius="4dp">
+        android:orientation="vertical"
+        >
+
+      <androidx.cardview.widget.CardView
+          style="?attr/backgroundCard"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="8dp"
+          android:layout_marginRight="8dp"
+          app:cardCornerRadius="4dp"
+          >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
 
           <TextView
-            android:id="@+id/appc_message_appcoins_section_1"
-            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:text="@string/appc_info_view_body_1"
-            app:layout_constraintEnd_toEndOf="@id/guideline_right"
-            app:layout_constraintLeft_toLeftOf="@id/guideline_left"
-            app:layout_constraintRight_toRightOf="@id/guideline_right"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toTopOf="parent" />
+              android:id="@+id/appc_message_appcoins_section_1"
+              style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="26dp"
+              android:text="@string/appc_info_view_body_1"
+              app:layout_constraintEnd_toEndOf="@id/guideline_right"
+              app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+              app:layout_constraintRight_toRightOf="@id/guideline_right"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toTopOf="parent"
+              />
 
           <androidx.cardview.widget.CardView
-            android:id="@+id/appc_video_card"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="8dp"
-            app:cardCornerRadius="4dp"
-            app:layout_constraintDimensionRatio="V,16:9.3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appc_message_appcoins_section_1">
+              android:id="@+id/appc_video_card"
+              android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_marginLeft="8dp"
+              android:layout_marginTop="20dp"
+              android:layout_marginRight="8dp"
+              app:cardCornerRadius="4dp"
+              app:layout_constraintDimensionRatio="V,16:9.3"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@id/appc_message_appcoins_section_1"
+              >
 
             <LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/appc_gradient">
-
-              <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="4dp">
+                android:background="@drawable/appc_gradient"
+                >
+
+              <androidx.cardview.widget.CardView
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_marginLeft="8dp"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginRight="8dp"
+                  android:layout_marginBottom="8dp"
+                  app:cardCornerRadius="4dp"
+                  >
 
                 <cm.aptoide.aptoideviews.video.YoutubePlayer
-                  android:id="@+id/youtube_player"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent" />
+                    android:id="@+id/youtube_player"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
 
               </androidx.cardview.widget.CardView>
 
@@ -172,121 +191,133 @@
           </androidx.cardview.widget.CardView>
 
           <TextView
-            android:id="@+id/appc_message_appcoins_header_2"
-            style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:text="@string/appc_info_view_title_2"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_video_card" />
+              android:id="@+id/appc_message_appcoins_header_2"
+              style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="19dp"
+              android:text="@string/appc_info_view_title_2"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/appc_video_card"
+              />
 
           <TextView
-            android:id="@+id/appc_message_appcoins_section_2a"
-            style="@style/Aptoide.TextView.Regular.M"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/appc_message_appcoins_header_2"
-            android:layout_marginTop="9dp"
-            android:text="@string/appc_info_view_body_2"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_2" />
+              android:id="@+id/appc_message_appcoins_section_2a"
+              style="@style/Aptoide.TextView.Regular.M"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/appc_message_appcoins_header_2"
+              android:layout_marginTop="9dp"
+              android:text="@string/appc_info_view_body_2"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_2"
+              />
 
           <FrameLayout
-            android:id="@+id/app_card_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="19dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_2a">
+              android:id="@+id/app_card_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="8dp"
+              android:layout_marginTop="19dp"
+              android:layout_marginRight="8dp"
+              app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_2a"
+              >
 
             <View
-              android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:background="@color/grey_fog_normal" />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey_fog_normal"
+                />
 
             <include
-              android:id="@+id/app_cardview"
-              layout="@layout/app_install_cardview"
+                android:id="@+id/app_cardview"
+                layout="@layout/app_install_cardview"
 
-              android:layout_width="match_parent"
-              android:layout_height="57dp" />
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                />
 
             <View
-              android:layout_width="match_parent"
-              android:layout_height="1dp"
-              android:layout_gravity="bottom"
-              android:background="@color/grey_fog_normal" />
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="@color/grey_fog_normal"
+                />
 
           </FrameLayout>
 
           <TextView
-            android:id="@+id/appc_message_appcoins_header_3"
-            style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:text="@string/appc_info_view_title_3"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/app_card_layout" />
+              android:id="@+id/appc_message_appcoins_header_3"
+              style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="19dp"
+              android:text="@string/appc_info_view_title_3"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/app_card_layout"
+              />
 
           <TextView
-            android:id="@+id/appc_message_appcoins_section_3"
-            style="@style/Aptoide.TextView.Regular.M"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
-            android:text="@string/appc_info_view_body_3"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_3" />
+              android:id="@+id/appc_message_appcoins_section_3"
+              style="@style/Aptoide.TextView.Regular.M"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:text="@string/appc_info_view_body_3"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_3"
+              />
 
           <TextView
-            android:id="@+id/appc_message_appcoins_header_4"
-            style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:text="@string/appc_info_view_title_4"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_3" />
+              android:id="@+id/appc_message_appcoins_header_4"
+              style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="19dp"
+              android:text="@string/appc_info_view_title_4"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_section_3"
+              />
 
           <TextView
-            android:id="@+id/appc_message_appcoins_section_4"
-            style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
-            android:paddingBottom="20dp"
-            android:text="@string/appc_info_view_title_5"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_right"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_left"
-            app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_4" />
+              android:id="@+id/appc_message_appcoins_section_4"
+              style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="9dp"
+              android:paddingBottom="20dp"
+              android:text="@string/appc_info_view_title_5"
+              app:layout_constraintEnd_toStartOf="@+id/guideline_right"
+              app:layout_constraintHorizontal_bias="0"
+              app:layout_constraintStart_toStartOf="@id/guideline_left"
+              app:layout_constraintTop_toBottomOf="@+id/appc_message_appcoins_header_4"
+              />
 
           <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="20dp" />
+              android:id="@+id/guideline_left"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              app:layout_constraintGuide_begin="20dp"
+              />
 
           <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="17dp" />
+              android:id="@+id/guideline_right"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              app:layout_constraintGuide_end="17dp"
+              />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -294,51 +325,56 @@
 
 
       <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="10dp"
-        app:cardCornerRadius="4dp">
+          android:layout_width="match_parent"
+          android:layout_height="128dp"
+          android:layout_marginLeft="8dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginRight="8dp"
+          android:layout_marginBottom="10dp"
+          app:cardCornerRadius="4dp"
+          >
 
         <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:background="@color/catappult_purple">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/catappult_purple"
+            >
 
           <TextView
-            android:id="@+id/appc_developers_header"
-            style="@style/Aptoide.TextView.Medium.L"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="13dp"
-            android:text="@string/appc_info_view_devs_title"
-            android:textColor="@color/catappult_pink"
-            android:textStyle="bold" />
+              android:id="@+id/appc_developers_header"
+              style="@style/Aptoide.TextView.Medium.L"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="13dp"
+              android:text="@string/appc_info_view_devs_title"
+              android:textColor="@color/catappult_pink"
+              android:textStyle="bold"
+              />
 
           <TextView
-            android:id="@+id/appc_developers_body"
-            style="@style/Aptoide.TextView.Medium.S"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/appc_developers_header"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="6dp"
-            android:text="@string/appc_info_view_devs_body"
-            android:textColor="@color/white" />
+              android:id="@+id/appc_developers_body"
+              style="@style/Aptoide.TextView.Medium.S"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/appc_developers_header"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="6dp"
+              android:text="@string/appc_info_view_devs_body"
+              android:textColor="@color/white"
+              />
 
           <Button
-            android:id="@+id/catappult_dev_button"
-            style="@style/Aptoide.Button.Catappult"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/appc_info_view_devs_button" />
+              android:id="@+id/catappult_dev_button"
+              style="@style/Aptoide.Button.Catappult"
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:layout_alignParentBottom="true"
+              android:layout_marginLeft="8dp"
+              android:layout_marginRight="8dp"
+              android:layout_marginBottom="8dp"
+              android:text="@string/appc_info_view_devs_button"
+              />
 
         </RelativeLayout>
 
@@ -349,22 +385,25 @@
   </androidx.core.widget.NestedScrollView>
 
   <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      >
 
     <LinearLayout
-      android:id="@+id/app_cardview_layout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:background="@drawable/background_with_shadow"
-      android:visibility="gone">
+        android:id="@+id/app_cardview_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/background_with_shadow"
+        android:visibility="gone"
+        >
 
       <include
-        android:id="@+id/app_cardview"
-        layout="@layout/app_install_cardview"
-        android:layout_width="match_parent"
-        android:layout_height="57dp" />
+          android:id="@+id/app_cardview"
+          layout="@layout/app_install_cardview"
+          android:layout_width="match_parent"
+          android:layout_height="57dp"
+          />
     </LinearLayout>
 
   </RelativeLayout>
