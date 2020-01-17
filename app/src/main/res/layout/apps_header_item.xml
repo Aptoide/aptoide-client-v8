@@ -9,7 +9,7 @@
       android:id="@+id/apps_header_title"
       style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+      android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
       android:layout_alignParentLeft="true"
       android:layout_centerVertical="true"

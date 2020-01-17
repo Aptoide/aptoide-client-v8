@@ -368,7 +368,7 @@
   </style>
 
   <style name="Aptoide.TextView.Medium.XS.Theme">
-    <item name="android:textColor">?attr/colorPrimary</item>
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
   </style>
 
   <style name="Aptoide.TextView.Medium.XXS.Theme">
