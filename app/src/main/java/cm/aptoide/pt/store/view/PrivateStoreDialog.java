@@ -33,6 +33,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.BaseDialogFragment;
@@ -58,6 +59,7 @@ public class PrivateStoreDialog extends BaseDialogFragment {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
+  private ThemeManager themeManager;
 
   public static PrivateStoreDialog newInstance(Fragment returnFragment, int requestCode,
       String storeName, boolean isInsideStore) {
@@ -79,6 +81,7 @@ public class PrivateStoreDialog extends BaseDialogFragment {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    themeManager = new ThemeManager(getActivity());
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager =
@@ -183,7 +186,8 @@ public class PrivateStoreDialog extends BaseDialogFragment {
 
   private void showLoadingDialog() {
     if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     }
     loadingDialog.show();
   }

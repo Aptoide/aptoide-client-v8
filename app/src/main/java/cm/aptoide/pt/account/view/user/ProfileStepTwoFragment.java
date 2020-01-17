@@ -18,6 +18,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -35,6 +36,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
   @Inject AccountAnalytics accountAnalytics;
   @Inject LoginSignupManager loginSignupManager;
   @Inject MarketResourceFormatter marketResourceFormatter;
+  @Inject ThemeManager themeManager;
   private Button continueBtn;
   private Button privateProfileBtn;
   private TextView createProfileTitle;
@@ -56,6 +58,7 @@ public class ProfileStepTwoFragment extends BaseToolbarFragment
     getFragmentComponent(savedInstanceState).inject(this);
     accountNavigator = ((ActivityResultNavigator) getContext()).getAccountNavigator();
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId,
         getContext().getString(R.string.please_wait));
   }
 

@@ -42,6 +42,7 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -91,6 +92,7 @@ public class AddStoreDialog extends BaseDialogFragment {
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private ScreenOrientationManager orientationManager;
+  private ThemeManager themeManager;
 
   private SearchSuggestionManager searchSuggestionManager;
   private CompositeSubscription subscriptions;
@@ -114,6 +116,7 @@ public class AddStoreDialog extends BaseDialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    themeManager = new ThemeManager(getActivity());
     subscriptions = new CompositeSubscription();
 
     tokenInvalidator =
@@ -343,7 +346,8 @@ public class AddStoreDialog extends BaseDialogFragment {
   private void showLoadingDialog() {
 
     if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     }
     orientationManager.lock();
     loadingDialog.show();
