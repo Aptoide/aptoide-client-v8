@@ -190,6 +190,11 @@
     <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
   </style>
 
+  <style name="backgroundCardStyleBlack">
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="cardBackgroundColor">@color/grey_dark</item>
+  </style>
+
   <style name="backgroundCardAccentStyle">
     <item name="android:foreground">?selectableItemBackground</item>
     <item name="android:background">@drawable/aptoide_gradient</item>

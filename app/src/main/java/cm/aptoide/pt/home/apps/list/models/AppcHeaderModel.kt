@@ -1,16 +1,15 @@
 package cm.aptoide.pt.home.apps.list.models
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import cm.aptoide.pt.R
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fa.epoxysample.bundles.models.base.BaseViewHolder
 import kotlin.math.roundToInt
-import androidx.constraintlayout.widget.ConstraintSet
 
 @EpoxyModelClass(layout = R.layout.appc_apps_section_promo_header)
 abstract class AppcHeaderModel : EpoxyModelWithHolder<AppcHeaderModel.Holder>() {
@@ -44,11 +43,13 @@ abstract class AppcHeaderModel : EpoxyModelWithHolder<AppcHeaderModel.Holder>() 
 
       val constraintSet = ConstraintSet()
       constraintSet.clone(holder.rootLayout)
-      constraintSet.clear(R.id.appc_disclaimer_icon)
+      constraintSet.clear(R.id.appc_disclaimer_icon, ConstraintSet.RIGHT)
       constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.LEFT, R.id.title,
           ConstraintSet.LEFT)
       constraintSet.connect(R.id.appc_disclaimer_icon, ConstraintSet.TOP, R.id.title,
           ConstraintSet.BOTTOM)
+      constraintSet.setHorizontalBias(R.id.appc_disclaimer_icon, 0.15f)
+      constraintSet.applyTo(holder.rootLayout)
     }
 
   }
