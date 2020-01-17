@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.ThemeAttributeProvider;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
@@ -104,19 +103,19 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
     int color;
     if (getLayoutPosition() % 2 == 0) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(new ThemeAttributeProvider(itemView.getContext()
-            .getTheme()).getAttributeForTheme(R.attr.backgroundSecondary).resourceId, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId, theme);
       } else {
-        color = res.getColor(new ThemeAttributeProvider(itemView.getContext()
-            .getTheme()).getAttributeForTheme(R.attr.backgroundSecondary).resourceId);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId);
       }
     } else {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(new ThemeAttributeProvider(itemView.getContext()
-            .getTheme()).getAttributeForTheme(R.attr.backgroundMain).resourceId, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId, theme);
       } else {
-        color = res.getColor(new ThemeAttributeProvider(itemView.getContext()
-            .getTheme()).getAttributeForTheme(R.attr.backgroundMain).resourceId);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId);
       }
     }
 
