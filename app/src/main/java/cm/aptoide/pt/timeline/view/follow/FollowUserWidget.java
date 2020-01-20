@@ -1,6 +1,5 @@
 package cm.aptoide.pt.timeline.view.follow;
 
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
@@ -191,9 +190,9 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
   }
 
-  private void setupStoreNameTv(int storeColor, String storeName) {
+  private void setupStoreNameTv(int storeColorResourceId, String storeName) {
     storeNameTv.setText(storeName);
-    storeNameTv.setTextColor(storeColor);
+    storeNameTv.setTextColor(storeColorResourceId);
     storeNameTv.setVisibility(View.VISIBLE);
     Drawable drawable;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -206,7 +205,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     drawable.setBounds(0, 0, 30, 30);
     drawable.mutate();
 
-    drawable.setColorFilter(storeColor, PorterDuff.Mode.SRC_IN);
+    //drawable.setColorFilter(getContext().getResources()
+    //.getColor(storeColorResourceId), PorterDuff.Mode.SRC_IN);
     storeNameTv.setCompoundDrawablePadding(5);
     storeNameTv.setCompoundDrawables(drawable, null, null, null);
   }
