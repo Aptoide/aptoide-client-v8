@@ -376,8 +376,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getFormattedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
-      AlertDialog.Builder alertDialogBuilder =
-          new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
+      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
       alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
           .setMessage(getString(R.string.setting_sdk_version)
