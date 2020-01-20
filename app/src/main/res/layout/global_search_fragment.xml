@@ -96,9 +96,9 @@
             android:id="@+id/fragment_search_result_all_stores_button"
             android:layout_width="128dp"
             android:layout_height="match_parent"
-            android:background="@drawable/default_search_button_background"
+            android:background="?attr/roundGradientButtonBackground"
             android:text="@string/all_stores"
-            android:textColor="@color/white"
+            android:textColor="?attr/inverseTextColor"
             android:textSize="10sp"
             tools:ignore="SmallSp"
             />

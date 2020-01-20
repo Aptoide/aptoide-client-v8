@@ -594,7 +594,8 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
-      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
+      followedStoresButton.setTextColor(
+          themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
       followedStoresButton.setBackgroundResource(
           themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }
@@ -616,7 +617,8 @@ public class SearchResultFragment extends BackButtonFragment
       followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
-      allStoresButton.setTextColor(getResources().getColor(R.color.white));
+      allStoresButton.setTextColor(
+          themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
       allStoresButton.setBackgroundResource(
           themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }

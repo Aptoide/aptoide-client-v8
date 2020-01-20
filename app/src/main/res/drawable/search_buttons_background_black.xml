@@ -2,7 +2,7 @@
   <item android:color="@color/black">
     <shape>
       <solid android:color="@color/black" />
-      <stroke android:color="@color/grey_medium" android:width="1dp" />
+      <stroke android:color="@color/grey_700" android:width="1dp" />
       <corners android:radius="45dp" />
       <padding android:bottom="2dp" android:left="2dp" android:right="2dp" android:top="2dp" />
     </shape>
