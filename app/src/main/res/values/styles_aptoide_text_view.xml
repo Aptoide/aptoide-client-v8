@@ -197,6 +197,10 @@
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XS.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.S.White">
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
@@ -250,6 +254,9 @@
     <item name="android:textColor">?attr/textColorRed700</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.S.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimary</item>
+  </style>
 
   <style name="Aptoide.TextView.Medium.XXS.Orange">
     <item name="android:textColor">?attr/textColorOrange</item>

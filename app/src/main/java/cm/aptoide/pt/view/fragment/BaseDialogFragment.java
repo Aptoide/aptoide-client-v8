@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 public class BaseDialogFragment extends RxDialogFragment {
 
-  @Inject ThemeManager themeAttributeProvider;
+  public @Inject ThemeManager themeManager;
   private FragmentComponent fragmentComponent;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class BaseDialogFragment extends RxDialogFragment {
 
     if (this.getActivity() != null) {
       setStyle(DialogFragment.STYLE_NO_TITLE,
-          themeAttributeProvider.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     }
   }
 

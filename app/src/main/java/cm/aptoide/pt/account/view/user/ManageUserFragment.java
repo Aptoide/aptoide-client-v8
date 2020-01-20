@@ -120,6 +120,7 @@ public class ManageUserFragment extends BackButtonFragment
             .build();
 
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId,
         context.getString(R.string.please_wait_upload));
   }
 

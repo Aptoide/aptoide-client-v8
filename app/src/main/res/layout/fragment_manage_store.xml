@@ -100,6 +100,9 @@
               style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
               android:layout_width="match_parent"
               android:hint="@string/create_store_name_inserted"
+              android:inputType="text"
+              android:singleLine="true"
+              android:imeOptions="actionDone"
               />
 
           <EditText
@@ -109,7 +112,7 @@
               android:layout_height="wrap_content"
               android:hint="@string/create_store_description_hint"
               android:visibility="gone"
-              tools:visibility="gone"
+              tools:visibility="visible"
               />
 
           <LinearLayout
@@ -483,7 +486,6 @@
             android:id="@+id/create_store_skip"
             style="@style/Aptoide.Button.Ghost"
             android:layout_width="8dp"
-            android:layout_height="60dp"
             android:layout_marginEnd="@dimen/padding_smaller"
             android:layout_marginRight="@dimen/padding_smaller"
             android:layout_weight="1"

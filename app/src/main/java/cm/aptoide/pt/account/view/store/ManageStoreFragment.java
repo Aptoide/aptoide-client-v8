@@ -486,6 +486,7 @@ public class ManageStoreFragment extends BackButtonFragment
     youtubeEndRowIcon = view.findViewById(R.id.edit_store_youtube_plus);
 
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId,
         getActivity().getApplicationContext()
             .getString(R.string.please_wait_upload));
     toolbar = view.findViewById(R.id.toolbar);

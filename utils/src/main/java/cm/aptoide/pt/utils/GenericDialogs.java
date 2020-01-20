@@ -8,6 +8,7 @@ package cm.aptoide.pt.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ import rx.subscriptions.Subscriptions;
 /**
  * Created by trinkes on 5/9/16. <li>{@link #createGenericYesNoCancelMessage(Context, String, *
  * String)}</li> <li>{@link #createGenericOkCancelMessage(Context, String, String)}</li> <li>{@link
- * #createGenericPleaseWaitDialog(Context)}</li>
+ * #createGenericPleaseWaitDialog(Context, int)}</li>
  */
 public class GenericDialogs {
 
@@ -242,8 +243,9 @@ public class GenericDialogs {
    *
    * @return A ProgressDialog with a please wait message
    */
-  public static ProgressDialog createGenericPleaseWaitDialog(Context context) {
-    ProgressDialog progressDialog = new ProgressDialog(context);
+  public static ProgressDialog createGenericPleaseWaitDialog(Context context, int resourceId) {
+    ProgressDialog progressDialog =
+        new ProgressDialog(new ContextThemeWrapper(context, resourceId));
     progressDialog.setMessage(context.getString(R.string.please_wait));
     progressDialog.setCancelable(false);
     return progressDialog;
@@ -252,10 +254,12 @@ public class GenericDialogs {
   /**
    * Creates an endless progressDialog to be shown when user is waiting for something
    *
-   * @return A ProgressDialog with a please wait message
+   * @return A ProgressDialog with a configurable message
    */
-  public static ProgressDialog createGenericPleaseWaitDialog(Context context, String string) {
-    ProgressDialog progressDialog = new ProgressDialog(context);
+  public static ProgressDialog createGenericPleaseWaitDialog(Context context, int resourceId,
+      String string) {
+    ProgressDialog progressDialog =
+        new ProgressDialog(new ContextThemeWrapper(context, resourceId));
     progressDialog.setMessage(string);
     progressDialog.setCancelable(false);
     return progressDialog;

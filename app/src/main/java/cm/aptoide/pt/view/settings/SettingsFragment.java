@@ -350,7 +350,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(preference -> {
-      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
           getString(R.string.storage_dialog_title, marketName),
           getString(R.string.clear_cache_dialog_message))
