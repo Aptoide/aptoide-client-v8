@@ -28,6 +28,7 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
@@ -37,7 +38,7 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class CommentDialogFragment
-    extends com.trello.rxlifecycle.components.support.RxDialogFragment {
+    extends BaseDialogFragment {
 
   private static final String APP_OR_STORE_NAME = "app_or_store_name";
   private static final String RESOURCE_ID_AS_LONG = "resource_id_as_long";
