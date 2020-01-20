@@ -25,7 +25,7 @@
         android:layout_marginTop="17dp"
         android:text="@string/remote_install_title"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#ff6600"
+        android:textColor="?attr/colorPrimaryDark"
         android:textIsSelectable="false"
         android:textSize="15.3sp"
         />
@@ -73,7 +73,7 @@
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
       android:alpha="0.15"
-      android:background="#000000"
+      android:background="?attr/separatorColor"
       />
 
   <LinearLayout
@@ -179,6 +179,7 @@
 
       <Button
           android:id="@+id/help_btn"
+          style="@style/Aptoide.Button.Alternative"
           android:layout_width="53.7dp"
           android:layout_height="25.7dp"
           android:layout_alignParentEnd="true"
@@ -186,10 +187,8 @@
           android:layout_gravity="center_vertical"
           android:layout_marginEnd="17dp"
           android:layout_marginRight="17dp"
-          android:background="@drawable/rounded_corners_primary3"
           android:ellipsize="none"
           android:text="@string/remote_install_help"
-          android:textColor="@color/white"
           android:textSize="12.0sp"
           />
 

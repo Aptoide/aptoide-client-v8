@@ -52,6 +52,7 @@
 
   <style name="Aptoide.DialogTheme.Rounded">
     <item name="android:background">@drawable/rounded_corners_bg</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
   </style>
 
   <style name="Aptoide.DialogTheme.Dark" parent="AppBaseThemeDark">
@@ -74,6 +75,7 @@
 
   <style name="Aptoide.DialogTheme.Dark.Rounded">
     <item name="android:background">@drawable/rounded_corners_bg_dark</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
   </style>
 
 

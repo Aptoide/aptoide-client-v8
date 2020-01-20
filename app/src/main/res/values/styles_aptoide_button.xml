@@ -17,6 +17,11 @@
     <item name="android:textColor">?attr/storesTextColor</item>
   </style>
 
+  <style name="Aptoide.Button.Alternative">
+    <item name="android:background">?attr/raisedButtonAlternativeBackground</item>
+    <item name="android:textColor">?attr/inverseTextColor</item>
+  </style>
+
   <!-- Ghost button-->
   <style name="Aptoide.Button.Ghost">
     <item name="android:layout_width">wrap_content</item>

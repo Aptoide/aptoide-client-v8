@@ -34,6 +34,7 @@
     <!--Buttons-->
     <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="raisedButtonSecondaryBackground">@drawable/aptoide_gradient_rounded</item>
+    <item name="raisedButtonAlternativeBackground">@drawable/rounded_corners_bg</item>
     <item name="raisedButtonForeground">@null</item>
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
@@ -253,8 +254,9 @@
 
     <!--Buttons-->
     <item name="raisedButtonBackground">@color/grey_900</item>
-    <item name="raisedButtonSecondaryBackground">@color/grey_dark</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/aptoide_rounded_alt_dark</item>
     <item name="raisedButtonForeground">?attr/selectableItemBackground</item>
+    <item name="raisedButtonAlternativeBackground">@drawable/aptoide_rounded_dark</item>
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme_dark</item>
     <item name="raisedButtonTextColor">@color/white</item>

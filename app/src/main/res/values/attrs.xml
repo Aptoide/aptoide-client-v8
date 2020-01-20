@@ -146,6 +146,7 @@
   <attr name="raisedButtonBackground" format="reference" />
   <attr name="raisedButtonSecondaryBackground" format="reference" />
   <attr name="raisedButtonForeground" format="reference" />
+  <attr name="raisedButtonAlternativeBackground" format="reference" />
   <attr name="ghostButtonBackground" format="reference" />
   <attr name="raisedButtonTextColor" format="color" />
   <attr name="flatButtonBackground" format="color" />
