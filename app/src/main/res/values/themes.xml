@@ -440,7 +440,7 @@
     <item name="roundGradientButtonBackground">@drawable/default_search_button_background_white
     </item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
-    <item name="themeTextColor">@color/black</item>
+    <item name="themeTextColor">@color/white</item>
   </style>
 
   <style name="AptoideThemeDark" parent="AppBaseThemeDark" />
