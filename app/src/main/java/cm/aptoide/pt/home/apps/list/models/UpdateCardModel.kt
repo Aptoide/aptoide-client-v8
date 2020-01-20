@@ -123,8 +123,10 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
       holder.secondaryText.setTextAppearance(holder.itemView.context,
           R.style.Aptoide_TextView_Medium_XS_Red700)
     } else {
-      holder.secondaryIcon.setImageResource(
-          themeManager!!.getAttributeForTheme(R.attr.version_refresh_icon).resourceId)
+      themeManager?.getAttributeForTheme(R.attr.version_refresh_icon)?.resourceId?.let {
+        holder.secondaryIcon.setImageResource(
+            it)
+      }
       holder.secondaryText.text = app.version
       holder.secondaryText.setTextAppearance(holder.itemView.context,
           R.style.Aptoide_TextView_Medium_XS_Grey)
