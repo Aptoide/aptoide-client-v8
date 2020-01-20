@@ -5,7 +5,7 @@
     android:layout_height="87dp"
     android:orientation="vertical"
     android:padding="5dp"
-    style="?attr/backgroundCard"
+    style="?attr/backgroundCardSecondaryColor"
     >
 
   <ImageView

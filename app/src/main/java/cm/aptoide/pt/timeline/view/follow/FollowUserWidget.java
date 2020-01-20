@@ -42,8 +42,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private TextView followersNumber;
   private ImageView mainIcon;
   private ImageView secondaryIcon;
-  private TextView followingTv;
-  private TextView followedTv;
   private Button follow;
   private LinearLayout followNumbers;
   private LinearLayout followLayout;
@@ -59,8 +57,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     storeNameTv = itemView.findViewById(R.id.store_name);
     followingNumber = itemView.findViewById(R.id.following_number);
     followersNumber = itemView.findViewById(R.id.followers_number);
-    followingTv = itemView.findViewById(R.id.following_tv);
-    followedTv = itemView.findViewById(R.id.followers_tv);
     mainIcon = itemView.findViewById(R.id.main_icon);
     secondaryIcon = itemView.findViewById(R.id.secondary_icon);
     follow = itemView.findViewById(R.id.follow_btn);
@@ -88,7 +84,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
       separatorView.setVisibility(View.INVISIBLE);
       if (displayable.hasStore()) {
         followLayout.setVisibility(View.VISIBLE);
-        setFollowColor(displayable);
       }
 
       final String storeName = displayable.getStoreName();
@@ -170,13 +165,11 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
 
     if (displayable.hasStore()) {
-      setupStoreNameTv(displayable.getStoreColor(getContext().getApplicationContext()),
+      setupStoreNameTv(
           displayable.storeName());
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
-    followedTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
-    followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()),
@@ -184,15 +177,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                 .log(err)));
   }
 
-  private void setFollowColor(FollowUserDisplayable displayable) {
-    follow.setBackgroundResource(
-        displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
-    follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
-  }
-
-  private void setupStoreNameTv(int storeColorResourceId, String storeName) {
+  private void setupStoreNameTv(String storeName) {
     storeNameTv.setText(storeName);
-    storeNameTv.setTextColor(storeColorResourceId);
     storeNameTv.setVisibility(View.VISIBLE);
     Drawable drawable;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -205,8 +191,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     drawable.setBounds(0, 0, 30, 30);
     drawable.mutate();
 
-    //drawable.setColorFilter(getContext().getResources()
-    //.getColor(storeColorResourceId), PorterDuff.Mode.SRC_IN);
     storeNameTv.setCompoundDrawablePadding(5);
     storeNameTv.setCompoundDrawables(drawable, null, null, null);
   }
