@@ -391,7 +391,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         .flatMapCompletable(account -> {
           if (account.isLoggedIn()) {
             // show fragment CommentDialog
-            FragmentManager fm = CommentListFragment.this.getActivity()0
+            FragmentManager fm = CommentListFragment.this.getActivity()
                 .getSupportFragmentManager();
             CommentDialogFragment commentDialogFragment =
                 CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);
