@@ -54,6 +54,8 @@
     <item name="preferenceTheme">@style/Aptoide.PreferenceThemeOverlay</item>
 
     <item name="dialogsTheme">@style/Aptoide.DialogTheme</item>
+    <item name="roundedDialogsTheme">@style/Aptoide.DialogTheme.Rounded</item>
+
     <!--background-->
     <item name="backgroundMain">@color/default_background_color_light</item>
     <item name="backgroundSecondary">@color/light_custom_gray</item>
@@ -228,6 +230,7 @@
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
     <item name="dialogsTheme">@style/Aptoide.DialogTheme.Dark</item>
+    <item name="roundedDialogsTheme">@style/Aptoide.DialogTheme.Dark.Rounded</item>
 
     <item name="colorPrimary">@color/aptoide_orange</item>
     <item name="colorPrimaryDark">@color/light_grey</item>

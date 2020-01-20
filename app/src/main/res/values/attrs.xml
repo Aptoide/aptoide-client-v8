@@ -178,6 +178,8 @@
   <attr name="addCircleButtonDrawable" format="reference" />
 
   <attr name="dialogsTheme" format="reference" />
+  <attr name="roundedDialogsTheme" format="reference" />
+
   <attr name="wizardBackgroundBottom" format="color" />
   <attr name="wizardRadioBackgroundColor" format="color" />
 

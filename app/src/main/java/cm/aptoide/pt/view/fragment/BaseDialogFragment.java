@@ -3,6 +3,7 @@ package cm.aptoide.pt.view.fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import androidx.annotation.AttrRes;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.AptoideApplication;
@@ -28,7 +29,7 @@ public class BaseDialogFragment extends RxDialogFragment {
 
     if (this.getActivity() != null) {
       setStyle(DialogFragment.STYLE_NO_TITLE,
-          themeAttributeProvider.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+          themeAttributeProvider.getAttributeForTheme(getDialogStyle()).resourceId);
     }
   }
 
@@ -41,6 +42,10 @@ public class BaseDialogFragment extends RxDialogFragment {
         .setAttributes(layoutParams);
     getDialog().getWindow()
         .addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+  }
+
+  public @AttrRes int getDialogStyle() {
+    return R.attr.dialogsTheme;
   }
 
   public FragmentComponent getFragmentComponent(Bundle savedInstanceState) {

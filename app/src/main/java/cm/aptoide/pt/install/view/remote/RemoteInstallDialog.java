@@ -57,6 +57,10 @@ public class RemoteInstallDialog extends BaseDialogFragment
     sManager = new RemoteInstallationSenderManager(getActivity());
   }
 
+  @Override public int getDialogStyle() {
+    return R.attr.roundedDialogsTheme;
+  }
+
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     Dialog dialog = super.onCreateDialog(savedInstanceState);
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
