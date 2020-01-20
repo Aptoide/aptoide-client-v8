@@ -393,7 +393,8 @@ public class DisplayablesFactory {
             themeManager.getAttributeForTheme(storeTheme, R.attr.themeTextColor).data));
       } else if (accountManager.isLoggedIn()) {
         if (MyStoreManager.shouldShowCreateStore()) {
-          displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats()));
+          displayables.add(new CreateStoreDisplayable(storeAnalytics, store.getTimelineStats(),
+              themeManager.getAttributeForTheme(R.attr.themeTextColor).data));
         }
       } else {
         displayables.add(new LoginDisplayable());
