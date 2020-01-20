@@ -93,7 +93,8 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   }
 
   private void showChipCancelButton(CheckBox chip) {
-    Drawable cancelButton = getResources().getDrawable(R.drawable.ic_cancel_white_24dp);
+    Drawable cancelButton = getResources().getDrawable(
+        themeManager.getAttributeForTheme(R.attr.cancelChipDrawable).resourceId);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       chip.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, cancelButton, null);
     } else {
@@ -112,21 +113,16 @@ public class HomeContainerFragment extends NavigationTrackFragment implements Ho
   private void setupChipsListeners() {
     gamesChip.setOnCheckedChangeListener((__, isChecked) -> {
       if (isChecked) {
-        gamesChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(gamesChip);
       } else {
-        gamesChip.setTextColor(
-            themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data);
         hideChipCancelButton(gamesChip);
       }
     });
 
     appsChip.setOnCheckedChangeListener((__, isChecked) -> {
       if (isChecked) {
-        appsChip.setTextColor(getResources().getColor(R.color.white));
         showChipCancelButton(appsChip);
       } else {
-        appsChip.setTextColor(themeManager.getAttributeForTheme(R.attr.colorControlHighlight).data);
         hideChipCancelButton(appsChip);
       }
     });

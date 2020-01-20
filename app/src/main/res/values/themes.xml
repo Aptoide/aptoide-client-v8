@@ -211,6 +211,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color</item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_white_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
@@ -434,7 +436,9 @@
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
-    <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChips">@drawable/default_home_chips_background_white</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme</item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
