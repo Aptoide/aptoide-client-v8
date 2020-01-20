@@ -62,7 +62,7 @@ open class ApkfyExperiment(private val abTestManager: ABTestManager,
                                          group: String): JSONObject {
     val superProperties = currentProperties ?: JSONObject()
     try {
-      superProperties.put("asv-2119-group", group)
+      superProperties.put("asv_2119_group", group)
     } catch (e: JSONException) {
       e.printStackTrace()
     }
@@ -76,7 +76,7 @@ open class ApkfyExperiment(private val abTestManager: ABTestManager,
         .doOnCompleted {
           appViewAnalytics.sendApkfyABTestImpressionEvent(assignment)
           setSuperProperties()
-          sharedPreferences.edit().putString(APKFY_EXPERIMENT_GROUP, assignment)
+          sharedPreferences.edit().putString(APKFY_EXPERIMENT_GROUP, assignment).apply()
         }
   }
 
