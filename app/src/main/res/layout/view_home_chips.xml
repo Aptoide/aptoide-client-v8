@@ -28,7 +28,7 @@
       android:paddingRight="10dp"
       android:text="@string/home_chip_games"
       android:textAllCaps="true"
-      android:textColor="?attr/colorPrimaryDark"
+      android:textColor="?attr/homeChipsTextColorSelector"
       />
   <CheckBox
       android:id="@+id/apps_chip"
@@ -49,7 +49,7 @@
       android:paddingRight="10dp"
       android:text="@string/home_chip_apps"
       android:textAllCaps="true"
-      android:textColor="?attr/colorPrimaryDark"
+      android:textColor="?attr/homeChipsTextColorSelector"
       />
 
 

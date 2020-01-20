@@ -350,7 +350,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(preference -> {
-      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
           getString(R.string.storage_dialog_title, marketName),
           getString(R.string.clear_cache_dialog_message))
@@ -376,8 +377,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getFormattedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
-      AlertDialog.Builder alertDialogBuilder =
-          new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
+      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
       alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
           .setMessage(getString(R.string.setting_sdk_version)

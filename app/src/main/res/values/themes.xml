@@ -27,7 +27,8 @@
     <!--toolbar-->
     <item name="toolbarTheme">@style/Toolbar</item>
     <item name="toolbarBackground">@drawable/aptoide_gradient</item>
-    <item name="toolbarTextColor">@color/white</item>
+    <item name="toolbarBackgroundSecondary">@color/white</item>
+    <item name="toolbarTextColor">@color/black_87_alpha</item>
     <item name="toolbarReviewsColor">@color/white</item>
     <item name="actionMenuTextColor">@color/white</item>
 
@@ -79,6 +80,9 @@
     <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
+    <!-- status bar -->
+    <item name="statusBarColorSecondary">@color/white</item>
+
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
 
@@ -95,6 +99,9 @@
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button</item>
+
+    <!--editorial-->
+    <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_normal</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
@@ -207,6 +214,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color</item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_white_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
@@ -247,6 +256,7 @@
     <!--toolbar-->
     <item name="toolbarTheme">@style/ToolbarDark</item>
     <item name="toolbarBackground">@color/grey_900</item>
+    <item name="toolbarBackgroundSecondary">@color/grey_900</item>
     <item name="toolbarTextColor">@color/white</item>
     <item name="toolbarReviewsColor">?attr/toolbarBackground</item>
     <item name="actionMenuTextColor">@color/white</item>
@@ -300,6 +310,10 @@
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
+    <!-- status bar -->
+    <item name="statusBarColorSecondary">@color/black</item>
+
+
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
     <item name="appview_background">@color/grey_900</item>
@@ -313,6 +327,9 @@
 
     <!--account-->
     <item name="login_button_style">@style/Aptoide.Button</item>
+
+    <!--editorial-->
+    <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_wallet_promotion</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>
@@ -424,7 +441,9 @@
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
-    <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChips">@drawable/default_home_chips_background_white</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme</item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
@@ -482,7 +501,7 @@
     <item name="toolbarBackground">@drawable/grey_gradient</item>
     <item name="ghostButtonBackground">@drawable/button_border_grey</item>
     <item name="colorControlHighlight">@color/grey_gradient_end</item>
-    <item name="bnItemColorState">@drawable/grey_nav_item_color_state</item>
+    <item name="bnItemColorState">@drawable/default_nav_item_color_state_dark</item>
     <item name="wizardThirdColor">@color/grey</item>
     <item name="loggedInIcon">@drawable/grey_ic_logged_in</item>
     <item name="homeChips">@drawable/grey_home_chips_background</item>
