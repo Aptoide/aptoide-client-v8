@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     >
 
-  <androidx.cardview.widget.CardView
+  <FrameLayout
       android:id="@+id/chips_element"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -15,5 +15,5 @@
       >
 
     <include layout="@layout/view_home_chips" />
-  </androidx.cardview.widget.CardView>
+  </FrameLayout>
 </com.google.android.material.appbar.AppBarLayout>
