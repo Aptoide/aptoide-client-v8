@@ -36,9 +36,8 @@ public class HomeContainerPresenterTest {
     MockitoAnnotations.initMocks(this);
     lifecycleEvent = PublishSubject.create();
 
-    presenter = new HomeContainerPresenter(view, Schedulers.immediate(), crashReporter,
-        aptoideAccountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
-        chipManager);
+    presenter = new HomeContainerPresenter(view, Schedulers.immediate(), aptoideAccountManager,
+        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));

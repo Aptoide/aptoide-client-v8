@@ -83,6 +83,9 @@
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
 
+    <!--search-->
+    <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
+
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
     <item name="appview_background">@color/default_background_color_light</item>
@@ -304,6 +307,8 @@
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
 
+    <!--search-->
+    <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>
@@ -451,7 +456,8 @@
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
-    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background_white
+    </item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
     <item name="themeTextColor">@color/white</item>
   </style>
