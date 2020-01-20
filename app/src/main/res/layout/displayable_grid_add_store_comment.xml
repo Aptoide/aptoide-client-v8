@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="78dp"
-    android:background="@drawable/dialog_bg_2"
+    android:background="?attr/backgroundCardColor"
     android:orientation="horizontal"
-    android:paddingEnd="12dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
     android:paddingStart="12dp"
+    android:paddingLeft="12dp"
+    android:paddingEnd="12dp"
+    android:paddingRight="12dp"
     android:weightSum="5"
     >
 
@@ -26,6 +25,7 @@
 
   <Button
       android:id="@+id/comment_store_button"
+      style="@style/Aptoide.Button.S"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
@@ -33,7 +33,6 @@
       android:text="@string/comment_store"
       android:textAllCaps="true"
       android:textSize="@dimen/text_size_small"
-      style="@style/Aptoide.Button.S"
       />
 
 </LinearLayout>
