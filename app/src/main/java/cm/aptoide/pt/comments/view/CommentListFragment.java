@@ -51,6 +51,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.CommentOperations;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.custom.HorizontalDividerItemDecoration;
@@ -88,6 +89,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private static final String STORE_CONTEXT = "store_context";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject ThemeManager themeManager;
   //
   // vars
   //
@@ -216,19 +218,19 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Override public void bindViews(View view) {
     super.bindViews(view);
     commentOperations = new CommentOperations();
-    floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fabAdd);
+    floatingActionButton = view.findViewById(R.id.fabAdd);
     if (floatingActionButton != null) {
       Drawable drawable;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        drawable = getContext().getDrawable(R.drawable.forma_1);
+        drawable = getContext().getDrawable(
+            themeManager.getAttributeForTheme(R.attr.penDrawable).resourceId);
       } else {
         drawable = getActivity().getResources()
-            .getDrawable(R.drawable.forma_1);
+            .getDrawable(themeManager.getAttributeForTheme(R.attr.penDrawable).resourceId);
       }
       floatingActionButton.setImageDrawable(drawable);
       floatingActionButton.setVisibility(View.VISIBLE);
     }
-    final CrashReport crashReport = CrashReport.getInstance();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -379,7 +381,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   //
 
   @Override protected RecyclerView.ItemDecoration getItemDecoration() {
-    return new HorizontalDividerItemDecoration(getContext(), 0);
+    return new HorizontalDividerItemDecoration(this.getActivity(), themeManager);
   }
 
   public Completable createNewCommentFragment(long storeCommentId, String storeName) {
@@ -389,7 +391,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
         .flatMapCompletable(account -> {
           if (account.isLoggedIn()) {
             // show fragment CommentDialog
-            FragmentManager fm = CommentListFragment.this.getActivity()
+            FragmentManager fm = CommentListFragment.this.getActivity()0
                 .getSupportFragmentManager();
             CommentDialogFragment commentDialogFragment =
                 CommentDialogFragment.newInstanceStoreComment(storeCommentId, storeName);

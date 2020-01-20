@@ -57,7 +57,6 @@
   <attr name="customRowForegroundHomeLayout" format="reference" />
   <attr name="icAboutDrawable" format="reference" />
   <attr name="icAcceptDrawable" format="reference" />
-  <attr name="icAddStoreDrawable" format="reference" />
   <attr name="icCancelDrawable" format="reference" />
   <attr name="icCollapseDrawable" format="reference" />
   <attr name="icDialogDrawable" format="reference" />
@@ -83,6 +82,7 @@
   <attr name="penDrawable" format="reference" />
   <attr name="thumbsUpDrawable" format="reference" />
   <attr name="thumbsDownDrawable" format="reference" />
+  <attr name="addDrawable" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
   <attr name="ratingDrawable" format="reference" />

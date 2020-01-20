@@ -486,7 +486,7 @@ public class DisplayablesFactory {
       displayables.add(
           new StoreLatestCommentsDisplayable(data.second.getId(), data.second.getName(),
               comments.getDataList()
-                  .getList()));
+                  .getList(), themeManager));
     } else {
       displayables.add(
           new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(), storeTheme,

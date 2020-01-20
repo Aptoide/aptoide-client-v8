@@ -42,7 +42,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="right|end|bottom"
       android:layout_margin="@dimen/fab_margin"
-      android:src="@drawable/forma_1"
+      android:src="?attr/penDrawable"
       android:visibility="gone"
       />
 

@@ -86,8 +86,6 @@
         style="@style/Aptoide.Button.S"
         />
 
-    <!--android:visibility="gone"-->
-
   </FrameLayout>
   <ImageView
       android:id="@+id/medal_icon"

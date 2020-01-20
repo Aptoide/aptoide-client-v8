@@ -74,7 +74,9 @@ public class StoreLatestCommentsWidget extends Widget<StoreLatestCommentsDisplay
 
     LinearLayoutManager layoutManager = new LinearLayoutManager(recyclerView.getContext());
     recyclerView.setLayoutManager(layoutManager);
-    recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(getContext()));
+    recyclerView.addItemDecoration(
+        new HorizontalDividerItemDecoration(((ActivityResultNavigator) getContext()).getActivity(),
+            displayable.getThemeManager()));
 
     storeId = displayable.getStoreId();
     storeName = displayable.getStoreName();

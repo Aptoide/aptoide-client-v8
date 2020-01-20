@@ -197,7 +197,6 @@
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_black</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
     <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
     <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
@@ -219,6 +218,7 @@
     <item name="penDrawable">@drawable/ic_pen_white</item>
     <item name="thumbsUpDrawable">@drawable/thumbs_up_grey</item>
     <item name="thumbsDownDrawable">@drawable/thumbs_down_grey</item>
+    <item name="addDrawable">@drawable/ic_add</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
@@ -234,7 +234,7 @@
     <item name="android:windowBackground">@color/default_background_color_dark</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
-    <item name="dialogsTheme">@style/Aptoide.DialogTheme.Dark</item>
+    <item name="dialogsTheme">@style/AppBaseThemeDark.DialogTheme</item>
 
     <item name="colorPrimary">@color/aptoide_orange</item>
     <item name="colorPrimaryDark">@color/light_grey</item>
@@ -421,7 +421,6 @@
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_white</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
     <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
     <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
@@ -444,6 +443,7 @@
     <item name="penDrawable">@drawable/ic_pen_black</item>
     <item name="thumbsUpDrawable">@drawable/thumbs_up_light_grey</item>
     <item name="thumbsDownDrawable">@drawable/thumbs_down_light_grey</item>
+    <item name="addDrawable">@drawable/ic_add_black</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
