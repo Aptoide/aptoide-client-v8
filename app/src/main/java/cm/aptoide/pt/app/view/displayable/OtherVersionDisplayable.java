@@ -7,7 +7,7 @@ package cm.aptoide.pt.app.view.displayable;
 
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
@@ -15,14 +15,14 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
  */
 public class OtherVersionDisplayable extends DisplayablePojo<App> {
 
-  private StoreContext storeContext;
+  private ThemeManager themeManager;
 
   public OtherVersionDisplayable() {
   }
 
-  public OtherVersionDisplayable(App pojo, StoreContext storeContext) {
+  public OtherVersionDisplayable(App pojo, ThemeManager themeManager) {
     super(pojo);
-    this.storeContext = storeContext;
+    this.themeManager = themeManager;
   }
 
   @Override protected Configs getConfig() {
@@ -33,7 +33,7 @@ public class OtherVersionDisplayable extends DisplayablePojo<App> {
     return R.layout.other_version_row;
   }
 
-  public StoreContext getStoreContext() {
-    return storeContext;
+  public ThemeManager getThemeManager() {
+    return themeManager;
   }
 }
