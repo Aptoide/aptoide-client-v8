@@ -82,7 +82,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
                 TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                     AptoideUtils.StringU.getFormattedString(
                         R.string.social_timeline_following_fragment_title,
-                        getContext().getResources(), displayable.getSecondStatsNumber()),
+                        getContext().getResources(), displayable.getFirstStatsNumber()),
                     displayable.getStoreContext()), true);
           }));
 
@@ -93,7 +93,7 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
                 TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                     AptoideUtils.StringU.getFormattedString(
                         R.string.social_timeline_followers_fragment_title,
-                        getContext().getResources(), displayable.getFirstStatsNumber()),
+                        getContext().getResources(), displayable.getSecondStatsNumber()),
                     displayable.getStoreContext()), true);
           }));
     }

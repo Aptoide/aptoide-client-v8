@@ -30,7 +30,6 @@ import retrofit2.Converter;
 public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Inject ThemeManager themeManager;
-
   private Long userId;
   private Long storeId;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
