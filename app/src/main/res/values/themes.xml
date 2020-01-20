@@ -369,7 +369,7 @@
     <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
     <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
     <item name="titleLabelStyle">@style/titleLabel</item>
-    <item name="separatorColor">@color/grey_dark</item>
+    <item name="separatorColor">@color/light_grey</item>
     <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
 
     <!--recycler-->
