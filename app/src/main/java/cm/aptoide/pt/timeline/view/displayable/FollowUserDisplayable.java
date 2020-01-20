@@ -1,6 +1,5 @@
 package cm.aptoide.pt.timeline.view.displayable;
 
-import android.content.Context;
 import android.text.TextUtils;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -17,19 +16,14 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
   private boolean isLike;
-  private int storeColor;
-  private int buttonThemeBackground;
   private String theme;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, int storeColor,
-      int buttonThemeColor, String theme) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, String theme) {
     super(pojo);
     this.isLike = isLike;
-    this.storeColor = storeColor;
-    this.buttonThemeBackground = buttonThemeColor;
     this.theme = theme;
   }
 
@@ -98,14 +92,6 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
 
   public boolean hasUser() {
     return !TextUtils.isEmpty(getPojo().getName()) || !TextUtils.isEmpty(getPojo().getAvatar());
-  }
-
-  public int getStoreColor(Context context) {
-    return storeColor;
-  }
-
-  public int getButtonBackgroundStoreThemeColor(Context context) {
-    return buttonThemeBackground;
   }
 
   public void viewClicked(FragmentNavigator navigator) {

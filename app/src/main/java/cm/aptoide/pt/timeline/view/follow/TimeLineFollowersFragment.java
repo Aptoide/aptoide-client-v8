@@ -30,7 +30,6 @@ import retrofit2.Converter;
 public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   @Inject ThemeManager themeManager;
-
   private Long userId;
   private Long storeId;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
@@ -101,10 +100,17 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false,
-        themeManager.getAttributeForTheme(storeTheme, R.attr.colorPrimary).data,
-        themeManager.getAttributeForTheme(storeTheme, R.attr.ghostButtonBackground).resourceId,
-        storeTheme);
+    return new FollowUserDisplayable(user, false, getUserStoreTheme(user));
+  }
+
+  private String getUserStoreTheme(GetFollowers.TimelineUser user) {
+    if (user.getStore() != null) {
+      return user.getStore()
+          .getAppearance()
+          .getTheme();
+    }
+    return themeManager.getBaseTheme()
+        .getThemeName();
   }
 
   @Override

@@ -83,9 +83,10 @@
           app:layout_constraintRight_toLeftOf="@+id/leftSeparator"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent"
+          tools:text="following"
           />
 
-      <View xmlns:android="http://schemas.android.com/apk/res/android"
+      <View
           android:id="@+id/leftSeparator"
           android:layout_width="1dp"
           android:layout_height="36dp"
@@ -116,9 +117,10 @@
           app:layout_constraintRight_toLeftOf="@+id/rightSeparator"
           app:layout_constraintStart_toEndOf="@+id/leftSeparator"
           app:layout_constraintTop_toTopOf="parent"
+          tools:text="followers"
           />
 
-      <View xmlns:android="http://schemas.android.com/apk/res/android"
+      <View
           android:id="@+id/rightSeparator"
           android:layout_width="1dp"
           android:layout_height="36dp"
