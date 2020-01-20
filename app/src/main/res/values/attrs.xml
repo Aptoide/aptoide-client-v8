@@ -83,6 +83,8 @@
   <attr name="thumbsDownDrawable" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
+  <attr name="homeChipsTextColorSelector" format="reference" />
+  <attr name="cancelChipDrawable" format="reference" />
   <attr name="ratingDrawable" format="reference" />
   <attr name="reactionInputDrawable" format="reference" />
   <attr name="navigationDrawerColor" format="color" />
@@ -159,6 +161,7 @@
   <attr name="preferenceTitleTextSize" format="dimension" />
   <attr name="preferenceSummaryColor" format="color" />
   <attr name="preferenceSummaryTextSize" format="dimension" />
+  <attr name="preferenceTheme" format="reference" />
   <attr name="colorControlHighlight" format="color" />
   <attr name="bnItemColorState" format="color" />
   <attr name="wizardFirstColor" format="color" />
