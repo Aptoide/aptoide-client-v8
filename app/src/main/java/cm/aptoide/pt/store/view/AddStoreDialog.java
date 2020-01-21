@@ -259,13 +259,12 @@ public class AddStoreDialog extends BaseDialogFragment {
   }
 
   private void bindViews(View view) {
-    addStoreButton = (Button) view.findViewById(R.id.button_dialog_add_store);
-    topStoresButton = (Button) view.findViewById(R.id.button_top_stores);
-    searchView = (SearchView) view.findViewById(R.id.store_search_view);
-    searchViewLayout = (RelativeLayout) view.findViewById(R.id.search_box_layout);
-    errorMessage = (TextView) view.findViewById(R.id.error_message);
-    EditText searchEditText =
-        (EditText) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+    addStoreButton = view.findViewById(R.id.button_dialog_add_store);
+    topStoresButton = view.findViewById(R.id.button_top_stores);
+    searchView = view.findViewById(R.id.store_search_view);
+    searchViewLayout = view.findViewById(R.id.search_box_layout);
+    errorMessage = view.findViewById(R.id.error_message);
+    EditText searchEditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     searchEditText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
     searchEditText.setHintTextColor(getResources().getColor(R.color.grey));
   }
@@ -286,7 +285,7 @@ public class AddStoreDialog extends BaseDialogFragment {
     searchView.setSuggestionsAdapter(suggestionCursorAdapter);
 
     final AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     handleEmptyQuery(suggestionCursorAdapter);
