@@ -12,6 +12,7 @@ import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.promotions.WalletApp
+import cm.aptoide.pt.themes.ThemeManager
 import cm.aptoide.pt.utils.GenericDialogs
 import cm.aptoide.pt.view.ActivityView
 import com.jakewharton.rxbinding.view.RxView
@@ -147,7 +148,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   override fun showRootInstallWarningPopup(): Observable<Boolean> {
     return GenericDialogs.createGenericYesNoCancelMessage(applicationContext, null,
-        resources.getString(R.string.root_access_dialog))
+        resources.getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map { response -> response.equals(GenericDialogs.EResponse.YES) }
   }
 

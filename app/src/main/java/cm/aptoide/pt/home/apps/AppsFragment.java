@@ -108,11 +108,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private void buildIgnoreUpdatesDialog() {
-    ignoreUpdateDialog =
-        new RxAlertDialog.Builder(getContext()).setTitle(R.string.apps_title_ignore_updates)
-            .setPositiveButton(R.string.apps_button_ignore_updates_yes)
-            .setNegativeButton(R.string.apps_button_ignore_updates_no)
-            .build();
+    ignoreUpdateDialog = new RxAlertDialog.Builder(getContext(), themeManager).setTitle(
+        R.string.apps_title_ignore_updates)
+        .setPositiveButton(R.string.apps_button_ignore_updates_yes)
+        .setNegativeButton(R.string.apps_button_ignore_updates_no)
+        .build();
   }
 
   @Nullable @Override
@@ -170,7 +170,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<Boolean> showRootWarning() {
     return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
-        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()))
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 

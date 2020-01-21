@@ -255,7 +255,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -579,7 +580,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> {

@@ -84,8 +84,6 @@ public class MyAccountFragment extends BackButtonFragment
   private CardView aptoideTvCardView;
   private CardView aptoideUploaderCardView;
   private CardView aptoideBackupAppsCardView;
-  //Navigation buttons
-  private View notificationHistory;
   private View settings;
   private TextView myAccountProductCardTitle;
 
@@ -112,7 +110,6 @@ public class MyAccountFragment extends BackButtonFragment
     ((TextView) view.findViewById(R.id.sign_in_message)).setText(
         getString(R.string.newaccount_signin_message, marketName));
     toolbar = view.findViewById(R.id.toolbar);
-    notificationHistory = view.findViewById(R.id.notifications_history);
     settings = view.findViewById(R.id.settings);
     myAccountProductCardTitle = view.findViewById(R.id.my_account_product_card_title);
     myAccountProductCardTitle.setText(getString(R.string.my_account_product_card_section_title));
@@ -232,10 +229,6 @@ public class MyAccountFragment extends BackButtonFragment
 
   @Override public Observable<Void> settingsClicked() {
     return RxView.clicks(settings);
-  }
-
-  @Override public Observable<Void> notificationsClicked() {
-    return RxView.clicks(notificationHistory);
   }
 
   @Override public Observable<GetStore> getStore() {

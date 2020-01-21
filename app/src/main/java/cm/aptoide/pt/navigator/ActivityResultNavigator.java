@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.fragment.FragmentView;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -24,6 +25,7 @@ public abstract class ActivityResultNavigator extends BaseActivity implements Ac
 
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
+  public @Inject ThemeManager themeManager;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;

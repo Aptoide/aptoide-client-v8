@@ -6,6 +6,7 @@ import android.widget.EditText;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.StringRes;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.dialog.EditableTextDialog;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 
@@ -31,8 +32,8 @@ public class PinDialog extends EditableTextDialog {
     private int viewRes;
     private int editTextId;
 
-    public Builder(Context context) {
-      this.builder = new RxAlertDialog.Builder(context);
+    public Builder(Context context, ThemeManager themeManager) {
+      this.builder = new RxAlertDialog.Builder(context, themeManager);
       this.layoutInflater = LayoutInflater.from(context);
     }
 

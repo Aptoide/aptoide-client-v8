@@ -398,7 +398,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -534,7 +535,8 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public Observable<Boolean> showDowngradeMessage() {
     return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
         getContext().getResources()
-            .getString(R.string.downgrade_warning_dialog))
+            .getString(R.string.downgrade_warning_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(eResponse -> eResponse.equals(YES));
   }
 
@@ -672,7 +674,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));

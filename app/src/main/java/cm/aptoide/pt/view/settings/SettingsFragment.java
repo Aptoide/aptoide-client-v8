@@ -231,24 +231,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void setAdultContentContent() {
     if (settingsManager.showAdultContent()) {
       adultContentConfirmationDialog =
-          new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
+          new RxAlertDialog.Builder(getContext(), themeManager).setMessage(R.string.are_you_adult)
               .setPositiveButton(R.string.yes)
               .setNegativeButton(R.string.no)
               .build();
       enableAdultContentPinDialog =
-          new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+          new PinDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
               .setPositiveButton(R.string.all_button_ok)
               .setNegativeButton(R.string.cancel)
               .setView(R.layout.dialog_requestpin)
               .setEditText(R.id.pininput)
               .build();
-      removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
-          .setPositiveButton(R.string.all_button_ok)
-          .setNegativeButton(R.string.cancel)
-          .setView(R.layout.dialog_requestpin)
-          .setEditText(R.id.pininput)
-          .build();
-      setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
+      removePinDialog =
+          new PinDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
+              .setPositiveButton(R.string.all_button_ok)
+              .setNegativeButton(R.string.cancel)
+              .setView(R.layout.dialog_requestpin)
+              .setEditText(R.id.pininput)
+              .build();
+      setPinDialog = new PinDialog.Builder(getContext(), themeManager).setMessage(
+          R.string.asksetadultpinmessage)
           .setPositiveButton(R.string.all_button_ok)
           .setNegativeButton(R.string.cancel)
           .setView(R.layout.dialog_requestpin)
@@ -354,7 +356,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
           themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
           getString(R.string.storage_dialog_title, marketName),
-          getString(R.string.clear_cache_dialog_message))
+          getString(R.string.clear_cache_dialog_message),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
           .doOnNext(eResponse -> dialog.show())
           .flatMap(eResponse -> fileManager.deleteCache())
