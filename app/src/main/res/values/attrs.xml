@@ -51,13 +51,14 @@
   <attr name="editorialPlaceholderCard" format="reference" />
   <attr name="statusBarColorSecondary" format="color" />
 
+  <attr name="searchStoresSwitchBackground" format="reference" />
+
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
   <attr name="customRowForeground" format="reference" />
   <attr name="customRowForegroundHomeLayout" format="reference" />
   <attr name="icAboutDrawable" format="reference" />
   <attr name="icAcceptDrawable" format="reference" />
-  <attr name="icAddStoreDrawable" format="reference" />
   <attr name="icCancelDrawable" format="reference" />
   <attr name="icCollapseDrawable" format="reference" />
   <attr name="icDialogDrawable" format="reference" />
@@ -83,8 +84,11 @@
   <attr name="penDrawable" format="reference" />
   <attr name="thumbsUpDrawable" format="reference" />
   <attr name="thumbsDownDrawable" format="reference" />
+  <attr name="addDrawable" format="reference" />
   <attr name="loggedInIcon" format="reference" />
   <attr name="homeChips" format="reference" />
+  <attr name="homeChipsTextColorSelector" format="reference" />
+  <attr name="cancelChipDrawable" format="reference" />
   <attr name="ratingDrawable" format="reference" />
   <attr name="reactionInputDrawable" format="reference" />
   <attr name="navigationDrawerColor" format="color" />
@@ -163,6 +167,7 @@
   <attr name="preferenceTitleTextSize" format="dimension" />
   <attr name="preferenceSummaryColor" format="color" />
   <attr name="preferenceSummaryTextSize" format="dimension" />
+  <attr name="preferenceTheme" format="reference" />
   <attr name="colorControlHighlight" format="color" />
   <attr name="bnItemColorState" format="color" />
   <attr name="wizardFirstColor" format="color" />

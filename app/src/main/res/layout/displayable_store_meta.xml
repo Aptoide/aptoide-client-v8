@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    style="?attr/backgroundCard"
+    android:background="?attr/backgroundCardColor"
     >
 
   <ImageView
@@ -85,8 +85,6 @@
         android:text="@string/unfollow"
         style="@style/Aptoide.Button.S"
         />
-
-    <!--android:visibility="gone"-->
 
   </FrameLayout>
   <ImageView

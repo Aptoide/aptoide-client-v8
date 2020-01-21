@@ -86,6 +86,9 @@
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
 
+    <!--search-->
+    <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
+
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Ghost.S.Grey</item>
     <item name="appview_background">@color/default_background_color_light</item>
@@ -200,7 +203,6 @@
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_black</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
     <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
     <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
@@ -214,6 +216,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color</item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_white_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_black</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_black</item>
     <item name="ratingBarDrawable">@drawable/dark_progress_bar</item>
@@ -222,6 +226,7 @@
     <item name="penDrawable">@drawable/ic_pen_white</item>
     <item name="thumbsUpDrawable">@drawable/thumbs_up_grey</item>
     <item name="thumbsDownDrawable">@drawable/thumbs_down_grey</item>
+    <item name="addDrawable">@drawable/ic_add</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
@@ -237,8 +242,8 @@
     <item name="android:windowBackground">@color/default_background_color_dark</item>
     <item name="android:ratingBarStyle">@style/RatingBarSmall</item>
 
-    <item name="dialogsTheme">@style/Aptoide.DialogTheme.Dark</item>
-    <item name="roundedDialogsTheme">@style/Aptoide.DialogTheme.Dark.Rounded</item>
+    <item name="dialogsTheme">@style/AppBaseThemeDark.DialogTheme</item>
+    <item name="roundedDialogsTheme">@style/AppBaseThemeDark.DialogTheme.Rounded</item>
 
     <item name="colorPrimary">@color/aptoide_orange</item>
     <item name="colorPrimaryDark">@color/light_grey</item>
@@ -307,6 +312,8 @@
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
 
+    <!--search-->
+    <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>
@@ -389,7 +396,7 @@
     <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
     <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
     <item name="titleLabelStyle">@style/titleLabel</item>
-    <item name="separatorColor">@color/grey_dark</item>
+    <item name="separatorColor">@color/light_grey</item>
     <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
 
     <!--recycler-->
@@ -426,7 +433,6 @@
     <item name="icExcludedUpdatesDrawable">@drawable/ic_action_cancel_dark</item>
     <item name="icSettingsDrawable">@drawable/ic_action_settings_white</item>
     <item name="icSendFeedbackDrawable">@drawable/ic_send_feedback</item>
-    <item name="icAddStoreDrawable">@drawable/ic_action_new</item>
     <item name="icAcceptDrawable">@drawable/ic_action_accept</item>
     <item name="icCollapseDrawable">@drawable/ic_action_home_collapse</item>
     <item name="icExpandDrawable">@drawable/ic_action_home_expand</item>
@@ -439,7 +445,10 @@
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
-    <item name="homeChips">@drawable/default_home_chips_background</item>
+    <item name="homeChips">@drawable/default_home_chips_background_white</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme
+    </item>
+    <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
     <item name="ratingBarDrawable">@drawable/light_progress_bar</item>
@@ -449,10 +458,12 @@
     <item name="penDrawable">@drawable/ic_pen_black</item>
     <item name="thumbsUpDrawable">@drawable/thumbs_up_light_grey</item>
     <item name="thumbsDownDrawable">@drawable/thumbs_down_light_grey</item>
+    <item name="addDrawable">@drawable/ic_add_black</item>
 
     <!--store theme specific attributes-->
     <item name="datePickerStyle">@style/DefaultDatePickerDialog</item>
-    <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
+    <item name="roundGradientButtonBackground">@drawable/default_search_button_background_white
+    </item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
     <item name="themeTextColor">@color/white</item>
   </style>

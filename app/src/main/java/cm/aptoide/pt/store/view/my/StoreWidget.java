@@ -77,22 +77,22 @@ public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
     if (displayable.isStatsClickable()) {
       compositeSubscription.add(RxView.clicks(firstStat)
           .subscribe(click -> {
-            storeAnalytics.sendFollowersStoresInteractEvent();
+            storeAnalytics.sendFollowingStoresInteractEvent();
             getFragmentNavigator().navigateTo(
-                TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
+                TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
                     AptoideUtils.StringU.getFormattedString(
-                        R.string.social_timeline_followers_fragment_title,
+                        R.string.social_timeline_following_fragment_title,
                         getContext().getResources(), displayable.getFirstStatsNumber()),
                     displayable.getStoreContext()), true);
           }));
 
       compositeSubscription.add(RxView.clicks(secondStat)
           .subscribe(click -> {
-            storeAnalytics.sendFollowingStoresInteractEvent();
+            storeAnalytics.sendFollowersStoresInteractEvent();
             getFragmentNavigator().navigateTo(
-                TimeLineFollowingFragment.newInstanceUsingUser(storeTheme,
+                TimeLineFollowersFragment.newInstanceUsingUser(storeTheme,
                     AptoideUtils.StringU.getFormattedString(
-                        R.string.social_timeline_following_fragment_title,
+                        R.string.social_timeline_followers_fragment_title,
                         getContext().getResources(), displayable.getSecondStatsNumber()),
                     displayable.getStoreContext()), true);
           }));
