@@ -230,6 +230,8 @@
     <item name="roundGradientButtonBackground">@drawable/default_search_button_background</item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
     <item name="themeTextColor">@color/default_text</item>
+    <item name="storeBadgeDialogTextBackground">@color/grey_fog_light</item>
+    <item name="storeBadgeDialogProgress">@color/progress_bar_color</item>
   </style>
 
 
@@ -441,7 +443,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background_white</item>
-    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme
+    </item>
     <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
@@ -460,6 +463,10 @@
     </item>
     <item name="themeSelectorItemBackground">@drawable/create_store_theme_shape_default</item>
     <item name="themeTextColor">@color/white</item>
+    <item name="storeBadgeDialogTextBackground">@color/grey_dark</item>
+    <item name="storeBadgeDialogProgress">@color/grey_dark</item>
+
+
   </style>
 
   <style name="AptoideThemeDark" parent="AppBaseThemeDark" />

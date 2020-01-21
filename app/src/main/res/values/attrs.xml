@@ -194,6 +194,8 @@
   <attr name="roundGradientButtonBackground" format="reference" />
   <attr name="themeSelectorItemBackground" format="reference" />
   <attr name="themeTextColor" format="color|reference" />
+  <attr name="storeBadgeDialogTextBackground" format="color|reference" />
+  <attr name="storeBadgeDialogProgress" format="color|reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />
