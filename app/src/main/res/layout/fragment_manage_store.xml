@@ -100,9 +100,9 @@
               style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
               android:layout_width="match_parent"
               android:hint="@string/create_store_name_inserted"
+              android:imeOptions="actionDone"
               android:inputType="text"
               android:singleLine="true"
-              android:imeOptions="actionDone"
               />
 
           <EditText

@@ -617,8 +617,7 @@ public class SearchResultFragment extends BackButtonFragment
       followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
-      allStoresButton.setTextColor(
-          themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
+      allStoresButton.setTextColor(themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
       allStoresButton.setBackgroundResource(
           themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }

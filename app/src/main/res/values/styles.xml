@@ -50,8 +50,18 @@
     <item name="android:windowCloseOnTouchOutside">true</item>
   </style>
 
+  <style name="Aptoide.DialogTheme.Rounded">
+    <item name="android:background">@drawable/rounded_corners_bg</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+  </style>
+
   <style name="AppBaseThemeDark.DialogTheme" parent="Aptoide.DialogTheme">
     <item name="android:background">@color/grey_900</item>
+  </style>
+
+  <style name="AppBaseThemeDark.DialogTheme.Rounded">
+    <item name="android:background">@drawable/rounded_corners_bg_dark</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
   </style>
 
   <style name="Widget.Aptoide.Card" parent="">
@@ -155,7 +165,7 @@
     <item name="android:background">@drawable/black_card</item>
     <item name="android:foreground">?attr/selectableItemBackground</item>
   </style>
-  
+
   <style name="WidgetButtonCustom" parent="@style/Widget.Aptoide.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

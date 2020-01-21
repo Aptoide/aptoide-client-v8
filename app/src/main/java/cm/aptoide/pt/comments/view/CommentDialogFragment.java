@@ -37,8 +37,7 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class CommentDialogFragment
-    extends BaseDialogFragment {
+public class CommentDialogFragment extends BaseDialogFragment {
 
   private static final String APP_OR_STORE_NAME = "app_or_store_name";
   private static final String RESOURCE_ID_AS_LONG = "resource_id_as_long";
