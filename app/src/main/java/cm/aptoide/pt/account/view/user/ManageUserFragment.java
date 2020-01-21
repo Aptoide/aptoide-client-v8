@@ -18,6 +18,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
@@ -111,13 +112,14 @@ public class ManageUserFragment extends BackButtonFragment
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
     imagePickerErrorHandler = new ImagePickerErrorHandler(context);
 
-    dialogFragment =
-        new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
-            .setTitle(R.string.upload_dialog_title)
-            .setNegativeButton(R.string.cancel)
-            .setCameraButton(R.id.button_camera)
-            .setGalleryButton(R.id.button_gallery)
-            .build();
+    dialogFragment = new ImagePickerDialog.Builder(new ContextThemeWrapper(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setViewRes(
+        ImagePickerDialog.LAYOUT)
+        .setTitle(R.string.upload_dialog_title)
+        .setNegativeButton(R.string.cancel)
+        .setCameraButton(R.id.button_camera)
+        .setGalleryButton(R.id.button_gallery)
+        .build();
 
     uploadWaitDialog = GenericDialogs.createGenericPleaseWaitDialog(context,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId,

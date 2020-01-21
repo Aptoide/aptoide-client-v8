@@ -22,6 +22,7 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -125,13 +126,14 @@ public class ManageStoreFragment extends BackButtonFragment
     getFragmentComponent(savedInstanceState).inject(this);
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
-    dialogFragment =
-        new ImagePickerDialog.Builder(getContext()).setViewRes(ImagePickerDialog.LAYOUT)
-            .setTitle(R.string.upload_dialog_title)
-            .setNegativeButton(R.string.cancel)
-            .setCameraButton(R.id.button_camera)
-            .setGalleryButton(R.id.button_gallery)
-            .build();
+    dialogFragment = new ImagePickerDialog.Builder(new ContextThemeWrapper(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setViewRes(
+        ImagePickerDialog.LAYOUT)
+        .setTitle(R.string.upload_dialog_title)
+        .setNegativeButton(R.string.cancel)
+        .setCameraButton(R.id.button_camera)
+        .setGalleryButton(R.id.button_gallery)
+        .build();
 
     imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
   }

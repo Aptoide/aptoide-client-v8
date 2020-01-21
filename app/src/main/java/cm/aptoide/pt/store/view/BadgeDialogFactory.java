@@ -9,25 +9,30 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.ColorRes;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.themes.ThemeManager;
 
 public class BadgeDialogFactory {
   public static final float MEDAL_SCALE = 1.25f;
   private final Context context;
+  private final ThemeManager themeManager;
   private int normalMedalSize;
   private int selectedMedalSize;
 
-  public BadgeDialogFactory(Context context) {
+  public BadgeDialogFactory(Context context, ThemeManager themeManager) {
     this.context = context;
+    this.themeManager = themeManager;
   }
 
   public Dialog create(GridStoreMetaWidget.HomeMeta.Badge badge, boolean storeOwner) {
-    View view = LayoutInflater.from(context)
+    View view = LayoutInflater.from(new ContextThemeWrapper(context,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId))
         .inflate(R.layout.store_badge_dialog, null);
     ImageView bronzeMedal = ((ImageView) view.findViewById(R.id.bronze_medal));
     normalMedalSize = bronzeMedal.getLayoutParams().width;
@@ -302,7 +307,8 @@ public class BadgeDialogFactory {
       GridStoreMetaWidget.HomeMeta.Badge storeBadge,
       GridStoreMetaWidget.HomeMeta.Badge selectedBadge,
       GridStoreMetaWidget.HomeMeta.Badge currentSetup) {
-    int tinBadgeColor = R.color.progress_bar_color;
+    int tinBadgeColor =
+        themeManager.getAttributeForTheme(R.attr.storeBadgeDialogProgress).resourceId;
     if (currentSetup.ordinal() <= storeBadge.ordinal()
         && currentSetup.ordinal() <= selectedBadge.ordinal()) {
       tinBadgeColor = mainColor;
