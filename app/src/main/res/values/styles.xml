@@ -23,7 +23,7 @@
     <item name="listPreferredItemPaddingRight">24dip</item>
   </style>
 
-  <style name="Aptoide.DialogTheme" parent="AppBaseTheme">
+  <style name="Aptoide.DialogTheme">
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="windowNoTitle">true</item>

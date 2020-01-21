@@ -112,6 +112,32 @@ public class AddStoreDialog extends BaseDialogFragment {
     orientationManager = new ScreenOrientationManager(activity, activity.getWindowManager());
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    final Dialog dialog = getDialog();
+    Rect rect = new Rect();
+    Window window = getActivity().getWindow();
+    window.getDecorView()
+        .getWindowVisibleDisplayFrame(rect);
+    double width = rect.width() * 0.8;
+    if (dialog != null) {
+      if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+        dialog.getWindow()
+            .setLayout(Math.round((float) width), WRAP_CONTENT);
+      } else {
+        dialog.getWindow()
+            .setLayout(MATCH_PARENT, WRAP_CONTENT);
+      }
+    }
+  }
+
+  @Override public void onDestroyView() {
+    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
+      subscriptions.unsubscribe();
+    }
+    super.onDestroyView();
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     subscriptions = new CompositeSubscription();
@@ -138,32 +164,6 @@ public class AddStoreDialog extends BaseDialogFragment {
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
 
     searchSuggestionManager = application.getSearchSuggestionManager();
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    final Dialog dialog = getDialog();
-    Rect rect = new Rect();
-    Window window = getActivity().getWindow();
-    window.getDecorView()
-        .getWindowVisibleDisplayFrame(rect);
-    double width = rect.width() * 0.8;
-    if (dialog != null) {
-      if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
-        dialog.getWindow()
-            .setLayout(Math.round((float) width), WRAP_CONTENT);
-      } else {
-        dialog.getWindow()
-            .setLayout(MATCH_PARENT, WRAP_CONTENT);
-      }
-    }
-  }
-
-  @Override public void onDestroyView() {
-    if (subscriptions != null && !subscriptions.isUnsubscribed()) {
-      subscriptions.unsubscribe();
-    }
-    super.onDestroyView();
   }
 
   @Override public void onViewCreated(final View view, Bundle savedInstanceState) {
@@ -343,7 +343,8 @@ public class AddStoreDialog extends BaseDialogFragment {
   private void showLoadingDialog() {
 
     if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     }
     orientationManager.lock();
     loadingDialog.show();

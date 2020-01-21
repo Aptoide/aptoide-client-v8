@@ -58,7 +58,7 @@ class ThemeManager(private val activity: Activity) {
     }
   }
 
-  private fun isThemeDark(): Boolean {
+  fun isThemeDark(): Boolean {
     return activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
   }
 

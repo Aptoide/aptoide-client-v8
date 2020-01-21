@@ -27,6 +27,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -50,6 +51,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
   @Inject @Named("marketName") String marketName;
+  @Inject ThemeManager themeManager;
   private ProgressDialog progressDialog;
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
@@ -448,7 +450,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
     termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
 
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
 
     try {
       bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()

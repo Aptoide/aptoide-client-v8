@@ -59,7 +59,8 @@
 
   <!-- Bottom Nav -->
   <color name="bottom_nav_non_selected_item_color">#8A000000</color>
-  <color name="bottom_nav_non_selected_item_color_dark">#F9F9F9</color>
+  <color name="bottom_nav_non_selected_item_color_dark">#808080</color>
+  <color name="bottom_nav_selected_item_color_dark">#FFFFFF</color>
 
   <!-- Window Color -->
   <color name="default_background_color_light">#F9F9F9</color>

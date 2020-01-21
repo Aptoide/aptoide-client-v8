@@ -18,6 +18,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -37,6 +38,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment
   @Inject AccountNavigator accountNavigator;
   @Inject AccountAnalytics accountAnalytics;
   @Inject LoginSignupManager loginSignupManager;
+  @Inject ThemeManager themeManager;
   private Button continueBtn;
   private Button moreInfoBtn;
   private ProgressDialog waitDialog;
@@ -55,6 +57,7 @@ public class ProfileStepOneFragment extends BaseToolbarFragment
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
     waitDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId,
         getContext().getString(R.string.please_wait));
   }
 

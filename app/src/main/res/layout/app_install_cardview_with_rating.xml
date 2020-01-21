@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@drawable/card_border_fog_grey_normal"
+    android:background="?attr/editorialPlaceholderCard"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     >
 
@@ -16,10 +15,10 @@
       android:layout_width="40dp"
       android:layout_height="40dp"
       android:layout_gravity="center"
-      android:layout_marginBottom="8dp"
       android:layout_marginLeft="8dp"
-      android:layout_marginRight="8dp"
       android:layout_marginTop="8dp"
+      android:layout_marginRight="8dp"
+      android:layout_marginBottom="8dp"
       android:adjustViewBounds="true"
       tools:src="@drawable/orange_gradient"
       />
@@ -34,17 +33,17 @@
 
     <TextView
         android:id="@+id/app_title_textview_with_rating"
+        style="@style/Aptoide.TextView.Medium.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="94dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="94dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="94dp"
+        android:layout_marginRight="94dp"
         android:lines="1"
         android:visibility="gone"
         tools:text="@string/appc_title_settings_appcoins_wallet"
         tools:visibility="visible"
-        style="@style/Aptoide.TextView.Medium.S.Black"
         />
 
     <LinearLayout
@@ -52,11 +51,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_title_textview_with_rating"
-        android:layout_marginEnd="1dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="1dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone"
@@ -66,36 +65,36 @@
       <ImageView
           android:layout_width="10dp"
           android:layout_height="10dp"
-          android:src="@drawable/ic_star_black"
+          android:src="?attr/ratingDrawable"
           />
       <TextView
           android:id="@+id/rating_label"
+          style="@style/Aptoide.TextView.Medium.XXS"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="5dp"
           android:layout_marginStart="5dp"
+          android:layout_marginLeft="5dp"
           tools:ignore="SmallSp"
           tools:text="2.3"
-          style="@style/Aptoide.TextView.Medium.XXS"
           />
     </LinearLayout>
 
     <Button
         android:id="@+id/appview_install_button"
+        style="@style/Aptoide.Button.S"
         android:layout_width="83dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop="1dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="1dp"
         android:text="@string/install"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="12sp"
         android:visibility="visible"
-        style="@style/Aptoide.Button.S"
         />
   </RelativeLayout>
 
@@ -110,11 +109,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="19dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="19dp"
+        android:layout_marginLeft="19dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_weight="1"
         android:orientation="vertical"
         >
@@ -128,10 +127,10 @@
 
         <ProgressBar
             android:id="@+id/appview_download_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="4dp"
             android:indeterminate="false"
-            style="?android:attr/progressBarStyleHorizontal"
             />
       </FrameLayout>
 
@@ -144,23 +143,23 @@
 
         <TextView
             android:id="@+id/appview_download_download_state"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/appview_short_downloading"
-            style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
 
         <TextView
             android:id="@+id/appview_download_progress_number"
+            style="@style/Aptoide.TextView.Medium.XS.Grey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_gravity="start"
             tools:text="80%"
-            style="@style/Aptoide.TextView.Medium.XS.Grey"
             />
       </RelativeLayout>
 
@@ -170,8 +169,8 @@
         android:id="@+id/install_controls_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
         android:layout_weight="4"
         android:gravity="end"
         android:orientation="horizontal"
@@ -185,7 +184,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="center"
-          android:src="@drawable/ic_clear_action_black"
+          android:src="?attr/download_progress_cancel"
           android:visibility="gone"
           />
 
@@ -197,7 +196,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/ic_play_arrow_action_black"
+          android:src="?attr/download_progress_resume"
           android:visibility="gone"
           />
 
@@ -209,7 +208,7 @@
           android:contentDescription="@null"
           android:padding="12dp"
           android:scaleType="fitCenter"
-          android:src="@drawable/ic_pause_action_black"
+          android:src="?attr/download_progress_pause"
           />
 
     </LinearLayout>

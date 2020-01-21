@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -78,7 +77,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private MenuItem installMenuItem;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
@@ -289,8 +287,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =

@@ -183,7 +183,8 @@ public class PrivateStoreDialog extends BaseDialogFragment {
 
   private void showLoadingDialog() {
     if (loadingDialog == null) {
-      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity());
+      loadingDialog = GenericDialogs.createGenericPleaseWaitDialog(getActivity(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
     }
     loadingDialog.show();
   }

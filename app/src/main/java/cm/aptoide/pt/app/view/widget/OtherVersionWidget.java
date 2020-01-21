@@ -60,9 +60,9 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void bindView(OtherVersionDisplayable displayable, int position) {
+    this.displayable = displayable;
     setItemBackgroundColor(itemView);
     try {
-      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()
@@ -103,15 +103,19 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
     int color;
     if (getLayoutPosition() % 2 == 0) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.light_custom_gray, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId, theme);
       } else {
-        color = res.getColor(R.color.light_custom_gray);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId);
       }
     } else {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.white, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId, theme);
       } else {
-        color = res.getColor(R.color.white);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId);
       }
     }
 

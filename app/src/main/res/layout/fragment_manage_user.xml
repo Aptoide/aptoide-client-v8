@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -36,11 +35,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/padding_medium_small"
-        android:layout_marginEnd="@dimen/padding_medium_default"
-        android:layout_marginLeft="@dimen/padding_medium_default"
-        android:layout_marginRight="@dimen/padding_medium_default"
         android:layout_marginStart="@dimen/padding_medium_default"
+        android:layout_marginLeft="@dimen/padding_medium_default"
+        android:layout_marginEnd="@dimen/padding_medium_default"
+        android:layout_marginRight="@dimen/padding_medium_default"
+        android:layout_marginBottom="@dimen/padding_medium_small"
         android:gravity="bottom"
         android:orientation="horizontal"
         android:weightSum="2"
@@ -61,8 +60,8 @@
 
         <Button
             android:id="@+id/create_user_cancel_button"
+            style="@style/Aptoide.Button.Ghost"
             android:layout_width="8dp"
-            android:layout_height="60dp"
             android:layout_marginEnd="@dimen/padding_smaller"
             android:layout_marginRight="@dimen/padding_smaller"
             android:layout_weight="1"
@@ -70,20 +69,19 @@
             android:text="@string/cancel"
             android:visibility="gone"
             tools:visibility="visible"
-            style="@style/Aptoide.Button.Ghost"
             />
 
         <Button
             android:id="@+id/create_user_create_profile"
+            style="@style/Aptoide.Button"
             android:layout_width="0dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="@dimen/padding_smaller"
-            android:layout_marginRight="5dp"
             android:layout_marginStart="@dimen/padding_smaller"
+            android:layout_marginLeft="@dimen/padding_smaller"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/create_user_create_button"
-            style="@style/Aptoide.Button"
             />
       </LinearLayout>
 
@@ -107,11 +105,11 @@
             android:id="@+id/create_user_image_action"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
             android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
             android:layout_marginTop="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
             >
 
           <ImageView
@@ -124,24 +122,24 @@
           <ImageView
               android:layout_width="@dimen/select_picture_camera_icon_size"
               android:layout_height="@dimen/select_picture_camera_icon_size"
-              android:layout_alignBottom="@+id/create_user_image"
               android:layout_alignEnd="@+id/create_user_image"
               android:layout_alignRight="@+id/create_user_image"
+              android:layout_alignBottom="@+id/create_user_image"
               android:background="@drawable/create_user_camera_background_shape"
               android:padding="@dimen/padding_very_small"
               android:src="@drawable/create_user_camera"
               />
 
           <TextView
+              style="@style/Aptoide.TextView.Medium"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_centerVertical="true"
-              android:layout_marginLeft="@dimen/padding_medium_default"
               android:layout_marginStart="@dimen/padding_medium_default"
+              android:layout_marginLeft="@dimen/padding_medium_default"
               android:layout_toEndOf="@id/create_user_image"
               android:layout_toRightOf="@id/create_user_image"
               android:text="@string/create_user_take_picture"
-              style="@style/Aptoide.TextView.Medium"
               />
 
         </RelativeLayout>
@@ -149,44 +147,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
             android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
             android:layout_marginTop="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
             android:orientation="vertical"
             >
 
           <TextView
+              style="@style/Aptoide.TextView.Regular.S"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:text="@string/create_user_choose_username"
-              style="@style/Aptoide.TextView.Regular.S"
               />
 
           <EditText
               android:id="@+id/create_user_username_inserted"
+              style="@style/Aptoide.TextView.Regular.S"
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:layout_marginTop="@dimen/padding_very_small"
               android:background="@drawable/rounded_corners_white"
               android:hint="@string/create_user_username"
+              android:imeOptions="actionDone"
+              android:inputType="text"
               android:maxLength="@integer/max_username_char_length"
-              android:paddingBottom="@dimen/padding_very_small"
-              android:paddingEnd="@dimen/padding_smaller"
-              android:paddingLeft="@dimen/padding_smaller"
-              android:paddingRight="@dimen/padding_smaller"
               android:paddingStart="@dimen/padding_smaller"
+              android:paddingLeft="@dimen/padding_smaller"
               android:paddingTop="@dimen/padding_very_small"
-              style="@style/Aptoide.TextView.Regular.S"
+              android:paddingEnd="@dimen/padding_smaller"
+              android:paddingRight="@dimen/padding_smaller"
+              android:paddingBottom="@dimen/padding_very_small"
+              android:singleLine="true"
               />
 
           <TextView
+              style="@style/Aptoide.TextView.Regular.XS"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_marginTop="@dimen/padding_very_small"
               android:text="@string/create_user_hint"
-              style="@style/Aptoide.TextView.Regular.XS"
               />
 
         </LinearLayout>
@@ -195,20 +196,20 @@
             android:id="@+id/birthday_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
             android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_small"
             android:layout_marginTop="22dp"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_marginRight="@dimen/padding_small"
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible"
             >
           <TextView
+              style="@style/Aptoide.TextView.Regular.M"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/createuser_title_date_of_birth"
-              style="@style/Aptoide.TextView.Regular.M"
               />
 
           <RelativeLayout
@@ -226,15 +227,15 @@
                 />
             <TextView
                 android:id="@+id/calendar_date"
+                style="@style/Aptoide.TextView.Medium.S"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_toEndOf="@id/calendar"
                 android:layout_toRightOf="@id/calendar"
                 android:text="@string/createuser_title_choose_date"
                 android:textColor="?attr/colorPrimaryDark"
-                style="@style/Aptoide.TextView.Medium.S"
                 />
 
           </RelativeLayout>
@@ -244,8 +245,8 @@
             android:id="@+id/newsletter_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="9dp"
             android:layout_marginStart="9dp"
+            android:layout_marginLeft="9dp"
             android:layout_marginTop="30dp"
             android:visibility="gone"
             tools:visibility="visible"
@@ -256,15 +257,15 @@
               android:layout_height="wrap_content"
               />
           <TextView
+              style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
-              android:layout_marginLeft="6dp"
               android:layout_marginStart="6dp"
+              android:layout_marginLeft="6dp"
               android:gravity="center"
               android:text="@string/createuser_short_subscribe_newsletter"
               android:textAlignment="center"
-              style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
               />
         </LinearLayout>
 
