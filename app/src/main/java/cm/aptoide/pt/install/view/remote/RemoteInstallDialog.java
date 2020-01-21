@@ -128,8 +128,7 @@ public class RemoteInstallDialog extends BaseDialogFragment
 
   private void populateDeviceList() {
     List<ReceiverDevice> devices = new ArrayList<>();
-    adapter = new ReceiverDeviceAdapter(getActivity().getApplicationContext(),
-        R.layout.row_remote_install, devices);
+    adapter = new ReceiverDeviceAdapter(getContext(), R.layout.row_remote_install, devices);
     listView.setAdapter(adapter);
   }
 
