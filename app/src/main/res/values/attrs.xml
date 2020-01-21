@@ -196,6 +196,7 @@
   <attr name="themeTextColor" format="color|reference" />
   <attr name="storeBadgeDialogTextBackground" format="color|reference" />
   <attr name="storeBadgeDialogProgress" format="color|reference" />
+  <attr name="storeEditStoreDrawable" format="reference" />
 
   <declare-styleable name="CustomTextInputLayout">
     <attr name="helperText" format="string" />

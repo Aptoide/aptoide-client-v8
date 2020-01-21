@@ -232,6 +232,7 @@
     <item name="themeTextColor">@color/default_text</item>
     <item name="storeBadgeDialogTextBackground">@color/grey_fog_light</item>
     <item name="storeBadgeDialogProgress">@color/progress_bar_color</item>
+    <item name="storeEditStoreDrawable">@drawable/ic_edit_black_9dp</item>
   </style>
 
 
@@ -465,8 +466,7 @@
     <item name="themeTextColor">@color/white</item>
     <item name="storeBadgeDialogTextBackground">@color/grey_dark</item>
     <item name="storeBadgeDialogProgress">@color/grey_dark</item>
-
-
+    <item name="storeEditStoreDrawable">@drawable/ic_edit_white_9dp</item>
   </style>
 
   <style name="AptoideThemeDark" parent="AppBaseThemeDark" />
