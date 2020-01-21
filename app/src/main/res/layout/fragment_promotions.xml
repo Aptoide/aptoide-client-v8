@@ -19,7 +19,7 @@
         android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:contentScrim="@color/white"
+        app:contentScrim="?attr/backgroundMain"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
       <ImageView
@@ -123,7 +123,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="24dp"
-          android:background="@color/wizard_color_2_green_faded_secondary"
+          android:background="?attr/promotionStepBackground"
           android:orientation="horizontal"
           android:paddingBottom="10dp"
           android:paddingTop="10dp"
@@ -192,7 +192,7 @@
           android:layout_height="wrap_content"
           android:layout_marginBottom="12dp"
           android:layout_marginTop="24dp"
-          android:background="@color/wizard_color_2_green_faded_secondary"
+          android:background="?attr/promotionStepBackground"
           android:orientation="horizontal"
           android:paddingBottom="10dp"
           android:paddingTop="10dp"

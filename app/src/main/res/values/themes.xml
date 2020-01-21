@@ -45,6 +45,7 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardAccentStyle</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
+    <item name="lockedButton">@drawable/card_border_fog_grey_normal</item>
 
 
     <!--for settings preference theme-->
@@ -82,6 +83,9 @@
 
     <!-- reviews -->
     <item name="ratingNumberDrawable">@drawable/rating_shape</item>
+
+    <!-- promotions -->
+    <item name="promotionStepBackground">@color/wizard_color_2_green_faded_secondary</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
@@ -281,7 +285,7 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardStyleDark</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
-
+    <item name="lockedButton">@drawable/card_border_fog_grey_wallet_promotion</item>
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -319,6 +323,9 @@
 
     <!-- reviews -->
     <item name="ratingNumberDrawable">@drawable/rating_shape_white</item>
+
+    <!-- promotions -->
+    <item name="promotionStepBackground">@color/wizard_color_2_green_faded</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>

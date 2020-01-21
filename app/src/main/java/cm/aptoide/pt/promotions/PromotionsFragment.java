@@ -87,7 +87,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private TextView toolbarTitle;
   private Subscription errorMessageSubscription;
-  private DecimalFormat decimalFormat;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,11 +98,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    decimalFormat = new DecimalFormat("0.0");
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
-        new PromotionsViewHolderFactory(promotionAppClick, decimalFormat));
+        new PromotionsViewHolderFactory(promotionAppClick, themeManager));
 
     toolbarImage = view.findViewById(R.id.app_graphic);
     toolbarImagePlaceholder = view.findViewById(R.id.app_graphic_placeholder);
@@ -165,8 +163,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           case COLLAPSED:
             toolbarTitle.setVisibility(View.VISIBLE);
 
-            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
-                resources.getColor(R.color.black), true);
+            configureAppBarLayout(resources.getDrawable(R.drawable.transparent), resources.getColor(
+                themeManager.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId), true);
             break;
         }
       }
@@ -219,7 +217,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override
   public void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getPackageName()
-        .equals("com.tw.tycoon.casino")) {
+        .equals("com.appcoins.wallet")) {
       showWallet(promotionViewApp, isWalletInstalled);
       setWalletItemClickListener(promotionViewApp);
     } else {

@@ -99,6 +99,8 @@
   <attr name="timelineSendDrawable" format="reference" />
   <attr name="homeLabelbackground" format="reference" />
   <attr name="customColor" format="color" />
+  <attr name="lockedButton" format="reference" />
+  <attr name="promotionStepBackground" format="color" />
 
   <attr name="gridItemRatingBar" format="reference" />
   <attr name="titleLabelStyle" format="reference" />
