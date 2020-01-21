@@ -19,6 +19,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.home.apps.list.AppsController;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -43,6 +44,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
 
   @Inject AppsPresenter appsPresenter;
+  @Inject ThemeManager themeManager;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
   private ProgressBar progressBar;
@@ -86,7 +88,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private void setupRecyclerView() {
-    appsController = new AppsController();
+    appsController = new AppsController(themeManager);
     appsRecyclerView.setController(appsController);
     appsController.getAdapter()
         .registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {

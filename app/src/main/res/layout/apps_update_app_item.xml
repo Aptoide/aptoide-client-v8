@@ -31,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="@mipmap/ic_launcher"
+        tools:background="@drawable/ad_icon"
         />
 
     <TextView
@@ -58,7 +58,7 @@
         android:layout_height="12dp"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
-        android:src="@drawable/ic_refresh_orange"
+        android:src="?attr/version_refresh_icon"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/apps_secondary_text"
         app:layout_constraintEnd_toStartOf="@id/apps_secondary_text"
@@ -114,7 +114,7 @@
         android:contentDescription="@null"
         android:padding="12dp"
         android:scaleType="center"
-        android:src="@drawable/ic_refresh_action_black"
+        android:src="?attr/icUpdateDrawable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
