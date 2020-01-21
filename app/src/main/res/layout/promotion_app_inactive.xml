@@ -6,6 +6,7 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="7dp"
     app:cardUseCompatPadding="true"
+    style="@style/backgroundCardStyleDark"
     >
 
 

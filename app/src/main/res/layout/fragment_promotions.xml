@@ -30,7 +30,6 @@
           android:scaleType="fitXY"
           android:visibility="visible"
           app:layout_collapseMode="parallax"
-          tools:background="@color/background_light_grey"
           />
 
       <ImageView
@@ -53,7 +52,7 @@
           android:layout_height="?attr/actionBarSize"
           android:background="@drawable/editorial_up_bottom_black_gradient"
           android:gravity="center"
-          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          style="@style/Toolbar"
           app:layout_collapseMode="pin"
           >
         <TextView
@@ -78,6 +77,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:visibility="gone"
+      tools:visibility="visible"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
@@ -150,7 +150,6 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_2"
-            android:textColor="@color/black_87_alpha"
             tools:text="First, get the appcoins wallet to receive your appcoins credits"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />
@@ -220,7 +219,6 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_3"
-            android:textColor="@color/black_87_alpha"
             tools:text="Then install any of these games to earn AppCoins Credits!"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />

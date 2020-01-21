@@ -78,6 +78,13 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private Button cancelUpdateWalletButton;
   private Button updateWalletButton;
 
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    getFragmentComponent(savedInstanceState).inject(this);
+    clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     loading = view.findViewById(R.id.loading);
@@ -103,13 +110,6 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     attachPresenter(presenter);
 
     handleRestoreViewState(savedInstanceState);
-  }
-
-  @Override public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    getFragmentComponent(savedInstanceState).inject(this);
-    clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
   }
 
   public void onResume() {
@@ -350,7 +350,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private void enableNextButton() {
     walletNextButton.setClickable(true);
     walletNextButton.setFocusable(true);
-    walletNextButton.setTextColor(getResources().getColor(R.color.default_orange_gradient_end));
+    walletNextButton.setTextColor(themeManager.getAttributeForTheme(R.attr.colorPrimaryDark).data);
   }
 
   private void disableNextButton() {
@@ -362,7 +362,8 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
   private void disableWalletButton() {
     getWalletAddressButton.setClickable(false);
     getWalletAddressButton.setFocusable(false);
-    getWalletAddressButton.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
+    getWalletAddressButton.setBackgroundColor(
+        themeManager.getAttributeForTheme(R.attr.walletDialogColor).data);
   }
 
   private void enableWalletButton() {

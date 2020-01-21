@@ -80,8 +80,15 @@
     <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
 
+    <!-- reviews -->
+    <item name="ratingNumberDrawable">@drawable/rating_shape</item>
+
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
+
+    <!-- dialogs -->
+    <item name="walletEditBackgroundDrawable">@drawable/edit_text_background</item>
+    <item name="walletDialogColor">@color/grey_fog_light</item>
 
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
@@ -310,9 +317,15 @@
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
+    <!-- reviews -->
+    <item name="ratingNumberDrawable">@drawable/rating_shape_white</item>
+
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>
 
+    <!-- dialogs -->
+    <item name="walletEditBackgroundDrawable">@drawable/edit_text_background_black</item>
+    <item name="walletDialogColor">@color/grey_700</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
@@ -441,7 +454,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background_white</item>
-    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme
+    </item>
     <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>

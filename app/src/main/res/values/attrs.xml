@@ -50,8 +50,10 @@
   <attr name="backgroundCardSecondaryColor" format="color|reference" />
   <attr name="editorialPlaceholderCard" format="reference" />
   <attr name="statusBarColorSecondary" format="color" />
+  <attr name="walletEditBackgroundDrawable" format="reference" />
 
   <attr name="searchStoresSwitchBackground" format="reference" />
+  <attr name="ratingNumberDrawable" format="reference" />
 
   <attr name="backgroundAddStoreButton" format="color" />
   <attr name="backgroundHeaderLoggedIn" format="reference" />
@@ -134,6 +136,9 @@
   <attr name="appview_toolbar_bg_default" format="reference|color" />
   <attr name="appview_toolbar_bg_appc" format="reference|color" />
   <attr name="rating_bar_progress" format="reference" />
+
+  <!-- dialogs -->
+  <attr name="walletDialogColor" format="color" />
 
   <!-- account -->
   <attr name="login_button_style" format="reference" />
