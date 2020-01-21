@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -42,7 +45,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String STORE_NAME = "store_name";
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
+  private static final String HAS_APPC = "HAS_APPC";
   @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
+  @Inject ThemeManager themeManager;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -51,17 +56,21 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private String storeName;
   private String description;
   private String appName;
+  private boolean hasAppc;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private String partnerId;
+  private Toolbar toolbar;
 
-  public static DescriptionFragment newInstance(String appName, String description) {
+  public static DescriptionFragment newInstance(String appName, String description,
+      boolean isAppc) {
     DescriptionFragment fragment = new DescriptionFragment();
     Bundle args = new Bundle();
     args.putString(APP_NAME, appName);
     args.putString(DESCRIPTION, description);
+    args.putBoolean(HAS_APPC, isAppc);
     fragment.setArguments(args);
     return fragment;
   }
@@ -103,6 +112,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     if (args.containsKey(APP_NAME)) {
       appName = args.getString(APP_NAME);
     }
+    if (args.containsKey(HAS_APPC)) {
+      hasAppc = args.getBoolean(HAS_APPC);
+    }
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -127,6 +139,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
         if (bar != null) {
           bar.setTitle(appName);
         }
+        if (hasAppc) {
+          setupAppcAppView();
+        }
       }
       finishLoading();
     } else if (hasAppId) {
@@ -140,12 +155,32 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
             setupAppDescription(getApp);
             setupTitle(getApp);
             finishLoading();
+            if (hasAppc(getApp)) {
+              hasAppc = true;
+              setupAppcAppView();
+            }
           }, false);
     } else {
       Logger.getInstance()
           .e(TAG, "App id unavailable");
       setDataUnavailable();
     }
+  }
+
+  private boolean hasAppc(GetApp getApp) {
+    return getApp.getNodes()
+        .getMeta()
+        .getData()
+        .hasAdvertising() || getApp.getNodes()
+        .getMeta()
+        .getData()
+        .hasBilling();
+  }
+
+  private void setupAppcAppView() {
+    Drawable drawable = ContextCompat.getDrawable(getContext(),
+        themeManager.getAttributeForTheme(R.attr.appDescriptionToolbarAppc).resourceId);
+    toolbar.setBackground(drawable);
   }
 
   private void setupAppDescription(GetApp getApp) {
@@ -198,6 +233,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     super.bindViews(view);
     emptyData = view.findViewById(R.id.empty_data);
     descriptionContainer = view.findViewById(R.id.data_container);
+    toolbar = view.findViewById(R.id.toolbar);
   }
 
   @Override public void onDestroyView() {

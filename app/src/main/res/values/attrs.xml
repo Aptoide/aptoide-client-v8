@@ -188,6 +188,7 @@
   <attr name="dialogsTheme" format="reference" />
   <attr name="wizardBackgroundBottom" format="color" />
   <attr name="wizardRadioBackgroundColor" format="color" />
+  <attr name="appDescriptionToolbarAppc" format="reference" />
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />

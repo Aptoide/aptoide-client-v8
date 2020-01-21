@@ -79,6 +79,7 @@
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
     <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
+    <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
@@ -306,6 +307,7 @@
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+    <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
 
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
@@ -441,7 +443,8 @@
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
     <item name="homeChips">@drawable/default_home_chips_background_white</item>
-    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme</item>
+    <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme
+    </item>
     <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
     <item name="ratingDrawable">@drawable/ic_star_white</item>
     <item name="reactionInputDrawable">@drawable/ic_reaction_emoticon_white</item>
