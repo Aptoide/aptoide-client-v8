@@ -103,16 +103,6 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
     return new FollowUserDisplayable(user, false, getUserStoreTheme(user));
   }
 
-  private String getUserStoreTheme(GetFollowers.TimelineUser user) {
-    if (user.getStore() != null) {
-      return user.getStore()
-          .getAppearance()
-          .getTheme();
-    }
-    return themeManager.getBaseTheme()
-        .getThemeName();
-  }
-
   @Override
   protected EndlessRecyclerOnScrollListener.BooleanAction<GetFollowers> getFirstResponseAction(
       List<Displayable> dispList) {
@@ -128,5 +118,15 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   public String getHeaderMessage() {
     return getString(R.string.social_timeline_share_bar_followers);
+  }
+
+  private String getUserStoreTheme(GetFollowers.TimelineUser user) {
+    if (user.getStore() != null) {
+      return user.getStore()
+          .getAppearance()
+          .getTheme();
+    }
+    return themeManager.getBaseTheme()
+        .getThemeName();
   }
 }
