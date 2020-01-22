@@ -25,7 +25,7 @@
 
   <Button
       android:id="@+id/comment_store_button"
-      style="@style/Aptoide.Button.S"
+      style="@style/Aptoide.Button.Secondary.S"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
