@@ -363,7 +363,7 @@ public class ClaimPromotionDialogFragment extends BaseDialogView
     getWalletAddressButton.setClickable(false);
     getWalletAddressButton.setFocusable(false);
     getWalletAddressButton.setBackgroundColor(
-        themeManager.getAttributeForTheme(R.attr.walletDialogColor).data);
+        themeManager.getAttributeForTheme(R.attr.claimedButton).data);
   }
 
   private void enableWalletButton() {

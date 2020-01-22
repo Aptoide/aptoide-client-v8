@@ -85,14 +85,14 @@
     <item name="ratingNumberDrawable">@drawable/rating_shape</item>
 
     <!-- promotions -->
-    <item name="promotionStepBackground">@color/wizard_color_2_green_faded_secondary</item>
+    <item name="promotionStepBackground">@drawable/promotions_shape_circular_textview</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
 
     <!-- dialogs -->
     <item name="walletEditBackgroundDrawable">@drawable/edit_text_background</item>
-    <item name="walletDialogColor">@color/grey_fog_light</item>
+    <item name="claimedButton">@drawable/button_border_grey</item>
 
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
@@ -325,14 +325,14 @@
     <item name="ratingNumberDrawable">@drawable/rating_shape_white</item>
 
     <!-- promotions -->
-    <item name="promotionStepBackground">@color/wizard_color_2_green_faded</item>
+    <item name="promotionStepBackground">@drawable/promotions_shape_circular_textview_white</item>
 
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>
 
     <!-- dialogs -->
     <item name="walletEditBackgroundDrawable">@drawable/edit_text_background_black</item>
-    <item name="walletDialogColor">@color/grey_700</item>
+    <item name="claimedButton">@drawable/button_border_dark</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>

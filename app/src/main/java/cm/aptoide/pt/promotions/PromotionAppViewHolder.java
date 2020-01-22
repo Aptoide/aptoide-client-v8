@@ -62,10 +62,10 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
       if (appState == CLAIMED) {
         lockInstallButton(true);
-        promotionAction.setBackgroundColor(
-            themeManager.getAttributeForTheme(R.attr.walletDialogColor).data);
-        promotionAction.setTextColor(itemView.getResources()
-            .getColor(R.color.black));
+        promotionAction.setBackground(itemView.getResources()
+            .getDrawable(themeManager.getAttributeForTheme(R.attr.claimedButton).resourceId));
+        promotionAction.setTextColor(
+            themeManager.getAttributeForTheme(android.R.attr.textColorPrimary).data);
 
         SpannableString string = new SpannableString("  " + itemView.getResources()
             .getString(R.string.holidayspromotion_button_claimed)

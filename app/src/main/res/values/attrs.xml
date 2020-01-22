@@ -140,7 +140,7 @@
   <attr name="rating_bar_progress" format="reference" />
 
   <!-- dialogs -->
-  <attr name="walletDialogColor" format="color" />
+  <attr name="claimedButton" format="reference" />
 
   <!-- account -->
   <attr name="login_button_style" format="reference" />
