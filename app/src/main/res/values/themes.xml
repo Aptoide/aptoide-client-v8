@@ -84,6 +84,9 @@
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
 
+    <!-- separators -->
+    <item name="reviewsSeparator">@color/white</item>
+
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
 
@@ -320,6 +323,9 @@
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
 
+    <!-- separators -->
+    <item name="reviewsSeparator">@color/grey_dark</item>
+
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
@@ -406,7 +412,7 @@
     <item name="gridItemRatingBar">@style/RatingBarExtraSmall</item>
     <item name="android:ratingBarStyleSmall">@style/RatingBarExtraSmall</item>
     <item name="titleLabelStyle">@style/titleLabel</item>
-    <item name="separatorColor">@color/light_grey</item>
+    <item name="separatorColor">@color/grey_dark</item>
     <item name="customButtomDarkGrayThinLine">@style/WidgetButtonCustomDarkGrayThinLine</item>
 
     <!--recycler-->
