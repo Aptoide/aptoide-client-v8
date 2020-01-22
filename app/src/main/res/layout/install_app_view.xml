@@ -8,7 +8,7 @@
 
   <Button
       android:id="@+id/appview_install_button"
-      style="@style/Aptoide.Button"
+      style="@style/Aptoide.Button.Install"
       android:layout_width="249dp"
       android:layout_height="@dimen/install_button_height"
       android:layout_gravity="center_horizontal"

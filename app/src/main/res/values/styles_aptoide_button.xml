@@ -124,6 +124,12 @@
     <item name="android:background">?attr/installButtonBackground</item>
   </style>
 
+  <style name="Aptoide.Button.Install.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
+
+
   <style name="Aptoide.Button.Install.Appc" parent="Aptoide.Button">
     <item name="android:textColor">@color/white</item>
     <item name="android:background">@drawable/appc_gradient_rounded</item>
