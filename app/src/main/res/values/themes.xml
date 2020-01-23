@@ -280,7 +280,7 @@
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme_dark</item>
     <item name="raisedButtonTextColor">@color/white</item>
-    <item name="buttonTextFont">roboto-medium</item>
+    <item name="buttonTextFont">sans-serif-medium</item>
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
@@ -516,6 +516,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/grey_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/grey_gradient</item>
     <item name="installButtonBackground">@drawable/grey_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/grey_gradient</item>
@@ -554,6 +555,7 @@
 
 
     <item name="raisedButtonBackground">@drawable/teal_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/teal_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/teal_gradient</item>
     <item name="installButtonBackground">@drawable/teal_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/teal_gradient</item>
@@ -592,6 +594,7 @@
 
 
     <item name="raisedButtonBackground">@drawable/brown_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/brown_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/brown_gradient</item>
     <item name="installButtonBackground">@drawable/brown_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/brown_gradient</item>
@@ -630,6 +633,7 @@
     </item>
 
     <item name="raisedButtonBackground">@drawable/blue_grey_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/blue_grey_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/blue_grey_gradient</item>
     <item name="installButtonBackground">@drawable/blue_grey_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/blue_grey_gradient</item>
@@ -670,6 +674,7 @@
 
 
     <item name="raisedButtonBackground">@drawable/light_green_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/light_green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_green_gradient</item>
     <item name="installButtonBackground">@drawable/light_green_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/light_green_gradient</item>
@@ -708,6 +713,7 @@
     </item>
 
     <item name="raisedButtonBackground">@drawable/light_blue_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/light_blue_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/light_blue_gradient</item>
     <item name="installButtonBackground">@drawable/light_blue_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/light_blue_gradient</item>
@@ -745,6 +751,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/amber_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/amber_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/amber_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/amber_gradient</item>
     <item name="installButtonBackground">@drawable/amber_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/amber_gradient</item>
@@ -782,6 +789,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/lime_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/lime_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/lime_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/lime_gradient</item>
     <item name="installButtonBackground">@drawable/lime_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/lime_gradient</item>
@@ -820,6 +828,7 @@
 
 
     <item name="raisedButtonBackground">@drawable/orange_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/orange_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/orange_gradient</item>
     <item name="installButtonBackground">@drawable/orange_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/orange_gradient</item>
@@ -858,6 +867,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/pink_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/pink_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/pink_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/pink_gradient</item>
     <item name="installButtonBackground">@drawable/pink_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/pink_gradient</item>
@@ -896,6 +906,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/indigo_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/indigo_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/indigo_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/indigo_gradient</item>
     <item name="installButtonBackground">@drawable/indigo_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/indigo_gradient</item>
@@ -933,6 +944,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/red_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/red_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/red_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/red_gradient</item>
     <item name="installButtonBackground">@drawable/red_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/red_gradient</item>
@@ -971,6 +983,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/green_gradient_end</item>
 
     <item name="raisedButtonBackground">@drawable/green_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/green_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/green_gradient</item>
     <item name="installButtonBackground">@drawable/green_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/green_gradient</item>
@@ -1010,6 +1023,7 @@
     </item>
 
     <item name="raisedButtonBackground">@drawable/deep_purple_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/deep_purple_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/deep_purple_gradient</item>
     <item name="installButtonBackground">@drawable/deep_purple_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/deep_purple_gradient</item>
@@ -1047,6 +1061,7 @@
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grey</item>
 
     <item name="raisedButtonBackground">@drawable/black_gradient_rounded</item>
+    <item name="raisedButtonSecondaryBackground">@drawable/black_gradient_rounded</item>
     <item name="flatButtonBackground">@drawable/black_gradient</item>
     <item name="installButtonBackground">@drawable/black_gradient_rounded</item>
     <item name="toolbarBackground">@drawable/black_gradient</item>
