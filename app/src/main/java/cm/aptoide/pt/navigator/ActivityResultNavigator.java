@@ -23,9 +23,9 @@ import rx.Observable;
 
 public abstract class ActivityResultNavigator extends BaseActivity implements ActivityNavigator {
 
+  public @Inject ThemeManager themeManager;
   @Inject AccountNavigator accountNavigator;
   @Inject @Named("marketName") String marketName;
-  public @Inject ThemeManager themeManager;
   private PublishRelay<Result> resultRelay;
   private FragmentNavigator fragmentNavigator;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
