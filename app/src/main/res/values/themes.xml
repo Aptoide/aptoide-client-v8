@@ -255,10 +255,10 @@
     <item name="dialogsTheme">@style/AppBaseThemeDark.DialogTheme</item>
     <item name="roundedDialogsTheme">@style/AppBaseThemeDark.DialogTheme.Rounded</item>
 
-    <item name="colorPrimary">@color/aptoide_orange</item>
+    <item name="colorPrimary">@color/default_orange_gradient_start</item>
     <item name="colorPrimaryDark">@color/light_grey</item>
     <item name="colorAccent">@color/white</item>
-    <item name="customColor">@color/aptoide_orange</item>
+    <item name="customColor">@color/default_orange_gradient_start</item>
     <item name="android:statusBarColor" tools:targetApi="lollipop">#000000</item>
     <item name="widgetBackgroundColorPrimary">@color/default_background_color_dark</item>
     <item name="widgetBackgroundColorSecondary">@color/grey_900</item>
