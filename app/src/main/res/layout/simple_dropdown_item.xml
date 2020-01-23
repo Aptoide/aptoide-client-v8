@@ -5,7 +5,7 @@
     style="@style/Aptoide.TextView.Medium.M.Primary"
     android:layout_width="match_parent"
     android:layout_height="@dimen/button_height"
-    android:background="?attr/backgroundSecondary"
+    android:background="?attr/searchDropdownBackgroundColor"
     android:drawablePadding="@dimen/padding_small"
     android:ellipsize="marquee"
     android:gravity="center_vertical"
