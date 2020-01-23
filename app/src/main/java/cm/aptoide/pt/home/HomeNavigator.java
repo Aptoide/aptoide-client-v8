@@ -74,7 +74,7 @@ public class HomeNavigator {
 
     fragmentNavigator.navigateTo(StoreTabGridRecyclerFragment.newInstance(click.getBundle()
         .getEvent(), click.getType(), click.getBundle()
-        .getTitle(), "default", tag, StoreContext.home), true);
+        .getTitle(), "default", tag, StoreContext.home, true), true);
   }
 
   public void navigateToAppView(String tag, SearchAdResult searchAdResult) {
