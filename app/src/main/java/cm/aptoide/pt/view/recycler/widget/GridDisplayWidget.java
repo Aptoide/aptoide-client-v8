@@ -33,7 +33,7 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    imageView = (ImageView) itemView.findViewById(R.id.image_category);
+    imageView = itemView.findViewById(R.id.image_category);
   }
 
   @Override public void bindView(GridDisplayDisplayable displayable, int position) {
@@ -48,8 +48,8 @@ public class GridDisplayWidget extends Widget<GridDisplayDisplayable> {
       if (StoreTabFragmentChooser.validateAcceptedName(name)) {
         getFragmentNavigator().navigateTo(
             StoreTabGridRecyclerFragment.newInstance(event, pojo.getLabel(),
-                displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext()),
-            true);
+                displayable.getStoreTheme(), displayable.getTag(), displayable.getStoreContext(),
+                false), true);
       } else {
         switch (name) {
           case facebook:

@@ -26,8 +26,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    title = (TextView) itemView.findViewById(R.id.title);
-    more = (Button) itemView.findViewById(R.id.more);
+    title = itemView.findViewById(R.id.title);
+    more = itemView.findViewById(R.id.more);
   }
 
   @Override public void bindView(StoreGridHeaderDisplayable displayable, int position) {
@@ -66,7 +66,8 @@ public class StoreGridHeaderWidget extends Widget<StoreGridHeaderDisplayable> {
                       storeContext);
             } else {
               displayable.getStoreTabNavigator()
-                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext);
+                  .navigateToStoreTabGridRecyclerView(event, title, storeTheme, tag, storeContext,
+                      true);
             }
           }));
     }
