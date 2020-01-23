@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-  ~ Copyright (c) 2016.
-  ~ Modified on 26/07/2016.
-  -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,7 +23,7 @@
         android:gravity="center"
         android:minHeight="112dp"
         app:layout_collapseMode="pin"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="@style/PopupMenuStyle"
         />
   </com.google.android.material.appbar.AppBarLayout>
 
@@ -42,7 +36,6 @@
       android:visibility="gone"
       tools:visibility="gone"
       />
-  <!-- is this necessary ?? -->
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -78,10 +71,10 @@
       android:layout_height="match_parent"
       android:layout_below="@id/app_bar_layout"
       android:clipToPadding="false"
-      android:paddingEnd="@dimen/recycler_margin"
-      android:paddingLeft="@dimen/recycler_margin"
-      android:paddingRight="@dimen/recycler_margin"
       android:paddingStart="@dimen/recycler_margin"
+      android:paddingLeft="@dimen/recycler_margin"
+      android:paddingEnd="@dimen/recycler_margin"
+      android:paddingRight="@dimen/recycler_margin"
       android:visibility="gone"
       tools:visibility="visible"
       />

@@ -1,56 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?><!--
-  Copyright (c) 2012 tdeus.
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the GNU Public License v2.0
-  which accompanies this distribution, and is available at
-  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
--->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?selectableItemBackground"
     >
-  <!--
-      style="?attr/customRowForeground"
-  -->
   <RelativeLayout
+      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      style="?attr/backgroundCard"
       >
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        tools:src="@drawable/com_facebook_profile_picture_blank_square"
+        tools:src="@drawable/ad_icon"
         />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toLeftOf="@+id/is_excluded"
-        android:layout_toRightOf="@+id/icon"
         android:layout_toStartOf="@+id/is_excluded"
+        android:layout_toLeftOf="@+id/is_excluded"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
         android:orientation="vertical"
         >
 
       <TextView
           android:id="@+id/name"
+          style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:ellipsize="end"
           android:maxLines="1"
-          android:textAppearance="?android:attr/textAppearanceMedium"
           tools:text="AliExpress"
           />
 

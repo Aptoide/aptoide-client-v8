@@ -547,6 +547,12 @@
     <item name="android:textColor">?attr/colorPrimary</item>
   </style>
 
+  <style name="PopupMenuStyle" parent="Theme.AppCompat">
+    <item name="android:background">?attr/searchDropdownBackgroundColor</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
+
+  </style>
+
   <style name="AlertDialogAptoide" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
     <item name="android:colorAccent">?attr/preferenceTitleColor</item>
     <item name="android:textColorPrimary">@android:color/black</item>
