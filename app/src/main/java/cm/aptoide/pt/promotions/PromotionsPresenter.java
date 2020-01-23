@@ -252,7 +252,7 @@ public class PromotionsPresenter implements Presenter {
     return Observable.just(promotionsModel)
         .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
         .filter(promotionApp -> promotionApp.getPackageName()
-            .equals("com.tw.tycoon.casino"))
+            .equals("com.appcoins.wallet"))
         .doOnNext(wallet -> view.lockPromotionApps(
             promotionsModel.isWalletInstalled() && wallet.isClaimed()))
         .map(promotionApp -> promotionsModel)

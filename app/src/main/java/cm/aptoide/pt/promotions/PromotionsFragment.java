@@ -60,7 +60,7 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 import static cm.aptoide.pt.utils.GenericDialogs.EResponse.YES;
 
 public class PromotionsFragment extends NavigationTrackFragment implements PromotionsView {
-  private static final String WALLET_PACKAGE_NAME = "com.tw.tycoon.casino";
+  private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
 
   @Inject PromotionsPresenter promotionsPresenter;
   @Inject ThemeManager themeManager;
