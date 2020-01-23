@@ -205,6 +205,10 @@
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.S.Primary">
+    <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.XS.White">
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>

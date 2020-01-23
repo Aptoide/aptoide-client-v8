@@ -46,6 +46,8 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardAccentStyle</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
+    <item name="lockedButton">@drawable/card_border_fog_grey_normal</item>
+    <item name="lockedWalletButtonColor">@color/grey_fog_light</item>
 
 
     <!--for settings preference theme-->
@@ -88,8 +90,18 @@
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
 
+    <!-- reviews -->
+    <item name="ratingNumberDrawable">@drawable/rating_shape</item>
+
+    <!-- promotions -->
+    <item name="promotionStepBackground">@drawable/promotions_shape_circular_textview</item>
+
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/white</item>
+
+    <!-- dialogs -->
+    <item name="walletEditBackgroundDrawable">@drawable/edit_text_background</item>
+    <item name="claimedButton">@drawable/button_border_grey</item>
 
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background</item>
@@ -290,7 +302,8 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardStyleDark</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
-
+    <item name="lockedButton">@drawable/locked_button_background</item>
+    <item name="lockedWalletButtonColor">@color/secondary_text_color</item>
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
@@ -331,9 +344,18 @@
     <!--search-->
     <item name="searchStoresSwitchBackground">@drawable/search_buttons_background_black</item>
 
+    <!-- reviews -->
+    <item name="ratingNumberDrawable">@drawable/rating_shape_white</item>
+
+    <!-- promotions -->
+    <item name="promotionStepBackground">@drawable/promotions_shape_circular_textview_white</item>
+
     <!-- status bar -->
     <item name="statusBarColorSecondary">@color/black</item>
 
+    <!-- dialogs -->
+    <item name="walletEditBackgroundDrawable">@drawable/edit_text_background_black</item>
+    <item name="claimedButton">@drawable/button_border_dark</item>
 
     <!--appview-->
     <item name="appview_button_style">@style/Aptoide.Button.Flat.S.DarkBG</item>
