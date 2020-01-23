@@ -25,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.preference.EditTextPreference;
@@ -470,7 +471,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
           contactLayout.setVisibility(View.INVISIBLE);
         }
 
-        new AlertDialog.Builder(context).setView(view)
+        new AlertDialog.Builder(new ContextThemeWrapper(context,
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setView(view)
             .setTitle(getString(R.string.settings_about_us))
             .setIcon(android.R.drawable.ic_menu_info_details)
             .setPositiveButton(android.R.string.ok,
