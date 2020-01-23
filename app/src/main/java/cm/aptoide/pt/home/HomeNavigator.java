@@ -109,14 +109,14 @@ public class HomeNavigator {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
                 .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(),
-            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
                 .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(),
-            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   public void navigateToPromotions() {

@@ -267,7 +267,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Override public void startAptoideTvWebView() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(),
-            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   @Override public void refreshUI(Store store) {
