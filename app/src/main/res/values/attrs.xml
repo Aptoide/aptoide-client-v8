@@ -47,6 +47,7 @@
   <attr name="skeletonColor" format="color|reference" />
   <attr name="earnAppcoinsBg" format="reference" />
   <attr name="earnAppcoinsCardBg" format="color|reference" />
+  <attr name="reviewsSeparator" format="color" />
   <attr name="backgroundCardSecondaryColor" format="color|reference" />
   <attr name="editorialPlaceholderCard" format="reference" />
   <attr name="statusBarColorSecondary" format="color" />

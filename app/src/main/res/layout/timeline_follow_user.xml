@@ -132,33 +132,4 @@
         />
 
   </LinearLayout>
-
-  <LinearLayout
-      android:id="@+id/follow_store_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:layout_alignParentEnd="true"
-      android:layout_alignParentRight="true"
-      android:layout_alignParentTop="true"
-      android:layout_marginEnd="15dp"
-      android:layout_marginRight="15dp"
-      android:gravity="center"
-      android:orientation="vertical"
-      android:visibility="gone"
-      tools:visibility="gone"
-      >
-
-    <Button
-        android:id="@+id/follow_btn"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:background="@drawable/button_border_orange3"
-        android:text="@string/follow"
-        android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceSmallInverse"
-        android:textColor="@color/app_view_follow_orange"
-        android:textSize="8.4sp"
-        />
-  </LinearLayout>
-
 </RelativeLayout>
