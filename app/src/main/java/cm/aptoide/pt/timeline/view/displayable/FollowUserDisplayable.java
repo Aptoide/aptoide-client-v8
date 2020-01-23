@@ -15,15 +15,13 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.TimelineUser> {
 
-  private boolean isLike;
   private String theme;
 
   public FollowUserDisplayable() {
   }
 
-  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, boolean isLike, String theme) {
+  public FollowUserDisplayable(GetFollowers.TimelineUser pojo, String theme) {
     super(pojo);
-    this.isLike = isLike;
     this.theme = theme;
   }
 
@@ -104,9 +102,5 @@ public class FollowUserDisplayable extends DisplayablePojo<GetFollowers.Timeline
       navigator.navigateTo(AptoideApplication.getFragmentProvider()
           .newStoreFragment(getPojo().getId(), theme, StoreFragment.OpenType.GetHome), true);
     }
-  }
-
-  public boolean isLike() {
-    return isLike;
   }
 }

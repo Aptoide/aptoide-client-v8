@@ -100,17 +100,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false, getUserStoreTheme(user));
-  }
-
-  private String getUserStoreTheme(GetFollowers.TimelineUser user) {
-    if (user.getStore() != null) {
-      return user.getStore()
-          .getAppearance()
-          .getTheme();
-    }
-    return themeManager.getBaseTheme()
-        .getThemeName();
+    return new FollowUserDisplayable(user, getUserStoreTheme(user));
   }
 
   @Override
@@ -128,5 +118,15 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
 
   public String getHeaderMessage() {
     return getString(R.string.social_timeline_share_bar_followers);
+  }
+
+  private String getUserStoreTheme(GetFollowers.TimelineUser user) {
+    if (user.getStore() != null) {
+      return user.getStore()
+          .getAppearance()
+          .getTheme();
+    }
+    return themeManager.getBaseTheme()
+        .getThemeName();
   }
 }
