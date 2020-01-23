@@ -120,7 +120,7 @@
 
 
   <!--Install button-->
-  <style name="Aptoide.Button.Install" parent="Aptoide.Button">
+  <style name="Aptoide.Button.Install">
     <item name="android:background">?attr/installButtonBackground</item>
   </style>
 
