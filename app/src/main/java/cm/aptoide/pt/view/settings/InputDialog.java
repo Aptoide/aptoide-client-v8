@@ -14,15 +14,20 @@ import cm.aptoide.pt.view.rx.RxAlertDialog;
  * Created by marcelobenites on 09/03/17.
  */
 
-public class PinDialog extends EditableTextDialog {
+public class InputDialog extends EditableTextDialog {
 
-  public PinDialog(RxAlertDialog dialog, EditText editText) {
+  public InputDialog(RxAlertDialog dialog, EditText editText) {
     super(dialog, editText);
   }
 
   @Override public void show() {
     super.show();
     setText("");
+  }
+
+  public void showWithInput(String text) {
+    super.show();
+    setText(text);
   }
 
   public static class Builder {
@@ -37,38 +42,38 @@ public class PinDialog extends EditableTextDialog {
       this.layoutInflater = LayoutInflater.from(context);
     }
 
-    public PinDialog.Builder setEditText(@IdRes int editTextId) {
+    public InputDialog.Builder setEditText(@IdRes int editTextId) {
       this.editTextId = editTextId;
       return this;
     }
 
-    public PinDialog.Builder setView(@LayoutRes int viewRes) {
+    public InputDialog.Builder setView(@LayoutRes int viewRes) {
       this.viewRes = viewRes;
       return this;
     }
 
-    public PinDialog.Builder setMessage(@StringRes int messageId) {
+    public InputDialog.Builder setMessage(@StringRes int messageId) {
       builder.setMessage(messageId);
       return this;
     }
 
-    public PinDialog.Builder setPositiveButton(@StringRes int textId) {
+    public InputDialog.Builder setPositiveButton(@StringRes int textId) {
       builder.setPositiveButton(textId);
       return this;
     }
 
-    public PinDialog.Builder setNegativeButton(@StringRes int textId) {
+    public InputDialog.Builder setNegativeButton(@StringRes int textId) {
       builder.setNegativeButton(textId);
       return this;
     }
 
-    public PinDialog build() {
+    public InputDialog build() {
 
       if (viewRes != 0 && editTextId != 0) {
         final android.view.View view = layoutInflater.inflate(viewRes, null, false);
-        final EditText pinEditText = ((EditText) view.findViewById(editTextId));
+        final EditText pinEditText = view.findViewById(editTextId);
         builder.setView(view);
-        return new PinDialog(builder.build(), pinEditText);
+        return new InputDialog(builder.build(), pinEditText);
       }
       throw new IllegalArgumentException("View and edit text resource ids must be provided");
     }
