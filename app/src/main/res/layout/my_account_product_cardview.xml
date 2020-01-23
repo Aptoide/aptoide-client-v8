@@ -11,20 +11,22 @@
     >
 
   <androidx.constraintlayout.widget.ConstraintLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       >
 
     <ImageView
         android:id="@+id/product_icon_imageview"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ad_icon"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/product_title_textview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -32,31 +34,40 @@
 
     <TextView
         android:id="@+id/product_title_textview"
-        android:layout_width="wrap_content"
+        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:layout_toRightOf="@+id/product_icon_imageview"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/product_icon_imageview"
         app:layout_constraintStart_toEndOf="@+id/product_icon_imageview"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Aptoide TV"
-        style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
         />
 
 
     <TextView
         android:id="@+id/product_subtitle_textview"
-        android:layout_width="wrap_content"
+        style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/product_title_textview"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_toRightOf="@+id/product_icon_imageview"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/product_icon_imageview"
         app:layout_constraintStart_toEndOf="@+id/product_icon_imageview"
         app:layout_constraintTop_toBottomOf="@+id/product_title_textview"
         tools:text="The best solution for your Set Top Box and Smart TV"
-        style="@style/Aptoide.TextView.Regular.XXS.GreyMedium"
         />
 
 
