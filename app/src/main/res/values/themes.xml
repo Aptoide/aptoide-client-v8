@@ -82,6 +82,7 @@
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
     <item name="earnAppcoinsCardBg">@color/white</item>
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
+    <item name="searchDropdownBackgroundColor">@color/white</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
 
     <!-- separators -->
@@ -321,6 +322,7 @@
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
+    <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
 
     <!-- separators -->

@@ -73,7 +73,7 @@ public class AppSearchSuggestionsView implements SearchSuggestionsView {
     });
 
     AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(androidx.appcompat.R.id.search_src_text);
+        searchView.findViewById(androidx.appcompat.R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
 
     getLifecycleEvent().filter(event -> event == LifecycleEvent.RESUME)
