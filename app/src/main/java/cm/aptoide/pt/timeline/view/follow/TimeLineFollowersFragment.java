@@ -100,7 +100,7 @@ public class TimeLineFollowersFragment extends TimeLineFollowFragment {
   }
 
   @Override protected Displayable createUserDisplayable(GetFollowers.TimelineUser user) {
-    return new FollowUserDisplayable(user, false, getUserStoreTheme(user));
+    return new FollowUserDisplayable(user, getUserStoreTheme(user));
   }
 
   @Override

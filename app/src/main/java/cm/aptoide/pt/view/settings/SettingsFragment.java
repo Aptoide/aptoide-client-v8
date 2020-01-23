@@ -325,12 +325,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
       subscriptions.add(RxPreference.clicks(termsAndConditions)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
-                  themeManager.getAttributeForTheme(R.attr.colorPrimary).data)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId)));
 
       subscriptions.add(RxPreference.clicks(privacyPolicy)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
-                  themeManager.getAttributeForTheme(R.attr.colorPrimary).data)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId)));
     }
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
@@ -640,7 +640,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void openDeleteAccountView(String accessToken) {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
-            getContext(), themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
+            getContext(), themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   private void handleSocialNotifications(Boolean isChecked) {

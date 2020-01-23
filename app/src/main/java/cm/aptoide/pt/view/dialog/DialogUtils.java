@@ -218,8 +218,9 @@ import rx.subscriptions.Subscriptions;
 
   public void setBulletText(TextView textView, String text) {
     SpannableString spannable = new SpannableString(text);
-    spannable.setSpan(new BulletSpan(16, resources.getColor(R.color.default_orange_gradient_end)),
-        0, text.length(), 0);
+    spannable.setSpan(
+        new BulletSpan(16, themeManager.getAttributeForTheme(R.attr.colorPrimaryDark).data), 0,
+        text.length(), 0);
 
     textView.setText(spannable);
   }

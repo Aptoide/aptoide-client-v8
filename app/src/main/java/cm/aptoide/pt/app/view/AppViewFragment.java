@@ -708,7 +708,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setDescription(model.getMedia()
         .getDescription());
     setAppFlags(model.isGoodApp(), model.getAppFlags());
-    setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
+    setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore(),
+        model.isAppCoinApp());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
   }
@@ -1463,10 +1464,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private void setReadMoreClickListener(String appName, AppMedia media, Store store) {
+  private void setReadMoreClickListener(String appName, AppMedia media, Store store,
+      boolean hasAppc) {
     descriptionReadMore.setOnClickListener(view -> readMoreClick.onNext(
         new ReadMoreClickEvent(appName, media.getDescription(), store.getAppearance()
-            .getTheme())));
+            .getTheme(), hasAppc)));
   }
 
   private void setAppFlags(boolean isGoodFile, AppFlags appFlags) {

@@ -15,7 +15,7 @@
   <View
       android:layout_width="match_parent"
       android:layout_height="1dp"
-      android:background="@color/white"
+      android:background="?attr/reviewsSeparator"
       />
   <RelativeLayout
       android:layout_width="match_parent"

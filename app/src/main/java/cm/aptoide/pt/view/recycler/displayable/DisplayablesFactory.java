@@ -491,7 +491,7 @@ public class DisplayablesFactory {
       displayables.add(
           new StoreAddCommentDisplayable(data.second.getId(), data.second.getName(), storeTheme,
               themeManager.getAttributeForTheme(storeTheme.getThemeName(),
-                  R.attr.raisedButtonBackground).resourceId));
+                  R.attr.raisedButtonSecondaryBackground).resourceId));
     }
 
     return displayables;

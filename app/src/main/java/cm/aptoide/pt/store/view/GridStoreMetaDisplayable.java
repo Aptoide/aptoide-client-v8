@@ -260,8 +260,7 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   }
 
   public int getRaisedButtonBackground() {
-    return themeManager.getAttributeForTheme(getStoreThemeName(),
-        R.attr.raisedButtonBackground).resourceId;
+    return themeManager.getAttributeForTheme(R.attr.raisedButtonSecondaryBackground).resourceId;
   }
 
   public String getStoreThemeName() {

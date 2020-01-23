@@ -558,7 +558,7 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(readMoreClickEvent -> {
           appViewAnalytics.sendReadMoreEvent();
           appViewNavigator.navigateToDescriptionReadMore(readMoreClickEvent.getStoreName(),
-              readMoreClickEvent.getDescription());
+              readMoreClickEvent.getDescription(), readMoreClickEvent.hasAppc());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

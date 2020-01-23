@@ -120,9 +120,15 @@
 
 
   <!--Install button-->
-  <style name="Aptoide.Button.Install" parent="Aptoide.Button">
+  <style name="Aptoide.Button.Install">
     <item name="android:background">?attr/installButtonBackground</item>
   </style>
+
+  <style name="Aptoide.Button.Install.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
+
 
   <style name="Aptoide.Button.Install.Appc" parent="Aptoide.Button">
     <item name="android:textColor">@color/white</item>
