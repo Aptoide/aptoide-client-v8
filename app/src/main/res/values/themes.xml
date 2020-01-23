@@ -46,6 +46,7 @@
     <item name="followStoreCardBackground">@style/backgroundCardAccentStyle</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
     <item name="lockedButton">@drawable/card_border_fog_grey_normal</item>
+    <item name="lockedWalletButtonColor">@color/grey_fog_light</item>
 
 
     <!--for settings preference theme-->
@@ -286,6 +287,7 @@
     <item name="followStoreCardBackground">@style/backgroundCardStyleDark</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
     <item name="lockedButton">@drawable/locked_button_background</item>
+    <item name="lockedWalletButtonColor">@color/secondary_text_color</item>
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
