@@ -35,10 +35,6 @@
   <color name="green_tint_default">#45d316</color>
   <color name="working_well_text_color">#98cf1c</color>
 
-  <!-- AppsTimeline colors -->
-  <color name="appstimeline_grey">#4d4d4d</color>
-  <color name="appstimeline_recommends_title">#ff7200</color>
-
   <!-- Create stores colors -->
   <color name="create_store_title_color">#545454</color>
   <color name="create_store_hint_color">#7e7e7e</color>
