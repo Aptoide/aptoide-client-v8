@@ -285,7 +285,7 @@
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardStyleDark</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline_dark</item>
-    <item name="lockedButton">@drawable/card_border_fog_grey_wallet_promotion</item>
+    <item name="lockedButton">@drawable/locked_button_background</item>
 
     <!--for settings preference theme-->
     <item name="preferenceTitleColor">@color/black_87_alpha</item>
