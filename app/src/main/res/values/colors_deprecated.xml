@@ -31,7 +31,6 @@
   <color name="black_alfa_gradient_end">#2f000000</color>
   <color name="black_gradient_start">#000000</color>
   <color name="black_gradient_end">#525252</color>
-  <color name="app_view_follow_orange">#b64735</color>
   <color name="almost_black">#403f3d</color>
   <color name="green_tint_default">#45d316</color>
   <color name="working_well_text_color">#98cf1c</color>
