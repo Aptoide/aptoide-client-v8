@@ -19,7 +19,7 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="20dp"
       android:gravity="left|center_vertical"
-      android:textColor="?attr/colorPrimary"
+      android:textColor="?attr/colorAccent"
       android:textSize="@dimen/text_size_large"
       android:visibility="gone"
       tools:visibility="visible"
@@ -68,7 +68,7 @@
         android:padding="6dp"
         android:text="@string/dialog_button_comment"
         android:textAllCaps="true"
-        android:textColor="?colorPrimary"
+        android:textColor="?attr/colorAccent"
         android:textSize="@dimen/text_size_medium"
         />
 
