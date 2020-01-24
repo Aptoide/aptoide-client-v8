@@ -19,9 +19,7 @@
       <stroke
           android:color="#FE6446"
           android:width="1dip"/>
-      <gradient
-          android:endColor="?attr/backgroundMain"
-          android:startColor="?attr/backgroundMain"/>
+      <gradient android:endColor="#F9F9F9" android:startColor="#F9F9F9" />
     </shape>
   </item>
 </selector>

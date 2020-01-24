@@ -46,7 +46,9 @@ class ThemeManager(private val activity: Activity) {
   }
 
   fun setStatusBarThemeColor(theme: String?) {
-    setStatusBarThemeColor(getAttributeForTheme(theme, android.R.attr.statusBarColor).data)
+    if (Build.VERSION.SDK_INT >= 21) {
+      setStatusBarThemeColor(getAttributeForTheme(theme, android.R.attr.statusBarColor).data)
+    }
   }
 
   fun setStatusBarThemeColor(@ColorInt color: Int) {
