@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -115,7 +116,9 @@ public class PrivateStoreDialog extends BaseDialogFragment {
     final View rootView = LayoutInflater.from(context)
         .inflate(R.layout.dialog_add_pvt_store, null, false);
 
-    return new AlertDialog.Builder(context).setTitle(R.string.subscribe_pvt_store)
+    return new AlertDialog.Builder(new ContextThemeWrapper(context,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setTitle(
+        R.string.subscribe_pvt_store)
         .setView(rootView)
         .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
           storeUser = ((EditText) rootView.findViewById(R.id.edit_store_username)).getText()

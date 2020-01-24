@@ -110,11 +110,11 @@ public class ManageUserFragment extends BackButtonFragment
     Bundle args = getArguments();
 
     isEditProfile = args != null && args.getBoolean(EXTRA_IS_EDIT, false);
-    imagePickerErrorHandler = new ImagePickerErrorHandler(context);
+    imagePickerErrorHandler = new ImagePickerErrorHandler(context, themeManager);
 
     dialogFragment = new ImagePickerDialog.Builder(new ContextThemeWrapper(getContext(),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setViewRes(
-        ImagePickerDialog.LAYOUT)
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId),
+        themeManager).setViewRes(ImagePickerDialog.LAYOUT)
         .setTitle(R.string.upload_dialog_title)
         .setNegativeButton(R.string.cancel)
         .setCameraButton(R.id.button_camera)

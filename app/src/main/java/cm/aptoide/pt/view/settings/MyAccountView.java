@@ -28,8 +28,6 @@ public interface MyAccountView extends View {
 
   Observable<Void> settingsClicked();
 
-  Observable<Void> notificationsClicked();
-
   Observable<GetStore> getStore();
 
   Observable<Void> aptoideTvCardViewClick();

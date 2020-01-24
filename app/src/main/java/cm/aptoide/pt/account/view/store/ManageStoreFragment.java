@@ -127,15 +127,15 @@ public class ManageStoreFragment extends BackButtonFragment
     currentModel = Parcels.unwrap(getArguments().getParcelable(EXTRA_STORE_MODEL));
     goToHome = getArguments().getBoolean(EXTRA_GO_TO_HOME, true);
     dialogFragment = new ImagePickerDialog.Builder(new ContextThemeWrapper(getContext(),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setViewRes(
-        ImagePickerDialog.LAYOUT)
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId),
+        themeManager).setViewRes(ImagePickerDialog.LAYOUT)
         .setTitle(R.string.upload_dialog_title)
         .setNegativeButton(R.string.cancel)
         .setCameraButton(R.id.button_camera)
         .setGalleryButton(R.id.button_gallery)
         .build();
 
-    imagePickerErrorHandler = new ImagePickerErrorHandler(getContext());
+    imagePickerErrorHandler = new ImagePickerErrorHandler(getContext(), themeManager);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

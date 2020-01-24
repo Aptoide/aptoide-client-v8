@@ -8,6 +8,7 @@ package cm.aptoide.pt.permission;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,17 +16,17 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.permissions.ApkPermission;
 import cm.aptoide.pt.permissions.ApkPermissionGroup;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DialogPermissions extends DialogFragment {
+public class DialogPermissions extends BaseDialogFragment {
 
   private String appName;
   private String versionName;
@@ -53,7 +54,8 @@ public class DialogPermissions extends DialogFragment {
 
     @SuppressLint("InflateParams") final View v = LayoutInflater.from(getActivity())
         .inflate(R.layout.layout_dialog_permissions, null);
-    AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v)
+    AlertDialog builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setView(v)
         .create();
 
     v.findViewById(R.id.dialog_ok_button)

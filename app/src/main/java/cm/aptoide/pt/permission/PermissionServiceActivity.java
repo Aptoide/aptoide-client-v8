@@ -300,7 +300,8 @@ import rx.functions.Action0;
 
   private void showMessageOKCancel(String message,
       SimpleSubscriber<GenericDialogs.EResponse> subscriber) {
-    GenericDialogs.createGenericOkCancelMessage(this, "", message)
+    GenericDialogs.createGenericOkCancelMessage(this, "", message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribe(subscriber);
   }
 

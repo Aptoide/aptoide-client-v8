@@ -79,6 +79,7 @@ import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -139,6 +140,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject @Named("marketName") String marketName;
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
+  @Inject ThemeManager themeManager;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1013,7 +1015,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .equals("mobile")) {
       GenericDialogs.createGenericOkMessage(getContext(),
           getContext().getString(R.string.remote_install_menu_title),
-          getContext().getString(R.string.install_on_tv_mobile_error))
+          getContext().getString(R.string.install_on_tv_mobile_error),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .subscribe(__ -> {
           }, err -> CrashReport.getInstance()
               .log(err));
@@ -1067,7 +1070,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
-        getContext().getString(R.string.installapp_alrt, appName))
+        getContext().getString(R.string.installapp_alrt, appName),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .filter(response -> response.equals(YES))
         .map(__ -> null);
   }
@@ -1638,7 +1642,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -1682,7 +1687,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public Observable<Boolean> showDowngradeMessage() {
     return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
         getContext().getResources()
-            .getString(R.string.downgrade_warning_dialog))
+            .getString(R.string.downgrade_warning_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(eResponse -> eResponse.equals(YES));
   }
 
@@ -1853,7 +1859,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));

@@ -2,9 +2,12 @@ package cm.aptoide.pt.view.rx;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.themes.ThemeManager;
 import com.jakewharton.rxrelay.PublishRelay;
 import rx.Completable;
 import rx.Observable;
@@ -102,8 +105,9 @@ public class RxAlertDialog implements DialogInterface {
     private DialogClick negativeClick;
     private View view;
 
-    public Builder(Context context) {
-      this.builder = new AlertDialog.Builder(context);
+    public Builder(Context context, ThemeManager themeManager) {
+      this.builder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId));
     }
 
     public Builder setView(View view) {

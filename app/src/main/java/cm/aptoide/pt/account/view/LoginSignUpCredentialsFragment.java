@@ -441,7 +441,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     signUpArea = view.findViewById(R.id.sign_up_button_area);
     separator = view.findViewById(R.id.separator);
 
-    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext()).setMessage(
+    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext(), themeManager).setMessage(
         R.string.facebook_email_permission_regected_message)
         .setPositiveButton(R.string.facebook_grant_permission_button)
         .setNegativeButton(android.R.string.cancel)

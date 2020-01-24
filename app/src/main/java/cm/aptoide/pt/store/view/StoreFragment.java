@@ -323,7 +323,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
         .flatMap(__ -> toolbarMenuItemClick)
         .filter(menuItem -> menuItem != null && menuItem.getItemId() == R.id.menu_item_share)
         .doOnNext(__ -> {
-          shareStoreHelper.shareStore(storeUrl, iconPath);
+          shareStoreHelper.shareStore(storeUrl);
         })
         .compose(bindUntilEvent(LifecycleEvent.PAUSE))
         .subscribe(__ -> {
@@ -526,7 +526,8 @@ public class StoreFragment extends BasePagerToolbarFragment {
 
   private void showStoreSuspendedPopup(String storeName) {
     GenericDialogs.createGenericOkCancelMessage(getContext(), "", R.string.store_suspended_message,
-        android.R.string.ok, R.string.unfollow)
+        android.R.string.ok, R.string.unfollow,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribe(eResponse -> {
           switch (eResponse) {
             case NO:

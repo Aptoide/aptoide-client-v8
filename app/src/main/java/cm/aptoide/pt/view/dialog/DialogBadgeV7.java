@@ -8,6 +8,7 @@ package cm.aptoide.pt.view.dialog;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -48,7 +49,8 @@ public class DialogBadgeV7 extends BaseDialogFragment {
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     @SuppressLint("InflateParams") final View v = LayoutInflater.from(getActivity())
         .inflate(R.layout.layout_dialog_badge, null);
-    AlertDialog builder = new AlertDialog.Builder(getActivity()).setView(v)
+    AlertDialog builder = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setView(v)
         .create();
 
     v.findViewById(R.id.dialog_ok_button)
