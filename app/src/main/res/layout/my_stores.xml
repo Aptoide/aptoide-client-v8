@@ -29,16 +29,6 @@
         android:paddingRight="@dimen/recycler_margin"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="?attr/addDrawable"
-        android:visibility="gone"
-        />
-
   </cm.aptoide.aptoideviews.swipe.AptoideSwipeRefresh>
 
 
