@@ -418,9 +418,9 @@
     <item name="commentTitleColor">@color/white</item>
 
     <!--Swipe Refresh-->
-    <item name="swipeProgressColor1">@color/default_progress_bar_color</item>
-    <item name="swipeProgressColor2">@color/default_color</item>
-    <item name="swipeBackgroundColor">@color/white</item>
+    <item name="swipeProgressColor1">@color/white</item>
+    <item name="swipeProgressColor2">@color/white</item>
+    <item name="swipeBackgroundColor">@color/grey_900</item>
 
     <!--widgets-->
     <item name="colorButtonNormal">@color/default_color</item>
