@@ -186,7 +186,7 @@
   <attr name="wizardSecondColor" format="color" />
   <attr name="wizardThirdColor" format="color" />
   <attr name="reactionsPopUpBackgroundColor" format="color" />
-  <attr name="reactionsButtonColor" format="color" />
+  <attr name="reactionsButtonBackground" format="color" />
   <attr name="widgetBackgroundColorPrimary" format="color" />
   <attr name="widgetBackgroundColorSecondary" format="color" />
   <attr name="commentBackgroundColor" format="color" />

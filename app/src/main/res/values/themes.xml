@@ -78,7 +78,7 @@
     <item name="wizardThirdColor">@color/wizard_color_3_orange</item>
     <item name="wizardBackgroundBottom">@color/white</item>
     <item name="reactionsPopUpBackgroundColor">@color/white</item>
-    <item name="reactionsButtonColor">@color/black_87_alpha</item>
+    <item name="reactionsButtonBackground">@drawable/round_button</item>
     <item name="backgroundButton">@style/backgroundButtonWhite</item>
     <item name="skeletonColor">@color/grey_fog_light_medium</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg</item>
@@ -330,7 +330,7 @@
     <item name="wizardThirdColor">@color/grey_dark</item>
     <item name="wizardBackgroundBottom">@color/grey_900</item>
     <item name="reactionsPopUpBackgroundColor">@color/grey_900</item>
-    <item name="reactionsButtonColor">@android:color/white</item>
+    <item name="reactionsButtonBackground">@drawable/round_button_dark</item>
     <item name="skeletonColor">@color/grey_dark</item>
     <item name="earnAppcoinsBg">@drawable/earn_appcoins_bg_dark</item>
     <item name="earnAppcoinsCardBg">@color/grey_dark</item>
@@ -486,7 +486,7 @@
     <item name="icAppviewsPencil">@drawable/ic_edit_black_24dp</item>
     <item name="android:alertDialogTheme">@style/AlertDialogAptoide</item>
     <item name="loggedInIcon">@drawable/default_ic_logged_in</item>
-    <item name="homeChips">@drawable/default_home_chips_background_white</item>
+    <item name="homeChips">@drawable/default_home_chips_background_dark</item>
     <item name="homeChipsTextColorSelector">@drawable/default_home_chips_text_color_dark_theme
     </item>
     <item name="cancelChipDrawable">@drawable/ic_cancel_black_24dp</item>
