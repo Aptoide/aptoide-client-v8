@@ -573,6 +573,7 @@
 
   <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/grey</item>
   </style>
 
   <style name="AptoideThemeTeal">
@@ -612,6 +613,7 @@
 
   <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/teal</item>
   </style>
 
   <style name="AptoideThemeBrown">
@@ -651,6 +653,7 @@
 
   <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/brown</item>
   </style>
 
   <style name="AptoideThemeBlueGrey">
@@ -691,6 +694,7 @@
 
   <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/grey_fog_dark</item>
   </style>
 
   <style name="AptoideThemeLightGreen">
@@ -963,6 +967,7 @@
 
   <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/indigo</item>
   </style>
 
   <style name="AptoideThemeRed">
@@ -1080,6 +1085,7 @@
 
   <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/deep_purple_light_text</item>
   </style>
 
   <style name="AptoideThemeBlack">
@@ -1118,6 +1124,8 @@
 
   <style name="AptoideThemeDark.Black" parent="AptoideThemeBlack">
     <item name="themeTextColor">@color/white</item>
+    <item name="colorAccent">@color/white</item>
+    <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
   </style>
 
 </resources>

@@ -77,6 +77,8 @@
   <color name="pink_text">@color/pink</color>
   <color name="red_text">@color/red</color>
   <color name="teal_text">@color/teal</color>
+  <color name="deep_purple_light_text">#6D44B8</color>
+
 
 </resources>
 
