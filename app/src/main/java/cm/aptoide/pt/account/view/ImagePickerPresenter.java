@@ -16,7 +16,6 @@ import java.io.File;
 import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class ImagePickerPresenter implements Presenter {
 
@@ -33,11 +32,13 @@ public class ImagePickerPresenter implements Presenter {
   private final ImagePickerNavigator navigator;
   private final ContentResolver contentResolver;
   private final ImageLoader imageLoader;
+  private final Scheduler ioScheduler;
 
   public ImagePickerPresenter(ImagePickerView view, CrashReport crashReport,
       AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
       ImageValidator imageValidator, Scheduler viewScheduler, UriToPathResolver uriToPathResolver,
-      ImagePickerNavigator navigator, ContentResolver contentResolver, ImageLoader imageLoader) {
+      ImagePickerNavigator navigator, ContentResolver contentResolver, ImageLoader imageLoader,
+      Scheduler ioScheduler) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountPermissionProvider = accountPermissionProvider;
@@ -48,6 +49,7 @@ public class ImagePickerPresenter implements Presenter {
     this.navigator = navigator;
     this.contentResolver = contentResolver;
     this.imageLoader = imageLoader;
+    this.ioScheduler = ioScheduler;
   }
 
   public void handlePickImageClick() {
@@ -84,10 +86,10 @@ public class ImagePickerPresenter implements Presenter {
           createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
       image.recycle();
       return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
-          .subscribeOn(Schedulers.io());
+          .subscribeOn(ioScheduler);
     } else {
       return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
-          .subscribeOn(Schedulers.io());
+          .subscribeOn(ioScheduler);
     }
   }
 

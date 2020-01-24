@@ -214,7 +214,7 @@ import rx.subscriptions.CompositeSubscription;
         accountPermissionProvider, photoFileGenerator, imageValidator,
         AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
         fragment.getActivity()
-            .getContentResolver(), ImageLoader.with(fragment.getContext()));
+            .getContentResolver(), ImageLoader.with(fragment.getContext()), Schedulers.io());
   }
 
   @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
