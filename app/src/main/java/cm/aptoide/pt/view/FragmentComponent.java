@@ -25,10 +25,10 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
-import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
+import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
@@ -58,7 +58,7 @@ public interface FragmentComponent {
 
   void inject(CommentListFragment commentListFragment);
 
-  void inject(FragmentTopStores fragmentTopStores);
+  void inject(TopStoresFragment topStoresFragment);
 
   void inject(LatestReviewsFragment latestReviewsFragment);
 

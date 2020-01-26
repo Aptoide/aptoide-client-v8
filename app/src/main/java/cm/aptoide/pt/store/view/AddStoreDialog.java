@@ -350,7 +350,7 @@ public class AddStoreDialog extends BaseDialogFragment {
   }
 
   private void topStoresAction() {
-    navigator.navigateTo(FragmentTopStores.newInstance(), true);
+    navigator.navigateTo(TopStoresFragment.newInstance(), true);
     if (isAdded()) {
       dismiss();
     }

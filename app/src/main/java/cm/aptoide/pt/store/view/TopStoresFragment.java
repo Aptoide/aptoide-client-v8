@@ -29,11 +29,11 @@ import rx.Observable;
 /**
  * Created by trinkes on 8/25/16.
  */
-public class FragmentTopStores extends GridRecyclerFragmentWithDecorator<BaseAdapter>
+public class TopStoresFragment extends GridRecyclerFragmentWithDecorator<BaseAdapter>
     implements Endless {
 
   public static final int STORES_LIMIT_PER_REQUEST = 10;
-  public static String TAG = FragmentTopStores.class.getSimpleName();
+  public static String TAG = TopStoresFragment.class.getSimpleName();
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   private int offset = 0;
@@ -46,8 +46,8 @@ public class FragmentTopStores extends GridRecyclerFragmentWithDecorator<BaseAda
                 .log(err);
           });
 
-  public static FragmentTopStores newInstance() {
-    return new FragmentTopStores();
+  public static TopStoresFragment newInstance() {
+    return new TopStoresFragment();
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
