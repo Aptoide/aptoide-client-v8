@@ -16,7 +16,7 @@ import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ListStoresRequest;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
+import cm.aptoide.pt.view.fragment.GridRecyclerFragmentWithDecorator;
 import cm.aptoide.pt.view.recycler.BaseAdapter;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -29,7 +29,8 @@ import rx.Observable;
 /**
  * Created by trinkes on 8/25/16.
  */
-public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implements Endless {
+public class FragmentTopStores extends GridRecyclerFragmentWithDecorator<BaseAdapter>
+    implements Endless {
 
   public static final int STORES_LIMIT_PER_REQUEST = 10;
   public static String TAG = FragmentTopStores.class.getSimpleName();
@@ -75,14 +76,14 @@ public class FragmentTopStores extends AptoideBaseFragment<BaseAdapter> implemen
     return R.layout.fragment_with_toolbar_no_theme;
   }
 
-  @Override public void setupViews() {
-    super.setupViews();
-    setupToolbar();
-  }
-
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
     super.load(create, refresh, savedInstanceState);
     fetchStores();
+  }
+
+  @Override public void setupViews() {
+    super.setupViews();
+    setupToolbar();
   }
 
   private void fetchStores() {
