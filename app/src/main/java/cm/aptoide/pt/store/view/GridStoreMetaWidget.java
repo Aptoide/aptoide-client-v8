@@ -188,13 +188,13 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     String screenTitle =
         AptoideUtils.StringU.getFormattedString(R.string.social_timeline_followers_fragment_title,
             resources, displayable.getFollowersCount());
-    if (displayable.hasStore()) {
+    if (displayable.hasUser()) {
       fragmentNavigator.navigateTo(
-          TimeLineFollowersFragment.newInstanceUsingStore(displayable.getStoreId(),
+          TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(),
               displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     } else {
       fragmentNavigator.navigateTo(
-          TimeLineFollowersFragment.newInstanceUsingUser(displayable.getUserId(),
+          TimeLineFollowersFragment.newInstanceUsingStore(displayable.getStoreId(),
               displayable.getStoreThemeName(), screenTitle, StoreContext.meta), true);
     }
   }
