@@ -36,12 +36,12 @@
 
       <ProgressBar
           android:id="@+id/appview_progress"
+          style="?android:attr/progressBarStyleLarge"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:layout_marginTop="150dp"
           android:visibility="gone"
-          style="?android:attr/progressBarStyleLarge"
           />
 
       <cm.aptoide.aptoideviews.errors.ErrorView
