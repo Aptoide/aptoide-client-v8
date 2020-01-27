@@ -5,8 +5,8 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
-import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
@@ -74,15 +74,15 @@ public class AppsPresenter implements Presenter {
 
     handleRefreshApps();
 
-    handleNavigateToAppViewWithDownload();
+    handleAppcoinsMigrationUpgradeClick();
   }
 
-  private void handleNavigateToAppViewWithDownload() {
+  private void handleAppcoinsMigrationUpgradeClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> view.startDownloadInAppview())
-        .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((UpdateApp) app).getAppId(),
-            ((UpdateApp) app).getPackageName()))
+        .flatMap(__ -> view.appcoinsMigrationUpgradeClicked())
+        .doOnNext(app -> appsNavigator.navigateToAppViewAndInstall(((AppcUpdateApp) app).getAppId(),
+            ((AppcUpdateApp) app).getPackageName()))
         .doOnNext(__ -> appsManager.setMigrationAppViewAnalyticsEvent())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

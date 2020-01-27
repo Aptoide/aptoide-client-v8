@@ -156,7 +156,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(AppClick::getApp);
   }
 
-  @Override public Observable<App> startDownloadInAppview() {
+  @Override public Observable<App> appcoinsMigrationUpgradeClicked() {
     return appsController.getAppEventListener()
         .filter(appClick -> appClick.getClickType() == AppClick.ClickType.APPC_ACTION_CLICK)
         .map(AppClick::getApp);
@@ -184,17 +184,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(AppClick::getApp);
   }
 
-  @Override public void showIgnoreUpdate() {
-    ignoreUpdateDialog.show();
-  }
-
   @Override public Single<RxAlertDialog.Result> showIgnoreUpdateDialog() {
     return ignoreUpdateDialog.showWithResult();
-  }
-
-  @Override public Observable<Void> ignoreUpdate() {
-    return ignoreUpdateDialog.positiveClicks()
-        .map(__ -> null);
   }
 
   @Override public void showUnknownErrorMessage() {
@@ -250,10 +241,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     hideLoadingProgressBar();
     appsController.setData(model.getUpdates(), model.getInstalled(), model.getMigrations(),
         model.getDownloads());
-  }
-
-  @Override public Observable<Void> onLoadAppcUpgradesSection() {
-    return appcUpgradesSectionLoaded;
   }
 
   private void hideLoadingProgressBar() {

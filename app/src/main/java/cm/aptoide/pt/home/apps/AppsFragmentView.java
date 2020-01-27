@@ -19,7 +19,7 @@ public interface AppsFragmentView extends View {
 
   Observable<App> pauseDownload();
 
-  Observable<App> startDownloadInAppview();
+  Observable<App> appcoinsMigrationUpgradeClicked();
 
   Observable<App> startDownload();
 
@@ -29,11 +29,7 @@ public interface AppsFragmentView extends View {
 
   Observable<App> updateLongClick();
 
-  void showIgnoreUpdate();
-
   Single<RxAlertDialog.Result> showIgnoreUpdateDialog();
-
-  Observable<Void> ignoreUpdate();
 
   void showUnknownErrorMessage();
 
@@ -54,6 +50,4 @@ public interface AppsFragmentView extends View {
   void setDefaultUserImage();
 
   void showModel(AppsModel model);
-
-  Observable<Void> onLoadAppcUpgradesSection();
 }
