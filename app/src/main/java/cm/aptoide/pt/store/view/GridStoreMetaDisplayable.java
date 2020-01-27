@@ -183,6 +183,10 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     return getStore() != null;
   }
 
+  public boolean hasUser() {
+    return getUser() != null;
+  }
+
   public GridStoreMetaWidget.HomeMeta.Badge getBadge() {
     if (hasStore()) {
       switch (getPojo().getData()
