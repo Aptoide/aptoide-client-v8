@@ -34,9 +34,9 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -44,7 +44,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -64,7 +63,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
 
   @Inject PromotionsPresenter promotionsPresenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
@@ -88,7 +87,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private TextView toolbarTitle;
   private Subscription errorMessageSubscription;
-  private DecimalFormat decimalFormat;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -100,11 +98,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    decimalFormat = new DecimalFormat("0.0");
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
-        new PromotionsViewHolderFactory(promotionAppClick, decimalFormat));
+        new PromotionsViewHolderFactory(promotionAppClick, themeManager));
 
     toolbarImage = view.findViewById(R.id.app_graphic);
     toolbarImagePlaceholder = view.findViewById(R.id.app_graphic_placeholder);
@@ -119,9 +116,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     genericErrorView = view.findViewById(R.id.generic_error);
     genericErrorViewRetry = genericErrorView.findViewById(R.id.retry);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
-    }
     toolbarTitle = view.findViewById(R.id.toolbar_title);
     toolbar = view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
@@ -169,8 +163,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           case COLLAPSED:
             toolbarTitle.setVisibility(View.VISIBLE);
 
-            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
-                resources.getColor(R.color.black), true);
+            configureAppBarLayout(resources.getDrawable(R.drawable.transparent), resources.getColor(
+                themeManager.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId), true);
             break;
         }
       }
@@ -185,26 +179,21 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .getSimpleName());
   }
 
-  private void handleStatusBar(boolean collapseState) {
-    if (collapseState) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(getResources().getColor(R.color.white));
+  private void handleStatusBar(boolean isCollapsed) {
+    if (isCollapsed) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && !themeManager.isThemeDark()) {
+          window.getDecorView()
+              .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        window.setStatusBarColor(getResources().getColor(
+            themeManager.getAttributeForTheme(R.attr.statusBarColorSecondary).resourceId));
       }
     } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
         window.getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
       }
     }
   }
@@ -228,7 +217,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override
   public void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getPackageName()
-        .equals("com.appcoins.wallet")) {
+        .equals(WALLET_PACKAGE_NAME)) {
       showWallet(promotionViewApp, isWalletInstalled);
       setWalletItemClickListener(promotionViewApp);
     } else {
@@ -256,7 +245,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -406,8 +396,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.VISIBLE);
           pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
@@ -428,8 +418,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.GONE);
           cancelDownload.setVisibility(View.VISIBLE);
           cancelDownload.setOnClickListener(__ -> promotionAppClick.onNext(
@@ -580,7 +570,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> {
@@ -666,7 +657,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
+    themeManager.resetToBaseTheme();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       window.getDecorView()
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

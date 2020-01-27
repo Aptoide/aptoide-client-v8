@@ -119,8 +119,6 @@ public abstract class TimeLineFollowFragment extends GridRecyclerSwipeWithToolba
 
   public class BundleKeys {
     public static final String USER_ID = "user_id";
-    public static final String CARD_UID = "CARDUID";
-    public static final String NUMBER_LIKES = "NUMBER_LIKES";
     public static final String STORE_ID = "STORE_ID";
     public static final String STORE_CONTEXT = "STORE_CONTEXT";
   }

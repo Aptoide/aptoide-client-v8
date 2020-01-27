@@ -25,6 +25,7 @@ import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,6 +50,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.CURATION;
   @Inject public EditorialListPresenter presenter;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
+  @Inject ThemeManager themeAttributeProvider;
   private BottomNavigationActivity bottomNavigationActivity;
   private RecyclerView editorialList;
   private EditorialListAdapter adapter;
@@ -78,7 +80,7 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
     userAvatar = view.findViewById(R.id.user_actionbar_icon);
     layoutManager = new ScrollControlLinearLayoutManager(getContext());
     adapter = new EditorialListAdapter(new ArrayList<>(), new ProgressCard(), uiEventsListener,
-        captionBackgroundPainter);
+        captionBackgroundPainter, themeAttributeProvider);
     editorialList = view.findViewById(R.id.editorial_list);
     editorialList.setLayoutManager(layoutManager);
     editorialList.setAdapter(adapter);
@@ -86,8 +88,6 @@ public class EditorialListFragment extends NavigationTrackFragment implements Ed
         .setChangeDuration(0);
 
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
 
     errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);

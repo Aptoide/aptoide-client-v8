@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,7 +34,7 @@
       android:layout_width="match_parent"
       android:layout_height="48dp"
       android:layout_alignParentBottom="true"
-      android:background="@color/white"
+      android:background="?attr/wizardBackgroundBottom"
       android:measureWithLargestChild="false"
       android:minHeight="82dp"
       android:orientation="horizontal"
@@ -53,7 +52,6 @@
         android:focusable="false"
         android:gravity="center"
         android:orientation="vertical"
-        android:weightSum="10"
         />
 
     <RadioGroup
@@ -67,8 +65,9 @@
         android:orientation="horizontal"
         />
 
-    <TextView
-        android:id="@+id/skip_text"
+    <Button
+        android:id="@+id/skip_button"
+        style="@style/Aptoide.Button.Flat"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -76,8 +75,6 @@
         android:padding="4dp"
         android:text="@string/skip"
         android:textAllCaps="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?attr/colorPrimaryDark"
         android:textStyle="bold"
         android:weightSum="1"
         />

@@ -51,7 +51,6 @@ public class MyAccountPresenter implements Presenter {
     handleProfileEditClick();
     handleProfileDisplayableClick();
     handleSettingsClicked();
-    handleNotificationHistoryClicked();
     handleAptoideTvCardViewClick();
     handleAptoideUploaderCardViewClick();
     handleAptoideBackupCardViewClick();
@@ -192,16 +191,6 @@ public class MyAccountPresenter implements Presenter {
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.settingsClicked())
         .doOnNext(__ -> myAccountNavigator.navigateToSettings())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReport.log(throwable));
-  }
-
-  @VisibleForTesting public void handleNotificationHistoryClicked() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.notificationsClicked())
-        .doOnNext(__ -> myAccountNavigator.navigateToNotificationHistory())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));

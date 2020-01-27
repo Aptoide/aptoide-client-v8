@@ -40,6 +40,7 @@ import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.promotions.PromotionsHomeDialog;
 import cm.aptoide.pt.reactions.ReactionsHomeEvent;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.snackbar.Snackbar;
@@ -74,6 +75,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   @Inject @Named("marketName") String marketName;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
+  @Inject ThemeManager themeManager;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -133,8 +135,6 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     errorView = view.findViewById(R.id.error_view);
     progressBar = view.findViewById(R.id.progress_bar);
     swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     promotionsHomeDialog = new PromotionsHomeDialog(getContext());
@@ -347,7 +347,7 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
         oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, showNatives), captionBackgroundPainter, marketName);
+            marketName, showNatives), captionBackgroundPainter, marketName, themeManager);
     bundlesList.setAdapter(adapter);
   }
 

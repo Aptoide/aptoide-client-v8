@@ -6,6 +6,7 @@
 package cm.aptoide.pt.store.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
@@ -47,6 +49,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   protected NavigationTracker navigationTracker;
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
+  @Inject ThemeManager themeManager;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +80,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   }
 
   public Observable<List<Displayable>> parseDisplayables(GetStoreWidgets getStoreWidgets) {
+    int currentNightMode = getContext().getResources()
+        .getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+    boolean isDarkTheme = currentNightMode == Configuration.UI_MODE_NIGHT_YES;
+
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .concatMapEager(wsWidget -> {
@@ -86,12 +94,12 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
               storeContext, getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
-              navigationTracker, new BadgeDialogFactory(getContext()),
+              navigationTracker, new BadgeDialogFactory(getActivity(), themeManager),
               ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
               AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
-              application.getDefaultSharedPreferences());
+              application.getDefaultSharedPreferences(), themeManager);
         })
         .toList()
         .first();

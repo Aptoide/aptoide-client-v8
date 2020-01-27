@@ -5,9 +5,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -27,23 +24,21 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.WalletService;
 import cm.aptoide.pt.app.view.donations.model.DonationsDialogResult;
 import cm.aptoide.pt.app.view.donations.utils.GenericPaymentIntentBuilder;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.view.MainActivity;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-public class DonateDialogFragment extends DialogFragment implements DonateDialogView {
+public class DonateDialogFragment extends BaseDialogFragment implements DonateDialogView {
   private static final int RC_REQUEST = 666;
   private static final int SEEKBAR_MAX = 20; //20 steps
   private static final int SEEKBAR_START = 2;
@@ -55,7 +50,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
   @Inject WalletService walletService;
   @Inject AppNavigator appNavigator;
   @Inject DonationsAnalytics donationsAnalytics;
-  @Inject @Named("aptoide-theme") String theme;
   boolean textUpdate;
   boolean sliderUpdate;
   private String packageName;
@@ -83,7 +77,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     DonateDialogFragment fragment = new DonateDialogFragment();
     args.putString(PACKAGE_NAME, packageName);
     args.putBoolean(HAS_WALLET, hasWallet);
-    fragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
     fragment.setArguments(args);
     return fragment;
   }
@@ -100,15 +93,26 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     handleValueInputFiltering();
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    nickname = null;
-    appcValue = null;
-    appcSlider = null;
-    donateButton = null;
-    cancelButton = null;
-    donationsView = null;
-    donationsProgress = null;
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    this.nickname = view.findViewById(R.id.nickname);
+    nickname.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    nickname.setSingleLine();
+    this.appcValue = view.findViewById(R.id.appc_value);
+    this.appcSlider = view.findViewById(R.id.appc_slider);
+    this.donateButton = view.findViewById(R.id.donate_button);
+    this.cancelButton = view.findViewById(R.id.cancel_button);
+    this.donationsView = view.findViewById(R.id.donations_view);
+    this.donationsProgress = view.findViewById(R.id.donations_progress);
+    this.noWalletView = view.findViewById(R.id.no_wallet_layout);
+    this.noWalletCancelButton = view.findViewById(R.id.no_wallet_cancel_button);
+    this.noWalletContinueButton = view.findViewById(R.id.no_wallet_continue_button);
+    this.errorView = view.findViewById(R.id.error_layout);
+    this.errorOkButton = view.findViewById(R.id.error_ok_button);
+    this.thankYouView = view.findViewById(R.id.thank_you_layout);
+    this.thankYouOkButton = view.findViewById(R.id.thank_you_ok_button);
+    chooseViewToPresent(getArguments().getBoolean(HAS_WALLET, true));
+    presenter.present();
   }
 
   private void handleValueInputFiltering() {
@@ -185,16 +189,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     appcSlider.setMax(SEEKBAR_MAX);
     appcSlider.setProgress(SEEKBAR_START);
     appcSlider.incrementProgressBy(1);
-    appcSlider.getProgressDrawable()
-        .setColorFilter(new PorterDuffColorFilter(getContext().getResources()
-            .getColor(StoreTheme.get(theme)
-                .getDarkerColor()), PorterDuff.Mode.SRC_IN));
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      appcSlider.getThumb()
-          .setColorFilter(getContext().getResources()
-              .getColor(StoreTheme.get(theme)
-                  .getDarkerColor()), PorterDuff.Mode.SRC_IN);
-    }
     appcSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         sliderUpdate = false;
@@ -281,28 +275,6 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
     return inflater.inflate(R.layout.appview_donations_dialog, container, false);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    this.nickname = view.findViewById(R.id.nickname);
-    nickname.setImeOptions(EditorInfo.IME_ACTION_DONE);
-    nickname.setSingleLine();
-    this.appcValue = view.findViewById(R.id.appc_value);
-    this.appcSlider = view.findViewById(R.id.appc_slider);
-    this.donateButton = view.findViewById(R.id.donate_button);
-    this.cancelButton = view.findViewById(R.id.cancel_button);
-    this.donationsView = view.findViewById(R.id.donations_view);
-    this.donationsProgress = view.findViewById(R.id.donations_progress);
-    this.noWalletView = view.findViewById(R.id.no_wallet_layout);
-    this.noWalletCancelButton = view.findViewById(R.id.no_wallet_cancel_button);
-    this.noWalletContinueButton = view.findViewById(R.id.no_wallet_continue_button);
-    this.errorView = view.findViewById(R.id.error_layout);
-    this.errorOkButton = view.findViewById(R.id.error_ok_button);
-    this.thankYouView = view.findViewById(R.id.thank_you_layout);
-    this.thankYouOkButton = view.findViewById(R.id.thank_you_ok_button);
-    chooseViewToPresent(getArguments().getBoolean(HAS_WALLET, true));
-    presenter.present();
-  }
-
   public void onResume() {
     super.onResume();
 
@@ -317,6 +289,17 @@ public class DonateDialogFragment extends DialogFragment implements DonateDialog
 
     window.setLayout((int) (width * 0.9), WindowManager.LayoutParams.WRAP_CONTENT);
     window.setGravity(Gravity.CENTER);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    nickname = null;
+    appcValue = null;
+    appcSlider = null;
+    donateButton = null;
+    cancelButton = null;
+    donationsView = null;
+    donationsProgress = null;
   }
 
   @Override public void onDestroy() {

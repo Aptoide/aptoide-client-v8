@@ -8,6 +8,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.dialog.DialogUtils;
+import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
 import dagger.Subcomponent;
@@ -39,4 +40,6 @@ public interface ActivityComponent {
   void inject(SettingsFragment settingsFragment);
 
   void inject(StoreTabGridRecyclerFragment storeTabGridRecyclerFragment);
+
+  void inject(BaseDialogFragment baseDialogFragment);
 }

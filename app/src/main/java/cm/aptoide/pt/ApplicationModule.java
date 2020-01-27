@@ -666,10 +666,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         defaultSharedPreferences);
   }
 
-  @Singleton @Provides @Named("aptoide-theme") String providesAptoideTheme() {
-    return BuildConfig.APTOIDE_THEME;
-  }
-
   @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
       InstallManager installManager) {
 

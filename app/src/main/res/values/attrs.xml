@@ -1,114 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <attr format="reference" name="customButton"/>
-  <attr format="reference" name="customButtonWhite"/>
-  <attr format="reference" name="customButtomDarkGrayThinLine"/>
+  <attr name="customButton" format="reference" />
+  <attr name="customButtonWhite" format="reference" />
+  <attr name="customButtomDarkGrayThinLine" format="reference" />
 
-  <attr format="reference" name="toolbarTheme"/>
+  <attr name="toolbarTheme" format="reference" />
 
-  <attr format="reference|color" name="backgroundMain"/>
-  <attr format="color|reference" name="backgroundSecondary"/>
-  <attr format="color|reference" name="backgroundInverse"/>
-  <attr format="color|reference" name="backgroundTabs"/>
-  <attr format="color|reference" name="backgroundWidgetSecondary"/>
-  <attr format="color|reference" name="tertiaryTextColor"/>
-  <attr format="color|reference" name="inverseTextColor"/>
-  <attr format="color|reference" name="separatorColor"/>
-  <attr format="reference" name="appManualReviewedMessageBackground"/>
+  <attr name="backgroundMain" format="reference|color" />
+  <attr name="backgroundSecondary" format="color|reference" />
+  <attr name="backgroundInverse" format="color|reference" />
+  <attr name="backgroundTabs" format="color|reference" />
+  <attr name="backgroundWidgetSecondary" format="color|reference" />
+  <attr name="tertiaryTextColor" format="color|reference" />
+  <attr name="inverseTextColor" format="color|reference" />
+  <attr name="separatorColor" format="color|reference" />
+  <attr name="appManualReviewedMessageBackground" format="reference" />
 
-  <attr format="dimension" name="sectionListView.sectionTextViewPadding"/>
-  <attr format="color" name="sectionListView.sectionTextViewTextColor"/>
-  <attr format="dimension" name="sectionListView.sectionTextViewTextSize"/>
+  <attr name="sectionListView.sectionTextViewPadding" format="dimension" />
+  <attr name="sectionListView.sectionTextViewTextColor" format="color" />
+  <attr name="sectionListView.sectionTextViewTextSize" format="dimension" />
 
-  <attr format="dimension" name="sectionListView.sectionItemPadding"/>
-  <attr format="color|reference" name="sectionListView.sectionItemBackground"/>
+  <attr name="sectionListView.sectionItemPadding" format="dimension" />
+  <attr name="sectionListView.sectionItemBackground" format="color|reference" />
 
-  <attr format="dimension" name="sectionListView.listTextViewPadding"/>
-  <attr format="color" name="sectionListView.listTextViewTextColor"/>
-  <attr format="dimension" name="sectionListView.listTextViewTextSize"/>
+  <attr name="sectionListView.listTextViewPadding" format="dimension" />
+  <attr name="sectionListView.listTextViewTextColor" format="color" />
+  <attr name="sectionListView.listTextViewTextSize" format="dimension" />
 
-  <attr format="dimension" name="sectionListView.listItemPadding"/>
-  <attr format="color|reference" name="sectionListView.listItemBackground"/>
+  <attr name="sectionListView.listItemPadding" format="dimension" />
+  <attr name="sectionListView.listItemBackground" format="color|reference" />
 
-  <attr format="reference" name="icMyAccountDrawable"/>
-  <attr format="reference" name="icSearchDrawable"/>
-  <attr format="reference" name="icExcludedUpdatesDrawable"/>
-  <attr format="reference" name="icSettingsDrawable"/>
-  <attr format="reference" name="icSendFeedbackDrawable"/>
+  <attr name="icMyAccountDrawable" format="reference" />
+  <attr name="icSearchDrawable" format="reference" />
+  <attr name="icExcludedUpdatesDrawable" format="reference" />
+  <attr name="icSettingsDrawable" format="reference" />
+  <attr name="icSendFeedbackDrawable" format="reference" />
 
-  <attr format="color" name="backgroundHomeSeparator"/>
+  <attr name="backgroundHomeSeparator" format="color" />
 
-  <attr format="reference" name="backgroundCard"/>
-  <attr format="reference" name="appviewRatingCardBarckground"/>
-  <attr format="color|reference" name="backgroundCardColor"/>
+  <attr name="backgroundCard" format="reference" />
+  <attr name="appviewRatingCardBarckground" format="reference" />
+  <attr name="backgroundCardColor" format="color|reference" />
+  <attr name="backgroundCardColorSecondary" format="color|reference" />
+  <attr name="backgroundButton" format="color|reference" />
+  <attr name="skeletonColor" format="color|reference" />
+  <attr name="earnAppcoinsBg" format="reference" />
+  <attr name="earnAppcoinsCardBg" format="color|reference" />
+  <attr name="reviewsSeparator" format="color" />
+  <attr name="backgroundCardSecondaryColor" format="color|reference" />
+  <attr name="editorialPlaceholderCard" format="reference" />
+  <attr name="statusBarColorSecondary" format="color" />
+  <attr name="walletEditBackgroundDrawable" format="reference" />
 
-  <attr format="color" name="backgroundAddStoreButton"/>
-  <attr format="reference" name="backgroundHeaderLoggedIn"/>
-  <attr format="reference" name="customRowForeground"/>
-  <attr format="reference" name="customRowForegroundHomeLayout"/>
-  <attr format="reference" name="icAboutDrawable"/>
-  <attr format="reference" name="icAcceptDrawable"/>
-  <attr format="reference" name="icAddStoreDrawable"/>
-  <attr format="reference" name="icCancelDrawable"/>
-  <attr format="reference" name="icCollapseDrawable"/>
-  <attr format="reference" name="icDialogDrawable"/>
-  <attr format="reference" name="icDontLikeDrawable"/>
-  <attr format="reference" name="icDownloadsDrawable"/>
-  <attr format="reference" name="icEmailDrawable"/>
-  <attr format="reference" name="icErrorDrawable"/>
-  <attr format="reference" name="icExpandDrawable"/>
-  <attr format="reference" name="icLikeDrawable"/>
-  <attr format="reference" name="icNextItemDrawable"/>
-  <attr format="reference" name="icPlayDrawable"/>
-  <attr format="reference" name="icRatingBadDrawable"/>
-  <attr format="reference" name="icRatingFloatDrawable"/>
-  <attr format="reference" name="icRatingGoodDrawable"/>
-  <attr format="reference" name="icStoreInfoDrawable"/>
-  <attr format="reference" name="icTimelineAccessSecure"/>
-  <attr format="reference" name="icTimelineDrawable"/>
-  <attr format="reference" name="icUninstallDrawable"/>
-  <attr format="reference" name="icUpdateDrawable"/>
-  <attr format="reference" name="icViewMoreComments"/>
-  <attr format="reference" name="icWebSiteDrawable"/>
-  <attr format="reference" name="icAppviewsPencil"/>
-  <attr format="reference" name="loggedInIcon"/>
-  <attr format="reference" name="homeChips"/>
-  <attr format="color" name="navigationDrawerColor"/>
-  <attr format="reference" name="timelineButtonsBackgroundColor"/>
-  <attr format="reference" name="timelinePostBackground"/>
-  <attr format="reference" name="timelineSendDrawable"/>
-  <attr format="reference" name="homeLabelbackground"/>
-  <attr format="color" name="customColor"/>
+  <attr name="searchStoresSwitchBackground" format="reference" />
+  <attr name="ratingNumberDrawable" format="reference" />
 
-  <attr format="reference" name="gridItemRatingBar"/>
-  <attr format="reference" name="titleLabelStyle"/>
-  <attr format="reference|color" name="storesTextColor"/>
-  <attr format="reference" name="defaultTextStyle"/>
-  <attr format="reference|color" name="appviewRatingCardTextColor"/>
+  <attr name="backgroundAddStoreButton" format="color" />
+  <attr name="backgroundHeaderLoggedIn" format="reference" />
+  <attr name="customRowForeground" format="reference" />
+  <attr name="customRowForegroundHomeLayout" format="reference" />
+  <attr name="icAboutDrawable" format="reference" />
+  <attr name="icAcceptDrawable" format="reference" />
+  <attr name="icCancelDrawable" format="reference" />
+  <attr name="icCollapseDrawable" format="reference" />
+  <attr name="icDialogDrawable" format="reference" />
+  <attr name="icDontLikeDrawable" format="reference" />
+  <attr name="icDownloadsDrawable" format="reference" />
+  <attr name="icEmailDrawable" format="reference" />
+  <attr name="icErrorDrawable" format="reference" />
+  <attr name="icExpandDrawable" format="reference" />
+  <attr name="icLikeDrawable" format="reference" />
+  <attr name="icNextItemDrawable" format="reference" />
+  <attr name="icPlayDrawable" format="reference" />
+  <attr name="icRatingBadDrawable" format="reference" />
+  <attr name="icRatingFloatDrawable" format="reference" />
+  <attr name="icRatingGoodDrawable" format="reference" />
+  <attr name="icStoreInfoDrawable" format="reference" />
+  <attr name="icTimelineAccessSecure" format="reference" />
+  <attr name="icTimelineDrawable" format="reference" />
+  <attr name="icUninstallDrawable" format="reference" />
+  <attr name="icUpdateDrawable" format="reference" />
+  <attr name="version_refresh_icon" format="reference" />
+  <attr name="icViewMoreComments" format="reference" />
+  <attr name="icWebSiteDrawable" format="reference" />
+  <attr name="icAppviewsPencil" format="reference" />
+  <attr name="penDrawable" format="reference" />
+  <attr name="thumbsUpDrawable" format="reference" />
+  <attr name="thumbsDownDrawable" format="reference" />
+  <attr name="addDrawable" format="reference" />
+  <attr name="loggedInIcon" format="reference" />
+  <attr name="homeChips" format="reference" />
+  <attr name="homeChipsTextColorSelector" format="reference" />
+  <attr name="cancelChipDrawable" format="reference" />
+  <attr name="ratingDrawable" format="reference" />
+  <attr name="reactionInputDrawable" format="reference" />
+  <attr name="navigationDrawerColor" format="color" />
+  <attr name="timelineButtonsBackgroundColor" format="reference" />
+  <attr name="timelinePostBackground" format="reference" />
+  <attr name="timelineSendDrawable" format="reference" />
+  <attr name="homeLabelbackground" format="reference" />
+  <attr name="customColor" format="color" />
+  <attr name="lockedButton" format="reference" />
+  <attr name="lockedWalletButtonColor" format="reference" />
+  <attr name="promotionStepBackground" format="color" />
+
+  <attr name="gridItemRatingBar" format="reference" />
+  <attr name="titleLabelStyle" format="reference" />
+  <attr name="storesTextColor" format="reference|color" />
+  <attr name="defaultTextStyle" format="reference" />
+  <attr name="appviewRatingCardTextColor" format="reference|color" />
+  <attr name="textColorBlackAlpha" format="reference|color" />
+
+  <attr name="textColorWhite" format="reference|color" />
+  <attr name="textColorGreyFogDark" format="reference|color" />
+  <attr name="textColorGrey700" format="reference|color" />
+  <attr name="textColorGreyMedium" format="reference|color" />
+  <attr name="textColorGreyFogNormal" format="reference|color" />
+  <attr name="textColorGrey" format="reference|color" />
+  <attr name="textColorGrey900" format="reference|color" />
+  <attr name="textColorRed700" format="reference|color" />
+  <attr name="textColorOrange" format="reference|color" />
+  <attr name="textColorOrangeGradientEnd" format="reference|color" />
+  <attr name="textColorCurationGold" format="reference|color" />
+  <attr name="textColorAppcOrange" format="reference|color" />
+  <attr name="textColorSpendAppc" format="reference|color" />
+  <attr name="textColorAppcColor" format="reference|color" />
+  <attr name="textColorTwitter" format="reference|color" />
+  <attr name="textColorTwitch" format="reference|color" />
+  <attr name="textColorYoutube" format="reference|color" />
+  <attr name="textColorFacebook" format="reference|color" />
+
+  <!--Swipe Refresh-->
+  <attr name="swipeProgressColor1" format="reference|color" />
+  <attr name="swipeProgressColor2" format="reference|color" />
+  <attr name="swipeBackgroundColor" format="reference|color" />
+
+  <attr name="appview_button_style" format="reference" />
+  <attr name="appview_background" format="reference" />
+  <attr name="appview_toolbar_bg_default" format="reference|color" />
+  <attr name="appview_toolbar_bg_appc" format="reference|color" />
+  <attr name="rating_bar_progress" format="reference" />
+
+  <!-- dialogs -->
+  <attr name="claimedButton" format="reference" />
+
+  <!-- account -->
+  <attr name="login_button_style" format="reference" />
+
+  <attr name="placeholder_myaccount" format="reference" />
+  <attr name="placeholder_9_16" format="reference" />
+  <attr name="placeholder_16_9" format="reference" />
+  <attr name="placeholder_square" format="reference" />
+  <attr name="placeholder_brick" format="reference" />
+
+  <attr name="download_progress_resume" format="reference" />
+  <attr name="download_progress_pause" format="reference" />
+  <attr name="download_progress_cancel" format="reference" />
+  <attr name="resume_to_pause" format="reference" />
+  <attr name="pause_to_resume" format="reference" />
 
   <!--New styles attributes-->
-  <attr format="reference" name="raisedButtonBackground"/>
-  <attr format="reference" name="ghostButtonBackground"/>
-  <attr format="color" name="raisedButtonTextColor"/>
-  <attr format="color" name="flatButtonBackground"/>
-  <attr format="string" name="buttonTextFont"/>
-  <attr format="dimension" name="buttonTextSize"/>
-  <attr format="dimension" name="buttonTextSizeSmall"/>
-  <attr format="reference" name="installButtonBackground"/>
-  <attr format="reference" name="toolbarBackground"/>
-  <attr format="color" name="toolbarTextColor"/>
-  <attr format="color" name="preferenceTitleColor"/>
-  <attr format="dimension" name="preferenceTitleTextSize"/>
-  <attr format="color" name="preferenceSummaryColor"/>
-  <attr format="dimension" name="preferenceSummaryTextSize"/>
-  <attr format="color" name="colorControlHighlight"/>
-  <attr format="color" name="nav_item_color_state"/>
-  <attr format="color" name="wizard3Color"/>
+  <attr name="raisedButtonBackground" format="reference" />
+  <attr name="raisedButtonSecondaryBackground" format="reference" />
+  <attr name="raisedButtonForeground" format="reference" />
+  <attr name="raisedButtonAlternativeBackground" format="reference" />
+  <attr name="ghostButtonBackground" format="reference" />
+  <attr name="raisedButtonTextColor" format="color" />
+  <attr name="flatButtonBackground" format="color" />
+  <attr name="buttonTextFont" format="string" />
+  <attr name="buttonTextSize" format="dimension" />
+  <attr name="buttonTextSizeSmall" format="dimension" />
+  <attr name="installButtonBackground" format="reference" />
+  <attr name="toolbarBackground" format="reference" />
+  <attr name="toolbarBackgroundSecondary" format="color" />
+  <attr name="toolbarTextColor" format="color" />
+  <attr name="preferenceTitleColor" format="color" />
+  <attr name="preferenceTitleTextSize" format="dimension" />
+  <attr name="preferenceSummaryColor" format="color" />
+  <attr name="preferenceSummaryTextSize" format="dimension" />
+  <attr name="preferenceTheme" format="reference" />
+  <attr name="colorControlHighlight" format="color" />
+  <attr name="bnItemColorState" format="color" />
+  <attr name="wizardFirstColor" format="color" />
+  <attr name="wizardSecondColor" format="color" />
+  <attr name="wizardThirdColor" format="color" />
+  <attr name="reactionsPopUpBackgroundColor" format="color" />
+  <attr name="reactionsButtonBackground" format="color" />
+  <attr name="widgetBackgroundColorPrimary" format="color" />
+  <attr name="widgetBackgroundColorSecondary" format="color" />
+  <attr name="commentBackgroundColor" format="color" />
+  <attr name="toolbarReviewsColor" format="color" />
+  <attr name="ratingTextColor" format="color" />
+  <attr name="ratingBarDrawable" format="reference" />
+  <attr name="notificationDrawable" format="reference" />
+  <attr name="commentTitleColor" format="color" />
+  <attr name="followStoreCardBackground" format="reference" />
+  <attr name="addCircleButtonDrawable" format="reference" />
+  <attr name="searchDropdownBackgroundColor" format="color" />
+  <attr name="dialogsTheme" format="reference" />
+  <attr name="roundedDialogsTheme" format="reference" />
+  <attr name="wizardBackgroundBottom" format="color" />
+  <attr name="wizardRadioBackgroundColor" format="color" />
+  <attr name="appDescriptionToolbarAppc" format="reference" />
+
+  <!--store theme specific attributes-->
+  <attr name="datePickerStyle" format="reference" />
+  <attr name="roundGradientButtonBackground" format="reference" />
+  <attr name="themeSelectorItemBackground" format="reference" />
+  <attr name="themeTextColor" format="color|reference" />
+  <attr name="storeBadgeDialogTextBackground" format="color|reference" />
+  <attr name="storeBadgeDialogProgress" format="color|reference" />
+  <attr name="storeEditStoreDrawable" format="reference" />
 
   <declare-styleable name="CustomTextInputLayout">
-    <attr format="string" name="helperText"/>
-    <attr format="color|reference" name="helperTextColor"/>
+    <attr name="helperText" format="string" />
+    <attr name="helperTextColor" format="color|reference" />
+  </declare-styleable>
+  <declare-styleable name="ToolbarArcBackground">
+    <attr name="arcColor" format="color|reference" />
   </declare-styleable>
 
 </resources>

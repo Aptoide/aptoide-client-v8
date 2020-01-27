@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    style="?attr/backgroundCardColorSecondary"
     >
   <RelativeLayout
       android:layout_width="wrap_content"
@@ -55,7 +56,6 @@
         android:layout_toRightOf="@id/check_1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/black_87_alpha"
         tools:text="100% safe updates of APP"
         style="@style/Aptoide.TextView.Medium.S"
         />
@@ -71,7 +71,6 @@
         android:layout_toEndOf="@id/check_2"
         android:layout_toRightOf="@id/check_2"
         android:text="@string/appview_message_apkfy_2"
-        android:textColor="@color/black_87_alpha"
         style="@style/Aptoide.TextView.Medium.S"
         />
   </RelativeLayout>

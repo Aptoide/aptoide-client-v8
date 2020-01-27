@@ -7,10 +7,11 @@ import cm.aptoide.pt.home.apps.model.AppcUpdateApp
 import cm.aptoide.pt.home.apps.model.DownloadApp
 import cm.aptoide.pt.home.apps.model.InstalledApp
 import cm.aptoide.pt.home.apps.model.UpdateApp
+import cm.aptoide.pt.themes.ThemeManager
 import com.airbnb.epoxy.Typed4EpoxyController
 import rx.subjects.PublishSubject
 
-class AppsController :
+class AppsController(val themeManager: ThemeManager) :
     Typed4EpoxyController<List<UpdateApp>, List<InstalledApp>, List<AppcUpdateApp>, List<DownloadApp>>() {
 
   val appEventListener: PublishSubject<AppClick> = PublishSubject.create()
@@ -66,6 +67,7 @@ class AppsController :
           .id("updates", update.identifier)
           .application(update)
           .eventSubject(appEventListener)
+          .themeManager(themeManager)
           .addTo(this)
     }
 

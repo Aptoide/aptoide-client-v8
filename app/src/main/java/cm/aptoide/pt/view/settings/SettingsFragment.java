@@ -25,9 +25,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
@@ -50,6 +50,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -70,6 +71,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
+import static cm.aptoide.pt.preferences.managed.ManagedKeys.MAX_FILE_CACHE;
 
 /**
  * Created by fabio on 26-10-2015.
@@ -91,8 +93,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject SupportEmailProvider supportEmailProvider;
+  @Inject ThemeManager themeManager;
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
@@ -102,9 +104,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private EditableTextDialog enableAdultContentPinDialog;
   private EditableTextDialog setPinDialog;
   private EditableTextDialog removePinDialog;
+  private InputDialog fileMaxCacheDialog;
 
   private Preference pinPreferenceView;
   private Preference removePinPreferenceView;
+  private Preference fileMaxCachePreferenceView;
   private SwitchPreferenceCompat adultContentPreferenceView;
   private SwitchPreferenceCompat adultContentWithPinPreferenceView;
   private SwitchPreferenceCompat socialCampaignNotifications;
@@ -151,6 +155,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     settingsManager =
         ((AptoideApplication) getContext().getApplicationContext()).getSettingsManager();
     setAdultContentContent();
+    setupFileMaxCacheDialog();
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -190,6 +195,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     deleteAccount = findPreference(DELETE_ACCOUNT);
     socialCampaignNotifications =
         (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
+    fileMaxCachePreferenceView = findPreference(MAX_FILE_CACHE);
     setupClickHandlers();
   }
 
@@ -200,6 +206,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     adultContentWithPinPreferenceView = null;
     socialCampaignNotifications = null;
     pinPreferenceView = null;
+    fileMaxCachePreferenceView = null;
     removePinPreferenceView = null;
     excludedUpdates = null;
     sendFeedback = null;
@@ -208,6 +215,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
     deleteAccount = null;
     context = null;
     super.onDestroyView();
+  }
+
+  private void setupFileMaxCacheDialog() {
+    fileMaxCacheDialog = new InputDialog.Builder(getContext(), themeManager).setMessage(
+        R.string.settings_maxFileCache_title)
+        .setPositiveButton(R.string.all_button_ok)
+        .setNegativeButton(R.string.cancel)
+        .setView(R.layout.dialog_request_input)
+        .setEditText(R.id.input)
+        .build();
   }
 
   private void setGDPR() {
@@ -230,28 +247,30 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private void setAdultContentContent() {
     if (settingsManager.showAdultContent()) {
       adultContentConfirmationDialog =
-          new RxAlertDialog.Builder(getContext()).setMessage(R.string.are_you_adult)
+          new RxAlertDialog.Builder(getContext(), themeManager).setMessage(R.string.are_you_adult)
               .setPositiveButton(R.string.yes)
               .setNegativeButton(R.string.no)
               .build();
       enableAdultContentPinDialog =
-          new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+          new InputDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
               .setPositiveButton(R.string.all_button_ok)
               .setNegativeButton(R.string.cancel)
-              .setView(R.layout.dialog_requestpin)
-              .setEditText(R.id.pininput)
+              .setView(R.layout.dialog_request_input)
+              .setEditText(R.id.input)
               .build();
-      removePinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.request_adult_pin)
+      removePinDialog =
+          new InputDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
+              .setPositiveButton(R.string.all_button_ok)
+              .setNegativeButton(R.string.cancel)
+              .setView(R.layout.dialog_request_input)
+              .setEditText(R.id.input)
+              .build();
+      setPinDialog = new InputDialog.Builder(getContext(), themeManager).setMessage(
+          R.string.asksetadultpinmessage)
           .setPositiveButton(R.string.all_button_ok)
           .setNegativeButton(R.string.cancel)
-          .setView(R.layout.dialog_requestpin)
-          .setEditText(R.id.pininput)
-          .build();
-      setPinDialog = new PinDialog.Builder(getContext()).setMessage(R.string.asksetadultpinmessage)
-          .setPositiveButton(R.string.all_button_ok)
-          .setNegativeButton(R.string.cancel)
-          .setView(R.layout.dialog_requestpin)
-          .setEditText(R.id.pininput)
+          .setView(R.layout.dialog_request_input)
+          .setEditText(R.id.input)
           .build();
     }
   }
@@ -324,12 +343,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
       subscriptions.add(RxPreference.clicks(termsAndConditions)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_terms_conditions), getContext(),
-                  theme)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId)));
 
       subscriptions.add(RxPreference.clicks(privacyPolicy)
           .subscribe(clicked -> CustomTabsHelper.getInstance()
               .openInChromeCustomTab(getString(R.string.all_url_privacy_policy), getContext(),
-                  theme)));
+                  themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId)));
     }
 
     findPreference(SettingsConstants.FILTER_APPS).setOnPreferenceClickListener(preference -> {
@@ -349,10 +368,12 @@ public class SettingsFragment extends PreferenceFragmentCompat
     });
 
     findPreference(SettingsConstants.CLEAR_CACHE).setOnPreferenceClickListener(preference -> {
-      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext());
+      ProgressDialog dialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       subscriptions.add(GenericDialogs.createGenericContinueCancelMessage(getContext(),
           getString(R.string.storage_dialog_title, marketName),
-          getString(R.string.clear_cache_dialog_message))
+          getString(R.string.clear_cache_dialog_message),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .filter(eResponse -> eResponse.equals(GenericDialogs.EResponse.YES))
           .doOnNext(eResponse -> dialog.show())
           .flatMap(eResponse -> fileManager.deleteCache())
@@ -375,8 +396,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
         getFormattedDensity(AptoideUtils.ScreenU.getDensityDpi(getActivity().getWindowManager()));
 
     hwSpecs.setOnPreferenceClickListener(preference -> {
-      AlertDialog.Builder alertDialogBuilder =
-          new AlertDialog.Builder(context, R.style.AlertDialogAptoide);
+      AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       alertDialogBuilder.setTitle(getString(R.string.setting_hwspecstitle));
       alertDialogBuilder.setIcon(android.R.drawable.ic_menu_info_details)
           .setMessage(getString(R.string.setting_sdk_version)
@@ -413,17 +434,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
       AlertDialog alertDialog = alertDialogBuilder.create();
       alertDialog.show();
       return true;
-    });
-
-    EditTextPreference maxFileCache =
-        (EditTextPreference) findPreference(SettingsConstants.MAX_FILE_CACHE);
-    maxFileCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-
-      @Override public boolean onPreferenceClick(Preference preference) {
-        ((EditTextPreference) preference).setText(
-            String.valueOf(ManagerPreferences.getCacheLimit(sharedPreferences)));
-        return false;
-      }
     });
 
     Preference about = findPreference(SettingsConstants.ABOUT_DIALOG);
@@ -465,7 +475,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
           contactLayout.setVisibility(View.INVISIBLE);
         }
 
-        new AlertDialog.Builder(context).setView(view)
+        new AlertDialog.Builder(new ContextThemeWrapper(context,
+            themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)).setView(view)
             .setTitle(getString(R.string.settings_about_us))
             .setIcon(android.R.drawable.ic_menu_info_details)
             .setPositiveButton(android.R.string.ok,
@@ -603,6 +614,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
           })
           .subscribe());
 
+      subscriptions.add(RxPreference.clicks(fileMaxCachePreferenceView)
+          .doOnNext(preference -> fileMaxCacheDialog.showWithInput(
+              String.valueOf(ManagerPreferences.getCacheLimit(sharedPreferences))))
+          .subscribe());
+
       subscriptions.add(accountManager.pinRequired()
           .observeOn(AndroidSchedulers.mainThread())
           .doOnNext(pinRequired -> {
@@ -632,13 +648,21 @@ public class SettingsFragment extends PreferenceFragmentCompat
               .toObservable())
           .retry()
           .subscribe());
+
+      subscriptions.add(fileMaxCacheDialog.positiveClicks()
+          .filter(input -> !TextUtils.isEmpty(input))
+          .map(charSequence -> Integer.parseInt(charSequence.toString()))
+          .onErrorResumeNext(throwable -> Observable.just(200))
+          .doOnNext(limit -> ManagerPreferences.setCacheLimit(limit, sharedPreferences))
+          .retry()
+          .subscribe());
     }
   }
 
   private void openDeleteAccountView(String accessToken) {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(getString(R.string.settings_url_delete_account, accessToken),
-            getContext(), theme);
+            getContext(), themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   private void handleSocialNotifications(Boolean isChecked) {

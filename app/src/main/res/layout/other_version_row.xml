@@ -1,21 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2016.
   ~ Modified on 07/07/2016.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:orientation="horizontal"
-    android:paddingBottom="16dp"
-    android:paddingEnd="20dp"
-    android:paddingLeft="44dp"
-    android:paddingRight="20dp"
     android:paddingStart="44dp"
+    android:paddingLeft="44dp"
     android:paddingTop="16dp"
+    android:paddingEnd="20dp"
+    android:paddingRight="20dp"
+    android:paddingBottom="16dp"
     tools:background="@android:color/transparent"
     >
 
@@ -43,17 +41,16 @@
 
       <TextView
           android:id="@+id/version_name"
+          style="@style/Aptoide.TextView.Regular.L"
           android:layout_width="wrap_content"
           android:layout_height="@dimen/other_version_icon_size_with_icon"
-          android:layout_marginLeft="4dp"
           android:layout_marginStart="4dp"
+          android:layout_marginLeft="4dp"
           android:ellipsize="end"
           android:fontFamily="@string/font_family_regular"
           android:gravity="center_vertical"
           android:lines="1"
           android:maxLines="1"
-          android:textColor="@color/almost_black"
-          android:textSize="@dimen/text_size_large"
           android:textStyle="bold"
           tools:text="1.00.258.985lsndakljndanalnalndalnad7"
           />
@@ -62,8 +59,8 @@
           android:id="@+id/badge_icon"
           android:layout_width="@dimen/other_version_icon_size"
           android:layout_height="@dimen/other_version_icon_size"
-          android:layout_marginLeft="@dimen/appview_recommended_for_you_image_margin_left"
           android:layout_marginStart="@dimen/appview_recommended_for_you_image_margin_left"
+          android:layout_marginLeft="@dimen/appview_recommended_for_you_image_margin_left"
           android:scaleType="centerInside"
           android:src="@drawable/ic_badge_trusted"
           />
@@ -121,6 +118,7 @@
 
     <TextView
         android:id="@+id/store_name"
+        style="@style/Aptoide.TextView.Regular.S"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -128,8 +126,6 @@
         android:gravity="center"
         android:lines="1"
         android:maxLines="1"
-        android:textColor="@color/almost_black"
-        android:textSize="@dimen/text_size_medium"
         android:textStyle="bold"
         tools:text="Animirais Studio"
         />

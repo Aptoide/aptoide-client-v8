@@ -133,8 +133,8 @@ public class VanillaFragmentProvider implements FragmentProvider {
   }
 
   @Override
-  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
-    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  public Fragment newDescriptionFragment(String appName, String description, boolean hasAppc) {
+    return DescriptionFragment.newInstance(appName, description, hasAppc);
   }
 
   @Override public Fragment newSettingsFragment() {

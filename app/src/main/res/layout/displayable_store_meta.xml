@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/backgroundCardColor"
     android:orientation="vertical"
     android:padding="16dp"
-    style="?attr/backgroundCard"
     >
 
   <ImageView
@@ -29,27 +29,27 @@
       />
   <TextView
       android:id="@+id/main_name"
+      style="@style/Aptoide.TextView.Medium.M"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="20dp"
       android:layout_marginStart="20dp"
+      android:layout_marginLeft="20dp"
       app:layout_constraintLeft_toRightOf="@+id/main_icon"
       app:layout_constraintStart_toEndOf="@id/main_icon"
       app:layout_constraintTop_toTopOf="@+id/main_icon"
       tools:text="TextView"
-      style="@style/Aptoide.TextView.Medium.M"
       />
   <TextView
       android:id="@+id/secondary_name"
+      style="@style/Aptoide.TextView.Regular.XS"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginLeft="20dp"
       android:layout_marginStart="20dp"
+      android:layout_marginLeft="20dp"
       app:layout_constraintLeft_toRightOf="@+id/main_icon"
       app:layout_constraintStart_toEndOf="@id/main_icon"
       app:layout_constraintTop_toBottomOf="@+id/main_name"
       tools:text="TextView"
-      style="@style/Aptoide.TextView.Regular.XS"
       />
   <FrameLayout
       android:id="@+id/action_button_layout"
@@ -65,36 +65,34 @@
 
     <TextView
         android:id="@+id/edit_store_button"
+        style="text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_edit_black_9dp"
+        android:drawableLeft="?attr/storeEditStoreDrawable"
         android:gravity="center"
-        android:minHeight="24dp"
         android:minWidth="54dp"
-        android:paddingLeft="8dp"
+        android:minHeight="24dp"
         android:paddingStart="8dp"
+        android:paddingLeft="8dp"
         android:text="@string/myaccount_edit_store_button"
         android:textAllCaps="true"
         android:textSize="10sp"
         android:visibility="gone"
-        style="text"
         />
 
     <Button
         android:id="@+id/follow_store_button"
-        android:text="@string/unfollow"
         style="@style/Aptoide.Button.S"
+        android:text="@string/unfollow"
         />
-
-    <!--android:visibility="gone"-->
 
   </FrameLayout>
   <ImageView
       android:id="@+id/medal_icon"
       android:layout_width="40dp"
       android:layout_height="40dp"
-      android:layout_marginBottom="8dp"
       android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
       android:padding="8dp"
       app:layout_constraintBottom_toBottomOf="@+id/action_button_layout"
       app:layout_constraintEnd_toStartOf="@id/action_button_layout"
@@ -174,7 +172,7 @@
       app:layout_constraintStart_toEndOf="@+id/apps_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
       tools:layout_editor_absoluteX="127dp"
-    tools:text="17"
+      tools:text="17"
       />
   <TextView
       android:id="@+id/followers_text_view"
@@ -191,7 +189,7 @@
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/following_text_view"
       app:layout_constraintTop_toBottomOf="@+id/social_separator_container"
-    tools:text="100"
+      tools:text="100"
       />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

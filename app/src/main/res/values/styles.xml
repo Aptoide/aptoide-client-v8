@@ -23,7 +23,7 @@
     <item name="listPreferredItemPaddingRight">24dip</item>
   </style>
 
-  <style name="Aptoide.DialogTheme" parent="AppBaseTheme">
+  <style name="Aptoide.DialogTheme">
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="windowNoTitle">true</item>
@@ -50,6 +50,19 @@
     <item name="android:windowCloseOnTouchOutside">true</item>
   </style>
 
+  <style name="Aptoide.DialogTheme.Rounded">
+    <item name="android:background">@drawable/rounded_corners_bg</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+  </style>
+
+  <style name="AppBaseThemeDark.DialogTheme" parent="Aptoide.DialogTheme">
+    <item name="android:background">@color/grey_900</item>
+  </style>
+
+  <style name="AppBaseThemeDark.DialogTheme.Rounded">
+    <item name="android:background">@drawable/rounded_corners_bg_dark</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+  </style>
 
   <style name="Widget.Aptoide.Card" parent="">
     <item name="cardCornerRadius">8.3dp</item>
@@ -119,13 +132,14 @@
   </style>
 
   <style name="RatingBarReviewDialog">
-    <item name="android:progressDrawable">@drawable/rating_bar_review</item>
+    <item name="android:progressDrawable">?attr/rating_bar_progress</item>
     <item name="android:minHeight">36dp</item>
     <item name="android:maxHeight">36dp</item>
   </style>
 
   <style name="backgroundCardStyleLight">
-    <item name="android:background">@drawable/white_card</item>
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
   </style>
 
   <style name="WidgetButtonCustomAptoide" parent="WidgetButtonCustom">
@@ -142,9 +156,16 @@
     <item name="android:textColor">@color/dark_custom_gray</item>
   </style>
 
-  <!--
-  <style name="WidgetButtonCustom" parent="@android:style/Widget.Button">
-    -->
+  <style name="backgroundButtonWhite">
+    <item name="android:background">@drawable/white_card</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
+  <style name="backgroundButtonBlack">
+    <item name="android:background">@drawable/black_card</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
   <style name="WidgetButtonCustom" parent="@style/Widget.Aptoide.Button">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
@@ -160,7 +181,18 @@
   </style>
 
   <style name="backgroundCardStyleDark">
-    <item name="android:background">@drawable/dark_card</item>
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="cardBackgroundColor">?attr/backgroundCardColor</item>
+  </style>
+
+  <style name="backgroundCardStyleBlack">
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="cardBackgroundColor">@color/grey_dark</item>
+  </style>
+
+  <style name="backgroundCardAccentStyle">
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="android:background">@drawable/aptoide_gradient</item>
   </style>
 
   <style name="headerSeparatorButtonStyle">
@@ -190,6 +222,10 @@
     <item name="android:background">?attr/toolbarBackground</item>
     <item name="android:textColor">?attr/toolbarTextColor</item>
     <item name="android:colorControlNormal">@color/white</item>
+  </style>
+
+  <style name="Toolbar.Reviews" parent="@style/Toolbar">
+    <item name="android:background">?attr/toolbarReviewsColor</item>
   </style>
 
   <style name="ToolbarDark" parent="@style/Theme.AppCompat">
@@ -469,6 +505,7 @@
     <item name="android:drawablePadding">6dp</item>
     <item name="android:gravity">center</item>
     <item name="android:textSize">8.3sp</item>
+    <item name="android:textColor">?attr/ratingTextColor</item>
   </style>
 
   <style name="FragmentRateAndReviewsCount">
@@ -478,6 +515,7 @@
     <item name="android:text">@string/zero</item>
     <item name="android:textSize">8.3sp</item>
     <item name="android:gravity">right</item>
+    <item name="android:textColor">?attr/ratingTextColor</item>
   </style>
 
   <style name="RateAndReviews.Custom.ProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
@@ -490,7 +528,7 @@
     <item name="android:indeterminate">false</item>
     <item name="android:max">100</item>
     <item name="android:progress">0</item>
-    <item name="android:progressDrawable">@drawable/dark_progress_bar</item>
+    <item name="android:progressDrawable">?attr/ratingBarDrawable</item>
   </style>
 
   <style name="WidgetButtonCustomAptoideTwoLines" parent="WidgetButtonCustomAptoide">
@@ -507,6 +545,12 @@
   <style name="AlertTextAppearanceAptoide" parent="@style/Base.Widget.AppCompat.Button">
     <!-- Set text size and skeletonColor of title and message here -->
     <item name="android:textColor">?attr/colorPrimary</item>
+  </style>
+
+  <style name="PopupMenuStyle" parent="Theme.AppCompat">
+    <item name="android:background">?attr/searchDropdownBackgroundColor</item>
+    <item name="android:textColor">?attr/textColorBlackAlpha</item>
+
   </style>
 
   <style name="AlertDialogAptoide" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">

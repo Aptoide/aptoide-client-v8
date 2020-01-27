@@ -29,13 +29,13 @@
           android:id="@+id/promotions_icon"
           android:layout_width="32dp"
           android:layout_height="32dp"
-          android:layout_alignParentLeft="true"
           android:layout_alignParentStart="true"
+          android:layout_alignParentLeft="true"
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
           android:layout_gravity="center"
-          android:layout_marginLeft="14dp"
           android:layout_marginStart="14dp"
+          android:layout_marginLeft="14dp"
           android:src="@drawable/ic_promotions_seasonal_notification"
           android:visibility="gone"
           tools:visibility="visible"
@@ -43,10 +43,11 @@
 
       <TextView
           android:id="@+id/promotions_ticker"
+          style="@style/Aptoide.TextView.Medium.XXS"
           android:layout_width="wrap_content"
           android:layout_height="16dp"
-          android:layout_marginLeft="36dp"
           android:layout_marginStart="36dp"
+          android:layout_marginLeft="36dp"
           android:layout_marginTop="12dp"
           android:background="@drawable/promotions_ticker_badge"
           android:gravity="center"
@@ -55,7 +56,6 @@
           android:visibility="gone"
           tools:text="9+"
           tools:visibility="visible"
-          style="@style/Aptoide.TextView.Medium.XXS"
           />
 
       <include
@@ -99,6 +99,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:background="@color/white"></FrameLayout>
+        ></FrameLayout>
   </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

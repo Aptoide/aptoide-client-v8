@@ -233,17 +233,4 @@ public class MyAccountPresenterTest {
     //Then the user should navigate to the settings view
     verify(navigator).navigateToSettings();
   }
-
-  @Test public void handleNotificationHistoryClickedTest() {
-    //Given an initialized MyAccountPresenter
-    //When a user clicks the notifications button
-    when(view.notificationsClicked()).thenReturn(Observable.just(null));
-
-    myAccountPresenter.handleNotificationHistoryClicked();
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then the user should navigate to the notification center view
-    verify(navigator).navigateToNotificationHistory();
-  }
 }

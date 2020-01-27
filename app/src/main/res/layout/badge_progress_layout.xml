@@ -8,7 +8,7 @@
       android:id="@+id/progress1"
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/progress_bar_color"
+      android:background="?attr/storeBadgeDialogProgress"
       app:layout_constraintBottom_toBottomOf="@+id/tin_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/bronze_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/tin_dummy_view"
@@ -22,6 +22,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="36dp"
+      android:background="@color/transparent"
       android:padding="10dp"
       app:layout_constraintEnd_toStartOf="@+id/bronze_medal_layout"
       app:layout_constraintLeft_toLeftOf="parent"
@@ -33,6 +34,7 @@
         android:id="@+id/tin_medal"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
+        android:background="@color/transparent"
         android:src="@drawable/ic_tin_flat_icon"
         />
   </FrameLayout>
@@ -54,7 +56,7 @@
       android:id="@+id/progress2"
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/progress_bar_color"
+      android:background="?attr/storeBadgeDialogProgress"
       app:layout_constraintBottom_toBottomOf="@id/bronze_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/silver_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/bronze_dummy_view"
@@ -69,6 +71,7 @@
       android:id="@+id/bronze_medal_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="@color/transparent"
       android:padding="10dp"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/silver_medal_layout"
@@ -81,6 +84,7 @@
         android:id="@+id/bronze_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:background="@color/transparent"
         android:src="@drawable/ic_bronze_flat_icon"
         />
   </FrameLayout>
@@ -102,7 +106,7 @@
       android:id="@+id/progress3"
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/progress_bar_color"
+      android:background="?attr/storeBadgeDialogProgress"
       app:layout_constraintBottom_toBottomOf="@id/silver_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/gold_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/silver_dummy_view"
@@ -116,6 +120,7 @@
       android:id="@+id/silver_medal_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="@color/transparent"
       android:padding="10dp"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/gold_medal_layout"
@@ -128,6 +133,7 @@
         android:id="@+id/silver_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:background="@color/transparent"
         android:src="@drawable/ic_silver_flat_icon"
         />
   </FrameLayout>
@@ -149,7 +155,7 @@
       android:id="@+id/progress4"
       android:layout_width="0dp"
       android:layout_height="8dp"
-      android:background="@color/progress_bar_color"
+      android:background="?attr/storeBadgeDialogProgress"
       app:layout_constraintBottom_toBottomOf="@id/gold_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/platinum_dummy_view"
       app:layout_constraintLeft_toRightOf="@+id/gold_dummy_view"
@@ -163,6 +169,7 @@
       android:id="@+id/gold_medal_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="@color/transparent"
       android:padding="10dp"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal_layout"
       app:layout_constraintEnd_toStartOf="@+id/platinum_medal_layout"
@@ -175,6 +182,7 @@
         android:id="@+id/gold_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:background="@color/transparent"
         android:src="@drawable/ic_gold_flat_icon"
         />
   </FrameLayout>
@@ -196,6 +204,7 @@
       android:id="@+id/platinum_medal_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="@color/transparent"
       android:padding="10dp"
       app:layout_constraintBottom_toBottomOf="@id/tin_medal_layout"
       app:layout_constraintEnd_toEndOf="parent"
@@ -208,6 +217,7 @@
         android:id="@+id/platinum_medal"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:background="@color/transparent"
         android:src="@drawable/ic_platinum_flat_icon"
         />
   </FrameLayout>

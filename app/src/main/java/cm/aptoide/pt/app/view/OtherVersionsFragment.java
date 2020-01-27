@@ -25,11 +25,11 @@ import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -58,6 +58,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private SharedPreferences sharedPreferences;
+  private ThemeManager themeManager;
 
   /**
    * @param appName
@@ -84,6 +85,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    themeManager = new ThemeManager(getActivity());
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =
@@ -139,7 +141,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
           List<App> apps = listAppVersions.getList();
           ArrayList<Displayable> displayables = new ArrayList<>(apps.size());
           for (final App app : apps) {
-            displayables.add(new OtherVersionDisplayable(app, StoreContext.home));
+            displayables.add(new OtherVersionDisplayable(app, themeManager));
           }
           addDisplayables(displayables);
           getRecyclerView().setVisibility(View.VISIBLE);
@@ -172,6 +174,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
     if (hasToolbar()) {
       getToolbar().setTitle(title);
       collapsingToolbarLayout.setTitle(title);
+      collapsingToolbarLayout.setExpandedTitleColor(getView().getResources()
+          .getColor(themeManager.getAttributeForTheme(R.attr.textColorGrey900).resourceId));
     }
   }
 

@@ -44,7 +44,7 @@ public class WizardFragment extends UIComponentFragment
   private WizardPagerAdapter viewPagerAdapter;
   private AptoideViewPager viewPager;
   private RadioGroup radioGroup;
-  private View skipText;
+  private View skipButton;
   private List<RadioButton> wizardButtons;
   private View skipOrNextLayout;
   private LoginBottomSheet loginBottomSheet;
@@ -152,7 +152,7 @@ public class WizardFragment extends UIComponentFragment
     skipOrNextLayout = null;
     wizardButtons = null;
     radioGroup = null;
-    skipText = null;
+    skipButton = null;
     animatedColorView = null;
     super.onDestroyView();
   }
@@ -170,7 +170,7 @@ public class WizardFragment extends UIComponentFragment
   }
 
   @Override public Observable<Void> skipWizardClick() {
-    return RxView.clicks(skipText);
+    return RxView.clicks(skipButton);
   }
 
   @Override public void skipWizard() {
@@ -252,7 +252,7 @@ public class WizardFragment extends UIComponentFragment
     viewPager = view.findViewById(R.id.view_pager);
     skipOrNextLayout = view.findViewById(R.id.skip_next_layout);
     radioGroup = view.findViewById(R.id.view_pager_radio_group);
-    skipText = view.findViewById(R.id.skip_text);
+    skipButton = view.findViewById(R.id.skip_button);
     isInPortraitMode = getActivity().getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     animatedColorView = view.findViewById(R.id.animated_color_view);

@@ -12,27 +12,29 @@ public class StoreGridHeaderDisplayable extends Displayable {
   private final StoreTabNavigator storeTabNavigator;
   private final Model model;
   private final String marketName;
+  private final int textColor;
   private NavigationTracker navigationTracker;
 
   // this constructor is necessary due to reflection code that generates displayables. that code
   // needs to go as this.
   public StoreGridHeaderDisplayable() {
-    this(null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, 0);
   }
 
   public StoreGridHeaderDisplayable(String marketName, GetStoreWidgets.WSWidget wsWidget,
       String storeTheme, String tag, StoreContext storeContext, StoreTabNavigator storeTabNavigator,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, int textColor) {
     this.model = new Model(storeTheme, tag, storeContext);
     this.wsWidget = wsWidget;
     this.storeTabNavigator = storeTabNavigator;
     this.navigationTracker = navigationTracker;
     this.marketName = marketName;
+    this.textColor = textColor;
   }
 
   public StoreGridHeaderDisplayable(String marketName, GetStoreWidgets.WSWidget wsWidget,
-      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker) {
-    this(marketName, wsWidget, null, null, null, storeTabNavigator, navigationTracker);
+      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker, int textColor) {
+    this(marketName, wsWidget, null, null, null, storeTabNavigator, navigationTracker, textColor);
   }
 
   @Override protected Displayable.Configs getConfig() {
@@ -61,6 +63,10 @@ public class StoreGridHeaderDisplayable extends Displayable {
 
   public String getMarketName() {
     return marketName;
+  }
+
+  public int getTextColor() {
+    return textColor;
   }
 
   public static class Model {

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.view;
 
-import android.os.Build;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -45,15 +44,15 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    appImage = (ImageView) itemView.findViewById(R.id.app_image);
-    installButton = (Button) itemView.findViewById(R.id.app_install_button);
-    installMessage = (TextView) itemView.findViewById(R.id.install_message);
-    appName = (TextView) itemView.findViewById(R.id.app_name);
+    appImage = itemView.findViewById(R.id.app_image);
+    installButton = itemView.findViewById(R.id.app_install_button);
+    installMessage = itemView.findViewById(R.id.install_message);
+    appName = itemView.findViewById(R.id.app_name);
     verticalSeparator = itemView.findViewById(R.id.vertical_separator);
-    appRating = (RatingBar) itemView.findViewById(R.id.app_rating);
-    appDownloads = (TextView) itemView.findViewById(R.id.app_downloads);
-    appVersion = (TextView) itemView.findViewById(R.id.app_version);
-    appSize = (TextView) itemView.findViewById(R.id.app_size);
+    appRating = itemView.findViewById(R.id.app_rating);
+    appDownloads = itemView.findViewById(R.id.app_downloads);
+    appVersion = itemView.findViewById(R.id.app_version);
+    appSize = itemView.findViewById(R.id.app_size);
   }
 
   @Override public void bindView(OfficialAppDisplayable displayable, int position) {
@@ -63,16 +62,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     final boolean isAppInstalled = isAppInstalled(appMeta.second.getData()
         .getPackageName());
 
-    int color;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      color = context.getResources()
-          .getColor(displayable.getStoreTheme()
-              .getPrimaryColor(), context.getTheme());
-    } else {
-      color = context.getResources()
-          .getColor(displayable.getStoreTheme()
-              .getPrimaryColor());
-    }
+    int color = displayable.getPrimaryColor();
 
     final GetAppMeta.App appData = appMeta.second.getData();
     final String appName = appData.getName();
@@ -122,9 +112,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
     // check if app is installed. if it is, show open button
 
     // apply button background
-    installButton.setBackgroundDrawable(getContext().getResources()
-        .getDrawable(displayable.getStoreTheme()
-            .getRaisedButtonDrawable()));
+    installButton.setBackgroundResource(displayable.getRaisedButtonDrawable());
 
     installButton.setText(context.getString(isAppInstalled ? R.string.open : R.string.install));
 
