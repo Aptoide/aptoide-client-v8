@@ -1,9 +1,6 @@
 package cm.aptoide.pt.account.view;
 
-import android.graphics.Bitmap;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
-import cm.aptoide.pt.networking.image.ImageLoader;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
@@ -15,12 +12,12 @@ public class ImageValidator {
   private static final int MIN_IMAGE_WIDTH = 600;
   private static final int MAX_IMAGE_WIDTH = 10240;
   private static final int MAX_IMAGE_SIZE_IN_BYTES = 5242880;
-  private final ImageLoader imageLoader;
   private final Scheduler scheduler;
+  private final ImageInfoProvider imageInfoProvider;
 
-  public ImageValidator(ImageLoader imageLoader, Scheduler scheduler) {
-    this.imageLoader = imageLoader;
+  public ImageValidator(Scheduler scheduler, ImageInfoProvider imageInfoProvider) {
     this.scheduler = scheduler;
+    this.imageInfoProvider = imageInfoProvider;
   }
 
   /**
@@ -38,14 +35,14 @@ public class ImageValidator {
         .subscribeOn(scheduler);
   }
 
-  private ImageInfo getInfo(String imagePath) {
-    ImageInfo imageInfo = null;
-    Bitmap image = imageLoader.load(imagePath);
-    if (image != null) {
-      imageInfo = new ImageInfo(image.getWidth(), image.getHeight(), new File(imagePath).length());
+  private ImageInfo getInfo(String imagePath) throws InvalidImageException {
+    ImageInfo info = imageInfoProvider.getInfo(imagePath);
+    if (info == null) {
+      final List<InvalidImageException.ImageError> errors = new ArrayList<>();
+      errors.add(InvalidImageException.ImageError.ERROR_DECODING);
+      throw new InvalidImageException(errors);
     }
-    image.recycle();
-    return imageInfo;
+    return info;
   }
 
   private void validate(String imagePath) throws InvalidImageException {

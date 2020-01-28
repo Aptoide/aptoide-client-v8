@@ -15,6 +15,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.ImagePickerView;
@@ -237,8 +238,9 @@ import rx.subscriptions.CompositeSubscription;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides ImageValidator provideImageValidator() {
-    return new ImageValidator(ImageLoader.with(fragment.getContext()), Schedulers.computation());
+  @FragmentScope @Provides ImageValidator provideImageValidator(
+      ImageInfoProvider imageInfoProvider) {
+    return new ImageValidator(Schedulers.computation(), imageInfoProvider);
   }
 
   @FragmentScope @Provides CreateUserErrorMapper provideCreateUserErrorMapper(
