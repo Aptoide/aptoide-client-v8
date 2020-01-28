@@ -28,9 +28,6 @@ class ImageInfoProvider(private val contentResolver: ContentResolver) {
 
         cursor.close()
 
-        Logger.getInstance()
-            .e("lol", "Width is : $width height is $height size is $size")
-
         return ImageInfo(height, width, size)
 
       } catch (exception: Exception) {
