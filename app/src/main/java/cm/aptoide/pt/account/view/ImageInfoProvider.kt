@@ -11,8 +11,6 @@ class ImageInfoProvider(private val contentResolver: ContentResolver) {
 
   fun getInfo(imagePath: String): ImageInfo? {
 
-    val uri = Uri.parse(imagePath)
-
     val projection = arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.Media.HEIGHT,
         MediaStore.Images.Media.WIDTH, MediaStore.Images.Media.SIZE)
 
