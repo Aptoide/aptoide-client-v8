@@ -122,7 +122,8 @@ public class ImagePickerPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, __ -> {
+        });
   }
 
   @NonNull private Completable loadValidImageOrThrowForGallery(String selectedImageUri) {
