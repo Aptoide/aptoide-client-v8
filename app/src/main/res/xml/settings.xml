@@ -19,6 +19,10 @@
         app:key="updatesFilterAlphaBetaKey"
         app:summary="@string/settings_beta_filter_summary"
         app:title="@string/settings_beta_filter_setting_title" />
+    <Preference
+        app:key="appTheme"
+        app:summary="System default"
+        app:title="App theme" />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/updates">
     <SwitchPreferenceCompat

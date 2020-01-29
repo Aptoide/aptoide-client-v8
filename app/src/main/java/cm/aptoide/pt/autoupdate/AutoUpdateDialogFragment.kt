@@ -24,8 +24,8 @@ class AutoUpdateDialogFragment : BaseDialogView(), AutoUpdateDialogView {
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
-    dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
-    dialog.window.setBackgroundDrawableResource(R.drawable.transparent)
+    dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+    dialog?.window?.setBackgroundDrawableResource(R.drawable.transparent)
 
     return inflater.inflate(R.layout.auto_update_dialog_fragment, container, false)
   }

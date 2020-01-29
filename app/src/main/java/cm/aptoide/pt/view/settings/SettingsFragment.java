@@ -89,6 +89,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
   private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
   private static final String PRIVACY_POLICY_PREFERENCE_KEY = "privacyPolicy";
+  private static final String APP_THEME_PREFERENCE_KEY = "appTheme";
   private static final String DELETE_ACCOUNT = "deleteAccount";
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
@@ -100,6 +101,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private FileManager fileManager;
   private AptoideAccountManager accountManager;
 
+  private RxAlertDialog appThemeDialog;
   private RxAlertDialog adultContentConfirmationDialog;
   private EditableTextDialog enableAdultContentPinDialog;
   private EditableTextDialog setPinDialog;
@@ -192,6 +194,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
     setGDPR();
+    setupAppTheme();
     deleteAccount = findPreference(DELETE_ACCOUNT);
     socialCampaignNotifications =
         (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
@@ -242,6 +245,45 @@ public class SettingsFragment extends PreferenceFragmentCompat
         preferenceCategory.removePreference(privacyPolicyPreference);
       }
     }
+  }
+
+  private void setupAppTheme() {
+    Preference appThemePreference = findPreference(APP_THEME_PREFERENCE_KEY);
+    appThemePreference.setSummary(themeManager.getThemeOption()
+        .toString());
+
+    ThemeManager.ThemeOption[] options = ThemeManager.ThemeOption.values();
+    int selectedItem = 0;
+    ThemeManager.ThemeOption currentThemeOption = themeManager.getThemeOption();
+    CharSequence[] optionsS = new CharSequence[options.length];
+    for (int i = 0; i < options.length; i++) {
+      if (options[i].equals(currentThemeOption)) {
+        selectedItem = i;
+      }
+      optionsS[i] = options[i].name();
+    }
+
+    //TODO: Replace with correct id
+    appThemeDialog =
+        new RxAlertDialog.Builder(getContext(), themeManager).setTitleSmall(R.string.are_you_adult)
+            .setSingleChoiceItems(optionsS, selectedItem)
+            .setPositiveButton(R.string.all_button_ok)
+            .setNegativeButton(R.string.cancel)
+            .build();
+
+    subscriptions.add(RxPreference.clicks(appThemePreference)
+        .doOnNext(preference -> appThemeDialog.show())
+        .subscribe());
+
+    subscriptions.add(appThemeDialog.positiveClicks()
+        .doOnNext(__ -> appThemePreference.setSummary(optionsS[appThemeDialog.getCheckedItem()]))
+        .map(__ -> options[appThemeDialog.getCheckedItem()])
+        .doOnNext(themeVariant -> {
+          themeManager.setThemeOption(themeVariant);
+          themeManager.resetToBaseTheme();
+        })
+        .retry()
+        .subscribe());
   }
 
   private void setAdultContentContent() {

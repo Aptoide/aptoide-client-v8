@@ -408,6 +408,7 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides ThemeManager providesThemeManager() {
-    return new ThemeManager(activity);
+    return new ThemeManager(activity,
+        ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
   }
 }
