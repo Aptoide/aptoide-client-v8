@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     >
   <ImageView
       android:id="@+id/user_icon"
@@ -16,39 +15,38 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginLeft="8dp"
       android:layout_marginStart="8dp"
+      android:layout_marginLeft="8dp"
       android:layout_toEndOf="@id/user_icon"
       android:layout_toRightOf="@id/user_icon"
       android:orientation="vertical"
       >
     <TextView
         android:id="@+id/name"
+        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="My Profile/Store"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
         />
     <TextView
         android:id="@+id/description"
+        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="1"
         android:maxWidth="180dp"
+        android:maxLines="1"
         tools:text="Batatas"
-        style="@style/Aptoide.TextView.Regular.S.BlackAlpha"
         />
   </LinearLayout>
 
   <Button
       android:id="@+id/edit_button"
+      style="@style/Aptoide.Button.Ghost.S"
       android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_centerVertical="true"
       android:text="@string/newaccount_edit"
-      style="@style/Aptoide.Button.Ghost.S"
       />
 </RelativeLayout>
