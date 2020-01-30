@@ -179,6 +179,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/follow_add_icon"
+                    android:tint="?attr/colorAccent"
                     />
               </RelativeLayout>
 
@@ -252,6 +253,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/follow_add_icon"
+                    android:tint="?attr/colorAccent"
                     />
 
               </RelativeLayout>
@@ -326,6 +328,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/follow_add_icon"
+                    android:tint="?attr/colorAccent"
                     />
               </RelativeLayout>
 
@@ -400,6 +403,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/follow_add_icon"
+                    android:tint="?attr/colorAccent"
                     />
 
               </RelativeLayout>
