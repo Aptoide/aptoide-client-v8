@@ -35,7 +35,7 @@
     <!--Buttons-->
     <item name="raisedButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="raisedButtonSecondaryBackground">@drawable/aptoide_gradient_rounded</item>
-    <item name="raisedButtonAlternativeBackground">@drawable/rounded_corners_bg</item>
+    <item name="raisedButtonAlternativeBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="raisedButtonForeground">@null</item>
     <item name="flatButtonBackground">@drawable/aptoide_gradient</item>
     <item name="ghostButtonBackground">@drawable/btn_ghost_theme</item>
