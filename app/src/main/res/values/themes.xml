@@ -413,10 +413,10 @@
     <item name="textColorAppcOrange">@color/appc_orange</item>
     <item name="textColorSpendAppc">@color/appc_spend</item>
     <item name="textColorAppcColor">#ff7867</item>
-    <item name="textColorTwitter">@color/twitter_color</item>
-    <item name="textColorTwitch">@color/twitch</item>
-    <item name="textColorYoutube">@color/youtube</item>
-    <item name="textColorFacebook">@color/facebook</item>
+    <item name="textColorTwitter">@color/white</item>
+    <item name="textColorTwitch">@color/white</item>
+    <item name="textColorYoutube">@color/white</item>
+    <item name="textColorFacebook">@color/white</item>
     <item name="ratingTextColor">@color/white</item>
     <item name="commentTitleColor">@color/white</item>
 
