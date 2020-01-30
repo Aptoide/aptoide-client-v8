@@ -87,6 +87,7 @@
     <item name="searchDropdownBackgroundColor">@color/white</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
 
+
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
 
@@ -124,6 +125,7 @@
 
     <!--editorial-->
     <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_normal</item>
+    <item name="editorialInstallCardBackgroundColor">@color/grey_fog_light</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder</item>
@@ -374,7 +376,8 @@
     <item name="login_button_style">@style/Aptoide.Button</item>
 
     <!--editorial-->
-    <item name="editorialPlaceholderCard">@drawable/card_border_fog_grey_wallet_promotion</item>
+    <item name="editorialPlaceholderCard">@drawable/editorial_app_card_install_border</item>
+    <item name="editorialInstallCardBackgroundColor">@color/grey_dark</item>
 
     <!--placeholders-->
     <item name="placeholder_myaccount">@drawable/my_account_placeholder_dark</item>

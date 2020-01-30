@@ -164,7 +164,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/background_with_shadow"
+        android:background="@drawable/editorial_install_card_background"
         >
       <include
           android:id="@+id/app_cardview"
