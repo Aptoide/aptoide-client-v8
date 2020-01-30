@@ -152,6 +152,9 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
+import cm.aptoide.pt.themes.DarkThemeDialogManager;
+import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
+import cm.aptoide.pt.themes.DarkThemeDialogView;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -532,9 +535,11 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
+      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
+      DarkThemeDialogManager darkThemeDialogManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        darkThemeDialogManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -616,5 +621,10 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
     return new ExternalNavigator(fragment.getContext(), themeManager);
+  }
+
+  @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
+      DarkThemeDialogManager darkThemeDialogManager) {
+    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, darkThemeDialogManager);
   }
 }
