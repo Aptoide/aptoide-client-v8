@@ -5,8 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.GmsStatusValueProvider;
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -180,13 +180,13 @@ public class FirstLaunchAnalytics {
   }
 
   public Completable sendAppStart(android.app.Application application,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, IdsRepository idsRepository) {
 
     FacebookSdk.sdkInitialize(application);
     AppEventsLogger.activateApp(application);
     AppEventsLogger.newLogger(application);
-    return (((AptoideApplication) application).getIdsRepository()
-        .getUniqueIdentifier()).doOnSuccess(AppEventsLogger::setUserID)
+    return idsRepository.getUniqueIdentifier()
+        .doOnSuccess(AppEventsLogger::setUserID)
         .toObservable()
         .doOnNext(__ -> setupRakamFirstLaunchSuperProperty(
             SecurePreferences.isFirstRun(sharedPreferences)))

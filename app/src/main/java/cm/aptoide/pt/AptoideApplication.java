@@ -635,7 +635,7 @@ public abstract class AptoideApplication extends Application {
   private Completable sendAppStartToAnalytics() {
     return firstLaunchAnalytics.sendAppStart(this,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()));
+            getDefaultSharedPreferences()), idsRepository);
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {

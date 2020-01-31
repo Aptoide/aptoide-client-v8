@@ -58,17 +58,10 @@ public class IdsRepository {
       if (!TextUtils.isEmpty(id)) {
         return id;
       } else {
-        return "";
+        return UUID.randomUUID()
+            .toString();
       }
     })
-        .map(id -> {
-          if (!TextUtils.isEmpty(id)) {
-            return id;
-          } else {
-            return UUID.randomUUID()
-                .toString();
-          }
-        })
         .doOnSuccess(id -> sharedPreferences.edit()
             .putString(APTOIDE_CLIENT_UUID, id)
             .apply());
@@ -117,16 +110,9 @@ public class IdsRepository {
       if (!TextUtils.isEmpty(id)) {
         return id;
       } else {
-        return "";
+        return generateRandomAdvertisingId();
       }
     })
-        .map(id -> {
-          if (!TextUtils.isEmpty(id)) {
-            return id;
-          } else {
-            return generateRandomAdvertisingId();
-          }
-        })
         .doOnSuccess(id -> sharedPreferences.edit()
             .putString(ADVERTISING_ID_CLIENT, advertisingId)
             .apply());
