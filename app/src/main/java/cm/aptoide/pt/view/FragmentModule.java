@@ -155,6 +155,7 @@ import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.themes.DarkThemeDialogManager;
 import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
 import cm.aptoide.pt.themes.DarkThemeDialogView;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -624,7 +625,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
-      DarkThemeDialogManager darkThemeDialogManager) {
-    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, darkThemeDialogManager);
+      DarkThemeDialogManager darkThemeDialogManager, ThemeManager themeManager,
+      ThemeAnalytics themeAnalytics) {
+    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, darkThemeDialogManager,
+        themeManager, themeAnalytics);
   }
 }
