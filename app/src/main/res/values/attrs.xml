@@ -52,6 +52,7 @@
   <attr name="editorialPlaceholderCard" format="reference" />
   <attr name="statusBarColorSecondary" format="color" />
   <attr name="walletEditBackgroundDrawable" format="reference" />
+  <attr name="editorialInstallCardBackgroundColor" format="color" />
 
   <attr name="searchStoresSwitchBackground" format="reference" />
   <attr name="ratingNumberDrawable" format="reference" />
