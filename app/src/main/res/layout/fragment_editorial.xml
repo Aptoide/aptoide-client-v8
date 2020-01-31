@@ -122,14 +122,13 @@
             android:id="@+id/editorial_items"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="32dp"
             android:nestedScrollingEnabled="false"
             />
         <include
             layout="@layout/reactions_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginBottom="8dp"
