@@ -72,7 +72,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="18dp"
       android:layout_marginBottom="18dp"
-      android:text="You can always change the theme in Settings"
+      android:text="@string/dark_theme_notification_disclaimer"
       android:textColor="@color/grey"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
