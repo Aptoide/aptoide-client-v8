@@ -458,7 +458,7 @@
 
   <!-- Search Widget-->
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
-  <string name="no_search_results_enable_adult_content">Enable Adult Content</string>
+  <string name="no_search_results_enable_adult_content">Show adult content</string>
   <string name="no_search_results_other_filters">Or try different filters</string>
 
   <!-- Search Fragment -->
@@ -771,7 +771,7 @@
   <!--Google Play Services-->
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
-  
+
   <!--Dark Theme-->
   <string name="settings_dark_theme_title">Theme</string>
   <string name="settings_dark_theme_dialog_title">Choose theme</string>

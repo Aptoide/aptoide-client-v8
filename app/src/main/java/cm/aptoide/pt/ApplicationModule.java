@@ -72,6 +72,7 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.OAuthModeProvider;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -1993,5 +1994,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
+  }
+
+  @Singleton @Provides ImageInfoProvider providesImageInfoProvider() {
+    return new ImageInfoProvider(application.getContentResolver());
   }
 }
