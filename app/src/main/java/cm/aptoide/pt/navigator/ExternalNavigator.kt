@@ -9,7 +9,7 @@ open class ExternalNavigator(val context: Context, val themeManager: ThemeManage
 
   fun navigateToCatappultWebsite() {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://catappult.io/", context, themeManager.getAttributeForTheme(
+        .openInChromeCustomTab("https://catappult.io/?utm_source=vanilla", context, themeManager.getAttributeForTheme(
             R.attr.colorPrimary).resourceId)
   }
 }
