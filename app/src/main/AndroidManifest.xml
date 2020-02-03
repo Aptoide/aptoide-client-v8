@@ -112,7 +112,7 @@
         android:name=".wallet.WalletInstallActivity"
         android:excludeFromRecents="true"
         android:taskAffinity=".wallet.WalletInstallActivity"
-        android:theme="@style/Aptoide.DialogTheme"
+        android:theme="@style/Aptoide.WalletDialogTheme"
         android:windowSoftInputMode="adjustPan" />
 
     <activity
