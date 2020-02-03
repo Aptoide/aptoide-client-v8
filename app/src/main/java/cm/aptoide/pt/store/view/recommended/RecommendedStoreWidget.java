@@ -43,11 +43,11 @@ public class RecommendedStoreWidget extends Widget<RecommendedStoreDisplayable> 
   }
 
   @Override protected void assignViews(View itemView) {
-    storeName = (TextView) itemView.findViewById(R.id.recommended_store_name);
-    followingUsers = (TextView) itemView.findViewById(R.id.recommended_store_users);
-    numberStoreApps = (TextView) itemView.findViewById(R.id.recommended_store_apps);
-    storeIcon = (ImageView) itemView.findViewById(R.id.store_avatar_row);
-    followButton = (AppCompatButton) itemView.findViewById(R.id.recommended_store_action);
+    storeName = itemView.findViewById(R.id.recommended_store_name);
+    followingUsers = itemView.findViewById(R.id.recommended_store_users);
+    numberStoreApps = itemView.findViewById(R.id.recommended_store_apps);
+    storeIcon = itemView.findViewById(R.id.store_avatar_row);
+    followButton = itemView.findViewById(R.id.recommended_store_action);
   }
 
   @Override public void bindView(RecommendedStoreDisplayable displayable, int position) {
