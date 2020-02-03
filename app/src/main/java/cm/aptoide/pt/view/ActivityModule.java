@@ -81,7 +81,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.themes.DarkThemeDialogManager;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -413,8 +413,8 @@ import static android.content.Context.WINDOW_SERVICE;
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
   }
 
-  @ActivityScope @Provides DarkThemeDialogManager providesDarkThemeDialogManager(
+  @ActivityScope @Provides DarkThemeNewFeatureManager providesDarkThemeDialogManager(
       @Named("default") SharedPreferences sharedPreferences, ThemeManager themeManager) {
-    return new DarkThemeDialogManager(themeManager, sharedPreferences);
+    return new DarkThemeNewFeatureManager(themeManager, sharedPreferences);
   }
 }

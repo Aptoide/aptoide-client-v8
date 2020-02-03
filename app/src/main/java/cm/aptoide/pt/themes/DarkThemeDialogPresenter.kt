@@ -4,7 +4,7 @@ import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 
 class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
-                               val darkThemeDialogManager: DarkThemeDialogManager,
+                               val darkThemeNewFeatureManager: DarkThemeNewFeatureManager,
                                val themeManager: ThemeManager,
                                val themeAnalytics: ThemeAnalytics) : Presenter {
 
@@ -19,7 +19,7 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .flatMap { view.clickTurnItOn() }
         .doOnNext {
           view.dismissView()
-          darkThemeDialogManager.setDarkTheme()
+          darkThemeNewFeatureManager.setDarkTheme()
           themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark())
           themeAnalytics.sendDarkThemeDialogTurnItOnClickEvent("HomeFragment")
         }

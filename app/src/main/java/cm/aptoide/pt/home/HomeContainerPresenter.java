@@ -5,7 +5,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.themes.DarkThemeDialogManager;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -20,12 +20,12 @@ public class HomeContainerPresenter implements Presenter {
   private final HomeAnalytics homeAnalytics;
   private final Home home;
   private final ChipManager chipManager;
-  private final DarkThemeDialogManager darkThemeDialogManager;
+  private final DarkThemeNewFeatureManager darkThemeNewFeatureManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
       HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeDialogManager darkThemeDialogManager) {
+      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.accountManager = accountManager;
@@ -34,7 +34,7 @@ public class HomeContainerPresenter implements Presenter {
     this.homeAnalytics = homeAnalytics;
     this.home = home;
     this.chipManager = chipManager;
-    this.darkThemeDialogManager = darkThemeDialogManager;
+    this.darkThemeNewFeatureManager = darkThemeNewFeatureManager;
   }
 
   @Override public void present() {
@@ -59,8 +59,8 @@ public class HomeContainerPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> {
-          if (darkThemeDialogManager.shouldShowDarkThemeDialog()) {
-            darkThemeDialogManager.setDarkThemeDialogAsShown();
+          if (darkThemeNewFeatureManager.shouldShowDarkThemeFeature()) {
+            darkThemeNewFeatureManager.setDarkThemeFeatureAsShown();
             homeContainerNavigator.showDarkThemeDialog();
           }
         })

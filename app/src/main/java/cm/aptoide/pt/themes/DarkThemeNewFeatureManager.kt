@@ -3,8 +3,8 @@ package cm.aptoide.pt.themes
 import android.content.SharedPreferences
 import android.os.Build
 
-open class DarkThemeDialogManager(val themeManager: ThemeManager,
-                                  val preferences: SharedPreferences) {
+open class DarkThemeNewFeatureManager(val themeManager: ThemeManager,
+                                      val preferences: SharedPreferences) {
 
   companion object {
     const val SHOULD_SHOW_DARKTHEME_DIALOG = "should_show_dark_theme_dialog"
@@ -15,11 +15,11 @@ open class DarkThemeDialogManager(val themeManager: ThemeManager,
     themeManager.resetToBaseTheme()
   }
 
-  fun setDarkThemeDialogAsShown() {
+  fun setDarkThemeFeatureAsShown() {
     preferences.edit().putBoolean(SHOULD_SHOW_DARKTHEME_DIALOG, false).apply()
   }
 
-  open fun shouldShowDarkThemeDialog(): Boolean {
+  open fun shouldShowDarkThemeFeature(): Boolean {
     return preferences.getBoolean(SHOULD_SHOW_DARKTHEME_DIALOG, true)
         && ((Build.VERSION.SDK_INT >= 29
         && !themeManager.isThemeDark()
