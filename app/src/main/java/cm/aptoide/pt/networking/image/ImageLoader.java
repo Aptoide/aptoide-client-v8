@@ -107,9 +107,8 @@ public class ImageLoader {
             with(context)
             .asBitmap()
             .load(uri)
-            .apply(getRequestOptions())
-            .into(-1, -1). // full size
-            get();
+            .submit()
+            .get();
       } catch (InterruptedException e) {
         e.printStackTrace();
       } catch (ExecutionException e) {
@@ -418,8 +417,7 @@ public class ImageLoader {
             with(context)
             .asBitmap()
             .load(apkIconPath)
-            .apply(getRequestOptions())
-            .into(-1, -1) // full size
+            .submit()
             .get();
       } catch (InterruptedException e) {
         e.printStackTrace();

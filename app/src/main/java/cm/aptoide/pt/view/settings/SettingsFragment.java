@@ -251,36 +251,34 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   private void setupAppTheme() {
     Preference appThemePreference = findPreference(APP_THEME_PREFERENCE_KEY);
-    appThemePreference.setSummary(themeManager.getThemeOption()
-        .toString());
+    appThemePreference.setSummary(getThemeString(themeManager.getThemeOption()));
 
     ThemeManager.ThemeOption[] options = ThemeManager.ThemeOption.values();
     int selectedItem = 0;
     ThemeManager.ThemeOption currentThemeOption = themeManager.getThemeOption();
-    CharSequence[] optionsS = new CharSequence[options.length];
+    CharSequence[] themeOptionsText = new CharSequence[options.length];
     for (int i = 0; i < options.length; i++) {
       if (options[i].equals(currentThemeOption)) {
         selectedItem = i;
       }
-      optionsS[i] = options[i].name();
+      themeOptionsText[i] = getThemeString(options[i]);
     }
 
-    //TODO: Replace with correct id
-    appThemeDialog =
-        new RxAlertDialog.Builder(getContext(), themeManager).setTitleSmall(R.string.are_you_adult)
-            .setSingleChoiceItems(optionsS, selectedItem)
-            .setPositiveButton(R.string.all_button_ok)
-            .setNegativeButton(R.string.cancel)
-            .build();
+    appThemeDialog = new RxAlertDialog.Builder(getContext(), themeManager).setTitleSmall(
+        R.string.settings_dark_theme_dialog_title)
+        .setSingleChoiceItems(themeOptionsText, selectedItem)
+        .setPositiveButton(R.string.all_button_ok)
+        .setNegativeButton(R.string.cancel)
+        .build();
 
     subscriptions.add(RxPreference.clicks(appThemePreference)
         .doOnNext(preference -> appThemeDialog.show())
         .subscribe());
 
     subscriptions.add(appThemeDialog.positiveClicks()
-        .doOnNext(__ -> appThemePreference.setSummary(optionsS[appThemeDialog.getCheckedItem()]))
         .map(__ -> options[appThemeDialog.getCheckedItem()])
         .doOnNext(themeVariant -> {
+          appThemePreference.setSummary(themeOptionsText[appThemeDialog.getCheckedItem()]);
           themeManager.setThemeOption(themeVariant);
           themeManager.resetToBaseTheme();
           themeAnalytics.sendThemeChangedEvent(themeVariant, TAG);
@@ -288,6 +286,18 @@ public class SettingsFragment extends PreferenceFragmentCompat
         })
         .retry()
         .subscribe());
+  }
+
+  private String getThemeString(ThemeManager.ThemeOption themeOption) {
+    switch (themeOption) {
+      case DARK:
+        return getString(R.string.settings_dark_theme_dark);
+      case LIGHT:
+        return getString(R.string.settings_dark_theme_light);
+      case SYSTEM_DEFAULT:
+      default:
+        return getString(R.string.settings_dark_theme_system);
+    }
   }
 
   private void setAdultContentContent() {

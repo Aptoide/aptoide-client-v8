@@ -9,7 +9,7 @@
       android:id="@+id/icon"
       android:layout_width="45dp"
       android:layout_height="45dp"
-      tools:src="@mipmap/ic_launcher"
+      tools:src="@drawable/ad_icon"
       />
 
   <LinearLayout
@@ -19,43 +19,43 @@
       >
     <TextView
         android:id="@+id/title"
+        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
-        android:textColor="@color/black"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         tools:text="teste"
         />
 
     <TextView
         android:id="@+id/description"
+        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
         android:autoLink="all"
         android:scrollbars="vertical"
-        android:textColor="@color/dark_gray"
         tools:text="description"
         />
 
     <TextView
         android:id="@+id/app_name"
+        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginStart="10dp"
-        android:textColor="@color/dark_gray"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
         tools:text="app name"
         />
 
@@ -63,8 +63,8 @@
         android:id="@+id/push_notification_graphic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         tools:src="@drawable/no_connection_error"
         />
 
