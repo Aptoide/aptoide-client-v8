@@ -310,7 +310,6 @@ public class MyAccountFragment extends BackButtonFragment
     }
     if (!TextUtils.isEmpty(account.getAvatar())) {
       String userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, myAccountAvatar, STROKE_SIZE,
               R.attr.placeholder_myaccount);

@@ -71,7 +71,7 @@ public class ImagePickerPresenterTest {
     presenter =
         new ImagePickerPresenter(userView, crashReport, permissionProvider, photoFileGenerator,
             imageValidator, Schedulers.immediate(), uriToPathResolver, navigator, contentResolver,
-            imageLoader);
+            imageLoader, Schedulers.immediate());
 
     when(userView.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
