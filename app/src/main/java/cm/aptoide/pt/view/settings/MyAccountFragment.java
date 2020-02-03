@@ -315,7 +315,6 @@ public class MyAccountFragment extends BackButtonFragment
     }
     if (!TextUtils.isEmpty(account.getAvatar())) {
       String userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, myAccountAvatar, STROKE_SIZE,
               R.drawable.my_account_placeholder);
@@ -337,27 +336,27 @@ public class MyAccountFragment extends BackButtonFragment
     accountView = view.findViewById(R.id.account_displayables);
     loginView = view.findViewById(R.id.login_register_container);
 
-    myAccountAvatar = (ImageView) myProfileView.findViewById(R.id.user_icon);
-    myAccountName = (TextView) myProfileView.findViewById(R.id.description);
-    myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
-    myStoreName = (TextView) myStoreView.findViewById(R.id.description);
+    myAccountAvatar = myProfileView.findViewById(R.id.user_icon);
+    myAccountName = myProfileView.findViewById(R.id.description);
+    myStoreAvatar = myStoreView.findViewById(R.id.user_icon);
+    myStoreName = myStoreView.findViewById(R.id.description);
 
-    TextView myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
+    TextView myStoreTitle = myStoreView.findViewById(R.id.name);
     myStoreTitle.setText(R.string.newaccount_my_store);
 
-    TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
+    TextView myAccountTitle = myProfileView.findViewById(R.id.name);
     myAccountTitle.setText(R.string.newaccount_my_profile);
 
-    loginButton = (Button) view.findViewById(R.id.login_button);
-    logoutButton = (Button) view.findViewById(R.id.logout_button);
-    createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
-    createStoreButton = (Button) view.findViewById(R.id.create_store_button);
-    editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
-    editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+    loginButton = view.findViewById(R.id.login_button);
+    logoutButton = view.findViewById(R.id.logout_button);
+    createStoreMessage = view.findViewById(R.id.create_store_message);
+    createStoreButton = view.findViewById(R.id.create_store_button);
+    editStoreButton = myStoreView.findViewById(R.id.edit_button);
+    editProfileButton = myProfileView.findViewById(R.id.edit_button);
 
-    aptoideTvCardView = (CardView) view.findViewById(R.id.product_aptoideTv_cardview);
-    aptoideUploaderCardView = (CardView) view.findViewById(R.id.product_uploader_cardview);
-    aptoideBackupAppsCardView = (CardView) view.findViewById(R.id.product_backup_cardview);
+    aptoideTvCardView = view.findViewById(R.id.product_aptoideTv_cardview);
+    aptoideUploaderCardView = view.findViewById(R.id.product_uploader_cardview);
+    aptoideBackupAppsCardView = view.findViewById(R.id.product_backup_cardview);
   }
 
   private void setupToolbar() {
