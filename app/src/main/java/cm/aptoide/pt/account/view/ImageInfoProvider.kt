@@ -22,13 +22,14 @@ class ImageInfoProvider(private val contentResolver: ContentResolver) {
     if (uri?.scheme.equals(ContentResolver.SCHEME_CONTENT)) {
       val cursor = contentResolver.query(uri, projection, null, null, null)
 
-      cursor?.let { c ->
+      cursor?.let { imageCursor ->
         try {
           cursor.moveToFirst()
 
-          val width = c.getInt(c.getColumnIndex(MediaStore.Images.Media.WIDTH))
-          val height = c.getInt(c.getColumnIndex(MediaStore.Images.Media.HEIGHT))
-          val size = c.getLong(c.getColumnIndex(MediaStore.Images.Media.SIZE))
+          val width = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
+          val height =
+              imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
+          val size = imageCursor.getLong(imageCursor.getColumnIndex(MediaStore.Images.Media.SIZE))
 
           cursor.close()
 

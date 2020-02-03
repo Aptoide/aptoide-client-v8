@@ -32,25 +32,23 @@ open class ImageValidator(private val scheduler: Scheduler,
   private fun validate(imagePath: String) {
     val imageInfo = getInfo(imagePath)
     val errors: MutableList<ImageError> = ArrayList()
-    if (imageInfo == null) {
-      errors.add(ImageError.ERROR_DECODING)
-    } else {
-      if (imageInfo.height < MIN_IMAGE_HEIGHT) {
-        errors.add(ImageError.MIN_HEIGHT)
-      }
-      if (imageInfo.width < MIN_IMAGE_WIDTH) {
-        errors.add(ImageError.MIN_WIDTH)
-      }
-      if (imageInfo.height > MAX_IMAGE_HEIGHT) {
-        errors.add(ImageError.MAX_HEIGHT)
-      }
-      if (imageInfo.width > MAX_IMAGE_WIDTH) {
-        errors.add(ImageError.MAX_WIDTH)
-      }
-      if (imageInfo.size > MAX_IMAGE_SIZE_IN_BYTES) {
-        errors.add(ImageError.MAX_IMAGE_SIZE)
-      }
+
+    if (imageInfo.height < MIN_IMAGE_HEIGHT) {
+      errors.add(ImageError.MIN_HEIGHT)
+    } else if (imageInfo.height > MAX_IMAGE_HEIGHT) {
+      errors.add(ImageError.MAX_HEIGHT)
     }
+
+    if (imageInfo.width < MIN_IMAGE_WIDTH) {
+      errors.add(ImageError.MIN_WIDTH)
+    } else if (imageInfo.width > MAX_IMAGE_WIDTH) {
+      errors.add(ImageError.MAX_WIDTH)
+    }
+
+    if (imageInfo.size > MAX_IMAGE_SIZE_IN_BYTES) {
+      errors.add(ImageError.MAX_IMAGE_SIZE)
+    }
+
     if (!errors.isEmpty()) {
       throw InvalidImageException(errors)
     }
