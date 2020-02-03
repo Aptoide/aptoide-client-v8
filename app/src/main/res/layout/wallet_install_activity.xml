@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
@@ -68,7 +67,7 @@
       app:layout_constraintTop_toBottomOf="@+id/app_icon_imageview"
       tools:text="@string/wallet_install_request_message_body"
       tools:visibility="visible"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
       />
 
   <TextView
@@ -82,7 +81,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/message_textview"
       tools:text="Just tap to buy again"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
       />
 
   <Button
@@ -139,7 +138,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/appc_image"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
       />
 
   <include
