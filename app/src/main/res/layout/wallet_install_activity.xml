@@ -53,7 +53,7 @@
 
   <TextView
       android:id="@+id/message_textview"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"
@@ -72,7 +72,7 @@
 
   <TextView
       android:id="@+id/install_complete_message"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
@@ -124,7 +124,7 @@
 
   <TextView
       android:id="@+id/error_message_textview"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha.Force"
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="29dp"

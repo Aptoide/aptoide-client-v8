@@ -22,7 +22,7 @@
       />
   <TextView
       android:id="@+id/wallet_download_download_state"
-      style="@style/Aptoide.TextView.Medium.XS.Grey.Force"
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:ellipsize="end"
@@ -33,7 +33,7 @@
       />
   <TextView
       android:id="@+id/wallet_download_progress_number"
-      style="@style/Aptoide.TextView.Medium.XS.Grey.Force"
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
