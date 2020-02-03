@@ -1,9 +1,12 @@
 package cm.aptoide.pt.account.view
 
 import android.content.ContentResolver
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import cm.aptoide.pt.logger.Logger
+import java.io.File
+
 
 class ImageInfoProvider(private val contentResolver: ContentResolver) {
 
@@ -14,22 +17,40 @@ class ImageInfoProvider(private val contentResolver: ContentResolver) {
     val projection = arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.Media.HEIGHT,
         MediaStore.Images.Media.WIDTH, MediaStore.Images.Media.SIZE)
 
-    val cursor = contentResolver.query(Uri.parse(imagePath), projection, null, null, null)
+    val uri = Uri.parse(imagePath)
 
-    cursor?.let { c ->
+    if (uri?.scheme.equals(ContentResolver.SCHEME_CONTENT)) {
+      val cursor = contentResolver.query(uri, projection, null, null, null)
+
+      cursor?.let { c ->
+        try {
+          cursor.moveToFirst()
+
+          val width = c.getInt(c.getColumnIndex(MediaStore.Images.Media.WIDTH))
+          val height = c.getInt(c.getColumnIndex(MediaStore.Images.Media.HEIGHT))
+          val size = c.getLong(c.getColumnIndex(MediaStore.Images.Media.SIZE))
+
+          cursor.close()
+
+          return ImageInfo(height, width, size)
+
+        } catch (exception: Exception) {
+          Logger.getInstance().e(TAG, exception)
+        }
+      }
+    } else if (uri?.scheme.equals(ContentResolver.SCHEME_FILE)) {
       try {
-        cursor.moveToFirst()
+        val file = File(imagePath)
 
-        val width = c.getInt(c.getColumnIndex(MediaStore.Images.Media.WIDTH))
-        val height = c.getInt(c.getColumnIndex(MediaStore.Images.Media.HEIGHT))
-        val size = c.getLong(c.getColumnIndex(MediaStore.Images.Media.SIZE))
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(file.absolutePath, options)
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
 
-        cursor.close()
-
-        return ImageInfo(height, width, size)
-
+        return ImageInfo(imageHeight, imageWidth, file.length())
       } catch (exception: Exception) {
-        Logger.getInstance().e(TAG, exception)
+        exception.printStackTrace()
       }
     }
     return null

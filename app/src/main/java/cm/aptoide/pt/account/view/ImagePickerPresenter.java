@@ -72,6 +72,7 @@ public class ImagePickerPresenter implements Presenter {
   @NonNull private Single<String> getFileNameFromCameraWithUri(String createdUri) {
     return navigator.navigateToCameraWithImageUri(CAMERA_PICK, Uri.parse(createdUri))
         .first()
+        .observeOn(ioScheduler)
         .flatMapSingle(__ -> saveCameraPictureInPublicPhotos(createdUri))
         .toSingle();
   }
@@ -85,10 +86,10 @@ public class ImagePickerPresenter implements Presenter {
       String path = MediaStore.Images.Media.insertImage(contentResolver, image,
           createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
       image.recycle();
-      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
+      return Single.just(path)
           .subscribeOn(ioScheduler);
     } else {
-      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
+      return Single.just(createdUri)
           .subscribeOn(ioScheduler);
     }
   }
