@@ -21,8 +21,8 @@
         app:title="@string/settings_beta_filter_setting_title" />
     <Preference
         app:key="appTheme"
-        app:summary="System default"
-        app:title="App theme" />
+        app:summary="@string/settings_dark_theme_system"
+        app:title="@string/settings_dark_theme_title" />
   </PreferenceCategory>
   <PreferenceCategory app:title="@string/updates">
     <SwitchPreferenceCompat

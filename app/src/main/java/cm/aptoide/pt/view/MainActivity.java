@@ -111,7 +111,7 @@ public class MainActivity extends BottomNavigationActivity
 
     updatesBadge = LayoutInflater.from(this)
         .inflate(R.layout.updates_badge, appsView, false);
-    updatesNumber = (TextView) updatesBadge.findViewById(R.id.updates_badge);
+    updatesNumber = updatesBadge.findViewById(R.id.updates_badge);
     appsItemView.addView(updatesBadge);
     appsItemView.setVisibility(View.VISIBLE);
   }

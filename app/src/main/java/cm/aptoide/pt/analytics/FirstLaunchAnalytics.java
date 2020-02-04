@@ -14,7 +14,6 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.safetynet.HarmfulAppsData;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.safetynet.SafetyNetClient;
-import io.rakam.api.Identify;
 import io.rakam.api.Rakam;
 import java.io.IOException;
 import java.io.InputStream;
@@ -330,19 +329,23 @@ public class FirstLaunchAnalytics {
 
   private void sendRakamUserProperties(String utmContent, String utmSource, String utmCampaign,
       String utmMedium, String entryPoint, String packageName) {
-    Identify rakamProperties = new Identify();
-
-    rakamProperties.set(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
-
-    rakamProperties.set(UTM_CONTENT_RAKAM, utmContent)
-        .set(UTM_SOURCE_RAKAM, utmSource)
-        .set(UTM_CAMPAIGN_RAKAM, utmCampaign)
-        .set(UTM_MEDIUM_RAKAM, utmMedium)
-        .set(ENTRY_POINT_RAKAM, entryPoint);
-
-    rakamProperties.set(APTOIDE_PACKAGE, packageName);
-
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
+    try {
+      superProperties.put(GMS_RAKAM, gmsStatusValueProvider.getGmsValue());
+      superProperties.put(UTM_CONTENT_RAKAM, utmContent);
+      superProperties.put(UTM_SOURCE_RAKAM, utmSource);
+      superProperties.put(UTM_CAMPAIGN_RAKAM, utmCampaign);
+      superProperties.put(UTM_MEDIUM_RAKAM, utmMedium);
+      superProperties.put(ENTRY_POINT_RAKAM, entryPoint);
+      superProperties.put(APTOIDE_PACKAGE, packageName);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
     Rakam.getInstance()
-        .identify(rakamProperties);
+        .setSuperProperties(superProperties);
   }
 }
