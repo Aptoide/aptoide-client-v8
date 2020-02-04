@@ -8,7 +8,7 @@ public interface LocalNotificationSyncPersistence {
 
   void save(LocalNotificationSync notification);
 
-  Observable<Sync> get();
+  Observable<Sync> get(String id);
 
   void remove(String id);
 }

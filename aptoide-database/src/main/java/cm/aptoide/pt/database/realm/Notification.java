@@ -29,11 +29,12 @@ public class Notification extends RealmObject {
   private String graphic;
   private String ownerId;
   private boolean processed;
+  private int actionStringRes;
 
   public Notification(Long expire, String abTestingGroup, String body, int campaignId, String img,
       String lang, String title, String url, String urlTrack, String notificationCenterUrlTrack,
       long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId,
-      boolean processed) {
+      boolean processed, int actionStringRes) {
     this.expire = expire;
     this.body = body;
     this.img = img;
@@ -51,6 +52,7 @@ public class Notification extends RealmObject {
     this.graphic = graphic;
     this.ownerId = ownerId;
     this.processed = processed;
+    this.actionStringRes = actionStringRes;
     key = String.valueOf(timeStamp + type);
   }
 
@@ -137,4 +139,9 @@ public class Notification extends RealmObject {
   public boolean isProcessed() {
     return processed;
   }
+
+  public int getActionStringRes() {
+    return actionStringRes;
+  }
+
 }

@@ -21,6 +21,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
@@ -39,6 +40,7 @@ public class MainActivity extends BottomNavigationActivity
   @Inject Presenter presenter;
   @Inject Resources resources;
   @Inject MarketResourceFormatter marketResourceFormatter;
+  @Inject NewFeatureManager newFeatureManager;
   private InstallManager installManager;
   private View snackBarLayout;
   private PublishRelay<Void> installErrorsDismissEvent;
@@ -57,6 +59,7 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
+    newFeatureManager.scheduleNotification();
 
     setupUpdatesNotification();
 

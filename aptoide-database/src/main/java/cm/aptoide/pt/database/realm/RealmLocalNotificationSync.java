@@ -14,10 +14,11 @@ public class RealmLocalNotificationSync extends RealmObject {
   private String navigationUrl;
   private long trigger;
   private String id;
+  private int actionStringRes;
+  private int type;
 
   public RealmLocalNotificationSync(String notificationId, String title, String body, String image,
-      String navigationUrl, long trigger, String id) {
-
+      int actionStringRes, String navigationUrl, long trigger, String id, int type) {
     this.notificationId = notificationId;
     this.title = title;
     this.body = body;
@@ -25,6 +26,8 @@ public class RealmLocalNotificationSync extends RealmObject {
     this.navigationUrl = navigationUrl;
     this.trigger = trigger;
     this.id = id;
+    this.actionStringRes = actionStringRes;
+    this.type = type;
   }
 
   public RealmLocalNotificationSync() {
@@ -57,5 +60,13 @@ public class RealmLocalNotificationSync extends RealmObject {
 
   public String getId() {
     return id;
+  }
+
+  public int getActionStringRes() {
+    return actionStringRes;
+  }
+
+  public int getType() {
+    return type;
   }
 }

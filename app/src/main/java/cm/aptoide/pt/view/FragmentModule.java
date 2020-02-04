@@ -152,9 +152,9 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
 import cm.aptoide.pt.themes.DarkThemeDialogView;
+import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
@@ -537,10 +537,10 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
       HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
+      NewFeatureManager newFeatureManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        darkThemeNewFeatureManager);
+        newFeatureManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -625,9 +625,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
-      DarkThemeNewFeatureManager darkThemeNewFeatureManager, ThemeManager themeManager,
+      NewFeatureManager newFeatureManager, ThemeManager themeManager,
       ThemeAnalytics themeAnalytics) {
-    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, darkThemeNewFeatureManager,
+    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, newFeatureManager,
         themeManager, themeAnalytics);
   }
 }

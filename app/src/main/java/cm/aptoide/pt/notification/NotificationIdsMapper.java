@@ -19,6 +19,8 @@ public class NotificationIdsMapper {
         return 2;
       case AptoideNotification.APPC_PROMOTION:
         return 3;
+      case AptoideNotification.NEW_FEATURE:
+        return 4;
       default:
         throw new IllegalArgumentException("unknown notification type " + notificationType);
     }
@@ -43,6 +45,10 @@ public class NotificationIdsMapper {
       case 3:
         return new Integer[] {
             AptoideNotification.APPC_PROMOTION
+        };
+      case 4:
+        return new Integer[] {
+            AptoideNotification.NEW_FEATURE
         };
       default:
         throw new IllegalArgumentException("unknown notification notificationId " + notificationId);

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -78,7 +79,8 @@ public class SystemNotificationShower implements Presenter {
         .flatMapCompletable(aptoideNotification -> {
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
-          if (aptoideNotification.getType() != AptoideNotification.APPC_PROMOTION) {
+          if (aptoideNotification.getType() != AptoideNotification.APPC_PROMOTION
+              && aptoideNotification.getType() != AptoideNotification.NEW_FEATURE) {
             notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
                 aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
                 aptoideNotification.getUrl());
@@ -91,6 +93,7 @@ public class SystemNotificationShower implements Presenter {
                 .toCompletable();
           }
         })
+        .retry()
         .subscribe(notification -> {
         }, throwable -> crashReport.log(throwable)));
   }
@@ -108,10 +111,17 @@ public class SystemNotificationShower implements Presenter {
   private Single<Notification> mapLocalToAndroidNotification(
       AptoideNotification aptoideNotification, int notificationId) {
     return getPressIntentAction(aptoideNotification.getUrlTrack(), aptoideNotification.getUrl(),
-        notificationId, context).flatMap(
-        pressIntentAction -> buildLocalNotification(context, aptoideNotification.getTitle(),
+        notificationId, context).flatMap(pressIntentAction -> {
+      if (aptoideNotification.getType() == AptoideNotification.NEW_FEATURE) {
+        return buildNewFeatureNotification(context, aptoideNotification.getTitle(),
+            aptoideNotification.getBody(), aptoideNotification.getActionStringRes(),
+            pressIntentAction, getOnDismissAction(notificationId));
+      } else {
+        return buildLocalNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
-            getOnDismissAction(notificationId)));
+            getOnDismissAction(notificationId));
+      }
+    });
   }
 
   private Single<PendingIntent> getPressIntentAction(String trackUrl, String url,
@@ -157,6 +167,31 @@ public class SystemNotificationShower implements Presenter {
                   .load(iconUrl)
                   .submit()
                   .get())
+              .build();
+      notification.flags =
+          android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
+      return notification;
+    })
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  @NonNull private Single<Notification> buildNewFeatureNotification(Context context, String title,
+      String body, @StringRes int actionButtonString, PendingIntent pressIntentAction,
+      PendingIntent onDismissAction) {
+
+    return Single.fromCallable(() -> {
+      Notification notification =
+          new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
+              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setColor(ContextCompat.getColor(context, R.color.default_orange_gradient_end))
+              .setContentTitle(title)
+              .setContentText(body)
+              .addAction(0, context.getResources()
+                      .getString(R.string.promo_update2appc_notification_dismiss_button),
+                  onDismissAction)
+              .addAction(0, context.getResources()
+                  .getString(actionButtonString), pressIntentAction)
               .build();
       notification.flags =
           android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
@@ -304,7 +339,8 @@ public class SystemNotificationShower implements Presenter {
         .flatMapSingle(notificationInfo -> notificationProvider.getLastShowed(
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> {
-              if (notification.getType() != AptoideNotification.APPC_PROMOTION) {
+              if (notification.getType() != AptoideNotification.APPC_PROMOTION
+                  && notification.getType() != AptoideNotification.NEW_FEATURE) {
                 notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
                     notification.getAbTestingGroup(), notification.getCampaignId(),
                     notification.getUrl());

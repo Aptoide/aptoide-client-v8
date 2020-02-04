@@ -68,7 +68,7 @@ public class NotificationService {
               graphic, AptoideNotification.NOT_DISMISSED, id, notification.getUrlTrack(),
               notification.getUrlTrackNc(), false, System.currentTimeMillis(),
               notification.getExpire(), notification.getAbTestingGroup(),
-              notification.getCampaignId(), notification.getLang()));
+              notification.getCampaignId(), notification.getLang(), -1));
     }
     return aptoideNotifications;
   }
