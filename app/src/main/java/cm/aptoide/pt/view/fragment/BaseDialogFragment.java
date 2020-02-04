@@ -27,7 +27,7 @@ public class BaseDialogFragment extends RxDialogFragment {
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
 
-    if (this.getActivity() != null) {
+    if (this.getActivity() != null && shouldUseDefaultDialogStyle()) {
       setStyle(DialogFragment.STYLE_NO_TITLE,
           themeManager.getAttributeForTheme(getDialogStyle()).resourceId);
     }
@@ -46,6 +46,10 @@ public class BaseDialogFragment extends RxDialogFragment {
 
   public @AttrRes int getDialogStyle() {
     return R.attr.dialogsTheme;
+  }
+
+  public boolean shouldUseDefaultDialogStyle() {
+    return true;
   }
 
   public FragmentComponent getFragmentComponent(Bundle savedInstanceState) {
