@@ -84,7 +84,7 @@
   </style>
 
   <style name="AppBaseThemeDark.DialogTheme" parent="Aptoide.DialogTheme">
-    <item name="android:windowBackground">@color/grey_900</item>
+    <item name="android:background">@color/grey_900</item>
   </style>
 
   <style name="AppBaseThemeDark.DialogTheme.Rounded">

@@ -46,4 +46,8 @@ class AutoUpdateDialogFragment : BaseDialogView(), AutoUpdateDialogView {
   override fun dismissDialog() {
     dismiss()
   }
+
+  override fun shouldUseDefaultDialogStyle(): Boolean {
+    return false
+  }
 }
