@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.DrawableRes;
+import androidx.appcompat.widget.TooltipCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
@@ -71,6 +72,9 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
 
       version.setText(app.getFile()
           .getVername());
+      TooltipCompat.setTooltipText(version, app.getFile()
+          .getVername());
+      version.setOnClickListener(v -> navigateToAppView());
       setBadge(app);
       date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
           .getTimeDiffString(getContext(), app.getModified()
@@ -157,6 +161,10 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void onClick(View v) {
+    navigateToAppView();
+  }
+
+  private void navigateToAppView() {
     Logger.getInstance()
         .d(TAG, "showing other version for app with id = " + appId);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()
