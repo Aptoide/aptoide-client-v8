@@ -45,7 +45,6 @@ class ThemeManager(private val activity: Activity,
    * Resets the currently active theme to the default theme (set in BuildConfig on compile-time)
    */
   fun resetToBaseTheme() {
-    setDefaultNightMode(getThemeOption())
     setTheme(BuildConfig.APTOIDE_THEME)
   }
 
