@@ -10,6 +10,7 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
 
   override fun present() {
     newFeatureManager.setFeatureAsShown()
+    newFeatureManager.unscheduleNotification()
     handleDismissClick()
     handleTurnItOnClick()
   }

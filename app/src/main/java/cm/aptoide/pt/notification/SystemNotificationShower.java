@@ -25,6 +25,7 @@ import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
@@ -50,13 +51,15 @@ public class SystemNotificationShower implements Presenter {
   private NotificationApplicationView view;
   private CompositeSubscription subscriptions;
   private NewFeatureManager newFeatureManager;
+  private ThemeAnalytics themeAnalytics;
 
   public SystemNotificationShower(Context context, NotificationManager notificationManager,
       NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
       NotificationAnalytics notificationAnalytics, CrashReport crashReport,
       NotificationProvider notificationProvider,
       NotificationApplicationView notificationApplicationView, CompositeSubscription subscriptions,
-      NavigationTracker navigationTracker, NewFeatureManager newFeatureManager) {
+      NavigationTracker navigationTracker, NewFeatureManager newFeatureManager,
+      ThemeAnalytics themeAnalytics) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
@@ -68,6 +71,7 @@ public class SystemNotificationShower implements Presenter {
     view = notificationApplicationView;
     this.navigationTracker = navigationTracker;
     this.newFeatureManager = newFeatureManager;
+    this.themeAnalytics = themeAnalytics;
   }
 
   @Override public void present() {
@@ -326,7 +330,13 @@ public class SystemNotificationShower implements Presenter {
 
   private void setNotificationDismissSubscribe() {
     view.getNotificationDismissed()
-        .filter(notificationInfo -> notificationInfo.getNotificationType() < 8)
+        .filter(notificationInfo -> notificationInfo.getNotificationType() < 9)
+        .doOnNext(notificationInfo -> {
+          if (notificationIdsMapper.getNotificationType(
+              notificationInfo.getNotificationType())[0].equals(AptoideNotification.NEW_FEATURE)) {
+            themeAnalytics.sendDarkThemeDismissClickEvent("Notification");
+          }
+        })
         .doOnNext(notificationInfo -> dismissNotificationAfterAction(
             notificationInfo.getNotificationType()))
         .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
@@ -352,6 +362,9 @@ public class SystemNotificationShower implements Presenter {
                     notificationInfo.getNotificationTrackUrl(),
                     notificationInfo.getNotificationType(), notificationInfo.getNotificationUrl(),
                     notification.getCampaignId(), notification.getAbTestingGroup());
+              }
+              if (notification.getType() == AptoideNotification.NEW_FEATURE) {
+                themeAnalytics.sendDarkThemeDialogTurnItOnClickEvent("Notification");
               }
             })
             .doOnSuccess(notification -> navigationTracker.registerScreen(

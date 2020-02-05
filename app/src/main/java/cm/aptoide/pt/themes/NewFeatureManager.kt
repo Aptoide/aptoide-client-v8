@@ -28,7 +28,6 @@ class NewFeatureManager(val preferences: SharedPreferences,
 
   fun setFeatureAsShown() {
     preferences.edit().putBoolean(HAS_SHOWN_FEATURE + newFeature.id, true).apply()
-    localNotificationSyncManager.unschedule(LocalNotificationSync.NEW_FEATURE)
   }
 
   fun hasShownFeature(): Boolean {
