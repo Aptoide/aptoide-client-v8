@@ -61,6 +61,7 @@
       android:layout_marginRight="16dp"
       android:text="@string/dark_theme_notification_button"
       android:textColor="@color/black"
+      android:background="@drawable/aptoide_rounded_dark"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/dismissButton"
       app:layout_constraintTop_toTopOf="@+id/dismissButton"
