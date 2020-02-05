@@ -19,7 +19,7 @@ class NewFeatureManager(val preferences: SharedPreferences,
     if (shouldShowFeature()) {
       val action = "turn_it_on"
       localNotificationSyncManager.schedule(getFeatureTitle(), getFeatureDescription(), "",
-          R.string.action,
+          R.string.dark_theme_notification_button,
           "aptoidefeature://id=${getFeatureId()}&action=$action", LocalNotificationSync.NEW_FEATURE,
           AptoideNotification.NEW_FEATURE)
     } else {
