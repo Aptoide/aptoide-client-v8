@@ -27,6 +27,8 @@ public class BaseBottomSheetDialogView extends BaseBottomSheetDialogFragment imp
     switch (event) {
       case ATTACH:
       case CREATE:
+      case DETACH:
+      case DESTROY:
         return Observable.empty();
       case CREATE_VIEW:
         return Observable.just(cm.aptoide.pt.presenter.View.LifecycleEvent.CREATE);
@@ -40,9 +42,6 @@ public class BaseBottomSheetDialogView extends BaseBottomSheetDialogFragment imp
         return Observable.just(cm.aptoide.pt.presenter.View.LifecycleEvent.STOP);
       case DESTROY_VIEW:
         return Observable.just(cm.aptoide.pt.presenter.View.LifecycleEvent.DESTROY);
-      case DETACH:
-      case DESTROY:
-        return Observable.empty();
       default:
         throw new IllegalStateException("Unrecognized event: " + event.name());
     }

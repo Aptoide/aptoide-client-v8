@@ -5,18 +5,15 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.FlavourFragmentModule;
-import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.FragmentComponent;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.MainActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.trello.rxlifecycle.components.support.RxAppCompatDialogFragment;
-import javax.inject.Inject;
 
 public class BaseBottomSheetDialogFragment extends RxAppCompatDialogFragment {
 
-  @Inject ThemeManager themeManager;
   private FragmentComponent fragmentComponent;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
