@@ -250,6 +250,7 @@ import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
+import cm.aptoide.pt.util.StringProvider;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -2003,5 +2004,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager) {
     return new ThemeAnalytics(analyticsManager);
+  }
+
+  @Singleton @Provides StringProvider providesStringProvider() {
+    return new StringProvider(application);
   }
 }

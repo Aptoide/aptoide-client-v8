@@ -6,10 +6,12 @@ import cm.aptoide.pt.R
 import cm.aptoide.pt.notification.AptoideNotification
 import cm.aptoide.pt.notification.sync.LocalNotificationSync
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager
+import cm.aptoide.pt.util.StringProvider
 
 class NewFeatureManager(val preferences: SharedPreferences,
                         val localNotificationSyncManager: LocalNotificationSyncManager,
-                        val themeManager: ThemeManager) {
+                        val themeManager: ThemeManager,
+                        val stringProvider: StringProvider) {
 
   companion object {
     const val HAS_SHOWN_FEATURE = "has_shown_feature_"
@@ -17,14 +19,16 @@ class NewFeatureManager(val preferences: SharedPreferences,
 
   fun scheduleNotification() {
     if (shouldShowFeature()) {
-      val action = "turn_it_on"
       localNotificationSyncManager.schedule(getFeatureTitle(), getFeatureDescription(), "",
-          R.string.dark_theme_notification_button,
-          "aptoidefeature://id=${getFeatureId()}&action=$action", LocalNotificationSync.NEW_FEATURE,
+          getFeatureActionStringRes(),
+          "aptoidefeature://id=${getFeatureId()}&action=${getFeatureActionId()}",
+          LocalNotificationSync.NEW_FEATURE,
           AptoideNotification.NEW_FEATURE)
     } else {
       unscheduleNotification()
     }
+
+
   }
 
   private fun unscheduleNotification() {
@@ -42,7 +46,7 @@ class NewFeatureManager(val preferences: SharedPreferences,
 
   /**
    * To be set for each feature
-   * This shouldn't be hard coded...
+   * This shouldn't be hard coded as it is now...
    */
 
   fun shouldShowFeature(): Boolean {
@@ -58,10 +62,18 @@ class NewFeatureManager(val preferences: SharedPreferences,
   }
 
   fun getFeatureTitle(): String {
-    return "Dark Theme has arrived!"
+    return stringProvider.getString(R.string.dark_theme_notification_title)
   }
 
   fun getFeatureDescription(): String {
     return "Save energy and reduce eye strain in low light conditions."
+  }
+
+  fun getFeatureActionStringRes(): Int {
+    return R.string.dark_theme_notification_button
+  }
+
+  fun getFeatureActionId(): String {
+    return "turn_it_on"
   }
 }
