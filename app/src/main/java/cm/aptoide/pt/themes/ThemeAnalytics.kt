@@ -7,6 +7,10 @@ import java.util.*
 
 class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
 
+  companion object {
+    const val DARK_THEME_INTERACT_EVENT = "Dark_Theme_Interact"
+  }
+
   fun sendDarkThemeDialogTurnItOnClickEvent(context: String) {
     sendDarkThemeInteractEvent("turn it on", context)
   }
@@ -28,7 +32,8 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
   private fun sendDarkThemeInteractEvent(action: String, context: String) {
     val params = HashMap<String, Any>()
     params.put("action", action)
-    analyticsManager.logEvent(params, "Dark_Theme_Interact", AnalyticsManager.Action.CLICK, context)
+    analyticsManager.logEvent(params, DARK_THEME_INTERACT_EVENT, AnalyticsManager.Action.CLICK,
+        context)
   }
 
   private fun getThemeOptionName(themeOption: ThemeManager.ThemeOption): String {
