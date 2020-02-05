@@ -28,6 +28,7 @@
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
+  <string name="continue_button">CONTINUE</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -784,7 +785,5 @@
   <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
   <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
 
-    
-  
-  
+
 </resources>
