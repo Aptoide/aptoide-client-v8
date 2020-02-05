@@ -86,6 +86,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -190,6 +191,7 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
+  @Inject NewFeatureManager newFeatureManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -851,6 +853,10 @@ public abstract class AptoideApplication extends Application {
 
   public NavigationTracker getNavigationTracker() {
     return navigationTracker;
+  }
+
+  public NewFeatureManager getNewFeatureManager() {
+    return newFeatureManager;
   }
 
   public FragmentProvider createFragmentProvider() {

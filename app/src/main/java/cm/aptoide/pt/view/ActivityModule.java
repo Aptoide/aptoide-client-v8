@@ -65,7 +65,6 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
-import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
 import cm.aptoide.pt.permission.AccountPermissionProvider;
 import cm.aptoide.pt.permission.PermissionProvider;
@@ -82,6 +81,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
@@ -414,9 +414,8 @@ import static android.content.Context.WINDOW_SERVICE;
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
   }
 
-  @ActivityScope @Provides NewFeatureManager providesDarkThemeDialogManager(
-      @Named("default") SharedPreferences sharedPreferences, ThemeManager themeManager,
-      LocalNotificationSyncManager localNotificationSyncManager) {
-    return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, themeManager);
+  @ActivityScope @Provides DarkThemeNewFeatureManager providesDarkThemeDialogManager(
+      ThemeManager themeManager, NewFeatureManager newFeatureManager) {
+    return new DarkThemeNewFeatureManager(themeManager, newFeatureManager);
   }
 }

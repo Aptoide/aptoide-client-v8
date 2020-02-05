@@ -24,6 +24,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.installer.RootInstallErrorNotification;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.themes.NewFeatureManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
@@ -48,13 +49,14 @@ public class SystemNotificationShower implements Presenter {
   private NotificationProvider notificationProvider;
   private NotificationApplicationView view;
   private CompositeSubscription subscriptions;
+  private NewFeatureManager newFeatureManager;
 
   public SystemNotificationShower(Context context, NotificationManager notificationManager,
       NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
       NotificationAnalytics notificationAnalytics, CrashReport crashReport,
       NotificationProvider notificationProvider,
       NotificationApplicationView notificationApplicationView, CompositeSubscription subscriptions,
-      NavigationTracker navigationTracker) {
+      NavigationTracker navigationTracker, NewFeatureManager newFeatureManager) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
@@ -65,6 +67,7 @@ public class SystemNotificationShower implements Presenter {
     this.subscriptions = subscriptions;
     view = notificationApplicationView;
     this.navigationTracker = navigationTracker;
+    this.newFeatureManager = newFeatureManager;
   }
 
   @Override public void present() {
@@ -113,6 +116,7 @@ public class SystemNotificationShower implements Presenter {
     return getPressIntentAction(aptoideNotification.getUrlTrack(), aptoideNotification.getUrl(),
         notificationId, context).flatMap(pressIntentAction -> {
       if (aptoideNotification.getType() == AptoideNotification.NEW_FEATURE) {
+        newFeatureManager.setFeatureAsShown();
         return buildNewFeatureNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getActionStringRes(),
             pressIntentAction, getOnDismissAction(notificationId));

@@ -246,11 +246,12 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
-import cm.aptoide.pt.util.StringProvider;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -2006,7 +2007,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ThemeAnalytics(analyticsManager);
   }
 
-  @Singleton @Provides StringProvider providesStringProvider() {
-    return new StringProvider(application);
+  @Singleton @Provides NewFeature providesNewFeature() {
+    return new NewFeature("dark_theme",
+        application.getString(R.string.dark_theme_notification_title),
+        application.getString(R.string.dark_theme_notification_body), "turn_it_on",
+        R.string.dark_theme_notification_button);
+  }
+
+  @Singleton @Provides NewFeatureManager providesNewFeatureManager(
+      @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
+      LocalNotificationSyncManager localNotificationSyncManager) {
+    return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
   }
 }

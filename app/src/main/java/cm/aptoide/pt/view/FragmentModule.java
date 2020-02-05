@@ -155,6 +155,7 @@ import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
 import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
 import cm.aptoide.pt.themes.DarkThemeDialogView;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -539,10 +540,10 @@ import rx.subscriptions.CompositeSubscription;
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
       HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      NewFeatureManager newFeatureManager) {
+      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
         accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        newFeatureManager);
+        darkThemeNewFeatureManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
