@@ -2,8 +2,8 @@ package cm.aptoide.pt.themes
 
 import android.os.Build
 
-class DarkThemeNewFeatureManager(val themeManager: ThemeManager,
-                                 val newFeatureManager: NewFeatureManager) {
+open class DarkThemeNewFeatureManager(val themeManager: ThemeManager,
+                                      val newFeatureManager: NewFeatureManager) {
 
   fun scheduleNotification() {
     if (shouldShowFeature()) {
@@ -13,7 +13,7 @@ class DarkThemeNewFeatureManager(val themeManager: ThemeManager,
     }
   }
 
-  fun shouldShowFeature(): Boolean {
+  open fun shouldShowFeature(): Boolean {
     return !newFeatureManager.hasShownFeature()
         && ((Build.VERSION.SDK_INT >= 29
         && !themeManager.isThemeDark()

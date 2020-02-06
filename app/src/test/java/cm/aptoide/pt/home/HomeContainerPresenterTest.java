@@ -175,7 +175,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void gamesChipChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.GAMES));
-    when(darkThemeNewFeatureManager.shouldShowDarkThemeFeature()).thenReturn(false);
+    when(darkThemeNewFeatureManager.shouldShowFeature()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -184,7 +184,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void noChipsChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.HOME));
-    when(darkThemeNewFeatureManager.shouldShowDarkThemeFeature()).thenReturn(false);
+    when(darkThemeNewFeatureManager.shouldShowFeature()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -193,7 +193,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void appsChipChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.APPS));
-    when(darkThemeNewFeatureManager.shouldShowDarkThemeFeature()).thenReturn(false);
+    when(darkThemeNewFeatureManager.shouldShowFeature()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
