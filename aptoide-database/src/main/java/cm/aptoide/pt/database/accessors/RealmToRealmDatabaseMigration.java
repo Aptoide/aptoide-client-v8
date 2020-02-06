@@ -516,5 +516,13 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("currencySymbol", String.class);
       oldVersion++;
     }
+    if (oldVersion == 8106) {
+      schema.get("RealmLocalNotificationSync")
+          .addField("actionStringRes", int.class)
+          .addField("type", int.class);
+      schema.get("Notification")
+          .addField("actionStringRes", int.class);
+      oldVersion++;
+    }
   }
 }
