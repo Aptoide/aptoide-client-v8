@@ -99,7 +99,9 @@ public class UserAgentInterceptorV8 implements Interceptor {
         + "; "
         + aptoidePackage
         + "; "
-        + aptoideVersionCode + "; " + aptoideMd5Manager.getAptoideMd5()
+        + aptoideVersionCode
+        + "; "
+        + aptoideMd5Manager.getAptoideMd5()
         + "; "
         + myscr
         + "; ");

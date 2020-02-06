@@ -143,5 +143,4 @@ public class Notification extends RealmObject {
   public int getActionStringRes() {
     return actionStringRes;
   }
-
 }
