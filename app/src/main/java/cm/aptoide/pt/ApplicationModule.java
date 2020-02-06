@@ -246,6 +246,7 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -1850,7 +1851,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
-        AptoideApplicationAnalytics.IS_ANDROID_TV);
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1997,5 +1998,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides ImageInfoProvider providesImageInfoProvider() {
     return new ImageInfoProvider(application.getContentResolver());
+  }
+
+  @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager) {
+    return new ThemeAnalytics(analyticsManager);
   }
 }

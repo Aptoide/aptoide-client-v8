@@ -50,6 +50,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
@@ -96,6 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject SupportEmailProvider supportEmailProvider;
   @Inject ThemeManager themeManager;
+  @Inject ThemeAnalytics themeAnalytics;
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
@@ -279,6 +281,8 @@ public class SettingsFragment extends PreferenceFragmentCompat
           appThemePreference.setSummary(themeOptionsText[appThemeDialog.getCheckedItem()]);
           themeManager.setThemeOption(themeVariant);
           themeManager.resetToBaseTheme();
+          themeAnalytics.sendThemeChangedEvent(themeVariant, TAG);
+          themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
         })
         .retry()
         .subscribe());
