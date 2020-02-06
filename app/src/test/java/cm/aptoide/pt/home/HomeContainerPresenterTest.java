@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.themes.DarkThemeDialogManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ public class HomeContainerPresenterTest {
   @Mock private HomeAnalytics homeAnalytics;
   @Mock private HomeContainerNavigator homeContainerNavigator;
   @Mock private ChipManager chipManager;
+  @Mock private DarkThemeDialogManager darkThemeDialogManager;
 
   private HomeContainerPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -37,7 +39,8 @@ public class HomeContainerPresenterTest {
     lifecycleEvent = PublishSubject.create();
 
     presenter = new HomeContainerPresenter(view, Schedulers.immediate(), aptoideAccountManager,
-        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
+        homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        darkThemeDialogManager);
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.toolbarUserClick()).thenReturn(Observable.just(null));
     when(aptoideAccountManager.accountStatus()).thenReturn(Observable.just(account));
@@ -172,6 +175,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void gamesChipChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.GAMES));
+    when(darkThemeDialogManager.shouldShowDarkThemeDialog()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -180,6 +184,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void noChipsChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.HOME));
+    when(darkThemeDialogManager.shouldShowDarkThemeDialog()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
@@ -188,6 +193,7 @@ public class HomeContainerPresenterTest {
 
   @Test public void appsChipChecked_loadHomeMainContentTest() {
     when(view.isChipChecked()).thenReturn(Observable.just(HomeContainerFragment.ChipsEvents.APPS));
+    when(darkThemeDialogManager.shouldShowDarkThemeDialog()).thenReturn(false);
     presenter.loadMainHomeContent();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
