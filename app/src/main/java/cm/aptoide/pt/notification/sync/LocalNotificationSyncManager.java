@@ -6,7 +6,8 @@ import cm.aptoide.pt.sync.SyncScheduler;
 
 public class LocalNotificationSyncManager {
 
-  private static final long FIVE_MINUTES = 5 * 1000;
+  public static final long FIVE_MINUTES = 5 * 60 * 1000;
+  public static final long TWO_MINUTES = 2 * 60 * 1000;
 
   private final SyncScheduler syncScheduler;
   private final NotificationProvider provider;
@@ -20,10 +21,10 @@ public class LocalNotificationSyncManager {
   }
 
   public void schedule(String title, String body, String image, @StringRes int actionStringString,
-      String navigationUrl, String id, int type) {
+      String navigationUrl, String id, int type, long triggerTime) {
     if (enabled) {
       syncScheduler.schedule(
-          new LocalNotificationSync(provider, false, true, 0, FIVE_MINUTES, title, body, image,
+          new LocalNotificationSync(provider, false, true, 0, triggerTime, title, body, image,
               actionStringString, navigationUrl, id, type));
     }
   }

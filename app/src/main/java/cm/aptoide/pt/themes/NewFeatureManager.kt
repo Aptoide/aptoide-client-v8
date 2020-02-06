@@ -19,7 +19,7 @@ class NewFeatureManager(val preferences: SharedPreferences,
         newFeature.actionStringRes,
         "aptoidefeature://id=${newFeature.id}&action=${newFeature.actionId}",
         LocalNotificationSync.NEW_FEATURE,
-        AptoideNotification.NEW_FEATURE)
+        AptoideNotification.NEW_FEATURE, LocalNotificationSyncManager.TWO_MINUTES)
   }
 
   fun unscheduleNotification() {

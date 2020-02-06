@@ -86,6 +86,7 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.PreferencesXmlParser;
@@ -175,6 +176,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
+  @Inject NewFeature newFeature;
   @Inject NewFeatureManager newFeatureManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
@@ -859,6 +861,10 @@ public abstract class AptoideApplication extends Application {
 
   public NewFeatureManager getNewFeatureManager() {
     return newFeatureManager;
+  }
+
+  public NewFeature getNewFeature() {
+    return newFeature;
   }
 
   public ThemeAnalytics getThemeAnalytics() {
