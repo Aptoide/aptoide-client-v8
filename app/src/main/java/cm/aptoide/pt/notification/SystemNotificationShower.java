@@ -196,7 +196,7 @@ public class SystemNotificationShower implements Presenter {
               .setContentTitle(title)
               .setContentText(body)
               .addAction(0, context.getResources()
-                      .getString(R.string.promo_update2appc_notification_dismiss_button),
+                      .getString(R.string.updates_notification_dismiss_button),
                   onDismissAction)
               .addAction(0, context.getResources()
                   .getString(actionButtonString), pressIntentAction)
