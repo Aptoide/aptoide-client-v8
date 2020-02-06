@@ -21,6 +21,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -40,6 +41,7 @@ public class MainActivity extends BottomNavigationActivity
   @Inject Presenter presenter;
   @Inject Resources resources;
   @Inject MarketResourceFormatter marketResourceFormatter;
+  @Inject ThemeAnalytics themeAnalytics;
   @Inject DarkThemeNewFeatureManager darkThemeNewFeatureManager;
   private InstallManager installManager;
   private View snackBarLayout;
@@ -59,6 +61,7 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
+    themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
     darkThemeNewFeatureManager.scheduleNotification();
 
     setupUpdatesNotification();

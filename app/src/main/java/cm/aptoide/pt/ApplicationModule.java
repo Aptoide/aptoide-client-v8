@@ -1576,8 +1576,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
-        idsRepository.getUniqueIdentifier(),
-        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        idsRepository, AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
@@ -1854,7 +1853,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
-        AptoideApplicationAnalytics.IS_ANDROID_TV);
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

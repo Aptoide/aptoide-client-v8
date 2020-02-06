@@ -90,9 +90,11 @@ public class UpdateRepository {
 
   private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
       boolean bypassServerCache) {
-    return ListAppcAppsUpgradesRequest.of(idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager)
-        .observe(bypassCache, bypassServerCache)
+    return idsRepository.getUniqueIdentifier()
+        .flatMapObservable(
+            id -> ListAppcAppsUpgradesRequest.of(id, bodyInterceptor, httpClient, converterFactory,
+                tokenInvalidator, sharedPreferences, packageManager)
+                .observe(bypassCache, bypassServerCache))
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();
@@ -105,10 +107,12 @@ public class UpdateRepository {
       boolean bypassServerCache) {
     Logger.getInstance()
         .d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return ListAppsUpdatesRequest.of(storeIds, idsRepository.getUniqueIdentifier(), bodyInterceptor,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, packageManager,
-        appBundlesVisibilityManager)
-        .observe(bypassCache, bypassServerCache)
+    return idsRepository.getUniqueIdentifier()
+        .flatMapObservable(
+            id -> ListAppsUpdatesRequest.of(storeIds, id, bodyInterceptor, httpClient,
+                converterFactory, tokenInvalidator, sharedPreferences, packageManager,
+                appBundlesVisibilityManager)
+                .observe(bypassCache, bypassServerCache))
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();
