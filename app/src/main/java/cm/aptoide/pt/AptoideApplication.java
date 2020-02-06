@@ -290,6 +290,7 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
+        .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
@@ -347,6 +348,10 @@ public abstract class AptoideApplication extends Application {
 
   private Completable checkAdsUserProperty() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
+  }
+
+  private Completable setUpAdsUserProperty(){
+    return adsUserPropertyManager.setUp();
   }
 
   private Completable checkApkfyUserProperty() {
