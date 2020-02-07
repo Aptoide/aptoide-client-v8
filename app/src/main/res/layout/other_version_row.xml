@@ -3,7 +3,8 @@
   ~ Modified on 07/07/2016.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="120dp"
@@ -18,10 +19,16 @@
     >
 
   <LinearLayout
-      android:layout_width="wrap_content"
+      android:id="@+id/version"
+      android:layout_width="0dp"
       android:layout_height="match_parent"
       android:gravity="center_vertical"
       android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/store"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       tools:background="@android:color/transparent"
       >
     <LinearLayout
@@ -46,11 +53,11 @@
           android:layout_height="@dimen/other_version_icon_size_with_icon"
           android:layout_marginStart="4dp"
           android:layout_marginLeft="4dp"
-          android:ellipsize="end"
+          android:layout_weight="1"
+          android:ellipsize="middle"
           android:fontFamily="@string/font_family_regular"
           android:gravity="center_vertical"
-          android:lines="1"
-          android:maxLines="1"
+          android:singleLine="true"
           android:textStyle="bold"
           tools:text="1.00.258.985lsndakljndanalnalndalnad7"
           />
@@ -95,18 +102,17 @@
   </LinearLayout>
 
   <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      />
-
-
-  <LinearLayout
+      android:id="@+id/store"
       android:layout_width="105dp"
       android:layout_height="match_parent"
       android:gravity="center_vertical"
       android:orientation="vertical"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@id/version"
+      app:layout_constraintTop_toTopOf="parent"
       tools:background="@android:color/transparent"
+
       >
 
     <ImageView
@@ -144,4 +150,4 @@
         />
 
   </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
