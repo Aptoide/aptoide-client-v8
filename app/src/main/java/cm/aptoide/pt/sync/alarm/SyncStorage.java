@@ -24,13 +24,9 @@ public class SyncStorage {
   }
 
   public Sync get(String syncId) {
-    if (syncId.equals(LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION)) {
-      return persistence.get()
-          .toBlocking()
-          .first();
-    } else {
-      return syncs.get(syncId);
-    }
+    return persistence.get(syncId)
+        .toBlocking()
+        .first();
   }
 
   public List<Sync> getAll() {

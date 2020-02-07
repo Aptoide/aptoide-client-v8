@@ -4,13 +4,25 @@ import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 
 class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
-                               val darkThemeDialogManager: DarkThemeDialogManager,
+                               val newFeatureManager: NewFeatureManager,
                                val themeManager: ThemeManager,
                                val themeAnalytics: ThemeAnalytics) : Presenter {
 
   override fun present() {
+    handleDialogShown()
     handleDismissClick()
     handleTurnItOnClick()
+  }
+
+  private fun handleDialogShown() {
+    view.lifecycleEvent
+        .filter { e -> e == View.LifecycleEvent.RESUME }
+        .doOnNext {
+          newFeatureManager.setFeatureAsShown()
+          newFeatureManager.unscheduleNotification()
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {})
   }
 
   private fun handleTurnItOnClick() {
@@ -19,7 +31,8 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .flatMap { view.clickTurnItOn() }
         .doOnNext {
           view.dismissView()
-          darkThemeDialogManager.setDarkTheme()
+          themeManager.setThemeOption(ThemeManager.ThemeOption.DARK)
+          themeManager.resetToBaseTheme()
           themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark())
           themeAnalytics.sendDarkThemeDialogTurnItOnClickEvent("HomeFragment")
         }

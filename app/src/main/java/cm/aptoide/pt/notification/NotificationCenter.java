@@ -34,7 +34,8 @@ public class NotificationCenter {
         .flatMapIterable(notifications -> notifications)
         .filter(notification -> !notification.isProcessed())
         .flatMapSingle(notification -> {
-          if (notification.getType() != AptoideNotification.APPC_PROMOTION) {
+          if (notification.getType() != AptoideNotification.APPC_PROMOTION
+              && notification.getType() != AptoideNotification.NEW_FEATURE) {
             notificationAnalytics.sendPushNotificationReceivedEvent(notification.getType(),
                 notification.getAbTestingGroup(), notification.getCampaignId(),
                 notification.getUrl());

@@ -5,7 +5,7 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.themes.DarkThemeDialogManager;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -20,12 +20,12 @@ public class HomeContainerPresenter implements Presenter {
   private final HomeAnalytics homeAnalytics;
   private final Home home;
   private final ChipManager chipManager;
-  private final DarkThemeDialogManager darkThemeDialogManager;
+  private final DarkThemeNewFeatureManager darkThemeNewFeatureManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
       HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeDialogManager darkThemeDialogManager) {
+      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.accountManager = accountManager;
@@ -34,10 +34,11 @@ public class HomeContainerPresenter implements Presenter {
     this.homeAnalytics = homeAnalytics;
     this.home = home;
     this.chipManager = chipManager;
-    this.darkThemeDialogManager = darkThemeDialogManager;
+    this.darkThemeNewFeatureManager = darkThemeNewFeatureManager;
   }
 
   @Override public void present() {
+    loadNewFeatureDialog();
     loadMainHomeContent();
     loadUserImage();
     handleUserImageClick();
@@ -55,15 +56,24 @@ public class HomeContainerPresenter implements Presenter {
     handleBottomNavigationEvents();
   }
 
-  @VisibleForTesting public void loadMainHomeContent() {
+  private void loadNewFeatureDialog() {
     view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .doOnNext(__ -> {
-          if (darkThemeDialogManager.shouldShowDarkThemeDialog()) {
-            darkThemeDialogManager.setDarkThemeDialogAsShown();
+          if (darkThemeNewFeatureManager.shouldShowFeature()) {
             homeContainerNavigator.showDarkThemeDialog();
           }
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  @VisibleForTesting public void loadMainHomeContent() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.isChipChecked())
         .doOnNext(checked -> {
           switch (checked) {
