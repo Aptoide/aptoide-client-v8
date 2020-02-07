@@ -38,6 +38,7 @@ public class HomeContainerPresenter implements Presenter {
   }
 
   @Override public void present() {
+    loadNewFeatureDialog();
     loadMainHomeContent();
     loadUserImage();
     handleUserImageClick();
@@ -55,14 +56,24 @@ public class HomeContainerPresenter implements Presenter {
     handleBottomNavigationEvents();
   }
 
-  @VisibleForTesting public void loadMainHomeContent() {
+  private void loadNewFeatureDialog() {
     view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
         .doOnNext(__ -> {
           if (darkThemeNewFeatureManager.shouldShowFeature()) {
             homeContainerNavigator.showDarkThemeDialog();
           }
         })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> {
+          throw new OnErrorNotImplementedException(err);
+        });
+  }
+
+  @VisibleForTesting public void loadMainHomeContent() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.isChipChecked())
         .doOnNext(checked -> {
           switch (checked) {

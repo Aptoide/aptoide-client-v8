@@ -9,8 +9,20 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
                                val themeAnalytics: ThemeAnalytics) : Presenter {
 
   override fun present() {
+    handleDialogShown()
     handleDismissClick()
     handleTurnItOnClick()
+  }
+
+  private fun handleDialogShown() {
+    view.lifecycleEvent
+        .filter { e -> e == View.LifecycleEvent.RESUME }
+        .doOnNext {
+          newFeatureManager.setFeatureAsShown()
+          newFeatureManager.unscheduleNotification()
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, {})
   }
 
   private fun handleTurnItOnClick() {
@@ -18,8 +30,6 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .filter { e -> e == View.LifecycleEvent.CREATE }
         .flatMap { view.clickTurnItOn() }
         .doOnNext {
-          newFeatureManager.setFeatureAsShown()
-          newFeatureManager.unscheduleNotification()
           view.dismissView()
           themeManager.setThemeOption(ThemeManager.ThemeOption.DARK)
           themeManager.resetToBaseTheme()
@@ -35,8 +45,6 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .filter { e -> e == View.LifecycleEvent.CREATE }
         .flatMap { view.clickDismiss() }
         .doOnNext {
-          newFeatureManager.setFeatureAsShown()
-          newFeatureManager.unscheduleNotification()
           view.dismissView()
           themeAnalytics.sendDarkThemeDismissClickEvent("HomeFragment")
         }
