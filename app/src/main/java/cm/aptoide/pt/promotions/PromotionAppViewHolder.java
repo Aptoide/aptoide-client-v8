@@ -14,6 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
 
@@ -27,6 +28,7 @@ import static cm.aptoide.pt.promotions.PromotionsAdapter.UPDATE;
 public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
   private final PublishSubject<PromotionAppClick> promotionAppClick;
+  private final ThemeManager themeManager;
   private int appState;
   private TextView appName;
   private TextView appDescription;
@@ -35,7 +37,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
   private Button promotionAction;
 
   public PromotionAppViewHolder(View itemView, int appState,
-      PublishSubject<PromotionAppClick> promotionAppClick) {
+      PublishSubject<PromotionAppClick> promotionAppClick, ThemeManager themeManager) {
     super(itemView);
     this.appState = appState;
     appIcon = itemView.findViewById(R.id.app_icon);
@@ -44,6 +46,7 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
     appRewardMessage = itemView.findViewById(R.id.app_reward);
     promotionAction = itemView.findViewById(R.id.promotion_app_action_button);
     this.promotionAppClick = promotionAppClick;
+    this.themeManager = themeManager;
   }
 
   public void setApp(PromotionViewApp app, boolean isWalletInstalled) {
@@ -59,10 +62,10 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
 
       if (appState == CLAIMED) {
         lockInstallButton(true);
-        promotionAction.setBackgroundColor(itemView.getResources()
-            .getColor(R.color.grey_fog_light));
-        promotionAction.setTextColor(itemView.getResources()
-            .getColor(R.color.black));
+        promotionAction.setBackground(itemView.getResources()
+            .getDrawable(themeManager.getAttributeForTheme(R.attr.claimedButton).resourceId));
+        promotionAction.setTextColor(
+            themeManager.getAttributeForTheme(android.R.attr.textColorPrimary).data);
 
         SpannableString string = new SpannableString("  " + itemView.getResources()
             .getString(R.string.holidayspromotion_button_claimed)
@@ -92,15 +95,14 @@ public class PromotionAppViewHolder extends RecyclerView.ViewHolder {
   private void lockInstallButton(boolean lock) {
     if (lock) {
       promotionAction.setEnabled(false);
-      promotionAction.setBackgroundDrawable(itemView.getContext()
-          .getResources()
-          .getDrawable(R.drawable.card_border_fog_grey_normal));
+      promotionAction.setBackground(itemView.getResources()
+          .getDrawable(themeManager.getAttributeForTheme(R.attr.lockedButton).resourceId));
       promotionAction.setTextColor(itemView.getContext()
           .getResources()
           .getColor(R.color.grey_fog_light));
     } else {
       promotionAction.setEnabled(true);
-      promotionAction.setBackgroundDrawable(itemView.getContext()
+      promotionAction.setBackground(itemView.getContext()
           .getResources()
           .getDrawable(R.drawable.appc_gradient_rounded));
     }

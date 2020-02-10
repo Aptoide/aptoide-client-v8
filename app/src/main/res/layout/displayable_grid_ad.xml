@@ -2,15 +2,14 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="104dp"
-    android:layout_height="wrap_content"
+    android:layout_height="165dp"
     android:clickable="true"
-    android:foreground="?selectableItemBackground"
     app:cardCornerRadius="4dp"
     >
 
   <RelativeLayout
-      style="?attr/backgroundCard"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
@@ -79,7 +78,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="1dp"
           android:layout_marginLeft="1dp"
-          android:layout_marginTop="2dp"
+          android:layout_marginTop="7dp"
           android:layout_marginEnd="1dp"
           android:layout_marginRight="1dp"
           android:gravity="center_vertical"
@@ -90,7 +89,7 @@
         <ImageView
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:src="@drawable/ic_star_black"
+            android:src="?attr/ratingDrawable"
             />
 
         <TextView
@@ -122,7 +121,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="1dp"
           android:layout_marginLeft="1dp"
-          android:layout_marginTop="2dp"
+          android:layout_marginTop="7dp"
           android:layout_marginEnd="1dp"
           android:layout_marginRight="1dp"
           android:gravity="center_vertical"

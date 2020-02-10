@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/appview_latest_version_text"
-        android:textColor="@color/grey_900"
+        android:textColor="?attr/textColorGrey900"
         />
     <TextView
         android:id="@+id/latest_version"
@@ -29,7 +29,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="@color/grey_700"
         tools:text="1.7.1"
         />
   </LinearLayout>
@@ -65,7 +64,7 @@
         android:minLines="2"
         android:text="@string/appview_other_versions"
         android:textSize="12sp"
-        style="@style/Widget.Aptoide.defaultColorText"
+        style="@style/Widget.Aptoide.defaultDarkColorText"
         />
   </LinearLayout>
 </LinearLayout>

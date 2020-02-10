@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:orientation="vertical"
     >
 
@@ -32,12 +31,14 @@
         android:id="@+id/medal_icon"
         android:layout_width="98dp"
         android:layout_height="98dp"
+        android:background="@color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/dummy_header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/dummy_header"
+        tools:background="@drawable/tin_medal_gradient"
         />
     <View
         android:id="@+id/dummy_header"
@@ -49,6 +50,7 @@
 
     <TextView
         android:id="@+id/medal_title"
+        style="@style/Aptoide.TextView.Medium.L"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -59,18 +61,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/medal_icon"
         tools:text="Gold medal"
-        style="@style/Aptoide.TextView.Medium.L"
         />
 
     <TextView
         android:id="@+id/congratulations_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:gravity="center_horizontal"
         android:lines="3"
         android:maxLines="3"
@@ -91,7 +92,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/grey_fog_light"
+        android:background="?attr/storeBadgeDialogTextBackground"
         app:layout_constraintBottom_toBottomOf="@+id/uploaded_apps"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -102,12 +103,14 @@
 
     <TextView
         android:id="@+id/uploaded_apps"
+        style="@style/Aptoide.TextView.Medium.S"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginTop="34dp"
+        android:background="@color/transparent"
+        android:drawableStart="@drawable/check"
         android:drawableLeft="@drawable/check"
         android:drawablePadding="16dp"
-        android:drawableStart="@drawable/check"
         android:gravity="center_vertical"
         app:layout_constraintLeft_toRightOf="@id/tin_medal_layout"
         app:layout_constraintStart_toEndOf="@id/tin_medal_layout"
@@ -115,28 +118,28 @@
         app:layout_goneMarginLeft="48dp"
         app:layout_goneMarginStart="48dp"
         tools:text="800 Apps"
-        style="@style/Aptoide.TextView.Medium.S"
         />
     <TextView
         android:id="@+id/downloads"
+        style="@style/Aptoide.TextView.Medium.S"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:background="@color/transparent"
+        android:drawableStart="@drawable/check"
         android:drawableLeft="@drawable/check"
         android:drawablePadding="16dp"
-        android:drawableStart="@drawable/check"
         android:gravity="center_vertical"
         app:layout_constraintLeft_toLeftOf="@id/uploaded_apps"
         app:layout_constraintStart_toStartOf="@id/uploaded_apps"
         app:layout_constraintTop_toBottomOf="@id/uploaded_apps"
         tools:text="100000 Downloads"
-        style="@style/Aptoide.TextView.Medium.S"
         />
 
     <View
         android:id="@+id/followers_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/grey_fog_light"
+        android:background="?attr/storeBadgeDialogTextBackground"
         app:layout_constraintBottom_toBottomOf="@+id/followers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -147,44 +150,47 @@
 
     <TextView
         android:id="@+id/followers"
+        style="@style/Aptoide.TextView.Medium.S"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:background="@color/transparent"
+        android:drawableStart="@drawable/check"
         android:drawableLeft="@drawable/check"
         android:drawablePadding="16dp"
-        android:drawableStart="@drawable/check"
         android:gravity="center_vertical"
         app:layout_constraintLeft_toLeftOf="@id/uploaded_apps"
         app:layout_constraintStart_toStartOf="@id/uploaded_apps"
         app:layout_constraintTop_toBottomOf="@id/downloads"
         tools:text="800 Apps"
-        style="@style/Aptoide.TextView.Medium.S"
         />
 
     <TextView
         android:id="@+id/reviews"
+        style="@style/Aptoide.TextView.Medium.S"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:background="@color/transparent"
+        android:drawableStart="@drawable/check"
         android:drawableLeft="@drawable/check"
         android:drawablePadding="16dp"
-        android:drawableStart="@drawable/check"
         android:gravity="center_vertical"
         app:layout_constraintLeft_toLeftOf="@id/uploaded_apps"
         app:layout_constraintStart_toStartOf="@id/uploaded_apps"
         app:layout_constraintTop_toBottomOf="@id/followers"
         tools:text="7500 Reviews"
-        style="@style/Aptoide.TextView.Medium.S"
         />
     <TextView
         android:id="@+id/ok_button"
+        style="@style/Aptoide.TextView.Medium.S"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:minHeight="24dp"
         android:minWidth="54dp"
+        android:minHeight="24dp"
         android:text="@string/got_it_button_text"
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,7 +198,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviews"
         tools:textAllCaps="true"
-        style="@style/Aptoide.TextView.Medium.S"
         />
   </androidx.constraintlayout.widget.ConstraintLayout>
 

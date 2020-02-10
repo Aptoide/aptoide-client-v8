@@ -87,12 +87,18 @@ public class ManagerPreferences {
   }
 
   public static long getCacheLimit(SharedPreferences defaultSharedPreferences) {
-    String chacheLimit = defaultSharedPreferences.getString(ManagedKeys.MAX_FILE_CACHE, "300");
+    String cacheLimit = defaultSharedPreferences.getString(ManagedKeys.MAX_FILE_CACHE, "300");
     try {
-      return Long.parseLong(chacheLimit);
+      return Long.parseLong(cacheLimit);
     } catch (Exception e) {
       return 200;
     }
+  }
+
+  public static void setCacheLimit(int value, SharedPreferences sharedPreferences) {
+    sharedPreferences.edit()
+        .putString(ManagedKeys.MAX_FILE_CACHE, String.valueOf(value))
+        .apply();
   }
 
   public static boolean getAndResetForceServerRefresh(SharedPreferences sharedPreferences) {

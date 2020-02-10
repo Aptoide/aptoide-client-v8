@@ -8,6 +8,7 @@ import cm.aptoide.pt.editorial.CaptionBackgroundPainter;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialBundleViewHolder;
 import cm.aptoide.pt.home.bundles.editorial.EditorialViewHolder;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.util.List;
 import rx.subjects.PublishSubject;
 
@@ -18,21 +19,24 @@ class EditorialListAdapter extends RecyclerView.Adapter<EditorialViewHolder> {
   private final ProgressCard progressBundle;
   private final PublishSubject<HomeEvent> uiEventsListener;
   private final CaptionBackgroundPainter captionBackgroundPainter;
+  private final ThemeManager themeAttributeProvider;
   private List<CurationCard> editorialListItems;
 
   public EditorialListAdapter(List<CurationCard> editorialListItems, ProgressCard progressBundle,
-      PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter) {
+      PublishSubject<HomeEvent> uiEventsListener, CaptionBackgroundPainter captionBackgroundPainter,
+      ThemeManager themeAttributeProvider) {
     this.editorialListItems = editorialListItems;
     this.progressBundle = progressBundle;
     this.uiEventsListener = uiEventsListener;
     this.captionBackgroundPainter = captionBackgroundPainter;
+    this.themeAttributeProvider = themeAttributeProvider;
   }
 
   @Override public EditorialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     if (viewType == EDITORIAL_CARD) {
       return new EditorialBundleViewHolder(LayoutInflater.from(parent.getContext())
-          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter);
+          .inflate(EDITORIAL_CARD, parent, false), uiEventsListener, captionBackgroundPainter,
+          themeAttributeProvider);
     } else {
       return new LoadingViewHolder(LayoutInflater.from(parent.getContext())
           .inflate(LOADING, parent, false), uiEventsListener, captionBackgroundPainter);

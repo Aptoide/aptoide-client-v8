@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.aptoideviews.video.WebChromeClientWithoutPlayerPlaceholder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -260,6 +261,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           embeddedVideo.getSettings()
               .setJavaScriptEnabled(true);
           embeddedVideo.loadUrl(editorialMedia.getUrl());
+          embeddedVideo.setWebChromeClient(new WebChromeClientWithoutPlayerPlaceholder());
           embeddedVideo.setVisibility(View.VISIBLE);
         }
       }

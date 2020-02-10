@@ -14,6 +14,7 @@ import cm.aptoide.pt.home.bundles.apps.RewardApp
 import cm.aptoide.pt.home.more.base.ListAppsFragment
 import cm.aptoide.pt.promotions.WalletApp
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment
+import cm.aptoide.pt.themes.ThemeManager
 import cm.aptoide.pt.utils.GenericDialogs
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.earn_appcoins_wallet_install_layout.*
@@ -30,6 +31,9 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
 
   @Inject
   lateinit var presenter: EarnAppcListPresenter
+
+  @Inject
+  lateinit var themeManager: ThemeManager
 
   private var errorMessageSubscription: Subscription? = null
 
@@ -117,7 +121,8 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
   }
 
   private fun showErrorDialog(title: String, message: String) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(context, title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(context, title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe({ }, { error -> OnErrorNotImplementedException(error) })
   }
@@ -194,7 +199,8 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
 
   override fun showRootInstallWarningPopup(): Observable<Boolean> {
     return GenericDialogs.createGenericYesNoCancelMessage(requireContext(), null,
-        resources.getString(R.string.root_access_dialog))
+        resources.getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map { response -> response.equals(GenericDialogs.EResponse.YES) }
   }
 
@@ -221,7 +227,7 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
   override fun createViewHolder(): (ViewGroup, Int) -> EarnAppcListViewHolder {
     return { parent, viewType ->
       EarnAppcListViewHolder(
-          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_item, parent,
+          LayoutInflater.from(parent.context).inflate(R.layout.earn_appcoins_item_more, parent,
               false), DecimalFormat("0.00"))
     }
   }

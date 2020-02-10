@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import androidx.annotation.AttrRes;
 import androidx.viewpager.widget.PagerAdapter;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.networking.image.ImageLoader;
@@ -55,13 +56,13 @@ public class ViewPagerAdapterScreenshots extends PagerAdapter {
     return view.equals(object); // ??
   }
 
-  private int getPlaceholder(Context context) {
+  private @AttrRes int getPlaceholder(Context context) {
     int id;
     if (context.getResources()
         .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-      id = R.drawable.placeholder_9_16;
+      id = R.attr.placeholder_9_16;
     } else {
-      id = R.drawable.placeholder_16_9;
+      id = R.attr.placeholder_16_9;
     }
     return id;
   }

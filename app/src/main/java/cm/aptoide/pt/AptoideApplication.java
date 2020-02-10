@@ -86,6 +86,9 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -175,6 +178,9 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
+  @Inject NewFeature newFeature;
+  @Inject NewFeatureManager newFeatureManager;
+  @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
@@ -292,6 +298,7 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
+        .andThen(setUpAdsUserProperty())
         .andThen(initializeSentry())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
@@ -352,6 +359,10 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
+  private Completable setUpAdsUserProperty(){
+    return adsUserPropertyManager.setUp();
+  }
+
   private Completable checkApkfyUserProperty() {
     return Completable.fromAction(() -> apkfyExperiment.setSuperProperties());
   }
@@ -373,7 +384,7 @@ public abstract class AptoideApplication extends Application {
     );
   }
 
-  private void initializeRakam() {
+  private void initializeRakam(String id) {
     RakamClient instance = Rakam.getInstance();
 
     try {
@@ -387,7 +398,7 @@ public abstract class AptoideApplication extends Application {
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-    instance.setUserId(idsRepository.getUniqueIdentifier());
+    instance.setUserId(id);
   }
 
   public void initializeMoPub() {
@@ -645,7 +656,7 @@ public abstract class AptoideApplication extends Application {
   private Completable sendAppStartToAnalytics() {
     return firstLaunchAnalytics.sendAppStart(this,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()));
+            getDefaultSharedPreferences()), idsRepository);
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
@@ -653,12 +664,12 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
-        .subscribeOn(Schedulers.newThread());
+    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier());
   }
 
   private Completable initializeRakamSdk() {
-    return Completable.fromAction(() -> initializeRakam())
+    return idsRepository.getUniqueIdentifier()
+        .flatMapCompletable(id -> Completable.fromAction(() -> initializeRakam(id)))
         .subscribeOn(Schedulers.newThread());
   }
 
@@ -861,6 +872,18 @@ public abstract class AptoideApplication extends Application {
 
   public NavigationTracker getNavigationTracker() {
     return navigationTracker;
+  }
+
+  public NewFeatureManager getNewFeatureManager() {
+    return newFeatureManager;
+  }
+
+  public NewFeature getNewFeature() {
+    return newFeature;
+  }
+
+  public ThemeAnalytics getThemeAnalytics() {
+    return themeAnalytics;
   }
 
   public FragmentProvider createFragmentProvider() {

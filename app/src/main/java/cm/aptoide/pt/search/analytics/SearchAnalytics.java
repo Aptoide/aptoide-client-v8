@@ -20,6 +20,7 @@ public class SearchAnalytics {
   public static final String SEARCH_START = "Search_Start";
   public static final String AB_SEARCH_ACTION = "AB_Search_Action";
   public static final String AB_SEARCH_IMPRESSION = "AB_Search_Impression";
+  private static final String EMPTY = "empty";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
 
@@ -87,7 +88,10 @@ public class SearchAnalytics {
       map.put(AttributeKey.IS_AD, isAd);
       map.put(AttributeKey.IS_APPC, isAppc);
     } else {
-      map.put(AttributeKey.POSITION, "empty");
+      map.put(AttributeKey.PACKAGE_NAME, EMPTY);
+      map.put(AttributeKey.POSITION, EMPTY);
+      map.put(AttributeKey.IS_AD, EMPTY);
+      map.put(AttributeKey.IS_APPC, EMPTY);
     }
     analyticsManager.logEvent(map, SEARCH_RESULT_CLICK, AnalyticsManager.Action.CLICK,
         getViewName(true));

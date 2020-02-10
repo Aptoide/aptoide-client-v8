@@ -29,7 +29,7 @@ public class RewardAppInBundleViewHolder extends AppViewHolder {
 
   @Override public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
+        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.attr.placeholder_square);
     appName.setText(app.getName());
     appReward.setText(itemView.getResources()
         .getString(R.string.appc_card_short));

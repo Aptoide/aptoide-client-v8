@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.style.BulletSpan;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +35,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.PostReviewRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
@@ -67,12 +69,14 @@ import rx.subscriptions.Subscriptions;
   private final Resources resources;
   private final String marketName;
   private final MarketResourceFormatter marketResourceFormatter;
+  private final ThemeManager themeManager;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
-      String marketName, MarketResourceFormatter marketResourceFormatter) {
+      String marketName, MarketResourceFormatter marketResourceFormatter,
+      ThemeManager themeManager) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -84,6 +88,7 @@ import rx.subscriptions.Subscriptions;
     this.resources = resources;
     this.marketName = marketName;
     this.marketResourceFormatter = marketResourceFormatter;
+    this.themeManager = themeManager;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -91,6 +96,8 @@ import rx.subscriptions.Subscriptions;
 
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
 
+      ContextThemeWrapper context = new ContextThemeWrapper(activity,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
             snackView -> {
@@ -101,29 +108,27 @@ import rx.subscriptions.Subscriptions;
         return;
       }
 
-      final View view = LayoutInflater.from(activity)
+      final View view = LayoutInflater.from(context)
           .inflate(R.layout.dialog_rate_app, null);
 
-      final TextView titleTextView = (TextView) view.findViewById(R.id.title);
-      final AppCompatRatingBar reviewRatingBar =
-          (AppCompatRatingBar) view.findViewById(R.id.rating_bar);
-      final TextInputLayout reviewTextInputLayout =
-          (TextInputLayout) view.findViewById(R.id.input_layout_review);
-      final Button cancelBtn = (Button) view.findViewById(R.id.cancel_button);
-      final Button rateBtn = (Button) view.findViewById(R.id.rate_button);
+      final TextView titleTextView = view.findViewById(R.id.title);
+      final AppCompatRatingBar reviewRatingBar = view.findViewById(R.id.rating_bar);
+      final TextInputLayout reviewTextInputLayout = view.findViewById(R.id.input_layout_review);
+      final Button cancelBtn = view.findViewById(R.id.cancel_button);
+      final Button rateBtn = view.findViewById(R.id.rate_button);
 
       final TextView highlightedReviewsExplained_1 =
-          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_1);
+          view.findViewById(R.id.highlighted_reviews_explanation_1);
       final TextView highlightedReviewsExplained_2 =
-          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_2);
+          view.findViewById(R.id.highlighted_reviews_explanation_2);
       final TextView highlightedReviewsExplained_3 =
-          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_3);
+          view.findViewById(R.id.highlighted_reviews_explanation_3);
       final TextView highlightedReviewsExplained_4 =
-          (TextView) view.findViewById(R.id.highlighted_reviews_explanation_4);
+          view.findViewById(R.id.highlighted_reviews_explanation_4);
 
       titleTextView.setText(String.format(LOCALE, activity.getString(R.string.rate_app), appName));
 
-      final AlertDialog.Builder builder = new AlertDialog.Builder(activity).setView(view);
+      final AlertDialog.Builder builder = new AlertDialog.Builder(context).setView(view);
       final AlertDialog dialog = builder.create();
       subscriber.add(Subscriptions.create(() -> {
         if (dialog != null && dialog.isShowing()) {
@@ -213,8 +218,9 @@ import rx.subscriptions.Subscriptions;
 
   public void setBulletText(TextView textView, String text) {
     SpannableString spannable = new SpannableString(text);
-    spannable.setSpan(new BulletSpan(16, resources.getColor(R.color.default_orange_gradient_end)),
-        0, text.length(), 0);
+    spannable.setSpan(
+        new BulletSpan(16, themeManager.getAttributeForTheme(R.attr.colorPrimaryDark).data), 0,
+        text.length(), 0);
 
     textView.setText(spannable);
   }

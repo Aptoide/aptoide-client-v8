@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
   <TextView
+      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       android:layout_width="match_parent"
       android:layout_height="48dp"
       android:gravity="center_vertical"
-      android:paddingEnd="17.3dp"
-      android:paddingLeft="13.3dp"
-      android:paddingRight="17.3dp"
       android:paddingStart="13.3dp"
+      android:paddingLeft="13.3dp"
+      android:paddingEnd="17.3dp"
+      android:paddingRight="17.3dp"
       android:text="@string/additional_information"
-      style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
-      android:paddingEnd="17.3dp"
-      android:paddingLeft="13.3dp"
-      android:paddingRight="17.3dp"
       android:paddingStart="13.3dp"
+      android:paddingLeft="13.3dp"
+      android:paddingEnd="17.3dp"
+      android:paddingRight="17.3dp"
       android:visibility="visible"
       >
 
@@ -46,8 +45,8 @@
           android:id="@+id/website_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
+          android:layout_marginLeft="18dp"
           android:gravity="center_vertical"
           android:text="@string/appview_short_developer_website"
           android:textColor="?android:attr/textColorSecondary"
@@ -71,8 +70,8 @@
           android:id="@+id/email_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
+          android:layout_marginLeft="18dp"
           android:gravity="center_vertical"
           android:text="@string/appview_short_developer_email"
           android:textColor="?android:attr/textColorSecondary"
@@ -95,8 +94,8 @@
           android:id="@+id/privacy_text"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
+          android:layout_marginLeft="18dp"
           android:gravity="center_vertical"
           android:text="@string/appview_short_developer_privacy_policy"
           android:textColor="?android:attr/textColorSecondary"
@@ -119,11 +118,11 @@
       <TextView
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginLeft="18dp"
           android:layout_marginStart="19dp"
+          android:layout_marginLeft="18dp"
           android:gravity="center_vertical"
           android:text="@string/permissions"
-          android:textColor="@color/black"
+          android:textColor="?android:attr/textColorSecondary"
           android:textSize="14sp"
           />
     </LinearLayout>

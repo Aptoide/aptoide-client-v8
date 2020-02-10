@@ -1,16 +1,15 @@
 package cm.aptoide.pt.view;
 
 import android.os.Bundle;
+import cm.aptoide.pt.themes.ThemeManager;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 public abstract class ThemedActivityView extends ActivityView {
-  @Inject @Named("aptoide-theme") String theme;
+  public @Inject ThemeManager themeManager;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getActivityComponent().inject(this);
-    ThemeUtils.setStatusBarThemeColor(this, theme);
-    ThemeUtils.setAptoideTheme(this, theme);
+    themeManager.resetToBaseTheme();
   }
 }

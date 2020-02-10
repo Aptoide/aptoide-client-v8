@@ -6,6 +6,7 @@ import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.view.settings.SettingsFragment;
 
 public class SearchNavigator {
 
@@ -48,5 +49,9 @@ public class SearchNavigator {
   public void goToSearchFragment(SearchQueryModel searchQueryModel) {
     final Fragment fragment = SearchResultFragment.newInstance(searchQueryModel);
     navigator.navigateTo(fragment, true);
+  }
+
+  public void goToSettings() {
+    navigator.navigateTo(new SettingsFragment(), true);
   }
 }

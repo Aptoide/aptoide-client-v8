@@ -15,6 +15,7 @@ import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.ImagePickerView;
@@ -152,6 +153,12 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
+import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
+import cm.aptoide.pt.themes.DarkThemeDialogView;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
 import cm.aptoide.pt.view.wizard.WizardPresenter;
@@ -214,7 +221,7 @@ import rx.subscriptions.CompositeSubscription;
         accountPermissionProvider, photoFileGenerator, imageValidator,
         AndroidSchedulers.mainThread(), uriToPathResolver, imagePickerNavigator,
         fragment.getActivity()
-            .getContentResolver(), ImageLoader.with(fragment.getContext()));
+            .getContentResolver(), ImageLoader.with(fragment.getContext()), Schedulers.io());
   }
 
   @FragmentScope @Provides ManageStorePresenter provideManageStorePresenter(
@@ -237,8 +244,9 @@ import rx.subscriptions.CompositeSubscription;
         accountAnalytics);
   }
 
-  @FragmentScope @Provides ImageValidator provideImageValidator() {
-    return new ImageValidator(ImageLoader.with(fragment.getContext()), Schedulers.computation());
+  @FragmentScope @Provides ImageValidator provideImageValidator(
+      ImageInfoProvider imageInfoProvider) {
+    return new ImageValidator(Schedulers.computation(), imageInfoProvider);
   }
 
   @FragmentScope @Provides CreateUserErrorMapper provideCreateUserErrorMapper(
@@ -275,10 +283,10 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationMapper bottomNavigationMapper, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme, AccountNavigator accountNavigator) {
+      AccountNavigator accountNavigator, ThemeManager themeManager) {
     return new HomeNavigator(fragmentNavigator, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()), theme,
-        accountNavigator);
+        bottomNavigationMapper, appNavigator, ((ActivityNavigator) fragment.getActivity()),
+        accountNavigator, themeManager);
   }
 
   @FragmentScope @Provides HomeContainerNavigator providesHomeContainerNavigator(
@@ -531,10 +539,11 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
       CrashReport crashReport, AptoideAccountManager accountManager,
       HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager) {
+      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
+      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        crashReport, accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home,
-        chipManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
+        darkThemeNewFeatureManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -614,8 +623,14 @@ import rx.subscriptions.CompositeSubscription;
         autoUpdateManager);
   }
 
-  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(
-      @Named("aptoide-theme") String theme) {
-    return new ExternalNavigator(fragment.getContext(), theme);
+  @FragmentScope @Provides ExternalNavigator providesExternalNavigator(ThemeManager themeManager) {
+    return new ExternalNavigator(fragment.getContext(), themeManager);
+  }
+
+  @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
+      NewFeatureManager newFeatureManager, ThemeManager themeManager,
+      ThemeAnalytics themeAnalytics) {
+    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, newFeatureManager,
+        themeManager, themeAnalytics);
   }
 }

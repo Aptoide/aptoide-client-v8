@@ -14,6 +14,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,6 +79,7 @@ import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.WalletApp;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppUtils;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -136,9 +138,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject AppViewPresenter presenter;
   @Inject DialogUtils dialogUtils;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
+  @Inject ThemeManager themeManager;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -708,7 +710,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setDescription(model.getMedia()
         .getDescription());
     setAppFlags(model.isGoodApp(), model.getAppFlags());
-    setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore());
+    setReadMoreClickListener(model.getAppName(), model.getMedia(), model.getStore(),
+        model.isAppCoinApp());
     setDeveloperDetails(model.getDeveloper());
     showAppViewLayout();
   }
@@ -1012,7 +1015,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .equals("mobile")) {
       GenericDialogs.createGenericOkMessage(getContext(),
           getContext().getString(R.string.remote_install_menu_title),
-          getContext().getString(R.string.install_on_tv_mobile_error))
+          getContext().getString(R.string.install_on_tv_mobile_error),
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
           .subscribe(__ -> {
           }, err -> CrashReport.getInstance()
               .log(err));
@@ -1066,7 +1070,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Void> showOpenAndInstallDialog(String title, String appName) {
     return GenericDialogs.createGenericOkCancelMessage(getContext(), title,
-        getContext().getString(R.string.installapp_alrt, appName))
+        getContext().getString(R.string.installapp_alrt, appName),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .filter(response -> response.equals(YES))
         .map(__ -> null);
   }
@@ -1136,8 +1141,14 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void setupAppcAppView() {
-    TransitionDrawable transition = (TransitionDrawable) ContextCompat.getDrawable(getContext(),
-        R.drawable.appc_gradient_transition);
+    TypedValue value = new TypedValue();
+    this.getContext()
+        .getTheme()
+        .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
+    int drawableId = value.resourceId;
+
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
     collapsingToolbarLayout.setBackgroundDrawable(transition);
     transition.startTransition(APPC_TRANSITION_MS);
 
@@ -1457,10 +1468,11 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  private void setReadMoreClickListener(String appName, AppMedia media, Store store) {
+  private void setReadMoreClickListener(String appName, AppMedia media, Store store,
+      boolean hasAppc) {
     descriptionReadMore.setOnClickListener(view -> readMoreClick.onNext(
         new ReadMoreClickEvent(appName, media.getDescription(), store.getAppearance()
-            .getTheme())));
+            .getTheme(), hasAppc)));
   }
 
   private void setAppFlags(boolean isGoodFile, AppFlags appFlags) {
@@ -1630,7 +1642,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -1674,7 +1687,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Override public Observable<Boolean> showDowngradeMessage() {
     return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
         getContext().getResources()
-            .getString(R.string.downgrade_warning_dialog))
+            .getString(R.string.downgrade_warning_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(eResponse -> eResponse.equals(YES));
   }
 
@@ -1845,7 +1859,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));

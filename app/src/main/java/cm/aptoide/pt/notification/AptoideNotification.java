@@ -18,6 +18,7 @@ public class AptoideNotification {
   public static final int NEW_SHARE = 5;
   public static final int NEW_ACTIVITY = 6;
   public static final int APPC_PROMOTION = 7;
+  public static final int NEW_FEATURE = 8;
   public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
   private Long expire;
   private String appName;
@@ -29,6 +30,7 @@ public class AptoideNotification {
   private String img;
   private String lang;
   private String title;
+  private int actionStringRes = -1;
   private String url;
   private String urlTrack;
   private String ownerId;
@@ -39,7 +41,8 @@ public class AptoideNotification {
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       long timeStamp, String appName, String graphic, long dismissed, String ownerId,
-      String urlTrack, String notificationCenterUrlTrack, boolean processed, Long expireSecsUtc) {
+      String urlTrack, String notificationCenterUrlTrack, boolean processed, Long expireSecsUtc,
+      int actionStringRes) {
     this.body = body;
     this.img = img;
     this.title = title;
@@ -54,14 +57,15 @@ public class AptoideNotification {
     this.urlTrack = urlTrack;
     this.notificationCenterUrlTrack = notificationCenterUrlTrack;
     this.processed = processed;
+    this.actionStringRes = actionStringRes;
   }
 
   public AptoideNotification(String body, String img, String title, String url, int type,
       String appName, String graphic, long dismissed, String ownerId, String urlTrack,
       String notificationCenterUrlTrack, boolean processed, long timeStamp, Long expireSecsUtc,
-      String abTestingGroup, int campaignId, String lang) {
+      String abTestingGroup, int campaignId, String lang, int actionStringRes) {
     this(body, img, title, url, type, timeStamp, appName, graphic, dismissed, ownerId, urlTrack,
-        notificationCenterUrlTrack, processed, expireSecsUtc);
+        notificationCenterUrlTrack, processed, expireSecsUtc, actionStringRes);
     this.abTestingGroup = abTestingGroup;
     this.campaignId = campaignId;
     this.lang = lang;
@@ -156,8 +160,13 @@ public class AptoideNotification {
     return notificationCenterUrlTrack;
   }
 
+  public int getActionStringRes() {
+    return actionStringRes;
+  }
+
   @Retention(RetentionPolicy.SOURCE) @IntDef({
-      CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY, APPC_PROMOTION
+      CAMPAIGN, COMMENT, LIKE, POPULAR, NEW_FOLLOWER, NEW_SHARE, NEW_ACTIVITY, APPC_PROMOTION,
+      NEW_FEATURE
   }) public @interface NotificationType {
   }
 }

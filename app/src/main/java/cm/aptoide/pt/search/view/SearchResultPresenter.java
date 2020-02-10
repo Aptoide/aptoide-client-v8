@@ -294,8 +294,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
         .flatMap(__ -> view.clickNoResultsSearchButton())
-        .filter(query -> query.length() > 1)
-        .doOnNext(query -> navigator.goToSearchFragment(new SearchQueryModel(query)))
+        .doOnNext(query -> navigator.goToSettings())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

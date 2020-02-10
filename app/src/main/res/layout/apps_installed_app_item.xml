@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:layout_marginBottom="8dp"
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
+    android:layout_marginBottom="8dp"
     app:cardCornerRadius="4dp"
     >
 
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
       android:layout_alignParentStart="true"
+      android:layout_alignParentLeft="true"
       >
 
     <ImageView
@@ -42,22 +42,22 @@
 
       <TextView
           android:id="@+id/apps_installed_app_name"
+          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="Aptoide"
-          style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
           />
 
       <TextView
           android:id="@+id/apps_installed_app_version"
+          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:ellipsize="end"
           android:maxLines="1"
           tools:text="1994"
-          style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
           />
 
 

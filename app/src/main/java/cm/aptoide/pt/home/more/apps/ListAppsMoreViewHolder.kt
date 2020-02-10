@@ -19,7 +19,7 @@ class ListAppsMoreViewHolder(val view: View,
   override fun bindApp(app: Application) {
     itemView.name.text = app.name
     ImageLoader.with(itemView.context)
-        .loadWithRoundCorners(app.icon, 8, itemView.icon, R.drawable.placeholder_square)
+        .loadWithRoundCorners(app.icon, 8, itemView.icon, R.attr.placeholder_square)
     if (app.hasAppcBilling()) {
       itemView.appc_info_layout.visibility = View.VISIBLE
       itemView.appc_text.setText(R.string.appc_card_short)

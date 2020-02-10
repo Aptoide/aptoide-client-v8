@@ -2,6 +2,7 @@ package cm.aptoide.pt.ads;
 
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
+import rx.Completable;
 import rx.Scheduler;
 
 public class AdsUserPropertyManager {
@@ -35,5 +36,15 @@ public class AdsUserPropertyManager {
             != WalletAdsOfferManager.OfferResponseStatus.NO_ADS)
         .subscribe(created -> {
         }, error -> crashReport.log(error));
+  }
+
+  public Completable setUp() {
+    return installedRepository.isInstalled(WALLET_PACKAGE)
+        .first()
+        .observeOn(ioScheduler)
+        .distinctUntilChanged()
+        .flatMapSingle(__ -> moPubAdsManager.getAdsVisibilityStatus())
+        .doOnNext(moPubAnalytics::setAdsVisibilityUserProperty)
+        .toCompletable();
   }
 }

@@ -76,7 +76,7 @@
 
     <activity
         android:name=".view.MainActivity"
-        android:theme="@style/AppBaseTheme.Splash"
+        android:theme="@style/AppBaseTheme"
         android:windowSoftInputMode="adjustPan">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -112,7 +112,7 @@
         android:name=".wallet.WalletInstallActivity"
         android:excludeFromRecents="true"
         android:taskAffinity=".wallet.WalletInstallActivity"
-        android:theme="@style/Aptoide.DialogTheme"
+        android:theme="@style/Aptoide.WalletDialogTheme"
         android:windowSoftInputMode="adjustPan" />
 
     <activity
@@ -218,6 +218,7 @@
         <data android:scheme="aptoideinstall" />
         <data android:scheme="aptoidesearch" />
         <data android:scheme="aptword" />
+        <data android:scheme="aptoidefeature" />
       </intent-filter>
 
       <intent-filter>

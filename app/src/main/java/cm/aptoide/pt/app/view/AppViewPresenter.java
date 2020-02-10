@@ -558,7 +558,7 @@ public class AppViewPresenter implements Presenter {
         .doOnNext(readMoreClickEvent -> {
           appViewAnalytics.sendReadMoreEvent();
           appViewNavigator.navigateToDescriptionReadMore(readMoreClickEvent.getStoreName(),
-              readMoreClickEvent.getDescription(), readMoreClickEvent.getStoreTheme());
+              readMoreClickEvent.getDescription(), readMoreClickEvent.hasAppc());
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -735,9 +735,7 @@ public class AppViewPresenter implements Presenter {
           appViewAnalytics.sendReadAllEvent();
           appViewNavigator.navigateToRateAndReview(model.getAppId(), model.getAppName(),
               model.getStore()
-                  .getName(), model.getPackageName(), model.getStore()
-                  .getAppearance()
-                  .getTheme());
+                  .getName(), model.getPackageName(), "default");
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

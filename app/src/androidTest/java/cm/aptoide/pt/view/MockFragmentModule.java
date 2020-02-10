@@ -2,9 +2,9 @@ package cm.aptoide.pt.view;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
-import cm.aptoide.pt.networking.image.ImageLoader;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
@@ -28,9 +28,9 @@ public class MockFragmentModule extends FragmentModule {
   /**
    * Mocks the error response
    */
-  @Override ImageValidator provideImageValidator() {
+  @Override ImageValidator provideImageValidator(ImageInfoProvider imageInfoProvider) {
     Scheduler scheduler = Schedulers.computation();
-    return new ImageValidator(ImageLoader.with(fragment.getContext()), scheduler) {
+    return new ImageValidator(scheduler, imageInfoProvider) {
 
       @Override public Completable validateOrGetException(String imagePath) {
         return Completable.defer(() -> {

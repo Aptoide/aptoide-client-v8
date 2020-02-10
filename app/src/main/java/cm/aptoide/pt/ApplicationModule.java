@@ -72,6 +72,7 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.OAuthModeProvider;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -245,6 +246,9 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -664,10 +668,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences) {
     return SecurePreferencesImplementation.getInstance(getApplicationContext(),
         defaultSharedPreferences);
-  }
-
-  @Singleton @Provides @Named("aptoide-theme") String providesAptoideTheme() {
-    return BuildConfig.APTOIDE_THEME;
   }
 
   @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
@@ -1576,8 +1576,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
-        idsRepository.getUniqueIdentifier(),
-        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        idsRepository, AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
@@ -1854,7 +1853,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
-        AptoideApplicationAnalytics.IS_ANDROID_TV);
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1997,5 +1996,26 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
+  }
+
+  @Singleton @Provides ImageInfoProvider providesImageInfoProvider() {
+    return new ImageInfoProvider(application.getContentResolver());
+  }
+
+  @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager) {
+    return new ThemeAnalytics(analyticsManager);
+  }
+
+  @Singleton @Provides NewFeature providesNewFeature() {
+    return new NewFeature("dark_theme",
+        application.getString(R.string.dark_theme_notification_title),
+        application.getString(R.string.dark_theme_notification_body), "turn_it_on",
+        R.string.dark_theme_notification_button);
+  }
+
+  @Singleton @Provides NewFeatureManager providesNewFeatureManager(
+      @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
+      LocalNotificationSyncManager localNotificationSyncManager) {
+    return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
   }
 }

@@ -19,6 +19,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.home.apps.list.AppsController;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
@@ -43,6 +44,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.APPS;
 
   @Inject AppsPresenter appsPresenter;
+  @Inject ThemeManager themeManager;
   private RxAlertDialog ignoreUpdateDialog;
   private ImageView userAvatar;
   private ProgressBar progressBar;
@@ -72,8 +74,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     setupRecyclerView();
 
     swipeRefreshLayout = view.findViewById(R.id.fragment_apps_swipe_container);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
     progressBar = view.findViewById(R.id.progress_bar);
     progressBar.setVisibility(View.VISIBLE);
     buildIgnoreUpdatesDialog();
@@ -88,7 +88,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private void setupRecyclerView() {
-    appsController = new AppsController();
+    appsController = new AppsController(themeManager);
     appsRecyclerView.setController(appsController);
     appsController.getAdapter()
         .registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -108,11 +108,11 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
   }
 
   private void buildIgnoreUpdatesDialog() {
-    ignoreUpdateDialog =
-        new RxAlertDialog.Builder(getContext()).setTitle(R.string.apps_title_ignore_updates)
-            .setPositiveButton(R.string.apps_button_ignore_updates_yes)
-            .setNegativeButton(R.string.apps_button_ignore_updates_no)
-            .build();
+    ignoreUpdateDialog = new RxAlertDialog.Builder(getContext(), themeManager).setTitle(
+        R.string.apps_title_ignore_updates)
+        .setPositiveButton(R.string.apps_button_ignore_updates_yes)
+        .setNegativeButton(R.string.apps_button_ignore_updates_no)
+        .build();
   }
 
   @Nullable @Override
@@ -156,7 +156,7 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(AppClick::getApp);
   }
 
-  @Override public Observable<App> startDownloadInAppview() {
+  @Override public Observable<App> appcoinsMigrationUpgradeClicked() {
     return appsController.getAppEventListener()
         .filter(appClick -> appClick.getClickType() == AppClick.ClickType.APPC_ACTION_CLICK)
         .map(AppClick::getApp);
@@ -170,7 +170,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public Observable<Boolean> showRootWarning() {
     return GenericDialogs.createGenericYesNoCancelMessage(getContext(), "",
-        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()))
+        AptoideUtils.StringU.getFormattedString(R.string.root_access_dialog, getResources()),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -184,17 +185,8 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
         .map(AppClick::getApp);
   }
 
-  @Override public void showIgnoreUpdate() {
-    ignoreUpdateDialog.show();
-  }
-
   @Override public Single<RxAlertDialog.Result> showIgnoreUpdateDialog() {
     return ignoreUpdateDialog.showWithResult();
-  }
-
-  @Override public Observable<Void> ignoreUpdate() {
-    return ignoreUpdateDialog.positiveClicks()
-        .map(__ -> null);
   }
 
   @Override public void showUnknownErrorMessage() {
@@ -250,10 +242,6 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
     hideLoadingProgressBar();
     appsController.setData(model.getUpdates(), model.getInstalled(), model.getMigrations(),
         model.getDownloads());
-  }
-
-  @Override public Observable<Void> onLoadAppcUpgradesSection() {
-    return appcUpgradesSectionLoaded;
   }
 
   private void hideLoadingProgressBar() {
