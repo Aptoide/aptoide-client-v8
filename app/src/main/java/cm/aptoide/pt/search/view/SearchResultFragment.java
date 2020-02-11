@@ -842,16 +842,20 @@ public class SearchResultFragment extends BackButtonFragment
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
-        .onSaveInstanceState());
+    if (allStoresResultList != null && allStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+          .onSaveInstanceState());
+    }
 
     outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
 
     if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
 
-    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager()
-            .onSaveInstanceState());
+    if (followedStoresResultList != null && followedStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
+          followedStoresResultList.getLayoutManager()
+              .onSaveInstanceState());
+    }
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
