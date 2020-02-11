@@ -401,6 +401,7 @@ dependencies {
   implementation "androidx.legacy:legacy-support-v13:${LEGACY_SUPPORT_VERSION}"
   implementation "androidx.cardview:cardview:${CARD_VIEW_VERSION}"
   implementation "androidx.browser:browser:${BROWSER_VERSION}"
+  implementation "androidx.fragment:fragment:${FRAGMENT_VERSION}"
 
   implementation "com.airbnb.android:epoxy:${EPOXY_VERSION}"
   kapt "com.airbnb.android:epoxy-processor:${EPOXY_VERSION}"
