@@ -1,9 +1,11 @@
 package cm.aptoide.pt.view.fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import cm.aptoide.pt.AptoideApplication;
@@ -26,11 +28,6 @@ public class BaseDialogFragment extends RxDialogFragment {
     super.onCreate(savedInstanceState);
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
-
-    if (this.getActivity() != null) {
-      setStyle(DialogFragment.STYLE_NO_TITLE,
-          themeManager.getAttributeForTheme(getDialogStyle()).resourceId);
-    }
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -44,8 +41,20 @@ public class BaseDialogFragment extends RxDialogFragment {
         .addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
   }
 
+  @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    if (this.getActivity() != null && shouldUseDefaultDialogStyle()) {
+      setStyle(DialogFragment.STYLE_NO_TITLE,
+          themeManager.getAttributeForTheme(getDialogStyle()).resourceId);
+    }
+    return super.onCreateDialog(savedInstanceState);
+  }
+
   public @AttrRes int getDialogStyle() {
     return R.attr.dialogsTheme;
+  }
+
+  public boolean shouldUseDefaultDialogStyle() {
+    return true;
   }
 
   public FragmentComponent getFragmentComponent(Bundle savedInstanceState) {

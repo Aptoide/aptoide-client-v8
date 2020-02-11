@@ -119,9 +119,14 @@ public class BottomNavigationNavigator {
   private void navigateToSelectedFragment(int newItem, Fragment fragment) {
     Fragment currentFragment = fragmentNavigator.getFragment();
     if (currentFragment == null || currentFragment.getClass() != fragment.getClass()) {
+      if (bottomNavigationItems.size() > 0 && bottomNavigationItems.get(0) == newItem) {
+        fragmentNavigator.cleanBackStack();
+      } else {
+        fragmentNavigator.cleanBackStack();
+        fragmentNavigator.navigateToWithoutBackSave(fragment, true);
+      }
       updateBottomNavigationItemsList(newItem);
       Collections.rotate(bottomNavigationItems, 1);
-      fragmentNavigator.navigateToCleaningBackStack(fragment, true);
     }
   }
 

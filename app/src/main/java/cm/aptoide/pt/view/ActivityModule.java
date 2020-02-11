@@ -81,6 +81,10 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -172,12 +176,13 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager) {
+      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
+      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
         sharedPreferences, storeAccessor, notificationAnalytics, navigationTracker, searchAnalytics,
         appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
-        appNavigator, installManager);
+        appNavigator, installManager, newFeature, themeManager, themeAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -408,6 +413,12 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides ThemeManager providesThemeManager() {
-    return new ThemeManager(activity);
+    return new ThemeManager(activity,
+        ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
+  }
+
+  @ActivityScope @Provides DarkThemeNewFeatureManager providesDarkThemeDialogManager(
+      ThemeManager themeManager, NewFeatureManager newFeatureManager) {
+    return new DarkThemeNewFeatureManager(themeManager, newFeatureManager);
   }
 }

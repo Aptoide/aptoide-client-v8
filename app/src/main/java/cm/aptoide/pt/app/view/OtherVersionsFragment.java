@@ -85,7 +85,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    themeManager = new ThemeManager(getActivity());
+    themeManager = new ThemeManager(getActivity(),
+        ((AptoideApplication) getActivity().getApplicationContext()).getDefaultSharedPreferences());
     sharedPreferences =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     baseBodyInterceptor =

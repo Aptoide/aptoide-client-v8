@@ -31,6 +31,7 @@ import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.themes.DarkThemeDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
@@ -125,4 +126,6 @@ public interface FragmentComponent {
   void inject(ListAppsMoreFragment listAppsMoreFragment);
 
   void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
+
+  void inject(DarkThemeDialogFragment darkThemeDialogFragment);
 }

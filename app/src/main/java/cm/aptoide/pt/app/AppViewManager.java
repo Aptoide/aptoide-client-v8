@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
+import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSync;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
@@ -477,11 +479,12 @@ public class AppViewManager {
     localNotificationSyncManager.schedule(
         String.format(appcPromotionNotificationStringProvider.getNotificationTitle(), appcValue),
         appcPromotionNotificationStringProvider.getNotificationBody(), image,
-        "aptoideinstall://package="
+        R.string.promo_update2appc_notification_claim_button, "aptoideinstall://package="
             + packageName
             + "&store="
             + storeName
-            + "&show_install_popup=false", LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+            + "&show_install_popup=false", LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION,
+        AptoideNotification.APPC_PROMOTION, LocalNotificationSyncManager.FIVE_MINUTES);
   }
 
   public void unscheduleNotificationSync() {

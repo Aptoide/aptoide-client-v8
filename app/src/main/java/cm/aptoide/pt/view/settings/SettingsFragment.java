@@ -50,6 +50,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
@@ -89,17 +90,20 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private static final String SEND_FEEDBACK_PREFERENCE_KEY = "sendFeedback";
   private static final String TERMS_AND_CONDITIONS_PREFERENCE_KEY = "termsConditions";
   private static final String PRIVACY_POLICY_PREFERENCE_KEY = "privacyPolicy";
+  private static final String APP_THEME_PREFERENCE_KEY = "appTheme";
   private static final String DELETE_ACCOUNT = "deleteAccount";
   protected Toolbar toolbar;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject SupportEmailProvider supportEmailProvider;
   @Inject ThemeManager themeManager;
+  @Inject ThemeAnalytics themeAnalytics;
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
   private AptoideAccountManager accountManager;
 
+  private RxAlertDialog appThemeDialog;
   private RxAlertDialog adultContentConfirmationDialog;
   private EditableTextDialog enableAdultContentPinDialog;
   private EditableTextDialog setPinDialog;
@@ -192,6 +196,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
     excludedUpdates = findPreference(EXCLUDED_UPDATES_PREFERENCE_KEY);
     sendFeedback = findPreference(SEND_FEEDBACK_PREFERENCE_KEY);
     setGDPR();
+    setupAppTheme();
     deleteAccount = findPreference(DELETE_ACCOUNT);
     socialCampaignNotifications =
         (SwitchPreferenceCompat) findPreference(CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY);
@@ -241,6 +246,57 @@ public class SettingsFragment extends PreferenceFragmentCompat
       if (privacyPolicyPreference != null) {
         preferenceCategory.removePreference(privacyPolicyPreference);
       }
+    }
+  }
+
+  private void setupAppTheme() {
+    Preference appThemePreference = findPreference(APP_THEME_PREFERENCE_KEY);
+    appThemePreference.setSummary(getThemeString(themeManager.getThemeOption()));
+
+    ThemeManager.ThemeOption[] options = ThemeManager.ThemeOption.values();
+    int selectedItem = 0;
+    ThemeManager.ThemeOption currentThemeOption = themeManager.getThemeOption();
+    CharSequence[] themeOptionsText = new CharSequence[options.length];
+    for (int i = 0; i < options.length; i++) {
+      if (options[i].equals(currentThemeOption)) {
+        selectedItem = i;
+      }
+      themeOptionsText[i] = getThemeString(options[i]);
+    }
+
+    appThemeDialog = new RxAlertDialog.Builder(getContext(), themeManager).setTitleSmall(
+        R.string.settings_dark_theme_dialog_title)
+        .setSingleChoiceItems(themeOptionsText, selectedItem)
+        .setPositiveButton(R.string.all_button_ok)
+        .setNegativeButton(R.string.cancel)
+        .build();
+
+    subscriptions.add(RxPreference.clicks(appThemePreference)
+        .doOnNext(preference -> appThemeDialog.show())
+        .subscribe());
+
+    subscriptions.add(appThemeDialog.positiveClicks()
+        .map(__ -> options[appThemeDialog.getCheckedItem()])
+        .doOnNext(themeVariant -> {
+          appThemePreference.setSummary(themeOptionsText[appThemeDialog.getCheckedItem()]);
+          themeManager.setThemeOption(themeVariant);
+          themeManager.resetToBaseTheme();
+          themeAnalytics.sendThemeChangedEvent(themeVariant, TAG);
+          themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
+        })
+        .retry()
+        .subscribe());
+  }
+
+  private String getThemeString(ThemeManager.ThemeOption themeOption) {
+    switch (themeOption) {
+      case DARK:
+        return getString(R.string.settings_dark_theme_dark);
+      case LIGHT:
+        return getString(R.string.settings_dark_theme_light);
+      case SYSTEM_DEFAULT:
+      default:
+        return getString(R.string.settings_dark_theme_system);
     }
   }
 
