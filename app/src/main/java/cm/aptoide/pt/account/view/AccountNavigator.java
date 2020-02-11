@@ -143,16 +143,16 @@ public class AccountNavigator {
   }
 
   public void navigateToCreateProfileView() {
-    fragmentNavigator.navigateToCleaningBackStack(ManageUserFragment.newInstanceToCreate(), true);
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate(), true);
   }
 
   public void navigateToProfileStepTwoView() {
-    fragmentNavigator.navigateToCleaningBackStack(ProfileStepTwoFragment.newInstance(), true);
+    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance(), true);
   }
 
   public void navigateToCreateStoreView() {
-    fragmentNavigator.navigateToCleaningBackStack(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true),
+        true);
   }
 
   public void navigateToTermsAndConditions() {
