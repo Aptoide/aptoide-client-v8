@@ -226,29 +226,11 @@ import rx.exceptions.OnErrorNotImplementedException;
         .map(__ -> view.getViewModel())
         .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
-        .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getSearchQueryModel()
-            .getFinalQuery())
-            .onErrorReturn(err -> {
-              crashReport.log(err);
-              return null;
-            })
-            .observeOn(viewScheduler)
-            .doOnNext(__ -> viewModel.setHasLoadedAds())
-            .doOnNext(ad -> {
-              if (ad == null) {
-                view.setFollowedStoresAdsEmpty();
-                view.setAllStoresAdsEmpty();
-              } else {
-                view.setAllStoresAdsResult(ad);
-                view.setFollowedStoresAdsResult(ad);
-              }
-            })
-            .flatMapCompletable(ad -> {
-              if (ad == null) {
-                return loadBannerAd();
-              }
-              return Completable.complete();
-            }))
+        .doOnNext(ad -> {
+          view.setFollowedStoresAdsEmpty();
+          view.setAllStoresAdsEmpty();
+        })
+        .flatMapCompletable(__ -> loadBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -360,7 +342,16 @@ import rx.exceptions.OnErrorNotImplementedException;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(
               getItemCount(getResultList(data)));
-        });
+        })
+        .observeOn(ioScheduler)
+        .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
+            .observeOn(viewScheduler)
+            .doOnSuccess(loadNativeAds -> {
+              if (loadNativeAds) {
+                view.showNativeAds(query);
+              }
+            })
+            .map(__ -> nonFollowedStoresSearchResult));
   }
 
   @NonNull
