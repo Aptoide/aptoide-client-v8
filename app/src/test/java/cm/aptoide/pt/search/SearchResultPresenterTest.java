@@ -348,14 +348,14 @@ public class SearchResultPresenterTest {
     presenter.handleClickOnNoResultsImage();
 
     //When the search has no results and the user clicks on the image from the no result view
-    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just("length>1"));
+    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just(null));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultModel.getStoreName()).thenReturn("random");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should navigate back to the search view
-    verify(searchNavigator).goToSearchFragment(any(SearchQueryModel.class));
+    verify(searchNavigator).goToSettings();
   }
 
   @Test public void handleAllStoresListReachedBottomTest() {

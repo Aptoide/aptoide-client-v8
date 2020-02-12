@@ -40,6 +40,7 @@ import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
+import cm.aptoide.analytics.implementation.loggers.UXCamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
@@ -53,6 +54,7 @@ import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -70,6 +72,7 @@ import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.account.MatureContentPersistence;
 import cm.aptoide.pt.account.OAuthModeProvider;
+import cm.aptoide.pt.account.view.ImageInfoProvider;
 import cm.aptoide.pt.account.view.store.StoreManager;
 import cm.aptoide.pt.account.view.user.NewsletterManager;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -172,13 +175,13 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
 import cm.aptoide.pt.install.InstallerAnalytics;
-import cm.aptoide.pt.install.InstallerFactory;
 import cm.aptoide.pt.install.PackageInstallerManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.RootInstallNotificationEventReceiver;
@@ -243,6 +246,9 @@ import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -326,22 +332,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
-      AptoideDownloadManager aptoideDownloadManager, InstallerAnalytics installerAnalytics,
+      AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
       RootAvailabilityManager rootAvailabilityManager,
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      @Named("cachePath") String cachePath, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, AppInstaller appInstaller,
-      AppInstallerStatusReceiver appInstallerStatusReceiver,
-      PackageInstallerManager packageInstallerManager,
-      RootInstallerProvider rootInstallerProvider) {
-    return new InstallManager(application, aptoideDownloadManager,
-        new InstallerFactory(new MinimalAdMapper(), installerAnalytics, appInstaller,
-            getInstallingStateTimeout(), appInstallerStatusReceiver, rootInstallerProvider).create(
-            application), rootAvailabilityManager, defaultSharedPreferences,
-        secureSharedPreferences, downloadsRepository, installedRepository, cachePath, apkPath,
-        obbPath, new FileUtils(), packageInstallerManager);
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+    return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
+        rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
+  }
+
+  @Singleton @Provides ForegroundManager providesForegroundManager() {
+    return new ForegroundManager(getApplicationContext());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
@@ -411,7 +414,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider, downloadAnalytics);
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics, apkPath, obbPath,
+        new FileUtils());
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
@@ -664,10 +668,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences) {
     return SecurePreferencesImplementation.getInstance(getApplicationContext(),
         defaultSharedPreferences);
-  }
-
-  @Singleton @Provides @Named("aptoide-theme") String providesAptoideTheme() {
-    return BuildConfig.APTOIDE_THEME;
   }
 
   @Singleton @Provides RootInstallationRetryHandler provideRootInstallationRetryHandler(
@@ -1311,8 +1311,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return retrofit.create(RetrofitAptoideBiService.ServiceV7.class);
   }
 
-  @Singleton @Provides Service providesAutoUpdateService(
-      @Named("retrofit-auto-update") Retrofit retrofit) {
+  @Singleton @Provides Service providesAutoUpdateService(@Named("retrofit-v7") Retrofit retrofit) {
     return retrofit.create(Service.class);
   }
 
@@ -1373,9 +1372,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides FirstLaunchAnalytics providesFirstLaunchAnalytics(
-      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient) {
+      AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
+      GmsStatusValueProvider gmsStatusValueProvider) {
     return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
-        application.getPackageName());
+        application.getPackageName(), gmsStatusValueProvider);
+  }
+
+  @Singleton @Provides GmsStatusValueProvider providesGmsStatusValueProvider() {
+    return new GmsStatusValueProvider(application.getApplicationContext());
   }
 
   @Singleton @Provides SafetyNetClient providesSafetyNetClient() {
@@ -1405,6 +1409,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides @Named("rakamEventLogger") EventLogger providesRakamEventLogger(
       AnalyticsLogger logger) {
     return new RakamEventLogger(logger);
+  }
+
+  @Singleton @Provides @Named("uxCamEventLogger") EventLogger providesUXCamEventLogger(
+      AnalyticsLogger logger) {
+    return new UXCamEventLogger(logger);
   }
 
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
@@ -1466,13 +1475,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
-      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
+      @Named("rakamEvents") Collection<String> rakamEvents,
+      @Named("uxCamEventLogger") EventLogger uxCamEventLogger,
+      @Named("uxCamEvents") Collection<String> uxCamEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
+        .addLogger(uxCamEventLogger, uxCamEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
@@ -1482,6 +1494,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
+    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
+        SearchAnalytics.SEARCH_RESULT_CLICK,
+        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME);
+  }
+
+  @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
@@ -1555,8 +1575,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
-        idsRepository.getUniqueIdentifier(),
-        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        idsRepository, AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
@@ -1771,8 +1790,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList("apps", "catappult");
   }
 
-  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics() {
-    return new AptoideApplicationAnalytics();
+  @Singleton @Provides AptoideApplicationAnalytics provideAptoideApplicationAnalytics(
+      AnalyticsManager analyticsManager) {
+    return new AptoideApplicationAnalytics(analyticsManager);
   }
 
   @Singleton @Provides MoPubAnalytics providesMoPubAnalytics() {
@@ -1831,7 +1851,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR, AppViewAnalytics.ADS_BLOCK_BY_OFFER,
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
-        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME);
+        InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
@@ -1962,11 +1983,38 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
 
+  @Singleton @Provides ApkfyExperiment providesApkfyExperiment(
+      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics,
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new ApkfyExperiment(abTestManager, appViewAnalytics, sharedPreferences);
+  }
+
   @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
       @Named("default") SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_RAKAM_HOST;
+  }
+
+  @Singleton @Provides ImageInfoProvider providesImageInfoProvider() {
+    return new ImageInfoProvider(application.getContentResolver());
+  }
+
+  @Singleton @Provides ThemeAnalytics providesThemeAnalytics(AnalyticsManager analyticsManager) {
+    return new ThemeAnalytics(analyticsManager);
+  }
+
+  @Singleton @Provides NewFeature providesNewFeature() {
+    return new NewFeature("dark_theme",
+        application.getString(R.string.dark_theme_notification_title),
+        application.getString(R.string.dark_theme_notification_body), "turn_it_on",
+        R.string.dark_theme_notification_button);
+  }
+
+  @Singleton @Provides NewFeatureManager providesNewFeatureManager(
+      @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
+      LocalNotificationSyncManager localNotificationSyncManager) {
+    return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
   }
 }

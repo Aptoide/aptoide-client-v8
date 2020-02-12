@@ -150,7 +150,7 @@ public class AppViewManagerTest {
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1);
+            (long) 1, false, -1, -1, "", "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -226,7 +226,7 @@ public class AppViewManagerTest {
 
     MinimalAd minimalAd =
         new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
-            (long) 1);
+            (long) 1, false, -1, -1, "", "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
@@ -372,7 +372,7 @@ public class AppViewManagerTest {
 
     //Then the AppViewManager should return a Complete when the download starts
     appViewManager.downloadApp(DownloadModel.Action.INSTALL, 2, "", "aString",
-        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE)
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, false)
         .test()
         .assertCompleted();
 
@@ -381,10 +381,10 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 0, null, DownloadModel.Action.INSTALL,
         AnalyticsManager.Action.CLICK, "", "aString",
-        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName");
+        WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false,
-        false, false, "ADS_HIDE", "", "storeName");
+        false, false, "ADS_HIDE", "", "storeName", false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -414,11 +414,12 @@ public class AppViewManagerTest {
   @Test public void pauseDownloadTest() {
     //When the presenter wants to pause the download
     //Then the appViewManager should return a Complete when the request is done
+    when(installManager.pauseInstall("md5")).thenReturn(Completable.complete());
     appViewManager.pauseDownload("md5")
         .test()
         .assertCompleted();
     //And it should ask the installManager to stop the installation
-    verify(installManager).stopInstallation("md5");
+    verify(installManager).pauseInstall("md5");
   }
 
   @Test public void resumeDownloadTest() {
@@ -438,7 +439,7 @@ public class AppViewManagerTest {
         Single.just(WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW));
 
     //Then the appViewManager should return a Complete when the request is done
-    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL, "")
+    appViewManager.resumeDownload("md5", 1, DownloadModel.Action.INSTALL, "", false)
         .test()
         .assertCompleted();
 
@@ -448,20 +449,21 @@ public class AppViewManagerTest {
     //And it should set the necessary analytics
     verify(appViewAnalytics).setupDownloadEvents(download, 2, "aString",
         DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
-        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName");
+        WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
         AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
-        false, false, false, "ADS_SHOW", "", "storeName");
+        false, false, false, "ADS_SHOW", "", "storeName", false);
   }
 
   @Test public void cancelDownloadTest() {
     //When the presents asks to cancel a download
     //Then it should return a Complete when the request is done
+    when(installManager.cancelInstall("md5", "packageName", 1)).thenReturn(Completable.complete());
     appViewManager.cancelDownload("md5", "packageName", 1)
         .test()
         .assertCompleted();
     //And it should ask the installManager to remove the file
-    verify(installManager).removeInstallationFile("md5", "packageName", 1);
+    verify(installManager).cancelInstall("md5", "packageName", 1);
   }
 
   @Test public void setAndGetSearchAdResultTest() {

@@ -8,17 +8,17 @@ public class HomePromotionsWrapper {
   private final int promotions;
   private final float totalUnclaimedAppcValue;
   private final boolean showDialog;
-  private final float totalAppcValue;
+  private final String description;
 
   public HomePromotionsWrapper(String title, String featureGraphic, boolean hasPromotions,
-      int promotions, float totalUnclaimedAppcValue, boolean showDialog, float totalAppcValue) {
+      int promotions, float totalUnclaimedAppcValue, boolean showDialog, String description) {
     this.title = title;
     this.featureGraphic = featureGraphic;
     this.hasPromotions = hasPromotions;
     this.promotions = promotions;
     this.totalUnclaimedAppcValue = totalUnclaimedAppcValue;
     this.showDialog = showDialog;
-    this.totalAppcValue = totalAppcValue;
+    this.description = description;
   }
 
   public boolean hasPromotions() {
@@ -37,15 +37,15 @@ public class HomePromotionsWrapper {
     return showDialog;
   }
 
-  public float getTotalAppcValue() {
-    return totalAppcValue;
-  }
-
   public String getTitle() {
     return title;
   }
 
   public String getFeatureGraphic() {
     return featureGraphic;
+  }
+
+  public String getDescription() {
+    return description;
   }
 }

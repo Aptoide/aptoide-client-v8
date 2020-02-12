@@ -39,7 +39,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.BroadcastRegisterOnSubscribe;
 import cm.aptoide.pt.utils.FileUtils;
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 import rx.Completable;
@@ -233,17 +232,24 @@ public class DefaultInstaller implements Installer {
   }
 
   private void moveInstallationFiles(Installation installation) {
-    List<FileToDownload> files = installation.getFiles();
-    for (int i = 0; i < files.size(); i++) {
-      FileToDownload file = files.get(i);
-      if (file != null && file.getFileType() == FileToDownload.OBB) {
-        String newPath = OBB_FOLDER + installation.getPackageName() + "/";
-        fileUtils.copyFile(file.getPath(), newPath, file.getFileName());
+    boolean filesMoved = false;
+    String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
+
+    for (FileToDownload file : installation.getFiles()) {
+
+      if (file.getFileType() == FileToDownload.OBB
+          && FileUtils.fileExists(file.getFilePath())
+          && !file.getPath()
+          .equals(destinationPath)) {
+        fileUtils.copyFile(file.getPath(), destinationPath, file.getFileName());
         FileUtils.removeFile(file.getPath());
-        file.setPath(newPath);
+        file.setPath(destinationPath);
+        filesMoved = true;
       }
     }
-    installation.saveFileChanges();
+    if (filesMoved) {
+      installation.saveFileChanges();
+    }
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {

@@ -459,12 +459,13 @@ public class HomePresenter implements Presenter {
                 .getPackageName(), adHomeEvent.getBundlePosition(), adHomeEvent.getBundle()
                 .getTag(), adHomeEvent.getType(), ApplicationAd.Network.SERVER))
             .map(adHomeEvent -> adHomeEvent.getAdClick())
-            .map(adMapper.mapAdToSearchAd())
+            .map(adMapper::mapAdToSearchAd)
             .observeOn(viewScheduler)
             .doOnError(throwable -> Logger.getInstance()
                 .e(this.getClass()
                     .getCanonicalName(), throwable))
-            .doOnNext(homeNavigator::navigateToAppView)
+            .doOnNext(result -> homeNavigator.navigateToAppView(result.getTag(),
+                result.getSearchAdResult()))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(homeClick -> {

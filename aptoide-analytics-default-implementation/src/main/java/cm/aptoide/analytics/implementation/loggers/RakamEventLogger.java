@@ -3,13 +3,12 @@ package cm.aptoide.analytics.implementation.loggers;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.EventLogger;
-import cm.aptoide.analytics.SessionLogger;
 import io.rakam.api.Rakam;
 import java.util.Map;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RakamEventLogger implements EventLogger, SessionLogger {
+public class RakamEventLogger implements EventLogger {
 
   private static final String TAG = "RakamEventLogger";
   private final AnalyticsLogger logger;
@@ -57,13 +56,5 @@ public class RakamEventLogger implements EventLogger, SessionLogger {
       }
     }
     return eventData;
-  }
-
-  @Override public void startSession() {
-    //According to rakam documentation: Sessions are handled automatically now; you no longer have to manually call startSession() or endSession().
-  }
-
-  @Override public void endSession() {
-    //According to rakam documentation: Sessions are handled automatically now; you no longer have to manually call startSession() or endSession().
   }
 }

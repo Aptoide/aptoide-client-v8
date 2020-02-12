@@ -1,15 +1,17 @@
 package cm.aptoide.pt.ads;
 
 import android.os.Bundle;
-import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
+import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MoPubAnalytics {
+
+  private static final String ADS_STATUS_USER_PROPERTY = "ads";
 
   public void setMoPubAbTestGroup(boolean isControlGroup) {
     Bundle bundle = new Bundle();
@@ -24,16 +26,15 @@ public class MoPubAnalytics {
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus) {
     Bundle bundle = new Bundle();
     String ads = mapToAdsVisibility(offerResponseStatus).getType();
-    bundle.putString("ads", ads);
+    bundle.putString(ADS_STATUS_USER_PROPERTY, ads);
     AppEventsLogger.updateUserProperties(bundle, response -> Logger.getInstance()
         .d("Facebook Analytics: ", response.toString()));
-    FlurryAgent.addSessionProperty("ads", ads);
+    FlurryAgent.addSessionProperty(ADS_STATUS_USER_PROPERTY, ads);
 
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      String rakamAds = mapAdsVisibilityToRakamValues(offerResponseStatus);
-      Rakam.getInstance()
-          .setSuperProperties(createRakamSuperProperties(rakamAds));
-    }
+    String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
+    Rakam.getInstance()
+        .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
+    UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, adsStatusByRakamValue);
   }
 
   private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
@@ -49,10 +50,14 @@ public class MoPubAnalytics {
     }
   }
 
-  private JSONObject createRakamSuperProperties(String ads) {
-    JSONObject superProperties = new JSONObject();
+  private JSONObject createRakamAdsSuperProperties(String ads) {
+    JSONObject superProperties = Rakam.getInstance()
+        .getSuperProperties();
+    if (superProperties == null) {
+      superProperties = new JSONObject();
+    }
     try {
-      superProperties.put("ads", ads);
+      superProperties.put(ADS_STATUS_USER_PROPERTY, ads);
     } catch (JSONException e) {
       e.printStackTrace();
     }

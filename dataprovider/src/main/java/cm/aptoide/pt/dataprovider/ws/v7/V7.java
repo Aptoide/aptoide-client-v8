@@ -44,10 +44,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.WalletAdsOfferResponse;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewRequest;
-import cm.aptoide.pt.dataprovider.ws.v7.post.CardPreviewResponse;
-import cm.aptoide.pt.dataprovider.ws.v7.post.PostInTimelineResponse;
-import cm.aptoide.pt.dataprovider.ws.v7.post.PostRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.ClaimPromotionRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.promotions.GetPackagePromotionsResponse;
@@ -417,10 +413,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Body GetFollowersRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
-    @POST("user/timeline/card/getLikes") Observable<GetFollowers> getCardUserLikes(
-        @Body GetUserLikesRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
     @POST("store/set") Observable<BaseV7Response> editStore(@Body SimpleSetStoreRequest.Body body);
 
     @POST("user/set") Observable<BaseV7Response> setUser(@Body SetUserRequest.Body body);
@@ -449,20 +441,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
 
-    @POST("user/timeline/card/set") Observable<PostInTimelineResponse> postInTimeline(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body PostRequest.PostRequestBody body);
-
-    @POST("user/timeline/card/preview/get") Observable<CardPreviewResponse> getCardPreview(
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Body CardPreviewRequest.Body request);
-
     @POST("apps/getRecommended") Observable<ListApps> getRecommended(
         @Body GetRecommendedRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("user/follower/set/") Observable<BaseV7Response> unfollowUser(
-        @Body UnfollowUserRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreWidgets/") Observable<GetStoreWidgets> getHomeBundles(

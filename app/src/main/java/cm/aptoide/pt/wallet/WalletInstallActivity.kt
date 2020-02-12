@@ -147,7 +147,8 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
 
   override fun showRootInstallWarningPopup(): Observable<Boolean> {
     return GenericDialogs.createGenericYesNoCancelMessage(applicationContext, null,
-        resources.getString(R.string.root_access_dialog))
+        resources.getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map { response -> response.equals(GenericDialogs.EResponse.YES) }
   }
 

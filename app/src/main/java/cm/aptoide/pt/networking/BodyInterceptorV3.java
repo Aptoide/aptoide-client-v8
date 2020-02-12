@@ -43,33 +43,35 @@ public class BodyInterceptorV3 implements BodyInterceptor<BaseBody> {
 
   public Single<BaseBody> intercept(BaseBody body) {
     return authenticationPersistence.getAuthentication()
-        .map(authentication -> {
-          body.setAndroidVersion(androidVersion);
-          String md5 = aptoideMd5Manager.getAptoideMd5();
-          if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
-          body.setAptoidePackage(aptoidePackage);
-          body.setAptoideUid(idsRepository.getUniqueIdentifier());
-          body.setQ(qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
-          body.setResponseMode(responseMode);
+        .flatMap(authentication -> idsRepository.getUniqueIdentifier()
+            .map(id -> {
+              body.setAndroidVersion(androidVersion);
+              String md5 = aptoideMd5Manager.getAptoideMd5();
+              if (!md5.isEmpty()) body.setAptoideMd5sum(md5);
+              body.setAptoidePackage(aptoidePackage);
+              body.setAptoideUid(id);
+              body.setQ(
+                  qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)));
+              body.setResponseMode(responseMode);
 
-          if (authentication.isAuthenticated()) {
-            body.setAccessToken(authentication.getAccessToken());
-          }
+              if (authentication.isAuthenticated()) {
+                body.setAccessToken(authentication.getAccessToken());
+              }
 
-          final String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
+              final String forceCountry = ToolboxManager.getForceCountry(sharedPreferences);
 
-          if (!TextUtils.isEmpty(forceCountry)) {
-            body.setSimCountryISOCode(forceCountry);
-          } else {
-            if (operatorManager.isSimStateReady()) {
-              body.setMobileCountryCode(operatorManager.getMobileCountryCode());
-              body.setMobileNetworkCode(operatorManager.getMobileNetworkCode());
-              body.setSimCountryISOCode(operatorManager.getSimCountryISO());
-            }
-          }
+              if (!TextUtils.isEmpty(forceCountry)) {
+                body.setSimCountryISOCode(forceCountry);
+              } else {
+                if (operatorManager.isSimStateReady()) {
+                  body.setMobileCountryCode(operatorManager.getMobileCountryCode());
+                  body.setMobileNetworkCode(operatorManager.getMobileNetworkCode());
+                  body.setSimCountryISOCode(operatorManager.getSimCountryISO());
+                }
+              }
 
-          return body;
-        })
+              return body;
+            }))
         .subscribeOn(Schedulers.computation());
   }
 }

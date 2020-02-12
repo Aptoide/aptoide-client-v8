@@ -9,12 +9,12 @@
       android:id="@+id/imageView"
       android:layout_width="55dp"
       android:layout_height="55dp"
-      android:layout_marginBottom="5dp"
-      android:layout_marginEnd="10dp"
-      android:layout_marginLeft="5dp"
-      android:layout_marginRight="14dp"
       android:layout_marginStart="5dp"
+      android:layout_marginLeft="5dp"
       android:layout_marginTop="1dp"
+      android:layout_marginEnd="10dp"
+      android:layout_marginRight="14dp"
+      android:layout_marginBottom="5dp"
       android:src="@drawable/ic_tv"
       />
 
@@ -25,7 +25,7 @@
       android:layout_marginTop="20dp"
       android:text="BRAVIA 2015"
       android:textAppearance="?android:attr/textAppearanceMedium"
-      android:textColor="#ff6600"
+      android:textColor="?attr/colorPrimaryDark"
       android:textSize="15sp"
       />
 </LinearLayout>

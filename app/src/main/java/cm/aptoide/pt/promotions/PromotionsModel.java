@@ -7,33 +7,32 @@ public class PromotionsModel {
 
   private final String promotionId;
   private final List<PromotionApp> appsList;
-  private final int totalAppcValue;
   private final String title;
   private final String featureGraphic;
   private final boolean isWalletInstalled;
   private final boolean isError;
+  private final String description;
+  private final String dialogDescription;
 
-  public PromotionsModel(String promotionId, List<PromotionApp> appsList, int totalAppcValue,
-      String title, String featureGraphic, boolean isWalletInstalled, boolean isError) {
+  public PromotionsModel(String promotionId, List<PromotionApp> appsList, String title,
+      String featureGraphic, boolean isWalletInstalled, boolean isError, String description,
+      String dialogDescription) {
     this.promotionId = promotionId;
     this.appsList = appsList;
-    this.totalAppcValue = totalAppcValue;
     this.title = title;
     this.featureGraphic = featureGraphic;
     this.isWalletInstalled = isWalletInstalled;
     this.isError = isError;
+    this.description = description;
+    this.dialogDescription = dialogDescription;
   }
 
   public static PromotionsModel ofError() {
-    return new PromotionsModel("n/a", Collections.emptyList(), -1, "", "", false, true);
+    return new PromotionsModel("n/a", Collections.emptyList(), "", "", false, true, "", "");
   }
 
   public List<PromotionApp> getAppsList() {
     return appsList;
-  }
-
-  public int getTotalAppcValue() {
-    return totalAppcValue;
   }
 
   public boolean isWalletInstalled() {
@@ -54,5 +53,13 @@ public class PromotionsModel {
 
   public String getPromotionId() {
     return promotionId;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public String getDialogDescription() {
+    return dialogDescription;
   }
 }

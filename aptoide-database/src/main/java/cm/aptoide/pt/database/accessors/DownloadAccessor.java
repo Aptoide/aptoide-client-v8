@@ -100,4 +100,16 @@ public class DownloadAccessor extends SimpleAccessor<Download> {
   public Observable<List<Download>> getAsList(String md5) {
     return database.getAsList(Download.class, Download.MD5, md5);
   }
+
+  public Observable<List<Download>> getUnmovedFilesDownloads() {
+    return Observable.fromCallable(() -> database.get())
+        .flatMap(realm -> realm.where(Download.class)
+            .equalTo("overallDownloadStatus", Download.WAITING_TO_MOVE_FILES)
+            .findAllSorted("timeStamp", Sort.ASCENDING)
+            .asObservable())
+        .unsubscribeOn(RealmSchedulers.getScheduler())
+        .flatMap((data) -> database.copyFromRealm(data))
+        .subscribeOn(RealmSchedulers.getScheduler())
+        .observeOn(Schedulers.io());
+  }
 }

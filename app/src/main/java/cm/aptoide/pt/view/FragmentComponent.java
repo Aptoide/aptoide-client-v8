@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
+import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.home.GetRewardAppCoinsAppsFragment;
 import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
-import cm.aptoide.pt.home.apps.SeeMoreAppcFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreFragment;
 import cm.aptoide.pt.notification.view.InboxFragment;
@@ -25,12 +25,13 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
-import cm.aptoide.pt.store.view.FragmentTopStores;
 import cm.aptoide.pt.store.view.ListStoresFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
+import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.themes.DarkThemeDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
@@ -58,7 +59,7 @@ public interface FragmentComponent {
 
   void inject(CommentListFragment commentListFragment);
 
-  void inject(FragmentTopStores fragmentTopStores);
+  void inject(TopStoresFragment topStoresFragment);
 
   void inject(LatestReviewsFragment latestReviewsFragment);
 
@@ -120,9 +121,11 @@ public interface FragmentComponent {
 
   void inject(EditorialListFragment editorialListFragment);
 
-  void inject(SeeMoreAppcFragment seeMoreAppcFragment);
-
   void inject(EarnAppcListFragment earnAppcListFragment);
 
   void inject(ListAppsMoreFragment listAppsMoreFragment);
+
+  void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
+
+  void inject(DarkThemeDialogFragment darkThemeDialogFragment);
 }

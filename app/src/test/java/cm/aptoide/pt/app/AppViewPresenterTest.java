@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -57,6 +58,7 @@ public class AppViewPresenterTest {
   @Mock private PromotionsNavigator promotionsNavigator;
   @Mock private SimilarAppsExperiment similarAppsExperiment;
   @Mock private ExternalNavigator externalNavigator;
+  @Mock private ApkfyExperiment apkfyExperiment;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -71,7 +73,7 @@ public class AppViewPresenterTest {
         spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
             appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
             permissionManager, permissionService, promotionsNavigator, similarAppsExperiment,
-            externalNavigator));
+            externalNavigator, apkfyExperiment));
 
     lifecycleEvent = PublishSubject.create();
 

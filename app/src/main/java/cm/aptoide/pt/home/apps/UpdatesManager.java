@@ -58,8 +58,8 @@ public class UpdatesManager {
         });
   }
 
-  public Observable<List<Update>> getUpdatesList(boolean isExcluded, boolean excludeAppcUpgrades) {
-    return updateRepository.getAll(isExcluded)
+  public Observable<List<Update>> getUpdatesList(boolean excludeAppcUpgrades) {
+    return updateRepository.getAll(false)
         .flatMap(updates -> Observable.just(updates)
             .flatMapIterable(list -> list)
             .filter(update -> !excludeAppcUpgrades || !update.isAppcUpgrade())
@@ -97,6 +97,6 @@ public class UpdatesManager {
   }
 
   public Observable<Integer> getUpdatesNumber() {
-    return getUpdatesList(false, false).map(list -> list.size());
+    return getUpdatesList(false).map(list -> list.size());
   }
 }

@@ -19,6 +19,7 @@ import cm.aptoide.pt.reactions.ReactionsHomeEvent;
 import cm.aptoide.pt.reactions.TopReactionsPreview;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
+import cm.aptoide.pt.themes.ThemeManager;
 import com.google.android.material.snackbar.Snackbar;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,12 +47,12 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final CardView curationTypeCaption;
   private final TextView curationTypeCaptionText;
   private final CaptionBackgroundPainter captionBackgroundPainter;
+  private final ThemeManager themeAttributeProvider;
   private TopReactionsPreview topReactionsPreview;
-
   private Skeleton skeleton;
 
   public EditorialBundleViewHolder(View view, PublishSubject<HomeEvent> uiEventsListener,
-      CaptionBackgroundPainter captionBackgroundPainter) {
+      CaptionBackgroundPainter captionBackgroundPainter, ThemeManager themeAttributeProvider) {
     super(view);
     this.uiEventsListener = uiEventsListener;
     this.editorialCard = view.findViewById(R.id.editorial_card);
@@ -63,6 +64,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     this.curationTypeCaption = view.findViewById(R.id.curation_type_bubble);
     this.curationTypeCaptionText = view.findViewById(R.id.curation_type_bubble_text);
     this.captionBackgroundPainter = captionBackgroundPainter;
+    this.themeAttributeProvider = themeAttributeProvider;
     topReactionsPreview = new TopReactionsPreview();
     topReactionsPreview.initialReactionsSetup(view);
 
@@ -168,12 +170,14 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+      reactButton.setImageResource(
+          themeAttributeProvider.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     }
   }
 
   private void clearReactions() {
-    reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+    reactButton.setImageResource(
+        themeAttributeProvider.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     topReactionsPreview.clearReactions();
   }
 }

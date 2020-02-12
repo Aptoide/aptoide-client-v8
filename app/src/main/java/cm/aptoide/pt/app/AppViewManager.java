@@ -2,6 +2,7 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -12,6 +13,7 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
+import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.sync.LocalNotificationSync;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
@@ -211,7 +213,7 @@ public class AppViewManager {
 
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
       String trustedValue, String editorsChoicePosition,
-      WalletAdsOfferManager.OfferResponseStatus status) {
+      WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
     return getAppModel().flatMapObservable(app -> Observable.just(
         downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
             app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
@@ -223,7 +225,7 @@ public class AppViewManager {
                 .getName())))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
-              status, download.getStoreName());
+              status, download.getStoreName(), isApkfy);
           if (DownloadModel.Action.MIGRATE.equals(downloadAction)) {
             setupMigratorUninstallEvent(download.getPackageName());
           }
@@ -249,7 +251,7 @@ public class AppViewManager {
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download,
                 walletApp.getDownloadModel()
                     .getAction(), walletApp.getId(), offerResponseStatus, walletApp.getStoreName(),
-                walletApp.getTrustedBadge()))
+                walletApp.getTrustedBadge(), false))
             .map(__ -> download))
         .flatMapCompletable(download -> installManager.install(download))
         .toCompletable();
@@ -257,24 +259,26 @@ public class AppViewManager {
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
-      String trustedBadge) {
+      String trustedBadge, boolean isApkfy) {
     setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
-        storeName);
+        storeName, isApkfy);
   }
 
   private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
       long appId, String malwareRank, String editorsChoice,
-      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName) {
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
+      boolean isApkfy) {
     int campaignId = notificationAnalytics.getCampaignId(download.getPackageName(), appId);
     String abTestGroup = notificationAnalytics.getAbTestingGroup(download.getPackageName(), appId);
     appViewAnalytics.setupDownloadEvents(download, campaignId, abTestGroup, downloadAction,
-        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName);
+        AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
+        isApkfy);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
-        storeName);
+        storeName, isApkfy);
   }
 
   public void setupMigratorUninstallEvent(String packageName) {
@@ -292,23 +296,22 @@ public class AppViewManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable resumeDownload(String md5, long appId, DownloadModel.Action action,
-      String trustedBadge) {
+      String trustedBadge, boolean isApkfy) {
     return installManager.getDownload(md5)
         .flatMap(download -> moPubAdsManager.getAdsVisibilityStatus()
             .doOnSuccess(offerResponseStatus -> setupDownloadEvents(download, action, appId,
-                offerResponseStatus, download.getStoreName(), trustedBadge))
+                offerResponseStatus, download.getStoreName(), trustedBadge, isApkfy))
             .map(__ -> download))
         .doOnError(throwable -> throwable.printStackTrace())
         .flatMapCompletable(download -> installManager.install(download));
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public SearchAdResult getSearchAdResult() {
@@ -476,11 +479,12 @@ public class AppViewManager {
     localNotificationSyncManager.schedule(
         String.format(appcPromotionNotificationStringProvider.getNotificationTitle(), appcValue),
         appcPromotionNotificationStringProvider.getNotificationBody(), image,
-        "aptoideinstall://package="
+        R.string.promo_update2appc_notification_claim_button, "aptoideinstall://package="
             + packageName
             + "&store="
-            + storeName
-            + "&show_install_popup=false", LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+            + storeName + "&show_install_popup=false",
+        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION, AptoideNotification.APPC_PROMOTION,
+        LocalNotificationSyncManager.FIVE_MINUTES);
   }
 
   public void unscheduleNotificationSync() {

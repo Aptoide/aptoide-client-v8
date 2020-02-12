@@ -31,6 +31,7 @@ import cm.aptoide.pt.link.AptoideInstall;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
@@ -83,6 +84,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private DeepLinkAnalytics deepLinkAnalytics;
+  private NewFeature newFeature;
   private boolean shortcutNavigation;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +99,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     String uri = getIntent().getDataString();
     deepLinkAnalytics.website(uri);
     shortcutNavigation = false;
+    newFeature = application.getNewFeature();
 
     Logger.getInstance()
         .v(TAG, "uri: " + uri);
@@ -148,6 +151,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .equals("cm.aptoide.pt") && u.getPath()
           .equals("/deeplink") && "aptoide".equalsIgnoreCase(u.getScheme())) {
         intent = dealWithAptoideSchema(u);
+      } else if ("aptoidefeature".equalsIgnoreCase(u.getScheme())) {
+        intent = parseFeatureUri(u.getHost());
       }
     }
     if (intent != null) {
@@ -155,6 +160,18 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     deepLinkAnalytics.sendWebsite();
     finish();
+  }
+
+  private Intent parseFeatureUri(String uri) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.FEATURE, true);
+    if (uri.contains("id=" + newFeature.getId())) {
+      intent.putExtra(DeepLinksKeys.ID, newFeature.getId());
+      if (uri.contains("action=" + newFeature.getActionId())) {
+        intent.putExtra(DeepLinksKeys.ACTION, newFeature.getActionId());
+      }
+    }
+    return intent;
   }
 
   private Intent dealWithAptoideSchema(Uri u) {
@@ -758,6 +775,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String EDITORIAL_DEEPLINK = "editorial";
     public static final String APPC_INFO_VIEW = "appc_info_view";
     public static final String APPC_ADS = "appc_ads";
+    public static final String FEATURE = "feature";
   }
 
   public static class DeepLinksKeys {
@@ -774,6 +792,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     //deep link query parameters
     public static final String ACTION = "action";
+    public static final String ID = "id";
     public static final String TYPE = "type";
     public static final String NAME = "name";
     public static final String LAYOUT = "layout";

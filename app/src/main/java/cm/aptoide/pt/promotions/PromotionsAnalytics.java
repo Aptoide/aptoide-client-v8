@@ -51,7 +51,7 @@ public class PromotionsAnalytics {
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       Origin origin, boolean isAppBundle) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
-        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin);
+        DownloadAnalytics.AppContext.PROMOTIONS, action, false, origin, false);
     downloadAnalytics.downloadCompleteEvent(download.getMd5(), download.getPackageName(), "",
         action, offerResponseStatus, isAppBundle);
   }
@@ -155,7 +155,7 @@ public class PromotionsAnalytics {
     if (downloadAction != null) {
       installAnalytics.clickOnInstallEvent(packageName, downloadAction, hasSplits, hasBilling,
           downloadAction.equals(DownloadModel.Action.MIGRATE.toString()), rank, "unknown", origin,
-          store);
+          store, false);
       analyticsManager.logEvent(createPromotionsInteractMap(downloadAction, packageName, appcValue),
           PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, context);
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,

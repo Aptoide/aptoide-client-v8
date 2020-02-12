@@ -42,6 +42,8 @@
   <color name="red_gradient_end">#CF382D</color>
   <color name="teal_gradient_end">#00655C</color>
 
+  <color name="status_bar_color">#FE6446</color>
+
 
   <!-- Stores themes - 700 colors -->
   <color name="default_color_700">#bf6113</color>
@@ -77,6 +79,8 @@
   <color name="pink_text">@color/pink</color>
   <color name="red_text">@color/red</color>
   <color name="teal_text">@color/teal</color>
+  <color name="deep_purple_light_text">#6D44B8</color>
+
 
 </resources>
 

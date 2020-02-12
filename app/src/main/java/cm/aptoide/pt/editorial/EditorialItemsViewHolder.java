@@ -24,6 +24,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.home.SnapToStartHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.aptoideviews.video.WebChromeClientWithoutPlayerPlaceholder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -260,6 +261,7 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
           embeddedVideo.getSettings()
               .setJavaScriptEnabled(true);
           embeddedVideo.loadUrl(editorialMedia.getUrl());
+          embeddedVideo.setWebChromeClient(new WebChromeClientWithoutPlayerPlaceholder());
           embeddedVideo.setVisibility(View.VISIBLE);
         }
       }
@@ -379,7 +381,8 @@ class EditorialItemsViewHolder extends RecyclerView.ViewHolder {
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
     resumeDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.RESUME, appName, packageName, md5sum, icon,
-            verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));
+            verName, verCode, path, pathAlt, obb, action, size, splits, requiredSplits,
+            trustedBadge, storeName)));
     pauseDownload.setOnClickListener(click -> downloadEventListener.onNext(
         new EditorialDownloadEvent(EditorialEvent.Type.PAUSE, appName, packageName, md5sum, icon,
             verName, verCode, path, pathAlt, obb, size, splits, requiredSplits)));

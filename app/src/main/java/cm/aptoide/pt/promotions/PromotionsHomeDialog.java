@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.HomePromotionsWrapper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -65,9 +67,7 @@ public class PromotionsHomeDialog {
   public void showDialog(HomePromotionsWrapper promotions) {
     dialog.show();
     TextView description = dialogView.findViewById(R.id.description);
-    description.setText(dialogView.getContext()
-        .getString(R.string.holidayspromotion_message_popup,
-            String.valueOf(promotions.getTotalAppcValue())));
+    description.setText(promotions.getDescription());
     TextView titleView = dialog.findViewById(R.id.promotion_title);
     ImageView promotionGraphicView = dialog.findViewById(R.id.promotion_graphic);
     titleView.setText(promotions.getTitle());

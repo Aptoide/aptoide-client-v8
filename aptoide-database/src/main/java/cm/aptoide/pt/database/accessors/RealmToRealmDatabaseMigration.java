@@ -507,5 +507,22 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("trustedBadge", String.class);
       oldVersion++;
     }
+    if (oldVersion == 8105) {
+      schema.get("MinimalAd")
+          .addField("hasAppc", boolean.class)
+          .addField("appcAmount", double.class)
+          .addField("currencyAmount", double.class)
+          .addField("currency", String.class)
+          .addField("currencySymbol", String.class);
+      oldVersion++;
+    }
+    if (oldVersion == 8106) {
+      schema.get("RealmLocalNotificationSync")
+          .addField("actionStringRes", int.class)
+          .addField("type", int.class);
+      schema.get("Notification")
+          .addField("actionStringRes", int.class);
+      oldVersion++;
+    }
   }
 }

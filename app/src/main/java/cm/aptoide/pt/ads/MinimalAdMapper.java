@@ -18,6 +18,24 @@ public class MinimalAdMapper {
       clickUrl = partner.getData()
           .getClickUrl();
     }
+    GetAdsResponse.Info.Payout payout = ad.getInfo()
+        .getPayout();
+    double appcAmount = -1;
+    double fiatAmount = -1;
+    String currency = "";
+    String currencySymbol = "";
+    boolean hasAppc = false;
+    if (payout != null) {
+      appcAmount = payout.getAppc();
+      fiatAmount = payout.getFiat()
+          .getAmount();
+      currency = payout.getFiat()
+          .getCurrency();
+      currencySymbol = payout.getFiat()
+          .getSymbol();
+      hasAppc = true;
+    }
+
     return new MinimalAd(ad.getData()
         .getPackageName(), id, clickUrl, ad.getInfo()
         .getCpcUrl(), ad.getInfo()
@@ -31,7 +49,7 @@ public class MinimalAdMapper {
         .getDownloads(), ad.getData()
         .getStars(), ad.getData()
         .getModified()
-        .getTime());
+        .getTime(), hasAppc, appcAmount, fiatAmount, currency, currencySymbol);
   }
 
   public StoredMinimalAd map(SearchAdResult searchAdResult, String referrer) {

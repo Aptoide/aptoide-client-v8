@@ -2,11 +2,17 @@ package cm.aptoide.pt.view.rx;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.widget.TextView;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import cm.aptoide.pt.R;
+import cm.aptoide.pt.themes.ThemeManager;
 import com.jakewharton.rxrelay.PublishRelay;
+import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by marcelobenites on 08/03/17.
@@ -33,6 +39,11 @@ public class RxAlertDialog implements DialogInterface {
 
   public View getDialogView() {
     return view;
+  }
+
+  public int getCheckedItem() {
+    return dialog.getListView()
+        .getCheckedItemPosition();
   }
 
   public void show() {
@@ -77,6 +88,21 @@ public class RxAlertDialog implements DialogInterface {
         .map(click -> this);
   }
 
+  public Single<Result> showWithResult() {
+    return Completable.fromAction(dialog::show)
+        .andThen(Observable.merge(cancelEvent.cancels()
+            .map(__ -> Result.CANCEL), dismissEvent.dismisses()
+            .map(__ -> Result.DISMISS), positiveClick.clicks()
+            .map(__ -> Result.POSITIVE), negativeClick.clicks()
+            .map(__ -> Result.NEGATIVE)))
+        .first()
+        .toSingle();
+  }
+
+  public enum Result {
+    CANCEL, DISMISS, POSITIVE, NEGATIVE
+  }
+
   public static class Builder {
 
     private final AlertDialog.Builder builder;
@@ -85,8 +111,9 @@ public class RxAlertDialog implements DialogInterface {
     private DialogClick negativeClick;
     private View view;
 
-    public Builder(Context context) {
-      this.builder = new AlertDialog.Builder(context);
+    public Builder(Context context, ThemeManager themeManager) {
+      this.builder = new AlertDialog.Builder(new ContextThemeWrapper(context,
+          themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId));
     }
 
     public Builder setView(View view) {
@@ -100,6 +127,24 @@ public class RxAlertDialog implements DialogInterface {
       return this;
     }
 
+    public Builder setTitleSmall(@StringRes int titleId) {
+      TextView textView = new TextView(builder.getContext());
+      textView.setTextSize(12f);
+      textView.setTextColor(textView.getResources()
+          .getColor(R.color.secondary_text_color));
+      textView.setText(titleId);
+
+      int paddingTop = (int) (20 * textView.getResources()
+          .getDisplayMetrics().density + 0.5f);
+      int paddingLeft = (int) (25 * textView.getResources()
+          .getDisplayMetrics().density + 0.5f);
+      int paddingBottom = (int) (10 * textView.getResources()
+          .getDisplayMetrics().density + 0.5f);
+      textView.setPaddingRelative(paddingLeft, paddingTop, 0, paddingBottom);
+      builder.setCustomTitle(textView);
+      return this;
+    }
+
     public Builder setMessage(@StringRes int messageId) {
       builder.setMessage(messageId);
       return this;
@@ -108,6 +153,11 @@ public class RxAlertDialog implements DialogInterface {
     public Builder setPositiveButton(@StringRes int textId) {
       positiveClick = new DialogClick(DialogInterface.BUTTON_POSITIVE, PublishRelay.create());
       builder.setPositiveButton(textId, positiveClick);
+      return this;
+    }
+
+    public Builder setSingleChoiceItems(CharSequence[] items, int selectedItem) {
+      builder.setSingleChoiceItems(items, selectedItem, null);
       return this;
     }
 

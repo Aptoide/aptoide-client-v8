@@ -32,6 +32,7 @@ import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.misc.ErrorHomeBundle;
 import cm.aptoide.pt.home.bundles.misc.ProgressBundle;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.jakewharton.rxbinding.support.v4.widget.RxSwipeRefreshLayout;
@@ -63,6 +64,7 @@ public class MoreBundleFragment extends NavigationTrackFragment
   @Inject MoreBundlePresenter presenter;
   @Inject @Named("marketName") String marketName;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
+  @Inject ThemeManager themeAttributeProvider;
   private RecyclerView bundlesList;
   private BundlesAdapter adapter;
   private PublishSubject<HomeEvent> uiEventsListener;
@@ -95,18 +97,16 @@ public class MoreBundleFragment extends NavigationTrackFragment
         savedInstanceState.putParcelable(MORE_LIST_STATE_KEY, null);
       }
     }
-    bundlesList = (RecyclerView) view.findViewById(R.id.more_bundles_list);
+    bundlesList = view.findViewById(R.id.more_bundles_list);
     toolbarElement = view.findViewById(R.id.action_bar);
     errorView = view.findViewById(R.id.error_view);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.more_refresh_layout);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    swipeRefreshLayout.setColorSchemeResources(R.color.default_progress_bar_color,
-        R.color.default_color, R.color.default_progress_bar_color, R.color.default_color);
+    progressBar = view.findViewById(R.id.progress_bar);
+    swipeRefreshLayout = view.findViewById(R.id.more_refresh_layout);
+    toolbar = view.findViewById(R.id.toolbar);
     adapter = new BundlesAdapter(new ArrayList<>(), new ProgressBundle(), new ErrorHomeBundle(),
         oneDecimalFormatter, uiEventsListener,
         new AdsBundlesViewHolderFactory(uiEventsListener, adClickedEvents, oneDecimalFormatter,
-            marketName, false), captionBackgroundPainter, marketName);
+            marketName, false), captionBackgroundPainter, marketName, themeAttributeProvider);
     layoutManager = new LinearLayoutManager(getContext());
     bundlesList.setLayoutManager(layoutManager);
     bundlesList.setAdapter(adapter);

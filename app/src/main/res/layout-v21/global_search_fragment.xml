@@ -66,6 +66,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
+        style="?attr/backgroundCardColorSecondary"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         >
@@ -75,7 +76,7 @@
           android:layout_height="26.6dp"
           android:layout_centerHorizontal="true"
           android:layout_gravity="center"
-          android:background="@drawable/search_buttons_background"
+          android:background="?attr/searchStoresSwitchBackground"
           android:gravity="center_horizontal"
           android:orientation="horizontal"
           >
@@ -96,10 +97,10 @@
             android:id="@+id/fragment_search_result_all_stores_button"
             android:layout_width="128dp"
             android:layout_height="match_parent"
-            android:background="@drawable/default_search_button_background"
+            android:background="?attr/roundGradientButtonBackground"
             android:stateListAnimator="@null"
             android:text="@string/all_stores"
-            android:textColor="@color/white"
+            android:textColor="?attr/inverseTextColor"
             android:textSize="10sp"
             tools:ignore="SmallSp"
             />
@@ -124,8 +125,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/mopub_banner"
-      android:layout_above="@id/mopub_banner2"
-      android:layout_marginTop="5dp"
+        android:layout_above="@id/mopub_banner2"
+        android:layout_marginTop="5dp"
         android:visibility="invisible"
         />
 
@@ -140,15 +141,16 @@
         />
 
     <com.mopub.mobileads.MoPubView
-      android:id="@+id/mopub_banner2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_marginTop="5dp"
-      android:visibility="gone"
-      tools:background="@color/green"
-      tools:layout_height="20dp"
-      tools:visibility="gone" />
+        android:id="@+id/mopub_banner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        tools:background="@color/green"
+        tools:layout_height="20dp"
+        tools:visibility="gone"
+        />
 
   </RelativeLayout>
 

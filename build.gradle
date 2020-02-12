@@ -28,6 +28,7 @@ allprojects {
     google()
     maven { url 'https://maven.google.com' }
     maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+    maven { url 'https://sdk.uxcam.com/android/' }
     flatDir {
       dirs 'libs'
     }
@@ -59,14 +60,14 @@ ext {
   //
 
   // Google Android Support
-  APPCOMPAT_VERSION = '1.0.2'
+  APPCOMPAT_VERSION = '1.1.0'
   ANDROIDX_ANNOTATION_VERSION = '1.1.0'
 
   MATERIAL_VERSION = '1.0.0'
   PALETTE_VERSION = '1.0.0'
   RECYCLER_VIEW_VERSION = '1.0.0'
   CARD_VIEW_VERSION = '1.0.0'
-  PREFERENCES_VERSION = '1.0.0'
+  PREFERENCES_VERSION = '1.1.0'
   BROWSER_VERSION = '1.0.0'
   LEGACY_SUPPORT_VERSION = '1.0.0'
 
@@ -121,7 +122,7 @@ ext {
   SUPER_USER_LIB_VERSION = '1.0.0.+'
 
   // Flurry Android SDK
-  FLURRY_VERSION = '11.6.0'
+  FLURRY_VERSION = '12.1.0'
 
   CRASHLYTICS_VERSION = '2.10.0'
 
@@ -160,6 +161,10 @@ ext {
   LOTTIE_VERSION = '2.7.0'
 
   JMDNS_VERSION = '3.5.1'
+
+  EPOXY_VERSION = '3.8.0'
+
+  STATEMACHINE_VERSION = '0.1.2'
 }
 
 // see 'Multi-module reports' in https://developer.android.com/studio/test/command-line.html

@@ -72,7 +72,6 @@ public class AlarmSyncScheduler implements SyncScheduler {
   }
 
   private void schedulePeriodicSync(Sync sync) {
-
     if (sync.isExact()) {
       scheduleExactPeriodicSync(sync);
     } else {

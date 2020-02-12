@@ -70,9 +70,9 @@ public class PromotionsManager {
           }
           PromotionMeta meta = promotions.get(0);
           return getPromotionApps(meta.getPromotionId()).map(
-              appsList -> new PromotionsModel(meta.getPromotionId(), appsList,
-                  getTotalAppc(appsList), meta.getTitle(), meta.getBackground(),
-                  isWalletInstalled(), false));
+              appsList -> new PromotionsModel(meta.getPromotionId(), appsList, meta.getTitle(),
+                  meta.getBackground(), isWalletInstalled(), false, meta.getDescription(),
+                  meta.getDialogDescription()));
         });
   }
 
@@ -160,16 +160,15 @@ public class PromotionsManager {
         AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        download.getTrustedBadge(), download.getStoreName(), false);
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId) {

@@ -39,11 +39,11 @@ import cm.aptoide.pt.reactions.ReactionEvent;
 import cm.aptoide.pt.reactions.TopReactionsPreview;
 import cm.aptoide.pt.reactions.data.TopReaction;
 import cm.aptoide.pt.reactions.ui.ReactionsPopup;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
@@ -81,7 +81,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Inject EditorialPresenter presenter;
   @Inject @Named("screenWidth") float screenWidth;
   @Inject @Named("screenHeight") float screenHeight;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   @Inject CaptionBackgroundPainter captionBackgroundPainter;
   private Toolbar toolbar;
   private ImageView appImage;
@@ -147,7 +147,7 @@ public class EditorialFragment extends NavigationTrackFragment
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
     }
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
     AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
     appCompatActivity.setSupportActionBar(toolbar);
@@ -156,20 +156,20 @@ public class EditorialFragment extends NavigationTrackFragment
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
     backArrow = toolbar.getNavigationIcon();
-    scrollView = (NestedScrollView) view.findViewById(R.id.nested_scroll_view);
-    appBarLayout = (AppBarLayout) view.findViewById(R.id.app_bar_layout);
-    appImage = (ImageView) view.findViewById(R.id.app_graphic);
-    itemName = (TextView) view.findViewById(R.id.action_item_name);
+    scrollView = view.findViewById(R.id.nested_scroll_view);
+    appBarLayout = view.findViewById(R.id.app_bar_layout);
+    appImage = view.findViewById(R.id.app_graphic);
+    itemName = view.findViewById(R.id.action_item_name);
     appCardLayout = view.findViewById(R.id.app_cardview_layout);
     appCardView = view.findViewById(R.id.app_cardview);
-    appCardImage = (ImageView) appCardView.findViewById(R.id.app_icon_imageview);
-    appCardTitle = (TextView) appCardView.findViewById(R.id.app_title_textview);
-    appCardButton = (Button) appCardView.findViewById(R.id.appview_install_button);
+    appCardImage = appCardView.findViewById(R.id.app_icon_imageview);
+    appCardTitle = appCardView.findViewById(R.id.app_title_textview);
+    appCardButton = appCardView.findViewById(R.id.appview_install_button);
     actionItemCard = view.findViewById(R.id.action_item_card);
     editorialItemsCard = view.findViewById(R.id.card_info_layout);
-    editorialItems = (RecyclerView) view.findViewById(R.id.editorial_items);
+    editorialItems = view.findViewById(R.id.editorial_items);
     errorView = view.findViewById(R.id.error_view);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBar = view.findViewById(R.id.progress_bar);
     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
     layoutManager.setOrientation(RecyclerView.VERTICAL);
     adapter = new EditorialItemsAdapter(new ArrayList<>(), oneDecimalFormatter, uiEventsListener,
@@ -180,17 +180,16 @@ public class EditorialFragment extends NavigationTrackFragment
     reactButton = view.findViewById(R.id.add_reactions);
     topReactionsPreview.initialReactionsSetup(view);
 
-    cardInfoLayout = (RelativeLayout) view.findViewById(R.id.card_info_install_layout);
+    cardInfoLayout = view.findViewById(R.id.card_info_install_layout);
     downloadControlsLayout = view.findViewById(R.id.install_controls_layout);
-    downloadInfoLayout = ((LinearLayout) view.findViewById(R.id.appview_transfer_info));
-    downloadProgressBar = ((ProgressBar) view.findViewById(R.id.appview_download_progress_bar));
-    downloadProgressValue = (TextView) view.findViewById(R.id.appview_download_progress_number);
-    cancelDownload = ((ImageView) view.findViewById(R.id.appview_download_cancel_button));
-    resumeDownload = ((ImageView) view.findViewById(R.id.appview_download_resume_download));
-    pauseDownload = ((ImageView) view.findViewById(R.id.appview_download_pause_download));
-    toolbarTitle = ((TextView) view.findViewById(R.id.toolbar_title));
-    collapsingToolbarLayout =
-        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    downloadInfoLayout = view.findViewById(R.id.appview_transfer_info);
+    downloadProgressBar = view.findViewById(R.id.appview_download_progress_bar);
+    downloadProgressValue = view.findViewById(R.id.appview_download_progress_number);
+    cancelDownload = view.findViewById(R.id.appview_download_cancel_button);
+    resumeDownload = view.findViewById(R.id.appview_download_resume_download);
+    pauseDownload = view.findViewById(R.id.appview_download_pause_download);
+    toolbarTitle = view.findViewById(R.id.toolbar_title);
+    collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar_layout);
     collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(R.color.transparent));
     collapsingToolbarLayout.setCollapsedTitleTextColor(
         getResources().getColor(R.color.transparent));
@@ -224,8 +223,11 @@ public class EditorialFragment extends NavigationTrackFragment
             break;
           case COLLAPSED:
             movingCollapseSubject.onNext(isItemShown());
-            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
-                resources.getColor(R.color.black), true);
+            configureAppBarLayout(resources.getDrawable(
+                themeManager.getAttributeForTheme(R.attr.toolbarBackgroundSecondary).resourceId),
+                resources.getColor(
+                    themeManager.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId),
+                true);
             break;
         }
       }
@@ -267,7 +269,7 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
+    themeManager.resetStatusBarColor();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       window.getDecorView()
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -309,7 +311,7 @@ public class EditorialFragment extends NavigationTrackFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.editorial_layout, container, false);
+    return inflater.inflate(R.layout.fragment_editorial, container, false);
   }
 
   @Override public void showLoading() {
@@ -396,7 +398,8 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -427,7 +430,8 @@ public class EditorialFragment extends NavigationTrackFragment
     return RxView.clicks(resumeDownload)
         .map(click -> new EditorialDownloadEvent(EditorialEvent.Type.RESUME,
             editorialViewModel.getBottomCardPackageName(), editorialViewModel.getBottomCardMd5(),
-            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId()))
+            editorialViewModel.getBottomCardVersionCode(), editorialViewModel.getBottomCardAppId(),
+            action))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.RESUME)));
   }
@@ -531,7 +535,8 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public Observable<Boolean> showDowngradeMessage() {
     return GenericDialogs.createGenericContinueCancelMessage(getContext(), null,
         getContext().getResources()
-            .getString(R.string.downgrade_warning_dialog))
+            .getString(R.string.downgrade_warning_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(eResponse -> eResponse.equals(YES));
   }
 
@@ -572,7 +577,8 @@ public class EditorialFragment extends NavigationTrackFragment
     if (topReactionsPreview.isReactionValid(reaction)) {
       reactButton.setImageResource(mapReaction(reaction));
     } else {
-      reactButton.setImageResource(R.drawable.ic_reaction_emoticon);
+      reactButton.setImageResource(
+          themeManager.getAttributeForTheme(R.attr.reactionInputDrawable).resourceId);
     }
   }
 
@@ -668,7 +674,8 @@ public class EditorialFragment extends NavigationTrackFragment
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> new OnErrorNotImplementedException(error));
@@ -685,7 +692,7 @@ public class EditorialFragment extends NavigationTrackFragment
       case ACTIVE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        downloadProgressValue.setText(progress + "%");
         pauseDownload.setVisibility(View.VISIBLE);
         cancelDownload.setVisibility(View.GONE);
         resumeDownload.setVisibility(View.GONE);
@@ -701,7 +708,7 @@ public class EditorialFragment extends NavigationTrackFragment
       case PAUSE:
         downloadProgressBar.setIndeterminate(false);
         downloadProgressBar.setProgress(progress);
-        downloadProgressValue.setText(String.valueOf(progress) + "%");
+        downloadProgressValue.setText(progress + "%");
         pauseDownload.setVisibility(View.GONE);
         cancelDownload.setVisibility(View.VISIBLE);
         resumeDownload.setVisibility(View.VISIBLE);
@@ -724,26 +731,21 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  private void handleStatusBar(boolean collapseState) {
-    if (collapseState) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(getResources().getColor(R.color.white));
+  private void handleStatusBar(boolean isCollapsed) {
+    if (isCollapsed) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && !themeManager.isThemeDark()) {
+          window.getDecorView()
+              .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        window.setStatusBarColor(getResources().getColor(
+            themeManager.getAttributeForTheme(R.attr.statusBarColorSecondary).resourceId));
       }
     } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
         window.getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
       }
     }
   }

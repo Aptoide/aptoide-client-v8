@@ -202,7 +202,7 @@ public class HomePresenterTest {
     //then it should navigate to the App's detail View
     verify(homeAnalytics).sendAdClickEvent(anyInt(), anyString(), anyInt(), anyString(),
         eq(HomeEvent.Type.AD), eq(ApplicationAd.Network.SERVER));
-    verify(homeNavigator).navigateToAppView(any());
+    verify(homeNavigator).navigateToAppView(any(), any());
   }
 
   @Test public void moreClicked_NavigateToActionView() {

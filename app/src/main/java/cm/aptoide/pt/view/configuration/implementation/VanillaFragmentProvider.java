@@ -110,14 +110,16 @@ public class VanillaFragmentProvider implements FragmentProvider {
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext);
+      StoreContext storeContext, boolean addAdultFilter, boolean shouldShowToolbar) {
+    return StoreTabGridRecyclerFragment.newInstance(event, storeTheme, tag, storeContext,
+        shouldShowToolbar);
   }
 
   @Override
   public Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag, StoreContext storeContext, boolean addAdultFilter) {
-    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext);
+      String tag, StoreContext storeContext, boolean addAdultFilter, boolean shouldShowToolbar) {
+    return StoreTabGridRecyclerFragment.newInstance(event, title, storeTheme, tag, storeContext,
+        shouldShowToolbar);
   }
 
   @Override public Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
@@ -131,8 +133,8 @@ public class VanillaFragmentProvider implements FragmentProvider {
   }
 
   @Override
-  public Fragment newDescriptionFragment(String appName, String description, String storeTheme) {
-    return DescriptionFragment.newInstance(appName, description, storeTheme);
+  public Fragment newDescriptionFragment(String appName, String description, boolean hasAppc) {
+    return DescriptionFragment.newInstance(appName, description, hasAppc);
   }
 
   @Override public Fragment newSettingsFragment() {

@@ -42,6 +42,7 @@ public class PromotionsPresenter implements Presenter {
   @Override public void present() {
     getPromotionApps();
     installButtonClick();
+    handleClickOnAppCard();
     pauseDownload();
     cancelDownload();
     resumeDownload();
@@ -148,6 +149,21 @@ public class PromotionsPresenter implements Presenter {
         });
   }
 
+  private void handleClickOnAppCard() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.appCardClick())
+        .doOnNext(promotionAppClick -> promotionsNavigator.navigateToAppView(
+            promotionAppClick.getApp()
+                .getAppId(), promotionAppClick.getApp()
+                .getPackageName()))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> {
+          throw new IllegalStateException(error);
+        });
+  }
+
   private void handlePromotionOverDialogClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
@@ -196,7 +212,7 @@ public class PromotionsPresenter implements Presenter {
       view.showPromotionOverDialog();
       return Observable.empty();
     } else {
-      view.showAppCoinsAmount((appsModel.getTotalAppcValue()));
+      view.setPromotionMessage((appsModel.getDescription()));
       view.showPromotionTitle(appsModel.getTitle());
       view.showPromotionFeatureGraphic(appsModel.getFeatureGraphic());
       return handlePromotionApps(appsModel);

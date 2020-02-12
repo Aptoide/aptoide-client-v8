@@ -23,10 +23,9 @@ public class RealmLocalNotificationSyncPersistence implements LocalNotificationS
     database.insert(mapper.map(notification));
   }
 
-  @Override public Observable<Sync> get() {
+  @Override public Observable<Sync> get(String id) {
     return database.get(RealmLocalNotificationSync.class,
-        RealmLocalNotificationSync.PRIMARY_KEY_NAME,
-        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION)
+        RealmLocalNotificationSync.PRIMARY_KEY_NAME, id)
         .map(sync -> {
           if (sync != null) {
             return mapper.map(sync, provider);
@@ -38,6 +37,6 @@ public class RealmLocalNotificationSyncPersistence implements LocalNotificationS
 
   @Override public void remove(String id) {
     database.delete(RealmLocalNotificationSync.class, RealmLocalNotificationSync.PRIMARY_KEY_NAME,
-        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION);
+        id);
   }
 }
