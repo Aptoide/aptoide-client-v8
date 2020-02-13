@@ -493,7 +493,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void showBannerAd() {
     bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
+    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
     bannerAdBottom.setVisibility(VISIBLE);
     bannerAdBottom.loadAd();
   }
@@ -506,7 +506,8 @@ public class SearchResultFragment extends BackButtonFragment
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
     if (Build.VERSION.SDK_INT >= 21) {
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_PLACEMENT_ID, requestParameters);
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID,
+          requestParameters);
     }
   }
 
