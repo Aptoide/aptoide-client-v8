@@ -124,12 +124,16 @@ public class AppsFragment extends NavigationTrackFragment implements AppsFragmen
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
-    appsController.onRestoreInstanceState(savedInstanceState);
+    if (appsController != null) {
+      appsController.onRestoreInstanceState(savedInstanceState);
+    }
   }
 
   @Override public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    appsController.onSaveInstanceState(outState);
+    if (appsController != null) {
+      appsController.onSaveInstanceState(outState);
+    }
   }
 
   @Override public Observable<App> installApp() {
