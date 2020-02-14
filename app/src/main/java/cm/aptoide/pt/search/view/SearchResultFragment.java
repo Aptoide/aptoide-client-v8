@@ -494,7 +494,6 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void showBannerAd() {
     bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
     bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
-    bannerAdBottom.setVisibility(VISIBLE);
     bannerAdBottom.loadAd();
   }
 
