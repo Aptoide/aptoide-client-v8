@@ -102,6 +102,7 @@
           android:layout_marginEnd="5dp"
           android:layout_marginRight="5dp"
           android:scaleType="fitXY"
+          android:visibility="invisible"
           app:srcCompat="@drawable/ic_get_appc"
           />
 
@@ -112,6 +113,7 @@
           android:layout_height="wrap_content"
           android:maxLines="2"
           android:textColor="@color/curation_gold"
+          android:visibility="invisible"
           tools:text="EARN €0.78"
           />
 
@@ -135,8 +137,9 @@
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:background="@color/transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
-        app:layout_constraintStart_toStartOf="@+id/star_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <RelativeLayout
@@ -144,8 +147,9 @@
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:background="@color/transparent"
-        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
-        app:layout_constraintStart_toStartOf="@+id/star_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
