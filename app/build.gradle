@@ -6,6 +6,7 @@ apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'io.sentry.android.gradle'
 
 buildscript {
 
@@ -321,10 +322,13 @@ android {
         type ==
         'release') {
       buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY + "\""
+      buildConfigField "String", "SENTRY_DSN_KEY", "\"" + project.SENTRY_DSN_KEY + "\""
     } else if (flavors[0].name.contains("cobrand")) {
       buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY_COBRAND + "\""
+      buildConfigField "String", "SENTRY_DSN_KEY", "\"" + project.SENTRY_DSN_KEY_COBRAND + "\""
     } else {
       buildConfigField "String", "SENTRY_API_KEY", "\"" + project.SENTRY_API_KEY_DEBUG + "\""
+      buildConfigField "String", "SENTRY_DSN_KEY", "\"" + project.SENTRY_DSN_KEY_DEBUG + "\""
     }
 
     variant.outputs.all { output ->

@@ -359,7 +359,7 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty(){
+  private Completable setUpAdsUserProperty() {
     return adsUserPropertyManager.setUp();
   }
 
@@ -379,9 +379,7 @@ public abstract class AptoideApplication extends Application {
 
   private Completable initializeSentry() {
     return Completable.fromAction(
-        () -> Sentry.init("https://" + BuildConfig.SENTRY_API_KEY + "@sentry.aptoide.com/Vanilla",
-            new AndroidSentryClientFactory(this))
-    );
+        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
   }
 
   private void initializeRakam(String id) {
