@@ -227,6 +227,7 @@ import rx.exceptions.OnErrorNotImplementedException;
         .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
         .doOnNext(ad -> {
+          ad.setHasLoadedAds();
           view.setFollowedStoresAdsEmpty();
           view.setAllStoresAdsEmpty();
         })
