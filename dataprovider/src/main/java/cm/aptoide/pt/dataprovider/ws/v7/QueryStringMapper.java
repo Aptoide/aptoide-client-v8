@@ -112,4 +112,14 @@ public class QueryStringMapper {
     }
     return nodes;
   }
+
+  public Map<String, String> map(GetRecommendedRequest.Body body) {
+    Map<String, String> data = new HashMap<>();
+    map(body, false, data);
+    put("package_name", body.getPackageName(), data);
+    put("limit", body.getLimit(), data);
+    put("offset", body.getOffset(), data);
+    put("section", body.getSection(), data);
+    return data;
+  }
 }
