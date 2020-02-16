@@ -267,6 +267,10 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header("Cache-Control") String bypassCache,
         @QueryMap(encoded = true) Map<String, String> parameters);
 
+    @GET("listSearchApps") Observable<ListSearchApps> listSearchApps(
+        @Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
+
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
@@ -318,10 +322,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("{url}") Observable<GetStoreMeta> getStoreMeta(
         @Path(value = "url", encoded = true) String url, @Body GetHomeMetaRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
-        @Body ListSearchAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,

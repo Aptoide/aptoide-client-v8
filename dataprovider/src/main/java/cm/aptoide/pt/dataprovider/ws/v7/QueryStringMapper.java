@@ -58,6 +58,29 @@ public class QueryStringMapper {
     return data;
   }
 
+  public Map<String, String> map(ListSearchAppsRequest.Body body, boolean shouldEnableAppBundles) {
+    Map<String, String> data = new HashMap<>();
+    map(body, true, data);
+    put("aab", shouldEnableAppBundles, data);
+    put("limit", body.getLimit(), data);
+    put("offset", body.getOffset(), data);
+    put("query", body.getQuery(), data);
+    put("trusted", body.getTrusted(), data);
+    if (body.getStoreIds() != null) {
+      put("store_ids", body.getStoreIdsAsString(), data);
+    }
+    if (body.getStoreNames() != null) {
+      put("store_names", body.getStoreNamesAsString(), data);
+    }
+
+    if (body.getStoresAuthMap() != null && !body.getStoresAuthMap()
+        .isEmpty()) {
+      put("stores_auth_map", body.getStoresAuthMapAsString(), data);
+    }
+
+    return data;
+  }
+
   public Map<String, String> map(GetAppRequest.Body body, boolean shouldEnableAppBundles) {
     Map<String, String> data = new HashMap<>();
     map(body, false, data);
