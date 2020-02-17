@@ -9,7 +9,6 @@ import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.notification.view.InboxFragment;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.themes.ThemeManager;
 import rx.Observable;
@@ -87,9 +86,5 @@ public class MyAccountNavigator {
 
   public void navigateToSettings() {
     fragmentNavigator.navigateTo(SettingsFragment.newInstance(), true);
-  }
-
-  public void navigateToNotificationHistory() {
-    fragmentNavigator.navigateTo(new InboxFragment(), true);
   }
 }
