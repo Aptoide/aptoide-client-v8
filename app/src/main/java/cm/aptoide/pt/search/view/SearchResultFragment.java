@@ -190,7 +190,7 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-    bannerAdBottom = view.findViewById(R.id.mopub_banner2);
+    bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
   }
 
