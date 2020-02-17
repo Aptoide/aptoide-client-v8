@@ -52,7 +52,7 @@
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="?attr/backgroundMain"
+          android:background="?attr/backgroundCardColor"
           >
 
         <TextView
@@ -82,8 +82,8 @@
         <include
             android:id="@+id/separator"
             layout="@layout/separator_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
             android:layout_below="@id/show_adult_text"
             />
 
@@ -95,7 +95,7 @@
             android:layout_below="@id/separator"
             android:layout_marginStart="13dp"
             android:layout_marginLeft="13dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
             android:text="@string/no_search_results_other_filters"
             />
@@ -103,8 +103,8 @@
         <Button
             android:id="@+id/no_search_settings_button"
             style="@style/Aptoide.Button.Ghost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
             android:layout_below="@id/separator"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"

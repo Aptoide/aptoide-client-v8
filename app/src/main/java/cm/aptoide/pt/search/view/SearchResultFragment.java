@@ -205,11 +205,6 @@ public class SearchResultFragment extends BackButtonFragment
 
     noSearchAdultContentSwitch.setOnClickListener(
         v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
-
-    noSearchAdultContentSwitch.setOnDragListener((v, event) -> {
-      noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked());
-      return true;
-    });
   }
 
   @Override public void showFollowedStoresResult() {
