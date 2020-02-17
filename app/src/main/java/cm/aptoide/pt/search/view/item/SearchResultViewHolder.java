@@ -75,9 +75,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setDownloadCount() {
-    String downloadNumber =
-        String.format("%s", AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()));
-    downloadsTextView.setText(downloadNumber);
+    downloadsTextView.setText(AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()));
   }
 
   private void setAppName() {
