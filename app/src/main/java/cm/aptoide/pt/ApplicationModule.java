@@ -1495,7 +1495,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME);

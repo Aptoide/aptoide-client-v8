@@ -481,8 +481,7 @@ public class AppViewManager {
         appcPromotionNotificationStringProvider.getNotificationBody(), image,
         R.string.promo_update2appc_notification_claim_button, "aptoideinstall://package="
             + packageName
-            + "&store="
-            + storeName + "&show_install_popup=false",
+            + "&store=" + storeName + "&show_install_popup=false",
         LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION, AptoideNotification.APPC_PROMOTION,
         LocalNotificationSyncManager.FIVE_MINUTES);
   }

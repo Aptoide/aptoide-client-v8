@@ -279,7 +279,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
-    setBannersVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void showResultsView() {
@@ -296,7 +296,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    setBannersVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -522,7 +522,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    setBannersVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void showGenericErrorView() {
@@ -535,13 +535,9 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    setBannersVisibility(View.GONE);
-  }
-
-  private void setBannersVisibility(int visibility) {
-    bannerAdBottom.setVisibility(visibility);
   }
 
   public void showSuggestionsView() {
@@ -553,14 +549,14 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
-      setBannersVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
-      setBannersVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
@@ -571,7 +567,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
     if (bannerAdBottom != null) {
-      setBannersVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
