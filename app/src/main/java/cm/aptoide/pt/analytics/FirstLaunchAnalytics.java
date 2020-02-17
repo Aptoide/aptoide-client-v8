@@ -35,6 +35,7 @@ public class FirstLaunchAnalytics {
   public static final String FIRST_LAUNCH = "Aptoide_First_Launch";
   public static final String PLAY_PROTECT_EVENT = "Google_Play_Protect";
   public static final String FIRST_LAUNCH_BI = "FIRST_LAUNCH";
+  public static final String FIRST_LAUNCH_RAKAM = "aptoide_first_launch";
   private static final String GMS = "GMS";
   private static final String GMS_RAKAM = "gms";
   private static final String UNKNOWN = "unknown";
@@ -54,6 +55,7 @@ public class FirstLaunchAnalytics {
   private final static String UTM_MEDIUM_RAKAM = "utm_medium";
   private final static String ENTRY_POINT_RAKAM = "entry_point";
   private static final String APTOIDE_PACKAGE = "aptoide_package";
+  private static final String VERSION_CODE = "version_code";
   private final AnalyticsManager analyticsManager;
   private final AnalyticsLogger logger;
   private final String packageName;
@@ -64,15 +66,17 @@ public class FirstLaunchAnalytics {
   private String utmContent = UNKNOWN;
   private String entryPoint = UNKNOWN;
   private SafetyNetClient safetyNetClient;
+  private int versionCode;
 
   public FirstLaunchAnalytics(AnalyticsManager analyticsManager, AnalyticsLogger logger,
       SafetyNetClient safetyNetClient, String packageName,
-      GmsStatusValueProvider gmsStatusValueProvider) {
+      GmsStatusValueProvider gmsStatusValueProvider, int versionCode) {
     this.analyticsManager = analyticsManager;
     this.logger = logger;
     this.safetyNetClient = safetyNetClient;
     this.packageName = packageName;
     this.gmsStatusValueProvider = gmsStatusValueProvider;
+    this.versionCode = versionCode;
   }
 
   private void sendFirstLaunchEvent(String utmSource, String utmMedium, String utmCampaign,
@@ -83,6 +87,8 @@ public class FirstLaunchAnalytics {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
         FIRST_LAUNCH_BI, AnalyticsManager.Action.OPEN, CONTEXT);
+    analyticsManager.logEvent(new HashMap<>(), FIRST_LAUNCH_RAKAM, AnalyticsManager.Action.OPEN,
+        CONTEXT);
   }
 
   private void sendPlayProtectEvent() {
@@ -206,6 +212,7 @@ public class FirstLaunchAnalytics {
     }
     try {
       superProperties.put("first_session", isFirstLaunch);
+      superProperties.put(VERSION_CODE, versionCode);
     } catch (JSONException e) {
       e.printStackTrace();
     }
