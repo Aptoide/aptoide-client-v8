@@ -87,7 +87,7 @@ import rx.Single;
                     AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
                 appBundlesVisibilityManager)
-                .observe(true))
+                .observe(false))
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .toSingle();
@@ -97,7 +97,7 @@ import rx.Single;
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         appBundlesVisibilityManager)
-        .observe(true)
+        .observe(false)
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .doOnError(throwable -> throwable.printStackTrace())
