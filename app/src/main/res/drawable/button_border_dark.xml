@@ -1,13 +1,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:color="@color/white" android:state_pressed="true">
     <shape>
-      <solid
-          android:color="@color/black"/>
+      <solid android:color="@color/black" />
       <stroke
           android:color="@color/white"
           android:width="1dp"/>
-      <corners
-          android:radius="4dp"/>
+      <corners android:radius="4dp" />
       <padding
           android:bottom="5dp"
           android:left="5dp"
@@ -17,12 +15,10 @@
   </item>
   <item android:color="@color/grey_dark">
     <shape>
-      <solid android:color="@color/grey_900"/>
-      <stroke
-          android:color="@color/grey_dark"
+      <solid android:color="@color/grey_900" />
+      <stroke android:color="@color/grey_dark"
           android:width="1dp"/>
-      <corners
-          android:radius="4dp"/>
+      <corners android:radius="4dp" />
       <padding
           android:bottom="5dp"
           android:left="5dp"

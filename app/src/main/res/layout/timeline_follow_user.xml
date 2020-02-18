@@ -108,9 +108,9 @@
         android:layout_gravity="center"
         android:layout_marginStart="9dp"
         android:layout_marginLeft="9dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
         android:background="?attr/separatorColor"
         />

@@ -543,8 +543,7 @@ public class GetAdsResponse {
           + this.getCpcUrl()
           + ", cpiUrl="
           + this.getCpiUrl()
-          + ", cpdUrl="
-          + this.getCpdUrl() + ", payout=" + this.payout.toString()
+          + ", cpdUrl=" + this.getCpdUrl() + ", payout=" + this.payout.toString()
           + ")";
     }
 

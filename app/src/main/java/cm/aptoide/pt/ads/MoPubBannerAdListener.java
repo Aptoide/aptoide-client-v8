@@ -4,9 +4,12 @@ import cm.aptoide.pt.logger.Logger;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 
+import static android.view.View.VISIBLE;
+
 public class MoPubBannerAdListener implements MoPubView.BannerAdListener {
 
   @Override public void onBannerLoaded(MoPubView banner) {
+    banner.setVisibility(VISIBLE);
     Logger.getInstance()
         .d("Mopub", "Banner loaded");
   }

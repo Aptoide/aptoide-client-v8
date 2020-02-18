@@ -91,8 +91,6 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleClickOnBottomNavWithoutResults();
     handleErrorRetryClick();
     listenToSearchQueries();
-
-    loadBannerAd();
   }
 
   private void handleErrorRetryClick() {
@@ -107,18 +105,13 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, crashReport::log);
   }
 
-  private void loadBannerAd() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.showingSearchResultsView())
-        .observeOn(ioScheduler)
-        .flatMapSingle(__ -> searchManager.shouldLoadBannerAd())
-        .filter(loadBanner -> loadBanner)
+  private Completable loadBannerAd() {
+    return searchManager.shouldLoadBannerAd()
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showBannerAd())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
+        .doOnSuccess(shouldLoad -> {
+          if (shouldLoad) view.showBannerAd();
+        })
+        .toCompletable();
   }
 
   @VisibleForTesting public void handleFragmentRestorationVisibility() {
@@ -233,23 +226,12 @@ import rx.exceptions.OnErrorNotImplementedException;
         .map(__ -> view.getViewModel())
         .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
-        .flatMap(viewModel -> searchManager.getAdsForQuery(viewModel.getSearchQueryModel()
-            .getFinalQuery())
-            .onErrorReturn(err -> {
-              crashReport.log(err);
-              return null;
-            })
-            .observeOn(viewScheduler)
-            .doOnNext(__ -> viewModel.setHasLoadedAds())
-            .doOnNext(ad -> {
-              if (ad == null) {
-                view.setFollowedStoresAdsEmpty();
-                view.setAllStoresAdsEmpty();
-              } else {
-                view.setAllStoresAdsResult(ad);
-                view.setFollowedStoresAdsResult(ad);
-              }
-            }))
+        .doOnNext(ad -> {
+          ad.setHasLoadedAds();
+          view.setFollowedStoresAdsEmpty();
+          view.setAllStoresAdsEmpty();
+        })
+        .flatMapCompletable(__ -> loadBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));

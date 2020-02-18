@@ -6,18 +6,13 @@
       android:right="6dp"
       android:top="6dp">
 
-    <shape
-        android:shape="rectangle">
+    <shape android:shape="rectangle">
 
       <stroke
-          android:color="?android:attr/colorControlHighlight"
           android:width="2dp"
-          >
-      </stroke>
+          android:color="?android:attr/colorControlHighlight"></stroke>
 
-      <corners
-          android:radius="4dp">
-      </corners>
+      <corners android:radius="4dp"></corners>
     </shape>
   </item>
 </layer-list>
