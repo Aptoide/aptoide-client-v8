@@ -71,13 +71,13 @@
     <TextView
         android:id="@+id/downloads"
         style="@style/Aptoide.TextView.Regular.XXS.Grey"
-        android:layout_width="30dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
         app:layout_constraintStart_toEndOf="@+id/downloads_icon"
         app:layout_constraintTop_toTopOf="@+id/downloads_icon"
-        tools:text="444 K"
+        tools:text="123 K"
         />
     <ImageView
         android:id="@+id/store_icon"
