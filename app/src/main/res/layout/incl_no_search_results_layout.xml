@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/no_search_results_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:visibility="gone"
     tools:visibility="visible"
     >
@@ -39,17 +39,84 @@
         android:text="@string/no_search_results_message"
         />
 
-    <Button
-        android:id="@+id/no_search_settings_button"
-        style="@style/Aptoide.Button.Ghost"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:paddingStart="22dp"
-        android:paddingLeft="22dp"
-        android:paddingEnd="22dp"
-        android:paddingRight="22dp"
-        android:text="@string/settings_title_settings"
-        />
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="80dp"
+        >
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="?attr/backgroundCardColor"
+          >
+
+        <TextView
+            android:id="@+id/show_adult_text"
+            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="21dp"
+            android:text="@string/no_search_results_enable_adult_content"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/no_search_adult_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="27dp"
+            android:layout_marginRight="27dp"
+            android:layout_marginBottom="20dp"
+            />
+
+        <include
+            android:id="@+id/separator"
+            layout="@layout/separator_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/show_adult_text"
+            />
+
+        <TextView
+            android:id="@+id/settings_text"
+            style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/separator"
+            android:layout_marginStart="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/no_search_results_other_filters"
+            />
+
+        <Button
+            android:id="@+id/no_search_settings_button"
+            style="@style/Aptoide.Button.Ghost"
+            android:layout_width="88dp"
+            android:layout_height="32dp"
+            android:layout_below="@id/separator"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="21dp"
+            android:text="@string/newaccount_settings"
+            />
+
+
+      </RelativeLayout>
+    </androidx.cardview.widget.CardView>
   </LinearLayout>
 </ScrollView>

@@ -33,6 +33,7 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
 import rx.exceptions.OnErrorNotImplementedException;
+import rx.schedulers.Schedulers;
 
 @SuppressWarnings({ "WeakerAccess", "Convert2MethodRef" }) public class SearchResultPresenter
     implements Presenter {
@@ -91,6 +92,13 @@ import rx.exceptions.OnErrorNotImplementedException;
     handleClickOnBottomNavWithoutResults();
     handleErrorRetryClick();
     listenToSearchQueries();
+
+    handleClickOnAdultContentSwitch();
+    handleAdultContentDialogPositiveClick();
+    handleAdultContentDialogNegativeClick();
+    handleAdultContentDialogWithPinPositiveClick();
+    redoSearchAfterAdultContentSwitch();
+    updateAdultContentSwitchOnNoResults();
   }
 
   private void handleErrorRetryClick() {
@@ -282,6 +290,82 @@ import rx.exceptions.OnErrorNotImplementedException;
         }, e -> crashReport.log(e));
   }
 
+  public void handleClickOnAdultContentSwitch() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .observeOn(viewScheduler)
+        .flatMap(__ -> view.clickAdultContentSwitch())
+        .observeOn(Schedulers.io())
+        .flatMap(isChecked -> {
+          if (!isChecked) {
+            return searchManager.disableAdultContent()
+                .observeOn(viewScheduler)
+                .doOnError(e -> view.enableAdultContent())
+                .toObservable()
+                .map(__ -> false);
+          } else {
+            return Observable.just(true);
+          }
+        })
+        .observeOn(viewScheduler)
+        .filter(show -> show)
+        .flatMap(__ -> searchManager.isAdultContentPinRequired())
+        .doOnNext(pinRequired -> {
+          if (pinRequired) {
+            view.showAdultContentConfirmationDialogWithPin();
+          } else {
+            view.showAdultContentConfirmationDialog();
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleAdultContentDialogPositiveClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.adultContentDialogPositiveClick())
+        .observeOn(Schedulers.io())
+        .flatMapCompletable(click -> searchManager.enableAdultContent())
+        .observeOn(viewScheduler)
+        .doOnError(e -> view.disableAdultContent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleAdultContentDialogNegativeClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.adultContentPinDialogNegativeClick(),
+            view.adultContentDialogNegativeClick()))
+        .doOnNext(__ -> view.disableAdultContent())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  private void handleAdultContentDialogWithPinPositiveClick() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.adultContentWithPinDialogPositiveClick()
+            .observeOn(Schedulers.io())
+            .flatMap(pin -> searchManager.enableAdultContentWithPin(pin.toString()
+                .isEmpty() ? 0 : Integer.valueOf(pin.toString()))
+                .toObservable()
+                .observeOn(viewScheduler)
+                .doOnError(throwable -> {
+                  if (throwable instanceof SecurityException) {
+                    view.showWrongPinErrorMessage();
+                  }
+                }))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
   private void openAppView(SearchAppResultWrapper searchApp) {
     final String packageName = searchApp.getSearchAppResult()
         .getPackageName();
@@ -400,6 +484,29 @@ import rx.exceptions.OnErrorNotImplementedException;
         .map(__ -> view.getViewModel())
         .flatMap(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  public void redoSearchAfterAdultContentSwitch() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.adultContentDialogPositiveClick(),
+            view.adultContentWithPinDialogPositiveClick()))
+        .map(__ -> view.getViewModel())
+        .flatMap(model -> search(model))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  public void updateAdultContentSwitchOnNoResults() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMap(__ -> view.viewHasNoResults())
+        .flatMap(__ -> searchManager.isAdultContentEnabled())
+        .doOnNext(adultContent -> view.setAdultContentSwitch(adultContent))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }

@@ -188,6 +188,7 @@ public class SearchResultPresenterTest {
 
     //When the user submits a search and has no store associated to the search
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
+    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
     //It should load data
@@ -227,6 +228,7 @@ public class SearchResultPresenterTest {
 
     //When the user submits a search and has a store associated to the view
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
+    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
 

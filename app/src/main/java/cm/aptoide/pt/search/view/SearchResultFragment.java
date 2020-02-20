@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -21,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -49,6 +51,9 @@ import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.settings.InputDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
@@ -94,6 +99,7 @@ public class SearchResultFragment extends BackButtonFragment
   private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
   private Button noSearchSettingsButton;
+  private SwitchCompat noSearchAdultContentSwitch;
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private CardView allAndFollowedStoresButtonsLayout;
@@ -127,8 +133,12 @@ public class SearchResultFragment extends BackButtonFragment
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAdBottom;
   private PublishSubject<Boolean> showingSearchResultsView;
+  private PublishSubject<Boolean> noResultsAdultContentSubject;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private ErrorView errorView;
+  private RxAlertDialog enableAdultContentDialog;
+  private InputDialog enableAdultContentDialogWithPin;
+  private PublishSubject<Void> noResultsPublishSubject;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -187,11 +197,15 @@ public class SearchResultFragment extends BackButtonFragment
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchSettingsButton = view.findViewById(R.id.no_search_settings_button);
+    noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
+
+    noSearchAdultContentSwitch.setOnClickListener(
+        v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
   }
 
   @Override public void showFollowedStoresResult() {
@@ -266,6 +280,10 @@ public class SearchResultFragment extends BackButtonFragment
     return RxView.clicks(noSearchSettingsButton);
   }
 
+  @Override public Observable<Boolean> clickAdultContentSwitch() {
+    return noResultsAdultContentSubject;
+  }
+
   @Override public Observable<Void> retryClicked() {
     return errorView.retryClick();
   }
@@ -280,6 +298,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
     bannerAdBottom.setVisibility(View.GONE);
+    noResultsPublishSubject.onNext(null);
   }
 
   @Override public void showResultsView() {
@@ -540,6 +559,51 @@ public class SearchResultFragment extends BackButtonFragment
     noResults = true;
   }
 
+  @Override public void disableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public void enableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(true);
+  }
+
+  @Override public void showAdultContentConfirmationDialog() {
+    enableAdultContentDialog.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogPositiveClick() {
+    return enableAdultContentDialog.positiveClicks();
+  }
+
+  @Override public Observable<CharSequence> adultContentWithPinDialogPositiveClick() {
+    return enableAdultContentDialogWithPin.positiveClicks();
+  }
+
+  @Override public void setAdultContentSwitch(Boolean adultContent) {
+    noSearchAdultContentSwitch.setChecked(adultContent);
+  }
+
+  @Override public void showAdultContentConfirmationDialogWithPin() {
+    enableAdultContentDialogWithPin.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogNegativeClick() {
+    return enableAdultContentDialog.negativeClicks();
+  }
+
+  @Override public Observable<DialogInterface> adultContentPinDialogNegativeClick() {
+    return enableAdultContentDialogWithPin.negativeClicks();
+  }
+
+  @Override public void showWrongPinErrorMessage() {
+    Snackbar.make(getView(), R.string.adult_pin_wrong, Snackbar.LENGTH_LONG);
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public Observable<Void> viewHasNoResults() {
+    return noResultsPublishSubject;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -667,6 +731,8 @@ public class SearchResultFragment extends BackButtonFragment
     queryTextChangedPublisher = PublishSubject.create();
 
     showingSearchResultsView = PublishSubject.create();
+    noResultsAdultContentSubject = PublishSubject.create();
+    noResultsPublishSubject = PublishSubject.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -721,6 +787,19 @@ public class SearchResultFragment extends BackButtonFragment
           savedInstanceState.containsKey(UNSUBMITTED_QUERY) ? savedInstanceState.getString(
               UNSUBMITTED_QUERY) : "";
     }
+
+    enableAdultContentDialog =
+        new RxAlertDialog.Builder(getContext(), themeManager).setMessage(R.string.are_you_adult)
+            .setPositiveButton(R.string.yes)
+            .setNegativeButton(R.string.no)
+            .build();
+    enableAdultContentDialogWithPin =
+        new InputDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
+            .setPositiveButton(R.string.all_button_ok)
+            .setNegativeButton(R.string.cancel)
+            .setView(R.layout.dialog_request_input)
+            .setEditText(R.id.input)
+            .build();
 
     attachPresenter(searchResultPresenter);
   }
@@ -783,6 +862,8 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroy() {
     super.onDestroy();
     showingSearchResultsView = null;
+    noResultsAdultContentSubject = null;
+    noResultsPublishSubject = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
