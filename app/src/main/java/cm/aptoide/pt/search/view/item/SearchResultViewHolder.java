@@ -26,7 +26,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private TextView downloadsTextView;
   private TextView ratingBar;
   private TextView storeTextView;
-  private View bottomView;
   private SearchAppResult searchApp;
   private CompositeSubscription subscriptions;
 
@@ -76,11 +75,7 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   }
 
   private void setDownloadCount() {
-    String downloadNumber =
-        String.format("%s %s", AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()),
-            bottomView.getContext()
-                .getString(R.string.downloads));
-    downloadsTextView.setText(downloadNumber);
+    downloadsTextView.setText(AptoideUtils.StringU.withSuffix(searchApp.getTotalDownloads()));
   }
 
   private void setAppName() {
@@ -93,7 +88,6 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
     downloadsTextView = (TextView) itemView.findViewById(R.id.downloads);
     ratingBar = (TextView) itemView.findViewById(R.id.rating);
     storeTextView = (TextView) itemView.findViewById(R.id.store_name);
-    bottomView = itemView;
 
     subscriptions.add(RxView.clicks(itemView)
         .map(__ -> searchApp)

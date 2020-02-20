@@ -267,6 +267,14 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
         @Header("Cache-Control") String bypassCache,
         @QueryMap(encoded = true) Map<String, String> parameters);
 
+    @GET("listSearchApps") Observable<ListSearchApps> listSearchApps(
+        @Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
+
+    @GET("apps/getRecommended") Observable<ListApps> getRecommended(
+        @Header("Cache-Control") String bypassCache,
+        @QueryMap(encoded = true) Map<String, String> parameters);
+
     @POST("listAppsUpdates") Observable<ListAppsUpdates> listAppsUpdates(
         @Body ListAppsUpdatesRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
@@ -318,10 +326,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
     @POST("{url}") Observable<GetStoreMeta> getStoreMeta(
         @Path(value = "url", encoded = true) String url, @Body GetHomeMetaRequest.Body body,
         @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
-
-    @POST("listSearchApps") Observable<ListSearchApps> listSearchApps(
-        @Body ListSearchAppsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
 
     @POST("listAppVersions") Observable<ListAppVersions> listAppVersions(
         @Body ListAppVersionsRequest.Body body,
@@ -440,10 +444,6 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("user/settings/set") Observable<BaseV7Response> setUserSettings(
         @Body SetUserSettings.Body body);
-
-    @POST("apps/getRecommended") Observable<ListApps> getRecommended(
-        @Body GetRecommendedRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
 
     @POST("getStoreWidgets/") Observable<GetStoreWidgets> getHomeBundles(
         @Body GetHomeBundlesRequest.Body body,

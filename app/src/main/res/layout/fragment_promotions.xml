@@ -139,10 +139,10 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="13dp"
             android:layout_marginStart="24dp"
-            android:background="?attr/promotionStepBackground"
+            style="@style/Aptoide.TextView.Medium.S.Primary"
             android:gravity="center"
             android:text="1"
-            style="@style/Aptoide.TextView.Medium.S.Primary"
+            android:background="?attr/promotionStepBackground"
             />
 
         <TextView
@@ -208,10 +208,10 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="13dp"
             android:layout_marginStart="24dp"
-            android:background="?attr/promotionStepBackground"
+            style="@style/Aptoide.TextView.Medium.S.Primary"
             android:gravity="center"
             android:text="2"
-            style="@style/Aptoide.TextView.Medium.S.Primary"
+            android:background="?attr/promotionStepBackground"
             />
 
         <TextView

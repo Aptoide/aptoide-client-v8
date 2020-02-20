@@ -131,7 +131,7 @@ public class SearchResultFragment extends BackButtonFragment
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
-  private MoPubView bannerAd;
+  private MoPubView bannerAdBottom;
   private PublishSubject<Boolean> showingSearchResultsView;
   private PublishSubject<Boolean> noResultsAdultContentSubject;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
@@ -201,7 +201,7 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-    bannerAd = view.findViewById(R.id.mopub_banner);
+    bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
 
     noSearchAdultContentSwitch.setOnClickListener(
@@ -297,7 +297,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
     noResultsPublishSubject.onNext(null);
   }
 
@@ -315,7 +315,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -511,10 +511,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showBannerAd() {
-    bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
-    bannerAd.setVisibility(VISIBLE);
-    bannerAd.loadAd();
+    bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
+    bannerAdBottom.loadAd();
   }
 
   @Override public Observable<Boolean> showingSearchResultsView() {
@@ -525,7 +524,8 @@ public class SearchResultFragment extends BackButtonFragment
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
     if (Build.VERSION.SDK_INT >= 21) {
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_PLACEMENT_ID, requestParameters);
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID,
+          requestParameters);
     }
   }
 
@@ -541,7 +541,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void showGenericErrorView() {
@@ -554,9 +554,9 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
   }
 
   @Override public void disableAdultContent() {
@@ -613,14 +613,14 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
@@ -630,8 +630,8 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
-    if (bannerAd != null) {
-      bannerAd.setVisibility(View.GONE);
+    if (bannerAdBottom != null) {
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
@@ -841,9 +841,9 @@ public class SearchResultFragment extends BackButtonFragment
       moPubRecyclerAdapter.destroy();
       moPubRecyclerAdapter = null;
     }
-    if (bannerAd != null) {
-      bannerAd.destroy();
-      bannerAd = null;
+    if (bannerAdBottom != null) {
+      bannerAdBottom.destroy();
+      bannerAdBottom = null;
     }
   }
 
@@ -923,16 +923,20 @@ public class SearchResultFragment extends BackButtonFragment
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
-        .onSaveInstanceState());
+    if (allStoresResultList != null && allStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+          .onSaveInstanceState());
+    }
 
     outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
 
     if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
 
-    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager()
-            .onSaveInstanceState());
+    if (followedStoresResultList != null && followedStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
+          followedStoresResultList.getLayoutManager()
+              .onSaveInstanceState());
+    }
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,

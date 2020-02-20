@@ -267,9 +267,14 @@ public class SearchResultPresenterTest {
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //verify(searchResultModel).setHasLoadedAds();
+    //verify(searchResultView).setAllStoresAdsResult(searchAdResult);
+    //verify(searchResultView).setFollowedStoresAdsResult(searchAdResult);
+
+    // We have these ads disabled
     verify(searchResultModel).setHasLoadedAds();
-    verify(searchResultView).setAllStoresAdsResult(searchAdResult);
-    verify(searchResultView).setFollowedStoresAdsResult(searchAdResult);
+    verify(searchResultView).setFollowedStoresAdsEmpty();
+    verify(searchResultView).setAllStoresAdsEmpty();
   }
 
   @Test public void firstAdsDataLoadTestEmptyAds() {

@@ -113,7 +113,8 @@ public class RemoteBundleDataSource implements BundleDataSource {
     return accountManager.enabled()
         .first()
         .flatMap(adultContentEnabled -> idsRepository.getUniqueIdentifier()
-            .flatMapObservable(id -> getPackages().toObservable()
+            .toObservable()
+            .flatMap(id -> getPackages().toObservable()
                 .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
                     converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
                     widgetsUtils, storeCredentialsProvider.fromUrl(""), id,
@@ -159,8 +160,12 @@ public class RemoteBundleDataSource implements BundleDataSource {
         .map(__ -> getStoreWidgets);
   }
 
-  public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit, String id,
-      boolean adultContentEnabled) {
+  public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
+    final boolean adultContentEnabled = accountManager.enabled()
+        .first()
+        .toSingle()
+        .toBlocking()
+        .value();
     BaseRequestWithStore.StoreCredentials storeCredentials = storeCredentialsProvider.fromUrl(url);
 
     GetStoreWidgetsRequest.Body body = new GetStoreWidgetsRequest.Body(storeCredentials,
@@ -168,9 +173,11 @@ public class RemoteBundleDataSource implements BundleDataSource {
     body.setOffset(offset);
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, storeCredentials, id, isGooglePlayServicesAvailable, partnerId,
-        adultContentEnabled, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils(), appBundlesVisibilityManager);
+        sharedPreferences, storeCredentials, idsRepository.getUniqueIdentifier()
+        .toBlocking()
+        .value(), isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
+        windowManager, connectivityManager, versionCodeProvider, new WSWidgetsUtils(),
+        appBundlesVisibilityManager);
   }
 
   private Single<List<String>> getPackages() {
@@ -248,10 +255,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       return Single.just(new HomeBundlesModel(true));
     }
     String newUrl = url.replace(V7.getHost(sharedPreferences), "");
-    return idsRepository.getUniqueIdentifier()
-        .flatMapObservable(id -> accountManager.enabled()
-            .flatMap(adultContent -> getMoreBundlesRequest(newUrl, offset, limit, id,
-                adultContent).observe(invalidateHttpCache, false)))
+    return getMoreBundlesRequest(newUrl, offset, limit).observe(invalidateHttpCache, false)
         .doOnSubscribe(() -> {
           loading.put(key, true);
           error.put(key, false);

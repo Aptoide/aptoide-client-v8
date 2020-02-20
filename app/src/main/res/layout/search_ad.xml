@@ -2,93 +2,99 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/backgroundCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="4dp"
-    style="?attr/backgroundCard"
     >
-
-  <RelativeLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_margin="8dp"
       >
-
     <ImageView
         android:id="@+id/app_icon"
-        android:layout_width="79dp"
-        android:layout_height="79dp"
-        android:layout_margin="12dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ad_icon"
         />
-
     <TextView
         android:id="@+id/app_name"
-        style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
-        android:layout_width="match_parent"
+        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/app_icon"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_toEndOf="@+id/app_icon"
-        android:layout_toRightOf="@+id/app_icon"
-        android:ellipsize="end"
+        android:layout_marginStart="13dp"
+        android:layout_marginLeft="13dp"
         android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/app_icon"
+        app:layout_constraintTop_toTopOf="@+id/app_icon"
         tools:text="Clash Royale"
         />
-
     <ImageView
         android:id="@+id/star_icon"
         android:layout_width="12dp"
         android:layout_height="12dp"
-        android:layout_below="@id/app_name"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/app_icon"
-        android:layout_toRightOf="@id/app_icon"
         android:src="?attr/ratingDrawable"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/downloads_icon"
+        app:layout_constraintLeft_toLeftOf="@+id/app_name"
+        app:layout_constraintTop_toBottomOf="@+id/app_name"
+        app:layout_constraintVertical_bias="0.25"
         />
-
     <TextView
         android:id="@+id/rating"
-        style="@style/Aptoide.TextView.Medium.S.Black"
+        style="@style/Aptoide.TextView.Medium.XXS.BlackAlpha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_name"
-        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@id/star_icon"
-        android:layout_toRightOf="@id/star_icon"
-        android:textSize="10sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/star_icon"
+        app:layout_constraintLeft_toRightOf="@+id/star_icon"
+        app:layout_constraintTop_toTopOf="@+id/star_icon"
         tools:text="4.2"
         />
-
+    <ImageView
+        android:id="@+id/downloads_icon"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginBottom="2dp"
+        android:src="@drawable/ic_appview_download_icon"
+        android:tint="@color/grey"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
+        app:layout_constraintStart_toStartOf="@+id/star_icon"
+        />
     <TextView
         android:id="@+id/downloads"
-        style="@style/Aptoide.TextView.Regular.XS.Grey"
+        style="@style/Aptoide.TextView.Regular.XXS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rating"
-        android:layout_marginTop="2dp"
-        android:layout_toEndOf="@id/app_icon"
-        android:layout_toRightOf="@id/app_icon"
-        android:textSize="12sp"
-        tools:text="1M Downloads"
+        android:layout_marginLeft="5dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
+        app:layout_constraintStart_toEndOf="@+id/downloads_icon"
+        app:layout_constraintTop_toTopOf="@+id/downloads_icon"
+        tools:text="123K"
         />
 
     <LinearLayout
         android:id="@+id/appc_earn_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/downloads"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/downloads"
         >
 
       <ImageView
@@ -98,6 +104,7 @@
           android:layout_marginEnd="5dp"
           android:layout_marginRight="5dp"
           android:scaleType="fitXY"
+          android:visibility="invisible"
           app:srcCompat="@drawable/ic_get_appc"
           />
 
@@ -108,6 +115,7 @@
           android:layout_height="wrap_content"
           android:maxLines="2"
           android:textColor="@color/curation_gold"
+          android:visibility="invisible"
           tools:text="EARN €0.78"
           />
 
@@ -116,15 +124,14 @@
 
     <TextView
         android:id="@+id/ad_label"
-        style="@style/Aptoide.TextView.Regular.XXS.Black"
+        style="@style/Aptoide.TextView.Medium.XS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/downloads"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/all_title_ad"
+        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
+        app:layout_constraintStart_toStartOf="@+id/star_icon"
         />
 
     <ImageView
@@ -132,6 +139,9 @@
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
     <RelativeLayout
@@ -139,7 +149,10 @@
         android:layout_width="1dp"
         android:layout_height="1dp"
         android:background="@color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
-  </RelativeLayout>
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

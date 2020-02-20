@@ -356,7 +356,7 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty(){
+  private Completable setUpAdsUserProperty() {
     return adsUserPropertyManager.setUp();
   }
 

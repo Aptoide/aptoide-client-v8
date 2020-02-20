@@ -1375,7 +1375,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AnalyticsManager analyticsManager, AnalyticsLogger logger, SafetyNetClient safetyNetClient,
       GmsStatusValueProvider gmsStatusValueProvider) {
     return new FirstLaunchAnalytics(analyticsManager, logger, safetyNetClient,
-        application.getPackageName(), gmsStatusValueProvider);
+        application.getPackageName(), gmsStatusValueProvider, BuildConfig.VERSION_CODE);
   }
 
   @Singleton @Provides GmsStatusValueProvider providesGmsStatusValueProvider() {
@@ -1499,7 +1499,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
-        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME);
+        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
+        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
