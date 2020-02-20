@@ -138,6 +138,7 @@ public class SearchResultFragment extends BackButtonFragment
   private ErrorView errorView;
   private RxAlertDialog enableAdultContentDialog;
   private InputDialog enableAdultContentDialogWithPin;
+  private PublishSubject<Void> noResultsPublishSubject;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -297,6 +298,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
     bannerAd.setVisibility(View.GONE);
+    noResultsPublishSubject.onNext(null);
   }
 
   @Override public void showResultsView() {
@@ -598,6 +600,10 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchAdultContentSwitch.setChecked(false);
   }
 
+  @Override public Observable<Void> viewHasNoResults() {
+    return noResultsPublishSubject;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -726,6 +732,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     showingSearchResultsView = PublishSubject.create();
     noResultsAdultContentSubject = PublishSubject.create();
+    noResultsPublishSubject = PublishSubject.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
@@ -855,6 +862,8 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroy() {
     super.onDestroy();
     showingSearchResultsView = null;
+    noResultsAdultContentSubject = null;
+    noResultsPublishSubject = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

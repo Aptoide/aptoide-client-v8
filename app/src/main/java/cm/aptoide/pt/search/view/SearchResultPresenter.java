@@ -99,6 +99,8 @@ import rx.schedulers.Schedulers;
     handleAdultContentDialogPositiveClick();
     handleAdultContentDialogNegativeClick();
     handleAdultContentDialogWithPinPositiveClick();
+    redoSearchAfterAdultContentSwitch();
+    updateAdultContentSwitchOnNoResults();
   }
 
   private void handleErrorRetryClick() {
@@ -498,10 +500,31 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
-        .flatMap(model -> searchManager.isAdultContentEnabled()
-            .doOnNext(adultContent -> view.setAdultContentSwitch(adultContent))
-            .flatMap(adultContent -> search(model)))
+        .flatMap(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  public void redoSearchAfterAdultContentSwitch() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> Observable.merge(view.adultContentDialogPositiveClick(),
+            view.adultContentWithPinDialogPositiveClick()))
+        .map(__ -> view.getViewModel())
+        .flatMap(model -> search(model))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, e -> crashReport.log(e));
+  }
+
+  public void updateAdultContentSwitchOnNoResults() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMap(__ -> view.viewHasNoResults())
+        .flatMap(__ -> searchManager.isAdultContentEnabled())
+        .doOnNext(adultContent -> view.setAdultContentSwitch(adultContent))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }

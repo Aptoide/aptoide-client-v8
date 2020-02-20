@@ -137,6 +137,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showWrongPinErrorMessage();
 
+  Observable<Void> viewHasNoResults();
+
   interface Model {
 
     List<SearchAppResult> getFollowedStoresSearchAppResults();
