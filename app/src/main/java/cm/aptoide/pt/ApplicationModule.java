@@ -1366,16 +1366,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return CrashReport.getInstance();
   }
 
- /* @Singleton @Provides RealmEventMapper providesRealmEventMapper(
-      @Named("default") ObjectMapper objectMapper) {
-    return new RealmEventMapper(objectMapper);
-  }
-
-  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
-      RealmEventMapper mapper) {
-    return new RealmEventPersistence(database, mapper);
-  }*/
-
   @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
       RetrofitAptoideBiService.ServiceV7 serviceV7,
       @Named("analytics-interceptor") AnalyticsBodyInterceptorV7 bodyInterceptor) {
