@@ -21,6 +21,7 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
+import androidx.room.Room;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -62,7 +63,6 @@ import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
@@ -89,8 +89,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
-import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
-import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
@@ -115,6 +113,8 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomEventMapper;
+import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -127,6 +127,7 @@ import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -140,7 +141,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -716,20 +716,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       LoginPreferences loginPreferences) {
     FacebookSdk.sdkInitialize(application);
 
-    final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
-        SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
-        defaultSharedPreferences, AccountManager.get(application),
-        new SecureCoderDecoder.Builder(application, defaultSharedPreferences).create(),
-        SQLiteDatabaseHelper.DATABASE_VERSION,
-        application.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME)
-            .getPath(), application.getAccountType(), BuildConfig.VERSION_NAME, Schedulers.io());
-
     final AccountPersistence accountPersistence =
         new AndroidAccountManagerPersistence(accountManager,
             new DatabaseStoreDataPersist(storeAccessor,
                 new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
-            accountDataMigration, androidAccountProvider, authenticationPersistence,
-            Schedulers.io());
+            androidAccountProvider, authenticationPersistence, Schedulers.io());
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
@@ -1016,6 +1007,28 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
             .build();
     Realm.setDefaultConfiguration(realmConfiguration);
     return new Database();
+  }
+
+  @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
+    return Room.databaseBuilder(getApplicationContext(), AptoideDatabase.class,
+        BuildConfig.ROOM_DATABASE_NAME)
+        .fallbackToDestructiveMigration()
+        .build();
+  }
+
+  @Singleton @Provides RoomEventPersistence providesRoomEventPersistence(
+      AptoideDatabase aptoideDatabase, RoomEventMapper roomEventMapper) {
+    return new RoomEventPersistence(aptoideDatabase.eventDAO(), roomEventMapper);
+  }
+
+  @Singleton @Provides RoomEventMapper providesRoomEventMapper(
+      @Named("default") ObjectMapper objectMapper) {
+    return new RoomEventMapper(objectMapper);
+  }
+
+  @Singleton @Provides EventsPersistence providesEventsPersistence(AptoideDatabase aptoideDatabase,
+      RoomEventMapper mapper) {
+    return new RoomEventPersistence(aptoideDatabase.eventDAO(), mapper);
   }
 
   @Singleton @Provides CallbackManager provideCallbackManager() {
@@ -1351,16 +1364,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides CrashReport providesCrashReports() {
     return CrashReport.getInstance();
-  }
-
-  @Singleton @Provides RealmEventMapper providesRealmEventMapper(
-      @Named("default") ObjectMapper objectMapper) {
-    return new RealmEventMapper(objectMapper);
-  }
-
-  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
-      RealmEventMapper mapper) {
-    return new RealmEventPersistence(database, mapper);
   }
 
   @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
