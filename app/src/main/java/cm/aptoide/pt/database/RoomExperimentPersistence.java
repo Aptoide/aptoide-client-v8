@@ -1,0 +1,41 @@
+package cm.aptoide.pt.database;
+
+import cm.aptoide.pt.abtesting.Experiment;
+import cm.aptoide.pt.abtesting.ExperimentModel;
+import cm.aptoide.pt.abtesting.ExperimentPersistence;
+import cm.aptoide.pt.database.room.ExperimentDAO;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.schedulers.Schedulers;
+import rx.Completable;
+
+public class RoomExperimentPersistence implements ExperimentPersistence {
+
+  private final ExperimentDAO experimentDAO;
+  private final RoomExperimentMapper mapper;
+
+  public RoomExperimentPersistence(ExperimentDAO experimentDAO, RoomExperimentMapper mapper) {
+    this.experimentDAO = experimentDAO;
+    this.mapper = mapper;
+  }
+
+  @Override public Completable save(String experimentName, Experiment experiment) {
+    return RxJavaInterop.toV1Completable(io.reactivex.Completable.create(completableEmitter -> {
+      experimentDAO.save(mapper.map(experimentName, experiment));
+      completableEmitter.onComplete();
+    })
+        .subscribeOn(Schedulers.io()));
+  }
+
+  @Override public rx.Observable<ExperimentModel> get(String identifier) {
+    return RxJavaInterop.toV1Observable(experimentDAO.get(identifier)
+        .subscribeOn(Schedulers.io())
+        .map(roomExperiment -> {
+          if (roomExperiment == null) {
+            return new ExperimentModel(mapper.map(roomExperiment), true);
+          } else {
+            return new ExperimentModel(mapper.map(roomExperiment), false);
+          }
+        }), BackpressureStrategy.BUFFER);
+  }
+}
