@@ -188,6 +188,7 @@ public class SearchResultPresenterTest {
 
     //When the user submits a search and has no store associated to the search
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
+    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
     //It should load data
@@ -227,6 +228,7 @@ public class SearchResultPresenterTest {
 
     //When the user submits a search and has a store associated to the view
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
+    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
 
@@ -265,9 +267,14 @@ public class SearchResultPresenterTest {
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
+    //verify(searchResultModel).setHasLoadedAds();
+    //verify(searchResultView).setAllStoresAdsResult(searchAdResult);
+    //verify(searchResultView).setFollowedStoresAdsResult(searchAdResult);
+
+    // We have these ads disabled
     verify(searchResultModel).setHasLoadedAds();
-    verify(searchResultView).setAllStoresAdsResult(searchAdResult);
-    verify(searchResultView).setFollowedStoresAdsResult(searchAdResult);
+    verify(searchResultView).setFollowedStoresAdsEmpty();
+    verify(searchResultView).setAllStoresAdsEmpty();
   }
 
   @Test public void firstAdsDataLoadTestEmptyAds() {
@@ -348,14 +355,14 @@ public class SearchResultPresenterTest {
     presenter.handleClickOnNoResultsImage();
 
     //When the search has no results and the user clicks on the image from the no result view
-    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just("length>1"));
+    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just(null));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
     when(searchResultModel.getStoreName()).thenReturn("random");
 
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
 
     //Then it should navigate back to the search view
-    verify(searchNavigator).goToSearchFragment(any(SearchQueryModel.class));
+    verify(searchNavigator).goToSettings();
   }
 
   @Test public void handleAllStoresListReachedBottomTest() {

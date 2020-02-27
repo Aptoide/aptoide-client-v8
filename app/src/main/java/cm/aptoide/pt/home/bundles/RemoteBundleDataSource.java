@@ -23,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
+import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final SharedPreferences sharedPreferences;
   private final WSWidgetsUtils widgetsUtils;
   private final StoreCredentialsProvider storeCredentialsProvider;
-  private final String clientUniqueId;
+  private final IdsRepository idsRepository;
   private final boolean isGooglePlayServicesAvailable;
   private final String partnerId;
   private final AptoideAccountManager accountManager;
@@ -70,7 +71,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       Converter.Factory converterFactory, BundlesResponseMapper mapper,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       WSWidgetsUtils widgetsUtils, StoreCredentialsProvider storeCredentialsProvider,
-      String clientUniqueId, boolean isGooglePlayServicesAvailable, String partnerId,
+      IdsRepository idsRepository, boolean isGooglePlayServicesAvailable, String partnerId,
       AptoideAccountManager accountManager, String filters, Resources resources,
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
@@ -86,7 +87,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     this.sharedPreferences = sharedPreferences;
     this.widgetsUtils = widgetsUtils;
     this.storeCredentialsProvider = storeCredentialsProvider;
-    this.clientUniqueId = clientUniqueId;
+    this.idsRepository = idsRepository;
     this.isGooglePlayServicesAvailable = isGooglePlayServicesAvailable;
     this.partnerId = partnerId;
     this.accountManager = accountManager;
@@ -111,43 +112,45 @@ public class RemoteBundleDataSource implements BundleDataSource {
 
     return accountManager.enabled()
         .first()
-        .flatMap(adultContentEnabled -> getPackages().toObservable()
-            .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
-                converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
-                widgetsUtils, storeCredentialsProvider.fromUrl(""), clientUniqueId,
-                isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
-                windowManager, connectivityManager, versionCodeProvider, packageNames,
-                appBundlesVisibilityManager)
-                .observe(invalidateHttpCache, false)
-                .flatMap(widgets -> Observable.merge(Observable.just(widgets),
-                    loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
-                        widgets, false)))
-                .doOnSubscribe(() -> {
-                  loading.put(key, true);
-                  error.put(key, false);
-                })
-                .doOnUnsubscribe(() -> loading.put(key, false))
-                .doOnTerminate(() -> loading.put(key, false))
-                .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
-                .filter(model -> skeletonLoad || model.isComplete())
-                .takeUntil(HomeBundlesModel::isComplete)
-                .onErrorReturn(throwable -> {
-                  throwable.printStackTrace();
-                  loading.put(key, false);
-                  error.put(key, true);
-                  return createErrorAppsList(throwable);
-                })));
+        .flatMap(adultContentEnabled -> idsRepository.getUniqueIdentifier()
+            .toObservable()
+            .flatMap(id -> getPackages().toObservable()
+                .flatMap(packageNames -> GetHomeBundlesRequest.of(limit, offset, okHttpClient,
+                    converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+                    widgetsUtils, storeCredentialsProvider.fromUrl(""), id,
+                    isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters,
+                    resources, windowManager, connectivityManager, versionCodeProvider,
+                    packageNames, appBundlesVisibilityManager)
+                    .observe(invalidateHttpCache, false)
+                    .flatMap(widgets -> Observable.merge(Observable.just(widgets),
+                        loadAppsInBundles(adultContentEnabled, invalidateHttpCache, packageNames,
+                            widgets, false, id)))
+                    .doOnSubscribe(() -> {
+                      loading.put(key, true);
+                      error.put(key, false);
+                    })
+                    .doOnUnsubscribe(() -> loading.put(key, false))
+                    .doOnTerminate(() -> loading.put(key, false))
+                    .flatMap(homeResponse -> mapHomeResponse(homeResponse, key))
+                    .filter(model -> skeletonLoad || model.isComplete())
+                    .takeUntil(HomeBundlesModel::isComplete)
+                    .onErrorReturn(throwable -> {
+                      throwable.printStackTrace();
+                      loading.put(key, false);
+                      error.put(key, true);
+                      return createErrorAppsList(throwable);
+                    }))));
   }
 
   private Observable<GetStoreWidgets> loadAppsInBundles(boolean adultContentEnabled,
       boolean invalidateHttpCache, List<String> packageNames, GetStoreWidgets getStoreWidgets,
-      boolean bypassCache) {
+      boolean bypassCache, String id) {
     return Observable.from(getStoreWidgets.getDataList()
         .getList())
         .observeOn(Schedulers.io())
         .flatMap(
             wsWidget -> widgetsUtils.loadWidgetNode(wsWidget, storeCredentialsProvider.fromUrl(""),
-                invalidateHttpCache, clientUniqueId, isGooglePlayServicesAvailable, partnerId,
+                invalidateHttpCache, id, isGooglePlayServicesAvailable, partnerId,
                 adultContentEnabled, bodyInterceptor, okHttpClient, converterFactory, filters,
                 tokenInvalidator, sharedPreferences, resources, windowManager, connectivityManager,
                 versionCodeProvider, bypassCache,
@@ -170,9 +173,11 @@ public class RemoteBundleDataSource implements BundleDataSource {
     body.setOffset(offset);
     return new GetStoreWidgetsRequest(new V7Url(url).remove("getStoreWidgets")
         .get(), body, bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, storeCredentials, clientUniqueId, isGooglePlayServicesAvailable,
-        partnerId, adultContentEnabled, filters, resources, windowManager, connectivityManager,
-        versionCodeProvider, new WSWidgetsUtils(), appBundlesVisibilityManager);
+        sharedPreferences, storeCredentials, idsRepository.getUniqueIdentifier()
+        .toBlocking()
+        .value(), isGooglePlayServicesAvailable, partnerId, adultContentEnabled, filters, resources,
+        windowManager, connectivityManager, versionCodeProvider, new WSWidgetsUtils(),
+        appBundlesVisibilityManager);
   }
 
   private Single<List<String>> getPackages() {

@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -14,8 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
@@ -23,9 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
@@ -49,10 +48,12 @@ import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
-import cm.aptoide.pt.store.StoreTheme;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.custom.DividerItemDecoration;
+import cm.aptoide.pt.view.rx.RxAlertDialog;
+import cm.aptoide.pt.view.settings.InputDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.v7.widget.RecyclerViewScrollEvent;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
@@ -66,11 +67,11 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.ViewBinder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.inject.Inject;
-import javax.inject.Named;
 import org.parceler.Parcels;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -93,12 +94,12 @@ public class SearchResultFragment extends BackButtonFragment
       "followed_stores_search_list_state";
   private static final String TRENDING_LIST_STATE = "trending_list_state";
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
-
   @Inject SearchResultPresenter searchResultPresenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
+  private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
-  private EditText noSearchLayoutSearchQuery;
-  private ImageView noResultsSearchButton;
+  private Button noSearchSettingsButton;
+  private SwitchCompat noSearchAdultContentSwitch;
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private CardView allAndFollowedStoresButtonsLayout;
@@ -130,10 +131,14 @@ public class SearchResultFragment extends BackButtonFragment
   private String unsubmittedQuery;
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
-  private MoPubView bannerAd;
+  private MoPubView bannerAdBottom;
   private PublishSubject<Boolean> showingSearchResultsView;
+  private PublishSubject<Boolean> noResultsAdultContentSubject;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private ErrorView errorView;
+  private RxAlertDialog enableAdultContentDialog;
+  private InputDialog enableAdultContentDialogWithPin;
+  private PublishSubject<Void> noResultsPublishSubject;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -175,31 +180,32 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout = (CardView) view.findViewById(
-        R.id.fragment_search_result_all_followed_stores_buttons_layout);
-    allStoresResultList =
-        (RecyclerView) view.findViewById(R.id.fragment_search_result_all_stores_app_list);
+    allAndFollowedStoresButtonsLayout =
+        view.findViewById(R.id.fragment_search_result_all_followed_stores_buttons_layout);
+    allStoresResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
-    suggestionsResultList = (RecyclerView) view.findViewById(R.id.suggestions_list);
+    suggestionsResultList = view.findViewById(R.id.suggestions_list);
 
-    trendingResultList = (RecyclerView) view.findViewById(R.id.trending_list);
+    trendingResultList = view.findViewById(R.id.trending_list);
 
     followedStoresResultList =
-        (RecyclerView) view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
-    allStoresButton = (Button) view.findViewById(R.id.fragment_search_result_all_stores_button);
-    followedStoresButton =
-        (Button) view.findViewById(R.id.fragment_search_result_followed_stores_button);
+        view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
+    allStoresButton = view.findViewById(R.id.fragment_search_result_all_stores_button);
+    followedStoresButton = view.findViewById(R.id.fragment_search_result_followed_stores_button);
 
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchLayoutSearchQuery = (EditText) view.findViewById(R.id.search_text);
-    noResultsSearchButton = (ImageView) view.findViewById(R.id.ic_search_button);
+    noSearchSettingsButton = view.findViewById(R.id.no_search_settings_button);
+    noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-    bannerAd = view.findViewById(R.id.mopub_banner);
+    bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
+
+    noSearchAdultContentSwitch.setOnClickListener(
+        v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
   }
 
   @Override public void showFollowedStoresResult() {
@@ -270,10 +276,12 @@ public class SearchResultFragment extends BackButtonFragment
     return RxView.clicks(allStoresButton);
   }
 
-  @Override public Observable<String> clickNoResultsSearchButton() {
-    return RxView.clicks(noResultsSearchButton)
-        .map(__ -> noSearchLayoutSearchQuery.getText()
-            .toString());
+  @Override public Observable<Void> clickNoResultsSearchButton() {
+    return RxView.clicks(noSearchSettingsButton);
+  }
+
+  @Override public Observable<Boolean> clickAdultContentSwitch() {
+    return noResultsAdultContentSubject;
   }
 
   @Override public Observable<Void> retryClicked() {
@@ -289,7 +297,8 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
+    noResultsPublishSubject.onNext(null);
   }
 
   @Override public void showResultsView() {
@@ -306,7 +315,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void hideLoading() {
@@ -502,10 +511,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showBannerAd() {
-    bannerAd.setBannerAdListener(new MoPubBannerAdListener());
-    bannerAd.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_PLACEMENT_ID);
-    bannerAd.setVisibility(VISIBLE);
-    bannerAd.loadAd();
+    bannerAdBottom.setBannerAdListener(new MoPubBannerAdListener());
+    bannerAdBottom.setAdUnitId(BuildConfig.MOPUB_BANNER_50_SEARCH_V2_PLACEMENT_ID);
+    bannerAdBottom.loadAd();
   }
 
   @Override public Observable<Boolean> showingSearchResultsView() {
@@ -516,7 +524,8 @@ public class SearchResultFragment extends BackButtonFragment
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
     if (Build.VERSION.SDK_INT >= 21) {
-      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_PLACEMENT_ID, requestParameters);
+      moPubRecyclerAdapter.loadAds(BuildConfig.MOPUB_NATIVE_SEARCH_V2_PLACEMENT_ID,
+          requestParameters);
     }
   }
 
@@ -532,7 +541,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
   }
 
   @Override public void showGenericErrorView() {
@@ -545,9 +554,54 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    bannerAdBottom.setVisibility(View.GONE);
     networkError = true;
     noResults = true;
-    bannerAd.setVisibility(View.GONE);
+  }
+
+  @Override public void disableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public void enableAdultContent() {
+    noSearchAdultContentSwitch.setChecked(true);
+  }
+
+  @Override public void showAdultContentConfirmationDialog() {
+    enableAdultContentDialog.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogPositiveClick() {
+    return enableAdultContentDialog.positiveClicks();
+  }
+
+  @Override public Observable<CharSequence> adultContentWithPinDialogPositiveClick() {
+    return enableAdultContentDialogWithPin.positiveClicks();
+  }
+
+  @Override public void setAdultContentSwitch(Boolean adultContent) {
+    noSearchAdultContentSwitch.setChecked(adultContent);
+  }
+
+  @Override public void showAdultContentConfirmationDialogWithPin() {
+    enableAdultContentDialogWithPin.show();
+  }
+
+  @Override public Observable<DialogInterface> adultContentDialogNegativeClick() {
+    return enableAdultContentDialog.negativeClicks();
+  }
+
+  @Override public Observable<DialogInterface> adultContentPinDialogNegativeClick() {
+    return enableAdultContentDialogWithPin.negativeClicks();
+  }
+
+  @Override public void showWrongPinErrorMessage() {
+    Snackbar.make(getView(), R.string.adult_pin_wrong, Snackbar.LENGTH_LONG);
+    noSearchAdultContentSwitch.setChecked(false);
+  }
+
+  @Override public Observable<Void> viewHasNoResults() {
+    return noResultsPublishSubject;
   }
 
   public void showSuggestionsView() {
@@ -559,14 +613,14 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsLayout.setVisibility(View.GONE);
       trendingResultList.setVisibility(View.VISIBLE);
       suggestionsResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     } else {
       noSearchLayout.setVisibility(View.GONE);
       errorView.setVisibility(View.GONE);
       searchResultsLayout.setVisibility(View.GONE);
       suggestionsResultList.setVisibility(View.VISIBLE);
       trendingResultList.setVisibility(View.GONE);
-      bannerAd.setVisibility(View.GONE);
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
@@ -576,8 +630,8 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
     suggestionsResultList.setVisibility(View.GONE);
-    if (bannerAd != null) {
-      bannerAd.setVisibility(View.GONE);
+    if (bannerAdBottom != null) {
+      bannerAdBottom.setVisibility(View.GONE);
     }
   }
 
@@ -598,9 +652,10 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void setFollowedStoresButtonSelected() {
     if (followedStoresButton.getVisibility() == View.VISIBLE) {
-      followedStoresButton.setTextColor(getResources().getColor(R.color.white));
-      followedStoresButton.setBackgroundResource(StoreTheme.get(theme)
-          .getRoundGradientButtonDrawable());
+      followedStoresButton.setTextColor(
+          themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
+      followedStoresButton.setBackgroundResource(
+          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
       allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
@@ -609,8 +664,8 @@ public class SearchResultFragment extends BackButtonFragment
     viewModel.setAllStoresSelected(false);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      followedStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
-          .getRoundGradientButtonDrawable());
+      followedStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.roundGradientButtonBackground).resourceId);
     }
   }
 
@@ -620,15 +675,15 @@ public class SearchResultFragment extends BackButtonFragment
       followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
     }
     if (allStoresButton.getVisibility() == View.VISIBLE) {
-      allStoresButton.setTextColor(getResources().getColor(R.color.white));
-      allStoresButton.setBackgroundResource(StoreTheme.get(theme)
-          .getRoundGradientButtonDrawable());
+      allStoresButton.setTextColor(themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
+      allStoresButton.setBackgroundResource(
+          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
     }
     viewModel.setAllStoresSelected(true);
     String storeTheme = viewModel.getStoreTheme();
     if (storeThemeExists(storeTheme)) {
-      allStoresButton.setBackgroundResource(StoreTheme.get(storeTheme)
-          .getRoundGradientButtonDrawable());
+      allStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.roundGradientButtonBackground).resourceId);
     }
   }
 
@@ -676,13 +731,15 @@ public class SearchResultFragment extends BackButtonFragment
     queryTextChangedPublisher = PublishSubject.create();
 
     showingSearchResultsView = PublishSubject.create();
+    noResultsAdultContentSubject = PublishSubject.create();
+    noResultsPublishSubject = PublishSubject.create();
 
     final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
 
     followedStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
-            searchResultAdsFollowedStores, crashReport);
+            searchResultAdsFollowedStores, crashReport, oneDecimalFormatter);
 
     listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
@@ -691,7 +748,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     allStoresResultAdapter =
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
-            searchResultAdsAllStores, crashReport);
+            searchResultAdsAllStores, crashReport, oneDecimalFormatter);
 
     searchSuggestionsAdapter =
         new SearchSuggestionsAdapter(new ArrayList<>(), suggestionClickedPublishSubject);
@@ -731,6 +788,19 @@ public class SearchResultFragment extends BackButtonFragment
               UNSUBMITTED_QUERY) : "";
     }
 
+    enableAdultContentDialog =
+        new RxAlertDialog.Builder(getContext(), themeManager).setMessage(R.string.are_you_adult)
+            .setPositiveButton(R.string.yes)
+            .setNegativeButton(R.string.no)
+            .build();
+    enableAdultContentDialogWithPin =
+        new InputDialog.Builder(getContext(), themeManager).setMessage(R.string.request_adult_pin)
+            .setPositiveButton(R.string.all_button_ok)
+            .setNegativeButton(R.string.cancel)
+            .setView(R.layout.dialog_request_input)
+            .setEditText(R.id.input)
+            .build();
+
     attachPresenter(searchResultPresenter);
   }
 
@@ -742,40 +812,24 @@ public class SearchResultFragment extends BackButtonFragment
   private void setupTheme() {
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      toolbar.setBackgroundResource(StoreTheme.get(storeTheme)
-          .getGradientDrawable());
+      themeManager.setTheme(storeTheme);
+      toolbar.setBackgroundResource(
+          themeManager.getAttributeForTheme(storeTheme, R.attr.toolbarBackground).resourceId);
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
         Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
-        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(storeTheme)
-                .getPrimaryColor()));
+        DrawableCompat.setTint(wrapDrawable,
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).data);
         progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
       } else {
         progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(storeTheme)
-                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
+            .setColorFilter(themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
+                PorterDuff.Mode.SRC_IN);
       }
     }
   }
 
   private void setupDefaultTheme() {
-    if (storeThemeExists(theme)) {
-      ThemeUtils.setStoreTheme(getActivity(), theme);
-      ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        Drawable wrapDrawable = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
-        DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(getContext(),
-            StoreTheme.get(theme)
-                .getPrimaryColor()));
-        progressBar.setIndeterminateDrawable(DrawableCompat.unwrap(wrapDrawable));
-      } else {
-        progressBar.getIndeterminateDrawable()
-            .setColorFilter(ContextCompat.getColor(getContext(), StoreTheme.get(theme)
-                .getPrimaryColor()), PorterDuff.Mode.SRC_IN);
-      }
-    }
+    themeManager.resetToBaseTheme();
   }
 
   @Override public void onDestroyView() {
@@ -787,9 +841,9 @@ public class SearchResultFragment extends BackButtonFragment
       moPubRecyclerAdapter.destroy();
       moPubRecyclerAdapter = null;
     }
-    if (bannerAd != null) {
-      bannerAd.destroy();
-      bannerAd = null;
+    if (bannerAdBottom != null) {
+      bannerAdBottom.destroy();
+      bannerAdBottom = null;
     }
   }
 
@@ -808,6 +862,8 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void onDestroy() {
     super.onDestroy();
     showingSearchResultsView = null;
+    noResultsAdultContentSubject = null;
+    noResultsPublishSubject = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -817,8 +873,7 @@ public class SearchResultFragment extends BackButtonFragment
     searchMenuItem = menu.findItem(R.id.menu_item_search);
     searchView = (SearchView) searchMenuItem.getActionView();
     searchView.setMaxWidth(Integer.MAX_VALUE);
-    AutoCompleteTextView autoCompleteTextView =
-        (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
+    AutoCompleteTextView autoCompleteTextView = searchView.findViewById(R.id.search_src_text);
     autoCompleteTextView.setThreshold(COMPLETION_THRESHOLD);
     MenuItemCompat.setOnActionExpandListener(searchMenuItem,
         new MenuItemCompat.OnActionExpandListener() {
@@ -868,16 +923,20 @@ public class SearchResultFragment extends BackButtonFragment
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
-        .onSaveInstanceState());
+    if (allStoresResultList != null && allStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+          .onSaveInstanceState());
+    }
 
     outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
 
     if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
 
-    outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-        followedStoresResultList.getLayoutManager()
-            .onSaveInstanceState());
+    if (followedStoresResultList != null && followedStoresResultList.getLayoutManager() != null) {
+      outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
+          followedStoresResultList.getLayoutManager()
+              .onSaveInstanceState());
+    }
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState,

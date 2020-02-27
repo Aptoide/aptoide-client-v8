@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
@@ -10,6 +9,7 @@
 
   <ProgressBar
       android:id="@+id/wallet_download_progress_bar"
+      style="?android:attr/progressBarStyleHorizontal"
       android:layout_width="0dp"
       android:layout_height="4dp"
       android:indeterminate="true"
@@ -19,10 +19,10 @@
       app:layout_constraintHorizontal_weight="1"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      style="?android:attr/progressBarStyleHorizontal"
       />
   <TextView
       android:id="@+id/wallet_download_download_state"
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:ellipsize="end"
@@ -30,17 +30,16 @@
       android:text="@string/apps_short_installing"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/wallet_download_progress_bar"
-      style="@style/Aptoide.TextView.Medium.XS.Grey"
       />
   <TextView
       android:id="@+id/wallet_download_progress_number"
+      style="@style/Aptoide.TextView.Medium.XS.Grey"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="start"
       app:layout_constraintEnd_toEndOf="@+id/wallet_download_progress_bar"
       app:layout_constraintTop_toBottomOf="@+id/wallet_download_progress_bar"
       tools:text="80%"
-      style="@style/Aptoide.TextView.Medium.XS.Grey"
       />
 
   <ImageView

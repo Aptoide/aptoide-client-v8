@@ -20,9 +20,11 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
   private Integer stars;
   private Long modified;
 
+  private Payout payout;
+
   public AptoideNativeAd(MinimalAd ad) {
     super(ad.getName(), ad.getIconPath(), 0f, ad.getDownloads(), ad.getPackageName(), ad.getAppId(),
-        "", false);
+        "", ad.isHasAppc());
     this.networkId = ad.getNetworkId();
     this.clickUrl = ad.getClickUrl();
     this.cpcUrl = ad.getCpcUrl();
@@ -40,7 +42,15 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
         .getIcon(), 0f, ad.getData()
         .getDownloads(), ad.getData()
         .getPackageName(), ad.getData()
-        .getId(), "", false);
+        .getId(), "", ad.getInfo()
+        .getPayout() != null
+        && ad.getInfo()
+        .getPayout()
+        .getFiat() != null
+        && ad.getInfo()
+        .getPayout()
+        .getFiat()
+        .getAmount() > 0);
     GetAdsResponse.Partner partner = ad.getPartner();
     int id = 0;
     String clickUrl = null;
@@ -67,6 +77,13 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
     this.modified = ad.getData()
         .getModified()
         .getTime();
+    GetAdsResponse.Info.Payout appcPayout = ad.getInfo()
+        .getPayout();
+    if (appcPayout != null) {
+      GetAdsResponse.Info.Fiat fiat = appcPayout.getFiat();
+      this.payout =
+          new Payout(appcPayout.getAppc(), fiat.getAmount(), fiat.getCurrency(), fiat.getSymbol());
+    }
   }
 
   @Override public String getAdTitle() {
@@ -86,6 +103,14 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
 
   @Override public Network getNetwork() {
     return Network.SERVER;
+  }
+
+  @Override public boolean hasAppcPayout() {
+    return hasAppcBilling() && payout != null && payout.getFiatAmount() > 0;
+  }
+
+  @Override public Payout getAppcPayout() {
+    return payout;
   }
 
   @Override public void setAdView(View adView) {
@@ -152,16 +177,21 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
     AptoideNativeAd ad = (AptoideNativeAd) o;
 
     return ad.modified.equals(this.modified)
-        && ad.stars.equals(this.stars) && ((Integer) ad.getDownloads()).equals(this.getDownloads())
-        && ad.description.equals(this.description) && ad.getIcon()
-        .equals(this.getIcon()) && ad.getName()
+        && ad.stars.equals(this.stars)
+        && ((Integer) ad.getDownloads()).equals(this.getDownloads())
+        && ad.description.equals(this.description)
+        && ad.getIcon()
+        .equals(this.getIcon())
+        && ad.getName()
         .equals(this.getName())
         && ad.cpiUrl.equals(this.cpiUrl)
         && ad.adId.equals(this.adId)
         && ad.cpdUrl.equals(this.cpdUrl)
-        && ad.cpcUrl.equals(this.cpcUrl) && ((Long) ad.getAppId()).equals(this.getAppId())
+        && ad.cpcUrl.equals(this.cpcUrl)
+        && ((Long) ad.getAppId()).equals(this.getAppId())
         && ad.clickUrl.equals(this.clickUrl)
-        && ad.networkId.equals(this.networkId) && ad.getPackageName()
+        && ad.networkId.equals(this.networkId)
+        && ad.getPackageName()
         .equals(getPackageName());
   }
 }

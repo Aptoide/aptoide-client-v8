@@ -16,7 +16,6 @@ import java.io.File;
 import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 public class ImagePickerPresenter implements Presenter {
 
@@ -33,11 +32,13 @@ public class ImagePickerPresenter implements Presenter {
   private final ImagePickerNavigator navigator;
   private final ContentResolver contentResolver;
   private final ImageLoader imageLoader;
+  private final Scheduler ioScheduler;
 
   public ImagePickerPresenter(ImagePickerView view, CrashReport crashReport,
       AccountPermissionProvider accountPermissionProvider, PhotoFileGenerator photoFileGenerator,
       ImageValidator imageValidator, Scheduler viewScheduler, UriToPathResolver uriToPathResolver,
-      ImagePickerNavigator navigator, ContentResolver contentResolver, ImageLoader imageLoader) {
+      ImagePickerNavigator navigator, ContentResolver contentResolver, ImageLoader imageLoader,
+      Scheduler ioScheduler) {
     this.view = view;
     this.crashReport = crashReport;
     this.accountPermissionProvider = accountPermissionProvider;
@@ -48,6 +49,7 @@ public class ImagePickerPresenter implements Presenter {
     this.navigator = navigator;
     this.contentResolver = contentResolver;
     this.imageLoader = imageLoader;
+    this.ioScheduler = ioScheduler;
   }
 
   public void handlePickImageClick() {
@@ -70,6 +72,7 @@ public class ImagePickerPresenter implements Presenter {
   @NonNull private Single<String> getFileNameFromCameraWithUri(String createdUri) {
     return navigator.navigateToCameraWithImageUri(CAMERA_PICK, Uri.parse(createdUri))
         .first()
+        .observeOn(ioScheduler)
         .flatMapSingle(__ -> saveCameraPictureInPublicPhotos(createdUri))
         .toSingle();
   }
@@ -83,11 +86,11 @@ public class ImagePickerPresenter implements Presenter {
       String path = MediaStore.Images.Media.insertImage(contentResolver, image,
           createdUri.substring(createdUri.lastIndexOf(File.pathSeparator)), null);
       image.recycle();
-      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(path)))
-          .subscribeOn(Schedulers.io());
+      return Single.just(path)
+          .subscribeOn(ioScheduler);
     } else {
-      return Single.just(uriToPathResolver.getCameraStoragePath(Uri.parse(createdUri)))
-          .subscribeOn(Schedulers.io());
+      return Single.just(createdUri)
+          .subscribeOn(ioScheduler);
     }
   }
 
@@ -120,7 +123,8 @@ public class ImagePickerPresenter implements Presenter {
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, __ -> {
+        });
   }
 
   @NonNull private Completable loadValidImageOrThrowForGallery(String selectedImageUri) {

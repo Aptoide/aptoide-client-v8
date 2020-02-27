@@ -1,35 +1,18 @@
 package cm.aptoide.pt.timeline.view.follow;
 
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
-import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.timeline.view.displayable.FollowUserDisplayable;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.recycler.widget.Widget;
-import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
-import okhttp3.OkHttpClient;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by trinkes on 16/12/2016.
@@ -43,104 +26,29 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
   private TextView followersNumber;
   private ImageView mainIcon;
   private ImageView secondaryIcon;
-  private TextView followingTv;
-  private TextView followedTv;
-  private Button follow;
   private LinearLayout followNumbers;
-  private LinearLayout followLayout;
   private View separatorView;
-  private AptoideAccountManager accountManager;
 
   public FollowUserWidget(View itemView) {
     super(itemView);
   }
 
   @Override protected void assignViews(View itemView) {
-    userNameTv = (TextView) itemView.findViewById(R.id.user_name);
-    storeNameTv = (TextView) itemView.findViewById(R.id.store_name);
-    followingNumber = (TextView) itemView.findViewById(R.id.following_number);
-    followersNumber = (TextView) itemView.findViewById(R.id.followers_number);
-    followingTv = (TextView) itemView.findViewById(R.id.following_tv);
-    followedTv = (TextView) itemView.findViewById(R.id.followers_tv);
-    mainIcon = (ImageView) itemView.findViewById(R.id.main_icon);
-    secondaryIcon = (ImageView) itemView.findViewById(R.id.secondary_icon);
-    follow = (Button) itemView.findViewById(R.id.follow_btn);
-    followNumbers = (LinearLayout) itemView.findViewById(R.id.followers_following_numbers);
-    followLayout = (LinearLayout) itemView.findViewById(R.id.follow_store_layout);
+    userNameTv = itemView.findViewById(R.id.user_name);
+    storeNameTv = itemView.findViewById(R.id.store_name);
+    followingNumber = itemView.findViewById(R.id.following_number);
+    followersNumber = itemView.findViewById(R.id.followers_number);
+    mainIcon = itemView.findViewById(R.id.main_icon);
+    secondaryIcon = itemView.findViewById(R.id.secondary_icon);
+    followNumbers = itemView.findViewById(R.id.followers_following_numbers);
     separatorView = itemView.findViewById(R.id.separator_vertical);
   }
 
   @Override public void bindView(FollowUserDisplayable displayable, int position) {
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
-    accountManager = application.getAccountManager();
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        application.getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient = application.getDefaultClient();
-
-    if (!displayable.isLike()) {
-      followLayout.setVisibility(View.GONE);
-      followNumbers.setVisibility(View.VISIBLE);
-      separatorView.setVisibility(View.VISIBLE);
-      followingNumber.setText(displayable.getFollowing());
-      followersNumber.setText(displayable.getFollowers());
-    } else {
-      followNumbers.setVisibility(View.GONE);
-      separatorView.setVisibility(View.INVISIBLE);
-      if (displayable.hasStore()) {
-        followLayout.setVisibility(View.VISIBLE);
-        setFollowColor(displayable);
-      }
-
-      final String storeName = displayable.getStoreName();
-
-      final StoreUtilsProxy storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
-          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-              ((AptoideApplication) getContext().getApplicationContext()
-                  .getApplicationContext()).getDatabase(), Store.class)),
-          AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Store.class), httpClient,
-          WebService.getDefaultConverter(), application.getTokenInvalidator(),
-          application.getDefaultSharedPreferences());
-
-      StoreRepository storeRepository =
-          RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
-
-      compositeSubscription.add(RxView.clicks(follow)
-          .flatMap(__ -> storeRepository.isSubscribed(storeName)
-              .first())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(isSubscribed -> {
-            if (isSubscribed) {
-              follow.setVisibility(View.VISIBLE);
-              follow.setText(R.string.follow);
-              Snackbar.make(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.unfollowing_store_message,
-                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
-                  .show();
-              storeUtilsProxy.unSubscribeStore(storeName);
-            } else {
-              follow.setVisibility(View.INVISIBLE);
-              Snackbar.make(itemView,
-                  AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                      getContext().getResources(), storeName), Snackbar.LENGTH_SHORT)
-                  .show();
-              storeUtilsProxy.subscribeStore(storeName);
-            }
-          }, e -> CrashReport.getInstance()
-              .log(e)));
-
-      compositeSubscription.add(storeRepository.isSubscribed(displayable.getStoreName())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe(isSubscribed -> {
-            if (isSubscribed) {
-              follow.setVisibility(View.INVISIBLE);
-            } else {
-              follow.setVisibility(View.VISIBLE);
-              follow.setText(R.string.follow);
-            }
-          }, (throwable) -> throwable.printStackTrace()));
-    }
+    followNumbers.setVisibility(View.VISIBLE);
+    separatorView.setVisibility(View.VISIBLE);
+    followingNumber.setText(displayable.getFollowing());
+    followersNumber.setText(displayable.getFollowers());
 
     final FragmentActivity context = getContext();
     if (displayable.hasStoreAndUser()) {
@@ -171,13 +79,10 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     }
 
     if (displayable.hasStore()) {
-      setupStoreNameTv(displayable.getStoreColor(getContext().getApplicationContext()),
-          displayable.storeName());
+      setupStoreNameTv(displayable.storeName());
     } else {
       storeNameTv.setVisibility(View.GONE);
     }
-    followedTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
-    followingTv.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(click -> displayable.viewClicked(getFragmentNavigator()),
@@ -185,20 +90,8 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
                 .log(err)));
   }
 
-  private void setFollowColor(FollowUserDisplayable displayable) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      follow.setBackground(
-          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
-    } else {
-      follow.setBackgroundDrawable(
-          displayable.getButtonBackgroundStoreThemeColor(getContext().getApplicationContext()));
-    }
-    follow.setTextColor(displayable.getStoreColor(getContext().getApplicationContext()));
-  }
-
-  private void setupStoreNameTv(int storeColor, String storeName) {
+  private void setupStoreNameTv(String storeName) {
     storeNameTv.setText(storeName);
-    storeNameTv.setTextColor(storeColor);
     storeNameTv.setVisibility(View.VISIBLE);
     Drawable drawable;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -211,7 +104,6 @@ public class FollowUserWidget extends Widget<FollowUserDisplayable> {
     drawable.setBounds(0, 0, 30, 30);
     drawable.mutate();
 
-    drawable.setColorFilter(storeColor, PorterDuff.Mode.SRC_IN);
     storeNameTv.setCompoundDrawablePadding(5);
     storeNameTv.setCompoundDrawables(drawable, null, null, null);
   }

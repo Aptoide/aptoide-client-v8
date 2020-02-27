@@ -19,6 +19,10 @@ public interface ApplicationAd {
 
   Network getNetwork();
 
+  boolean hasAppcPayout();
+
+  Payout getAppcPayout();
+
   void setAdView(View adView);
 
   enum Network {

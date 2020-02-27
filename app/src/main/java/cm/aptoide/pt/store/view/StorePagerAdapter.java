@@ -123,7 +123,7 @@ public class StorePagerAdapter extends FragmentStatePagerAdapter
   private Fragment caseAPI(GetStoreTabs.Tab tab, boolean addAdultFilter) {
     return AptoideApplication.getFragmentProvider()
         .newStoreTabGridRecyclerFragment(tab.getEvent(), storeTheme, tab.getTag(), storeContext,
-            addAdultFilter);
+            addAdultFilter, false);
   }
 
   private Fragment caseClient(Event event, GetStoreTabs.Tab tab) {

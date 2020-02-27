@@ -21,7 +21,8 @@ class EarnAppCoinsListAdapter(private val decimalFormatter: DecimalFormat,
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EarnAppCoinsItemViewHolder {
     return EarnAppCoinsItemViewHolder(LayoutInflater.from(parent.context)
-        .inflate(R.layout.earn_appcoins_item, parent, false), appClickedEvents, decimalFormatter)
+        .inflate(R.layout.earn_appcoins_item_home, parent, false), appClickedEvents,
+        decimalFormatter)
   }
 
   override fun onBindViewHolder(holder: EarnAppCoinsItemViewHolder, position: Int) {

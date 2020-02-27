@@ -38,6 +38,10 @@ public class DownloadsRepository {
     return downloadAccessor.getAll();
   }
 
+  public Observable<List<Download>> getWaitingToMoveFilesDownloads() {
+    return downloadAccessor.getUnmovedFilesDownloads();
+  }
+
   public Completable remove(String md5) {
     return Completable.fromAction(() -> downloadAccessor.delete(md5));
   }

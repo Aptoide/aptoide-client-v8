@@ -1,6 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
@@ -14,6 +15,7 @@ import cm.aptoide.pt.notification.ContentPuller;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.MainActivity;
@@ -44,10 +46,12 @@ public class BottomNavigationPresenterTest {
   @Mock private FragmentNavigator fragmentNavigator;
   @Mock private DeepLinkManager deepLinkManager;
   @Mock private BottomNavigationActivity bottomNavigationActivity;
+  @Mock private PermissionService permissionService;
   @Mock private MainActivity mainView;
   @Mock private BottomNavigationNavigator bottomNavigationNavigator;
   @Mock private UpdatesManager updatesManager;
   @Mock private AutoUpdateManager autoUpdateManager;
+  @Mock private RootAvailabilityManager rootAvailabilityManager;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -62,7 +66,8 @@ public class BottomNavigationPresenterTest {
         CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
-        bottomNavigationNavigator, updatesManager, autoUpdateManager);
+        bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
+        rootAvailabilityManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

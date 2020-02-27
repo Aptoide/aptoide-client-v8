@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -36,13 +35,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
-import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.dialog.DialogUtils;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -67,9 +65,9 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject AppNavigator appNavigator;
   @Inject @Named("marketName") String marketName;
   @Inject MarketResourceFormatter marketResourceFormatter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
+  @Inject DialogUtils dialogUtils;
   private SharedPreferences preferences;
-  private DialogUtils dialogUtils;
   private long reviewId;
   private String storeName;
   private String appName;
@@ -79,7 +77,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private MenuItem installMenuItem;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
-  private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
@@ -177,8 +174,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    final FloatingActionButton floatingActionButton =
-        (FloatingActionButton) view.findViewById(R.id.fab);
+    final FloatingActionButton floatingActionButton = view.findViewById(R.id.fab);
 
     RxView.clicks(floatingActionButton)
         .flatMap(__ -> dialogUtils.showRateDialog(getActivity(), appName, packageName, storeName))
@@ -189,16 +185,14 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
-    ThemeUtils.setStoreTheme(getActivity(), theme);
+    themeManager.resetToBaseTheme();
     super.onDestroyView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (storeTheme != null) {
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      ThemeUtils.setStoreTheme(getActivity(), storeTheme);
+      themeManager.setTheme(storeTheme);
     }
   }
 
@@ -211,11 +205,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
 
   @Override public void onViewCreated() {
     super.onViewCreated();
-    dialogUtils = new DialogUtils(accountManager,
-        ((ActivityResultNavigator) getContext()).getAccountNavigator(), baseBodyInterceptor,
-        httpClient, converterFactory, installedRepository, tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-        getContext().getResources(), marketName, marketResourceFormatter);
   }
 
   private void fetchRating(boolean refresh) {
@@ -298,8 +287,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     installedRepository =
         RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =

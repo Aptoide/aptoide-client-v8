@@ -41,17 +41,19 @@ public interface FragmentProvider {
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
    * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
+   * @param shouldShowToolbar When true adds toolbar to the fragment.
    */
   @Deprecated Fragment newStoreTabGridRecyclerFragment(Event event, String storeTheme, String tag,
-      StoreContext storeContext, boolean addAdultFilter);
+      StoreContext storeContext, boolean addAdultFilter, boolean shouldShowToolbar);
 
   /**
    * @param storeContext is needed to give context to fragment ex: store downloads vs global
    * downloads
    * @param addAdultFilter When true, adds adult switch to Fragment's bottom.
+   * @param shouldShowToolbar When true adds a toolbar to the fragment.
    */
   @Deprecated Fragment newStoreTabGridRecyclerFragment(Event event, String title, String storeTheme,
-      String tag, StoreContext storeContext, boolean addAdultFilter);
+      String tag, StoreContext storeContext, boolean addAdultFilter, boolean shouldShowToolbar);
 
   @Deprecated Fragment newSubscribedStoresFragment(Event event, String storeTheme, String tag,
       StoreContext storeName);
@@ -59,8 +61,7 @@ public interface FragmentProvider {
   @Deprecated Fragment newRateAndReviewsFragment(long appId, String appName, String storeName,
       String packageName, long reviewId);
 
-  @Deprecated Fragment newDescriptionFragment(String appName, String description,
-      String storeTheme);
+  @Deprecated Fragment newDescriptionFragment(String appName, String description, boolean isAppc);
 
   @Deprecated Fragment newSettingsFragment();
 

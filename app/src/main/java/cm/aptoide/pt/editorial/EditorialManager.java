@@ -98,7 +98,7 @@ public class EditorialManager {
         AnalyticsManager.Action.INSTALL, AppContext.EDITORIAL,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        download.getTrustedBadge(), download.getStoreName(), false);
   }
 
   public Observable<EditorialDownloadModel> loadDownloadModel(String md5, String packageName,
@@ -110,7 +110,7 @@ public class EditorialManager {
   }
 
   public Completable pauseDownload(String md5) {
-    return Completable.fromAction(() -> installManager.stopInstallation(md5));
+    return installManager.pauseInstall(md5);
   }
 
   public Completable resumeDownload(String md5, String packageName, long appId, String action) {
@@ -123,8 +123,7 @@ public class EditorialManager {
   }
 
   public Completable cancelDownload(String md5, String packageName, int versionCode) {
-    return Completable.fromAction(
-        () -> installManager.removeInstallationFile(md5, packageName, versionCode));
+    return installManager.cancelInstall(md5, packageName, versionCode);
   }
 
   public Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {

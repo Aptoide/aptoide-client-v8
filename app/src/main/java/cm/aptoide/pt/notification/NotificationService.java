@@ -39,9 +39,11 @@ public class NotificationService {
   }
 
   public Single<List<AptoideNotification>> getCampaignNotifications() {
-    return PullCampaignNotificationsRequest.of(idsRepository.getUniqueIdentifier(), versionName,
-        applicationId, httpClient, converterFactory, extraId, sharedPreferences, resources)
-        .observe()
+    return idsRepository.getUniqueIdentifier()
+        .flatMapObservable(
+            id -> PullCampaignNotificationsRequest.of(id, versionName, applicationId, httpClient,
+                converterFactory, extraId, sharedPreferences, resources)
+                .observe())
         .flatMap(response -> accountManager.accountStatus()
             .first()
             .map(account -> convertCampaignNotifications(response, account.getId())))
@@ -68,7 +70,7 @@ public class NotificationService {
               graphic, AptoideNotification.NOT_DISMISSED, id, notification.getUrlTrack(),
               notification.getUrlTrackNc(), false, System.currentTimeMillis(),
               notification.getExpire(), notification.getAbTestingGroup(),
-              notification.getCampaignId(), notification.getLang()));
+              notification.getCampaignId(), notification.getLang(), -1));
     }
     return aptoideNotifications;
   }

@@ -15,5 +15,5 @@ data class SearchQueryModel @JvmOverloads constructor(val userQuery: String = ""
     Parcelable
 
 enum class Source {
-  MANUAL, FROM_TRENDING, FROM_AUTOCOMPLETE
+  MANUAL, FROM_TRENDING, FROM_AUTOCOMPLETE, DEEPLINK
 }

@@ -9,6 +9,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.StringRes;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.jakewharton.rxbinding.view.RxView;
 import rx.Observable;
@@ -41,10 +42,6 @@ public class ImagePickerDialog implements DialogInterface {
         .map(__ -> this);
   }
 
-  public Observable<DialogInterface> cancelsSelected() {
-    return dialog.cancels();
-  }
-
   @Override public void cancel() {
     dialog.cancel();
   }
@@ -61,8 +58,8 @@ public class ImagePickerDialog implements DialogInterface {
     private int galleryButtonRes;
     private int cameraButtonRes;
 
-    public Builder(Context context) {
-      this.builder = new RxAlertDialog.Builder(context);
+    public Builder(Context context, ThemeManager themeManager) {
+      this.builder = new RxAlertDialog.Builder(context, themeManager);
       this.layoutInflater = LayoutInflater.from(context);
     }
 

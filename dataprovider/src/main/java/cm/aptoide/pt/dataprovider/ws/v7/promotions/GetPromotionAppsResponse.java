@@ -1,5 +1,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.promotions;
 
+import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7EndlessDataListResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
 
@@ -13,6 +14,7 @@ public class GetPromotionAppsResponse
     private boolean claimed;
     private float appc;
     private String promotionDescription;
+    private AppCoinsCampaign.Fiat fiat;
     private GetAppMeta.App app;
 
     public PromotionAppModel() {
@@ -48,6 +50,14 @@ public class GetPromotionAppsResponse
 
     public void setPromotionDescription(String description) {
       this.promotionDescription = description;
+    }
+
+    public AppCoinsCampaign.Fiat getFiat() {
+      return fiat;
+    }
+
+    public void setFiat(AppCoinsCampaign.Fiat fiat) {
+      this.fiat = fiat;
     }
   }
 }

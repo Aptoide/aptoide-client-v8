@@ -56,18 +56,19 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   @Inject @Named("marketName") String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
-      StoreContext storeContext) {
-    return newInstance(event, null, storeTheme, tag, storeContext);
+      StoreContext storeContext, boolean shouldShowToolbar) {
+    return newInstance(event, null, storeTheme, tag, storeContext, shouldShowToolbar);
   }
 
   public static Fragment newInstance(Event event, String title, String storeTheme, String tag,
-      StoreContext storeContext) {
-    return newInstance(event, HomeEvent.Type.NO_OP, title, storeTheme, tag, storeContext);
+      StoreContext storeContext, boolean shouldShowToolbar) {
+    return newInstance(event, HomeEvent.Type.NO_OP, title, storeTheme, tag, storeContext,
+        shouldShowToolbar);
   }
 
   public static Fragment newInstance(Event event, HomeEvent.Type type, String title,
-      String storeTheme, String tag, StoreContext storeContext) {
-    Bundle args = buildBundle(event, type, title, storeTheme, tag, storeContext);
+      String storeTheme, String tag, StoreContext storeContext, boolean shouldShowToolbar) {
+    Bundle args = buildBundle(event, type, title, storeTheme, tag, storeContext, shouldShowToolbar);
     Fragment fragment = StoreTabFragmentChooser.choose(event, type);
     Bundle arguments = fragment.getArguments();
     if (arguments != null) {
@@ -79,7 +80,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
 
   @NonNull
   protected static Bundle buildBundle(Event event, HomeEvent.Type homeEventType, String title,
-      String storeTheme, String tag, StoreContext storeContext) {
+      String storeTheme, String tag, StoreContext storeContext, boolean shouldShowToolbar) {
     Bundle args = new Bundle();
 
     if (homeEventType != null) {
@@ -112,6 +113,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
     args.putString(BundleCons.ACTION, event.getAction());
     args.putString(BundleCons.STORE_THEME, storeTheme);
     args.putString(BundleCons.TAG, tag);
+    args.putBoolean(BundleCons.TOOLBAR, shouldShowToolbar);
     return args;
   }
 

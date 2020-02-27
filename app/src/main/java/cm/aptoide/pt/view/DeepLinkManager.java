@@ -31,6 +31,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
+import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
@@ -40,11 +41,15 @@ import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabFragmentChooser;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.themes.ThemeManager;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -69,7 +74,6 @@ public class DeepLinkManager {
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
-  private final String defaultTheme;
   private final NavigationTracker navigationTracker;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
@@ -80,15 +84,21 @@ public class DeepLinkManager {
   private final AdsRepository adsRepository;
   private final AppNavigator appNavigator;
   private final CompositeSubscription subscriptions;
+  private final InstallManager installManager;
+  private final NewFeature newFeature;
+  private final ThemeManager themeManager;
+  private final ThemeAnalytics themeAnalytics;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
       SearchNavigator searchNavigator, DeepLinkMessages deepLinkMessages,
-      SharedPreferences sharedPreferences, StoreAccessor storeAccessor, String defaultTheme,
+      SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator) {
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
+      InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
+      ThemeAnalytics themeAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
@@ -97,7 +107,6 @@ public class DeepLinkManager {
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
-    this.defaultTheme = defaultTheme;
     this.navigationTracker = navigationTracker;
     this.notificationAnalytics = notificationAnalytics;
     this.searchAnalytics = searchAnalytics;
@@ -107,6 +116,10 @@ public class DeepLinkManager {
     this.storeAnalytics = storeAnalytics;
     this.adsRepository = adsRepository;
     this.appNavigator = appNavigator;
+    this.installManager = installManager;
+    this.newFeature = newFeature;
+    this.themeManager = themeManager;
+    this.themeAnalytics = themeAnalytics;
     this.subscriptions = new CompositeSubscription();
   }
 
@@ -163,6 +176,12 @@ public class DeepLinkManager {
       appcInfoDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPC_ADS)) {
       appcAdsDeepLink();
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.FEATURE)) {
+      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.ID) && intent.hasExtra(
+          DeepLinkIntentReceiver.DeepLinksKeys.ACTION)) {
+        sendFeatureAction(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ID),
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ACTION));
+      }
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -178,6 +197,20 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
+  }
+
+  private void sendFeatureAction(String id, String action) {
+    if (id.equals(newFeature.getId()) && action.equals(newFeature.getActionId())) {
+      // Set new feature action
+      themeManager.setThemeOption(ThemeManager.ThemeOption.DARK);
+      themeManager.resetToBaseTheme();
+      themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
+    }
+  }
+
+  private void pauseDownloadFromNotification(String md5) {
+    installManager.pauseInstall(md5)
+        .subscribe();
   }
 
   private void editorialDeepLinkFromSlug(String slug) {
@@ -240,7 +273,7 @@ public class DeepLinkManager {
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {
     bottomNavigationNavigator.navigateToSearch(
-        searchNavigator.resolveFragment(new SearchQueryModel(query)));
+        searchNavigator.resolveFragment(new SearchQueryModel(query, query, Source.DEEPLINK)));
     if (query == null || query.isEmpty()) {
       if (shortcutNavigation) {
         searchAnalytics.searchStart(SearchSource.SHORTCUT, false);
@@ -338,8 +371,8 @@ public class DeepLinkManager {
         fragmentNavigator.navigateTo(AptoideApplication.getFragmentProvider()
             .newStoreTabGridRecyclerFragment(event,
                 uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.TITLE),
-                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME),
-                defaultTheme, StoreContext.home, true), true);
+                uri.getQueryParameter(DeepLinkIntentReceiver.DeepLinksKeys.STORE_THEME), "",
+                StoreContext.home, true, true), true);
       } catch (UnsupportedEncodingException | IllegalArgumentException e) {
         e.printStackTrace();
       }

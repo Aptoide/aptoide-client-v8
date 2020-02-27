@@ -36,6 +36,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import com.jakewharton.rxbinding.view.RxView;
@@ -60,7 +61,7 @@ public class MyAccountFragment extends BackButtonFragment
   @Inject AccountAnalytics accountAnalytics;
   @Inject MyAccountManager myAccountManager;
   @Inject @Named("marketName") String marketName;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private AptoideAccountManager accountManager;
   private Converter.Factory converterFactory;
   private OkHttpClient httpClient;
@@ -83,8 +84,6 @@ public class MyAccountFragment extends BackButtonFragment
   private CardView aptoideTvCardView;
   private CardView aptoideUploaderCardView;
   private CardView aptoideBackupAppsCardView;
-  //Navigation buttons
-  private View notificationHistory;
   private View settings;
   private TextView myAccountProductCardTitle;
 
@@ -110,8 +109,7 @@ public class MyAccountFragment extends BackButtonFragment
 
     ((TextView) view.findViewById(R.id.sign_in_message)).setText(
         getString(R.string.newaccount_signin_message, marketName));
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    notificationHistory = view.findViewById(R.id.notifications_history);
+    toolbar = view.findViewById(R.id.toolbar);
     settings = view.findViewById(R.id.settings);
     myAccountProductCardTitle = view.findViewById(R.id.my_account_product_card_title);
     myAccountProductCardTitle.setText(getString(R.string.my_account_product_card_section_title));
@@ -233,10 +231,6 @@ public class MyAccountFragment extends BackButtonFragment
     return RxView.clicks(settings);
   }
 
-  @Override public Observable<Void> notificationsClicked() {
-    return RxView.clicks(notificationHistory);
-  }
-
   @Override public Observable<GetStore> getStore() {
     return accountManager.accountStatus()
         .first()
@@ -265,7 +259,8 @@ public class MyAccountFragment extends BackButtonFragment
 
   @Override public void startAptoideTvWebView() {
     CustomTabsHelper.getInstance()
-        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(), theme);
+        .openInChromeCustomTab("https://blog.aptoide.com/what-is-aptoidetv/", getContext(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   @Override public void refreshUI(Store store) {
@@ -315,10 +310,9 @@ public class MyAccountFragment extends BackButtonFragment
     }
     if (!TextUtils.isEmpty(account.getAvatar())) {
       String userAvatarUrl = account.getAvatar();
-      userAvatarUrl = userAvatarUrl.replace("50", "150");
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(userAvatarUrl, myAccountAvatar, STROKE_SIZE,
-              R.drawable.my_account_placeholder);
+              R.attr.placeholder_myaccount);
     }
   }
 
@@ -327,7 +321,7 @@ public class MyAccountFragment extends BackButtonFragment
       myStoreName.setText(storeName);
       ImageLoader.with(getContext())
           .loadWithShadowCircleTransformWithPlaceholder(storeAvatar, this.myStoreAvatar,
-              STROKE_SIZE, R.drawable.my_account_placeholder);
+              STROKE_SIZE, R.attr.placeholder_myaccount);
     }
   }
 
@@ -337,27 +331,27 @@ public class MyAccountFragment extends BackButtonFragment
     accountView = view.findViewById(R.id.account_displayables);
     loginView = view.findViewById(R.id.login_register_container);
 
-    myAccountAvatar = (ImageView) myProfileView.findViewById(R.id.user_icon);
-    myAccountName = (TextView) myProfileView.findViewById(R.id.description);
-    myStoreAvatar = (ImageView) myStoreView.findViewById(R.id.user_icon);
-    myStoreName = (TextView) myStoreView.findViewById(R.id.description);
+    myAccountAvatar = myProfileView.findViewById(R.id.user_icon);
+    myAccountName = myProfileView.findViewById(R.id.description);
+    myStoreAvatar = myStoreView.findViewById(R.id.user_icon);
+    myStoreName = myStoreView.findViewById(R.id.description);
 
-    TextView myStoreTitle = (TextView) myStoreView.findViewById(R.id.name);
+    TextView myStoreTitle = myStoreView.findViewById(R.id.name);
     myStoreTitle.setText(R.string.newaccount_my_store);
 
-    TextView myAccountTitle = (TextView) myProfileView.findViewById(R.id.name);
+    TextView myAccountTitle = myProfileView.findViewById(R.id.name);
     myAccountTitle.setText(R.string.newaccount_my_profile);
 
-    loginButton = (Button) view.findViewById(R.id.login_button);
-    logoutButton = (Button) view.findViewById(R.id.logout_button);
-    createStoreMessage = (TextView) view.findViewById(R.id.create_store_message);
-    createStoreButton = (Button) view.findViewById(R.id.create_store_button);
-    editStoreButton = (Button) myStoreView.findViewById(R.id.edit_button);
-    editProfileButton = (Button) myProfileView.findViewById(R.id.edit_button);
+    loginButton = view.findViewById(R.id.login_button);
+    logoutButton = view.findViewById(R.id.logout_button);
+    createStoreMessage = view.findViewById(R.id.create_store_message);
+    createStoreButton = view.findViewById(R.id.create_store_button);
+    editStoreButton = myStoreView.findViewById(R.id.edit_button);
+    editProfileButton = myProfileView.findViewById(R.id.edit_button);
 
-    aptoideTvCardView = (CardView) view.findViewById(R.id.product_aptoideTv_cardview);
-    aptoideUploaderCardView = (CardView) view.findViewById(R.id.product_uploader_cardview);
-    aptoideBackupAppsCardView = (CardView) view.findViewById(R.id.product_backup_cardview);
+    aptoideTvCardView = view.findViewById(R.id.product_aptoideTv_cardview);
+    aptoideUploaderCardView = view.findViewById(R.id.product_uploader_cardview);
+    aptoideBackupAppsCardView = view.findViewById(R.id.product_backup_cardview);
   }
 
   private void setupToolbar() {

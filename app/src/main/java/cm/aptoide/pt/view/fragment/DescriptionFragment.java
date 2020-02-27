@@ -1,5 +1,6 @@
 package cm.aptoide.pt.view.fragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
@@ -26,13 +28,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
-import cm.aptoide.pt.store.StoreTheme;
 import cm.aptoide.pt.store.StoreUtils;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.NotBottomNavigationView;
-import cm.aptoide.pt.view.ThemeUtils;
 import javax.inject.Inject;
-import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -43,45 +43,34 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String APP_ID = "app_id";
   private static final String PACKAGE_NAME = "packageName";
   private static final String STORE_NAME = "store_name";
-  private static final String STORE_THEME = "store_theme";
   private static final String DESCRIPTION = "description";
   private static final String APP_NAME = "APP_NAME";
+  private static final String HAS_APPC = "HAS_APPC";
   @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
   private TextView emptyData;
   private TextView descriptionContainer;
   private String storeName;
-  private String storeTheme;
   private String description;
   private String appName;
+  private boolean hasAppc;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
   private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private String partnerId;
+  private Toolbar toolbar;
 
   public static DescriptionFragment newInstance(String appName, String description,
-      String storeTheme) {
+      boolean isAppc) {
     DescriptionFragment fragment = new DescriptionFragment();
     Bundle args = new Bundle();
     args.putString(APP_NAME, appName);
-    args.putString(STORE_THEME, storeTheme);
     args.putString(DESCRIPTION, description);
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  public static DescriptionFragment newInstance(long appId, String packageName, String storeName,
-      String storeTheme) {
-    DescriptionFragment fragment = new DescriptionFragment();
-    Bundle args = new Bundle();
-    args.putLong(APP_ID, appId);
-    args.putString(PACKAGE_NAME, packageName);
-    args.putString(STORE_NAME, storeName);
-    args.putString(STORE_THEME, storeTheme);
+    args.putBoolean(HAS_APPC, isAppc);
     fragment.setArguments(args);
     return fragment;
   }
@@ -117,15 +106,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
       storeName = args.getString(STORE_NAME);
     }
 
-    if (args.containsKey(STORE_THEME)) {
-      storeTheme = args.getString(STORE_THEME);
-    }
-
     if (args.containsKey(DESCRIPTION)) {
       description = args.getString(DESCRIPTION);
     }
     if (args.containsKey(APP_NAME)) {
       appName = args.getString(APP_NAME);
+    }
+    if (args.containsKey(HAS_APPC)) {
+      hasAppc = args.getBoolean(HAS_APPC);
     }
   }
 
@@ -143,7 +131,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
-
     if (!TextUtils.isEmpty(description) && !TextUtils.isEmpty(appName)) {
 
       descriptionContainer.setText(AptoideUtils.HtmlU.parse(description));
@@ -151,6 +138,9 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
         ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (bar != null) {
           bar.setTitle(appName);
+        }
+        if (hasAppc) {
+          setupAppcAppView();
         }
       }
       finishLoading();
@@ -165,12 +155,32 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
             setupAppDescription(getApp);
             setupTitle(getApp);
             finishLoading();
+            if (hasAppc(getApp)) {
+              hasAppc = true;
+              setupAppcAppView();
+            }
           }, false);
     } else {
       Logger.getInstance()
           .e(TAG, "App id unavailable");
       setDataUnavailable();
     }
+  }
+
+  private boolean hasAppc(GetApp getApp) {
+    return getApp.getNodes()
+        .getMeta()
+        .getData()
+        .hasAdvertising() || getApp.getNodes()
+        .getMeta()
+        .getData()
+        .hasBilling();
+  }
+
+  private void setupAppcAppView() {
+    Drawable drawable = ContextCompat.getDrawable(getContext(),
+        themeManager.getAttributeForTheme(R.attr.appDescriptionToolbarAppc).resourceId);
+    toolbar.setBackground(drawable);
   }
 
   private void setupAppDescription(GetApp getApp) {
@@ -219,32 +229,14 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
     return true;
   }
 
-  @Override public void setupToolbarDetails(Toolbar toolbar) {
-    if (storeTheme != null) {
-      ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-      ThemeUtils.setStatusBarThemeColor(getActivity(), storeTheme);
-      if (bar != null) {
-        bar.setBackgroundDrawable(getActivity().getResources()
-            .getDrawable(StoreTheme.get(storeTheme)
-                .getGradientDrawable()));
-      }
-    }
-  }
-
   @Override public void bindViews(View view) {
     super.bindViews(view);
     emptyData = view.findViewById(R.id.empty_data);
     descriptionContainer = view.findViewById(R.id.data_container);
+    toolbar = view.findViewById(R.id.toolbar);
   }
 
   @Override public void onDestroyView() {
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
-    ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-    if (bar != null) {
-      bar.setBackgroundDrawable(getActivity().getResources()
-          .getDrawable(StoreTheme.get(theme)
-              .getGradientDrawable()));
-    }
     super.onDestroyView();
   }
 

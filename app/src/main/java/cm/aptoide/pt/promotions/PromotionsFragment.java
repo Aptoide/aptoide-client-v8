@@ -8,7 +8,11 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.TypedValue;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,10 +34,9 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
-import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
-import cm.aptoide.pt.view.ThemeUtils;
 import cm.aptoide.pt.view.fragment.NavigationTrackFragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -40,7 +44,6 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -60,7 +63,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private static final String WALLET_PACKAGE_NAME = "com.appcoins.wallet";
 
   @Inject PromotionsPresenter promotionsPresenter;
-  @Inject @Named("aptoide-theme") String theme;
+  @Inject ThemeManager themeManager;
   private RecyclerView promotionsList;
   private PromotionsAdapter promotionsAdapter;
   private PublishSubject<PromotionAppClick> promotionAppClick;
@@ -84,7 +87,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private TextView toolbarTitle;
   private Subscription errorMessageSubscription;
-  private DecimalFormat decimalFormat;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -96,11 +98,10 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    decimalFormat = new DecimalFormat("0.0");
     promotionsList = view.findViewById(R.id.fragment_promotions_promotions_list);
     promotionAppClick = PublishSubject.create();
     promotionsAdapter = new PromotionsAdapter(new ArrayList<>(),
-        new PromotionsViewHolderFactory(promotionAppClick, decimalFormat));
+        new PromotionsViewHolderFactory(promotionAppClick, themeManager));
 
     toolbarImage = view.findViewById(R.id.app_graphic);
     toolbarImagePlaceholder = view.findViewById(R.id.app_graphic_placeholder);
@@ -115,9 +116,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     genericErrorView = view.findViewById(R.id.generic_error);
     genericErrorViewRetry = genericErrorView.findViewById(R.id.retry);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
-    }
     toolbarTitle = view.findViewById(R.id.toolbar_title);
     toolbar = view.findViewById(R.id.toolbar);
     toolbar.setTitle("");
@@ -165,8 +163,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           case COLLAPSED:
             toolbarTitle.setVisibility(View.VISIBLE);
 
-            configureAppBarLayout(resources.getDrawable(R.drawable.transparent),
-                resources.getColor(R.color.black), true);
+            configureAppBarLayout(resources.getDrawable(R.drawable.transparent), resources.getColor(
+                themeManager.getAttributeForTheme(R.attr.textColorBlackAlpha).resourceId), true);
             break;
         }
       }
@@ -181,26 +179,21 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .getSimpleName());
   }
 
-  private void handleStatusBar(boolean collapseState) {
-    if (collapseState) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-        window.setStatusBarColor(getResources().getColor(R.color.grey_medium));
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        window.setStatusBarColor(getResources().getColor(R.color.white));
+  private void handleStatusBar(boolean isCollapsed) {
+    if (isCollapsed) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && !themeManager.isThemeDark()) {
+          window.getDecorView()
+              .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        window.setStatusBarColor(getResources().getColor(
+            themeManager.getAttributeForTheme(R.attr.statusBarColorSecondary).resourceId));
       }
     } else {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-          && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
         window.getDecorView()
             .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        window.getDecorView()
-            .setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        window.setStatusBarColor(getResources().getColor(R.color.black_87_alpha));
       }
     }
   }
@@ -224,8 +217,9 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   @Override
   public void showPromotionApp(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getPackageName()
-        .equals("com.appcoins.wallet")) {
+        .equals(WALLET_PACKAGE_NAME)) {
       showWallet(promotionViewApp, isWalletInstalled);
+      setWalletItemClickListener(promotionViewApp);
     } else {
       if (promotionViewApp.getDownloadModel()
           .hasError()) {
@@ -251,7 +245,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public Observable<Boolean> showRootInstallWarningPopup() {
     return GenericDialogs.createGenericYesNoCancelMessage(this.getContext(), null,
-        getResources().getString(R.string.root_access_dialog))
+        getResources().getString(R.string.root_access_dialog),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .map(response -> (response.equals(YES)));
   }
 
@@ -273,9 +268,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .map(promotionAppClick -> promotionAppClick.getApp());
   }
 
-  @Override public void showAppCoinsAmount(int totalAppcValue) {
-    promotionFirstMessage.setText(
-        getString(R.string.holidayspromotion_message_1, String.valueOf(totalAppcValue)));
+  @Override public void setPromotionMessage(String message) {
+    promotionFirstMessage.setText(message);
   }
 
   @Override public void lockPromotionApps(boolean walletInstalled) {
@@ -290,11 +284,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void updateClaimStatus(String packageName) {
     if (packageName.equals(WALLET_PACKAGE_NAME)) {
-      promotionAction.setEnabled(false);
-      promotionAction.setBackgroundColor(getContext().getResources()
-          .getColor(R.color.grey_fog_light));
+      setClaimedButton();
       promotionsAdapter.isWalletInstalled(true);
-      promotionAction.setText(getContext().getString(R.string.holidayspromotion_button_claimed));
     } else {
       promotionsAdapter.updateClaimStatus(packageName);
     }
@@ -349,6 +340,18 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         .load(background, toolbarImage);
   }
 
+  @Override public Observable<PromotionAppClick> appCardClick() {
+    return promotionAppClick.filter(promotionAppClick -> promotionAppClick.getClickType()
+        .equals(PromotionAppClick.ClickType.NAVIGATE));
+  }
+
+  private void setWalletItemClickListener(PromotionViewApp promotionViewApp) {
+    View.OnClickListener listener = __ -> promotionAppClick.onNext(
+        new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.NAVIGATE));
+    walletInactiveView.setOnClickListener(listener);
+    walletActiveView.setOnClickListener(listener);
+  }
+
   private void showWallet(PromotionViewApp promotionViewApp, boolean isWalletInstalled) {
     if (promotionViewApp.getDownloadModel()
         .isDownloading()) {
@@ -356,10 +359,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       walletInactiveView.setVisibility(View.GONE);
       ImageView appIcon = walletActiveView.findViewById(R.id.app_icon);
       TextView appName = walletActiveView.findViewById(R.id.app_name);
+      TextView appRewardMessage = walletActiveView.findViewById(R.id.app_reward);
       TextView appDescription = walletActiveView.findViewById(R.id.app_description);
-      TextView numberOfDownloads = walletActiveView.findViewById(R.id.number_of_downloads);
-      TextView appSize = walletActiveView.findViewById(R.id.app_size);
-      TextView rating = walletActiveView.findViewById(R.id.rating);
       ProgressBar downloadProgressBar =
           walletActiveView.findViewById(R.id.promotions_download_progress_bar);
       TextView downloadProgressValue =
@@ -376,7 +377,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           .load(promotionViewApp.getAppIcon(), appIcon);
       appName.setText(promotionViewApp.getName());
       appDescription.setText(promotionViewApp.getDescription());
-      appSize.setText(AptoideUtils.StringU.formatBytes(promotionViewApp.getSize(), false));
+      appRewardMessage.setText(
+          handleRewardMessage(promotionViewApp.getAppcValue(), promotionViewApp.getFiatSymbol(),
+              promotionViewApp.getFiatValue(), promotionViewApp.getDownloadModel()
+                  .getAction()
+                  .equals(DownloadModel.Action.UPDATE)));
       DownloadModel.DownloadState downloadState = promotionViewApp.getDownloadModel()
           .getDownloadState();
 
@@ -391,8 +396,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.VISIBLE);
           pauseDownload.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.PAUSE_DOWNLOAD)));
@@ -413,8 +418,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
           downloadProgressBar.setIndeterminate(false);
           downloadProgressBar.setProgress(promotionViewApp.getDownloadModel()
               .getProgress());
-          downloadProgressValue.setText(String.valueOf(promotionViewApp.getDownloadModel()
-              .getProgress()) + "%");
+          downloadProgressValue.setText(promotionViewApp.getDownloadModel()
+              .getProgress() + "%");
           pauseDownload.setVisibility(View.GONE);
           cancelDownload.setVisibility(View.VISIBLE);
           cancelDownload.setOnClickListener(__ -> promotionAppClick.onNext(
@@ -443,13 +448,6 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
               getContext().getString(R.string.out_of_space_dialog_message));
           break;
       }
-
-      if (promotionViewApp.getRating() == 0) {
-        rating.setText(R.string.appcardview_title_no_stars);
-      } else {
-        rating.setText(decimalFormat.format(promotionViewApp.getRating()));
-      }
-      numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
     } else {
       if (promotionViewApp.getDownloadModel()
           .hasError()) {
@@ -462,46 +460,31 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       ImageView appIcon = walletInactiveView.findViewById(R.id.app_icon);
       TextView appName = walletInactiveView.findViewById(R.id.app_name);
       TextView appDescription = walletInactiveView.findViewById(R.id.app_description);
-      TextView numberOfDownloads = walletInactiveView.findViewById(R.id.number_of_downloads);
-      TextView appSize = walletInactiveView.findViewById(R.id.app_size);
-      TextView rating = walletInactiveView.findViewById(R.id.rating);
+      TextView appRewardMessage = walletInactiveView.findViewById(R.id.app_reward);
 
       ImageLoader.with(getContext())
           .load(promotionViewApp.getAppIcon(), appIcon);
       appName.setText(promotionViewApp.getName());
       appDescription.setText(promotionViewApp.getDescription());
-      appSize.setText(AptoideUtils.StringU.formatBytes(promotionViewApp.getSize(), false));
-      if (promotionViewApp.getRating() == 0) {
-        rating.setText(R.string.appcardview_title_no_stars);
-      } else {
-        rating.setText(decimalFormat.format(promotionViewApp.getRating()));
-      }
-      numberOfDownloads.setText(String.valueOf(promotionViewApp.getNumberOfDownloads()));
+      appRewardMessage.setText(
+          handleRewardMessage(promotionViewApp.getAppcValue(), promotionViewApp.getFiatSymbol(),
+              promotionViewApp.getFiatValue(), promotionViewApp.getDownloadModel()
+                  .getAction()
+                  .equals(DownloadModel.Action.UPDATE)));
 
       promotionAction.setText(getContext().getString(getButtonMessage(getState(promotionViewApp)),
           promotionViewApp.getAppcValue()));
       if (getState(promotionViewApp) == CLAIMED) {
         if (!isWalletInstalled()) {
           promotionAction.setEnabled(true);
-          TypedValue resultValue = new TypedValue();
-          getContext().getTheme()
-              .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
-          promotionAction.setTextColor(Color.WHITE);
-          if (resultValue.resourceId != 0) {
-            promotionAction.setBackgroundResource(resultValue.resourceId);
-          } else {
-            promotionAction.setBackgroundDrawable(getContext().getResources()
-                .getDrawable(R.drawable.card_border_rounded_orange));
-          }
+          promotionAction.setBackgroundDrawable(getContext().getResources()
+              .getDrawable(R.drawable.appc_gradient_rounded));
           promotionAction.setText(getContext().getString(R.string.appview_button_install));
           promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
               new PromotionAppClick(promotionViewApp, PromotionAppClick.ClickType.INSTALL_APP)));
         } else {
-          promotionAction.setEnabled(false);
-          promotionAction.setBackgroundDrawable(getContext().getResources()
-              .getDrawable(R.drawable.card_border_fog_grey_normal));
-          promotionAction.setTextColor(getContext().getResources()
-              .getColor(R.color.grey_fog_light));
+
+          setClaimedButton();
         }
         promotionsAdapter.isWalletInstalled(isWalletInstalled);
       } else if (getState(promotionViewApp) == CLAIM) {
@@ -511,19 +494,11 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
         promotionAction.setTextColor(Color.WHITE);
         promotionAction.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
-        promotionsAdapter.isWalletInstalled(isWalletInstalled);
+        promotionsAdapter.isWalletInstalled(true);
       } else {
         promotionAction.setEnabled(true);
-        TypedValue resultValue = new TypedValue();
-        getContext().getTheme()
-            .resolveAttribute(R.attr.installButtonBackground, resultValue, true);
-        promotionAction.setTextColor(Color.WHITE);
-        if (resultValue.resourceId != 0) {
-          promotionAction.setBackgroundResource(resultValue.resourceId);
-        } else {
-          promotionAction.setBackgroundDrawable(getContext().getResources()
-              .getDrawable(R.drawable.card_border_rounded_orange));
-        }
+        promotionAction.setBackgroundDrawable(getContext().getResources()
+            .getDrawable(R.drawable.appc_gradient_rounded));
         if (promotionViewApp.isClaimed()) {
           promotionAction.setText(getContext().getString(R.string.appview_button_install));
         }
@@ -531,6 +506,43 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
             new PromotionAppClick(promotionViewApp, getClickType(getState(promotionViewApp)))));
       }
     }
+  }
+
+  private void setClaimedButton() {
+    promotionAction.setEnabled(false);
+    promotionAction.setBackgroundColor(getResources().getColor(R.color.grey_fog_light));
+    promotionAction.setTextColor(getResources().getColor(R.color.black));
+
+    SpannableString string = new SpannableString(
+        "  " + getResources().getString(R.string.holidayspromotion_button_claimed)
+            .toUpperCase());
+    Drawable image =
+        AppCompatResources.getDrawable(getContext(), R.drawable.ic_promotion_claimed_check);
+    image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
+    ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BASELINE);
+    string.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+    promotionAction.setTransformationMethod(null);
+    promotionAction.setText(string);
+  }
+
+  private SpannableString handleRewardMessage(float appcValue, String fiatSymbol, double fiatValue,
+      boolean isUpdate) {
+    DecimalFormat fiatDecimalFormat = new DecimalFormat("0.00");
+    String message = "";
+    String appc = Double.toString(Math.floor(appcValue));
+    if (isUpdate) {
+      message = getString(R.string.FIATpromotion_update_to_get_short, appc,
+          fiatSymbol + fiatDecimalFormat.format(fiatValue));
+    } else {
+      message = getString(R.string.FIATpromotion_install_to_get_short, appc,
+          fiatSymbol + fiatDecimalFormat.format(fiatValue));
+    }
+
+    SpannableString spannable = new SpannableString(message);
+    spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.promotions_reward)),
+        message.indexOf(appc), message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    return spannable;
   }
 
   private boolean isWalletInstalled() {
@@ -558,7 +570,8 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
   }
 
   private void showErrorDialog(String title, String message) {
-    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message)
+    errorMessageSubscription = GenericDialogs.createGenericOkMessage(getContext(), title, message,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId)
         .subscribeOn(AndroidSchedulers.mainThread())
         .subscribe(eResponse -> {
         }, error -> {
@@ -570,15 +583,15 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
     int message;
     switch (appState) {
       case UPDATE:
-        message = R.string.holidayspromotion_button_update;
+        message = R.string.appview_button_update;
         break;
       case DOWNGRADE:
       case DOWNLOAD:
       case INSTALL:
-        message = R.string.holidayspromotion_button_install;
+        message = R.string.install;
         break;
       case CLAIM:
-        message = R.string.holidayspromotion_button_claim;
+        message = R.string.promotion_claim_button;
         break;
       case CLAIMED:
         message = R.string.holidayspromotion_button_claimed;
@@ -644,7 +657,7 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    ThemeUtils.setStatusBarThemeColor(getActivity(), theme);
+    themeManager.resetToBaseTheme();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
       window.getDecorView()
           .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);

@@ -19,7 +19,7 @@
         android:id="@+id/collapsing_toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:contentScrim="@color/white"
+        app:contentScrim="?attr/backgroundMain"
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
       <ImageView
@@ -30,7 +30,6 @@
           android:scaleType="fitXY"
           android:visibility="visible"
           app:layout_collapseMode="parallax"
-          tools:background="@color/background_light_grey"
           />
 
       <ImageView
@@ -53,7 +52,7 @@
           android:layout_height="?attr/actionBarSize"
           android:background="@drawable/editorial_up_bottom_black_gradient"
           android:gravity="center"
-          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          style="@style/Toolbar"
           app:layout_collapseMode="pin"
           >
         <TextView
@@ -78,6 +77,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:visibility="gone"
+      tools:visibility="visible"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
@@ -103,7 +103,9 @@
           android:layout_marginRight="24dp"
           android:layout_marginStart="24dp"
           android:layout_marginTop="18dp"
+          android:textStyle="bold"
           style="@style/Aptoide.TextView.Regular.L"
+          tools:text="THIS IS PROMOTION"
           />
 
       <TextView
@@ -137,10 +139,10 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="13dp"
             android:layout_marginStart="24dp"
-            android:background="@drawable/promotions_shape_circular_textview"
+            style="@style/Aptoide.TextView.Medium.S.Primary"
             android:gravity="center"
             android:text="1"
-            style="@style/Aptoide.TextView.Medium.S.White"
+            android:background="?attr/promotionStepBackground"
             />
 
         <TextView
@@ -150,7 +152,6 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_2"
-            android:textColor="@color/black_87_alpha"
             tools:text="First, get the appcoins wallet to receive your appcoins credits"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />
@@ -207,10 +208,10 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="13dp"
             android:layout_marginStart="24dp"
-            android:background="@drawable/promotions_shape_circular_textview"
+            style="@style/Aptoide.TextView.Medium.S.Primary"
             android:gravity="center"
             android:text="2"
-            style="@style/Aptoide.TextView.Medium.S.White"
+            android:background="?attr/promotionStepBackground"
             />
 
         <TextView
@@ -220,7 +221,6 @@
             android:layout_marginEnd="24dp"
             android:layout_marginRight="24dp"
             android:text="@string/holidayspromotion_message_3"
-            android:textColor="@color/black_87_alpha"
             tools:text="Then install any of these games to earn AppCoins Credits!"
             style="@style/Aptoide.TextView.Medium.XS.Black"
             />

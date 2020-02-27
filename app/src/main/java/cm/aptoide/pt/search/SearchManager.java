@@ -26,6 +26,7 @@ import java.net.UnknownHostException;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
@@ -87,7 +88,7 @@ import rx.Single;
                     AccessorFactory.getAccessorFor(database, Store.class)), bodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences, enabled,
                 appBundlesVisibilityManager)
-                .observe(true))
+                .observe(false))
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .toSingle();
@@ -97,7 +98,7 @@ import rx.Single;
     return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         appBundlesVisibilityManager)
-        .observe(true)
+        .observe(false)
         .flatMap(results -> handleSearchResults(results))
         .onErrorResumeNext(throwable -> handleSearchError(throwable))
         .doOnError(throwable -> throwable.printStackTrace())
@@ -138,5 +139,25 @@ import rx.Single;
 
   public Single<Boolean> shouldLoadNativeAds() {
     return moPubAdsManager.shouldLoadNativeAds();
+  }
+
+  public Completable disableAdultContent() {
+    return accountManager.disable();
+  }
+
+  public Completable enableAdultContent() {
+    return accountManager.enable();
+  }
+
+  public Observable<Boolean> isAdultContentEnabled() {
+    return accountManager.enabled();
+  }
+
+  public Observable<Boolean> isAdultContentPinRequired() {
+    return accountManager.pinRequired();
+  }
+
+  public Completable enableAdultContentWithPin(int pin) {
+    return accountManager.enable(pin);
   }
 }

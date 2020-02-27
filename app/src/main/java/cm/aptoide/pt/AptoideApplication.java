@@ -2,11 +2,13 @@ package cm.aptoide.pt;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -83,6 +86,9 @@ import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -109,8 +115,11 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
+import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -169,6 +178,9 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsRepository adsRepository;
   @Inject SyncStorage syncStorage;
   @Inject NavigationTracker navigationTracker;
+  @Inject NewFeature newFeature;
+  @Inject NewFeatureManager newFeatureManager;
+  @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
@@ -185,6 +197,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
+  @Inject ApkfyExperiment apkfyExperiment;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -208,14 +221,6 @@ public abstract class AptoideApplication extends Application {
 
   public static DisplayableWidgetMapping getDisplayableWidgetMapping() {
     return displayableWidgetMapping;
-  }
-
-  public static boolean isAutoUpdateWasCalled() {
-    return autoUpdateWasCalled;
-  }
-
-  public static void setAutoUpdateWasCalled(boolean autoUpdateWasCalled) {
-    AptoideApplication.autoUpdateWasCalled = autoUpdateWasCalled;
   }
 
   public LeakTool getLeakTool() {
@@ -277,8 +282,9 @@ public abstract class AptoideApplication extends Application {
     //if (BuildConfig.DEBUG) {
     //  RxJavaPlugins.getInstance().registerObservableExecutionHook(new RxJavaStackTracer());
     //}
-
-    aptoideApplicationAnalytics = new AptoideApplicationAnalytics();
+    analyticsManager.setup();
+    UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
+    aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
     //
     // async app initialization
@@ -291,8 +297,13 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
+        .andThen(initializeUXCam())
+        .andThen(setUpAdsUserProperty())
+        .andThen(initializeSentry())
         .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics())
+        .andThen(sendAptoideApplicationStartAnalytics(
+            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
+        .andThen(checkApkfyUserProperty())
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
@@ -321,7 +332,15 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     startNotificationCleaner();
-    rootInstallationRetryHandler.start();
+
+    rootAvailabilityManager.isRootAvailable()
+        .doOnSuccess(isRootAvailable -> {
+          if (isRootAvailable) {
+            rootInstallationRetryHandler.start();
+          }
+        })
+        .subscribe(__ -> {
+        }, throwable -> throwable.printStackTrace());
 
     accountManager.accountStatus()
         .map(account -> account.isLoggedIn())
@@ -331,13 +350,21 @@ public abstract class AptoideApplication extends Application {
     long totalExecutionTime = System.currentTimeMillis() - initialTimestamp;
     Logger.getInstance()
         .v(TAG, String.format("onCreate took %d millis.", totalExecutionTime));
-    analyticsManager.setup();
     invalidRefreshTokenLogoutManager.start();
-    aptoideDownloadManager.start();
+
+    installManager.start();
   }
 
   private Completable checkAdsUserProperty() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
+  }
+
+  private Completable setUpAdsUserProperty() {
+    return adsUserPropertyManager.setUp();
+  }
+
+  private Completable checkApkfyUserProperty() {
+    return Completable.fromAction(() -> apkfyExperiment.setSuperProperties());
   }
 
   private Completable setUpFirstRunAnalytics() {
@@ -346,8 +373,16 @@ public abstract class AptoideApplication extends Application {
             getDefaultSharedPreferences())));
   }
 
-  private void initializeRakam() {
+  private Completable initializeUXCam() {
+    return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
+  }
 
+  private Completable initializeSentry() {
+    return Completable.fromAction(
+        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
+  }
+
+  private void initializeRakam(String id) {
     RakamClient instance = Rakam.getInstance();
 
     try {
@@ -361,7 +396,7 @@ public abstract class AptoideApplication extends Application {
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-    instance.setUserId(idsRepository.getUniqueIdentifier());
+    instance.setUserId(id);
   }
 
   public void initializeMoPub() {
@@ -608,17 +643,18 @@ public abstract class AptoideApplication extends Application {
         .build(context, flurryKey);
   }
 
-  private Completable sendAptoideApplicationStartAnalytics() {
+  private Completable sendAptoideApplicationStartAnalytics(boolean isTv) {
     return Completable.fromAction(() -> {
       aptoideApplicationAnalytics.setPackageDimension(getPackageName());
       aptoideApplicationAnalytics.setVersionCodeDimension(getVersionCode());
+      aptoideApplicationAnalytics.sendIsTvEvent(isTv);
     });
   }
 
   private Completable sendAppStartToAnalytics() {
     return firstLaunchAnalytics.sendAppStart(this,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()));
+            getDefaultSharedPreferences()), idsRepository);
   }
 
   protected DisplayableWidgetMapping createDisplayableWidgetMapping() {
@@ -626,16 +662,13 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable generateAptoideUuid() {
-    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier())
-        .subscribeOn(Schedulers.newThread());
+    return Completable.fromAction(() -> idsRepository.getUniqueIdentifier());
   }
 
   private Completable initializeRakamSdk() {
-    if (BuildConfig.FLAVOR_mode.equals("dev")) {
-      return Completable.fromAction(() -> initializeRakam())
-          .subscribeOn(Schedulers.newThread());
-    }
-    return Completable.complete();
+    return idsRepository.getUniqueIdentifier()
+        .flatMapCompletable(id -> Completable.fromAction(() -> initializeRakam(id)))
+        .subscribeOn(Schedulers.newThread());
   }
 
   private Completable prepareApp(AptoideAccountManager accountManager) {
@@ -837,6 +870,18 @@ public abstract class AptoideApplication extends Application {
 
   public NavigationTracker getNavigationTracker() {
     return navigationTracker;
+  }
+
+  public NewFeatureManager getNewFeatureManager() {
+    return newFeatureManager;
+  }
+
+  public NewFeature getNewFeature() {
+    return newFeature;
+  }
+
+  public ThemeAnalytics getThemeAnalytics() {
+    return themeAnalytics;
   }
 
   public FragmentProvider createFragmentProvider() {

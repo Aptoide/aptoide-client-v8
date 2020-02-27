@@ -34,7 +34,7 @@ public class AppBrickWidget extends Widget<AppBrickDisplayable> {
     final FragmentActivity context = getContext();
     ImageLoader.with(context)
         .load(displayable.getPojo()
-            .getGraphic(), R.drawable.placeholder_brick, graphic);
+            .getGraphic(), R.attr.placeholder_brick, graphic);
 
     compositeSubscription.add(RxView.clicks(itemView)
         .subscribe(v -> {

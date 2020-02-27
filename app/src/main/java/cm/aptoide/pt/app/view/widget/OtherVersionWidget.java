@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.DrawableRes;
+import androidx.appcompat.widget.TooltipCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
@@ -60,9 +61,9 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void bindView(OtherVersionDisplayable displayable, int position) {
+    this.displayable = displayable;
     setItemBackgroundColor(itemView);
     try {
-      this.displayable = displayable;
       final App app = displayable.getPojo();
       appId = app.getId();
       storeName = app.getStore()
@@ -71,6 +72,9 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
 
       version.setText(app.getFile()
           .getVername());
+      TooltipCompat.setTooltipText(version, app.getFile()
+          .getVername());
+      version.setOnClickListener(v -> navigateToAppView());
       setBadge(app);
       date.setText(AptoideUtils.DateTimeU.getInstance(getContext())
           .getTimeDiffString(getContext(), app.getModified()
@@ -103,15 +107,19 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
     int color;
     if (getLayoutPosition() % 2 == 0) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.light_custom_gray, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId, theme);
       } else {
-        color = res.getColor(R.color.light_custom_gray);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundSecondary).resourceId);
       }
     } else {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        color = res.getColor(R.color.white, theme);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId, theme);
       } else {
-        color = res.getColor(R.color.white);
+        color = res.getColor(displayable.getThemeManager()
+            .getAttributeForTheme(R.attr.backgroundMain).resourceId);
       }
     }
 
@@ -153,6 +161,10 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
   }
 
   @Override public void onClick(View v) {
+    navigateToAppView();
+  }
+
+  private void navigateToAppView() {
     Logger.getInstance()
         .d(TAG, "showing other version for app with id = " + appId);
     getFragmentNavigator().navigateTo(AptoideApplication.getFragmentProvider()

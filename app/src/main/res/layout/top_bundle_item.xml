@@ -44,6 +44,6 @@
       android:text="@string/button_header_more"
       android:textColor="?attr/colorPrimaryDark"
       app:fontFamily="@style/Aptoide.TextView.Medium"
-      style="?attr/backgroundCard"
+      style="?attr/backgroundButton"
       />
 </LinearLayout>

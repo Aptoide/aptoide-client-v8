@@ -1,5 +1,6 @@
 package cm.aptoide.pt.search.view;
 
+import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -22,7 +23,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<Void> clickEverywhereSearchButton();
 
-  Observable<String> clickNoResultsSearchButton();
+  Observable<Void> clickNoResultsSearchButton();
+
+  Observable<Boolean> clickAdultContentSwitch();
 
   Observable<Void> retryClicked();
 
@@ -113,6 +116,28 @@ public interface SearchResultView extends SearchSuggestionsView {
   void showNoNetworkView();
 
   void showGenericErrorView();
+
+  void disableAdultContent();
+
+  void enableAdultContent();
+
+  void showAdultContentConfirmationDialog();
+
+  Observable<DialogInterface> adultContentDialogPositiveClick();
+
+  Observable<CharSequence> adultContentWithPinDialogPositiveClick();
+
+  void setAdultContentSwitch(Boolean adultContent);
+
+  void showAdultContentConfirmationDialogWithPin();
+
+  Observable<DialogInterface> adultContentDialogNegativeClick();
+
+  Observable<DialogInterface> adultContentPinDialogNegativeClick();
+
+  void showWrongPinErrorMessage();
+
+  Observable<Void> viewHasNoResults();
 
   interface Model {
 

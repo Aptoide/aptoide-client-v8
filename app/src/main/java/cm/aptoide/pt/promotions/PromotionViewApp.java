@@ -30,13 +30,15 @@ public class PromotionViewApp {
   private final String storeName;
   private DownloadModel downloadModel;
   private boolean isClaimed;
+  private double fiatValue;
+  private String fiatSymbol;
 
   public PromotionViewApp(DownloadModel downloadModel, String name, String packageName, long appId,
       String downloadPath, String alternativePath, String appIcon, boolean isClaimed,
       String description, long size, float rating, int numberOfDownloads, String md5,
       int versionCode, String versionName, Obb obb, float appcValue, String signature,
       boolean hasAppc, List<Split> splits, List<String> requiredSplits, String rank,
-      String storeName) {
+      String storeName, double fiatValue, String fiatSymbol) {
     this.downloadModel = downloadModel;
     this.name = name;
     this.packageName = packageName;
@@ -60,6 +62,8 @@ public class PromotionViewApp {
     this.requiredSplits = requiredSplits;
     this.rank = rank;
     this.storeName = storeName;
+    this.fiatValue = fiatValue;
+    this.fiatSymbol = fiatSymbol;
   }
 
   public String getName() {
@@ -192,5 +196,13 @@ public class PromotionViewApp {
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public String getFiatSymbol() {
+    return fiatSymbol;
+  }
+
+  public double getFiatValue() {
+    return fiatValue;
   }
 }

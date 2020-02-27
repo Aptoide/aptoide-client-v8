@@ -28,6 +28,7 @@
   <string name="all_title_ad">Ad</string>
   <string name="not_now_button">NOT NOW</string>
   <string name="learn_more_button">LEARN MORE</string>
+  <string name="continue_button">CONTINUE</string>
 
 
   <!-- Permission pop-ups messages -->
@@ -457,7 +458,9 @@
   <string name="share_store">Share Store</string>
 
   <!-- Search Widget-->
-  <string name="no_search_results_message">There are no results for your search. \nTry using other words.</string>
+  <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
+  <string name="no_search_results_enable_adult_content">Show adult content</string>
+  <string name="no_search_results_other_filters">Or try different filters</string>
 
   <!-- Search Fragment -->
   <string name="all_stores">All stores</string>
@@ -559,18 +562,50 @@
   <string name="editorial_card_views_short">%s views</string>
   <string name="editorial_reactions_login_short">Log in to keep up with the liking!</string>
 
-  <!--Holidays AppCoins Craze-->
+  <!--Promotion in APPC-C (old)-->
   <string name="holidayspromotion_message_1">Install the following apps and get up to %s AppCoins Credits to spend in your favorite games!</string>
   <string name="holidayspromotion_message_2">First, get the AppCoins Wallet to receive your AppCoins Credits.</string>
-  <string name="holidayspromotion_message_3">Then install any of these games to earn AppCoins Credits!</string>
+  <string name="holidayspromotion_message_3">Then install any of these games to earn your rewards!</string>
   <string name="holidayspromotion_button_install">Install to get %s APPC Credits</string>
   <string name="holidayspromotion_button_update">Update to get %s APPC Credits</string>
   <string name="holidayspromotion_button_claim">Claim your %s APPC Credits</string>
   <string name="holidayspromotion_button_claimed">Claimed</string>
+  <string name="holidayspromotion_message_popup">Earn %s AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="holidayspromotion_button_popup">Check it out!</string>
+  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
+  <string name="promotion_notification_body">Don\'t forget to claim your %s AppCoins Credits.</string>
+  <string name="promotion_update_popup_title">Update Aptoide</string>
+  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
+  <string name="promotion_update_popup_update_button">Update now</string>
+  <string name="promotion_over_title">You missed it!</string>
+  <string name="promotion_over_message">This promotion just slipped away, but we\'ll do another one soon!</string>
+  <string name="FIATpromotion_over_title_2">Earn AppCoins Credits</string>
+  <string name="FIATpromotion_over_body_2">In the meanwhile, you can earn AppCoins Credits by installing and spending 2 minutes in any of these apps.</string>
+
+  <!--Promotion with FIAT-->
+  <string name="FIATpromotion_message_1">Install the following apps and get up to %s in AppCoins Credits to spend in your favorite games!</string>
+  <string name="FIATpromotion_message_2">First, get the AppCoins Wallet to receive your rewards.</string>
+  <string name="FIATpromotion_message_3">Then install any of these games to earn your rewards!</string>
+  <string name="FIATpromotion_install_to_get_short">Install to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_update_to_get_short">Update to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="FIATpromotion_button_claimed">Claimed</string>
+  <string name="FIATpromotion_title_error_claimed">Oops…</string>
+  <string name="FIATpromotion_short_error_claimed">You already claimed this reward!</string>
+  <string name="FIATpromotion_message_popup">Earn %s in AppCoins Credits by installing apps and spend them in your favorite games!</string>
+  <string name="FIATpromotion_notification_title">Get %s in AppCoins Credits now!</string>
+  <string name="FIATpromotion_notification_body">Don\'t forget to claim your %s.</string>
+  <string name="video_reward_title">Video Reward</string>
+  <string name="video_reward_body">Play the video and get AppCoins Credits for free to spend in your favorite games.</string>
+  <string name="video_reward_play_to_get_body">Play to get %1$s AppCoins Credits (%2$s)</string>
+  <string name="video_reward_play_button">PLAY</string>
+  <string name="promotion_claim_button">CLAIM</string>
+
+
+  <!--Get Wallet Address-->
   <string name="holidayspromotion_title_wallet">AppCoins Wallet Address</string>
-  <string name="holidayspromotion_message_wallet">Tell us your AppCoins wallet address. Once you create a wallet, you\'ll find the address when pressing on \'Receive\'.</string>
+  <string name="holidayspromotion_message_wallet">Tell us your wallet address! Tap below and the AppCoins Wallet will take care of it.</string>
   <string name="holidayspromotion_short_wallet_field">Wallet address</string>
-  <string name="holidayspromotion_button_wallet_get">Get the Wallet Address</string>
+  <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
   <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
@@ -584,15 +619,6 @@
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
-  <string name="holidayspromotion_message_popup">Earn %s APPC Credits by installing apps and spend them in your favorite games!</string>
-  <string name="holidayspromotion_button_popup">Check it out!</string>
-  <string name="promotion_notification_title">Get %s APPC Credits now!</string>
-  <string name="promotion_notification_body">Don\'t forget to claim your %s APPC Credits.</string>
-  <string name="promotion_update_popup_title">Update Aptoide</string>
-  <string name="promotion_update_popup_message">You need to update Aptoide to see this promotion.</string>
-  <string name="promotion_update_popup_update_button">Update now</string>
-  <string name="promotion_over_title">This promotion is over!</string>
-  <string name="promotion_over_message">Keep Aptoide installed and get notified when there\'s another promotion.</string>
 
 
   <!--Apps Short Description for promotions-->
@@ -620,6 +646,9 @@
   <string name="holidayspromotion_message_mini_world_description">A 3D free-to-play sandbox game about adventure, exploration, and creating your dream worlds.</string>
   <string name="holidayspromotion_message_tag_ryan_description">The coolest new endless runner game! Outrun Combo Panda and unlock Ryan\'s costumes.</string>
   <string name="holidayspromotion_message_rento_description">Trade lands, build houses, win auctions, roll the wheel of fortune, and have fun!</string>
+  <string name="promotion_message_wrestling_pro_description">A wrestling career that challenges you in both the ring and the backstage.</string>
+  <string name="promotion_message_zipline_description">A puzzle game to draw a safe path for the zip line and avoid the dangers!</string>
+  <string name="promotion_message_high_school_driver_description">The pressure is on, so pick up students, drop them to school and handle the traffic.</string>
   <string name="blackfriday_promo_title">Friday Means Gaming Items!</string>
 
   <!--APPC install Promotion-->
@@ -740,6 +769,21 @@
   <string name="auto_update_popup_title">Update Ready to Install!</string>
   <string name="auto_update_popup_body">A new version of Aptoide is available with new features and faster navigation. It takes less than 1 minute!</string>
 
+  <!--Google Play Services-->
   <string name="google_play_services_installation_message">This app requires Google Play Services. Do you want to install it from a safe source (Open GApps) made available by the developer\'s community?</string>
   <string name="google_play_services_dismiss_message">The installation failed. Please try again later.</string>
+
+  <!--Dark Theme-->
+  <string name="settings_dark_theme_title">Theme</string>
+  <string name="settings_dark_theme_dialog_title">Choose theme</string>
+  <string name="settings_dark_theme_system">System Default</string>
+  <string name="settings_dark_theme_light">Light</string>
+  <string name="settings_dark_theme_dark">Dark</string>
+  <string name="dark_theme_notification_title">Dark Theme has arrived!</string>
+  <string name="dark_theme_notification_body">Save battery and reduce eye strain in low light conditions.</string>
+  <string name="dark_theme_notification_button">TURN IT ON</string>
+  <string name="dark_theme_notification_body_update">Want to use Aptoide with dark theme? Update to the latest version!</string>
+  <string name="dark_theme_notification_disclaimer">You can always change the theme in Settings.</string>
+
+
 </resources>

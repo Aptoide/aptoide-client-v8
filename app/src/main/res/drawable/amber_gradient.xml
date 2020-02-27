@@ -6,5 +6,5 @@
       android:angle="0"
       android:endColor="@color/amber_gradient_end"
       android:startColor="@color/amber"
-      android:type="linear"/>
+      android:type="linear" />
 </shape>

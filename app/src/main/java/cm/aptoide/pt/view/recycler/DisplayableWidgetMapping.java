@@ -43,8 +43,6 @@ import cm.aptoide.pt.store.view.featured.AppBrickDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickListDisplayable;
 import cm.aptoide.pt.store.view.featured.AppBrickListWidget;
 import cm.aptoide.pt.store.view.featured.AppBrickWidget;
-import cm.aptoide.pt.store.view.home.AdultRowDisplayable;
-import cm.aptoide.pt.store.view.home.AdultRowWidget;
 import cm.aptoide.pt.store.view.my.StoreDisplayable;
 import cm.aptoide.pt.store.view.my.StoreWidget;
 import cm.aptoide.pt.store.view.recommended.RecommendedStoreDisplayable;
@@ -149,9 +147,6 @@ public class DisplayableWidgetMapping {
     // Updates
     displayableWidgetMappings.add(
         new DisplayableWidgetMapping(ExcludedUpdateWidget.class, ExcludedUpdateDisplayable.class));
-
-    displayableWidgetMappings.add(
-        new DisplayableWidgetMapping(AdultRowWidget.class, AdultRowDisplayable.class));
 
     // Loading
     displayableWidgetMappings.add(

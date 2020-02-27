@@ -40,7 +40,7 @@ public class TopAppViewHolder extends AppViewHolder {
 
   @Override public void setApp(Application app, HomeBundle homeBundle, int bundlePosition) {
     ImageLoader.with(itemView.getContext())
-        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.drawable.placeholder_square);
+        .loadWithRoundCorners(app.getIcon(), 8, appIcon, R.attr.placeholder_square);
     name.setText(app.getName());
     topNumber.setText(String.valueOf(bundlePosition + 1));
     appInfoViewHolder.setInfo(app.hasAppcBilling(), app.getRating(), true, true);

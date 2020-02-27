@@ -59,7 +59,7 @@ public interface AppViewView extends InstallAppView {
 
   Observable<ViewScrollChangeEvent> scrollVisibleSimilarApps();
 
-  Observable<Boolean> similarAppsVisibility();
+  Observable<Boolean> similarAppsVisibilityFromInstallClick();
 
   boolean isSimilarAppsVisible();
 

@@ -1,10 +1,11 @@
 package cm.aptoide.pt.comments.view;
 
+import android.content.res.Resources;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import androidx.annotation.ColorRes;
 import androidx.annotation.Dimension;
 import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.R;
@@ -82,9 +83,17 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   private void bindComplexComment(ComplexComment comment) {
     final ComplexComment complexComment = comment;
 
-    // switch background color according to level
-    @ColorRes int bgColor = (complexComment.getLevel() == 1) ? R.color.white : R.color.comment_gray;
     final FragmentActivity context = getContext();
+    final Resources.Theme theme = context.getTheme();
+
+    TypedValue primaryBackground = new TypedValue();
+    TypedValue secondaryBackground = new TypedValue();
+    theme.resolveAttribute(R.attr.widgetBackgroundColorPrimary, primaryBackground, true);
+    theme.resolveAttribute(R.attr.widgetBackgroundColorSecondary, secondaryBackground, true);
+
+    // switch background color according to level
+    int bgColor = (complexComment.getLevel() == 1) ? primaryBackground.resourceId
+        : secondaryBackground.resourceId;
     int color;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       color = context.getColor(bgColor);

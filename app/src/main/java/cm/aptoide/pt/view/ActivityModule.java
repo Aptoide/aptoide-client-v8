@@ -13,6 +13,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AppShortcutsAnalytics;
+import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
@@ -48,7 +49,6 @@ import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
-import cm.aptoide.pt.home.apps.SeeMoreAppcNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
@@ -75,11 +75,17 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
 import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
+import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
+import cm.aptoide.pt.themes.NewFeature;
+import cm.aptoide.pt.themes.NewFeatureManager;
+import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
@@ -133,10 +139,10 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ApkFy(activity, intent, securePreferences);
   }
 
-  @ActivityScope @Provides AutoUpdateService providesRetrofitAptoideBiService(Service service,
+  @ActivityScope @Provides AutoUpdateService providesAutoUpdateService(Service service,
       @Named("package-name") String packageName,
-      @Named("auto-update-store-name") String storeName) {
-    return new AutoUpdateService(service, packageName, storeName);
+      @Named("client-sdk-version") int clientSdkVersion) {
+    return new AutoUpdateService(service, packageName, clientSdkVersion);
   }
 
   @ActivityScope @Provides AutoUpdateRepository providesAutoUpdateRepository(
@@ -170,13 +176,13 @@ import static android.content.Context.WINDOW_SERVICE;
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
       AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator,
-      @Named("aptoide-theme") String theme) {
+      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
+      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
         bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
-        sharedPreferences, storeAccessor, theme, notificationAnalytics, navigationTracker,
-        searchAnalytics, appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics,
-        adsRepository, appNavigator);
+        sharedPreferences, storeAccessor, notificationAnalytics, navigationTracker, searchAnalytics,
+        appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
+        appNavigator, installManager, newFeature, themeManager, themeAnalytics);
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
@@ -185,25 +191,26 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
-      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager) {
+      UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
+      RootAvailabilityManager rootAvailabilityManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       AptoideAccountManager accountManager, CallbackManager callbackManager,
       GoogleApiClient googleApiClient, AccountAnalytics accountAnalytics,
-      BottomNavigationNavigator bottomNavigationNavigator, @Named("aptoide-theme") String theme) {
+      BottomNavigationNavigator bottomNavigationNavigator, ThemeManager themeManager) {
     return new AccountNavigator(bottomNavigationNavigator, fragmentNavigator, accountManager,
         ((ActivityNavigator) activity), LoginManager.getInstance(), callbackManager,
         googleApiClient, PublishRelay.create(), "http://m.aptoide.com/account/password-recovery",
-        accountAnalytics, theme);
+        accountAnalytics, themeManager);
   }
 
   @ActivityScope @Provides ScreenOrientationManager provideScreenOrientationManager() {
@@ -248,8 +255,8 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides MyAccountNavigator provideMyAccountNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
-      AccountNavigator accountNavigator, AppNavigator appNavigator) {
-    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator);
+      AccountNavigator accountNavigator, AppNavigator appNavigator, ThemeManager themeManager) {
+    return new MyAccountNavigator(fragmentNavigator, accountNavigator, appNavigator, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationMapper provideBottomNavigationMapper() {
@@ -259,9 +266,9 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides BottomNavigationNavigator provideBottomNavigationNavigator(
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationAnalytics bottomNavigationAnalytics, SearchAnalytics searchAnalytics,
-      @Named("aptoide-theme") String theme) {
+      ThemeManager themeManager) {
     return new BottomNavigationNavigator(fragmentNavigator, bottomNavigationAnalytics,
-        searchAnalytics, theme);
+        searchAnalytics, themeManager);
   }
 
   @ActivityScope @Provides BottomNavigationAnalytics providesBottomNavigationAnalytics(
@@ -281,10 +288,11 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter) {
+      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
+      ThemeManager themeManager) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName, marketResourceFormatter);
+        marketName, marketResourceFormatter, themeManager);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(
@@ -321,11 +329,16 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("local-version-code") int localVersionCode,
       AutoUpdateRepository autoUpdateRepository) {
     return new AutoUpdateManager(downloadFactory, permissionManager, installManager,
-        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT);
+        downloadAnalytics, localVersionCode, autoUpdateRepository, Build.VERSION.SDK_INT,
+        ((AptoideApplication) activity.getApplication()).getDefaultSharedPreferences());
   }
 
   @ActivityScope @Provides @Named("package-name") String providePackageName() {
     return activity.getPackageName();
+  }
+
+  @ActivityScope @Provides @Named("client-sdk-version") int provideClientSdkVersion() {
+    return Build.VERSION.SDK_INT;
   }
 
   @ActivityScope @Provides @Named("local-version-code") int provideLocalVersionCode(
@@ -346,8 +359,9 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides PromotionsNavigator providesPromotionsNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new PromotionsNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      AppNavigator appNavigator) {
+    return new PromotionsNavigator(fragmentNavigator, appNavigator);
   }
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
@@ -387,11 +401,6 @@ import static android.content.Context.WINDOW_SERVICE;
         intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.WALLET_PACKAGE_NAME_KEY));
   }
 
-  @ActivityScope @Provides SeeMoreAppcNavigator providesSeeMoreAppcNavigator(
-      AppNavigator appNavigator) {
-    return new SeeMoreAppcNavigator(appNavigator);
-  }
-
   @ActivityScope @Provides ListAppsMoreRepository providesListAppsMoreRepository(
       StoreCredentialsProvider storeCredentialsProvider,
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
@@ -401,5 +410,15 @@ import static android.content.Context.WINDOW_SERVICE;
     return new ListAppsMoreRepository(storeCredentialsProvider, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         activity.getResources(), activity.getWindowManager(), appBundlesVisibilityManager);
+  }
+
+  @ActivityScope @Provides ThemeManager providesThemeManager() {
+    return new ThemeManager(activity,
+        ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
+  }
+
+  @ActivityScope @Provides DarkThemeNewFeatureManager providesDarkThemeDialogManager(
+      ThemeManager themeManager, NewFeatureManager newFeatureManager) {
+    return new DarkThemeNewFeatureManager(themeManager, newFeatureManager);
   }
 }

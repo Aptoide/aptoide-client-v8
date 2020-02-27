@@ -195,7 +195,7 @@ public class MoreBundlePresenterTest {
     //When an app is clicked
     adClickEvent.onNext(event);
     //then it should navigate to the App's detail View
-    verify(homeNavigator).navigateToAppView(any());
+    verify(homeNavigator).navigateToAppView(any(), any());
   }
 
   @Test public void moreClicked_NavigateToActionView() {

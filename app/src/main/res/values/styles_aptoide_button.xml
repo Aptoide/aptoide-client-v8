@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <!--Big buttons-->
   <!--Raised button-->
   <style name="Aptoide.Button" parent="Widget.AppCompat.Button.Colored">
@@ -12,6 +12,16 @@
     <item name="colorControlHighlight">?attr/colorPrimaryDark</item>
   </style>
 
+  <style name="Aptoide.Button.Secondary">
+    <item name="android:background">?attr/raisedButtonSecondaryBackground</item>
+    <item name="android:textColor">?attr/storesTextColor</item>
+  </style>
+
+  <style name="Aptoide.Button.Alternative">
+    <item name="android:background">?attr/raisedButtonAlternativeBackground</item>
+    <item name="android:textColor">?attr/inverseTextColor</item>
+  </style>
+
   <!-- Ghost button-->
   <style name="Aptoide.Button.Ghost">
     <item name="android:layout_width">wrap_content</item>
@@ -20,7 +30,7 @@
     <item name="android:textAllCaps">true</item>
     <item name="android:background">?attr/ghostButtonBackground</item>
     <item name="android:textColor">?attr/colorPrimaryDark</item>
-    <item name="android:stateListAnimator">@null</item>
+    <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
   </style>
 
   <!-- Flat Button-->
@@ -37,6 +47,11 @@
   <!--Small buttons-->
   <!--Raised button-->
   <style name="Aptoide.Button.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
+
+  <style name="Aptoide.Button.Secondary.S">
     <item name="android:layout_height">@dimen/button_small_height</item>
     <item name="android:textSize">?attr/buttonTextSizeSmall</item>
   </style>
@@ -86,7 +101,7 @@
   <style name="Aptoide.Button.Ghost.GreyFogLight.Google">
     <item name="android:paddingRight">20dp</item>
     <item name="android:paddingLeft">20dp</item>
-    <item name="background">@color/white</item>
+    <item name="android:background">@drawable/google_button_rounded</item>
     <item name="android:drawableLeft">@drawable/google_icon_copy</item>
     <item name="android:text">@string/google</item>
     <item name="android:textColor">@color/google_grey</item>
@@ -96,7 +111,7 @@
   <style name="Aptoide.Button.Ghost.GreyFogLight.GoogleFull">
     <item name="android:paddingRight">50dp</item>
     <item name="android:paddingLeft">50dp</item>
-    <item name="background">@color/white</item>
+    <item name="android:background">@drawable/google_button_rounded</item>
     <item name="android:drawableLeft">@drawable/google_icon_copy</item>
     <item name="android:text">@string/connect_google</item>
     <item name="android:textColor">@color/google_grey</item>
@@ -105,9 +120,15 @@
 
 
   <!--Install button-->
-  <style name="Aptoide.Button.Install" parent="Aptoide.Button">
+  <style name="Aptoide.Button.Install">
     <item name="android:background">?attr/installButtonBackground</item>
   </style>
+
+  <style name="Aptoide.Button.Install.S">
+    <item name="android:layout_height">@dimen/button_small_height</item>
+    <item name="android:textSize">?attr/buttonTextSizeSmall</item>
+  </style>
+
 
   <style name="Aptoide.Button.Install.Appc" parent="Aptoide.Button">
     <item name="android:textColor">@color/white</item>
@@ -141,6 +162,15 @@
     <item name="android:layout_height">@dimen/button_height</item>
     <item name="android:textColor">@color/grey_medium</item>
     <item name="android:fontFamily">sans-serif</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="Aptoide.Button.Flat.SilverMedium" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">@dimen/button_height</item>
+    <item name="android:textColor">@color/silver_dark</item>
+    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textSize">?attr/buttonTextSize</item>
     <item name="android:textAllCaps">true</item>
   </style>
@@ -149,6 +179,13 @@
     <item name="android:textColor">@color/grey_medium</item>
   </style>
 
+  <style name="Aptoide.Button.Flat.S.DarkBG">
+    <item name="android:textColor">@color/silver_dark</item>
+    <item name="android:background">@color/grey_dark</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+  </style>
+
+
   <style name="Aptoide.Button.Flat.White">
     <item name="android:textColor">@color/white</item>
   </style>
@@ -156,7 +193,7 @@
   <style name="Aptoide.Button.Flat.DefaultOrangeGradientEnd" parent="Widget.AppCompat.Button.Borderless.Colored">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">@dimen/button_height</item>
-    <item name="android:textColor">@color/default_orange_gradient_end</item>
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
     <item name="android:fontFamily">sans-serif</item>
     <item name="android:textSize">?attr/buttonTextSize</item>
     <item name="android:textAllCaps">true</item>

@@ -5,11 +5,9 @@
 
 package cm.aptoide.pt.store.view;
 
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.AptoideApplication;
@@ -24,16 +22,16 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
 
   private ImageView storeAvatar;
   private TextView storeName;
-  private LinearLayout storeLayout;
+  private View storeLayout;
 
   public GridStoreWidget(View itemView) {
     super(itemView);
   }
 
   @Override protected void assignViews(View itemView) {
-    storeAvatar = (ImageView) itemView.findViewById(R.id.store_avatar_row);
-    storeName = (TextView) itemView.findViewById(R.id.store_name_row);
-    storeLayout = (LinearLayout) itemView.findViewById(R.id.store_main_layout_row);
+    storeAvatar = itemView.findViewById(R.id.store_avatar_row);
+    storeName = itemView.findViewById(R.id.store_name_row);
+    storeLayout = itemView.findViewById(R.id.store_main_layout_row);
   }
 
   @Override public void bindView(GridStoreDisplayable gridStoreDisplayable, int position) {
@@ -41,8 +39,6 @@ public class GridStoreWidget extends Widget<GridStoreDisplayable> {
     final Store store = gridStoreDisplayable.getPojo();
 
     storeName.setText(store.getName());
-
-    storeLayout.setBackgroundColor(Color.WHITE);
 
     final Action1<Void> handleStoreClick = v -> {
       String origin = gridStoreDisplayable.getOrigin();

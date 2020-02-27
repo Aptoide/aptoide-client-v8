@@ -20,6 +20,7 @@ import cm.aptoide.pt.link.CustomTabsHelper;
 import cm.aptoide.pt.navigator.ActivityNavigator;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.navigator.Result;
+import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -48,14 +49,14 @@ public class AccountNavigator {
   private final PublishRelay<FacebookLoginResult> facebookLoginSubject;
   private final String recoverPasswordUrl;
   private final AccountAnalytics accountAnalytics;
-  private final String theme;
+  private final ThemeManager themeManager;
 
   public AccountNavigator(BottomNavigationNavigator bottomNavigationNavigator,
       FragmentNavigator fragmentNavigator, AptoideAccountManager accountManager,
       ActivityNavigator activityNavigator, LoginManager facebookLoginManager,
       CallbackManager callbackManager, GoogleApiClient client,
       PublishRelay<FacebookLoginResult> facebookLoginSubject, String recoverPasswordUrl,
-      AccountAnalytics accountAnalytics, String theme) {
+      AccountAnalytics accountAnalytics, ThemeManager themeManager) {
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.fragmentNavigator = fragmentNavigator;
     this.accountManager = accountManager;
@@ -66,7 +67,7 @@ public class AccountNavigator {
     this.facebookLoginSubject = facebookLoginSubject;
     this.recoverPasswordUrl = recoverPasswordUrl;
     this.accountAnalytics = accountAnalytics;
-    this.theme = theme;
+    this.themeManager = themeManager;
   }
 
   public void navigateToRecoverPasswordView() {
@@ -142,27 +143,29 @@ public class AccountNavigator {
   }
 
   public void navigateToCreateProfileView() {
-    fragmentNavigator.navigateToCleaningBackStack(ManageUserFragment.newInstanceToCreate(), true);
+    fragmentNavigator.navigateTo(ManageUserFragment.newInstanceToCreate(), true);
   }
 
   public void navigateToProfileStepTwoView() {
-    fragmentNavigator.navigateToCleaningBackStack(ProfileStepTwoFragment.newInstance(), true);
+    fragmentNavigator.navigateTo(ProfileStepTwoFragment.newInstance(), true);
   }
 
   public void navigateToCreateStoreView() {
-    fragmentNavigator.navigateToCleaningBackStack(
-        ManageStoreFragment.newInstance(new ManageStoreViewModel(), true), true);
+    fragmentNavigator.navigateTo(ManageStoreFragment.newInstance(new ManageStoreViewModel(), true),
+        true);
   }
 
   public void navigateToTermsAndConditions() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(), theme);
+                .getString(R.string.all_url_terms_conditions), activityNavigator.getActivity(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 
   public void navigateToPrivacyPolicy() {
     CustomTabsHelper.getInstance()
         .openInChromeCustomTab(activityNavigator.getActivity()
-            .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(), theme);
+                .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(),
+            themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
   }
 }

@@ -6,9 +6,11 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -25,9 +27,18 @@ public class GetRecommendedRequest extends V7<ListApps, GetRecommendedRequest.Bo
         tokenInvalidator);
   }
 
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7/";
+  }
+
   @Override
   protected Observable<ListApps> loadDataFromNetwork(Interfaces interfaces, boolean bypassCache) {
-    return interfaces.getRecommended(body, bypassCache);
+    return interfaces.getRecommended(bypassCache ? "no-cache" : null,
+        getQueryStringMapper().map(body));
   }
 
   public static class Body extends BaseBody implements Endless {

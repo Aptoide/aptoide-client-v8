@@ -130,7 +130,8 @@ public class PromotionsService {
         .getList()) {
       promotionList.add(
           new PromotionMeta(promotionModel.getTitle(), promotionModel.getPromotionId(),
-              promotionModel.getType(), promotionModel.getBackground()));
+              promotionModel.getType(), promotionModel.getBackground(),
+              promotionModel.getDialogDescription(), promotionModel.getDescription()));
     }
     return promotionList;
   }
@@ -213,7 +214,9 @@ public class PromotionsService {
             .getRank()
             .toString(), app.getApp()
             .getStore()
-            .getName()));
+            .getName(), app.getFiat()
+            .getAmount(), app.getFiat()
+            .getSymbol()));
       }
     }
 

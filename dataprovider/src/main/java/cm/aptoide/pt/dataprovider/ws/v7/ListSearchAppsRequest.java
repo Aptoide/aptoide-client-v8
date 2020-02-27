@@ -6,11 +6,15 @@
 package cm.aptoide.pt.dataprovider.ws.v7;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.BuildConfig;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
+import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -30,6 +34,14 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, baseHost, httpClient, converterFactory, bodyInterceptor, tokenInvalidator);
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+  }
+
+  public static String getHost(SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_CACHE_HOST
+        + "/api/7/";
   }
 
   public static ListSearchAppsRequest of(String query, String storeName, int offset,
@@ -79,8 +91,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
   @Override protected Observable<ListSearchApps> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.listSearchApps(body, bypassCache,
-        appBundlesVisibilityManager.shouldEnableAppBundles());
+    return interfaces.listSearchApps(bypassCache ? "no-cache" : null,
+        getQueryStringMapper().map(body, appBundlesVisibilityManager.shouldEnableAppBundles()));
   }
 
   public static class Body extends BaseBodyWithAlphaBetaKey implements Endless {
@@ -92,18 +104,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     private List<String> storeNames;
     private HashMapNotNull<String, List<String>> storesAuthMap;
     private Boolean trusted;
-
-    public Body(Integer limit, int offset, String query, List<Long> storeIds,
-        HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
-        SharedPreferences sharedPreferences) {
-      super(sharedPreferences);
-      this.limit = limit;
-      this.offset = offset;
-      this.query = query;
-      this.storeIds = storeIds;
-      this.storesAuthMap = storesAuthMap;
-      this.trusted = trusted;
-    }
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
         HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
@@ -141,15 +141,6 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     }
 
     public Body(Integer limit, int offset, String query, Boolean trusted,
-        SharedPreferences sharedPreferences) {
-      super(sharedPreferences);
-      this.limit = limit;
-      this.offset = offset;
-      this.query = query;
-      this.trusted = trusted;
-    }
-
-    public Body(Integer limit, int offset, String query, Boolean trusted,
         SharedPreferences sharedPreferences, Boolean isMature) {
       super(sharedPreferences);
       this.limit = limit;
@@ -167,8 +158,34 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       return storeIds;
     }
 
+    public String getStoreIdsAsString() {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (int i = 0; i < storeIds.size(); i++) {
+        if (i != storeIds.size() - 1) {
+          stringBuilder.append(storeIds.get(i))
+              .append(",");
+        } else {
+          stringBuilder.append(storeIds.get(i));
+        }
+      }
+      return stringBuilder.toString();
+    }
+
     public List<String> getStoreNames() {
       return storeNames;
+    }
+
+    public String getStoreNamesAsString() {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (int i = 0; i < storeNames.size(); i++) {
+        if (i != storeNames.size() - 1) {
+          stringBuilder.append(storeNames.get(i))
+              .append(",");
+        } else {
+          stringBuilder.append(storeNames.get(i));
+        }
+      }
+      return stringBuilder.toString();
     }
 
     public HashMapNotNull<String, List<String>> getStoresAuthMap() {
@@ -189,6 +206,19 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     @Override public Integer getLimit() {
       return limit;
+    }
+
+    public String getStoresAuthMapAsString() {
+      ObjectMapper objectMapper = new ObjectMapper();
+
+      String json = null;
+      try {
+        json = objectMapper.writeValueAsString(storesAuthMap);
+        System.out.println("json = " + json);
+      } catch (JsonProcessingException e) {
+        e.printStackTrace();
+      }
+      return json;
     }
   }
 }

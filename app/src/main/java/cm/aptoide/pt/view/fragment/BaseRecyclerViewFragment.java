@@ -89,23 +89,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
   }
 
   @Override @CallSuper
-  public BaseRecyclerViewFragment replaceDisplayable(int position, Displayable displayable,
-      boolean finishedLoading) {
-
-    adapter.removeDisplayable(position);
-    adapter.addDisplayable(position, displayable);
-    adapter.notifyItemChanged(position);
-
-    this.displayables.remove(position);
-    this.displayables.add(position, displayable);
-
-    if (finishedLoading) {
-      finishLoading();
-    }
-    return this;
-  }
-
-  @Override @CallSuper
   public BaseRecyclerViewFragment addDisplayable(Displayable displayable, boolean finishedLoading) {
     adapter.addDisplayable(displayable);
     this.displayables.add(displayable);
@@ -127,13 +110,6 @@ public abstract class BaseRecyclerViewFragment<T extends BaseAdapter>
     }
 
     return this;
-  }
-
-  @Override @Nullable public Displayable getDisplayableAt(int index) {
-    if (displayables != null && displayables.size() > index) {
-      return displayables.get(0);
-    }
-    return null;
   }
 
   @Override @CallSuper public BaseRecyclerViewFragment addDisplayables(int position,

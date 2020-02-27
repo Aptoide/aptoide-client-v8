@@ -1,14 +1,11 @@
 package cm.aptoide.pt.store.view;
 
-import android.content.Context;
-import android.os.Build;
 import android.text.ParcelableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.annotation.ColorInt;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
@@ -47,7 +44,8 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
         String.valueOf(displayable.getFollowers()));
 
     ParcelableSpan[] textStyle = {
-        new StyleSpan(android.graphics.Typeface.BOLD), new ForegroundColorSpan(getTextColor())
+        new StyleSpan(android.graphics.Typeface.BOLD),
+        new ForegroundColorSpan(displayable.getTextAccentColor())
     };
     followers.setText(spannableFactory.createMultiSpan(followersText, textStyle,
         String.valueOf(displayable.getFollowers())));
@@ -65,16 +63,5 @@ public class CreateStoreWidget extends Widget<CreateStoreDisplayable> {
             .sendStoreTabInteractEvent("Login", false))
         .subscribe(__ -> {
         }, err -> crashReport.log(err)));
-  }
-
-  private @ColorInt int getTextColor() {
-    Context context = getContext();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      return context.getResources()
-          .getColor(R.color.default_color, context.getTheme());
-    } else {
-      return context.getResources()
-          .getColor(R.color.default_color);
-    }
   }
 }

@@ -40,7 +40,7 @@ public abstract class AnalyticsActivity extends PermissionProviderActivity {
           .getLanguage());
     }
 
-    firstLaunchAnalytics.setGmsPresent(AdNetworkUtils.isGooglePlayServicesAvailable(this));
+    firstLaunchAnalytics.setGmsPresent();
   }
 
   @Override protected void onStart() {

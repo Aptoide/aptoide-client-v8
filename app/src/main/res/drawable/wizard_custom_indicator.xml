@@ -1,14 +1,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item
-      android:drawable="@drawable/oval_white"
-      android:state_checked="true"
-      android:state_pressed="true"/>
-  <item
-      android:drawable="@drawable/oval_white"
-      android:state_pressed="true"/>
-  <item
-      android:drawable="@drawable/oval_white"
-      android:state_checked="true"/>
-  <item
-      android:drawable="@drawable/oval_grey"/>
+  <item android:drawable="@drawable/oval_white" android:state_checked="true" android:state_pressed="true" />
+  <item android:drawable="@drawable/oval_white" android:state_pressed="true" />
+  <item android:drawable="@drawable/oval_white" android:state_checked="true" />
+  <item android:drawable="@drawable/oval_grey" />
 </selector>

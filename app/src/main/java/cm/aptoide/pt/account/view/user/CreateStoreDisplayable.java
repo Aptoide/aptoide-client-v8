@@ -1,5 +1,6 @@
 package cm.aptoide.pt.account.view.user;
 
+import androidx.annotation.ColorInt;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.TimelineStats;
 import cm.aptoide.pt.store.StoreAnalytics;
@@ -13,13 +14,16 @@ public class CreateStoreDisplayable extends Displayable {
 
   private StoreAnalytics storeAnalytics;
   private TimelineStats timelineStats;
+  private int textAccentColor;
 
   public CreateStoreDisplayable() {
   }
 
-  public CreateStoreDisplayable(StoreAnalytics storeAnalytics, TimelineStats timelineStats) {
+  public CreateStoreDisplayable(StoreAnalytics storeAnalytics, TimelineStats timelineStats,
+      @ColorInt int textAccentColor) {
     this.storeAnalytics = storeAnalytics;
     this.timelineStats = timelineStats;
+    this.textAccentColor = textAccentColor;
   }
 
   @Override protected Configs getConfig() {
@@ -42,5 +46,9 @@ public class CreateStoreDisplayable extends Displayable {
   public long getFollowings() {
     return timelineStats.getData()
         .getFollowing();
+  }
+
+  public int getTextAccentColor() {
+    return textAccentColor;
   }
 }

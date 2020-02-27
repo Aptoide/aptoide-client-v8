@@ -66,6 +66,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragment_search_result_all_followed_stores_buttons_layout"
+        style="?attr/backgroundCardColorSecondary"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         >
@@ -95,9 +96,9 @@
             android:id="@+id/fragment_search_result_all_stores_button"
             android:layout_width="128dp"
             android:layout_height="match_parent"
-            android:background="@drawable/default_search_button_background"
+            android:background="?attr/roundGradientButtonBackground"
             android:text="@string/all_stores"
-            android:textColor="@color/white"
+            android:textColor="?attr/inverseTextColor"
             android:textSize="10sp"
             tools:ignore="SmallSp"
             />
@@ -105,34 +106,35 @@
       </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.mopub.mobileads.MoPubView
-        android:id="@+id/mopub_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        tools:background="@color/green"
-        tools:layout_height="20dp"
-        tools:visibility="gone"
-        />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_followed_stores_app_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mopub_banner"
-        android:layout_marginTop="5dp"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/mopub_banner"
+        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
         android:visibility="invisible"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mopub_banner"
-        android:layout_marginTop="5dp"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/mopub_banner"
+        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
         android:visibility="visible"
+        />
+
+    <com.mopub.mobileads.MoPubView
+        android:id="@+id/mopub_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        tools:background="@color/green"
+        tools:layout_height="20dp"
+        tools:visibility="gone"
         />
 
   </RelativeLayout>

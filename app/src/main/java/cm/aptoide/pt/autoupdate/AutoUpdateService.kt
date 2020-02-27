@@ -7,7 +7,7 @@ import rx.Observable
 import rx.Single
 
 class AutoUpdateService(private val service: Service, private val packageName: String,
-                        private val autoUpdateStoreName: String) {
+                        private val clientSdkVersion: Int) {
 
   private var loading = false
 
@@ -15,7 +15,7 @@ class AutoUpdateService(private val service: Service, private val packageName: S
     if (loading) {
       return Single.just(AutoUpdateModel(loading = true))
     }
-    return service.getJsonResponse(autoUpdateStoreName)
+    return service.getAutoUpdateResponse(packageName, clientSdkVersion)
         .doOnSubscribe { loading = true }
         .doOnUnsubscribe { loading = false }
         .doOnTerminate { loading = false }
@@ -36,7 +36,8 @@ class AutoUpdateService(private val service: Service, private val packageName: S
 }
 
 interface Service {
-  @GET("latest_version_{storeName}.json")
-  fun getJsonResponse(
-      @Path(value = "storeName") storeName: String): Observable<AutoUpdateJsonResponse>
+  @GET("apks/package/autoupdate/get/package_name={package_name}/sdk={client_sdk_version}")
+  fun getAutoUpdateResponse(
+      @Path(value = "package_name") packageName: String, @Path(value = "client_sdk_version")
+      clientSdkVersion: Int): Observable<AutoUpdateJsonResponse>
 }
