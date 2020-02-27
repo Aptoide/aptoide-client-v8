@@ -5,7 +5,7 @@ import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.ExperimentPersistence;
 import cm.aptoide.pt.database.room.ExperimentDAO;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
-import io.reactivex.BackpressureStrategy;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import rx.Completable;
 
@@ -27,15 +27,17 @@ public class RoomExperimentPersistence implements ExperimentPersistence {
         .subscribeOn(Schedulers.io()));
   }
 
-  @Override public rx.Observable<ExperimentModel> get(String identifier) {
-    return RxJavaInterop.toV1Observable(experimentDAO.get(identifier)
+  @Override public rx.Single<ExperimentModel> get(String identifier) {
+    return RxJavaInterop.toV1Single(experimentDAO.get(identifier)
         .subscribeOn(Schedulers.io())
-        .map(roomExperiment -> {
+        .flatMap(roomExperiment -> {
           if (roomExperiment == null) {
-            return new ExperimentModel(mapper.map(roomExperiment), true);
+            return Single.just(new ExperimentModel(new Experiment(), true));
           } else {
-            return new ExperimentModel(mapper.map(roomExperiment), false);
+            return Single.just(new ExperimentModel(mapper.map(roomExperiment), false));
           }
-        }), BackpressureStrategy.BUFFER);
+        }))
+        .onErrorReturn(throwable -> new ExperimentModel(new Experiment(), true))
+        .doOnError(Throwable::printStackTrace);
   }
 }

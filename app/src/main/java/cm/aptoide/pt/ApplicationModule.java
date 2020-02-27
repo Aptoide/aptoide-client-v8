@@ -53,8 +53,6 @@ import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.RealmExperimentMapper;
-import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
@@ -115,6 +113,8 @@ import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
+import cm.aptoide.pt.database.RoomExperimentMapper;
+import cm.aptoide.pt.database.RoomExperimentPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -1681,9 +1681,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ABTestService(abTestServiceProvider, idsRepository, Schedulers.io());
   }
 
-  @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
-      Database database) {
-    return new RealmExperimentPersistence(database, new RealmExperimentMapper());
+  @Singleton @Provides RoomExperimentPersistence providesRoomExperimentPersistence(
+      AptoideDatabase database, RoomExperimentMapper mapper) {
+    return new RoomExperimentPersistence(database.experimentDAO(), mapper);
+  }
+
+  @Singleton @Provides RoomExperimentMapper providesRoomExperimentMapper() {
+    return new RoomExperimentMapper();
   }
 
   @Singleton @Provides @Named("ab-test-local-cache")
@@ -1697,7 +1701,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence,
+      ABTestService abTestService, RoomExperimentPersistence persistence,
       @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
       AbTestCacheValidator cacheValidator) {
     return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);

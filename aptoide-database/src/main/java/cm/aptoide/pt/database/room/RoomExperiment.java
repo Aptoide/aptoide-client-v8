@@ -1,13 +1,12 @@
 package cm.aptoide.pt.database.room;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import io.realm.annotations.PrimaryKey;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "experiment") public class RoomExperiment {
 
-  public static String PRIMARY_KEY_NAME = "experimentName";
-
-  @PrimaryKey private String experimentName;
+  @NonNull @PrimaryKey private String experimentName;
   private long requestTime;
   private String assignment;
   private String payload;
