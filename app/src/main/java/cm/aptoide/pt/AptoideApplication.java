@@ -118,6 +118,8 @@ import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -297,6 +299,7 @@ public abstract class AptoideApplication extends Application {
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
         .andThen(setUpAdsUserProperty())
+        .andThen(initializeSentry())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
@@ -372,6 +375,11 @@ public abstract class AptoideApplication extends Application {
 
   private Completable initializeUXCam() {
     return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
+  }
+
+  private Completable initializeSentry() {
+    return Completable.fromAction(
+        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
   }
 
   private void initializeRakam(String id) {
