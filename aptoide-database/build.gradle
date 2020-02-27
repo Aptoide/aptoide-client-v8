@@ -63,8 +63,8 @@ dependencies {
   implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
-  implementation 'androidx.room:room-runtime:2.2.3'
-  annotationProcessor 'androidx.room:room-compiler:2.2.3'
+  implementation "androidx.room:room-runtime:${ROOM_VERSION}"
+  annotationProcessor "androidx.room:room-compiler:${ROOM_VERSION}"
 
   // RxJava support for Room
   implementation "androidx.room:room-rxjava2:${ROOM_VERSION}"
