@@ -60,7 +60,7 @@ ext {
   //
 
   // Room versions
-  ROOM_VERSION = '2.1.0'
+  ROOM_VERSION = '2.2.4'
   RXJAVA2_INTEROP = '0.13.7'
 
   // Google Android Support
