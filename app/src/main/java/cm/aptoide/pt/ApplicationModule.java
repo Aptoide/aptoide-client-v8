@@ -58,7 +58,6 @@ import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -1978,11 +1977,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
-  }
-
-  @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
-    return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
 
   @Singleton @Provides ApkfyExperiment providesApkfyExperiment(
