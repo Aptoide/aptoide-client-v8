@@ -11,10 +11,10 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.database.room.RoomStoreMinimalAd;
+import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -35,7 +35,7 @@ public class InstalledIntentService extends IntentService {
   @Inject InstallAnalytics installAnalytics;
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
-  @Inject RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence;
+  @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
   private SharedPreferences sharedPreferences;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
@@ -134,11 +134,11 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    Subscription unManagedSubscription = roomStoreMinimalAdPersistence.get(packageName)
+    Subscription unManagedSubscription = roomStoredMinimalAdPersistence.get(packageName)
         .observeOn(Schedulers.io())
-        .flatMapCompletable(storeMinimalAd -> {
-          if (storeMinimalAd != null) {
-            return knockCpi(packageName, roomStoreMinimalAdPersistence, storeMinimalAd);
+        .flatMapCompletable(storedMinimalAd -> {
+          if (storedMinimalAd != null) {
+            return knockCpi(packageName, roomStoredMinimalAdPersistence, storedMinimalAd);
           } else {
             return null;
           }
@@ -224,13 +224,13 @@ public class InstalledIntentService extends IntentService {
   }
 
   private Completable knockCpi(String packageName,
-      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence,
-      RoomStoreMinimalAd storeMinimalAd) {
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence,
+      RoomStoredMinimalAd storedMinimalAd) {
     return Completable.fromCallable(() -> {
-      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
+      ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer(),
           getApplicationContext());
-      AdNetworkUtils.knockCpi(adMapper.map(storeMinimalAd));
-      roomStoreMinimalAdPersistence.remove(storeMinimalAd);
+      AdNetworkUtils.knockCpi(adMapper.map(storedMinimalAd));
+      roomStoredMinimalAdPersistence.remove(storedMinimalAd);
       return null;
     });
   }

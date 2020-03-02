@@ -1,7 +1,7 @@
 package cm.aptoide.pt.ads;
 
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.room.RoomStoreMinimalAd;
+import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -52,7 +52,7 @@ public class MinimalAdMapper {
         .getTime(), hasAppc, appcAmount, fiatAmount, currency, currencySymbol);
   }
 
-  public RoomStoreMinimalAd map(SearchAdResult searchAdResult, String referrer) {
+  public RoomStoredMinimalAd map(SearchAdResult searchAdResult, String referrer) {
 
     String packageName = searchAdResult.getPackageName();
     String cpcUrl = searchAdResult.getCpcUrl();
@@ -60,10 +60,10 @@ public class MinimalAdMapper {
     String cpiUrl = searchAdResult.getClickPerInstallUrl();
     long adId = searchAdResult.getAdId();
 
-    return new RoomStoreMinimalAd(packageName, referrer, cpcUrl, cpdUrl, cpiUrl, adId);
+    return new RoomStoredMinimalAd(packageName, referrer, cpcUrl, cpdUrl, cpiUrl, adId);
   }
 
-  public MinimalAdInterface map(RoomStoreMinimalAd storedMinimalAd) {
+  public MinimalAdInterface map(RoomStoredMinimalAd storedMinimalAd) {
     return new MinimalAdInterface() {
 
       public String cpdUrl;

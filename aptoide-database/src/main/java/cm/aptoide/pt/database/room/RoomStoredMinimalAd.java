@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "storeMinimalAd") public class RoomStoreMinimalAd {
+@Entity(tableName = "storedMinimalAd") public class RoomStoredMinimalAd {
 
   @NonNull @PrimaryKey private String packageName;
   private String referrer;
@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey;
   private Long timestamp;
   private Long adId;
 
-  public RoomStoreMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl,
+  public RoomStoredMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl,
       String cpiUrl, Long adId) {
     this.packageName = packageName;
     this.referrer = referrer;

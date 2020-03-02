@@ -22,7 +22,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
@@ -139,12 +139,12 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer, context);
               } else {
-                RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence =
-                    new RoomStoreMinimalAdPersistence(
+                RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence =
+                    new RoomStoredMinimalAdPersistence(
                         ((AptoideApplication) context.getApplicationContext()).getAptoideDatabase()
                             .storeMinimalAdDAO());
 
-                Completable.fromAction(() -> roomStoreMinimalAdPersistence.insert(
+                Completable.fromAction(() -> roomStoredMinimalAdPersistence.insert(
                     adMapper.map(searchAdResult, referrer)))
                     .subscribeOn(Schedulers.io())
                     .subscribe();

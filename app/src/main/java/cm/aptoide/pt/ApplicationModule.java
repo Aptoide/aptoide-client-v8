@@ -115,7 +115,7 @@ import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
 import cm.aptoide.pt.database.RoomExperimentPersistence;
-import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -491,9 +491,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides InstallationProvider provideInstallationProvider(
       AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
       InstalledRepository installedRepository,
-      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence) {
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
-        new MinimalAdMapper(), roomStoreMinimalAdPersistence);
+        new MinimalAdMapper(), roomStoredMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -1671,8 +1671,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository,
-      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence) {
-    return new AdsManager(adsRepository, roomStoreMinimalAdPersistence, new MinimalAdMapper());
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
+    return new AdsManager(adsRepository, roomStoredMinimalAdPersistence, new MinimalAdMapper());
   }
 
   @Singleton @Provides ABTestService providesABTestService(
@@ -1690,9 +1690,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomExperimentMapper();
   }
 
-  @Singleton @Provides RoomStoreMinimalAdPersistence providesRoomStoreMinimalAdPersistence(
+  @Singleton @Provides RoomStoredMinimalAdPersistence providesRoomStoreMinimalAdPersistence(
       AptoideDatabase database) {
-    return new RoomStoreMinimalAdPersistence(database.storeMinimalAdDAO());
+    return new RoomStoredMinimalAdPersistence(database.storeMinimalAdDAO());
   }
 
   @Singleton @Provides @Named("ab-test-local-cache")

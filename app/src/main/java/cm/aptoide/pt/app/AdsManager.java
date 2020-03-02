@@ -3,7 +3,7 @@ package cm.aptoide.pt.app;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
@@ -20,13 +20,13 @@ import rx.Single;
 public class AdsManager {
 
   private final AdsRepository adsRepository;
-  private final RoomStoreMinimalAdPersistence storedMinimalAdAccessor;
+  private final RoomStoredMinimalAdPersistence storedMinimalAdPersistence;
   private final MinimalAdMapper adMapper;
 
   public AdsManager(AdsRepository adsRepository,
-      RoomStoreMinimalAdPersistence storedMinimalAdAccessor, MinimalAdMapper adMapper) {
+      RoomStoredMinimalAdPersistence storedMinimalAdPersistence, MinimalAdMapper adMapper) {
     this.adsRepository = adsRepository;
-    this.storedMinimalAdAccessor = storedMinimalAdAccessor;
+    this.storedMinimalAdPersistence = storedMinimalAdPersistence;
     this.adMapper = adMapper;
   }
 
@@ -51,7 +51,7 @@ public class AdsManager {
   }
 
   public void handleAdsLogic(SearchAdResult searchAdResult) {
-    storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, null));
+    storedMinimalAdPersistence.insert(adMapper.map(searchAdResult, null));
     AdNetworkUtils.knockCpc(adMapper.map(searchAdResult));
   }
 }
