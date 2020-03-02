@@ -3,7 +3,7 @@ package cm.aptoide.pt.app;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
+import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
@@ -20,11 +20,11 @@ import rx.Single;
 public class AdsManager {
 
   private final AdsRepository adsRepository;
-  private final StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private final RoomStoreMinimalAdPersistence storedMinimalAdAccessor;
   private final MinimalAdMapper adMapper;
 
-  public AdsManager(AdsRepository adsRepository, StoredMinimalAdAccessor storedMinimalAdAccessor,
-      MinimalAdMapper adMapper) {
+  public AdsManager(AdsRepository adsRepository,
+      RoomStoreMinimalAdPersistence storedMinimalAdAccessor, MinimalAdMapper adMapper) {
     this.adsRepository = adsRepository;
     this.storedMinimalAdAccessor = storedMinimalAdAccessor;
     this.adMapper = adMapper;

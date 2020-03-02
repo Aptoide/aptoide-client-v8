@@ -2,7 +2,6 @@ package cm.aptoide.pt.database;
 
 import cm.aptoide.pt.database.room.RoomStoreMinimalAd;
 import cm.aptoide.pt.database.room.StoreMinimalAdDAO;
-import cm.aptoide.pt.logger.Logger;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.schedulers.Schedulers;

@@ -13,11 +13,10 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
+import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomStoreMinimalAd;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
@@ -35,6 +34,7 @@ import retrofit2.Converter;
 import rx.Completable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -43,6 +43,7 @@ public class InstalledIntentService extends IntentService {
   @Inject InstallAnalytics installAnalytics;
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
+  @Inject RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
@@ -148,19 +149,18 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-        StoredMinimalAd.class);
-    Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
+    Subscription unManagedSubscription = roomStoreMinimalAdPersistence.get(packageName)
+        .observeOn(Schedulers.io())
         .flatMapCompletable(storeMinimalAd -> {
           if (storeMinimalAd != null) {
-            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
+            return knockCpi(packageName, roomStoreMinimalAdPersistence, storeMinimalAd);
           } else {
             //return extractReferrer(packageName);
             return null;
           }
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {
+          err.printStackTrace();
           CrashReport.getInstance()
               .log(err);
         });
@@ -239,13 +239,14 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
-      StoredMinimalAd storeMinimalAd) {
+  private Completable knockCpi(String packageName,
+      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence,
+      RoomStoreMinimalAd storeMinimalAd) {
     return Completable.fromCallable(() -> {
       ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
           getApplicationContext());
       AdNetworkUtils.knockCpi(adMapper.map(storeMinimalAd));
-      storedMinimalAdAccessor.remove(storeMinimalAd);
+      roomStoreMinimalAdPersistence.remove(storeMinimalAd);
       return null;
     });
   }

@@ -115,6 +115,7 @@ import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
 import cm.aptoide.pt.database.RoomExperimentPersistence;
+import cm.aptoide.pt.database.RoomStoreMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
@@ -126,7 +127,6 @@ import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -490,9 +490,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
       AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
-      InstalledRepository installedRepository, Database database) {
+      InstalledRepository installedRepository,
+      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence) {
     return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
-        new MinimalAdMapper(), AccessorFactory.getAccessorFor(database, StoredMinimalAd.class));
+        new MinimalAdMapper(), roomStoreMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -1669,10 +1670,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
-    return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
-        ((AptoideApplication) application.getApplicationContext()).getDatabase(),
-        StoredMinimalAd.class), new MinimalAdMapper());
+  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository,
+      RoomStoreMinimalAdPersistence roomStoreMinimalAdPersistence) {
+    return new AdsManager(adsRepository, roomStoreMinimalAdPersistence, new MinimalAdMapper());
   }
 
   @Singleton @Provides ABTestService providesABTestService(
@@ -1688,6 +1688,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides RoomExperimentMapper providesRoomExperimentMapper() {
     return new RoomExperimentMapper();
+  }
+
+  @Singleton @Provides RoomStoreMinimalAdPersistence providesRoomStoreMinimalAdPersistence(
+      AptoideDatabase database) {
+    return new RoomStoreMinimalAdPersistence(database.storeMinimalAdDAO());
   }
 
   @Singleton @Provides @Named("ab-test-local-cache")

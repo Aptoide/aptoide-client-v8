@@ -36,6 +36,7 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -194,6 +195,7 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
+  @Inject AptoideDatabase aptoideDatabase;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -917,6 +919,10 @@ public abstract class AptoideApplication extends Application {
 
   public SettingsManager getSettingsManager() {
     return settingsManager;
+  }
+
+  public AptoideDatabase getAptoideDatabase() {
+    return aptoideDatabase;
   }
 }
 
