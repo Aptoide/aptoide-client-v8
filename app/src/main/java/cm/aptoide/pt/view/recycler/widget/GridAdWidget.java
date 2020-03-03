@@ -28,9 +28,9 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    name = (TextView) itemView.findViewById(R.id.name);
-    icon = (ImageView) itemView.findViewById(R.id.icon);
-    rating = (TextView) itemView.findViewById(R.id.rating_label);
+    name = itemView.findViewById(R.id.name);
+    icon = itemView.findViewById(R.id.icon);
+    rating = itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(GridAdDisplayable displayable, int position) {
