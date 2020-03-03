@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -45,7 +44,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -316,16 +314,6 @@ public abstract class AptoideApplication extends Application {
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
 
     clearFileCache();
-
-    //
-    // this will trigger the migration if needed
-    //
-
-    SQLiteDatabaseHelper dbHelper = new SQLiteDatabaseHelper(this);
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    if (db.isOpen()) {
-      db.close();
-    }
 
     startNotificationCenter();
     startNotificationCleaner();

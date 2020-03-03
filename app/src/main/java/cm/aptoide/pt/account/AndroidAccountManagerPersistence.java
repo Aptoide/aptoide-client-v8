@@ -38,7 +38,6 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
   private final AccountManager androidAccountManager;
   private final DatabaseStoreDataPersist storePersist;
   private final AccountFactory accountFactory;
-  private final AndroidAccountDataMigration accountDataMigration;
   private final AndroidAccountProvider androidAccountProvider;
   private final AuthenticationPersistence authenticationPersistence;
   private final Scheduler scheduler;
@@ -47,13 +46,11 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
 
   public AndroidAccountManagerPersistence(AccountManager androidAccountManager,
       DatabaseStoreDataPersist storePersist, AccountFactory accountFactory,
-      AndroidAccountDataMigration accountDataMigration,
       AndroidAccountProvider androidAccountProvider,
       AuthenticationPersistence authenticationPersistence, Scheduler scheduler) {
     this.androidAccountManager = androidAccountManager;
     this.storePersist = storePersist;
     this.accountFactory = accountFactory;
-    this.accountDataMigration = accountDataMigration;
     this.androidAccountProvider = androidAccountProvider;
     this.authenticationPersistence = authenticationPersistence;
     this.scheduler = scheduler;
@@ -115,53 +112,48 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
     if (accountCache != null) {
       return Single.just(accountCache);
     }
-    return accountDataMigration.migrate()
-        .andThen(androidAccountProvider.getAndroidAccount()
-            .flatMap(androidAccount -> {
+    return androidAccountProvider.getAndroidAccount()
+        .flatMap(androidAccount -> {
 
-              final String access =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_LEVEL);
-              final boolean terms =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS)
-                      != null ? Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
-                      ACCOUNT_TERMS_AND_CONDITIONS)) : false;
-              final boolean privacy =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY) != null
-                      ? Boolean.valueOf(
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY))
-                      : false;
-              final Date birthdate =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE) != null
-                      ? new Date(
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE))
-                      : new Date(1970, 1, 1);
-              return storePersist.get()
-                  .doOnError(err -> CrashReport.getInstance()
-                      .log(err))
-                  .flatMap(stores -> {
+          final String access =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_LEVEL);
+          final boolean terms =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS)
+                  != null ? Boolean.valueOf(
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS))
+                  : false;
+          final boolean privacy =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY) != null
+                  ? Boolean.valueOf(
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY))
+                  : false;
+          final Date birthdate =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE) != null
+                  ? new Date(androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE))
+                  : new Date(1970, 1, 1);
+          return storePersist.get()
+              .doOnError(err -> CrashReport.getInstance()
+                  .log(err))
+              .flatMap(stores -> authenticationPersistence.getAuthentication()
+                  .flatMap(authentication -> {
 
-                    return authenticationPersistence.getAuthentication()
-                        .flatMap(authentication -> {
+                    if (authentication.isAuthenticated()) {
 
-                          if (authentication.isAuthenticated()) {
+                      return Single.just(accountFactory.createAccount(access, stores,
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
+                          androidAccount.name,
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_AVATAR_URL),
+                          createStore(androidAccount), Boolean.valueOf(
+                              androidAccountManager.getUserData(androidAccount,
+                                  ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
+                              androidAccountManager.getUserData(androidAccount,
+                                  ACCOUNT_ACCESS_CONFIRMED)), privacy, terms, birthdate));
+                    }
 
-                            return Single.just(accountFactory.createAccount(access, stores,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
-                                androidAccount.name,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
-                                androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_AVATAR_URL), createStore(androidAccount),
-                                Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
-                                    androidAccountManager.getUserData(androidAccount,
-                                        ACCOUNT_ACCESS_CONFIRMED)), privacy, terms, birthdate));
-                          }
-
-                          return Single.error(
-                              new IllegalStateException("Account not authenticated"));
-                        });
-                  });
-            }));
+                    return Single.error(new IllegalStateException("Account not authenticated"));
+                  }));
+        });
   }
 
   @Override public Completable removeAccount() {
