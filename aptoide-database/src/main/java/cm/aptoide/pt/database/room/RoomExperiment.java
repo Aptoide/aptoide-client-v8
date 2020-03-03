@@ -1,22 +1,19 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-/**
- * Created by franciscocalado on 20/06/18.
- */
-public class RealmExperiment extends RealmObject {
-  public static String PRIMARY_KEY_NAME = "experimentName";
+@Entity(tableName = "experiment") public class RoomExperiment {
 
-  @PrimaryKey private String experimentName;
+  @NonNull @PrimaryKey private String experimentName;
   private long requestTime;
   private String assignment;
   private String payload;
   private boolean partOfExperiment;
   private boolean experimentOver;
 
-  public RealmExperiment(String experimentName, long requestTime, String assignment, String payload,
+  public RoomExperiment(String experimentName, long requestTime, String assignment, String payload,
       boolean partOfExperiment, boolean experimentOver) {
     this.experimentName = experimentName;
     this.requestTime = requestTime;
@@ -24,9 +21,6 @@ public class RealmExperiment extends RealmObject {
     this.payload = payload;
     this.partOfExperiment = partOfExperiment;
     this.experimentOver = experimentOver;
-  }
-
-  public RealmExperiment() {
   }
 
   public String getExperimentName() {

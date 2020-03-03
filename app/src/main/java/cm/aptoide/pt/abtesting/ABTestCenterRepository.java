@@ -1,6 +1,8 @@
 package cm.aptoide.pt.abtesting;
 
+import cm.aptoide.pt.database.RoomExperimentPersistence;
 import java.util.HashMap;
+import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -11,12 +13,12 @@ import rx.schedulers.Schedulers;
 public class ABTestCenterRepository implements AbTestRepository {
 
   private ABTestService service;
-  private RealmExperimentPersistence persistence;
+  private RoomExperimentPersistence persistence;
   private HashMap<String, ExperimentModel> localCache;
   private AbTestCacheValidator cacheValidator;
 
   public ABTestCenterRepository(ABTestService service, HashMap<String, ExperimentModel> localCache,
-      RealmExperimentPersistence persistence, AbTestCacheValidator cacheValidator) {
+      RoomExperimentPersistence persistence, AbTestCacheValidator cacheValidator) {
     this.service = service;
     this.localCache = localCache;
     this.persistence = persistence;
@@ -31,11 +33,12 @@ public class ABTestCenterRepository implements AbTestRepository {
             .getExperiment());
       } else {
         return service.getExperiment(identifier, type)
-            .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
-                __ -> Observable.just(experimentToCache.getExperiment())));
+            .flatMap(experimentToCache -> cacheExperiment(experimentToCache, identifier).andThen(
+                Observable.just(experimentToCache.getExperiment())));
       }
     }
     return persistence.get(identifier)
+        .toObservable()
         .observeOn(Schedulers.io())
         .flatMap(model -> {
           if (!model.hasError() && !model.getExperiment()
@@ -47,8 +50,8 @@ public class ABTestCenterRepository implements AbTestRepository {
           } else {
             return service.getExperiment(identifier, type)
                 .flatMap(
-                    experimentToCache -> cacheExperiment(experimentToCache, identifier).flatMap(
-                        __ -> Observable.just(experimentToCache.getExperiment())));
+                    experimentToCache -> cacheExperiment(experimentToCache, identifier).andThen(
+                        Observable.just(experimentToCache.getExperiment())));
           }
         });
   }
@@ -74,10 +77,9 @@ public class ABTestCenterRepository implements AbTestRepository {
     return recordAction(identifier, type);
   }
 
-  public Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName) {
-    localCache.put(experimentName, experiment);
-    persistence.save(experimentName, experiment.getExperiment());
-    return Observable.just(null);
+  public Completable cacheExperiment(ExperimentModel experiment, String experimentName) {
+    return Completable.fromAction(() -> localCache.put(experimentName, experiment))
+        .andThen(persistence.save(experimentName, experiment.getExperiment()));
   }
 
   @Override public Observable<String> getExperimentId(String id) {
