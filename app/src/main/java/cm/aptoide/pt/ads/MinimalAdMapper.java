@@ -1,6 +1,6 @@
 package cm.aptoide.pt.ads;
 
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.room.RoomMinimalAd;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -8,7 +8,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 
 public class MinimalAdMapper {
 
-  public MinimalAd map(GetAdsResponse.Ad ad) {
+  public RoomMinimalAd map(GetAdsResponse.Ad ad) {
     GetAdsResponse.Partner partner = ad.getPartner();
     int id = 0;
     String clickUrl = null;
@@ -36,7 +36,7 @@ public class MinimalAdMapper {
       hasAppc = true;
     }
 
-    return new MinimalAd(ad.getData()
+    return new RoomMinimalAd(ad.getData()
         .getPackageName(), id, clickUrl, ad.getInfo()
         .getCpcUrl(), ad.getInfo()
         .getCpdUrl(), ad.getData()

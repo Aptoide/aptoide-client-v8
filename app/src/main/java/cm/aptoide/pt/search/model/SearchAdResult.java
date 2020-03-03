@@ -2,7 +2,7 @@ package cm.aptoide.pt.search.model;
 
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.ads.data.Payout;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.room.RoomMinimalAd;
 import org.parceler.Parcel;
 
 @Parcel public class SearchAdResult {
@@ -46,7 +46,7 @@ import org.parceler.Parcel;
     this.payout = payout;
   }
 
-  public SearchAdResult(MinimalAd minimalAd) {
+  public SearchAdResult(RoomMinimalAd minimalAd) {
     this(minimalAd.getAdId(), minimalAd.getIconPath(), minimalAd.getDownloads(),
         minimalAd.getStars(), minimalAd.getModified(), minimalAd.getPackageName(),
         minimalAd.getCpcUrl(), minimalAd.getCpdUrl(), minimalAd.getCpiUrl(),

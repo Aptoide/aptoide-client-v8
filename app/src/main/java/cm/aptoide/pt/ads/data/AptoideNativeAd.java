@@ -1,7 +1,7 @@
 package cm.aptoide.pt.ads.data;
 
 import android.view.View;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.room.RoomMinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 
@@ -22,7 +22,7 @@ public class AptoideNativeAd extends Application implements ApplicationAd {
 
   private Payout payout;
 
-  public AptoideNativeAd(MinimalAd ad) {
+  public AptoideNativeAd(RoomMinimalAd ad) {
     super(ad.getName(), ad.getIconPath(), 0f, ad.getDownloads(), ad.getPackageName(), ad.getAppId(),
         "", ad.isHasAppc());
     this.networkId = ad.getNetworkId();

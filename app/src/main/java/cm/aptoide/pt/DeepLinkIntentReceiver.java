@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import androidx.annotation.Nullable;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
@@ -24,7 +23,6 @@ import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.link.AptoideInstall;
@@ -36,7 +34,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -141,8 +138,8 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("play.google.com") && u.getPath()
           .contains("store/apps/details")) {
         intent = dealWithGoogleHost(u);
-      } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithAptword(uri);
+      /*} else if ("aptword".equalsIgnoreCase(u.getScheme())) {
+        intent = dealWithAptword(uri);*/
       } else if ("file".equalsIgnoreCase(u.getScheme())) {
         downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
@@ -208,7 +205,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return null;
   }
 
-  private Intent dealWithAptword(String uri) {
+  /*private Intent dealWithAptword(String uri) {
     // TODO: 12-08-2016 neuro aptword Seems discontinued???
     String param = uri.substring("aptword://".length());
 
@@ -237,7 +234,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       }
     }
     return null;
-  }
+  }*/
 
   private Intent dealWithGoogleHost(Uri uri) {
     String param = uri.getQueryParameter("id");

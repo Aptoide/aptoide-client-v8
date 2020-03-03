@@ -3,7 +3,7 @@ package cm.aptoide.pt.app;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.ApplicationAdError;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.room.RoomMinimalAd;
 import cm.aptoide.pt.view.app.AppsList;
 
 /**
@@ -12,10 +12,10 @@ import cm.aptoide.pt.view.app.AppsList;
 
 public class MinimalAdRequestResult implements ApplicationAdResult {
 
-  private final MinimalAd minimalAd;
+  private final RoomMinimalAd minimalAd;
   private final AppsList.Error error;
 
-  public MinimalAdRequestResult(MinimalAd minimalAd) {
+  public MinimalAdRequestResult(RoomMinimalAd minimalAd) {
     this.minimalAd = minimalAd;
     this.error = null;
   }
@@ -25,7 +25,7 @@ public class MinimalAdRequestResult implements ApplicationAdResult {
     this.error = error;
   }
 
-  public MinimalAd getMinimalAd() {
+  public RoomMinimalAd getMinimalAd() {
     return minimalAd;
   }
 
