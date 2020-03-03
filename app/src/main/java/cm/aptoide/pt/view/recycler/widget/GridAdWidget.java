@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.room.RoomMinimalAd;
+import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
@@ -34,7 +34,7 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
   }
 
   @Override public void bindView(GridAdDisplayable displayable, int position) {
-    RoomMinimalAd pojo = displayable.getPojo();
+    MinimalAd pojo = displayable.getPojo();
     name.setText(pojo.getName());
 
     final FragmentActivity context = getContext();

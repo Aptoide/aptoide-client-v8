@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.database.room.RoomMinimalAd;
+import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;
@@ -39,7 +39,7 @@ public class GetAdsFragment extends StoreTabGridRecyclerFragment {
     return adsRepository.getAdsFromHomepageMore(refresh)
         .map(minimalAds -> {
           List<Displayable> displayables = new LinkedList<>();
-          for (RoomMinimalAd minimalAd : minimalAds) {
+          for (MinimalAd minimalAd : minimalAds) {
             displayables.add(new GridAdDisplayable(minimalAd, tag, navigationTracker));
           }
 

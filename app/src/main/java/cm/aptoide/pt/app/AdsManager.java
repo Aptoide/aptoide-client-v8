@@ -5,7 +5,7 @@ import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.room.RoomMinimalAd;
+import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -31,7 +31,7 @@ public class AdsManager {
     this.adMapper = adMapper;
   }
 
-  public Single<RoomMinimalAd> loadAds(String packageName, String storeName) {
+  public Single<MinimalAd> loadAds(String packageName, String storeName) {
     return adsRepository.loadAdsFromAppView(packageName, storeName)
         .toSingle();
   }

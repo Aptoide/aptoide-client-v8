@@ -2,7 +2,7 @@ package cm.aptoide.pt.home.more.apps
 
 import cm.aptoide.pt.ads.AdsRepository
 import cm.aptoide.pt.ads.data.AptoideNativeAd
-import cm.aptoide.pt.database.room.RoomMinimalAd
+import cm.aptoide.pt.database.room.MinimalAd
 import cm.aptoide.pt.dataprovider.model.v7.ListApps
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
 import cm.aptoide.pt.view.app.Application
@@ -44,9 +44,9 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
     return result
   }
 
-  private fun mapAdsResponse(response: List<RoomMinimalAd>): List<Application>? {
+  private fun mapAdsResponse(response: List<MinimalAd>): List<Application>? {
     val result = ArrayList<Application>()
-    for (ad: RoomMinimalAd in response) {
+    for (ad: MinimalAd in response) {
       result.add(AptoideNativeAd(ad))
     }
     return result

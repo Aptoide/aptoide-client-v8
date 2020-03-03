@@ -1,15 +1,10 @@
 package cm.aptoide.pt.database.room;
 
-import android.os.Parcelable;
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "minimalAd") public class RoomMinimalAd {
+public class MinimalAd {
 
   private String cpdUrl;
   private String description;
-  @NonNull @PrimaryKey private String packageName;
+  private String packageName;
   private Long networkId;
   private String clickUrl;
   private String cpcUrl;
@@ -28,7 +23,7 @@ import androidx.room.PrimaryKey;
   private String currency;
   private String currencySymbol;
 
-  public RoomMinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl,
+  public MinimalAd(String packageName, long networkId, String clickUrl, String cpcUrl,
       String cpdUrl, long appId, long adId, String cpiUrl, String name, String iconPath,
       String description, int downloads, int stars, Long modified, boolean hasAppc,
       double appcAmount, double currencyAmount, String currency, String currencySymbol) {

@@ -10,7 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.database.room.RoomMinimalAd;
+import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.GetAdsRequest;
@@ -82,7 +82,7 @@ public class AdsRepository {
     return getAdsResponse != null && validAds(getAdsResponse.getAds());
   }
 
-  public Observable<RoomMinimalAd> loadAdsFromAppView(String packageName, String storeName) {
+  public Observable<MinimalAd> loadAdsFromAppView(String packageName, String storeName) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -95,7 +95,7 @@ public class AdsRepository {
                     .observe())));
   }
 
-  private Observable<RoomMinimalAd> mapToMinimalAd(
+  private Observable<MinimalAd> mapToMinimalAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
     return getAdsResponseObservable.map((getAdsResponse) -> getAdsResponse.getAds())
         .flatMap(ads -> {
@@ -107,7 +107,7 @@ public class AdsRepository {
         .map((ad) -> adMapper.map(ad));
   }
 
-  public Observable<List<RoomMinimalAd>> getAdsFromHomepageMore(boolean refresh) {
+  public Observable<List<MinimalAd>> getAdsFromHomepageMore(boolean refresh) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -119,7 +119,7 @@ public class AdsRepository {
                 .observe(refresh))));
   }
 
-  private Observable<List<RoomMinimalAd>> mapToMinimalAds(
+  private Observable<List<MinimalAd>> mapToMinimalAds(
       Observable<GetAdsResponse> getAdsResponseObservable) {
     return getAdsResponseObservable.flatMap(ads -> {
       if (!validAds(ads)) {
@@ -129,7 +129,7 @@ public class AdsRepository {
     })
         .map((getAdsResponse) -> getAdsResponse.getAds())
         .map(ads -> {
-          List<RoomMinimalAd> minimalAds = new LinkedList<>();
+          List<MinimalAd> minimalAds = new LinkedList<>();
           for (GetAdsResponse.Ad ad : ads) {
             minimalAds.add(adMapper.map(ad));
           }
@@ -137,7 +137,7 @@ public class AdsRepository {
         });
   }
 
-  public Observable<List<RoomMinimalAd>> loadAdsFromAppviewSuggested(String packageName,
+  public Observable<List<MinimalAd>> loadAdsFromAppviewSuggested(String packageName,
       List<String> keywords) {
     return accountManager.accountStatus()
         .first()
@@ -150,7 +150,7 @@ public class AdsRepository {
                 .observe()).subscribeOn(Schedulers.io())));
   }
 
-  public Observable<RoomMinimalAd> getAdsFromSearch(String query) {
+  public Observable<MinimalAd> getAdsFromSearch(String query) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -162,7 +162,7 @@ public class AdsRepository {
                 .observe())));
   }
 
-  public Observable<RoomMinimalAd> getAdsFromSecondInstall(String packageName) {
+  public Observable<MinimalAd> getAdsFromSecondInstall(String packageName) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -174,7 +174,7 @@ public class AdsRepository {
                 .observe())));
   }
 
-  public Observable<RoomMinimalAd> getAdsFromSecondTry(String packageName) {
+  public Observable<MinimalAd> getAdsFromSecondTry(String packageName) {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -186,7 +186,7 @@ public class AdsRepository {
                 .observe())));
   }
 
-  public Observable<RoomMinimalAd> getAdForShortcut() {
+  public Observable<MinimalAd> getAdForShortcut() {
     return accountManager.accountStatus()
         .first()
         .flatMap(account -> idsRepository.getUniqueIdentifier()
@@ -199,7 +199,7 @@ public class AdsRepository {
                     .observe())));
   }
 
-  private Observable<RoomMinimalAd> mapRandomAd(
+  private Observable<MinimalAd> mapRandomAd(
       Observable<GetAdsResponse> getAdsResponseObservable) {
     Random rand = new Random();
     return getAdsResponseObservable.map((getAdsResponse) -> getAdsResponse.getAds())
