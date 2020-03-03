@@ -48,8 +48,8 @@ public class MyAccountNavigator {
   }
 
   public void navigateToEditStoreView(Store store, int requestCode) {
-    ManageStoreViewModel viewModel = new ManageStoreViewModel(store.getId(),
-        themeManager.getStoreTheme(store.getAppearance()
+    ManageStoreViewModel viewModel =
+        new ManageStoreViewModel(store.getId(), themeManager.getStoreTheme(store.getAppearance()
             .getTheme()), store.getName(), store.getAppearance()
         .getDescription(), store.getAvatar(), store.getSocialChannels());
     fragmentNavigator.navigateForResult(ManageStoreFragment.newInstance(viewModel, false),

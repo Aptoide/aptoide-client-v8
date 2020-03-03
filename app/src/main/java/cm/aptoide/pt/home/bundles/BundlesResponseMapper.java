@@ -84,7 +84,7 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           List<Application> applicationList = null;
           if (viewObject != null) {
-            applicationList = map(((ListAppCoinsCampaigns) viewObject).getList(), widgetTag);
+            applicationList = map(((ListAppCoinsCampaigns) viewObject).getDataList().getList(), widgetTag);
           }
           if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,

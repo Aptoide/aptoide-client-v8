@@ -3,12 +3,14 @@ package cm.aptoide.pt.repository.request;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
+import cm.aptoide.pt.dataprovider.model.v7.DataList;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppCoinsCampaignsRequest;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.install.InstallManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -20,13 +22,16 @@ import rx.Observable;
 
 public class RewardAppCoinsAppsRepository {
 
-  private static final int APPCOINS_REWARD_LIMIT = 30;
+  private static final int APPCOINS_REWARD_LIMIT = 10;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private InstallManager installManager;
+
+  private int total = 0;
+  private int next = 0;
 
   public RewardAppCoinsAppsRepository(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<BaseBody> bodyInterceptor, TokenInvalidator tokenInvalidator,
@@ -39,17 +44,28 @@ public class RewardAppCoinsAppsRepository {
     this.installManager = installManager;
   }
 
-  public Observable<List<RewardApp>> getAppCoinsRewardAppsFromHomeMore(boolean refresh,
-      String tag) {
+  public Observable<List<RewardApp>> getFreshAppCoinsRewardAppsFromHomeMore(String tag) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(0, APPCOINS_REWARD_LIMIT), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(refresh)
-        .flatMap(response -> map(response.getList(), tag));
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(true)
+        .flatMap(response -> map(response.getDataList(), tag));
   }
 
-  private Observable<List<RewardApp>> map(List<AppCoinsCampaign> list, String tag) {
+  public Observable<List<RewardApp>> getNextAppCoinsRewardAppsFromHomeMore(String tag) {
+    if (next >= total) {
+      return Observable.just(Collections.emptyList());
+    }
+    return new GetAppCoinsCampaignsRequest(
+        new GetAppCoinsCampaignsRequest.Body(next, APPCOINS_REWARD_LIMIT), httpClient,
+        converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences).observe(false)
+        .flatMap(response -> map(response.getDataList(), tag));
+  }
+
+  private Observable<List<RewardApp>> map(DataList<AppCoinsCampaign> list, String tag) {
+    this.total = list.getTotal();
+    this.next = list.getNext();
     List<RewardApp> rewardAppsList = new ArrayList<>();
-    for (AppCoinsCampaign campaign : list) {
+    for (AppCoinsCampaign campaign : list.getList()) {
       AppCoinsCampaign.CampaignApp app = campaign.getApp();
       if (!installManager.wasAppEverInstalled(app.getPackageName())) {
         rewardAppsList.add(new RewardApp(app.getName(), app.getIcon(), app.getStats()
