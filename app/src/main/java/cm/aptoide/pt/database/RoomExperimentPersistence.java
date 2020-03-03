@@ -30,13 +30,8 @@ public class RoomExperimentPersistence implements ExperimentPersistence {
   @Override public rx.Single<ExperimentModel> get(String identifier) {
     return RxJavaInterop.toV1Single(experimentDAO.get(identifier)
         .subscribeOn(Schedulers.io())
-        .flatMap(roomExperiment -> {
-          if (roomExperiment == null) {
-            return Single.just(new ExperimentModel(new Experiment(), true));
-          } else {
-            return Single.just(new ExperimentModel(mapper.map(roomExperiment), false));
-          }
-        }))
+        .flatMap(
+            roomExperiment -> Single.just(new ExperimentModel(mapper.map(roomExperiment), false))))
         .onErrorReturn(throwable -> new ExperimentModel(new Experiment(), true))
         .doOnError(Throwable::printStackTrace);
   }
