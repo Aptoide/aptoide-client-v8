@@ -1,6 +1,5 @@
 package cm.aptoide.pt.ads;
 
-import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.model.MinimalAdInterface;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;

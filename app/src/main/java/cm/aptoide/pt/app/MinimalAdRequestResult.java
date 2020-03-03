@@ -1,9 +1,9 @@
 package cm.aptoide.pt.app;
 
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.ads.data.ApplicationAdError;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
-import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.view.app.AppsList;
 
 /**

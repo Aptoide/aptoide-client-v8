@@ -2,13 +2,13 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;
@@ -149,8 +149,8 @@ public class AppViewManagerTest {
     keywords.add("key");
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1,
-            1, (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
+            (long) 1, false, -1, -1, "", "");
     MinimalAdRequestResult minimalAdRequestResult = new MinimalAdRequestResult(minimalAd);
     AppsList appsList = new AppsList(Collections.emptyList(), false, 0);
 
@@ -225,8 +225,8 @@ public class AppViewManagerTest {
             null, null);
 
     MinimalAd minimalAd =
-        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1,
-            1, (long) 1, false, -1, -1, "", "");
+        new MinimalAd("anyString", (long) 1, "", "", "", (long) 1, (long) 1, "", "", "", "", 1, 1,
+            (long) 1, false, -1, -1, "", "");
 
     appViewManager =
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,

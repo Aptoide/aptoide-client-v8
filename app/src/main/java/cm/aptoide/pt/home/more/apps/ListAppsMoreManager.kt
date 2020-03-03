@@ -1,8 +1,8 @@
 package cm.aptoide.pt.home.more.apps
 
 import cm.aptoide.pt.ads.AdsRepository
+import cm.aptoide.pt.ads.MinimalAd
 import cm.aptoide.pt.ads.data.AptoideNativeAd
-import cm.aptoide.pt.database.room.MinimalAd
 import cm.aptoide.pt.dataprovider.model.v7.ListApps
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
 import cm.aptoide.pt.view.app.Application

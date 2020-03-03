@@ -7,7 +7,7 @@ package cm.aptoide.pt.view.recycler.displayable;
 
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.room.MinimalAd;
+import cm.aptoide.pt.ads.MinimalAd;
 
 /**
  * Created by neuro on 20-06-2016.
@@ -20,8 +20,7 @@ public class GridAdDisplayable extends DisplayablePojo<MinimalAd> {
   public GridAdDisplayable() {
   }
 
-  public GridAdDisplayable(MinimalAd minimalAd, String tag,
-      NavigationTracker navigationTracker) {
+  public GridAdDisplayable(MinimalAd minimalAd, String tag, NavigationTracker navigationTracker) {
     super(minimalAd);
     this.tag = tag;
     this.navigationTracker = navigationTracker;

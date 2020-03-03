@@ -1,4 +1,4 @@
-package cm.aptoide.pt.database.room;
+package cm.aptoide.pt.ads;
 
 public class MinimalAd {
 

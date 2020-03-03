@@ -2,10 +2,9 @@ package cm.aptoide.pt.app;
 
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.AdsRepository;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.realm.MinimalAd;
-import cm.aptoide.pt.database.room.MinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.search.model.SearchAdResult;
