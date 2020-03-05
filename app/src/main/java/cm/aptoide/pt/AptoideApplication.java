@@ -298,8 +298,8 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
-        .andThen(setUpAdsUserProperty())
         .andThen(initializeSentry())
+        .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
@@ -360,7 +360,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable setUpAdsUserProperty() {
-    return adsUserPropertyManager.setUp();
+    return idsRepository.getUniqueIdentifier()
+        .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
+        .doOnCompleted(() -> Rakam.getInstance()
+            .enableForegroundTracking(this));
   }
 
   private Completable checkApkfyUserProperty() {
@@ -382,7 +385,7 @@ public abstract class AptoideApplication extends Application {
         () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
   }
 
-  private void initializeRakam(String id) {
+  private void initializeRakam() {
     RakamClient instance = Rakam.getInstance();
 
     try {
@@ -392,11 +395,9 @@ public abstract class AptoideApplication extends Application {
           .e(TAG, "error: ", e);
     }
     instance.setDeviceId(idsRepository.getAndroidId());
-    instance.enableForegroundTracking(this);
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-    instance.setUserId(id);
   }
 
   public void initializeMoPub() {
@@ -666,8 +667,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeRakamSdk() {
-    return idsRepository.getUniqueIdentifier()
-        .flatMapCompletable(id -> Completable.fromAction(() -> initializeRakam(id)))
+    return Completable.fromAction(() -> initializeRakam())
         .subscribeOn(Schedulers.newThread());
   }
 
