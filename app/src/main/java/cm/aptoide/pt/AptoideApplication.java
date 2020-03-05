@@ -31,10 +31,10 @@ import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -149,6 +149,8 @@ public abstract class AptoideApplication extends Application {
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
   private static boolean autoUpdateWasCalled = false;
+  @Inject AptoideDatabase aptoideDatabase;
+  @Inject RoomNotificationPersistence notificationPersistence;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
@@ -195,7 +197,6 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
-  @Inject AptoideDatabase aptoideDatabase;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -489,10 +490,9 @@ public abstract class AptoideApplication extends Application {
 
   private NotificationsCleaner getNotificationCleaner() {
     if (notificationsCleaner == null) {
-      notificationsCleaner =
-          new NotificationsCleaner(AccessorFactory.getAccessorFor(database, Notification.class),
-              Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
-              getNotificationProvider(), CrashReport.getInstance());
+      notificationsCleaner = new NotificationsCleaner(notificationPersistence,
+          Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
+          getNotificationProvider(), CrashReport.getInstance());
     }
     return notificationsCleaner;
   }
@@ -541,9 +541,8 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationProvider getNotificationProvider() {
     if (notificationProvider == null) {
-      notificationProvider =
-          new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
-              Schedulers.io());
+      notificationProvider = new NotificationProvider(
+          new RoomNotificationPersistence(aptoideDatabase.notificationDao()), Schedulers.io());
     }
     return notificationProvider;
   }

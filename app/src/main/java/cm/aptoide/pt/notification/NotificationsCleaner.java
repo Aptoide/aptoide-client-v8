@@ -2,8 +2,8 @@ package cm.aptoide.pt.notification;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.realm.Notification;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
+import cm.aptoide.pt.database.room.RoomNotification;
 import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,16 +21,16 @@ public class NotificationsCleaner {
   public static final int MAX_NUMBER_NOTIFICATIONS_SAVED = 50;
 
   private final Calendar calendar;
-  private final NotificationAccessor notificationAccessor;
+  private final RoomNotificationPersistence roomNotificationPersistence;
   private final CompositeSubscription subscriptions;
   private AptoideAccountManager accountManager;
   private NotificationProvider notificationProvider;
   private CrashReport crashReport;
 
-  public NotificationsCleaner(NotificationAccessor notificationAccessor, Calendar calendar,
-      AptoideAccountManager accountManager, NotificationProvider notificationProvider,
-      CrashReport crashReport) {
-    this.notificationAccessor = notificationAccessor;
+  public NotificationsCleaner(RoomNotificationPersistence roomNotificationPersistence,
+      Calendar calendar, AptoideAccountManager accountManager,
+      NotificationProvider notificationProvider, CrashReport crashReport) {
+    this.roomNotificationPersistence = roomNotificationPersistence;
     this.calendar = calendar;
     this.accountManager = accountManager;
     this.notificationProvider = notificationProvider;
@@ -57,7 +57,7 @@ public class NotificationsCleaner {
     idsList.add(id);
     //where there is no login the account and the id is "" and those notifications should't be removed
     idsList.add("");
-    return notificationAccessor.deleteAllExcluding(idsList);
+    return roomNotificationPersistence.deleteAllExcluding(idsList);
   }
 
   public Completable cleanLimitExceededNotifications(int limit) {
@@ -65,7 +65,7 @@ public class NotificationsCleaner {
   }
 
   private Completable removeExpiredNotifications() {
-    return Observable.defer(() -> notificationAccessor.getAllSorted(Sort.DESCENDING))
+    return Observable.defer(() -> roomNotificationPersistence.getAllSorted(Sort.DESCENDING))
         .first()
         .flatMapIterable(notifications -> notifications)
         .flatMap(notification -> {
@@ -80,7 +80,7 @@ public class NotificationsCleaner {
         .toCompletable();
   }
 
-  private boolean isNotificationExpired(Notification notification) {
+  private boolean isNotificationExpired(RoomNotification notification) {
     Long expire = notification.getExpire();
     if (expire != null) {
       long now = calendar.getTimeInMillis();
@@ -90,7 +90,7 @@ public class NotificationsCleaner {
   }
 
   private Completable removeExceededLimitNotifications(int limit) {
-    return Observable.defer(() -> notificationAccessor.getAllSorted(Sort.DESCENDING))
+    return Observable.defer(() -> roomNotificationPersistence.getAllSorted(Sort.DESCENDING))
         .first()
         .flatMapCompletable(notifications -> {
           if (notifications.size() > limit) {
@@ -102,13 +102,13 @@ public class NotificationsCleaner {
         .toCompletable();
   }
 
-  private Completable removeNotifications(List<Notification> notifications) {
+  private Completable removeNotifications(List<RoomNotification> notifications) {
     return Observable.from(notifications)
         .map(notification -> notification.getKey())
         .toList()
         .filter(list -> !list.isEmpty())
         .flatMapCompletable(
-            keys -> notificationAccessor.delete(keys.toArray(new String[keys.size()])))
+            keys -> roomNotificationPersistence.delete(keys.toArray(new String[keys.size()])))
         .toCompletable();
   }
 }

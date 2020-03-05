@@ -115,17 +115,16 @@ import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
 import cm.aptoide.pt.database.RoomExperimentPersistence;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
 import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -845,8 +844,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
   }
 
-  @Singleton @Provides NotificationAccessor provideNotificationAccessor(Database database) {
-    return new NotificationAccessor(database);
+  @Singleton @Provides RoomNotificationPersistence provideRoomNotificationPersistence(
+      AptoideDatabase database) {
+    return new RoomNotificationPersistence(database.notificationDao());
   }
 
   @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
@@ -1943,9 +1943,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PackageInstallerManager();
   }
 
-  @Singleton @Provides NotificationProvider providesNotificationProvider(Database database) {
-    return new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
-        Schedulers.io());
+  @Singleton @Provides NotificationProvider provideNotificationProvider(
+      RoomNotificationPersistence notificationPersistence) {
+    return new NotificationProvider(notificationPersistence, Schedulers.io());
   }
 
   @Singleton @Provides
