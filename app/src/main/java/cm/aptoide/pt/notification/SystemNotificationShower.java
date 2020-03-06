@@ -371,7 +371,7 @@ public class SystemNotificationShower implements Presenter {
             .map(notification -> notificationInfo))
         .flatMapCompletable(notificationInfo -> {
           callDeepLink(context, notificationInfo);
-         return dismissNotificationAfterAction(notificationInfo.getNotificationType());
+          return dismissNotificationAfterAction(notificationInfo.getNotificationType());
         })
         .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
             notificationInfo.getNotificationType())[0].equals(AptoideNotification.APPC_PROMOTION))
