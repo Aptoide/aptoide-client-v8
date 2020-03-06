@@ -22,7 +22,8 @@ import rx.Observable;
 
 public class RewardAppCoinsAppsRepository {
 
-  private static final int APPCOINS_REWARD_LIMIT = 10;
+  private static final int APPCOINS_REWARD_LIMIT = 50;
+  
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private BodyInterceptor<BaseBody> bodyInterceptor;
