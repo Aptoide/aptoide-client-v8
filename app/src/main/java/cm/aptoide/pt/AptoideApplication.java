@@ -147,7 +147,6 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static boolean autoUpdateWasCalled = false;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
