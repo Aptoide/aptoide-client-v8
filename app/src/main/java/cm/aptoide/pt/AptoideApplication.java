@@ -36,7 +36,6 @@ import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Notification;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -195,13 +194,12 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
-  @Inject AptoideDatabase aptoideDatabase;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private Map<Integer, Result> fragmentResulMap;
+  private Map<Integer, Result> fragmentResultMap;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -843,11 +841,11 @@ public abstract class AptoideApplication extends Application {
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
-    if (fragmentResulMap == null) {
-      fragmentResulMap = new HashMap<>();
+  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResultMap() {
+    if (fragmentResultMap == null) {
+      fragmentResultMap = new HashMap<>();
     }
-    return fragmentResulMap;
+    return fragmentResultMap;
   }
 
   public NavigationTracker getNavigationTracker() {
@@ -919,10 +917,6 @@ public abstract class AptoideApplication extends Application {
 
   public SettingsManager getSettingsManager() {
     return settingsManager;
-  }
-
-  public AptoideDatabase getAptoideDatabase() {
-    return aptoideDatabase;
   }
 }
 
