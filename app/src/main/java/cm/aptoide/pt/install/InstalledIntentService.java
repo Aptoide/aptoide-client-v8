@@ -6,35 +6,27 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import androidx.annotation.NonNull;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
 import cm.aptoide.pt.utils.AptoideUtils;
-import cm.aptoide.pt.utils.q.QManager;
 import javax.inject.Inject;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
 import rx.Completable;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class InstalledIntentService extends IntentService {
@@ -43,15 +35,12 @@ public class InstalledIntentService extends IntentService {
   @Inject InstallAnalytics installAnalytics;
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
+  @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
   private SharedPreferences sharedPreferences;
-  private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
-  private OkHttpClient httpClient;
-  private Converter.Factory converterFactory;
   private InstallManager installManager;
   private RootAvailabilityManager rootAvailabilityManager;
-  private QManager qManager;
   private MinimalAdMapper adMapper;
   private PackageManager packageManager;
 
@@ -66,12 +55,9 @@ public class InstalledIntentService extends IntentService {
     adMapper = new MinimalAdMapper();
     sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
-    qManager = ((AptoideApplication) getApplicationContext()).getQManager();
-    httpClient = ((AptoideApplication) getApplicationContext()).getDefaultClient();
-    converterFactory = WebService.getDefaultConverter();
+
     final SharedPreferences sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
-    adsRepository = ((AptoideApplication) getApplicationContext()).getAdsRepository();
     updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
     installManager = ((AptoideApplication) getApplicationContext()).getInstallManager();
@@ -148,15 +134,12 @@ public class InstalledIntentService extends IntentService {
   }
 
   private void checkAndBroadcastReferrer(String packageName) {
-    StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getApplicationContext().getApplicationContext()).getDatabase(),
-        StoredMinimalAd.class);
-    Subscription unManagedSubscription = storedMinimalAdAccessor.get(packageName)
-        .flatMapCompletable(storeMinimalAd -> {
-          if (storeMinimalAd != null) {
-            return knockCpi(packageName, storedMinimalAdAccessor, storeMinimalAd);
+    Subscription unManagedSubscription = roomStoredMinimalAdPersistence.get(packageName)
+        .observeOn(Schedulers.io())
+        .flatMapCompletable(storedMinimalAd -> {
+          if (storedMinimalAd != null) {
+            return knockCpi(packageName, roomStoredMinimalAdPersistence, storedMinimalAd);
           } else {
-            //return extractReferrer(packageName);
             return null;
           }
         })
@@ -239,24 +222,16 @@ public class InstalledIntentService extends IntentService {
     }
   }
 
-  private Completable knockCpi(String packageName, StoredMinimalAdAccessor storedMinimalAdAccessor,
-      StoredMinimalAd storeMinimalAd) {
+  private Completable knockCpi(String packageName,
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence,
+      RoomStoredMinimalAd storedMinimalAd) {
     return Completable.fromCallable(() -> {
-      ReferrerUtils.broadcastReferrer(packageName, storeMinimalAd.getReferrer(),
+      ReferrerUtils.broadcastReferrer(packageName, storedMinimalAd.getReferrer(),
           getApplicationContext());
-      AdNetworkUtils.knockCpi(adMapper.map(storeMinimalAd));
-      storedMinimalAdAccessor.remove(storeMinimalAd);
+      AdNetworkUtils.knockCpi(adMapper.map(storedMinimalAd));
+      roomStoredMinimalAdPersistence.remove(storedMinimalAd);
       return null;
     });
-  }
-
-  @NonNull private Completable extractReferrer(String packageName) {
-    return adsRepository.getAdsFromSecondInstall(packageName)
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnNext(minimalAd -> ReferrerUtils.extractReferrer(new SearchAdResult(minimalAd),
-            ReferrerUtils.RETRIES, true, adsRepository, httpClient, converterFactory, qManager,
-            getApplicationContext(), sharedPreferences, new MinimalAdMapper()))
-        .toCompletable();
   }
 
   private void sendCampaignConversion(String packageName, PackageInfo packageInfo) {

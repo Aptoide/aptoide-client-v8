@@ -7,7 +7,7 @@ package cm.aptoide.pt.view.recycler.displayable;
 
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.ads.MinimalAd;
 
 /**
  * Created by neuro on 20-06-2016.

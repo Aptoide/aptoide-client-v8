@@ -147,7 +147,6 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static boolean autoUpdateWasCalled = false;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
@@ -199,7 +198,7 @@ public abstract class AptoideApplication extends Application {
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private Map<Integer, Result> fragmentResulMap;
+  private Map<Integer, Result> fragmentResultMap;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -841,11 +840,11 @@ public abstract class AptoideApplication extends Application {
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
-    if (fragmentResulMap == null) {
-      fragmentResulMap = new HashMap<>();
+  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResultMap() {
+    if (fragmentResultMap == null) {
+      fragmentResultMap = new HashMap<>();
     }
-    return fragmentResulMap;
+    return fragmentResultMap;
   }
 
   public NavigationTracker getNavigationTracker() {

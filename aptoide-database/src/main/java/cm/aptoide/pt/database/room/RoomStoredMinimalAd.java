@@ -1,32 +1,21 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-/**
- * Created by neuro on 28-07-2016.
- */
-public class StoredMinimalAd extends RealmObject {
+@Entity(tableName = "storedMinimalAd") public class RoomStoredMinimalAd {
 
-  public static final String PACKAGE_NAME = "packageName";
-  public static final String REFERRER = "referrer";
-  public static final String CPI_URL = "cpiUrl";
-
-  @PrimaryKey @Required private String packageName;
+  @NonNull @PrimaryKey private String packageName;
   private String referrer;
   private String cpcUrl;
   private String cpdUrl;
   private String cpiUrl;
   private Long timestamp;
-
   private Long adId;
 
-  public StoredMinimalAd() {
-  }
-
-  public StoredMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl,
-      String cpiUrl, long adId) {
+  public RoomStoredMinimalAd(String packageName, String referrer, String cpcUrl, String cpdUrl,
+      String cpiUrl, Long adId) {
     this.packageName = packageName;
     this.referrer = referrer;
     this.cpcUrl = cpcUrl;
@@ -56,6 +45,10 @@ public class StoredMinimalAd extends RealmObject {
     return cpcUrl;
   }
 
+  public void setCpcUrl(String cpcUrl) {
+    this.cpcUrl = cpcUrl;
+  }
+
   public String getCpdUrl() {
     return cpdUrl;
   }
@@ -72,19 +65,19 @@ public class StoredMinimalAd extends RealmObject {
     this.cpiUrl = cpiUrl;
   }
 
-  public long getTimestamp() {
+  public Long getTimestamp() {
     return timestamp;
   }
 
-  public void setTimestamp(long timestamp) {
+  public void setTimestamp(Long timestamp) {
     this.timestamp = timestamp;
   }
 
-  public long getAdId() {
+  public Long getAdId() {
     return adId;
   }
 
-  public void setAdId(long adId) {
+  public void setAdId(Long adId) {
     this.adId = adId;
   }
 }
