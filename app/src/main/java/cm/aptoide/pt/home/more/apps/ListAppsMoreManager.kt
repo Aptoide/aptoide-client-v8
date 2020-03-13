@@ -11,7 +11,6 @@ import rx.Observable
 class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
                           val adsRepository: AdsRepository) {
 
-  private var offset = 0
   private var total = 0
   private var next = 0
 
@@ -23,7 +22,7 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
   }
 
   fun loadMoreApps(url: String?, refresh: Boolean, type: String?): Observable<List<Application>> {
-    return if (type.equals("getAds") || offset >= total)
+    return if (type.equals("getAds") || next >= total)
       Observable.just(null)
     else {
       listAppsMoreRepository.loadMoreApps(url, refresh, next)
@@ -34,7 +33,6 @@ class ListAppsMoreManager(val listAppsMoreRepository: ListAppsMoreRepository,
   private fun mapResponse(listApps: ListApps): List<Application> {
     val result = ArrayList<Application>()
     total = listApps.dataList.total
-    offset = listApps.dataList.offset
     next = listApps.dataList.next
     for (app: App in listApps.dataList.list) {
       result.add(Application(app.name, app.icon, app.stats.rating.avg, app.stats.downloads,

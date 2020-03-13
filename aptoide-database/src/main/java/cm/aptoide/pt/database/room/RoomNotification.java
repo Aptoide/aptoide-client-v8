@@ -54,16 +54,8 @@ import androidx.room.PrimaryKey;
     key = String.valueOf(timeStamp + type);
   }
 
-  public RoomNotification() {
-    expire = 0L;
-  }
-
   public Long getExpire() {
     return expire;
-  }
-
-  public void setExpire(Long expire) {
-    this.expire = expire;
   }
 
   public String getAppName() {
@@ -98,10 +90,6 @@ import androidx.room.PrimaryKey;
     return abTestingGroup;
   }
 
-  public void setAbTestingGroup(String abTestingGroup) {
-    this.abTestingGroup = abTestingGroup;
-  }
-
   public String getBody() {
     return body;
   }
@@ -120,10 +108,6 @@ import androidx.room.PrimaryKey;
 
   public String getImg() {
     return img;
-  }
-
-  public void setImg(String img) {
-    this.img = img;
   }
 
   public String getLang() {
@@ -154,24 +138,12 @@ import androidx.room.PrimaryKey;
     return urlTrack;
   }
 
-  public void setUrlTrack(String urlTrack) {
-    this.urlTrack = urlTrack;
-  }
-
   public long getTimeStamp() {
     return timeStamp;
   }
 
-  public void setTimeStamp(long timeStamp) {
-    this.timeStamp = timeStamp;
-  }
-
   public String getOwnerId() {
     return ownerId;
-  }
-
-  public void setOwnerId(String ownerId) {
-    this.ownerId = ownerId;
   }
 
   public String getKey() {
@@ -194,23 +166,11 @@ import androidx.room.PrimaryKey;
     return notificationCenterUrlTrack;
   }
 
-  public void setNotificationCenterUrlTrack(String notificationCenterUrlTrack) {
-    this.notificationCenterUrlTrack = notificationCenterUrlTrack;
-  }
-
   public boolean isProcessed() {
     return processed;
   }
 
-  public void setProcessed(boolean processed) {
-    this.processed = processed;
-  }
-
   public int getActionStringRes() {
     return actionStringRes;
-  }
-
-  public void setActionStringRes(int actionStringRes) {
-    this.actionStringRes = actionStringRes;
   }
 }

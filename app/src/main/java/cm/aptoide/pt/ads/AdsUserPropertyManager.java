@@ -38,13 +38,16 @@ public class AdsUserPropertyManager {
         }, error -> crashReport.log(error));
   }
 
-  public Completable setUp() {
+  public Completable setUp(String id) {
     return installedRepository.isInstalled(WALLET_PACKAGE)
         .first()
         .observeOn(ioScheduler)
         .distinctUntilChanged()
         .flatMapSingle(__ -> moPubAdsManager.getAdsVisibilityStatus())
-        .doOnNext(moPubAnalytics::setAdsVisibilityUserProperty)
+        .doOnNext(offerResponseStatus -> {
+          moPubAnalytics.setAdsVisibilityUserProperty(offerResponseStatus);
+          moPubAnalytics.setRakamUserId(id);
+        })
         .toCompletable();
   }
 }
