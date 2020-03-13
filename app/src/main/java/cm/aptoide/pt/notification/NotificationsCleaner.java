@@ -107,8 +107,7 @@ public class NotificationsCleaner {
         .map(notification -> notification.getKey())
         .toList()
         .filter(list -> !list.isEmpty())
-        .flatMapCompletable(
-            keys -> roomNotificationPersistence.delete(keys.toArray(new String[keys.size()])))
+        .flatMapCompletable(keys -> roomNotificationPersistence.delete(keys))
         .toCompletable();
   }
 }

@@ -53,7 +53,7 @@ public class RoomNotificationPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Completable delete(String[] keys) {
+  public Completable delete(List<String> keys) {
     return Completable.fromAction(() -> notificationDao.deleteByKey(keys))
         .subscribeOn(Schedulers.io());
   }

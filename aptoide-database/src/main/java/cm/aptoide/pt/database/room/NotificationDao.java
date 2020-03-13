@@ -26,7 +26,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Query("DELETE FROM notification where ownerId NOT IN (:ids) ") void deleteAllExcluding(
       List<String> ids);
 
-  @Query("DELETE FROM notification where `key` IN (:keys) ") void deleteByKey(String[] keys);
+  @Query("DELETE FROM notification where `key` IN (:keys) ") void deleteByKey(List<String> keys);
 
   @Query("DELETE FROM notification where type = :type") void deleteAllByType(int type);
 
