@@ -11,8 +11,8 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Insert(onConflict = REPLACE) void save(RoomLocalNotificationSync roomLocalNotificationSync);
 
-  @Query("SELECT * FROM localNotificationSync WHERE notificationId = :identifier")
-  Observable<RoomLocalNotificationSync> get(String identifier);
+  @Query("SELECT * FROM localNotificationSync WHERE notificationId = :id")
+  Observable<RoomLocalNotificationSync> get(String id);
 
   @Query("DELETE FROM localNotificationSync WHERE notificationId = :id") void delete(String id);
 }
