@@ -5,7 +5,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.room.RoomNotification;
-import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,7 +50,7 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(roomNotificationPersistence.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 0);
@@ -81,7 +80,7 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(2, roomNotificationPersistence.getAllSorted(null)
+    assertEquals(2, roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size());
@@ -107,20 +106,19 @@ public class NotificationsCleanerTest {
             getNotificationProvider(), CrashReport.getInstance());
 
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
-    List<RoomNotification> notificationList =
-        roomNotificationPersistence.getAllSorted(Sort.DESCENDING)
-            .toBlocking()
-            .first();
+    List<RoomNotification> notificationList = roomNotificationPersistence.getAllSortedDesc()
+        .toBlocking()
+        .first();
     notificationsCleaner.cleanLimitExceededNotifications(1)
         .subscribe(objectTestSubscriber);
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(roomNotificationPersistence.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 1);
-    assertEquals(roomNotificationPersistence.getAllSorted(Sort.DESCENDING)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .get(0)
@@ -147,20 +145,19 @@ public class NotificationsCleanerTest {
             Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
             getNotificationProvider(), CrashReport.getInstance());
 
-    List<RoomNotification> notificationList =
-        roomNotificationPersistence.getAllSorted(Sort.DESCENDING)
-            .toBlocking()
-            .first();
+    List<RoomNotification> notificationList = roomNotificationPersistence.getAllSortedDesc()
+        .toBlocking()
+        .first();
     notificationsCleaner.cleanLimitExceededNotifications(1)
         .subscribe(objectTestSubscriber);
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(roomNotificationPersistence.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 1);
-    assertEquals(roomNotificationPersistence.getAllSorted(Sort.DESCENDING)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .get(0)
@@ -190,7 +187,7 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(roomNotificationPersistence.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 3);
@@ -219,7 +216,7 @@ public class NotificationsCleanerTest {
       this.list = list;
     }
 
-    @Override public Observable<List<RoomNotification>> getAllSorted(Sort sort) {
+    @Override public Observable<List<RoomNotification>> getAllSortedDesc() {
       ArrayList<RoomNotification> value = new ArrayList<>(list.values());
       Collections.sort(value, (notification, t1) -> t1.getKey()
           .compareTo(notification.getKey()));
@@ -238,7 +235,7 @@ public class NotificationsCleanerTest {
           .toCompletable();
     }
 
-    @Override public Completable delete(String[] keys) {
+    @Override public Completable delete(List<String> keys) {
       return Completable.fromAction(() -> {
         for (String key : keys) {
           list.remove(key);
