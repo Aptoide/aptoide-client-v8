@@ -9,8 +9,9 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
 /**
  * Database holder that contains the list of entities (tables) associated with the database.
  */
-@Database(entities = { RoomEvent.class, RoomExperiment.class }, version = VERSION)
-public abstract class AptoideDatabase extends RoomDatabase {
+@Database(entities = {
+    RoomEvent.class, RoomExperiment.class, RoomStoredMinimalAd.class
+}, version = VERSION) public abstract class AptoideDatabase extends RoomDatabase {
 
   /**
    * Database Schema version
@@ -20,4 +21,6 @@ public abstract class AptoideDatabase extends RoomDatabase {
   public abstract EventDAO eventDAO();
 
   public abstract ExperimentDAO experimentDAO();
+
+  public abstract StoredMinimalAdDAO storeMinimalAdDAO();
 }

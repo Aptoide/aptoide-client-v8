@@ -7,11 +7,11 @@ package cm.aptoide.pt.download;
 
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -34,16 +34,16 @@ public class DownloadInstallationProvider implements InstallationProvider {
   private final DownloadAccessor downloadAccessor;
   private final MinimalAdMapper adMapper;
   private final InstalledRepository installedRepository;
-  private final StoredMinimalAdAccessor storedMinimalAdAccessor;
+  private final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
       DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
-      MinimalAdMapper adMapper, StoredMinimalAdAccessor storeMinimalAdAccessor) {
+      MinimalAdMapper adMapper, RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     this.downloadManager = downloadManager;
     this.downloadAccessor = downloadAccessor;
     this.adMapper = adMapper;
-    this.storedMinimalAdAccessor = storeMinimalAdAccessor;
     this.installedRepository = installedRepository;
+    this.roomStoredMinimalAdPersistence = roomStoredMinimalAdPersistence;
   }
 
   @Override public Observable<Installation> getInstallation(String md5) {
@@ -62,7 +62,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
                       installedRepository, installed);
                 })
                 .doOnNext(downloadInstallationAdapter -> {
-                  storedMinimalAdAccessor.get(downloadInstallationAdapter.getPackageName())
+                  roomStoredMinimalAdPersistence.get(downloadInstallationAdapter.getPackageName())
                       .doOnNext(handleCpd())
                       .subscribeOn(Schedulers.io())
                       .subscribe(storedMinimalAd -> {
@@ -88,12 +88,12 @@ public class DownloadInstallationProvider implements InstallationProvider {
     return installed;
   }
 
-  @NonNull private Action1<StoredMinimalAd> handleCpd() {
+  @NonNull private Action1<RoomStoredMinimalAd> handleCpd() {
     return storedMinimalAd -> {
       if (storedMinimalAd != null && storedMinimalAd.getCpdUrl() != null) {
         AdNetworkUtils.knockCpd(adMapper.map(storedMinimalAd));
         storedMinimalAd.setCpdUrl(null);
-        storedMinimalAdAccessor.insert(storedMinimalAd);
+        roomStoredMinimalAdPersistence.insert(storedMinimalAd);
       }
     };
   }
