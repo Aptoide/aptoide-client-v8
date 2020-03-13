@@ -11,19 +11,19 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao public interface NotificationDao {
 
-  @Query("SELECT * from NOTIFICATION where type IN (:notificationType) AND dismissed BETWEEN :startingTime AND :endTime ")
+  @Query("SELECT * from notification where type IN (:notificationType) AND dismissed BETWEEN :startingTime AND :endTime ")
   Single<List<RoomNotification>> getDismissed(Integer[] notificationType, long startingTime,
       long endTime);
 
-  @Query("SELECT * from NOTIFICATION where type IN (:notificationType) ORDER BY timeStamp DESC")
+  @Query("SELECT * from notification where type IN (:notificationType) ORDER BY timeStamp DESC")
   Single<List<RoomNotification>> getAllSortedDescByType(Integer[] notificationType);
 
-  @Query("SELECT * from NOTIFICATION ORDER BY timeStamp DESC")
+  @Query("SELECT * from notification ORDER BY timeStamp DESC")
   Observable<List<RoomNotification>> getAllSortedDesc();
 
   @Query("SELECT * FROM notification") Observable<List<RoomNotification>> getAll();
 
-  @Query("DELETE FROM NOTIFICATION where ownerId NOT IN (:ids) ") void deleteAllExcluding(
+  @Query("DELETE FROM notification where ownerId NOT IN (:ids) ") void deleteAllExcluding(
       List<String> ids);
 
   @Query("DELETE FROM notification where `key` IN (:keys) ") void deleteByKey(String[] keys);
