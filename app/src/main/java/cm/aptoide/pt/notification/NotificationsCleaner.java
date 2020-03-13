@@ -4,7 +4,6 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.room.RoomNotification;
-import io.realm.Sort;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -65,7 +64,7 @@ public class NotificationsCleaner {
   }
 
   private Completable removeExpiredNotifications() {
-    return Observable.defer(() -> roomNotificationPersistence.getAllSorted(Sort.DESCENDING))
+    return Observable.defer(() -> roomNotificationPersistence.getAllSortedDesc())
         .first()
         .flatMapIterable(notifications -> notifications)
         .flatMap(notification -> {
@@ -90,7 +89,7 @@ public class NotificationsCleaner {
   }
 
   private Completable removeExceededLimitNotifications(int limit) {
-    return Observable.defer(() -> roomNotificationPersistence.getAllSorted(Sort.DESCENDING))
+    return Observable.defer(() -> roomNotificationPersistence.getAllSortedDesc())
         .first()
         .flatMapCompletable(notifications -> {
           if (notifications.size() > limit) {

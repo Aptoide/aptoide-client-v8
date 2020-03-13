@@ -3,7 +3,6 @@ package cm.aptoide.pt.notification;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.room.RoomNotification;
-import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -67,7 +66,7 @@ public class NotificationProvider {
   }
 
   public Observable<List<AptoideNotification>> getNotifications(int entries) {
-    return roomNotificationPersistence.getAllSorted(Sort.DESCENDING)
+    return roomNotificationPersistence.getAllSortedDesc()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
             .take(entries)

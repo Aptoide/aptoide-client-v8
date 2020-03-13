@@ -4,7 +4,6 @@ import cm.aptoide.pt.database.room.NotificationDao;
 import cm.aptoide.pt.database.room.RoomNotification;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.BackpressureStrategy;
-import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -26,13 +25,13 @@ public class RoomNotificationPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Single<List<RoomNotification>> getAllSorted(Integer[] notificationType) {
+  public Single<List<RoomNotification>> getAllSortedDescByType(Integer[] notificationType) {
     return RxJavaInterop.toV1Single(notificationDao.getAllSortedDescByType(notificationType))
         .subscribeOn(Schedulers.io());
   }
 
   public Single<RoomNotification> getLastShowed(Integer[] notificationType) {
-    return getAllSorted(notificationType).flatMap(notifications -> {
+    return getAllSortedDescByType(notificationType).flatMap(notifications -> {
       for (RoomNotification notification : notifications) {
         if (!notification.isDismissed()) {
           return Single.just(notification);
@@ -42,7 +41,7 @@ public class RoomNotificationPersistence {
     });
   }
 
-  public Observable<List<RoomNotification>> getAllSorted(Sort sort) {
+  public Observable<List<RoomNotification>> getAllSortedDesc() {
     return RxJavaInterop.toV1Observable(notificationDao.getAllSortedDesc(),
         BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
