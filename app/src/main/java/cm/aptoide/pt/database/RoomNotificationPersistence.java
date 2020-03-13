@@ -26,13 +26,13 @@ public class RoomNotificationPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Single<List<RoomNotification>> getAllSorted(Sort sortOrder, Integer[] notificationType) {
+  public Single<List<RoomNotification>> getAllSorted(Integer[] notificationType) {
     return RxJavaInterop.toV1Single(notificationDao.getAllSortedDescByType(notificationType))
         .subscribeOn(Schedulers.io());
   }
 
   public Single<RoomNotification> getLastShowed(Integer[] notificationType) {
-    return getAllSorted(Sort.DESCENDING, notificationType).map(notifications -> {
+    return getAllSorted(notificationType).map(notifications -> {
       for (RoomNotification notification : notifications) {
         if (!notification.isDismissed()) {
           return notification;
