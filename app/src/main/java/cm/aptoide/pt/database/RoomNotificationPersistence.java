@@ -32,13 +32,13 @@ public class RoomNotificationPersistence {
   }
 
   public Single<RoomNotification> getLastShowed(Integer[] notificationType) {
-    return getAllSorted(notificationType).map(notifications -> {
+    return getAllSorted(notificationType).flatMap(notifications -> {
       for (RoomNotification notification : notifications) {
         if (!notification.isDismissed()) {
-          return notification;
+          return Single.just(notification);
         }
       }
-      return null;
+      return Single.just(null);
     });
   }
 
