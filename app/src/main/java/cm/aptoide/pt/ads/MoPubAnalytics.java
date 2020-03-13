@@ -37,6 +37,13 @@ public class MoPubAnalytics {
     UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, adsStatusByRakamValue);
   }
 
+  void setRakamUserId(String id) {
+    Rakam.getInstance()
+        .setUserId(id);
+    Logger.getInstance()
+        .d("RAKAM", "set user");
+  }
+
   private String mapAdsVisibilityToRakamValues(WalletAdsOfferManager.OfferResponseStatus status) {
     switch (status) {
       case NO_ADS:

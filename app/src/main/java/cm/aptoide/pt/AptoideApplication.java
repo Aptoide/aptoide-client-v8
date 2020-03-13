@@ -116,6 +116,8 @@ import com.mopub.nativeads.InneractiveAdapterConfiguration;
 import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
+import io.sentry.Sentry;
+import io.sentry.android.AndroidSentryClientFactory;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -294,6 +296,7 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
+        .andThen(initializeSentry())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
@@ -345,7 +348,10 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable setUpAdsUserProperty() {
-    return adsUserPropertyManager.setUp();
+    return idsRepository.getUniqueIdentifier()
+        .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
+        .doOnCompleted(() -> Rakam.getInstance()
+            .enableForegroundTracking(this));
   }
 
   private Completable checkApkfyUserProperty() {
@@ -362,7 +368,12 @@ public abstract class AptoideApplication extends Application {
     return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
   }
 
-  private void initializeRakam(String id) {
+  private Completable initializeSentry() {
+    return Completable.fromAction(
+        () -> Sentry.init(BuildConfig.SENTRY_DSN_KEY, new AndroidSentryClientFactory(this)));
+  }
+
+  private void initializeRakam() {
     RakamClient instance = Rakam.getInstance();
 
     try {
@@ -372,11 +383,9 @@ public abstract class AptoideApplication extends Application {
           .e(TAG, "error: ", e);
     }
     instance.setDeviceId(idsRepository.getAndroidId());
-    instance.enableForegroundTracking(this);
     instance.trackSessionEvents(true);
     instance.setLogLevel(Log.VERBOSE);
     instance.setEventUploadPeriodMillis(1);
-    instance.setUserId(id);
   }
 
   public void initializeMoPub() {
@@ -646,8 +655,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable initializeRakamSdk() {
-    return idsRepository.getUniqueIdentifier()
-        .flatMapCompletable(id -> Completable.fromAction(() -> initializeRakam(id)))
+    return Completable.fromAction(() -> initializeRakam())
         .subscribeOn(Schedulers.newThread());
   }
 

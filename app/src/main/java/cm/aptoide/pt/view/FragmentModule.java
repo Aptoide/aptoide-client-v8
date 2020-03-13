@@ -633,4 +633,13 @@ import rx.subscriptions.CompositeSubscription;
     return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, newFeatureManager,
         themeManager, themeAnalytics);
   }
+
+  @FragmentScope @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
+      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
+      InstallManager installManager) {
+    return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
+  }
 }
