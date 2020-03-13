@@ -53,7 +53,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   public static void extractReferrer(SearchAdResult searchAdResult, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
       final Converter.Factory converterFactory, final QManager qManager, Context context,
-      final SharedPreferences sharedPreferences, MinimalAdMapper adMapper) {
+      final SharedPreferences sharedPreferences, MinimalAdMapper adMapper,
+      final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     String packageName = searchAdResult.getPackageName();
     long networkId = searchAdResult.getNetworkId();
     String clickUrl = searchAdResult.getClickUrl();
@@ -139,11 +140,6 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer, context);
               } else {
-                RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence =
-                    new RoomStoredMinimalAdPersistence(
-                        ((AptoideApplication) context.getApplicationContext()).getAptoideDatabase()
-                            .storeMinimalAdDAO());
-
                 Completable.fromAction(() -> roomStoredMinimalAdPersistence.insert(
                     adMapper.map(searchAdResult, referrer)))
                     .subscribeOn(Schedulers.io())
@@ -222,7 +218,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .subscribe(
                           minimalAd1 -> extractReferrer(new SearchAdResult(minimalAd1), retries - 1,
                               broadcastReferrer, adsRepository, httpClient, converterFactory,
-                              qManager, context, sharedPreferences, new MinimalAdMapper()),
+                              qManager, context, sharedPreferences, new MinimalAdMapper(),
+                              roomStoredMinimalAdPersistence),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // Must clean Excluded Networks least after each "round"

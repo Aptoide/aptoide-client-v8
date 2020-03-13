@@ -279,7 +279,6 @@ public class AppViewPresenter implements Presenter {
                   handleAdsLogic(appViewManager.getSearchAdResult());
                 })
                 .doOnError(throwable -> {
-                  throwable.printStackTrace();
                   crashReport.log(throwable);
                 });
           }

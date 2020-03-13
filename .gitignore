@@ -51,3 +51,6 @@ instapk.properties
 
 .gitmodules
 crowdin.properties
+
+#sentry properties file
+sentry.properties
