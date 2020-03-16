@@ -3,6 +3,9 @@ package cm.aptoide.pt.themes
 import android.os.Bundle
 import cm.aptoide.analytics.AnalyticsManager
 import com.facebook.appevents.AppEventsLogger
+import io.rakam.api.Rakam
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 
 class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
@@ -23,24 +26,39 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
     sendDarkThemeInteractEvent(getThemeOptionName(theme), context)
   }
 
-  fun setDarkThemeUserProperty(isDarkTheme: Boolean) {
+  fun setDarkThemeUserProperty(darkThemeMode: DarkThemeMode) {
     val params = Bundle()
-    params.putBoolean("dark_theme", isDarkTheme)
+    params.putBoolean("dark_theme", darkThemeMode.isDark())
     AppEventsLogger.updateUserProperties(params) { }
+
+    val rakamClient = Rakam.getInstance()
+    rakamClient.superProperties =
+        createDarkThemeRakamSuperProperty(rakamClient.superProperties, darkThemeMode)
+  }
+
+  private fun createDarkThemeRakamSuperProperty(currentProperties: JSONObject?,
+                                                darkThemeMode: DarkThemeMode): JSONObject {
+    val superProperties = currentProperties ?: JSONObject()
+    try {
+      superProperties.put("dark_theme", darkThemeMode.name.toLowerCase())
+    } catch (e: JSONException) {
+      e.printStackTrace()
+    }
+    return superProperties
   }
 
   private fun sendDarkThemeInteractEvent(action: String, context: String) {
     val params = HashMap<String, Any>()
-    params.put("action", action)
+    params["action"] = action
     analyticsManager.logEvent(params, DARK_THEME_INTERACT_EVENT, AnalyticsManager.Action.CLICK,
         context)
   }
 
   private fun getThemeOptionName(themeOption: ThemeManager.ThemeOption): String {
-    when (themeOption) {
-      ThemeManager.ThemeOption.SYSTEM_DEFAULT -> return "system default"
-      ThemeManager.ThemeOption.LIGHT -> return "light theme"
-      ThemeManager.ThemeOption.DARK -> return "dark theme"
+    return when (themeOption) {
+      ThemeManager.ThemeOption.SYSTEM_DEFAULT -> "system default"
+      ThemeManager.ThemeOption.LIGHT -> "light theme"
+      ThemeManager.ThemeOption.DARK -> "dark theme"
     }
   }
 }
