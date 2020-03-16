@@ -1,40 +1,38 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-/**
- * Created by trinkes on 10/05/2017.
- */
+@Entity(tableName = "notification") public class RoomNotification {
 
-public class Notification extends RealmObject {
   public final static String KEY = "key";
   public static final int NOT_DISMISSED = -1;
 
-  private Long expire;
-  @PrimaryKey private String key;
-  private String abTestingGroup;
-  private String body;
-  private int campaignId;
-  private String img;
-  private String lang;
-  private String title;
-  private String url;
-  private String urlTrack;
-  private String notificationCenterUrlTrack;
-  private int type;
-  private long timeStamp;
+  private final Long expire;
+  private final String abTestingGroup;
+  private final String body;
+  private final int campaignId;
+  private final String img;
+  private final String lang;
+  private final String title;
+  private final String url;
+  private final String urlTrack;
+  private final String notificationCenterUrlTrack;
+  private final int type;
+  private final long timeStamp;
+  private final String appName;
+  private final String graphic;
+  private final String ownerId;
+  private final boolean processed;
+  private final int actionStringRes;
+  @NonNull @PrimaryKey private String key;
   private long dismissed;
-  private String appName;
-  private String graphic;
-  private String ownerId;
-  private boolean processed;
-  private int actionStringRes;
 
-  public Notification(Long expire, String abTestingGroup, String body, int campaignId, String img,
-      String lang, String title, String url, String urlTrack, String notificationCenterUrlTrack,
-      long timeStamp, int type, long dismissed, String appName, String graphic, String ownerId,
-      boolean processed, int actionStringRes) {
+  public RoomNotification(Long expire, String abTestingGroup, String body, int campaignId,
+      String img, String lang, String title, String url, String urlTrack,
+      String notificationCenterUrlTrack, long timeStamp, int type, long dismissed, String appName,
+      String graphic, String ownerId, boolean processed, int actionStringRes) {
     this.expire = expire;
     this.body = body;
     this.img = img;
@@ -54,10 +52,6 @@ public class Notification extends RealmObject {
     this.processed = processed;
     this.actionStringRes = actionStringRes;
     key = String.valueOf(timeStamp + type);
-  }
-
-  public Notification() {
-    expire = 0L;
   }
 
   public Long getExpire() {
@@ -122,6 +116,10 @@ public class Notification extends RealmObject {
 
   public String getKey() {
     return key;
+  }
+
+  public void setKey(@NonNull String key) {
+    this.key = key;
   }
 
   public boolean isDismissed() {

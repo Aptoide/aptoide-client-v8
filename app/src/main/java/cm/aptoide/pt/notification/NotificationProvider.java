@@ -1,9 +1,8 @@
 package cm.aptoide.pt.notification;
 
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.realm.Notification;
-import io.realm.Sort;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
+import cm.aptoide.pt.database.room.RoomNotification;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -16,17 +15,18 @@ import rx.Single;
 
 public class NotificationProvider {
 
-  private final NotificationAccessor notificationAccessor;
+  private final RoomNotificationPersistence roomNotificationPersistence;
   private final Scheduler scheduler;
 
-  public NotificationProvider(NotificationAccessor notificationAccessor, Scheduler scheduler) {
+  public NotificationProvider(RoomNotificationPersistence roomNotificationPersistence,
+      Scheduler scheduler) {
     this.scheduler = scheduler;
-    this.notificationAccessor = notificationAccessor;
+    this.roomNotificationPersistence = roomNotificationPersistence;
   }
 
-  @NonNull private Notification convertToNotification(AptoideNotification aptoideNotification) {
+  @NonNull private RoomNotification convertToNotification(AptoideNotification aptoideNotification) {
 
-    return new Notification(aptoideNotification.getExpire(),
+    return new RoomNotification(aptoideNotification.getExpire(),
         aptoideNotification.getAbTestingGroup(), aptoideNotification.getBody(),
         aptoideNotification.getCampaignId(), aptoideNotification.getImg(),
         aptoideNotification.getLang(), aptoideNotification.getTitle(), aptoideNotification.getUrl(),
@@ -40,15 +40,14 @@ public class NotificationProvider {
   public Single<List<AptoideNotification>> getDismissedNotifications(
       @AptoideNotification.NotificationType Integer[] notificationsTypes, long startTime,
       long endTime) {
-    return notificationAccessor.getDismissed(notificationsTypes, startTime, endTime)
-        .first()
+    return roomNotificationPersistence.getDismissed(notificationsTypes, startTime, endTime)
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
-            .toList())
-        .toSingle();
+            .toList()
+            .toSingle());
   }
 
-  private AptoideNotification convertToAptoideNotification(Notification notification) {
+  private AptoideNotification convertToAptoideNotification(RoomNotification notification) {
     return new AptoideNotification(notification.getBody(), notification.getImg(),
         notification.getTitle(), notification.getUrl(), notification.getType(),
         notification.getAppName(), notification.getGraphic(), notification.getDismissed(),
@@ -62,45 +61,36 @@ public class NotificationProvider {
     return Observable.from(aptideNotifications)
         .map(aptoideNotification -> convertToNotification(aptoideNotification))
         .toList()
-        .doOnNext(notifications -> notificationAccessor.insertAll(notifications))
+        .flatMapCompletable(notifications -> roomNotificationPersistence.insertAll(notifications))
         .toCompletable();
   }
 
   public Observable<List<AptoideNotification>> getNotifications(int entries) {
-    return notificationAccessor.getAllSorted(Sort.DESCENDING)
+    return roomNotificationPersistence.getAllSortedDesc()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
             .take(entries)
             .toList());
   }
 
-  public Observable<List<Notification>> getNotifications() {
-    return notificationAccessor.getAll();
+  public Observable<List<RoomNotification>> getNotifications() {
+    return roomNotificationPersistence.getAll();
   }
 
   public Observable<List<AptoideNotification>> getAptoideNotifications() {
-    return notificationAccessor.getAll()
+    return roomNotificationPersistence.getAll()
         .flatMap(notifications -> Observable.from(notifications)
             .map(notification -> convertToAptoideNotification(notification))
             .toList());
   }
 
-  public Single<Notification> getLastShowed(Integer[] notificationType) {
-    return notificationAccessor.getLastShowed(notificationType);
+  public Single<RoomNotification> getLastShowed(Integer[] notificationType) {
+    return roomNotificationPersistence.getLastShowed(notificationType);
   }
 
-  public Completable save(Notification notification) {
-    return Completable.fromAction(() -> {
-      notificationAccessor.insert(notification);
-    })
+  public Completable save(RoomNotification notification) {
+    return roomNotificationPersistence.insert(notification)
         .subscribeOn(scheduler);
-  }
-
-  public Observable<List<AptoideNotification>> getUnreadNotifications() {
-    return notificationAccessor.getUnread()
-        .flatMap(notifications -> Observable.from(notifications)
-            .map(notification -> convertToAptoideNotification(notification))
-            .toList());
   }
 
   public Completable save(AptoideNotification notification) {
@@ -108,6 +98,6 @@ public class NotificationProvider {
   }
 
   public Completable deleteAllForType(int type) {
-    return notificationAccessor.deleteAllOfType(type);
+    return roomNotificationPersistence.deleteAllOfType(type);
   }
 }
