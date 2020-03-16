@@ -35,6 +35,7 @@ import cm.aptoide.pt.themes.DarkThemeDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
@@ -128,4 +129,6 @@ public interface FragmentComponent {
   void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
 
   void inject(DarkThemeDialogFragment darkThemeDialogFragment);
+
+  void inject(SendFeedbackFragment sendFeedbackFragment);
 }
