@@ -23,7 +23,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
@@ -44,9 +43,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
 
   protected AptoideAccountManager accountManager;
   protected StoreUtilsProxy storeUtilsProxy;
-  protected InstalledRepository installedRepository;
   protected StoreAnalytics storeAnalytics;
   protected NavigationTracker navigationTracker;
+  @Inject InstalledRepository installedRepository;
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
@@ -73,8 +72,6 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }

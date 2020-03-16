@@ -26,7 +26,6 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.install.InstalledRepository;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
@@ -34,6 +33,7 @@ import cm.aptoide.pt.view.fragment.BaseToolbarFragment;
 import com.jakewharton.rxbinding.view.RxView;
 import java.io.File;
 import java.util.ArrayList;
+import javax.inject.Inject;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -46,6 +46,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment implements NotBott
   public static final String LOGS_FILE_NAME = "logs.txt";
   private static final String CARD_ID = "card_id";
   private final String KEY_SCREENSHOT_PATH = "screenShotPath";
+  @Inject InstalledRepository installedRepository;
   private CrashReport crashReport;
   private Button sendFeedbackBtn;
   private CheckBox logsAndScreenshotsCb;
@@ -53,7 +54,6 @@ public class SendFeedbackFragment extends BaseToolbarFragment implements NotBott
   private EditText messageBodyEdit;
   private EditText subgectEdit;
   private Subscription unManagedSubscription;
-  private InstalledRepository installedRepository;
   private String cardId;
   private NavigationTracker aptoideNavigationTracker;
 
@@ -109,8 +109,7 @@ public class SendFeedbackFragment extends BaseToolbarFragment implements NotBott
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
+    getFragmentComponent(savedInstanceState).inject(this);
     aptoideNavigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
     crashReport = CrashReport.getInstance();
