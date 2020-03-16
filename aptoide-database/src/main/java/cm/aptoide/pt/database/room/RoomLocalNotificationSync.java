@@ -1,23 +1,22 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-public class RealmLocalNotificationSync extends RealmObject {
+@Entity(tableName = "localNotificationSync") public class RoomLocalNotificationSync {
 
-  public static String PRIMARY_KEY_NAME = "notificationId";
+  @NonNull @PrimaryKey private final String notificationId;
+  private final String title;
+  private final String body;
+  private final String image;
+  private final String navigationUrl;
+  private final long trigger;
+  private final String id;
+  private final int actionStringRes;
+  private final int type;
 
-  @PrimaryKey private String notificationId;
-  private String title;
-  private String body;
-  private String image;
-  private String navigationUrl;
-  private long trigger;
-  private String id;
-  private int actionStringRes;
-  private int type;
-
-  public RealmLocalNotificationSync(String notificationId, String title, String body, String image,
+  public RoomLocalNotificationSync(String notificationId, String title, String body, String image,
       int actionStringRes, String navigationUrl, long trigger, String id, int type) {
     this.notificationId = notificationId;
     this.title = title;
@@ -28,10 +27,6 @@ public class RealmLocalNotificationSync extends RealmObject {
     this.id = id;
     this.actionStringRes = actionStringRes;
     this.type = type;
-  }
-
-  public RealmLocalNotificationSync() {
-
   }
 
   public String getNotificationId() {

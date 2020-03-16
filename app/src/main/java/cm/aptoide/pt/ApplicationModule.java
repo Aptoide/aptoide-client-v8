@@ -204,8 +204,8 @@ import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.RealmLocalNotificationSyncMapper;
-import cm.aptoide.pt.notification.RealmLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
+import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -853,7 +853,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides SyncStorage provideSyncStorage(
-      RealmLocalNotificationSyncPersistence persistence) {
+      RoomLocalNotificationSyncPersistence persistence) {
     return new SyncStorage(new HashMap<>(), persistence);
   }
 
@@ -1937,10 +1937,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides
-  RealmLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
-      Database database, NotificationProvider provider) {
-    return new RealmLocalNotificationSyncPersistence(database,
-        new RealmLocalNotificationSyncMapper(), provider);
+  RoomLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
+      AptoideDatabase database, NotificationProvider provider) {
+    return new RoomLocalNotificationSyncPersistence(new RoomLocalNotificationSyncMapper(), provider,
+        database.localNotificationSyncDao());
   }
 
   @Singleton @Provides LocalNotificationSyncManager providesLocalNotificationSyncManager(
