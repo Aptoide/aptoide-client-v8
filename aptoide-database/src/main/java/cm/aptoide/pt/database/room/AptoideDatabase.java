@@ -28,4 +28,6 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
   public abstract NotificationDao notificationDao();
 
   public abstract LocalNotificationSyncDao localNotificationSyncDao();
+
+  public abstract InstalledDao installedDao();
 }
