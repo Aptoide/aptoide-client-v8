@@ -40,7 +40,7 @@ class ThemeAnalytics(val analyticsManager: AnalyticsManager) {
                                                 darkThemeMode: DarkThemeMode): JSONObject {
     val superProperties = currentProperties ?: JSONObject()
     try {
-      superProperties.put("dark_theme", darkThemeMode.name.toLowerCase())
+      superProperties.put("theme", darkThemeMode.name.toLowerCase())
     } catch (e: JSONException) {
       e.printStackTrace()
     }
