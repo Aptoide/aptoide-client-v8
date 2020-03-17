@@ -1,22 +1,20 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-public class Installation extends RealmObject {
+@Entity(tableName = "installation") public class RoomInstallation {
 
   public static final String PACKAGE_NAME = "packageName";
 
-  @PrimaryKey private String packageName;
+  @PrimaryKey @NonNull private String packageName;
   private String icon;
   private String name;
   private int versionCode;
   private String versionName;
 
-  public Installation() {
-  }
-
-  public Installation(String packageName, String name, String icon, int versionCode,
+  public RoomInstallation(String packageName, String name, String icon, int versionCode,
       String versionName) {
     this.packageName = packageName;
     this.name = name;
