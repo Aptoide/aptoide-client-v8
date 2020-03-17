@@ -54,12 +54,6 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
-    return Observable.from(installs)
-        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
-        .toList();
-  }
-
   public Completable remove(String packageName, int versionCode) {
     return RxJavaInterop.toV1Completable(installedDao.remove(packageName, versionCode))
         .subscribeOn(Schedulers.io());
@@ -93,7 +87,13 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<List<RoomInstalled>> getInstalledAsList(String packageName) {
+  @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
+    return Observable.from(installs)
+        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+        .toList();
+  }
+
+  private Observable<List<RoomInstalled>> getInstalledAsList(String packageName) {
     return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageName(packageName),
         BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
