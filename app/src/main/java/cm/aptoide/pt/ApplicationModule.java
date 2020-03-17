@@ -57,7 +57,6 @@ import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -226,7 +225,6 @@ import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.repository.StoreRepository;
-import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
@@ -1086,15 +1084,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         oemidProvider.getOemid(), new MinimalAdMapper());
   }
 
-  @Singleton @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
-      @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      InstallManager installManager) {
-    return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
-  }
-
   @Singleton @Provides AdsApplicationVersionCodeProvider providesAdsApplicationVersionCodeProvider(
       PackageRepository packageRepository) {
     return new PackageRepositoryVersionCodeProvider(packageRepository,
@@ -1507,8 +1496,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
@@ -1998,11 +1986,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
-  }
-
-  @Singleton @Provides SimilarAppsExperiment providesSimilarAppsExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics) {
-    return new SimilarAppsExperiment(abTestManager, appViewAnalytics);
   }
 
   @Singleton @Provides ApkfyExperiment providesApkfyExperiment(

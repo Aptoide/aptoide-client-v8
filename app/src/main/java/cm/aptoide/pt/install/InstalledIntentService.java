@@ -144,7 +144,6 @@ public class InstalledIntentService extends IntentService {
           }
         })
         .subscribe(__ -> { /* do nothing */ }, err -> {
-          err.printStackTrace();
           CrashReport.getInstance()
               .log(err);
         });

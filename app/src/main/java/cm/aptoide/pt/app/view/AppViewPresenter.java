@@ -6,7 +6,6 @@ import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
-import cm.aptoide.pt.abtesting.experiments.SimilarAppsExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -66,7 +65,6 @@ public class AppViewPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
-  private final SimilarAppsExperiment similarAppsExperiment;
   private final ApkfyExperiment apkfyExperiment;
   private final ExternalNavigator externalNavigator;
 
@@ -75,8 +73,8 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, SimilarAppsExperiment similarAppsExperiment,
-      ExternalNavigator externalNavigator, ApkfyExperiment apkfyExperiment) {
+      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator,
+      ApkfyExperiment apkfyExperiment) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -89,7 +87,6 @@ public class AppViewPresenter implements Presenter {
     this.permissionManager = permissionManager;
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
-    this.similarAppsExperiment = similarAppsExperiment;
     this.externalNavigator = externalNavigator;
     this.apkfyExperiment = apkfyExperiment;
   }
@@ -141,8 +138,6 @@ public class AppViewPresenter implements Presenter {
     showInterstitial();
 
     handleDownloadingSimilarApp();
-    handleSimilarAppsABTestingImpression();
-    handleSimilarAppsABTestingConversion();
   }
 
   private Observable<AppViewModel> loadAppView() {
@@ -279,7 +274,6 @@ public class AppViewPresenter implements Presenter {
                   handleAdsLogic(appViewManager.getSearchAdResult());
                 })
                 .doOnError(throwable -> {
-                  throwable.printStackTrace();
                   crashReport.log(throwable);
                 });
           }
@@ -794,27 +788,6 @@ public class AppViewPresenter implements Presenter {
         }, err -> crashReport.log(err));
   }
 
-  private void handleSimilarAppsABTestingImpression() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.similarAppsVisibilityFromInstallClick())
-        .flatMapCompletable(__ -> similarAppsExperiment.recordImpression())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReport::log);
-  }
-
-  private void handleSimilarAppsABTestingConversion() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.installAppClick())
-        .flatMap(__ -> view.clickSimilarApp())
-        .flatMapCompletable(__ -> similarAppsExperiment.recordConversion())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReport::log);
-  }
-
   private void handleClickOnSimilarApps() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -933,11 +906,9 @@ public class AppViewPresenter implements Presenter {
   private Observable<List<SimilarAppsBundle>> sortSuggestedApps(AppModel appModel,
       List<SimilarAppsBundle> list) {
     return Observable.just(list)
-        .flatMapSingle(
-            similarAppsBundles -> similarAppsExperiment.shouldShowAppCoinsSimilarBundleFirst())
-        .map(shouldShowAppcBundleFirst -> {
+        .map(__ -> {
           if (list.size() >= 2) {
-            if (appModel.isAppCoinApp() || shouldShowAppcBundleFirst) {
+            if (appModel.isAppCoinApp()) {
               if (list.get(0)
                   .getType() == SimilarAppsBundle.BundleType.APPS) {
                 Collections.swap(list, 0, 1);

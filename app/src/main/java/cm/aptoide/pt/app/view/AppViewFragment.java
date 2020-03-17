@@ -67,6 +67,7 @@ import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundleAdapter;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -141,6 +142,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   @Inject ThemeManager themeManager;
+  @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -1052,12 +1054,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void extractReferrer(SearchAdResult searchAdResult) {
+
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
             adsRepository, httpClient, converterFactory, qManager,
             getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            new MinimalAdMapper()));
+            new MinimalAdMapper(), roomStoredMinimalAdPersistence));
   }
 
   @Override public void recoverScrollViewState() {

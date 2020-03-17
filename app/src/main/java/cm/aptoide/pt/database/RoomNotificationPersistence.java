@@ -4,7 +4,6 @@ import cm.aptoide.pt.database.room.NotificationDao;
 import cm.aptoide.pt.database.room.RoomNotification;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.BackpressureStrategy;
-import io.realm.Sort;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -26,23 +25,23 @@ public class RoomNotificationPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Single<List<RoomNotification>> getAllSorted(Sort sortOrder, Integer[] notificationType) {
+  public Single<List<RoomNotification>> getAllSortedDescByType(Integer[] notificationType) {
     return RxJavaInterop.toV1Single(notificationDao.getAllSortedDescByType(notificationType))
         .subscribeOn(Schedulers.io());
   }
 
   public Single<RoomNotification> getLastShowed(Integer[] notificationType) {
-    return getAllSorted(Sort.DESCENDING, notificationType).map(notifications -> {
+    return getAllSortedDescByType(notificationType).flatMap(notifications -> {
       for (RoomNotification notification : notifications) {
         if (!notification.isDismissed()) {
-          return notification;
+          return Single.just(notification);
         }
       }
-      return null;
+      return Single.just(null);
     });
   }
 
-  public Observable<List<RoomNotification>> getAllSorted(Sort sort) {
+  public Observable<List<RoomNotification>> getAllSortedDesc() {
     return RxJavaInterop.toV1Observable(notificationDao.getAllSortedDesc(),
         BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
@@ -53,7 +52,7 @@ public class RoomNotificationPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Completable delete(String[] keys) {
+  public Completable delete(List<String> keys) {
     return Completable.fromAction(() -> notificationDao.deleteByKey(keys))
         .subscribeOn(Schedulers.io());
   }

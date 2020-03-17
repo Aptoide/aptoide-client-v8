@@ -37,7 +37,7 @@ public abstract class ActivityResultNavigator extends BaseActivity implements Ac
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     fragmentResultRelay = ((AptoideApplication) getApplicationContext()).getFragmentResultRelay();
-    fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResulMap();
+    fragmentResultMap = ((AptoideApplication) getApplicationContext()).getFragmentResultMap();
     fragmentNavigator =
         new FragmentResultNavigator(getSupportFragmentManager(), R.id.fragment_placeholder,
             android.R.anim.fade_in, android.R.anim.fade_out, fragmentResultMap,
