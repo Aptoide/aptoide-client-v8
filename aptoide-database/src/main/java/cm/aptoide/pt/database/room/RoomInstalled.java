@@ -6,8 +6,8 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import cm.aptoide.pt.utils.AptoideUtils;
-import io.realm.annotations.PrimaryKey;
 
 @Entity(tableName = "installed") public class RoomInstalled {
 
@@ -29,8 +29,7 @@ import io.realm.annotations.PrimaryKey;
   public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
   public static final int TYPE_UNKNOWN = -1;
 
-  //	@PrimaryKey private int id = -1;
-  @PrimaryKey private String packageAndVersionCode;
+  @PrimaryKey @NonNull private String packageAndVersionCode;
   private String icon;
   private String packageName;
   private String name;
