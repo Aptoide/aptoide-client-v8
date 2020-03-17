@@ -87,6 +87,30 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
+  public Completable insert(RoomInstalled installed) {
+    return Completable.fromAction(() -> {
+      installedDao.insert(installed);
+      installationAccessor.insert(
+          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
+              installed.getVersionCode(), installed.getVersionName()));
+    })
+        .subscribeOn(Schedulers.io());
+  }
+
+  public Observable<List<RoomInstalled>> getAllAsList(String packageName) {
+    return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageName(packageName),
+        BackpressureStrategy.BUFFER)
+        .subscribeOn(Schedulers.io());
+  }
+
+  public Completable clearAndAddAll(List<RoomInstalled> list) {
+    return Completable.fromAction(() -> {
+      removeAll();
+      insertAll(list);
+    })
+        .subscribeOn(Schedulers.io());
+  }
+
   @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
     return Observable.from(installs)
         .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
@@ -116,29 +140,5 @@ public class RoomInstalledPersistence implements InstalledPersistence {
 
   private void removeAll() {
     installedDao.removeAll();
-  }
-
-  public Completable insert(RoomInstalled installed) {
-    return Completable.fromAction(() -> {
-      installedDao.insert(installed);
-      installationAccessor.insert(
-          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
-              installed.getVersionCode(), installed.getVersionName()));
-    })
-        .subscribeOn(Schedulers.io());
-  }
-
-  public Observable<List<RoomInstalled>> getAllAsList(String packageName) {
-    return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageName(packageName),
-        BackpressureStrategy.BUFFER)
-        .subscribeOn(Schedulers.io());
-  }
-
-  public Completable clearAndAddAll(List<RoomInstalled> list) {
-    return Completable.fromAction(() -> {
-      removeAll();
-      insertAll(list);
-    })
-        .subscribeOn(Schedulers.io());
   }
 }
