@@ -7,4 +7,6 @@ import rx.Observable;
 public interface InstalledPersistence {
 
   Observable<List<RoomInstalled>> getAllInstalled();
+
+  Observable<List<RoomInstalled>> getAll();
 }

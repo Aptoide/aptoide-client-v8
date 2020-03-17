@@ -10,7 +10,7 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -77,13 +77,13 @@ public class DownloadInstallationProvider implements InstallationProvider {
         });
   }
 
-  @NonNull private Installed convertDownloadToInstalled(Download download) {
-    Installed installed = new Installed();
+  @NonNull private RoomInstalled convertDownloadToInstalled(Download download) {
+    RoomInstalled installed = new RoomInstalled();
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
-    installed.setStatus(Installed.STATUS_UNINSTALLED);
-    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setStatus(RoomInstalled.STATUS_UNINSTALLED);
+    installed.setType(RoomInstalled.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());
     return installed;
   }
