@@ -1,7 +1,7 @@
 package cm.aptoide.pt.install;
 
 import cm.aptoide.pt.database.RoomInstalledPersistence;
-import cm.aptoide.pt.database.realm.Installation;
+import cm.aptoide.pt.database.room.RoomInstallation;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
@@ -79,7 +79,7 @@ public class InstalledRepository {
     return installedPersistence.get(packageName, versionCode);
   }
 
-  public Observable<List<Installation>> getInstallationsHistory() {
+  public Observable<List<RoomInstallation>> getInstallationsHistory() {
     return installedPersistence.getInstallationsHistory();
   }
 }

@@ -6,10 +6,10 @@
 package cm.aptoide.pt.database;
 
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.InstallationAccessor;
-import cm.aptoide.pt.database.realm.Installation;
 import cm.aptoide.pt.database.room.InstalledDao;
+import cm.aptoide.pt.database.room.RoomInstallation;
 import cm.aptoide.pt.database.room.RoomInstalled;
+import cm.aptoide.pt.install.InstallationPersistence;
 import cm.aptoide.pt.install.InstalledPersistence;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.BackpressureStrategy;
@@ -24,13 +24,16 @@ import rx.schedulers.Schedulers;
  */
 public class RoomInstalledPersistence implements InstalledPersistence {
 
-  private final InstallationAccessor installationAccessor;
+  private final InstallationPersistence roomInstallationPersistence;
   private final InstalledDao installedDao;
+  private final RoomInstallationMapper installationMapper;
 
   public RoomInstalledPersistence(InstalledDao installedDao,
-      InstallationAccessor installationAccessor) {
+      RoomInstallationPersistence roomInstallationPersistence,
+      RoomInstallationMapper installationMapper) {
     this.installedDao = installedDao;
-    this.installationAccessor = installationAccessor;
+    this.roomInstallationPersistence = roomInstallationPersistence;
+    this.installationMapper = installationMapper;
   }
 
   public Observable<List<RoomInstalled>> getAllInstalled() {
@@ -88,12 +91,8 @@ public class RoomInstalledPersistence implements InstalledPersistence {
   }
 
   public Completable insert(RoomInstalled installed) {
-    return Completable.fromAction(() -> {
-      installedDao.insert(installed);
-      installationAccessor.insert(
-          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
-              installed.getVersionCode(), installed.getVersionName()));
-    })
+    return Completable.fromAction(() -> installedDao.insert(installed))
+        .andThen(roomInstallationPersistence.insert(installationMapper.map(installed)))
         .subscribeOn(Schedulers.io());
   }
 
@@ -105,9 +104,10 @@ public class RoomInstalledPersistence implements InstalledPersistence {
 
   public Completable clearAndAddAll(List<RoomInstalled> list) {
     return Completable.fromAction(() -> {
-      removeAll();
-      insertAll(list);
+      installedDao.removeAll();
+      installedDao.insertAll(list);
     })
+        .andThen(roomInstallationPersistence.insertAll(installationMapper.map(list)))
         .subscribeOn(Schedulers.io());
   }
 
@@ -125,20 +125,7 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<List<Installation>> getInstallationsHistory() {
-    return installationAccessor.getInstallationsHistory();
-  }
-
-  private void insertAll(List<RoomInstalled> installedList) {
-    installedDao.insertAll(installedList);
-    for (RoomInstalled installed : installedList) {
-      installationAccessor.insert(
-          new Installation(installed.getPackageName(), installed.getName(), installed.getIcon(),
-              installed.getVersionCode(), installed.getVersionName()));
-    }
-  }
-
-  private void removeAll() {
-    installedDao.removeAll();
+  public Observable<List<RoomInstallation>> getInstallationsHistory() {
+    return roomInstallationPersistence.getInstallationsHistory();
   }
 }
