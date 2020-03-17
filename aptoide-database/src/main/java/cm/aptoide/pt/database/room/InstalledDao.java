@@ -11,14 +11,15 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao public interface InstalledDao {
 
-  @Query("SELECT * FROM Installed") Observable<RoomInstalled> getAll();
+  @Query("SELECT * FROM Installed") Observable<List<RoomInstalled>> getAll();
 
-  @Query("SELECT * FROM Installed ORDER BY name ASC") Observable<RoomInstalled> getAllSortedAsc();
+  @Query("SELECT * FROM Installed ORDER BY name ASC")
+  Observable<List<RoomInstalled>> getAllSortedAsc();
 
   @Query("DELETE FROM Installed where packageName = :packageName AND versionCode = :versionCode")
   Completable remove(String packageName, int versionCode);
 
-  @Query("SELECT * FROM Installed where packageName = :packageName AND versionCode = :versionCode")
+  @Query("SELECT * FROM Installed where packageName = :packageName AND versionCode = :versionCode LIMIT 1")
   Observable<RoomInstalled> get(String packageName, int versionCode);
 
   @Query("SELECT * FROM Installed where packageName = :packageName AND versionCode = :versionCode")
@@ -33,4 +34,6 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Insert(onConflict = REPLACE) void insertAll(List<RoomInstalled> installedList);
 
   @Insert(onConflict = REPLACE) void insert(RoomInstalled roomInstalled);
+
+  @Query("DELETE FROM installed") void removeAll();
 }
