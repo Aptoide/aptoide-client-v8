@@ -115,13 +115,13 @@ import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
 import cm.aptoide.pt.database.RoomExperimentPersistence;
+import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
@@ -529,8 +529,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
-      InstalledAccessor installedAccessor) {
-    return new InstalledRepository(installedAccessor);
+      RoomInstalledPersistence roomInstalledPersistence) {
+    return new InstalledRepository(roomInstalledPersistence);
   }
 
   @Singleton @Provides OemidProvider providesOemidProvider() {
@@ -558,9 +558,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator);
   }
 
-  @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
-      InstallationAccessor installationAccessor) {
-    return new InstalledAccessor(database, installationAccessor);
+  @Singleton @Provides RoomInstalledPersistence provideRoomInstalledPersistence(
+      AptoideDatabase database, InstallationAccessor installationAccessor) {
+    return new RoomInstalledPersistence(database.installedDao(), installationAccessor);
   }
 
   @Singleton @Provides InstallationAccessor providesInstallationAccessor(Database database) {
