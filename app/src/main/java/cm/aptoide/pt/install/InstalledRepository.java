@@ -82,8 +82,4 @@ public class InstalledRepository {
   public Observable<List<Installation>> getInstallationsHistory() {
     return installedPersistence.getInstallationsHistory();
   }
-
-  public Observable<List<RoomInstalled>> getInstalled(String[] packageNames) {
-    return installedPersistence.getInstalled(packageNames);
-  }
 }

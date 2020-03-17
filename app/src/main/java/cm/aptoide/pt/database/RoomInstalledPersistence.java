@@ -101,18 +101,11 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<List<RoomInstalled>> getInstalled(String[] apps) {
-    return RxJavaInterop.toV1Observable(installedDao.getAsListByPackageList(apps),
-        BackpressureStrategy.BUFFER)
-        .flatMap(installs -> filterCompleted(installs))
-        .subscribeOn(Schedulers.io());
-  }
-
   public Observable<List<Installation>> getInstallationsHistory() {
     return installationAccessor.getInstallationsHistory();
   }
 
-  public void insertAll(List<RoomInstalled> installedList) {
+  private void insertAll(List<RoomInstalled> installedList) {
     installedDao.insertAll(installedList);
     for (RoomInstalled installed : installedList) {
       installationAccessor.insert(
@@ -121,7 +114,7 @@ public class RoomInstalledPersistence implements InstalledPersistence {
     }
   }
 
-  public void removeAll() {
+  private void removeAll() {
     installedDao.removeAll();
   }
 

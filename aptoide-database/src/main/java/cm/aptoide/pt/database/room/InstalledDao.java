@@ -28,9 +28,6 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Query("SELECT * FROM Installed where packageName = :packageName")
   Observable<List<RoomInstalled>> getAsListByPackageName(String packageName);
 
-  @Query("SELECT * FROM Installed where packageName IN (:packageNames)")
-  Observable<List<RoomInstalled>> getAsListByPackageList(String[] packageNames);
-
   @Insert(onConflict = REPLACE) void insertAll(List<RoomInstalled> installedList);
 
   @Insert(onConflict = REPLACE) void insert(RoomInstalled roomInstalled);
