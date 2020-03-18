@@ -152,6 +152,10 @@
     <item name="android:textColor">?android:attr/textColorSecondary</item>
   </style>
 
+  <style name="Aptoide.TextView.Regular.XXS.Primary">
+    <item name="android:textColor">?attr/colorPrimaryDark</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XS.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>

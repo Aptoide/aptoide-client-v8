@@ -6,6 +6,7 @@ import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -52,12 +53,13 @@ public class AppsManager {
   private final DownloadFactory downloadFactory;
   private final MoPubAdsManager moPubAdsManager;
   private final PromotionsManager promotionsManager;
+  private final AptoideInstallManager aptoideInstallManager;
 
   public AppsManager(UpdatesManager updatesManager, InstallManager installManager,
       AppMapper appMapper, DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
       UpdatesAnalytics updatesAnalytics, PackageManager packageManager, Context context,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
-      PromotionsManager promotionsManager) {
+      PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager) {
     this.updatesManager = updatesManager;
     this.installManager = installManager;
     this.appMapper = appMapper;
@@ -69,6 +71,7 @@ public class AppsManager {
     this.downloadFactory = downloadFactory;
     this.moPubAdsManager = moPubAdsManager;
     this.promotionsManager = promotionsManager;
+    this.aptoideInstallManager = aptoideInstallManager;
   }
 
   public Observable<List<UpdateApp>> getUpdatesList() {
@@ -95,7 +98,20 @@ public class AppsManager {
   private Observable<List<UpdateApp>> getAllUpdatesList() {
     return updatesManager.getUpdatesList(true)
         .distinctUntilChanged()
-        .map(appMapper::mapUpdateToUpdateAppList);
+        .flatMap(updates -> Observable.from(updates)
+            .flatMap(update -> aptoideInstallManager.isInstalledWithAptoide(update.getPackageName())
+                .first()
+                .map(isAptoideInstalled -> appMapper.mapUpdateToUpdateApp(update,
+                    isAptoideInstalled)))
+            .toSortedList((updateApp, updateApp2) -> {
+              if (updateApp.isInstalledWithAptoide() && !updateApp2.isInstalledWithAptoide()) {
+                return -1;
+              } else if (!updateApp.isInstalledWithAptoide()
+                  && updateApp2.isInstalledWithAptoide()) {
+                return 1;
+              }
+              return 0;
+            }));
   }
 
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {
@@ -110,8 +126,12 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
               .flatMap(updatesManager::filterAppcUpgrade)
-              .toList()
-              .map(appMapper::getUpdatesList);
+              .flatMap(
+                  install -> aptoideInstallManager.isInstalledWithAptoide(install.getPackageName())
+                      .first()
+                      .map(isAptoideInstalled -> appMapper.mapInstallToUpdateApp(install,
+                          isAptoideInstalled)))
+              .toList();
         });
   }
 

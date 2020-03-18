@@ -99,6 +99,8 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallService;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
@@ -115,6 +117,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
+import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -335,10 +338,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      AptoideInstallManager aptoideInstallManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
+        aptoideInstallManager);
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
@@ -1484,7 +1489,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
@@ -2001,5 +2007,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
       LocalNotificationSyncManager localNotificationSyncManager) {
     return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
+  }
+
+  @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
+      InstalledRepository installedRepository, AptoideInstallService aptoideInstallService) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallService);
+  }
+
+  @Singleton @Provides AptoideInstallService providesAptoideInstallService(
+      AptoideInstallAccessor aptoideInstallAccessor) {
+    return new AptoideInstallService(aptoideInstallAccessor);
+  }
+
+  @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
+    return new AptoideInstallAccessor(database);
   }
 }

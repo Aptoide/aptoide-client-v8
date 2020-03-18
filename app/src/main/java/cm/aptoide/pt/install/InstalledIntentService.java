@@ -11,6 +11,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.CampaignAnalytics;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
@@ -43,6 +44,7 @@ public class InstalledIntentService extends IntentService {
   @Inject InstallAnalytics installAnalytics;
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
+  @Inject AptoideInstallManager aptoideInstallManager;
   private SharedPreferences sharedPreferences;
   private AdsRepository adsRepository;
   private UpdateRepository updatesRepository;
@@ -116,6 +118,7 @@ public class InstalledIntentService extends IntentService {
     sendInstallEvent(packageName, packageInfo);
     sendCampaignConversion(packageName, packageInfo);
     appcMigrationManager.persistCandidate(packageName);
+    aptoideInstallManager.persistCandidate(packageName);
   }
 
   protected void onPackageReplaced(String packageName) {
@@ -124,6 +127,7 @@ public class InstalledIntentService extends IntentService {
     PackageInfo packageInfo = databaseOnPackageReplaced(packageName);
     sendInstallEvent(packageName, packageInfo);
     sendCampaignConversion(packageName, packageInfo);
+    aptoideInstallManager.persistCandidate(packageName);
   }
 
   protected void onPackageRemoved(String packageName) {
