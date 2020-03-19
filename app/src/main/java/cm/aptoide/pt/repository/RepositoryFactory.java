@@ -36,7 +36,7 @@ public final class RepositoryFactory {
             .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
         getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
         getTokenInvalidator(context), sharedPreferences, context.getPackageManager(),
-        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()));
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(), sharedPreferences));
   }
 
   private static IdsRepository getIdsRepository(Context context) {
