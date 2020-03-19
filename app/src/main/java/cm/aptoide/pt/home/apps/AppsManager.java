@@ -111,7 +111,9 @@ public class AppsManager {
                 return 1;
               }
               return 0;
-            }));
+            }))
+        .flatMap(list -> aptoideInstallManager.sendImpressionEvent()
+            .andThen(Observable.just(list)));
   }
 
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {

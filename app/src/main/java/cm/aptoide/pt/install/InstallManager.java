@@ -54,7 +54,8 @@ public class InstallManager {
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager, AptoideInstallManager aptoideInstallManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      AptoideInstallManager aptoideInstallManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -235,6 +236,8 @@ public class InstallManager {
             downloadRepository.save(storedDownload);
           }
         })
+        .flatMap(install -> aptoideInstallManager.sendConversionEvent()
+            .andThen(Observable.just(install)))
         .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
             shouldInstall))

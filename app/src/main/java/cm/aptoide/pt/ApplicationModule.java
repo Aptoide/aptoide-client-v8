@@ -55,6 +55,7 @@ import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
+import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -99,6 +100,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallService;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -1494,7 +1496,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
+        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
+        AptoideInstallAnalytics.CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
@@ -2010,8 +2013,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallService aptoideInstallService) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallService);
+      InstalledRepository installedRepository, AptoideInstallService aptoideInstallService,
+      AptoideInstallExperiment aptoideInstallExperiment) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallService,
+        aptoideInstallExperiment);
   }
 
   @Singleton @Provides AptoideInstallService providesAptoideInstallService(
@@ -2021,5 +2026,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
     return new AptoideInstallAccessor(database);
+  }
+
+  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
+      @Named("ab-test") ABTestManager abTestManager,
+      AptoideInstallAnalytics aptoideInstallAnalytics) {
+    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
+  }
+
+  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
   }
 }
