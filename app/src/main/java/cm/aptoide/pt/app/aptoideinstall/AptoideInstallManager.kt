@@ -22,11 +22,11 @@ class AptoideInstallManager(val installedRepository: InstalledRepository,
         .flatMapObservable { shouldShow ->
           if (shouldShow) {
             if (isSplitInstalledWithAptoide(packageName)) {
-              Observable.just(true)
+              return@flatMapObservable Observable.just(true)
             }
-            aptoideInstallService.isInstalledWithAptoide(packageName)
+            return@flatMapObservable aptoideInstallService.isInstalledWithAptoide(packageName)
           }
-          Observable.just(false)
+          return@flatMapObservable Observable.just(false)
         }
   }
 
