@@ -3,19 +3,22 @@
  * Modified on 24/08/2016.
  */
 
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import cm.aptoide.pt.database.realm.RealmString;
+import cm.aptoide.pt.database.realm.RoomSplit;
+import java.util.List;
 
 /**
  * Created on 12/05/16.
  */
 
-public class Update extends RealmObject {
+@Entity(tableName = "update") public class RoomUpdate {
 
-  public static final String APP_ID = "appId";
   public static final String LABEL = "label";
   public static final String ICON = "icon";
   public static final String PACKAGE_NAME = "packageName";
@@ -31,12 +34,11 @@ public class Update extends RealmObject {
   public static final String EXCLUDED = "excluded";
   public static final String APPC_UPGRADE = "appcUpgrade";
 
-  @PrimaryKey private String packageName;
+  @NonNull @PrimaryKey private String packageName;
   private long appId;
   private String label;
   private String icon;
   private int versionCode;
-  //	private String signature;
   private long timestamp;
   private String md5;
   private String apkPath;
@@ -59,20 +61,20 @@ public class Update extends RealmObject {
   private String patchObbMd5;
 
   // Splits
-  private RealmList<Split> splits;
-  private RealmList<RealmString> requiredSplits;
+  @Embedded private List<RoomSplit> roomSplits;
+  private List<RealmString> requiredSplits;
 
   //appc
   private boolean hasAppc;
 
-  public Update() {
+  public RoomUpdate() {
   }
 
-  public Update(long id, String name, String icon, String packageName, String md5sum, String path,
-      long size, String versionName, String pathAlt, int versionCode, String rankName,
+  public RoomUpdate(long id, String name, String icon, String packageName, String md5sum,
+      String path, long size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
       String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc,
-      RealmList<Split> splits, RealmList<RealmString> requiredSplits, String storeName) {
+      List<RoomSplit> roomSplits, List<RealmString> requiredSplits, String storeName) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -92,7 +94,7 @@ public class Update extends RealmObject {
     this.patchObbMd5 = patchObbMd5;
     this.hasAppc = hasAppc;
     this.appcUpgrade = appcUpgrade;
-    this.splits = splits;
+    this.roomSplits = roomSplits;
     this.requiredSplits = requiredSplits;
     this.storeName = storeName;
   }
@@ -269,24 +271,24 @@ public class Update extends RealmObject {
     this.hasAppc = hasAppc;
   }
 
-  public RealmList<Split> getSplits() {
-    return splits;
+  public List<RoomSplit> getRoomSplits() {
+    return roomSplits;
   }
 
-  public void setSplits(RealmList<Split> splits) {
-    this.splits = splits;
+  public void setRoomSplits(List<RoomSplit> roomSplits) {
+    this.roomSplits = roomSplits;
   }
 
-  public RealmList<RealmString> getRequiredSplits() {
+  public List<RealmString> getRequiredSplits() {
     return requiredSplits;
   }
 
-  public void setRequiredSplits(RealmList<RealmString> requiredSplits) {
+  public void setRequiredSplits(List<RealmString> requiredSplits) {
     this.requiredSplits = requiredSplits;
   }
 
   public boolean hasSplits() {
-    return splits != null && !splits.isEmpty();
+    return roomSplits != null && !roomSplits.isEmpty();
   }
 
   public String getStoreName() {
