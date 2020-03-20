@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
 import android.util.Log;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
@@ -43,9 +43,9 @@ public class AppMapper {
     return installedAppsList;
   }
 
-  public List<UpdateApp> mapUpdateToUpdateAppList(List<Update> updates) {
+  public List<UpdateApp> mapUpdateToUpdateAppList(List<RoomUpdate> updates) {
     List<UpdateApp> updatesList = new ArrayList<>();
-    for (Update update : updates) {
+    for (RoomUpdate update : updates) {
       updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
           StateApp.Status.STANDBY, update.getAppId()));
@@ -53,10 +53,10 @@ public class AppMapper {
     return updatesList;
   }
 
-  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
+  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<RoomUpdate> updates,
       boolean hasPromotion, float appcValue) {
     List<AppcUpdateApp> updatesList = new ArrayList<>();
-    for (Update update : updates) {
+    for (RoomUpdate update : updates) {
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
           StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));

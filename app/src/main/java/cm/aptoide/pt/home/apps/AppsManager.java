@@ -109,7 +109,7 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
-              .flatMap(updatesManager::filterAppcUpgrade)
+              .flatMapSingle(updatesManager::filterAppcUpgrade)
               .toList()
               .map(appMapper::getUpdatesList);
         });
@@ -133,29 +133,25 @@ public class AppsManager {
     return installManager.fetchInstalled()
         .distinctUntilChanged()
         .flatMapIterable(list -> list)
-        .flatMap(updatesManager::filterUpdates)
+        .flatMapSingle(updatesManager::filterUpdates)
         .toList()
         .map(appMapper::mapInstalledToInstalledApps);
   }
 
   public Observable<List<DownloadApp>> getDownloadApps() {
     return installManager.getInstallations()
-        .doOnNext(installs -> Logger.getInstance()
-            .d("Apps", "emit list of installs from getDownloadApps - before throttle"))
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
           }
           return Observable.just(installations)
-              .doOnNext(__ -> Logger.getInstance()
-                  .d("Apps", "emit list of installs from getDownloadApps - after throttle"))
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(installManager::filterInstalled)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
-              .flatMap(updatesManager::filterAppcUpgrade)
+              .flatMapSingle(updatesManager::filterAppcUpgrade)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
@@ -288,7 +284,7 @@ public class AppsManager {
         .toCompletable();
   }
 
-  public Observable<Void> excludeUpdate(App app) {
+  public Completable excludeUpdate(App app) {
     return updatesManager.excludeUpdate(((UpdateApp) app).getPackageName());
   }
 

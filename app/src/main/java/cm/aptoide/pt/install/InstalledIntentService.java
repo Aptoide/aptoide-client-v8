@@ -12,9 +12,9 @@ import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -173,7 +173,7 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
-    final Update update = updatesRepository.get(packageName)
+    final RoomUpdate update = updatesRepository.get(packageName)
         .first()
         .doOnError(throwable -> {
           CrashReport.getInstance()
@@ -200,7 +200,7 @@ public class InstalledIntentService extends IntentService {
 
   private void databaseOnPackageRemoved(String packageName) {
     installManager.onAppRemoved(packageName)
-        .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
+        .andThen(updatesRepository.remove(packageName))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageRemoved: " + packageName),
             throwable -> CrashReport.getInstance()

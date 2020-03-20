@@ -18,7 +18,7 @@ import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -148,7 +148,7 @@ public class PullingContentService extends BaseService {
   /**
    * @return true if updateList were installed with success, false otherwise
    */
-  private Observable<Boolean> autoUpdate(List<Update> updateList) {
+  private Observable<Boolean> autoUpdate(List<RoomUpdate> updateList) {
     return Observable.just(ManagerPreferences.isAutoUpdateEnable(sharedPreferences)
         && ManagerPreferences.allowRootInstallation(sharedPreferences))
         .flatMap(shouldAutoUpdateRun -> {
@@ -157,7 +157,7 @@ public class PullingContentService extends BaseService {
                 .observeOn(Schedulers.io())
                 .map(updates -> {
                   ArrayList<Download> downloadList = new ArrayList<>(updates.size());
-                  for (Update update : updates) {
+                  for (RoomUpdate update : updates) {
                     downloadList.add(downloadFactory.create(update, false));
                   }
                   return downloadList;
@@ -169,7 +169,7 @@ public class PullingContentService extends BaseService {
         });
   }
 
-  private void setUpdatesNotification(List<Update> updates, int startId) {
+  private void setUpdatesNotification(List<RoomUpdate> updates, int startId) {
     Intent resultIntent = new Intent(getApplicationContext(),
         AptoideApplication.getActivityProvider()
             .getMainActivityFragmentClass());
