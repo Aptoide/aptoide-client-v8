@@ -157,7 +157,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
-            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI())),
+            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
         otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

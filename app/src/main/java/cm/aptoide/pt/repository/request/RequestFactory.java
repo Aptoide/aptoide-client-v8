@@ -41,8 +41,6 @@ import retrofit2.Converter;
   private final GetStoreRecommendedRequestFactory getStoreRecommendedRequestFactory;
   private final GetRecommendedRequestFactory getRecommendedRequestFactory;
   private final boolean googlePlayServicesAvailable;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager =
-      new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI());
 
   public RequestFactory(StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -53,6 +51,8 @@ import retrofit2.Converter;
       AdsApplicationVersionCodeProvider versionCodeProvider, boolean googlePlayServicesAvailable) {
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
+    AppBundlesVisibilityManager appBundlesVisibilityManager =
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(), sharedPreferences);
     listStoresRequestFactory =
         new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
