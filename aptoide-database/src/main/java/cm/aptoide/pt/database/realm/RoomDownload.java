@@ -7,13 +7,16 @@ package cm.aptoide.pt.database.realm;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
-public class Download extends RealmObject {
+@Entity(tableName = "download") public class RoomDownload {
 
   public static final int ACTION_INSTALL = 0;
   public static final int ACTION_UPDATE = 1;
@@ -39,11 +42,11 @@ public class Download extends RealmObject {
   public static final int NO_ERROR = 0;
   public static final int GENERIC_ERROR = 1;
   public static final int NOT_ENOUGH_SPACE_ERROR = 2;
-  public static String TAG = Download.class.getSimpleName();
-  RealmList<FileToDownload> filesToDownload;
+  public static String TAG = RoomDownload.class.getSimpleName();
+  @Embedded List<RoomFileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
   @IntRange(from = 0, to = 100) int overallProgress = 0;
-  @PrimaryKey private String md5;
+  @PrimaryKey @NonNull private String md5;
   private String appName;
   private String Icon;
   private long timeStamp;
@@ -56,12 +59,12 @@ public class Download extends RealmObject {
   private long size;
   private String storeName;
   private String trustedBadge;
-  @Download.DownloadError private int downloadError;
+  @RoomDownload.DownloadError private int downloadError;
 
-  public Download() {
+  public RoomDownload() {
   }
 
-  public @Download.DownloadError int getDownloadError() {
+  public @RoomDownload.DownloadError int getDownloadError() {
     return downloadError;
   }
 
@@ -85,11 +88,11 @@ public class Download extends RealmObject {
     this.appName = appName;
   }
 
-  public RealmList<FileToDownload> getFilesToDownload() {
+  public List<RoomFileToDownload> getFilesToDownload() {
     return filesToDownload;
   }
 
-  public void setFilesToDownload(RealmList<FileToDownload> filesToDownload) {
+  public void setFilesToDownload(List<RoomFileToDownload> filesToDownload) {
     this.filesToDownload = filesToDownload;
   }
 
@@ -193,7 +196,7 @@ public class Download extends RealmObject {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Download download = (Download) o;
+    RoomDownload download = (RoomDownload) o;
 
     if (getOverallDownloadStatus() != download.getOverallDownloadStatus()) return false;
     if (getOverallProgress() != download.getOverallProgress()) return false;
@@ -227,8 +230,8 @@ public class Download extends RealmObject {
   }
 
   public boolean hasSplits() {
-    for (FileToDownload fileToDownload : filesToDownload) {
-      if (fileToDownload.getFileType() == FileToDownload.SPLIT) {
+    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
+      if (roomFileToDownload.getFileType() == RoomFileToDownload.SPLIT) {
         return true;
       }
     }

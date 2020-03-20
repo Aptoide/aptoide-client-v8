@@ -7,7 +7,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.DeepLinkManager;
@@ -112,7 +112,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  @Override public void startProgress(Download download) {
+  @Override public void startProgress(RoomDownload download) {
     updateDownloadEventWithHasProgress(
         download.getPackageName() + download.getVersionCode() + DOWNLOAD_EVENT_NAME);
     updateDownloadEventWithHasProgress(download.getMd5() + DOWNLOAD_COMPLETE_EVENT);
@@ -169,23 +169,23 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
-  public void downloadStartEvent(Download download, AnalyticsManager.Action action,
+  public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
       AppContext context, Boolean isMigration) {
     downloadStartEvent(download, 0, null, context, action, isMigration, getOrigin(download), false);
   }
 
-  public void downloadStartEvent(Download download, AnalyticsManager.Action action,
+  public void downloadStartEvent(RoomDownload download, AnalyticsManager.Action action,
       AppContext context, Boolean isMigration, Origin origin) {
     downloadStartEvent(download, 0, null, context, action, isMigration, origin, false);
   }
 
-  public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
+  public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action, boolean isMigration, boolean isApkfy) {
     downloadStartEvent(download, campaignId, abTestGroup, context, action, isMigration,
         getOrigin(download), isApkfy);
   }
 
-  public void downloadStartEvent(Download download, int campaignId, String abTestGroup,
+  public void downloadStartEvent(RoomDownload download, int campaignId, String abTestGroup,
       AppContext context, AnalyticsManager.Action action, boolean isMigration, Origin origin,
       boolean isApkfy) {
     Map<String, Object> event = new HashMap<>();
@@ -217,7 +217,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
         new DownloadEvent(DOWNLOAD_EVENT_NAME, event, context, action));
   }
 
-  @NonNull private Map<String, Object> createAppData(Download download) {
+  @NonNull private Map<String, Object> createAppData(RoomDownload download) {
     Map<String, Object> app = new HashMap<>();
     app.put(PACKAGE, download.getPackageName());
     app.put(APPC, download.hasAppc());
@@ -225,16 +225,16 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     return app;
   }
 
-  public Origin getOrigin(Download download) {
+  public Origin getOrigin(RoomDownload download) {
     Origin origin;
     switch (download.getAction()) {
-      case Download.ACTION_INSTALL:
+      case RoomDownload.ACTION_INSTALL:
         origin = Origin.INSTALL;
         break;
-      case Download.ACTION_UPDATE:
+      case RoomDownload.ACTION_UPDATE:
         origin = Origin.UPDATE;
         break;
-      case Download.ACTION_DOWNGRADE:
+      case RoomDownload.ACTION_DOWNGRADE:
         origin = Origin.DOWNGRADE;
         break;
       default:

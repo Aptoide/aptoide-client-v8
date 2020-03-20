@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class DownloadAppMapper {
     this.downloadAppFileMapper = downloadAppFileMapper;
   }
 
-  public DownloadApp mapDownload(Download download) {
+  public DownloadApp mapDownload(RoomDownload download) {
     List<DownloadAppFile> fileList =
         downloadAppFileMapper.mapFileToDownloadList(download.getFilesToDownload());
     return new DownloadApp(download.getPackageName(), download.getVersionCode(), fileList,

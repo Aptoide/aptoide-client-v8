@@ -17,7 +17,7 @@ import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
@@ -154,7 +154,7 @@ public class PullingContentService extends BaseService {
             return Observable.just(updateList)
                 .observeOn(Schedulers.io())
                 .map(updates -> {
-                  ArrayList<Download> downloadList = new ArrayList<>(updates.size());
+                  ArrayList<RoomDownload> downloadList = new ArrayList<>(updates.size());
                   for (RoomUpdate update : updates) {
                     downloadList.add(downloadFactory.create(update, false));
                   }

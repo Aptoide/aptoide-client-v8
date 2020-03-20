@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
-import cm.aptoide.pt.database.realm.Download
+import cm.aptoide.pt.database.realm.RoomDownload
 import cm.aptoide.pt.download.DownloadAnalytics
 import cm.aptoide.pt.download.DownloadFactory
 import cm.aptoide.pt.install.Install
@@ -60,7 +60,7 @@ open class AutoUpdateManager(private val downloadFactory: DownloadFactory,
   fun isDownloadComplete(): Single<Boolean> {
     return loadAutoUpdateModel().toObservable()
         .flatMapSingle { model -> installManager.getDownload(model.md5) }
-        .map { download -> download != null && download.overallDownloadStatus == Download.COMPLETED }
+        .map { download -> download != null && download.overallDownloadStatus == RoomDownload.COMPLETED }
         .toSingle()
   }
 

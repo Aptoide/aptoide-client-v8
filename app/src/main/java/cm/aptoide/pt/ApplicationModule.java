@@ -122,8 +122,8 @@ import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
+import cm.aptoide.pt.database.accessors.RoomDownloadPersistence;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
@@ -460,8 +460,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(
-      DownloadAccessor downloadAccessor) {
-    return new DownloadsRepository(downloadAccessor);
+      RoomDownloadPersistence downloadPersistence) {
+    return new DownloadsRepository(downloadPersistence);
   }
 
   @Singleton @Provides DownloadStatusMapper downloadStatusMapper() {
@@ -489,11 +489,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
+      AptoideDownloadManager downloadManager, RoomDownloadPersistence downloadPersistence,
       InstalledRepository installedRepository,
       RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
-    return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
-        new MinimalAdMapper(), roomStoredMinimalAdPersistence);
+    return new DownloadInstallationProvider(downloadManager, downloadPersistence,
+        installedRepository, new MinimalAdMapper(), roomStoredMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -575,8 +575,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomInstallationPersistence(database.installationDao());
   }
 
-  @Singleton @Provides DownloadAccessor provideDownloadAccessor(Database database) {
-    return new DownloadAccessor(database);
+  @Singleton @Provides RoomDownloadPersistence provideDownloadAccessor(AptoideDatabase database) {
+    return new RoomDownloadPersistence(database.downloadDAO());
   }
 
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(

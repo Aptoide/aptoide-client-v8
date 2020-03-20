@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -15,17 +15,17 @@ public interface DownloadManager {
 
   void stop();
 
-  Completable startDownload(Download download);
+  Completable startDownload(RoomDownload download);
 
-  Observable<Download> getDownload(String md5);
+  Observable<RoomDownload> getDownload(String md5);
 
-  Observable<Download> getDownloadsByMd5(String md5);
+  Observable<RoomDownload> getDownloadsByMd5(String md5);
 
-  Observable<List<Download>> getDownloadsList();
+  Observable<List<RoomDownload>> getDownloadsList();
 
-  Observable<Download> getCurrentInProgressDownload();
+  Observable<RoomDownload> getCurrentInProgressDownload();
 
-  Observable<List<Download>> getCurrentActiveDownloads();
+  Observable<List<RoomDownload>> getCurrentActiveDownloads();
 
   Completable pauseAllDownloads();
 

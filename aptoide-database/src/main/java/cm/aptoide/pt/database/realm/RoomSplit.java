@@ -1,19 +1,17 @@
 package cm.aptoide.pt.database.realm;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-public class Split extends RealmObject {
-  @PrimaryKey private String md5;
+@Entity(tableName = "split") public class RoomSplit {
+  @PrimaryKey @NonNull private String md5;
   private String path;
   private String type;
   private String name;
   private long fileSize;
 
-  public Split() {
-  }
-
-  public Split(String md5, String path, String type, String name, long fileSize) {
+  public RoomSplit(String md5, String path, String type, String name, long fileSize) {
     this.md5 = md5;
     this.path = path;
     this.type = type;

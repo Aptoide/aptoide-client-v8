@@ -1,25 +1,23 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
 import android.text.TextUtils;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.utils.IdUtils;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Created by trinkes on 5/16/16.
- */
-public class FileToDownload extends RealmObject {
+@Entity(tableName = "filetodownload") public class RoomFileToDownload {
 
   public static final int APK = 0;
   public static final int OBB = 1;
   public static final int GENERIC = 2;
   public static final int SPLIT = 3;
 
-  @PrimaryKey private String md5;
-
+  @PrimaryKey @NonNull private String md5;
   private int downloadId;
   private String altLink;
   private String link;
@@ -27,31 +25,31 @@ public class FileToDownload extends RealmObject {
   private String path;
   private @FileType int fileType = GENERIC;
   private int progress;
-  private @Download.DownloadState int status;
+  private @RoomDownload.DownloadState int status;
   private String fileName;
   private int versionCode;
   private String versionName;
 
-  public static FileToDownload createFileToDownload(String link, String altLink, String md5,
+  public static RoomFileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
       String versionName, String cachePath) {
-    FileToDownload fileToDownload = new FileToDownload();
-    fileToDownload.setLink(link);
-    fileToDownload.setMd5(md5);
-    fileToDownload.setAltLink(altLink);
-    fileToDownload.versionCode = versionCode;
-    fileToDownload.versionName = versionName;
-    fileToDownload.setFileType(fileType);
-    fileToDownload.setPath(cachePath);
+    RoomFileToDownload roomFileToDownload = new RoomFileToDownload();
+    roomFileToDownload.setLink(link);
+    roomFileToDownload.setMd5(md5);
+    roomFileToDownload.setAltLink(altLink);
+    roomFileToDownload.versionCode = versionCode;
+    roomFileToDownload.versionName = versionName;
+    roomFileToDownload.setFileType(fileType);
+    roomFileToDownload.setPath(cachePath);
     if (!TextUtils.isEmpty(fileName)) {
       if (fileType == APK || fileType == SPLIT) {
-        fileToDownload.setFileName(fileName + ".apk");
+        roomFileToDownload.setFileName(fileName + ".apk");
       } else {
-        fileToDownload.setFileName(fileName);
+        roomFileToDownload.setFileName(fileName);
       }
     }
-    fileToDownload.setPackageName(packageName);
-    return fileToDownload;
+    roomFileToDownload.setPackageName(packageName);
+    return roomFileToDownload;
   }
 
   public int getVersionCode() {
@@ -82,7 +80,7 @@ public class FileToDownload extends RealmObject {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    FileToDownload that = (FileToDownload) o;
+    RoomFileToDownload that = (RoomFileToDownload) o;
 
     if (getDownloadId() != that.getDownloadId()) return false;
     if (getFileType() != that.getFileType()) return false;
@@ -116,15 +114,15 @@ public class FileToDownload extends RealmObject {
     return altLink;
   }
 
-  public void setAltLink(String altLink) {
+  private void setAltLink(String altLink) {
     this.altLink = altLink;
   }
 
-  public @Download.DownloadState int getStatus() {
+  public @RoomDownload.DownloadState int getStatus() {
     return status;
   }
 
-  public void setStatus(@Download.DownloadState int status) {
+  public void setStatus(@RoomDownload.DownloadState int status) {
     this.status = status;
   }
 

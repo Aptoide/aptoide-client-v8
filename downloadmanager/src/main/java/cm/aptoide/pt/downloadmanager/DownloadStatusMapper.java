@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 
 /**
  * Created by filipegoncalves on 9/4/18.
@@ -12,28 +12,28 @@ public class DownloadStatusMapper {
     int downloadState;
     switch (appDownloadState) {
       case PROGRESS:
-        downloadState = Download.PROGRESS;
+        downloadState = RoomDownload.PROGRESS;
         break;
       case INVALID_STATUS:
-        downloadState = Download.INVALID_STATUS;
+        downloadState = RoomDownload.INVALID_STATUS;
         break;
       case COMPLETED:
-        downloadState = Download.WAITING_TO_MOVE_FILES;
+        downloadState = RoomDownload.WAITING_TO_MOVE_FILES;
         break;
       case PENDING:
-        downloadState = Download.PENDING;
+        downloadState = RoomDownload.PENDING;
         break;
       case PAUSED:
-        downloadState = Download.PAUSED;
+        downloadState = RoomDownload.PAUSED;
         break;
       case WARN:
-        downloadState = Download.WARN;
+        downloadState = RoomDownload.WARN;
         break;
       case ERROR:
       case ERROR_MD5_DOES_NOT_MATCH:
       case ERROR_NOT_ENOUGH_SPACE:
       case ERROR_FILE_NOT_FOUND:
-        downloadState = Download.ERROR;
+        downloadState = RoomDownload.ERROR;
         break;
       default:
         throw new IllegalArgumentException("Invalid app download state " + appDownloadState);
@@ -47,13 +47,13 @@ public class DownloadStatusMapper {
       case ERROR:
       case ERROR_MD5_DOES_NOT_MATCH:
       case ERROR_FILE_NOT_FOUND:
-        downloadError = Download.GENERIC_ERROR;
+        downloadError = RoomDownload.GENERIC_ERROR;
         break;
       case ERROR_NOT_ENOUGH_SPACE:
-        downloadError = Download.NOT_ENOUGH_SPACE_ERROR;
+        downloadError = RoomDownload.NOT_ENOUGH_SPACE_ERROR;
         break;
       default:
-        downloadError = Download.NO_ERROR;
+        downloadError = RoomDownload.NO_ERROR;
         break;
     }
     return downloadError;

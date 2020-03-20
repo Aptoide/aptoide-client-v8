@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -238,9 +238,9 @@ public class DefaultInstaller implements Installer {
     boolean filesMoved = false;
     String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
 
-    for (FileToDownload file : installation.getFiles()) {
+    for (RoomFileToDownload file : installation.getFiles()) {
 
-      if (file.getFileType() == FileToDownload.OBB
+      if (file.getFileType() == RoomFileToDownload.OBB
           && FileUtils.fileExists(file.getFilePath())
           && !file.getPath()
           .equals(destinationPath)) {
@@ -351,8 +351,8 @@ public class DefaultInstaller implements Installer {
     AppInstall.InstallBuilder installBuilder = AppInstall.builder()
         .setPackageName(installation.getPackageName())
         .setBaseApk(installation.getFile());
-    for (FileToDownload file : installation.getFiles()) {
-      if (FileToDownload.SPLIT == file.getFileType()) {
+    for (RoomFileToDownload file : installation.getFiles()) {
+      if (RoomFileToDownload.SPLIT == file.getFileType()) {
         installBuilder.addApkSplit(new File(file.getFilePath()));
       }
     }
