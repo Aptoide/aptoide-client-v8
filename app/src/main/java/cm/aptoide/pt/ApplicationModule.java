@@ -129,6 +129,7 @@ import cm.aptoide.pt.database.realm.StoredMinimalAd;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
+import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
@@ -1528,8 +1529,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
+      HardwareSpecsFilterPersistence hardwareSpecsFilterPersistence) {
+    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
+        hardwareSpecsFilterPersistence);
+  }
+
+  @Singleton @Provides HardwareSpecsFilterPersistence providesHardwareSpecsFilterPersistence(
       @Named("default") SharedPreferences sharedPreferences) {
-    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(), sharedPreferences);
+    return new HardwareSpecsFilterPersistence(sharedPreferences);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
