@@ -11,9 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.updates.UpdatePersistence;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -30,7 +30,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
     implements NotBottomNavigationView {
 
   private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
-  @Inject RoomUpdatePersistence updatesPersistence;
+  @Inject UpdatePersistence updatesPersistence;
   private TextView emptyData;
 
   public ExcludedUpdatesFragment() {

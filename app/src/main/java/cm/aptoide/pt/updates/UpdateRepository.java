@@ -3,7 +3,6 @@ package cm.aptoide.pt.updates;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -33,7 +32,7 @@ public class UpdateRepository {
   private static final String TAG = UpdateRepository.class.getName();
 
   private final IdsRepository idsRepository;
-  private final RoomUpdatePersistence updatePersistence;
+  private final UpdatePersistence updatePersistence;
   private final StoreAccessor storeAccessor;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
@@ -44,7 +43,7 @@ public class UpdateRepository {
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
 
-  public UpdateRepository(RoomUpdatePersistence updatePersistence, StoreAccessor storeAccessor,
+  public UpdateRepository(UpdatePersistence updatePersistence, StoreAccessor storeAccessor,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,

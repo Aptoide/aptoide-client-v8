@@ -248,6 +248,7 @@ import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateMapper;
+import cm.aptoide.pt.updates.UpdatePersistence;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -967,7 +968,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreAccessor(database);
   }
 
-  @Singleton @Provides RoomUpdatePersistence providesUpdateAccessor(AptoideDatabase database) {
+  @Singleton @Provides UpdatePersistence providesUpdatePersistence(AptoideDatabase database) {
     return new RoomUpdatePersistence(database.updateDao());
   }
 
