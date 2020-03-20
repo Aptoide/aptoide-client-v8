@@ -32,4 +32,6 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
   public abstract InstalledDao installedDao();
 
   public abstract InstallationDao installationDao();
+
+  public abstract UpdateDao updateDao();
 }
