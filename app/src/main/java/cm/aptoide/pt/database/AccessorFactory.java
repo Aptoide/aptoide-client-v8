@@ -5,10 +5,8 @@ import cm.aptoide.pt.database.accessors.Accessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
 import io.realm.RealmObject;
 
 /**
@@ -21,8 +19,6 @@ import io.realm.RealmObject;
       Class<T> clazz) {
     if (clazz.equals(Download.class)) {
       return (A) new DownloadAccessor(database);
-    } else if (clazz.equals(Update.class)) {
-      return (A) new UpdateAccessor(database);
     } else if (clazz.equals(Store.class)) {
       return (A) new StoreAccessor(database);
     }
