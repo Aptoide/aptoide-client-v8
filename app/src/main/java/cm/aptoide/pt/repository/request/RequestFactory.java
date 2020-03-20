@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
+import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -52,7 +53,8 @@ import retrofit2.Converter;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(), sharedPreferences);
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
+            new HardwareSpecsFilterPersistence(sharedPreferences));
     listStoresRequestFactory =
         new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);

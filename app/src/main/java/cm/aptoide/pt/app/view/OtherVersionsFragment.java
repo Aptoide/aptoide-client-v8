@@ -19,6 +19,7 @@ import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
+import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppVersions;
@@ -158,7 +159,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
             new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences())),
+                new HardwareSpecsFilterPersistence(
+                    ((AptoideApplication) getContext()).getDefaultSharedPreferences()))),
         otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);
