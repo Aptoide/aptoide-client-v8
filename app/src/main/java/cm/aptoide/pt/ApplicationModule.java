@@ -119,12 +119,12 @@ import cm.aptoide.pt.database.RoomInstallationPersistence;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -247,6 +247,7 @@ import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.updates.UpdateMapper;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -966,8 +967,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreAccessor(database);
   }
 
-  @Singleton @Provides UpdateAccessor providesUpdateAccessor(Database database) {
-    return new UpdateAccessor(database);
+  @Singleton @Provides RoomUpdatePersistence providesUpdateAccessor(AptoideDatabase database) {
+    return new RoomUpdatePersistence(database.updateDao());
   }
 
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
@@ -1496,7 +1497,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
@@ -1625,15 +1627,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UpdatesManager(updateRepository);
   }
 
-  @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
-      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("mature-pool-v7")
+  @Singleton @Provides UpdateRepository providesUpdateRepository(
+      RoomUpdatePersistence updatePersistence, StoreAccessor storeAccessor,
+      IdsRepository idsRepository, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
-    return new UpdateRepository(updateAccessor, storeAccessor, idsRepository, bodyInterceptorPoolV7,
-        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        application.getPackageManager(), appBundlesVisibilityManager);
+      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
+    return new UpdateRepository(updatePersistence, storeAccessor, idsRepository,
+        bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        application.getPackageManager(), appBundlesVisibilityManager, updateMapper);
+  }
+
+  @Singleton @Provides UpdateMapper providesUpdateMapper() {
+    return new UpdateMapper();
   }
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(

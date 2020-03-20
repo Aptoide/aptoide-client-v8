@@ -9,8 +9,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -29,12 +29,12 @@ public final class RepositoryFactory {
       SharedPreferences sharedPreferences) {
     return new UpdateRepository(AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()
-            .getApplicationContext()).getDatabase(), Update.class), AccessorFactory.getAccessorFor(
+            .getApplicationContext()).getDatabase(), RoomUpdate.class), AccessorFactory.getAccessorFor(
         ((AptoideApplication) context.getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
         getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
         getTokenInvalidator(context), sharedPreferences, context.getPackageManager(),
-        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()));
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()), updateMapper);
   }
 
   private static IdsRepository getIdsRepository(Context context) {
