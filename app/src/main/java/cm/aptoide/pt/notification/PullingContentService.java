@@ -22,7 +22,6 @@ import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
@@ -45,10 +44,10 @@ public class PullingContentService extends BaseService {
   public static final int UPDATE_NOTIFICATION_ID = 123;
   @Inject @Named("marketName") String marketName;
   @Inject DownloadFactory downloadFactory;
+  @Inject UpdateRepository updateRepository;
   private AptoideApplication application;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
-  private UpdateRepository updateRepository;
   private SharedPreferences sharedPreferences;
   private NotificationAnalytics notificationAnalytics;
 
@@ -67,7 +66,6 @@ public class PullingContentService extends BaseService {
     application = (AptoideApplication) getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     installManager = application.getInstallManager();
-    updateRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     notificationAnalytics = application.getNotificationAnalytics();
     subscriptions = new CompositeSubscription();
     AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);

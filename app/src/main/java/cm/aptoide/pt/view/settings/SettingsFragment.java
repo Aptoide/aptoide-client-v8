@@ -49,7 +49,6 @@ import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagedKeys;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdateRepository;
@@ -98,18 +97,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
   @Inject SupportEmailProvider supportEmailProvider;
   @Inject ThemeManager themeManager;
   @Inject ThemeAnalytics themeAnalytics;
+  @Inject UpdateRepository updatesRepository;
   private Context context;
   private CompositeSubscription subscriptions;
   private FileManager fileManager;
   private AptoideAccountManager accountManager;
-
   private RxAlertDialog appThemeDialog;
   private RxAlertDialog adultContentConfirmationDialog;
   private EditableTextDialog enableAdultContentPinDialog;
   private EditableTextDialog setPinDialog;
   private EditableTextDialog removePinDialog;
   private InputDialog fileMaxCacheDialog;
-
   private Preference pinPreferenceView;
   private Preference removePinPreferenceView;
   private Preference fileMaxCachePreferenceView;
@@ -124,7 +122,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
   private boolean trackAnalytics;
   private NotificationSyncScheduler notificationSyncScheduler;
   private SharedPreferences sharedPreferences;
-  private UpdateRepository repository;
   private AdultContentAnalytics adultContentAnalytics;
   private FragmentNavigator fragmentNavigator;
   private AuthenticationPersistence authenticationPersistence;
@@ -151,8 +148,6 @@ public class SettingsFragment extends PreferenceFragmentCompat
         ((AptoideApplication) getContext().getApplicationContext()).getNotificationSyncScheduler();
     NavigationTracker navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    repository = RepositoryFactory.getUpdateRepository(getContext(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     navigationTracker.registerScreen(ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName()));
     adultContentAnalytics = application.getAdultContentAnalytics();
@@ -349,7 +344,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     if (shouldRefreshUpdates(key)) {
-      repository.sync(true, false)
+      updatesRepository.sync(true, false)
           .subscribe(() -> Logger.getInstance()
               .d(TAG, "updates refreshed"), throwable -> CrashReport.getInstance()
               .log(throwable));
