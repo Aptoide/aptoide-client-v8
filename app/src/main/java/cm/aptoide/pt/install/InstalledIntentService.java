@@ -18,7 +18,6 @@ import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
@@ -36,8 +35,8 @@ public class InstalledIntentService extends IntentService {
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
   @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
+  @Inject UpdateRepository updatesRepository;
   private SharedPreferences sharedPreferences;
-  private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private RootAvailabilityManager rootAvailabilityManager;
@@ -58,7 +57,6 @@ public class InstalledIntentService extends IntentService {
 
     final SharedPreferences sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
-    updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
     installManager = ((AptoideApplication) getApplicationContext()).getInstallManager();
     rootAvailabilityManager =
