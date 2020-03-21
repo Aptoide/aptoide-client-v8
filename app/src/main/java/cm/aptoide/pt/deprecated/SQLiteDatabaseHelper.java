@@ -9,11 +9,9 @@ import android.os.Build;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.deprecated.tables.Downloads;
-import cm.aptoide.pt.deprecated.tables.Excluded;
 import cm.aptoide.pt.deprecated.tables.Repo;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -101,15 +99,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
       logException(ex);
     }
 
-    try {
-      new Excluded().migrate(db, AccessorFactory.getAccessorFor(
-          ((AptoideApplication) context.getApplicationContext()
-              .getApplicationContext()).getDatabase(), Update.class), packageManager,
-          context.getApplicationContext());
-    } catch (Exception ex) {
-      logException(ex);
-    }
-
     // Updates table has changed. The new one has column label the old one doesn't.
     // The updates are going to be obtained from ws
     //try {
@@ -122,7 +111,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     try {
       new Downloads().migrate(AccessorFactory.getAccessorFor(
           ((AptoideApplication) context.getApplicationContext()
-              .getApplicationContext()).getDatabase(), Download.class));
+              .getApplicationContext()).getDatabase(), RoomDownload.class));
     } catch (Exception ex) {
       logException(ex);
     }
