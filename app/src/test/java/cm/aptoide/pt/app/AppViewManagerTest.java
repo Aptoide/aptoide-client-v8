@@ -8,7 +8,7 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;

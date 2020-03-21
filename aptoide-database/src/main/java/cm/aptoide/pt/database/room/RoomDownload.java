@@ -3,7 +3,7 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import cm.aptoide.pt.database.room.RoomFileToDownload;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;

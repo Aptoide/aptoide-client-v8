@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;

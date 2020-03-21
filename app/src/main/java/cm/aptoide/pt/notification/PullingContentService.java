@@ -17,7 +17,7 @@ import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;

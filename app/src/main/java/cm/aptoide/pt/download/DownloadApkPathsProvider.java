@@ -1,6 +1,6 @@
 package cm.aptoide.pt.download;
 
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 
 public class DownloadApkPathsProvider {
 

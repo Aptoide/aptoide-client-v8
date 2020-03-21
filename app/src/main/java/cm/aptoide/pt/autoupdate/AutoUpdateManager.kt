@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
-import cm.aptoide.pt.database.realm.RoomDownload
+import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadAnalytics
 import cm.aptoide.pt.download.DownloadFactory
 import cm.aptoide.pt.install.Install

@@ -7,9 +7,9 @@ package cm.aptoide.pt.download;
 
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.MinimalAdMapper;
+import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.accessors.RoomDownloadPersistence;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;

@@ -7,7 +7,7 @@ package cm.aptoide.pt.download;
 
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.aab.Split;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.realm.RealmString;
 import cm.aptoide.pt.database.realm.RoomSplit;
 import cm.aptoide.pt.database.room.RoomUpdate;

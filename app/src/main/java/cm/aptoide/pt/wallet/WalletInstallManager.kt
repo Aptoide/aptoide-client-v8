@@ -5,7 +5,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
-import cm.aptoide.pt.database.realm.RoomDownload
+import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadFactory
 import cm.aptoide.pt.install.AppInstallerStatusReceiver
 import cm.aptoide.pt.install.InstallManager

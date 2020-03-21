@@ -1,7 +1,7 @@
 package cm.aptoide.pt.downloadmanager;
 
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.utils.FileUtils;

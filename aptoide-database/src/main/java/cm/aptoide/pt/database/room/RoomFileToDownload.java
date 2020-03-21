@@ -5,7 +5,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.utils.IdUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -5,8 +5,8 @@
 
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.database.accessors.RoomDownloadPersistence;
-import cm.aptoide.pt.database.realm.RoomDownload;
+import cm.aptoide.pt.database.RoomDownloadPersistence;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.InstalledRepository;
