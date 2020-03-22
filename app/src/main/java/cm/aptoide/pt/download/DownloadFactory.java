@@ -8,10 +8,9 @@ package cm.aptoide.pt.download;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.database.realm.RealmString;
-import cm.aptoide.pt.database.realm.RoomSplit;
-import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
+import cm.aptoide.pt.database.room.RoomSplit;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,18 +103,19 @@ public class DownloadFactory {
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
             update.getApkPath(), update.getAlternativeApkPath(), splits,
-            mapRequiredSplits(update.getRequiredSplits()));
+            update.getRequiredSplits());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
       ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
-          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE, update.getApkPath(),
-          update.getAlternativeApkPath());
+          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE,
+          update.getApkPath(), update.getAlternativeApkPath());
 
       RoomDownload download = new RoomDownload();
       download.setMd5(update.getMd5());
       download.setIcon(update.getIcon());
       download.setAppName(update.getLabel());
-      download.setAction(isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE);
+      download.setAction(
+          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE);
       download.setPackageName(update.getPackageName());
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());
@@ -135,17 +135,8 @@ public class DownloadFactory {
     }
   }
 
-  private List<String> mapRequiredSplits(List<RealmString> requiredSplits) {
-    ArrayList<String> requiredSplitsResult = new ArrayList<>();
-    if (requiredSplits == null) return requiredSplitsResult;
-    for (RealmString split : requiredSplits) {
-      requiredSplitsResult.add(split.getString());
-    }
-    return requiredSplitsResult;
-  }
-
   private List<Split> map(List<RoomSplit> roomSplits) {
-    ArrayList<Split> splitsResult = new ArrayList<>();
+    List<Split> splitsResult = new ArrayList<>();
     if (roomSplits == null) return splitsResult;
     for (RoomSplit roomSplit : roomSplits) {
       splitsResult.add(new Split(roomSplit.getName(), roomSplit.getType(), roomSplit.getPath(),
