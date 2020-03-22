@@ -1,13 +1,11 @@
 package cm.aptoide.pt.updates
 
-import cm.aptoide.pt.database.realm.RealmString
-import cm.aptoide.pt.database.realm.RoomSplit
+import cm.aptoide.pt.database.room.RoomSplit
 import cm.aptoide.pt.database.room.RoomUpdate
 import cm.aptoide.pt.dataprovider.model.v7.Split
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App
-import io.realm.RealmList
 
-class UpdateMapper {
+public class UpdateMapper {
 
   fun mapAppUpdateList(appList: List<App>, isAppcUpgrade: Boolean): List<RoomUpdate> {
     val updateList: ArrayList<RoomUpdate> = ArrayList()
@@ -61,22 +59,23 @@ class UpdateMapper {
 
   private fun mapSplits(
       splits: List<Split>?): List<RoomSplit>? {
-    val splitsResult: MutableList<RoomSplit> = java.util.ArrayList()
+    val splitsResult: MutableList<RoomSplit> = ArrayList()
     if (splits == null) return splitsResult
     for (split in splits) {
       splitsResult.add(
-          RoomSplit(split.md5sum, split.path, split.type, split.name,
+          RoomSplit(split.md5sum, split.path,
+              split.type, split.name,
               split.filesize))
     }
     return splitsResult
   }
 
   private fun mapRequiredSplits(
-      requiredSplits: List<String>?): RealmList<RealmString>? {
-    val requiredSplitsResult = RealmList<RealmString>()
+      requiredSplits: List<String>?): List<String>? {
+    val requiredSplitsResult = ArrayList<String>()
     if (requiredSplits == null) return requiredSplitsResult
     for (required in requiredSplits) {
-      requiredSplitsResult.add(RealmString(required))
+      requiredSplitsResult.add(required)
     }
     return requiredSplitsResult
   }
