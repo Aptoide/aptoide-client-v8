@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.install.InstalledRepository;
 import java.io.File;
 import java.util.List;
@@ -20,11 +20,11 @@ import rx.Completable;
 public class DownloadInstallationAdapter implements Installation {
 
   private final RoomDownload download;
-  private RoomDownloadPersistence downloadPersistence;
+  private DownloadPersistence downloadPersistence;
   private InstalledRepository ongoingInstallProvider;
   private RoomInstalled installed;
 
-  public DownloadInstallationAdapter(RoomDownload download, RoomDownloadPersistence downloadPersistence,
+  public DownloadInstallationAdapter(RoomDownload download, DownloadPersistence downloadPersistence,
       InstalledRepository installedRepository, RoomInstalled installed) {
     this.download = download;
     this.downloadPersistence = downloadPersistence;
