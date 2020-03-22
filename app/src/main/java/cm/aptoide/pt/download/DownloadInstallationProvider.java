@@ -7,13 +7,13 @@ package cm.aptoide.pt.download;
 
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.MinimalAdMapper;
-import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
@@ -31,13 +31,13 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
   private static final String TAG = "DownloadInstallationPro";
   private final AptoideDownloadManager downloadManager;
-  private final RoomDownloadPersistence downloadPersistence;
+  private final DownloadPersistence downloadPersistence;
   private final MinimalAdMapper adMapper;
   private final InstalledRepository installedRepository;
   private final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
-      RoomDownloadPersistence downloadPersistence, InstalledRepository installedRepository,
+      DownloadPersistence downloadPersistence, InstalledRepository installedRepository,
       MinimalAdMapper adMapper, RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     this.downloadManager = downloadManager;
     this.downloadPersistence = downloadPersistence;

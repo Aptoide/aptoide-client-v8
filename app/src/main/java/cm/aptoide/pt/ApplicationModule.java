@@ -490,7 +490,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      AptoideDownloadManager downloadManager, RoomDownloadPersistence downloadPersistence,
+      AptoideDownloadManager downloadManager, DownloadPersistence downloadPersistence,
       InstalledRepository installedRepository,
       RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     return new DownloadInstallationProvider(downloadManager, downloadPersistence,
@@ -1630,9 +1630,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides UpdateRepository providesUpdateRepository(
-      RoomUpdatePersistence updatePersistence, StoreAccessor storeAccessor,
-      IdsRepository idsRepository, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      UpdatePersistence updatePersistence, StoreAccessor storeAccessor, IdsRepository idsRepository,
+      @Named("mature-pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
