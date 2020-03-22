@@ -110,6 +110,7 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
               .flatMapSingle(updatesManager::filterAppcUpgrade)
+              .filter(upgrade -> upgrade != null)
               .toList()
               .map(appMapper::getUpdatesList);
         });
@@ -134,6 +135,7 @@ public class AppsManager {
         .distinctUntilChanged()
         .flatMapIterable(list -> list)
         .flatMapSingle(updatesManager::filterUpdates)
+        .filter(update -> update != null)
         .toList()
         .map(appMapper::mapInstalledToInstalledApps);
   }
@@ -152,6 +154,7 @@ public class AppsManager {
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
               .flatMapSingle(updatesManager::filterAppcUpgrade)
+              .filter(upgrade -> upgrade != null)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
