@@ -1,11 +1,7 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "split") public class RoomSplit {
-  @PrimaryKey @NonNull private String md5;
+public class RoomSplit {
+  private String md5;
   private String path;
   private String type;
   private String name;

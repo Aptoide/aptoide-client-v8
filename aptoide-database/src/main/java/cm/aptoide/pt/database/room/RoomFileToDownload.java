@@ -2,21 +2,19 @@ package cm.aptoide.pt.database.room;
 
 import android.text.TextUtils;
 import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import androidx.room.Ignore;
 import cm.aptoide.pt.utils.IdUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@Entity(tableName = "filetodownload") public class RoomFileToDownload {
+public class RoomFileToDownload {
 
-  public static final int APK = 0;
-  public static final int OBB = 1;
-  public static final int GENERIC = 2;
-  public static final int SPLIT = 3;
+  @Ignore public static final int APK = 0;
+  @Ignore public static final int OBB = 1;
+  @Ignore public static final int GENERIC = 2;
+  @Ignore public static final int SPLIT = 3;
 
-  @PrimaryKey @NonNull private String md5;
+  private String md5;
   private int downloadId;
   private String altLink;
   private String link;
@@ -28,6 +26,9 @@ import java.lang.annotation.RetentionPolicy;
   private String fileName;
   private int versionCode;
   private String versionName;
+
+  public RoomFileToDownload() {
+  }
 
   public static RoomFileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,

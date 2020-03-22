@@ -6,11 +6,9 @@
 package cm.aptoide.pt.database.room;
 
 import androidx.annotation.NonNull;
-import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import cm.aptoide.pt.database.realm.RealmString;
-import cm.aptoide.pt.database.realm.RoomSplit;
 import java.util.List;
 
 /**
@@ -19,20 +17,20 @@ import java.util.List;
 
 @Entity(tableName = "update") public class RoomUpdate {
 
-  public static final String LABEL = "label";
-  public static final String ICON = "icon";
-  public static final String PACKAGE_NAME = "packageName";
-  public static final String VERSION_CODE = "versionCode";
-  public static final String SIGNATURE = "signature";
-  public static final String TIMESTAMP = "timestamp";
-  public static final String MD5 = "md5";
-  public static final String APK_PATH = "apkPath";
-  public static final String FILE_SIZE = "fileSize";
-  public static final String UPDATE_VERSION_NAME = "updateVersionName";
-  public static final String ALTERNATIVE_URL = "alternativeApkPath";
-  public static final String UPDATE_VERSION_CODE = "updateVersionCode";
-  public static final String EXCLUDED = "excluded";
-  public static final String APPC_UPGRADE = "appcUpgrade";
+  @Ignore public static final String LABEL = "label";
+  @Ignore public static final String ICON = "icon";
+  @Ignore public static final String PACKAGE_NAME = "packageName";
+  @Ignore public static final String VERSION_CODE = "versionCode";
+  @Ignore public static final String SIGNATURE = "signature";
+  @Ignore public static final String TIMESTAMP = "timestamp";
+  @Ignore public static final String MD5 = "md5";
+  @Ignore public static final String APK_PATH = "apkPath";
+  @Ignore public static final String FILE_SIZE = "fileSize";
+  @Ignore public static final String UPDATE_VERSION_NAME = "updateVersionName";
+  @Ignore public static final String ALTERNATIVE_URL = "alternativeApkPath";
+  @Ignore public static final String UPDATE_VERSION_CODE = "updateVersionCode";
+  @Ignore public static final String EXCLUDED = "excluded";
+  @Ignore public static final String APPC_UPGRADE = "appcUpgrade";
 
   @NonNull @PrimaryKey private String packageName;
   private long appId;
@@ -61,8 +59,8 @@ import java.util.List;
   private String patchObbMd5;
 
   // Splits
-  @Embedded private List<RoomSplit> roomSplits;
-  private List<RealmString> requiredSplits;
+  private List<RoomSplit> roomSplits;
+  private List<String> requiredSplits;
 
   //appc
   private boolean hasAppc;
@@ -74,7 +72,7 @@ import java.util.List;
       String path, long size, String versionName, String pathAlt, int versionCode, String rankName,
       String mainObbFileName, String mainObbPath, String mainObbMd5, String patchObbFileName,
       String patchObbPath, String patchObbMd5, boolean appcUpgrade, boolean hasAppc,
-      List<RoomSplit> roomSplits, List<RealmString> requiredSplits, String storeName) {
+      List<RoomSplit> roomSplits, List<String> requiredSplits, String storeName) {
     this.appId = id;
     this.label = name;
     this.icon = icon;
@@ -255,6 +253,10 @@ import java.util.List;
     return trustedBadge;
   }
 
+  public void setTrustedBadge(String trustedBadge) {
+    this.trustedBadge = trustedBadge;
+  }
+
   public boolean isAppcUpgrade() {
     return appcUpgrade;
   }
@@ -279,11 +281,11 @@ import java.util.List;
     this.roomSplits = roomSplits;
   }
 
-  public List<RealmString> getRequiredSplits() {
+  public List<String> getRequiredSplits() {
     return requiredSplits;
   }
 
-  public void setRequiredSplits(List<RealmString> requiredSplits) {
+  public void setRequiredSplits(List<String> requiredSplits) {
     this.requiredSplits = requiredSplits;
   }
 
@@ -293,5 +295,9 @@ import java.util.List;
 
   public String getStoreName() {
     return storeName;
+  }
+
+  public void setStoreName(String storeName) {
+    this.storeName = storeName;
   }
 }
