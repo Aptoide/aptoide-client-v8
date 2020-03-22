@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.accessors.RoomDownloadPersistence;
 import cm.aptoide.pt.database.room.RoomDownload;
 import java.util.List;
 import rx.Completable;
@@ -12,9 +11,9 @@ import rx.Observable;
 
 public class DownloadsRepository {
 
-  private RoomDownloadPersistence downloadPersistence;
+  private DownloadPersistence downloadPersistence;
 
-  public DownloadsRepository(RoomDownloadPersistence downloadPersistence) {
+  public DownloadsRepository(DownloadPersistence downloadPersistence) {
     this.downloadPersistence = downloadPersistence;
   }
 
@@ -43,7 +42,7 @@ public class DownloadsRepository {
   }
 
   public Completable remove(String md5) {
-    return Completable.fromAction(() -> downloadPersistence.delete(md5));
+    return downloadPersistence.delete(md5);
   }
 
   public Observable<List<RoomDownload>> getDownloadListByMd5(String md5) {

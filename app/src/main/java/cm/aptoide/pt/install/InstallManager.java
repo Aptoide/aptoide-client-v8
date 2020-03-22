@@ -247,8 +247,8 @@ public class InstallManager {
             .d(TAG, install.toString()));
   }
 
-  private Install createInstall(RoomDownload download, InstallationState installationState, String md5,
-      String packageName, int versioncode, Install.InstallationType installationType) {
+  private Install createInstall(RoomDownload download, InstallationState installationState,
+      String md5, String packageName, int versioncode, Install.InstallationType installationType) {
     return new Install(mapInstallation(download),
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
@@ -288,7 +288,8 @@ public class InstallManager {
     }
   }
 
-  private boolean mapIndeterminateState(RoomDownload download, InstallationState installationState) {
+  private boolean mapIndeterminateState(RoomDownload download,
+      InstallationState installationState) {
     return mapIndeterminate(download) || mapInstallIndeterminate(installationState.getStatus(),
         installationState.getType(), download);
   }
@@ -431,8 +432,8 @@ public class InstallManager {
     return isIndeterminate;
   }
 
-  @NonNull private RoomDownload updateDownloadAction(
-      RoomDownload download, RoomDownload storedDownload) {
+  @NonNull
+  private RoomDownload updateDownloadAction(RoomDownload download, RoomDownload storedDownload) {
     if (storedDownload.getAction() != download.getAction()) {
       storedDownload.setAction(download.getAction());
       downloadRepository.save(storedDownload);

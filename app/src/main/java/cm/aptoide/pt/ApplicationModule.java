@@ -110,6 +110,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
@@ -123,7 +124,6 @@ import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
-import cm.aptoide.pt.database.accessors.RoomDownloadPersistence;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
@@ -154,6 +154,7 @@ import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
 import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
@@ -460,7 +461,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(
-      RoomDownloadPersistence downloadPersistence) {
+      DownloadPersistence downloadPersistence) {
     return new DownloadsRepository(downloadPersistence);
   }
 
@@ -575,7 +576,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomInstallationPersistence(database.installationDao());
   }
 
-  @Singleton @Provides RoomDownloadPersistence provideDownloadAccessor(AptoideDatabase database) {
+  @Singleton @Provides DownloadPersistence provideDownloadPersistence(AptoideDatabase database) {
     return new RoomDownloadPersistence(database.downloadDAO());
   }
 
