@@ -9,9 +9,7 @@ import android.os.Build;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.RoomDownload;
 import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.deprecated.tables.Downloads;
 import cm.aptoide.pt.deprecated.tables.Repo;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -107,14 +105,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     //} catch (Exception ex) {
     //  logException(ex);
     //}
-
-    try {
-      new Downloads().migrate(AccessorFactory.getAccessorFor(
-          ((AptoideApplication) context.getApplicationContext()
-              .getApplicationContext()).getDatabase(), RoomDownload.class));
-    } catch (Exception ex) {
-      logException(ex);
-    }
 
     // table "AmazonABTesting" was deliberedly left out due to its irrelevance in the DB upgrade
     // table "ExcludedAd" was deliberedly left out due to its irrelevance in the DB upgrade
