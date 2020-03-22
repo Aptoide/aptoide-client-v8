@@ -2,6 +2,7 @@ package cm.aptoide.pt.database.room;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import cm.aptoide.pt.database.BuildConfig;
 
 import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
@@ -13,7 +14,9 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
     RoomEvent.class, RoomExperiment.class, RoomStoredMinimalAd.class, RoomNotification.class,
     RoomLocalNotificationSync.class, RoomInstalled.class, RoomInstallation.class, RoomUpdate.class,
     RoomDownload.class
-}, version = VERSION) public abstract class AptoideDatabase extends RoomDatabase {
+}, version = VERSION) @TypeConverters({
+    SplitTypeConverter.class, StringTypeConverter.class, FileToDownloadTypeConverter.class
+}) public abstract class AptoideDatabase extends RoomDatabase {
 
   /**
    * Database Schema version
