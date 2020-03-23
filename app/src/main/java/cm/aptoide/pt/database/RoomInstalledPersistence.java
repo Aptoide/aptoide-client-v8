@@ -34,10 +34,6 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  /**
-   * @return all the entries from this table even not installed apps
-   * if you want only installed apps consider using the install manager
-   */
   public Observable<List<RoomInstalled>> getAll() {
     return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());

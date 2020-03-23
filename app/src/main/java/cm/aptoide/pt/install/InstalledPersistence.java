@@ -9,6 +9,10 @@ public interface InstalledPersistence {
 
   Observable<List<RoomInstalled>> getAllInstalled();
 
+  /**
+   * @return all the entries from this table even not installed apps
+   * if you want only installed apps consider using the install manager
+   */
   Observable<List<RoomInstalled>> getAll();
 
   Observable<List<RoomInstalled>> getAllInstalledSorted();
