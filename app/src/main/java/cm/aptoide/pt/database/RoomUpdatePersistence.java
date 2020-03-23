@@ -71,7 +71,8 @@ public class RoomUpdatePersistence implements UpdatePersistence {
   }
 
   public Completable save(RoomUpdate update) {
-    return Completable.fromAction(() -> updateDao.insert(update));
+    return Completable.fromAction(() -> updateDao.insert(update))
+        .subscribeOn(Schedulers.io());
   }
 
   public Single<Boolean> isExcluded(String packageName) {

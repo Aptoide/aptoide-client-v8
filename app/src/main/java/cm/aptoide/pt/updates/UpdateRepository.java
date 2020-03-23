@@ -201,11 +201,13 @@ public class UpdateRepository {
 
   public Completable setExcluded(String packageName, boolean excluded) {
     return updatePersistence.get(packageName)
+        .first()
         .toSingle()
-        .flatMapCompletable(update -> {
-          update.setExcluded(excluded);
-          return updatePersistence.save(update);
-        });
+        .flatMap(update -> {
+          update.setExcluded(true);
+          return Single.just(update);
+        })
+        .flatMapCompletable(update -> updatePersistence.save(update));
   }
 
   public Single<Boolean> contains(String packageName, boolean isExcluded) {
