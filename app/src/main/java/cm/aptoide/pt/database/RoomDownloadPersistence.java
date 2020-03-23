@@ -50,7 +50,7 @@ public class RoomDownloadPersistence implements DownloadPersistence {
   }
 
   public void save(RoomDownload download) {
-    downloadDAO.insert(download);
+    new Thread(() -> downloadDAO.insert(download)).start();
   }
 
  /* public Completable save(List<RoomDownload> downloads) {
