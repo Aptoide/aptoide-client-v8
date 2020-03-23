@@ -113,7 +113,7 @@ public class DefaultInstaller implements Installer {
                 installation.setStatus(RoomInstalled.STATUS_COMPLETED);
                 return installation.save()
                     .toObservable()
-                    .map(__ -> null);
+                    .map(__ -> installation);
               } else {
                 if (forceDefaultInstall) {
                   return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
