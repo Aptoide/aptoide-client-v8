@@ -90,7 +90,7 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Completable clearAndAddAll(List<RoomInstalled> list) {
+  public Completable replaceAllBy(List<RoomInstalled> list) {
     return Completable.fromAction(() -> {
       installedDao.removeAll();
       installedDao.insertAll(list);
