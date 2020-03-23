@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 public class RoomDownloadPersistence implements DownloadPersistence {
@@ -30,9 +31,16 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<RoomDownload> get(String md5) {
-    return RxJavaInterop.toV1Observable(downloadDAO.get(md5), BackpressureStrategy.BUFFER)
-        .defaultIfEmpty(null)
+  public Single<RoomDownload> getAsSingle(String md5) {
+    return RxJavaInterop.toV1Single(downloadDAO.getAsSingle(md5))
+        .onErrorReturn(throwable -> null)
+        .subscribeOn(Schedulers.io());
+  }
+
+  public Observable<RoomDownload> getAsObservable(String md5) {
+    return RxJavaInterop.toV1Observable(downloadDAO.getAsObservable(md5),
+        BackpressureStrategy.BUFFER)
+        .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
 
@@ -41,9 +49,8 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Completable save(RoomDownload download) {
-    return Completable.fromAction(() -> downloadDAO.insert(download))
-        .subscribeOn(Schedulers.io());
+  public void save(RoomDownload download) {
+    downloadDAO.insert(download);
   }
 
  /* public Completable save(List<RoomDownload> downloads) {

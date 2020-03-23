@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by filipegoncalves on 7/27/18.
@@ -17,7 +18,9 @@ public interface DownloadManager {
 
   Completable startDownload(RoomDownload download);
 
-  Observable<RoomDownload> getDownload(String md5);
+  Observable<RoomDownload> getDownloadAsObservable(String md5);
+
+  Single<RoomDownload> getDownloadAsSingle(String md5);
 
   Observable<RoomDownload> getDownloadsByMd5(String md5);
 

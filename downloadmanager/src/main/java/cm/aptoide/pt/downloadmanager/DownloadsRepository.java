@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 /**
  * Created by filipegoncalves on 8/21/18.
@@ -21,8 +22,12 @@ public class DownloadsRepository {
     downloadPersistence.save(download);
   }
 
-  public Observable<RoomDownload> getDownload(String md5) {
-    return downloadPersistence.get(md5);
+  public Single<RoomDownload> getDownloadAsSingle(String md5) {
+    return downloadPersistence.getAsSingle(md5);
+  }
+
+  public Observable<RoomDownload> getDownloadAsObservable(String md5) {
+    return downloadPersistence.getAsObservable(md5);
   }
 
   public Observable<List<RoomDownload>> getDownloadsInProgress() {

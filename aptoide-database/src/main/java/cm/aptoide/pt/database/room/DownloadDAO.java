@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
@@ -12,8 +13,10 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Query("SELECT * from download") Observable<List<RoomDownload>> getAll();
 
-  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Observable<RoomDownload> get(
-      String md5);
+  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Single<RoomDownload> getAsSingle(String md5);
+
+  @Query("SELECT * from download where md5 = :md5 LIMIT 1 ") Observable<RoomDownload> getAsObservable(String md5);
+
 
   @Query("DELETE from download where md5= :md5") void remove(String md5);
 

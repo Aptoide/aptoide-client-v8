@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.Subscription;
 
 /**
@@ -72,8 +73,8 @@ public class AptoideDownloadManager implements DownloadManager {
     });
   }
 
-  @Override public Observable<RoomDownload> getDownload(String md5) {
-    return downloadsRepository.getDownload(md5)
+  @Override public Observable<RoomDownload> getDownloadAsObservable(String md5) {
+    return downloadsRepository.getDownloadAsObservable(md5)
         .flatMap(download -> {
           if (download == null || isFileMissingFromCompletedDownload(download)) {
             return Observable.error(new DownloadNotFoundException());
@@ -83,6 +84,17 @@ public class AptoideDownloadManager implements DownloadManager {
         })
         .takeUntil(
             storedDownload -> storedDownload.getOverallDownloadStatus() == RoomDownload.COMPLETED);
+  }
+
+  @Override public Single<RoomDownload> getDownloadAsSingle(String md5) {
+    return downloadsRepository.getDownloadAsSingle(md5)
+        .flatMap(download -> {
+          if (download == null || isFileMissingFromCompletedDownload(download)) {
+            return Single.error(new DownloadNotFoundException());
+          } else {
+            return Single.just(download);
+          }
+        });
   }
 
   @Override public Observable<RoomDownload> getDownloadsByMd5(String md5) {
@@ -126,7 +138,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Completable pauseDownload(String md5) {
-    return downloadsRepository.getDownload(md5)
+    return downloadsRepository.getDownloadAsObservable(md5)
         .first()
         .doOnError(throwable -> throwable.printStackTrace())
         .map(download -> {
@@ -140,7 +152,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Observable<Integer> getDownloadStatus(String md5) {
-    return getDownload(md5).onErrorReturn(throwable -> null)
+    return getDownloadAsObservable(md5).onErrorReturn(throwable -> null)
         .map(download -> {
           if (download != null) {
             if (download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
@@ -154,7 +166,7 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @Override public Completable removeDownload(String md5) {
-    return downloadsRepository.getDownload(md5)
+    return downloadsRepository.getDownloadAsObservable(md5)
         .first()
         .flatMap(download -> getAppDownloader(download).flatMap(
             appDownloader -> appDownloader.removeAppDownload()
@@ -294,7 +306,8 @@ public class AptoideDownloadManager implements DownloadManager {
 
   private Observable<RoomDownload> handleDownloadProgress(AppDownloader appDownloader) {
     return appDownloader.observeDownloadProgress()
-        .flatMap(appDownloadStatus -> downloadsRepository.getDownload(appDownloadStatus.getMd5())
+        .flatMap(appDownloadStatus -> downloadsRepository.getDownloadAsObservable(
+            appDownloadStatus.getMd5())
             .first()
             .flatMap(download -> updateDownload(download, appDownloadStatus)))
         .doOnNext(download -> {

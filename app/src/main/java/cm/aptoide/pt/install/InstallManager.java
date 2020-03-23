@@ -71,7 +71,7 @@ public class InstallManager {
 
   private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
       boolean forceSplitInstall) {
-    aptoideDownloadManager.getDownload(md5)
+    aptoideDownloadManager.getDownloadAsObservable(md5)
         .filter(download -> download != null)
         .takeUntil(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
         .filter(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
@@ -222,8 +222,8 @@ public class InstallManager {
 
   private Completable install(RoomDownload download, boolean forceDefaultInstall,
       boolean forceSplitInstall, boolean shouldInstall) {
-    return aptoideDownloadManager.getDownload(download.getMd5())
-        .first()
+    return aptoideDownloadManager.getDownloadAsSingle(download.getMd5())
+        .toObservable()
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(storedDownload -> {
@@ -466,8 +466,8 @@ public class InstallManager {
     if (shouldInstall) {
       waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
     }
-    return aptoideDownloadManager.getDownload(md5)
-        .first()
+    return aptoideDownloadManager.getDownloadAsSingle(md5)
+        .toObservable()
         .doOnNext(__ -> {
           if (shouldInstall) {
             startInstallService();
@@ -594,9 +594,7 @@ public class InstallManager {
    * @return the download object to be resumed or null if doesn't exists
    */
   public Single<RoomDownload> getDownload(String md5) {
-    return downloadRepository.getDownload(md5)
-        .first()
-        .toSingle();
+    return downloadRepository.getDownloadAsSingle(md5);
   }
 
   public Completable retryTimedOutInstallations() {
@@ -663,7 +661,7 @@ public class InstallManager {
   }
 
   public Observable<Install.InstallationStatus> getDownloadState(String md5) {
-    return aptoideDownloadManager.getDownload(md5)
+    return aptoideDownloadManager.getDownloadAsObservable(md5)
         .first()
         .map(download -> mapDownloadState(download));
   }

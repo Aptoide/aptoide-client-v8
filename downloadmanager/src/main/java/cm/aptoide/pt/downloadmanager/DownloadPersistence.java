@@ -4,16 +4,19 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public interface DownloadPersistence {
 
   Observable<List<RoomDownload>> getAll();
 
-  Observable<RoomDownload> get(String md5);
+  Single<RoomDownload> getAsSingle(String md5);
+
+  Observable<RoomDownload> getAsObservable(String md5);
 
   Completable delete(String md5);
 
-  Completable save(RoomDownload download);
+  void save(RoomDownload download);
 
   Observable<List<RoomDownload>> getRunningDownloads();
 

@@ -49,8 +49,8 @@ public class DownloadInstallationProvider implements InstallationProvider {
   @Override public Observable<Installation> getInstallation(String md5) {
     Logger.getInstance()
         .d(TAG, "Getting the installation " + md5);
-    return downloadManager.getDownload(md5)
-        .first()
+    return downloadManager.getDownloadAsSingle(md5)
+        .toObservable()
         .flatMap(download -> {
           if (download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
             return installedRepository.get(download.getPackageName(), download.getVersionCode())
