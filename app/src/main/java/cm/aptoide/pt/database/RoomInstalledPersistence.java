@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 02/09/2016.
- */
-
 package cm.aptoide.pt.database;
 
 import androidx.annotation.NonNull;
@@ -19,9 +14,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-/**
- * Created on 01/09/16.
- */
 public class RoomInstalledPersistence implements InstalledPersistence {
 
   private final InstallationPersistence roomInstallationPersistence;
