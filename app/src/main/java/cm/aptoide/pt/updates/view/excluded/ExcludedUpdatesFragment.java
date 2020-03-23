@@ -64,9 +64,9 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
   private void fetchExcludedUpdates() {
 
-    updatesPersistence.getAll(true)
+    updatesPersistence.getAllSorted(true)
         .observeOn(AndroidSchedulers.mainThread())
-        .doOnSuccess(excluded -> {
+        .doOnNext(excluded -> {
           if (excluded == null || excluded.isEmpty()) {
             emptyData.setText(R.string.no_excluded_updates_msg);
             emptyData.setVisibility(View.VISIBLE);
@@ -81,7 +81,6 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
             clearDisplayables().addDisplayables(displayables, true);
           }
         })
-        .toObservable()
         .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
         .subscribe(__ -> {
         }, t -> {
