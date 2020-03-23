@@ -53,32 +53,11 @@ public class RoomDownloadPersistence implements DownloadPersistence {
     new Thread(() -> downloadDAO.insert(download)).start();
   }
 
- /* public Completable save(List<RoomDownload> downloads) {
-    return Completable.fromAction(() -> downloadDAO.insertAll(downloads))
-        .subscribeOn(Schedulers.io());
-  }*/
-
   public Observable<List<RoomDownload>> getRunningDownloads() {
     return RxJavaInterop.toV1Observable(downloadDAO.getRunningDownloads(),
         BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
-    /*
-
-    return Observable.fromCallable(() -> database.get())
-        .flatMap(realm -> realm.where(RoomDownload.class)
-            .equalTo("overallDownloadStatus", RoomDownload.PROGRESS)
-            .or()
-            .equalTo("overallDownloadStatus", RoomDownload.PENDING)
-            .or()
-            .equalTo("overallDownloadStatus", RoomDownload.IN_QUEUE)
-            .findAll()
-            .asObservable())
-        .unsubscribeOn(RealmSchedulers.getScheduler())
-        .flatMap((data) -> database.copyFromRealm(data))
-        .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io());
-    */
   }
 
   public Observable<List<RoomDownload>> getInQueueSortedDownloads() {
@@ -86,16 +65,6 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
-
-    /*return Observable.fromCallable(() -> database.get())
-        .flatMap(realm -> realm.where(RoomDownload.class)
-            .equalTo("overallDownloadStatus", RoomDownload.IN_QUEUE)
-            .findAllSorted("timeStamp", Sort.ASCENDING)
-            .asObservable())
-        .unsubscribeOn(RealmSchedulers.getScheduler())
-        .flatMap((data) -> database.copyFromRealm(data))
-        .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io());*/
   }
 
   public Observable<List<RoomDownload>> getAsList(String md5) {
@@ -103,8 +72,6 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         .defaultIfEmpty(new ArrayList<>())
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
-
-    //return database.getAsList(RoomDownload.class, RoomDownload.MD5, md5);
   }
 
   public Observable<List<RoomDownload>> getUnmovedFilesDownloads() {
@@ -112,15 +79,5 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         BackpressureStrategy.BUFFER)
         .onErrorReturn(throwable -> new ArrayList<>())
         .subscribeOn(Schedulers.io());
-/*
-    return Observable.fromCallable(() -> database.get())
-        .flatMap(realm -> realm.where(RoomDownload.class)
-            .equalTo("overallDownloadStatus", RoomDownload.WAITING_TO_MOVE_FILES)
-            .findAllSorted("timeStamp", Sort.ASCENDING)
-            .asObservable())
-        .unsubscribeOn(RealmSchedulers.getScheduler())
-        .flatMap((data) -> database.copyFromRealm(data))
-        .subscribeOn(RealmSchedulers.getScheduler())
-        .observeOn(Schedulers.io());*/
   }
 }
