@@ -34,8 +34,6 @@ public interface DownloadManager {
 
   Completable pauseDownload(String md5);
 
-  Observable<Integer> getDownloadStatus(String md5);
-
   Completable removeDownload(String md5);
 
   Completable invalidateDatabase();
