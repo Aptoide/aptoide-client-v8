@@ -201,6 +201,7 @@ public class AppsManager {
                 .toString());
           }
         })
+        .flatMapCompletable(__ -> aptoideInstallManager.sendConversionEvent())
         .toCompletable();
   }
 

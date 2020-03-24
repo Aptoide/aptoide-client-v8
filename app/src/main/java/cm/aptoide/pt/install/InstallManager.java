@@ -236,8 +236,6 @@ public class InstallManager {
             downloadRepository.save(storedDownload);
           }
         })
-        .flatMap(install -> aptoideInstallManager.sendConversionEvent()
-            .andThen(Observable.just(install)))
         .flatMap(install -> installInBackground(download.getMd5(), forceDefaultInstall,
             packageInstallerManager.shouldSetInstallerPackageName(download) || forceSplitInstall,
             shouldInstall))
