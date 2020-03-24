@@ -201,7 +201,6 @@ public class AppsManager {
                 .toString());
           }
         })
-        .flatMapCompletable(__ -> aptoideInstallManager.sendConversionEvent())
         .toCompletable();
   }
 
@@ -276,7 +275,8 @@ public class AppsManager {
                   update.getStoreName(), "update");
               return Single.just(value);
             })
-            .flatMapCompletable(download -> installManager.install(download)))
+            .flatMapCompletable(download -> installManager.install(download))
+            .andThen(aptoideInstallManager.sendConversionEvent()))
         .toCompletable();
   }
 
