@@ -91,7 +91,7 @@
       android:layout_marginTop="3dp"
       android:ellipsize="end"
       android:maxLines="1"
-      android:text="Installed with Aptoide"
+      android:text="@string/installed_with_aptoide_body"
       android:visibility="visible"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@+id/apps_action_button"
