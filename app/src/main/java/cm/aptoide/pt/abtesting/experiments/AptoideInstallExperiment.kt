@@ -46,13 +46,21 @@ class AptoideInstallExperiment(private val abTestManager: ABTestManager,
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
         .filter { !it.isExperimentOver && it.isPartOfExperiment && assignment != null }
         .toCompletable()
-        .doOnCompleted { aptoideInstallAnalytics.sendAbTestParticipatingEvent(assignment!!) }
+        .doOnCompleted {
+          assignment?.let { assign ->
+            aptoideInstallAnalytics.sendAbTestParticipatingEvent(assign)
+          }
+        }
   }
 
   fun recordConversion(): Completable {
     return abTestManager.getExperiment(EXPERIMENT_ID, type)
         .filter { !it.isExperimentOver && it.isPartOfExperiment && assignment != null }
         .toCompletable()
-        .doOnCompleted { aptoideInstallAnalytics.sendAbTestConvertingEvent(assignment!!) }
+        .doOnCompleted {
+          assignment?.let { assign ->
+            aptoideInstallAnalytics.sendAbTestConvertingEvent(assignment!!)
+          }
+        }
   }
 }
