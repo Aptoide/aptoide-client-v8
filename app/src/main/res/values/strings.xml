@@ -429,6 +429,7 @@
   <string name="new_updates">There are %s new updates available</string>
   <string name="one_new_update">There is %s new update available</string>
   <string name="skip">Skip</string>
+  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
 
   <!-- Stores -->
   <string name="store_name">Store name</string>
