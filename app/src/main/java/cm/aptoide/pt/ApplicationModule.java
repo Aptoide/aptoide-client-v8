@@ -102,7 +102,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
-import cm.aptoide.pt.app.aptoideinstall.AptoideInstallService;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
@@ -2013,15 +2013,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallService aptoideInstallService,
+      InstalledRepository installedRepository, AptoideInstallPersistence aptoideInstallPersistence,
       AptoideInstallExperiment aptoideInstallExperiment) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallService,
+    return new AptoideInstallManager(installedRepository, aptoideInstallPersistence,
         aptoideInstallExperiment);
   }
 
-  @Singleton @Provides AptoideInstallService providesAptoideInstallService(
+  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
       AptoideInstallAccessor aptoideInstallAccessor) {
-    return new AptoideInstallService(aptoideInstallAccessor);
+    return new AptoideInstallPersistence(aptoideInstallAccessor);
   }
 
   @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {

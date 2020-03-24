@@ -4,7 +4,7 @@ import cm.aptoide.pt.database.accessors.AptoideInstallAccessor
 import rx.Observable
 import java.util.*
 
-class AptoideInstallService(val aptoideInstallAccessor: AptoideInstallAccessor) {
+class AptoideInstallPersistence(val aptoideInstallAccessor: AptoideInstallAccessor) {
 
   private val aptoideInstallCandidates = ArrayList<String>()
 
