@@ -55,6 +55,7 @@ import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
+import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -99,6 +100,9 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
@@ -115,6 +119,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
+import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -336,10 +341,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      AptoideInstallManager aptoideInstallManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
+        aptoideInstallManager);
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
@@ -1490,7 +1497,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
+        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
+        AptoideInstallAnalytics.CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
@@ -2010,5 +2018,32 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
       LocalNotificationSyncManager localNotificationSyncManager) {
     return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
+  }
+
+  @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
+      InstalledRepository installedRepository, AptoideInstallPersistence aptoideInstallPersistence,
+      AptoideInstallExperiment aptoideInstallExperiment) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallPersistence,
+        aptoideInstallExperiment);
+  }
+
+  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
+      AptoideInstallAccessor aptoideInstallAccessor) {
+    return new AptoideInstallPersistence(aptoideInstallAccessor);
+  }
+
+  @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
+    return new AptoideInstallAccessor(database);
+  }
+
+  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
+      @Named("ab-test") ABTestManager abTestManager,
+      AptoideInstallAnalytics aptoideInstallAnalytics) {
+    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
+  }
+
+  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
   }
 }
