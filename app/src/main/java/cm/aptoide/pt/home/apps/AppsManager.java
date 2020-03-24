@@ -102,7 +102,7 @@ public class AppsManager {
             .flatMap(update -> aptoideInstallManager.isInstalledWithAptoide(update.getPackageName())
                 .first()
                 .map(isAptoideInstalled -> appMapper.mapUpdateToUpdateApp(update,
-                    isAptoideInstalled)))
+                    isAptoideInstalled)), 1)
             .toSortedList((updateApp, updateApp2) -> {
               if (updateApp.isInstalledWithAptoide() && !updateApp2.isInstalledWithAptoide()) {
                 return -1;
