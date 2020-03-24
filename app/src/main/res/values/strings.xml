@@ -429,6 +429,7 @@
   <string name="new_updates">There are %s new updates available</string>
   <string name="one_new_update">There is %s new update available</string>
   <string name="skip">Skip</string>
+  <string name="installed_with_aptoide_body">Installed with Aptoide</string>
 
   <!-- Stores -->
   <string name="store_name">Store name</string>
@@ -608,14 +609,9 @@
   <string name="holidayspromotion_button_wallet_get">Make it happen</string>
   <string name="holidayspromotion_short_wallet_valid">Valid wallet address</string>
   <string name="holidayspromotion_short_wallet_invalid">Invalid wallet address</string>
-  <string name="holidayspromotion_title_captcha">Verify that You\'re a Human</string>
-  <string name="holidayspromotion_message_captcha">This is just a security thing</string>
-  <string name="holidayspromotion_short_captcha_field">Type the text here</string>
-  <string name="holidayspromotion_button_captcha">Claim</string>
   <string name="holidayspromotion_title_completed">Done!</string>
   <string name="holidayspromotion_message_completed">Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!</string>
   <string name="holidayspromotion_button_completed">Done</string>
-  <string name="holidayspromotion_short_error_captcha">Wrong captcha. Try again!</string>
   <string name="holidayspromotion_title_error_claimed">Oops…</string>
   <string name="holidayspromotion_short_error_claimed">You already claimed this reward!</string>
   <string name="holidayspromotion_short_error_wallet_address">Invalid address. Try again!</string>
