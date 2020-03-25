@@ -1,19 +1,19 @@
 package cm.aptoide.pt.database.accessors;
 
 import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.MigratedApp;
+import cm.aptoide.pt.database.room.RoomMigratedApp;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import rx.Observable;
 
-public class AppcMigrationAccessor extends SimpleAccessor<MigratedApp> {
+public class AppcMigrationPersistence extends SimpleAccessor<RoomMigratedApp> {
 
-  public AppcMigrationAccessor(Database db) {
-    super(db, MigratedApp.class);
+  public AppcMigrationPersistence(Database db) {
+    super(db, RoomMigratedApp.class);
   }
 
   public Observable<Boolean> isAppMigrated(String packageName) {
     return Observable.fromCallable(() -> database.get())
-        .flatMap(realm -> realm.where(MigratedApp.class)
+        .flatMap(realm -> realm.where(RoomMigratedApp.class)
             .equalTo(Installed.PACKAGE_NAME, packageName)
             .findAll()
             .asObservable()
@@ -31,6 +31,6 @@ public class AppcMigrationAccessor extends SimpleAccessor<MigratedApp> {
   }
 
   public void insert(String packageName) {
-    database.insert(new MigratedApp(packageName));
+    database.insert(new RoomMigratedApp(packageName));
   }
 }

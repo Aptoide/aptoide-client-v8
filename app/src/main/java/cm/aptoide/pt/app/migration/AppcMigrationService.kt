@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app.migration
 
-import cm.aptoide.pt.database.accessors.AppcMigrationAccessor
+import cm.aptoide.pt.database.accessors.AppcMigrationPersistence
 import rx.Observable
 import java.util.*
 
@@ -8,7 +8,7 @@ import java.util.*
  * This class is open just because of Mockito compat.
  * Mockito 2 does not have this restriction however.
  */
-open class AppcMigrationService(val appcMigrationAccessor: AppcMigrationAccessor) {
+open class AppcMigrationService(val appcMigrationPersistence: AppcMigrationPersistence) {
 
   private val migrationCandidates = ArrayList<String>()
 
@@ -20,12 +20,12 @@ open class AppcMigrationService(val appcMigrationAccessor: AppcMigrationAccessor
 
   fun persistCandidate(packageName: String) {
     if (migrationCandidates.contains(packageName)) {
-      appcMigrationAccessor.insert(packageName)
+      appcMigrationPersistence.insert(packageName)
       migrationCandidates.remove(packageName)
     }
   }
 
   fun isAppMigrated(packageName: String): Observable<Boolean> {
-    return appcMigrationAccessor.isAppMigrated(packageName)
+    return appcMigrationPersistence.isAppMigrated(packageName)
   }
 }
