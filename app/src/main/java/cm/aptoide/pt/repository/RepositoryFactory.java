@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -17,7 +16,6 @@ import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -45,11 +43,6 @@ public final class RepositoryFactory {
 
   private static OkHttpClient getHttpClient(Context context) {
     return ((AptoideApplication) context.getApplicationContext()).getDefaultClient();
-  }
-
-  public static InstalledRepository getInstalledRepository(Context context) {
-    return new InstalledRepository(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) context.getApplicationContext()).getDatabase(), Installed.class));
   }
 
   public static cm.aptoide.pt.repository.StoreRepository getStoreRepository(Context context) {

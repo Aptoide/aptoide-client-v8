@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.updates.UpdateRepository;
 import java.util.List;
@@ -25,10 +25,10 @@ public class UpdatesManager {
    *
    * @param item App to filter.
    *
-   * @return {@link Observable} to a {@link Installed} or empty.
+   * @return {@link Observable} to a {@link RoomInstalled} or empty.
    */
   // TODO: 31/1/2017 instead of Observable<Installed> use Single<Installed>
-  public Observable<Installed> filterUpdates(Installed item) {
+  public Observable<RoomInstalled> filterUpdates(RoomInstalled item) {
     return updateRepository.contains(item.getPackageName(), false)
         .flatMap(isUpdate -> {
           if (isUpdate) {

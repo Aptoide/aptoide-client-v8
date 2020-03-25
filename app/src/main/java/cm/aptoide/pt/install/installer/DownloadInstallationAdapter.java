@@ -8,10 +8,11 @@ package cm.aptoide.pt.install.installer;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.InstalledRepository;
 import java.io.File;
 import java.util.List;
+import rx.Completable;
 
 /**
  * Created by marcelobenites on 7/22/16.
@@ -21,10 +22,10 @@ public class DownloadInstallationAdapter implements Installation {
   private final Download download;
   private DownloadAccessor downloadAccessor;
   private InstalledRepository ongoingInstallProvider;
-  private Installed installed;
+  private RoomInstalled installed;
 
   public DownloadInstallationAdapter(Download download, DownloadAccessor downloadAccessor,
-      InstalledRepository installedRepository, Installed installed) {
+      InstalledRepository installedRepository, RoomInstalled installed) {
     this.download = download;
     this.downloadAccessor = downloadAccessor;
     this.ongoingInstallProvider = installedRepository;
@@ -57,8 +58,8 @@ public class DownloadInstallationAdapter implements Installation {
         .getFilePath());
   }
 
-  @Override public void save() {
-    ongoingInstallProvider.save(installed);
+  @Override public Completable save() {
+    return ongoingInstallProvider.save(installed);
   }
 
   @Override public int getStatus() {

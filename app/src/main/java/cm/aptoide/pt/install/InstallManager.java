@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
@@ -149,11 +149,12 @@ public class InstallManager {
         .distinctUntilChanged();
   }
 
-  private List<Install> createInstallList(List<Download> downloads, List<Installed> installeds) {
+  private List<Install> createInstallList(List<Download> downloads,
+      List<RoomInstalled> installeds) {
     List<Install> installList = new ArrayList<>();
     for (Download download : downloads) {
       boolean found = false;
-      for (Installed installed : installeds) {
+      for (RoomInstalled installed : installeds) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
           found = true;
@@ -166,7 +167,7 @@ public class InstallManager {
           } else {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    Installed.STATUS_UNINSTALLED, Installed.TYPE_UNKNOWN);
+                    RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN);
           }
 
           Install.InstallationType type;
@@ -186,7 +187,7 @@ public class InstallManager {
       if (!found) {
         installList.add(createInstall(download,
             new InstallationState(download.getPackageName(), download.getVersionCode(),
-                Installed.STATUS_UNINSTALLED, Installed.TYPE_UNKNOWN), download.getMd5(),
+                RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN), download.getMd5(),
             download.getPackageName(), download.getVersionCode(),
             Install.InstallationType.INSTALL));
       }
@@ -295,22 +296,22 @@ public class InstallManager {
   private Install.InstallationStatus mapInstallationStatus(Download download,
       InstallationState installationState) {
 
-    if (installationState.getStatus() == Installed.STATUS_COMPLETED) {
+    if (installationState.getStatus() == RoomInstalled.STATUS_COMPLETED) {
       return Install.InstallationStatus.INSTALLED;
     }
 
-    if (installationState.getStatus() == Installed.STATUS_INSTALLING
-        && installationState.getType() != Installed.TYPE_DEFAULT) {
+    if (installationState.getStatus() == RoomInstalled.STATUS_INSTALLING
+        && installationState.getType() != RoomInstalled.TYPE_DEFAULT) {
       return Install.InstallationStatus.INSTALLING;
     }
 
-    if (installationState.getStatus() == Installed.STATUS_WAITING
+    if (installationState.getStatus() == RoomInstalled.STATUS_WAITING
         && download != null
         && download.getOverallDownloadStatus() == Download.COMPLETED) {
       return Install.InstallationStatus.DOWNLOADING;
     }
 
-    if (installationState.getStatus() == Installed.STATUS_ROOT_TIMEOUT) {
+    if (installationState.getStatus() == RoomInstalled.STATUS_ROOT_TIMEOUT) {
       return Install.InstallationStatus.INSTALLATION_TIMEOUT;
     }
 
@@ -412,15 +413,15 @@ public class InstallManager {
   private boolean mapInstallIndeterminate(int status, int type, Download download) {
     boolean isIndeterminate = false;
     switch (status) {
-      case Installed.STATUS_UNINSTALLED:
-      case Installed.STATUS_COMPLETED:
+      case RoomInstalled.STATUS_UNINSTALLED:
+      case RoomInstalled.STATUS_COMPLETED:
         isIndeterminate = false;
         break;
-      case Installed.STATUS_INSTALLING:
-      case Installed.STATUS_ROOT_TIMEOUT:
-        isIndeterminate = type != Installed.TYPE_DEFAULT;
+      case RoomInstalled.STATUS_INSTALLING:
+      case RoomInstalled.STATUS_ROOT_TIMEOUT:
+        isIndeterminate = type != RoomInstalled.TYPE_DEFAULT;
         break;
-      case Installed.STATUS_WAITING:
+      case RoomInstalled.STATUS_WAITING:
         isIndeterminate =
             download != null && download.getOverallDownloadStatus() == Download.COMPLETED;
     }
@@ -465,43 +466,44 @@ public class InstallManager {
     }
     return aptoideDownloadManager.getDownload(md5)
         .first()
-        .doOnNext(download -> initInstallationProgress(download))
         .doOnNext(__ -> {
           if (shouldInstall) {
             startInstallService();
           }
         })
-        .flatMapCompletable(download -> {
-          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
-            return Completable.fromAction(() -> {
-              Logger.getInstance()
-                  .d(TAG,
-                      "Saving an already completed download to trigger the download installation");
-              downloadRepository.save(download);
-            });
-          } else {
-            return aptoideDownloadManager.startDownload(download);
-          }
-        })
+        .flatMapCompletable(
+            download -> initInstallationProgress(download).andThen(startDownload(download)))
         .map(__ -> md5);
+  }
+
+  private Completable startDownload(Download download) {
+    if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+      return Completable.fromAction(() -> {
+        Logger.getInstance()
+            .d(TAG, "Saving an already completed download to trigger the download installation");
+        downloadRepository.save(download);
+      });
+    } else {
+      return aptoideDownloadManager.startDownload(download);
+    }
   }
 
   private void startInstallService() {
     foregroundManager.startDownloadForeground();
   }
 
-  private void initInstallationProgress(Download download) {
-    Installed installed = convertDownloadToInstalled(download);
-    installedRepository.save(installed);
+  private Completable initInstallationProgress(Download download) {
+    RoomInstalled installed = convertDownloadToInstalled(download);
+    return installedRepository.save(installed);
   }
 
-  @NonNull private Installed convertDownloadToInstalled(Download download) {
-    Installed installed = new Installed();
+  @NonNull private RoomInstalled convertDownloadToInstalled(Download download) {
+    RoomInstalled installed = new RoomInstalled();
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
-    installed.setStatus(Installed.STATUS_WAITING);
-    installed.setType(Installed.TYPE_UNKNOWN);
+    installed.setStatus(RoomInstalled.STATUS_WAITING);
+    installed.setType(RoomInstalled.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());
     return installed;
   }
@@ -529,7 +531,7 @@ public class InstallManager {
         .onErrorReturn(throwable -> false);
   }
 
-  public Completable onAppInstalled(Installed installed) {
+  public Completable onAppInstalled(RoomInstalled installed) {
     return installedRepository.getAsList(installed.getPackageName())
         .first()
         .flatMapIterable(installeds -> {
@@ -542,8 +544,8 @@ public class InstallManager {
         .flatMapCompletable(databaseInstalled -> {
           if (databaseInstalled.getVersionCode() == installed.getVersionCode()) {
             installed.setType(databaseInstalled.getType());
-            installed.setStatus(Installed.STATUS_COMPLETED);
-            return Completable.fromAction(() -> installedRepository.save(installed));
+            installed.setStatus(RoomInstalled.STATUS_COMPLETED);
+            return installedRepository.save(installed);
           } else {
             return installedRepository.remove(databaseInstalled.getPackageName(),
                 databaseInstalled.getVersionCode());
@@ -579,7 +581,7 @@ public class InstallManager {
             .d("AptoideDownloadManager", " emiting installation type"));
   }
 
-  public Completable onUpdateConfirmed(Installed installed) {
+  public Completable onUpdateConfirmed(RoomInstalled installed) {
     return onAppInstalled(installed);
   }
 
@@ -609,15 +611,15 @@ public class InstallManager {
             .flatMap(install -> installedRepository.get(install.getPackageName(),
                 install.getVersionCode())
                 .first()
-                .doOnNext(installed -> {
-                  installed.setStatus(Installed.STATUS_UNINSTALLED);
-                  installedRepository.save(installed);
+                .flatMapCompletable(installed -> {
+                  installed.setStatus(RoomInstalled.STATUS_UNINSTALLED);
+                  return installedRepository.save(installed);
                 })))
         .toList()
         .toCompletable();
   }
 
-  public Observable<List<Installed>> fetchInstalled() {
+  public Observable<List<RoomInstalled>> fetchInstalled() {
     return installedRepository.getAllInstalledSorted()
         .first()
         .flatMapIterable(list -> list)

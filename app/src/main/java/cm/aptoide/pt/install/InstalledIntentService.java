@@ -12,8 +12,8 @@ import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
@@ -125,7 +125,7 @@ public class InstalledIntentService extends IntentService {
     if (checkAndLogNullPackageInfo(packageInfo, packageName)) {
       return packageInfo;
     }
-    Installed installed = new Installed(packageInfo, packageManager);
+    RoomInstalled installed = new RoomInstalled(packageInfo, packageManager);
     installManager.onAppInstalled(installed)
         .subscribe(() -> {
         }, throwable -> CrashReport.getInstance()
@@ -189,7 +189,7 @@ public class InstalledIntentService extends IntentService {
       return packageInfo;
     }
 
-    installManager.onUpdateConfirmed(new Installed(packageInfo, packageManager))
+    installManager.onUpdateConfirmed(new RoomInstalled(packageInfo, packageManager))
         .andThen(updatesRepository.remove(update))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageReplaced: " + packageName),

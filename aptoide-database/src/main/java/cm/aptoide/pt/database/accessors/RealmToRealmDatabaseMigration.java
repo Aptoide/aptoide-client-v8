@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.logger.Logger;
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
@@ -296,9 +296,9 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
               obj.getString("packageName") + obj.getInt("versionCode")))
           .addPrimaryKey("packageAndVersionCode")
           .addField("status", int.class)
-          .transform(obj -> obj.setInt("status", Installed.STATUS_COMPLETED))
+          .transform(obj -> obj.setInt("status", RoomInstalled.STATUS_COMPLETED))
           .addField("type", int.class)
-          .transform(obj -> obj.setInt("type", Installed.TYPE_UNKNOWN));
+          .transform(obj -> obj.setInt("type", RoomInstalled.TYPE_UNKNOWN));
 
       oldVersion++;
     }
