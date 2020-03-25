@@ -110,13 +110,13 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
 import cm.aptoide.pt.database.RoomExperimentPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.accessors.AppcMigrationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.InstallationAccessor;
@@ -1959,12 +1959,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationService providesAppcMigrationService(
-      AppcMigrationPersistence accessor) {
+      RoomAppcMigrationPersistence accessor) {
     return new AppcMigrationService(accessor);
   }
 
-  @Singleton @Provides AppcMigrationPersistence providesAppcMigrationAccessor(Database database) {
-    return new AppcMigrationPersistence(database);
+  @Singleton @Provides RoomAppcMigrationPersistence providesAppcMigrationAccessor(
+      AptoideDatabase database) {
+    return new RoomAppcMigrationPersistence(database.migratedAppDAO());
   }
 
   @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
