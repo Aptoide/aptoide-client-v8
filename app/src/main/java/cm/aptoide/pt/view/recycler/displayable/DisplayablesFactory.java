@@ -169,11 +169,16 @@ public class DisplayablesFactory {
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
+          boolean isAppInstalled = installedRepository.isInstalled(
+              ((GetAppMeta) widget.getViewObject()).getData()
+                  .getPackageName())
+              .toBlocking()
+              .first();
           return Observable.just(
               new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()),
                   themeManager.getAttributeForTheme(storeTheme, R.attr.colorPrimary).data,
-                  themeManager.getAttributeForTheme(storeTheme,
-                      R.attr.raisedButtonBackground).data));
+                  themeManager.getAttributeForTheme(storeTheme, R.attr.raisedButtonBackground).data,
+                  isAppInstalled));
       }
     }
     return Observable.empty();

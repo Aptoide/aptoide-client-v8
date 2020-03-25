@@ -36,7 +36,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListReviewsRequest;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -67,6 +66,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeManager themeManager;
   @Inject DialogUtils dialogUtils;
+  @Inject InstalledRepository installedRepository;
   private SharedPreferences preferences;
   private long reviewId;
   private String storeName;
@@ -78,7 +78,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
-  private InstalledRepository installedRepository;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
@@ -287,15 +286,11 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences();
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
         ((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class));
-    installedRepository =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     setHasOptionsMenu(true);

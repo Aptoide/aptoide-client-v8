@@ -1,17 +1,16 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import cm.aptoide.pt.utils.AptoideUtils;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
-public class Installed extends RealmObject {
+@Entity(tableName = "installed") public class RoomInstalled {
 
-  //	public static final String ID = "id";
   public static final String ICON = "icon";
   public static final String PACKAGE_NAME = "packageName";
   public static final String NAME = "name";
@@ -30,8 +29,7 @@ public class Installed extends RealmObject {
   public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
   public static final int TYPE_UNKNOWN = -1;
 
-  //	@PrimaryKey private int id = -1;
-  @PrimaryKey private String packageAndVersionCode;
+  @PrimaryKey @NonNull private String packageAndVersionCode;
   private String icon;
   private String packageName;
   private String name;
@@ -43,14 +41,14 @@ public class Installed extends RealmObject {
   private int status;
   private int type;
 
-  public Installed() {
+  public RoomInstalled() {
   }
 
-  public Installed(@NonNull PackageInfo packageInfo, PackageManager packageManager) {
+  public RoomInstalled(@NonNull PackageInfo packageInfo, PackageManager packageManager) {
     this(packageInfo, null, packageManager);
   }
 
-  public Installed(@NonNull PackageInfo packageInfo, @Nullable String storeName,
+  public RoomInstalled(@NonNull PackageInfo packageInfo, @Nullable String storeName,
       PackageManager packageManager) {
     setIcon(AptoideUtils.SystemU.getApkIconPath(packageInfo));
     setName(AptoideUtils.SystemU.getApkLabel(packageInfo, packageManager));
@@ -79,15 +77,11 @@ public class Installed extends RealmObject {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Installed installed = (Installed) o;
+    RoomInstalled installed = (RoomInstalled) o;
 
-    if (versionCode != installed.versionCode) return false;
-    if (!packageAndVersionCode.equals(installed.packageAndVersionCode)) return false;
-    return packageName.equals(installed.packageName);
-  }
-
-  public void setPackageAndVersionCode(String packageAndVersionCode) {
-    this.packageAndVersionCode = packageAndVersionCode;
+    if (versionCode != installed.getVersionCode()) return false;
+    if (!packageAndVersionCode.equals(installed.getPackageAndVersionCode())) return false;
+    return packageName.equals(installed.getPackageName());
   }
 
   public int getStatus() {
@@ -168,5 +162,13 @@ public class Installed extends RealmObject {
 
   public void setStoreName(String storeName) {
     this.storeName = storeName;
+  }
+
+  public String getPackageAndVersionCode() {
+    return packageAndVersionCode;
+  }
+
+  public void setPackageAndVersionCode(String packageAndVersionCode) {
+    this.packageAndVersionCode = packageAndVersionCode;
   }
 }

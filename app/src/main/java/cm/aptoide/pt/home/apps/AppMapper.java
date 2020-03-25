@@ -1,8 +1,8 @@
 package cm.aptoide.pt.home.apps;
 
 import android.util.Log;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
@@ -33,10 +33,10 @@ public class AppMapper {
     return downloadsList;
   }
 
-  public List<InstalledApp> mapInstalledToInstalledApps(List<Installed> installeds) {
+  public List<InstalledApp> mapInstalledToInstalledApps(List<RoomInstalled> installeds) {
     List<InstalledApp> installedAppsList = new ArrayList<>();
 
-    for (Installed installed : installeds) {
+    for (RoomInstalled installed : installeds) {
       installedAppsList.add(new InstalledApp(installed.getName(), installed.getPackageName(),
           installed.getVersionName(), installed.getIcon()));
     }

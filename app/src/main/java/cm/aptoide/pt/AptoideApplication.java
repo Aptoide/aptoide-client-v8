@@ -31,12 +31,12 @@ import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -152,6 +152,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
+  @Inject RoomInstalledPersistence roomInstalledPersistence;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
@@ -762,11 +763,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable discoverAndSaveInstalledApps() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(database, Installed.class);
     return Observable.fromCallable(() -> {
-      // remove the current installed apps
-      //AccessorFactory.getAccessorFor(Installed.class).removeAll();
-
       // get the installed apps
       List<PackageInfo> installedApps =
           AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
@@ -781,16 +778,13 @@ public abstract class AptoideApplication extends Application {
       return installedApps;
     })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
-        .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
+        .map(packageInfo -> new RoomInstalled(packageInfo, getPackageManager()))
         .toList()
-        .flatMap(appsInstalled -> installedAccessor.getAll()
+        .flatMap(appsInstalled -> roomInstalledPersistence.getAll()
             .first()
             .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(Installed.STATUS_UNINSTALLED))))
-        .doOnNext(list -> {
-          installedAccessor.removeAll();
-          installedAccessor.insertAll(list);
-        })
+                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
+        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
         .toCompletable();
   }
 

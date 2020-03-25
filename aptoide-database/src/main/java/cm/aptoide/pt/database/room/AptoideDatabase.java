@@ -11,7 +11,7 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
  */
 @Database(entities = {
     RoomEvent.class, RoomExperiment.class, RoomStoredMinimalAd.class, RoomNotification.class,
-    RoomLocalNotificationSync.class
+    RoomLocalNotificationSync.class, RoomInstalled.class, RoomInstallation.class
 }, version = VERSION) public abstract class AptoideDatabase extends RoomDatabase {
 
   /**
@@ -28,4 +28,8 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
   public abstract NotificationDao notificationDao();
 
   public abstract LocalNotificationSyncDao localNotificationSyncDao();
+
+  public abstract InstalledDao installedDao();
+
+  public abstract InstallationDao installationDao();
 }

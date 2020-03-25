@@ -20,7 +20,7 @@ import androidx.core.content.FileProvider;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.Installer;
@@ -100,8 +100,8 @@ public class DefaultInstaller implements Installer {
             .first())
         .observeOn(Schedulers.computation())
         .doOnNext(installation -> {
-          installation.setStatus(Installed.STATUS_INSTALLING);
-          installation.setType(Installed.TYPE_UNKNOWN);
+          installation.setStatus(RoomInstalled.STATUS_INSTALLING);
+          installation.setType(RoomInstalled.TYPE_UNKNOWN);
           moveInstallationFiles(installation);
         })
         .flatMap(installation -> Observable.just(
@@ -110,9 +110,10 @@ public class DefaultInstaller implements Installer {
             .first()
             .flatMap(isInstalled -> {
               if (isInstalled) {
-                installation.setStatus(Installed.STATUS_COMPLETED);
-                installation.save();
-                return Observable.just(null);
+                installation.setStatus(RoomInstalled.STATUS_COMPLETED);
+                return installation.save()
+                    .toObservable()
+                    .map(__ -> installation);
               } else {
                 if (forceDefaultInstall) {
                   return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
@@ -161,8 +162,8 @@ public class DefaultInstaller implements Installer {
                 installed.getVersionName(), installed.getStatus(), installed.getType(),
                 installed.getName(), installed.getIcon());
           } else {
-            return new InstallationState(packageName, versionCode, Installed.STATUS_UNINSTALLED,
-                Installed.TYPE_UNKNOWN);
+            return new InstallationState(packageName, versionCode, RoomInstalled.STATUS_UNINSTALLED,
+                RoomInstalled.TYPE_UNKNOWN);
           }
         })
         .doOnNext(installationState -> Logger.getInstance()
@@ -175,7 +176,7 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> startDefaultInstallation(Context context,
       Installation installation, boolean shouldSetPackageInstaller) {
-    return defaultInstall(context, installation, shouldSetPackageInstaller).doOnNext(
+    return defaultInstall(context, installation, shouldSetPackageInstaller).flatMapCompletable(
         installation1 -> installation1.save());
   }
 
@@ -192,7 +193,7 @@ public class DefaultInstaller implements Installer {
                     + installation.getPackageName()
                     + ". Error message: "
                     + throwable.getMessage())))
-        .doOnNext(installation1 -> installation1.save());
+        .flatMapCompletable(installation1 -> installation1.save());
   }
 
   private Observable<Installation> rootInstall(Installation installation) {
@@ -200,13 +201,13 @@ public class DefaultInstaller implements Installer {
       return Observable.create(rootInstallerProvider.provideRootInstaller(installation))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
-          .startWith(
-              updateInstallation(installation, Installed.TYPE_ROOT, Installed.STATUS_INSTALLING))
+          .startWith(updateInstallation(installation, RoomInstalled.TYPE_ROOT,
+              RoomInstalled.STATUS_INSTALLING))
           .onErrorResumeNext(throwable -> {
             if (throwable instanceof RootCommandTimeoutException) {
-              updateInstallation(installation, Installed.TYPE_ROOT,
-                  Installed.STATUS_ROOT_TIMEOUT).save();
-              return Observable.empty();
+              return updateInstallation(installation, RoomInstalled.TYPE_ROOT,
+                  RoomInstalled.STATUS_ROOT_TIMEOUT).save()
+                  .toObservable();
             } else {
               return Observable.error(throwable);
             }
@@ -261,8 +262,8 @@ public class DefaultInstaller implements Installer {
           Uri.fromFile(installation.getFile())))
           .subscribeOn(Schedulers.computation())
           .map(success -> installation)
-          .startWith(
-              updateInstallation(installation, Installed.TYPE_SYSTEM, Installed.STATUS_INSTALLING));
+          .startWith(updateInstallation(installation, RoomInstalled.TYPE_SYSTEM,
+              RoomInstalled.STATUS_INSTALLING));
     }
     return Observable.error(new Throwable());
   }
@@ -306,10 +307,10 @@ public class DefaultInstaller implements Installer {
         .flatMap(isInstallerInstallation -> Observable.merge(
             waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
-                  if (installation.getStatus() == Installed.STATUS_INSTALLING) {
+                  if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                            : Installed.TYPE_DEFAULT, Installed.STATUS_UNINSTALLED);
+                        shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
                   }
                   return null;
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
@@ -327,8 +328,8 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                          : Installed.TYPE_DEFAULT, map(installStatus));
+                      shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                          : RoomInstalled.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
                     installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
@@ -340,8 +341,8 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldUserPackageInstaller ? Installed.TYPE_SET_PACKAGE_NAME_INSTALLER
-                : Installed.TYPE_DEFAULT, Installed.STATUS_INSTALLING));
+            shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING));
   }
 
   @NotNull private AppInstall map(Installation installation) {
@@ -363,14 +364,14 @@ public class DefaultInstaller implements Installer {
   private int map(InstallStatus installStatus) {
     switch (installStatus.getStatus()) {
       case INSTALLING:
-        return Installed.STATUS_INSTALLING;
+        return RoomInstalled.STATUS_INSTALLING;
       case SUCCESS:
-        return Installed.STATUS_COMPLETED;
+        return RoomInstalled.STATUS_COMPLETED;
       case FAIL:
       case CANCELED:
       case UNKNOWN_ERROR:
       default:
-        return Installed.STATUS_UNINSTALLED;
+        return RoomInstalled.STATUS_UNINSTALLED;
     }
   }
 
