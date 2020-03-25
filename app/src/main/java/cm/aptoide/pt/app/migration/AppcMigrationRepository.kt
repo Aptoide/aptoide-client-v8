@@ -7,7 +7,7 @@ import java.util.*
  * This class is open just because of Mockito compat.
  * Mockito 2 does not have this restriction however.
  */
-open class AppcMigrationService(val appcMigrationPersistence: AppcMigrationPersistence) {
+open class AppcMigrationRepository(val appcMigrationPersistence: AppcMigrationPersistence) {
 
   private val migrationCandidates = ArrayList<String>()
 

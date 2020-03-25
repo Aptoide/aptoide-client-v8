@@ -97,7 +97,7 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
+import cm.aptoide.pt.app.migration.AppcMigrationRepository;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
@@ -1955,13 +1955,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository, AppcMigrationService appcMigrationService) {
-    return new AppcMigrationManager(repository, appcMigrationService);
+      InstalledRepository repository, AppcMigrationRepository appcMigrationRepository) {
+    return new AppcMigrationManager(repository, appcMigrationRepository);
   }
 
-  @Singleton @Provides AppcMigrationService providesAppcMigrationService(
+  @Singleton @Provides AppcMigrationRepository providesAppcMigrationService(
       AppcMigrationPersistence appcMigrationPersistence) {
-    return new AppcMigrationService(appcMigrationPersistence);
+    return new AppcMigrationRepository(appcMigrationPersistence);
   }
 
   @Singleton @Provides AppcMigrationPersistence providesAppcMigrationAccessor(
