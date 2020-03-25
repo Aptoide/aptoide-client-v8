@@ -96,6 +96,7 @@ import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
+import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationService;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
@@ -1959,11 +1960,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationService providesAppcMigrationService(
-      RoomAppcMigrationPersistence accessor) {
-    return new AppcMigrationService(accessor);
+      AppcMigrationPersistence appcMigrationPersistence) {
+    return new AppcMigrationService(appcMigrationPersistence);
   }
 
-  @Singleton @Provides RoomAppcMigrationPersistence providesAppcMigrationAccessor(
+  @Singleton @Provides AppcMigrationPersistence providesAppcMigrationAccessor(
       AptoideDatabase database) {
     return new RoomAppcMigrationPersistence(database.migratedAppDAO());
   }

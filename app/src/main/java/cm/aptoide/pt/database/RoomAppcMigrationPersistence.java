@@ -1,5 +1,6 @@
 package cm.aptoide.pt.database;
 
+import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.database.room.MigratedAppDAO;
 import cm.aptoide.pt.database.room.RoomMigratedApp;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
@@ -7,7 +8,7 @@ import io.reactivex.BackpressureStrategy;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public class RoomAppcMigrationPersistence {
+public class RoomAppcMigrationPersistence implements AppcMigrationPersistence {
 
   private MigratedAppDAO migratedAppDAO;
 

@@ -1,6 +1,5 @@
 package cm.aptoide.pt.app.migration
 
-import cm.aptoide.pt.database.RoomAppcMigrationPersistence
 import rx.Observable
 import java.util.*
 
@@ -8,7 +7,7 @@ import java.util.*
  * This class is open just because of Mockito compat.
  * Mockito 2 does not have this restriction however.
  */
-open class AppcMigrationService(val appcMigrationPersistence: RoomAppcMigrationPersistence) {
+open class AppcMigrationService(val appcMigrationPersistence: AppcMigrationPersistence) {
 
   private val migrationCandidates = ArrayList<String>()
 
