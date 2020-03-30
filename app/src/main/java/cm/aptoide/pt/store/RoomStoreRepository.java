@@ -1,0 +1,44 @@
+package cm.aptoide.pt.store;
+
+import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
+import java.util.List;
+import rx.Completable;
+import rx.Observable;
+
+public class RoomStoreRepository {
+
+  private final StorePersistence storePersistence;
+
+  public RoomStoreRepository(StorePersistence storePersistence) {
+    this.storePersistence = storePersistence;
+  }
+
+  public Observable<Boolean> isSubscribed(long storeId) {
+    return storePersistence.isSubscribed(storeId);
+  }
+
+  public Observable<Long> count() {
+    return storePersistence.count();
+  }
+
+  public Observable<List<RoomStore>> getAll() {
+    return storePersistence.getAll();
+  }
+
+  public Completable save(RoomStore entity) {
+    return storePersistence.save(entity);
+  }
+
+  public Observable<RoomStore> get(Long id) {
+    return storePersistence.get(id);
+  }
+
+  public Observable<RoomStore> get(String storeName) {
+    return storePersistence.get(storeName);
+  }
+
+  public void saveAll(List<Store> stores) {
+    storePersistence.insertAll(stores);
+  }
+}
