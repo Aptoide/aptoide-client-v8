@@ -25,10 +25,6 @@ public class StoreAccessor extends SimpleAccessor<Store> {
     return database.get(Store.class, Store.STORE_ID, storeId);
   }
 
-  public void remove(long storeId) {
-    database.delete(Store.class, Store.STORE_ID, storeId);
-  }
-
   public void remove(String storeName) {
     database.delete(Store.class, Store.STORE_NAME, storeName);
   }
