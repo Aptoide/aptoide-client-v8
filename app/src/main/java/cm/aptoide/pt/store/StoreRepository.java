@@ -21,11 +21,6 @@ public class StoreRepository {
         .map(stores -> stores != null && stores.size() > 0);
   }
 
-  public Observable<Boolean> isSubscribed(String storeName) {
-    return storeAccessor.getAsList(storeName)
-        .map(stores -> !stores.isEmpty());
-  }
-
   public Observable<Long> count() {
     return storeAccessor.count();
   }
