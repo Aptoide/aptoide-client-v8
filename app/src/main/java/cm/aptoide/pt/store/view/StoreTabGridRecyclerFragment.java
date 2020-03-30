@@ -25,8 +25,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Layout;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
-import cm.aptoide.pt.repository.RepositoryFactory;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.fragment.DisplayableManager;
@@ -42,8 +41,6 @@ import rx.Observable;
  */
 public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFragment {
 
-  protected StoreRepository storeRepository;
-
   protected Event.Type type;
   protected HomeEvent.Type homeEventType;
   protected Event.Name name;
@@ -53,6 +50,7 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   protected String tag;
   protected String storeTheme;
   protected StoreContext storeContext;
+  @Inject RoomStoreRepository storeRepository;
   @Inject @Named("marketName") String marketName;
 
   public static Fragment newInstance(Event event, String storeTheme, String tag,
@@ -122,7 +120,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
         (AptoideApplication) getContext().getApplicationContext();
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
-    storeRepository = RepositoryFactory.getStoreRepository(getContext().getApplicationContext());
 
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
