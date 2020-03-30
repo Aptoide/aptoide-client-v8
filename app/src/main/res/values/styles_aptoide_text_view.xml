@@ -192,6 +192,9 @@
   <style name="Aptoide.TextView.Medium.M.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
+  <style name="Aptoide.TextView.Medium.M.GreyMedium">
+    <item name="android:textColor">?attr/textColorGreyMedium</item>
+  </style>
 
   <style name="Aptoide.TextView.Medium.M.Primary">
     <item name="android:textColor">?android:attr/textColorPrimary</item>
