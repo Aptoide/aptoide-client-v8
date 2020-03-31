@@ -14,11 +14,11 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.functions.Action1;
@@ -30,9 +30,9 @@ import rx.functions.Action1;
 public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStores> {
   //// TODO(pedro): 19/07/17 More recommended store events here
 
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
-  private StoreCredentialsProvider storeCredentialsProvider;
 
   public static Fragment newInstance() {
     return new RecommendedStoresFragment();
@@ -40,9 +40,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
+    getFragmentComponent(savedInstanceState).inject(this);
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     BodyInterceptor<BaseBody> bodyInterceptor =

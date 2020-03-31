@@ -39,7 +39,6 @@ import cm.aptoide.pt.search.SuggestionCursorAdapter;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -52,6 +51,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Single;
@@ -73,6 +73,7 @@ public class AddStoreDialog extends BaseDialogFragment {
 
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
 
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private FragmentNavigator navigator;
   private String storeName;
@@ -83,7 +84,6 @@ public class AddStoreDialog extends BaseDialogFragment {
   private Button addStoreButton;
   private Button topStoresButton;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
@@ -140,6 +140,8 @@ public class AddStoreDialog extends BaseDialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
+
     subscriptions = new CompositeSubscription();
 
     tokenInvalidator =
@@ -148,9 +150,6 @@ public class AddStoreDialog extends BaseDialogFragment {
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     baseBodyBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
 

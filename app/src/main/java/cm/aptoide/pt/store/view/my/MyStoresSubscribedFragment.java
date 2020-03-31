@@ -26,7 +26,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
@@ -51,9 +50,9 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   private static final String USER_NOT_LOGGED_ERROR = "AUTH-5";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
@@ -69,9 +68,6 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
     getFragmentComponent(savedInstanceState).inject(this);
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), cm.aptoide.pt.database.realm.Store.class));
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
     bodyInterceptor =

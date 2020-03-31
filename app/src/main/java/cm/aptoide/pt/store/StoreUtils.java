@@ -6,6 +6,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -197,12 +198,12 @@ public class StoreUtils {
   }
 
   public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap(
-      StoreAccessor storeAccessor) {
+      RoomStoreRepository storeRepository) {
     HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
-    List<Store> stores = storeAccessor.getAll()
+    List<RoomStore> stores = storeRepository.getAll()
         .toBlocking()
         .first();
-    for (Store store : stores) {
+    for (RoomStore store : stores) {
       if (store.getPasswordSha1() != null) {
         storesAuthMap.put(store.getStoreName(),
             new LinkedList<>(Arrays.asList(store.getUsername(), store.getPasswordSha1())));

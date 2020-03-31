@@ -58,7 +58,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private SpannableFactory spannableFactory;
   private View editStoreButton;
   private View buttonsLayout;
-  private StoreCredentialsProviderImpl storeCredentialsProvider;
   private StoreAccessor storeAccessor;
   private BadgeDialogFactory badgeDialogFactory;
 
@@ -101,7 +100,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     spannableFactory = new SpannableFactory();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(storeAccessor);
     FragmentNavigator fragmentNavigator = getFragmentNavigator();
     Resources resources = getContext().getResources();
     followersCountTv.setOnClickListener(v -> {
@@ -282,8 +280,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   }
 
   private void setupUnfollowButton(String storeName) {
-    followStoreButton.setOnClickListener(
-        v -> storeUtilsProxy.unSubscribeStore(storeName, storeCredentialsProvider));
+    followStoreButton.setOnClickListener(v -> storeUtilsProxy.unSubscribeStore(storeName));
     followStoreButton.setText(R.string.unfollow);
   }
 

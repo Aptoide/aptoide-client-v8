@@ -95,11 +95,6 @@ public class StoreUtilsProxy {
         successRequestListener, errorRequestListener, storeName, accountManager);
   }
 
-  public void unSubscribeStore(String storeName,
-      StoreCredentialsProvider storeCredentialsProvider) {
-    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
-  }
-
   public void unSubscribeStore(String storeName) {
     StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
   }

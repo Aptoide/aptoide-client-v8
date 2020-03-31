@@ -37,6 +37,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.view.fragment.BaseDialogFragment;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
@@ -48,6 +49,7 @@ import retrofit2.Converter;
 public class PrivateStoreDialog extends BaseDialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
+  @Inject StoreCredentialsProviderImpl storeCredentialsProvider;
   private AptoideAccountManager accountManager;
   private ProgressDialog loadingDialog;
   private String storeName;
@@ -80,6 +82,7 @@ public class PrivateStoreDialog extends BaseDialogFragment {
 
   @Override public void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     tokenInvalidator =
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     accountManager =
@@ -88,10 +91,7 @@ public class PrivateStoreDialog extends BaseDialogFragment {
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-            ((AptoideApplication) getContext().getApplicationContext()
-                .getApplicationContext()).getDatabase(), Store.class)),
+    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
         AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
             .getApplicationContext()).getDatabase(), Store.class), httpClient,
         WebService.getDefaultConverter(), tokenInvalidator,
@@ -100,15 +100,6 @@ public class PrivateStoreDialog extends BaseDialogFragment {
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());
     }
-  }
-
-  @Override public void onDestroyView() {
-    Dialog dialog = getDialog();
-
-    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
-    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
-
-    super.onDestroyView();
   }
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -158,6 +149,15 @@ public class PrivateStoreDialog extends BaseDialogFragment {
           showLoadingDialog();
         })
         .create();
+  }
+
+  @Override public void onDestroyView() {
+    Dialog dialog = getDialog();
+
+    // Work around to the bug... : http://code.google.com/p/android/issues/detail?id=17423
+    if ((dialog != null) && getRetainInstance()) dialog.setDismissMessage(null);
+
+    super.onDestroyView();
   }
 
   @Override public void onDismiss(DialogInterface dialog) {

@@ -109,7 +109,6 @@ import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
@@ -119,13 +118,13 @@ import cm.aptoide.pt.database.RoomInstallationMapper;
 import cm.aptoide.pt.database.RoomInstallationPersistence;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
+import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -236,9 +235,11 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StorePersistence;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -872,10 +873,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("mature-pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
-    return new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(storeAccessor), storeAccessor, httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
+      StoreCredentialsProvider storeCredentialsProvider) {
+    return new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
+        storeAccessor, httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+        sharedPreferences);
   }
 
   @Singleton @Provides TokenInvalidator provideTokenInvalidator(
@@ -1068,7 +1070,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
-      @Named("default") ObjectMapper nonNullObjectMapper, StoreRepository storeRepository) {
+      @Named("default") ObjectMapper nonNullObjectMapper, RoomStoreRepository storeRepository) {
     return new StoreManager(okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper,
@@ -1123,8 +1125,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides StoreCredentialsProvider providesStoreCredentialsProvider(
-      StoreAccessor storeAccessor) {
-    return new StoreCredentialsProviderImpl(storeAccessor);
+      RoomStoreRepository storeRepository) {
+    return new StoreCredentialsProviderImpl(storeRepository);
   }
 
   @Singleton @Provides TrendingService providesTrendingService(
@@ -1155,11 +1157,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
-        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubAdsManager, appBundlesVisibilityManager);
+        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
+        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1577,15 +1579,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
-        idsRepository, AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        storeCredentialsProvider, idsRepository,
+        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10, appBundlesVisibilityManager);
+  }
+
+  @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {
+    return new RoomStorePersistence(aptoideDatabase.storeDao());
+  }
+
+  @Singleton @Provides RoomStoreRepository providesRoomStoreRepository(
+      StorePersistence storePersistence) {
+    return new RoomStoreRepository(storePersistence);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(

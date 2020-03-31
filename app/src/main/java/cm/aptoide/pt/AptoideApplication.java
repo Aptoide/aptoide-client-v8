@@ -153,6 +153,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
   @Inject RoomInstalledPersistence roomInstalledPersistence;
+  @Inject StoreCredentialsProviderImpl storeCredentials;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
@@ -694,10 +695,6 @@ public abstract class AptoideApplication extends Application {
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun() {
     return Completable.defer(() -> {
-
-      final StoreCredentialsProviderImpl storeCredentials =
-          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
-
       StoreUtilsProxy proxy =
           new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
               storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),

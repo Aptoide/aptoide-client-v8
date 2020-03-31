@@ -25,7 +25,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -49,6 +48,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,9 +56,6 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     getFragmentComponent(savedInstanceState).inject(this);
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     final OkHttpClient httpClient =
         ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     accountManager =
