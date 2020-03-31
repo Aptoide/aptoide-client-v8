@@ -1,6 +1,5 @@
 package cm.aptoide.pt.store;
 
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.RoomStore;
 import java.util.List;
 import rx.Completable;
@@ -38,7 +37,7 @@ public class RoomStoreRepository {
     return storePersistence.get(storeName);
   }
 
-  public void saveAll(List<Store> stores) {
-    storePersistence.insertAll(stores);
+  public Completable saveAll(List<RoomStore> stores) {
+    return storePersistence.saveAll(stores);
   }
 }

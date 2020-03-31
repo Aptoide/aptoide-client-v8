@@ -723,14 +723,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AuthenticationPersistence authenticationPersistence,
       AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
       StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
-      LoginPreferences loginPreferences) {
+      LoginPreferences loginPreferences, AccountPersistence accountPersistence) {
     FacebookSdk.sdkInitialize(application);
-
-    final AccountPersistence accountPersistence =
-        new AndroidAccountManagerPersistence(accountManager,
-            new DatabaseStoreDataPersist(storeAccessor,
-                new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
-            androidAccountProvider, authenticationPersistence, Schedulers.io());
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
@@ -743,6 +737,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
+  }
+
+  @Singleton @Provides AccountPersistence providesAccountPersistence(AccountManager accountManager,
+      DatabaseStoreDataPersist databaseStoreDataPersist, AccountFactory accountFactory,
+      AndroidAccountProvider androidAccountProvider,
+      AuthenticationPersistence authenticationPersistence) {
+    return new AndroidAccountManagerPersistence(accountManager, databaseStoreDataPersist,
+        accountFactory, androidAccountProvider, authenticationPersistence, Schedulers.io());
+  }
+
+  @Singleton @Provides DatabaseStoreDataPersist providesDatabaseStoreDataPersist(
+      RoomStoreRepository storeRepository) {
+    return new DatabaseStoreDataPersist(new DatabaseStoreDataPersist.DatabaseStoreMapper(),
+        storeRepository);
   }
 
   @Singleton @Provides AccountFactory provideAccountFactory() {
