@@ -718,11 +718,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, AccountManager accountManager,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence,
-      AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
+      GoogleApiClient googleApiClient, StoreManager storeManager, AccountService accountService,
       LoginPreferences loginPreferences, AccountPersistence accountPersistence) {
     FacebookSdk.sdkInitialize(application);
 
@@ -878,13 +874,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
+      RoomStoreRepository storeRepository, @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("mature-pool-v7")
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
       StoreCredentialsProvider storeCredentialsProvider) {
     return new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        storeAccessor, httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+        storeRepository, httpClient, WebService.getDefaultConverter(), tokenInvalidator,
         sharedPreferences);
   }
 
@@ -1169,7 +1165,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager);
+        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager, storeRepository);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1650,13 +1646,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides UpdateRepository providesUpdateRepository(
-      UpdatePersistence updatePersistence, StoreAccessor storeAccessor, IdsRepository idsRepository,
-      @Named("mature-pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+      UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
+      IdsRepository idsRepository, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
-    return new UpdateRepository(updatePersistence, storeAccessor, idsRepository,
+    return new UpdateRepository(updatePersistence, storeRepository, idsRepository,
         bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
         application.getPackageManager(), appBundlesVisibilityManager, updateMapper);
   }

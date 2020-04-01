@@ -22,7 +22,6 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -45,7 +44,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -76,14 +75,14 @@ import rx.schedulers.Schedulers;
  */
 public class DisplayablesFactory {
   public static Observable<Displayable> parse(String marketName, GetStoreWidgets.WSWidget widget,
-      String storeTheme, StoreRepository storeRepository, StoreCredentialsProvider storeCredentials,
-      StoreContext storeContext, Context context, AptoideAccountManager accountManager,
-      StoreUtilsProxy storeUtilsProxy, WindowManager windowManager, Resources resources,
-      InstalledRepository installedRepository, StoreAnalytics storeAnalytics,
-      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker,
-      BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
-      StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
-      Converter.Factory converter, TokenInvalidator tokenInvalidator,
+      String storeTheme, RoomStoreRepository storeRepository,
+      StoreCredentialsProvider storeCredentials, StoreContext storeContext, Context context,
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
+      StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
+      FragmentNavigator fragmentNavigator, BodyInterceptor<BaseBody> bodyInterceptorV7,
+      OkHttpClient client, Converter.Factory converter, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, ThemeManager themeManager) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
@@ -136,9 +135,9 @@ public class DisplayablesFactory {
         case HOME_META:
           return Observable.just(
               new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(), storeCredentials,
-                  storeAnalytics, badgeDialogFactory, fragmentNavigator, storeAccessor,
+                  storeAnalytics, badgeDialogFactory, fragmentNavigator, storeRepository,
                   bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences,
-                  themeManager));
+                  themeManager, storeUtilsProxy, accountManager));
 
         case MY_STORE_META:
           return Observable.from(
@@ -258,7 +257,7 @@ public class DisplayablesFactory {
   }
 
   private static Observable<Displayable> getMyStores(String marketName,
-      GetStoreWidgets.WSWidget wsWidget, StoreRepository storeRepository, String storeTheme,
+      GetStoreWidgets.WSWidget wsWidget, RoomStoreRepository storeRepository, String storeTheme,
       StoreContext storeContext, WindowManager windowManager, Resources resources, Context context,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
       NavigationTracker navigationTracker, ThemeManager themeManager) {
@@ -432,7 +431,7 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(String marketName,
-      GetStoreWidgets.WSWidget wsWidget, String storeTheme, StoreRepository storeRepository,
+      GetStoreWidgets.WSWidget wsWidget, String storeTheme, RoomStoreRepository storeRepository,
       StoreCredentialsProvider storeCredentials, StoreContext storeContext, Context context,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
@@ -495,7 +494,8 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
+  public static Observable<List<Store>> loadLocalSubscribedStores(
+      RoomStoreRepository storeRepository) {
     return storeRepository.getAll()
         .first()
         .observeOn(Schedulers.computation())

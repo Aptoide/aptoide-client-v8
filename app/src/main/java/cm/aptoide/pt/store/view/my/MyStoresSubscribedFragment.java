@@ -11,7 +11,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -24,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetMyStoreListRequest;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -51,6 +51,8 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject RoomStoreRepository storeRepository;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
@@ -124,14 +126,7 @@ public class MyStoresSubscribedFragment extends GetStoreEndlessFragment<ListStor
         if (layout == Layout.LIST) {
           storesDisplayables.add(
               new RecommendedStoreDisplayable(list.get(i), storeRepository, accountManager,
-                  new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-                      AccessorFactory.getAccessorFor(
-                          ((AptoideApplication) getContext().getApplicationContext()
-                              .getApplicationContext()).getDatabase(),
-                          cm.aptoide.pt.database.realm.Store.class), httpClient,
-                      WebService.getDefaultConverter(), tokenInvalidator,
-                      ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-                  storeCredentialsProvider));
+                  storeUtilsProxy, storeCredentialsProvider));
         } else {
           storesDisplayables.add(
               new GridStoreDisplayable(list.get(i), "More Followed Stores", storeAnalytics));

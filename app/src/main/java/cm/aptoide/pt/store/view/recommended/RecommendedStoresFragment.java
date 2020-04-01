@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
@@ -31,6 +32,7 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
   //// TODO(pedro): 19/07/17 More recommended store events here
 
   @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject RoomStoreRepository storeRepository;
   private AptoideAccountManager accountManager;
   private StoreUtilsProxy storeUtilsProxy;
 

@@ -33,7 +33,6 @@ import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -55,6 +54,7 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.AppSearchSuggestionsView;
 import cm.aptoide.pt.search.view.SearchSuggestionsPresenter;
 import cm.aptoide.pt.share.ShareStoreHelper;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
@@ -91,6 +91,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
   @Inject ThemeManager themeManager;
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject RoomStoreRepository storeRepository;
   private AptoideAccountManager accountManager;
   private String storeName;
   private String title;
@@ -528,10 +529,7 @@ public class StoreFragment extends BasePagerToolbarFragment {
           switch (eResponse) {
             case NO:
               StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider,
-                  AccessorFactory.getAccessorFor(
-                      ((AptoideApplication) getContext().getApplicationContext()
-                          .getApplicationContext()).getDatabase(),
-                      cm.aptoide.pt.database.realm.Store.class));
+                  storeRepository);
             case YES:
             case CANCEL:
               getActivity().onBackPressed();

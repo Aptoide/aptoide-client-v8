@@ -23,6 +23,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -49,6 +50,7 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
   @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject RoomStoreRepository storeRepository;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,12 +87,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           AptoideApplication application =
               (AptoideApplication) getContext().getApplicationContext();
           return DisplayablesFactory.parse(marketName, wsWidget, storeTheme, storeRepository,
-              storeContext, getContext(), accountManager, storeUtilsProxy,
+              storeCredentialsProvider, storeContext, getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
               navigationTracker, new BadgeDialogFactory(getActivity(), themeManager),
               ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
-              AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
               application.getDefaultSharedPreferences(), themeManager);

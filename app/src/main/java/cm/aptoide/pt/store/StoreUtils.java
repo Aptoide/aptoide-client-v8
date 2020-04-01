@@ -4,8 +4,6 @@ import androidx.annotation.Nullable;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
@@ -20,6 +18,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import rx.Completable;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -50,7 +49,7 @@ public class StoreUtils {
    */
   @Deprecated public static Observable<GetStoreMeta> subscribeStore(
       GetStoreMetaRequest getStoreMetaRequest, AptoideAccountManager accountManager,
-      String storeUserName, String storePassword, StoreAccessor storeAccessor) {
+      String storeUserName, String storePassword, RoomStoreRepository storeRepository) {
 
     return getStoreMetaRequest.observe()
         .flatMap(getStoreMeta -> accountManager.accountStatus()
@@ -72,13 +71,13 @@ public class StoreUtils {
                     new Exception("Something went wrong while getting store meta"));
               }
             }))
-        .doOnNext(
-            getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor));
+        .flatMap(getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest,
+            storeRepository).andThen(Observable.just(getStoreMeta)));
   }
 
-  private static void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
-      GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
-    Store store = new Store();
+  private static Completable saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
+      GetStoreMetaRequest getStoreMetaRequest, RoomStoreRepository storeRepository) {
+    RoomStore store = new RoomStore();
 
     store.setStoreId(storeData.getId());
     store.setStoreName(storeData.getName());
@@ -95,7 +94,7 @@ public class StoreUtils {
       store.setPasswordSha1(getStoreMetaRequest.getBody()
           .getStorePassSha1());
     }
-    storeAccessor.save(store);
+    return storeRepository.save(store);
   }
 
   /**
@@ -105,10 +104,10 @@ public class StoreUtils {
   @Deprecated public static void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
       @Nullable SuccessRequestListener<GetStoreMeta> successRequestListener,
       @Nullable ErrorRequestListener errorRequestListener, AptoideAccountManager accountManager,
-      String storeUserName, String storePassword, StoreAccessor storeAccessor) {
+      String storeUserName, String storePassword, RoomStoreRepository storeRepository) {
 
     subscribeStore(getStoreMetaRequest, accountManager, storeUserName, storePassword,
-        storeAccessor).observeOn(AndroidSchedulers.mainThread())
+        storeRepository).observeOn(AndroidSchedulers.mainThread())
         .subscribe(getStoreMeta -> {
           if (successRequestListener != null) {
             successRequestListener.call(getStoreMeta);
@@ -138,8 +137,8 @@ public class StoreUtils {
   }
 
   public static Observable<Boolean> isSubscribedStore(String storeName,
-      StoreAccessor storeAccessor) {
-    return storeAccessor.get(storeName)
+      RoomStoreRepository storeRepository) {
+    return storeRepository.get(storeName)
         .map(store -> store != null);
   }
 
@@ -184,16 +183,14 @@ public class StoreUtils {
     return repoUri;
   }
 
-  public static List<Long> getSubscribedStoresIds(StoreAccessor storeAccessor) {
-
+  public static List<Long> getSubscribedStoresIds(RoomStoreRepository storeRepository) {
     List<Long> storesNames = new LinkedList<>();
-    List<Store> stores = storeAccessor.getAll()
+    List<RoomStore> stores = storeRepository.getAll()
         .toBlocking()
         .first();
-    for (Store store : stores) {
+    for (RoomStore store : stores) {
       storesNames.add(store.getStoreId());
     }
-
     return storesNames;
   }
 
@@ -213,18 +210,19 @@ public class StoreUtils {
   }
 
   public static void unSubscribeStore(String name, AptoideAccountManager accountManager,
-      StoreCredentialsProvider storeCredentialsProvider, StoreAccessor storeAccessor) {
+      StoreCredentialsProvider storeCredentialsProvider, RoomStoreRepository storeRepository) {
     accountManager.accountStatus()
         .map(Account::isLoggedIn)
         .first()
-        .subscribe(isLoggedIn -> {
+        .doOnNext(isLoggedIn -> {
           if (isLoggedIn) {
             accountManager.unsubscribeStore(name, storeCredentialsProvider.get(name)
                 .getName(), storeCredentialsProvider.get(name)
                 .getPasswordSha1());
           }
-          storeAccessor.remove(name);
-        });
+        })
+        .flatMapCompletable(__ -> storeRepository.remove(name))
+        .subscribe();
   }
 
   public static StoreError getErrorType(String code) {

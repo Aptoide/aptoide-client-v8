@@ -40,4 +40,12 @@ public class RoomStoreRepository {
   public Completable saveAll(List<RoomStore> stores) {
     return storePersistence.saveAll(stores);
   }
+
+  public Completable remove(String storeName) {
+    return storePersistence.remove(storeName);
+  }
+
+  public Observable<RoomStore> getByName(String storeName) {
+    return storePersistence.get(storeName);
+  }
 }

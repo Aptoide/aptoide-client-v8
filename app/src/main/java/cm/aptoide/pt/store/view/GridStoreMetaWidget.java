@@ -10,20 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.StoreTheme;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
@@ -33,7 +25,6 @@ import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
-import okhttp3.OkHttpClient;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -58,7 +49,6 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
   private SpannableFactory spannableFactory;
   private View editStoreButton;
   private View buttonsLayout;
-  private StoreAccessor storeAccessor;
   private BadgeDialogFactory badgeDialogFactory;
 
   public GridStoreMetaWidget(View itemView) {
@@ -84,21 +74,8 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
 
   @Override public void bindView(GridStoreMetaDisplayable displayable, int position) {
     badgeDialogFactory = displayable.getBadgeDialogFactory();
-    accountManager =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    storeAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()).getDatabase(), Store.class);
-    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(storeAccessor), AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), httpClient,
-        WebService.getDefaultConverter(),
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+    accountManager = displayable.getAptoideAccountManager();
+    storeUtilsProxy = displayable.getStoreUtilsProxy();
     spannableFactory = new SpannableFactory();
     FragmentNavigator fragmentNavigator = getFragmentNavigator();
     Resources resources = getContext().getResources();
@@ -108,7 +85,7 @@ public class GridStoreMetaWidget extends MetaStoresBaseWidget<GridStoreMetaDispl
     followingCountTv.setOnClickListener(
         v -> navigateToFollowingScreen(displayable, fragmentNavigator, resources));
 
-    compositeSubscription.add(displayable.getHomeMeta(accountManager, getContext())
+    compositeSubscription.add(displayable.getHomeMeta(accountManager)
         .observeOn(AndroidSchedulers.mainThread())
         .doOnNext(homeMeta -> {
           ParcelableSpan[] textStyle = {
