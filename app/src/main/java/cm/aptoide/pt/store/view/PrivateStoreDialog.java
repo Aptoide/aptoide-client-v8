@@ -21,8 +21,6 @@ import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -31,7 +29,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -49,14 +46,13 @@ import retrofit2.Converter;
 public class PrivateStoreDialog extends BaseDialogFragment {
 
   public static final String TAG = "PrivateStoreDialog";
-  @Inject StoreCredentialsProviderImpl storeCredentialsProvider;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
   private ProgressDialog loadingDialog;
   private String storeName;
   private String storeUser;
   private String storePassSha1;
   private boolean isInsideStore;
-  private StoreUtilsProxy storeUtilsProxy;
   private BodyInterceptor<BaseBody> bodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -91,11 +87,6 @@ public class PrivateStoreDialog extends BaseDialogFragment {
     converterFactory = WebService.getDefaultConverter();
     bodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
     final Bundle args = getArguments();
     if (args != null) {
       storeName = args.getString(BundleArgs.STORE_NAME.name());

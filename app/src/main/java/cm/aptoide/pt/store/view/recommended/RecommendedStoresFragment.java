@@ -5,12 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.store.ListStores;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.Endless;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.store.RoomStoreRepository;
@@ -20,7 +15,6 @@ import cm.aptoide.pt.store.view.GetStoreEndlessFragment;
 import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import javax.inject.Inject;
-import okhttp3.OkHttpClient;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -33,8 +27,8 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
 
   @Inject StoreCredentialsProvider storeCredentialsProvider;
   @Inject RoomStoreRepository storeRepository;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
-  private StoreUtilsProxy storeUtilsProxy;
 
   public static Fragment newInstance() {
     return new RecommendedStoresFragment();
@@ -45,16 +39,6 @@ public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStore
     getFragmentComponent(savedInstanceState).inject(this);
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
-    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), httpClient,
-        WebService.getDefaultConverter(),
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
   }
 
   @Override protected V7<ListStores, ? extends Endless> buildRequest(boolean refresh, String url) {

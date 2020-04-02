@@ -22,8 +22,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -74,6 +72,7 @@ public class AddStoreDialog extends BaseDialogFragment {
   private final int PRIVATE_STORE_REQUEST_CODE = 20;
 
   @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   private AptoideAccountManager accountManager;
   private FragmentNavigator navigator;
   private String storeName;
@@ -363,51 +362,46 @@ public class AddStoreDialog extends BaseDialogFragment {
   }
 
   private void executeRequest(GetStoreMetaRequest getHomeMetaRequest) {
-    new StoreUtilsProxy(accountManager, baseBodyBodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()).subscribeStore(
-        getHomeMetaRequest, getStoreMeta1 -> {
-          ShowMessage.asSnack(getView(),
-              AptoideUtils.StringU.getFormattedString(R.string.store_followed,
-                  getContext().getResources(), storeName));
+    storeUtilsProxy.subscribeStore(getHomeMetaRequest, getStoreMeta1 -> {
+      ShowMessage.asSnack(getView(),
+          AptoideUtils.StringU.getFormattedString(R.string.store_followed,
+              getContext().getResources(), storeName));
 
-          dismissLoadingDialog();
-          dismiss();
-        }, e -> {
-          dismissLoadingDialog();
-          if (e instanceof AptoideWsV7Exception) {
-            BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
-            BaseV7Response.Error error = baseResponse.getError();
-            switch (StoreUtils.getErrorType(error.getCode())) {
-              case PRIVATE_STORE_ERROR:
-                DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
-                    .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
-                dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
-                break;
+      dismissLoadingDialog();
+      dismiss();
+    }, e -> {
+      dismissLoadingDialog();
+      if (e instanceof AptoideWsV7Exception) {
+        BaseV7Response baseResponse = ((AptoideWsV7Exception) e).getBaseResponse();
+        BaseV7Response.Error error = baseResponse.getError();
+        switch (StoreUtils.getErrorType(error.getCode())) {
+          case PRIVATE_STORE_ERROR:
+            DialogFragment dialogFragment = PrivateStoreDialog.newInstance(AddStoreDialog
+                .this, PRIVATE_STORE_REQUEST_CODE, storeName, false);
+            dialogFragment.show(getFragmentManager(), PrivateStoreDialog.class.getName());
+            break;
 
-              case STORE_DOESNT_EXIST:
-                searchViewLayout.setBackground(
-                    getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
-                errorMessage.setVisibility(View.VISIBLE);
-                errorMessage.setText(error.getDescription());
-                break;
-
-              default:
-                searchViewLayout.setBackground(
-                    getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
-                errorMessage.setVisibility(View.VISIBLE);
-                errorMessage.setText(error.getDescription());
-                break;
-            }
-          } else {
+          case STORE_DOESNT_EXIST:
             searchViewLayout.setBackground(
                 getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
             errorMessage.setVisibility(View.VISIBLE);
-            errorMessage.setText(R.string.error_occured);
-          }
-        }, storeName, accountManager);
+            errorMessage.setText(error.getDescription());
+            break;
+
+          default:
+            searchViewLayout.setBackground(
+                getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+            errorMessage.setVisibility(View.VISIBLE);
+            errorMessage.setText(error.getDescription());
+            break;
+        }
+      } else {
+        searchViewLayout.setBackground(
+            getResources().getDrawable(R.drawable.add_stores_dialog_seach_box_error));
+        errorMessage.setVisibility(View.VISIBLE);
+        errorMessage.setText(R.string.error_occured);
+      }
+    }, storeName, accountManager);
   }
 
   void dismissLoadingDialog() {
