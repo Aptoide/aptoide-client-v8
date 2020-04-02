@@ -18,7 +18,7 @@ public class RoomStoreRepository {
   }
 
   public Observable<Long> count() {
-    return storePersistence.count();
+    return storePersistence.countAll();
   }
 
   public Observable<List<RoomStore>> getAll() {
@@ -45,7 +45,7 @@ public class RoomStoreRepository {
     return storePersistence.remove(storeName);
   }
 
-  public Observable<RoomStore> getByName(String storeName) {
+  /*public Observable<RoomStore> getByName(String storeName) {
     return storePersistence.get(storeName);
-  }
+  }*/
 }

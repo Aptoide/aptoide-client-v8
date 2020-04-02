@@ -106,7 +106,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyDecorator;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;

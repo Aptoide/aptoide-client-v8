@@ -305,7 +305,7 @@ public class DeepLinkManager {
           .toList()
           .flatMap(stores -> {
             if (stores.size() == 1) {
-              return roomStoreRepository.getByName(stores.get(0))
+              return roomStoreRepository.get(stores.get(0))
                   .flatMapCompletable(store -> openStore(store))
                   .map(success -> stores);
             } else {

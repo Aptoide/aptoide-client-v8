@@ -116,8 +116,6 @@ public abstract class StoreTabGridRecyclerFragment extends GridRecyclerSwipeFrag
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    final AptoideApplication application =
-        (AptoideApplication) getContext().getApplicationContext();
     ((MainActivity) getContext()).getActivityComponent()
         .inject(this);
 

@@ -78,7 +78,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
@@ -182,8 +182,8 @@ public abstract class AptoideApplication extends Application {
   @Inject NewFeatureManager newFeatureManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  @Inject StoreCredentialsProvider storeCredentials;
   @Inject StoreUtilsProxy storeUtilsProxy;
-  @Inject StoreCredentialsProviderImpl storeCredentials;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
   @Inject NotificationAnalytics notificationAnalytics;
@@ -699,7 +699,7 @@ public abstract class AptoideApplication extends Application {
                 .log(err))));
   }
 
-  private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
+  private Completable setDefaultFollowedStores(StoreCredentialsProvider storeCredentials,
       StoreUtilsProxy proxy) {
 
     return Observable.from(defaultFollowedStores)
@@ -907,6 +907,10 @@ public abstract class AptoideApplication extends Application {
 
   public SettingsManager getSettingsManager() {
     return settingsManager;
+  }
+
+  public StoreCredentialsProvider getStoreCredentials() {
+    return storeCredentials;
   }
 }
 
