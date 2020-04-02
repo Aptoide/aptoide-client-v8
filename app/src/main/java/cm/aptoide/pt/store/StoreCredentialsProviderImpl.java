@@ -21,7 +21,7 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
     RoomStore store = storeRepository.get(storeId)
         .toBlocking()
-        .first();
+        .value();
 
     String username = null;
     String passwordSha1 = null;
@@ -40,7 +40,7 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
     RoomStore store = storeRepository.get(storeName)
         .toBlocking()
-        .first();
+        .value();
 
     String username = null;
     String passwordSha1 = null;

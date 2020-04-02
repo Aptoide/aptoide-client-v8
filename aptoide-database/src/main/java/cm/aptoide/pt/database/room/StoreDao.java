@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.List;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
@@ -12,10 +13,10 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Query("SELECT * from store") Observable<List<RoomStore>> getAll();
 
-  @Query("SELECT * from store where storeName = :storeName") Observable<RoomStore> getByStoreName(
+  @Query("SELECT * from store where storeName = :storeName") Single<RoomStore> getByStoreName(
       String storeName);
 
-  @Query("SELECT * from store where storeName = :storeId") Observable<RoomStore> getByStoreId(
+  @Query("SELECT * from store where storeName = :storeId") Single<RoomStore> getByStoreId(
       long storeId);
 
   @Query("SELECT COUNT(*) from store where storeName = :storeId") Observable<Integer> isSubscribed(

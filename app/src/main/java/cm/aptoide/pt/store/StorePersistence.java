@@ -4,13 +4,14 @@ import cm.aptoide.pt.database.room.RoomStore;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public interface StorePersistence {
   Observable<List<RoomStore>> getAll();
 
-  Observable<RoomStore> get(String storeName);
+  Single<RoomStore> get(String storeName);
 
-  Observable<RoomStore> get(long storeId);
+  Single<RoomStore> get(long storeId);
 
   Completable remove(String storeName);
 

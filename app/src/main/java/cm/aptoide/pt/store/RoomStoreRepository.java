@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.room.RoomStore;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 
 public class RoomStoreRepository {
 
@@ -29,11 +30,11 @@ public class RoomStoreRepository {
     return storePersistence.save(entity);
   }
 
-  public Observable<RoomStore> get(Long id) {
+  public Single<RoomStore> get(Long id) {
     return storePersistence.get(id);
   }
 
-  public Observable<RoomStore> get(String storeName) {
+  public Single<RoomStore> get(String storeName) {
     return storePersistence.get(storeName);
   }
 

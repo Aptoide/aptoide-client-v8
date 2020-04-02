@@ -8,6 +8,7 @@ import io.reactivex.BackpressureStrategy;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.schedulers.Schedulers;
 
 public class RoomStorePersistence implements StorePersistence {
@@ -23,14 +24,15 @@ public class RoomStorePersistence implements StorePersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<RoomStore> get(String storeName) {
-    return RxJavaInterop.toV1Observable(storeDao.getByStoreName(storeName),
-        BackpressureStrategy.BUFFER)
+  public Single<RoomStore> get(String storeName) {
+    return RxJavaInterop.toV1Single(storeDao.getByStoreName(storeName))
+        .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<RoomStore> get(long storeId) {
-    return RxJavaInterop.toV1Observable(storeDao.getByStoreId(storeId), BackpressureStrategy.BUFFER)
+  public Single<RoomStore> get(long storeId) {
+    return RxJavaInterop.toV1Single(storeDao.getByStoreId(storeId))
+        .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
 

@@ -141,8 +141,7 @@ public class DeepLinkManager {
           intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
       newRepoDeepLink(intent, intent.getExtras()
-              .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO),
-          storeRepository);
+          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeRepository);
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
@@ -288,7 +287,7 @@ public class DeepLinkManager {
     if (repos != null) {
       subscriptions.add(Observable.from(repos)
           .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName, roomStoreRepository)
-              .first()
+              .toObservable()
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(isFollowed -> {
                 if (isFollowed) {
@@ -306,8 +305,7 @@ public class DeepLinkManager {
           .flatMap(stores -> {
             if (stores.size() == 1) {
               return roomStoreRepository.get(stores.get(0))
-                  .flatMapCompletable(store -> openStore(store))
-                  .map(success -> stores);
+                  .flatMapObservable(store -> openStore(store).andThen(Observable.just(stores)));
             } else {
               return navigateToStores().toObservable()
                   .map(success -> stores);

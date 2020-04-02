@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 
 /**
@@ -136,7 +137,7 @@ public class StoreUtils {
         .getStorePassSha1() != null;
   }
 
-  public static Observable<Boolean> isSubscribedStore(String storeName,
+  public static Single<Boolean> isSubscribedStore(String storeName,
       RoomStoreRepository storeRepository) {
     return storeRepository.get(storeName)
         .map(store -> store != null);
