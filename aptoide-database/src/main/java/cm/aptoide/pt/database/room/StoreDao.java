@@ -19,7 +19,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
   @Query("SELECT * from store where storeName = :storeId") Single<RoomStore> getByStoreId(
       long storeId);
 
-  @Query("SELECT COUNT(*) from store where storeName = :storeId") Observable<Integer> isSubscribed(
+  @Query("SELECT COUNT(*) from store where storeId = :storeId") Observable<Integer> isSubscribed(
       long storeId);
 
   @Query("DELETE FROM store where storeName = :storeName") void removeByStoreName(String storeName);
