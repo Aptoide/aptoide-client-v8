@@ -96,7 +96,8 @@ import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
+import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
+import cm.aptoide.pt.app.migration.AppcMigrationRepository;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
@@ -110,6 +111,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
@@ -119,7 +121,6 @@ import cm.aptoide.pt.database.RoomInstallationPersistence;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
@@ -1496,7 +1497,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT, AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
+        InstallAnalytics.RAKAM_INSTALL_EVENT,
+        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
@@ -1961,17 +1963,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository, AppcMigrationService appcMigrationService) {
-    return new AppcMigrationManager(repository, appcMigrationService);
+      InstalledRepository repository, AppcMigrationRepository appcMigrationRepository) {
+    return new AppcMigrationManager(repository, appcMigrationRepository);
   }
 
-  @Singleton @Provides AppcMigrationService providesAppcMigrationService(
-      AppcMigrationAccessor accessor) {
-    return new AppcMigrationService(accessor);
+  @Singleton @Provides AppcMigrationRepository providesAppcMigrationService(
+      AppcMigrationPersistence appcMigrationPersistence) {
+    return new AppcMigrationRepository(appcMigrationPersistence);
   }
 
-  @Singleton @Provides AppcMigrationAccessor providesAppcMigrationAccessor(Database database) {
-    return new AppcMigrationAccessor(database);
+  @Singleton @Provides AppcMigrationPersistence providesAppcMigrationAccessor(
+      AptoideDatabase database) {
+    return new RoomAppcMigrationPersistence(database.migratedAppDAO());
   }
 
   @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
