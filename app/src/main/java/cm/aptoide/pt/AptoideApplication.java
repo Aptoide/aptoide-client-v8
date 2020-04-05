@@ -30,6 +30,7 @@ import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
@@ -200,6 +201,7 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
+  @Inject RealmStoreMigrator realmStoreMigrator;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -324,6 +326,10 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     startNotificationCleaner();
+
+    realmStoreMigrator.performMigration()
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
 
     rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRootAvailable -> {

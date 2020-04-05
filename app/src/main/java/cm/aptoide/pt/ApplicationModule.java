@@ -109,6 +109,7 @@ import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
+import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
@@ -988,6 +989,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreRepository(storeAccessor);
   }
 
+  @Singleton @Provides RealmStoreMigrator providesStoreRealmMigrator(
+      StorePersistence storePersistence, StoreRepository storeRepository) {
+    return new RealmStoreMigrator(storePersistence, storeRepository);
+  }
+
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
       AnalyticsManager analyticsManager) {
     return new PageViewsAnalytics(analyticsManager);
@@ -1165,7 +1171,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager, storeRepository);
+        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager,
+        storeRepository);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(

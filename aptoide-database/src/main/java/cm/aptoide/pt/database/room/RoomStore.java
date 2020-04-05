@@ -21,6 +21,20 @@ import androidx.room.PrimaryKey;
   private String username;
   private String passwordSha1;
 
+  public RoomStore() {
+  }
+
+  public RoomStore(long storeId, String iconPath, String theme, long downloads, String storeName,
+      String username, String passwordSha1) {
+    this.storeId = storeId;
+    this.iconPath = iconPath;
+    this.theme = theme;
+    this.downloads = downloads;
+    this.storeName = storeName;
+    this.username = username;
+    this.passwordSha1 = passwordSha1;
+  }
+
   public long getStoreId() {
     return storeId;
   }
