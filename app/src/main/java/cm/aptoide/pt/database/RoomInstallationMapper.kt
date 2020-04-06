@@ -10,9 +10,7 @@ class RoomInstallationMapper {
     val installationList: MutableList<RoomInstallation> =
         ArrayList()
     for (installed in installedList) {
-      installationList.add(
-          RoomInstallation(installed.packageName, installed.name, installed.icon,
-              installed.versionCode, installed.versionName))
+      installationList.add(map(installed))
     }
     return installationList
   }
