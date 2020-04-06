@@ -1034,7 +1034,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
     return Room.databaseBuilder(getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
-        .fallbackToDestructiveMigration()
         .build();
   }
 
