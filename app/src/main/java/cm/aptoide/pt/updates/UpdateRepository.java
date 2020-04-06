@@ -126,32 +126,10 @@ public class UpdateRepository {
 
   private Completable saveNewUpdates(List<App> updates) {
     return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(updates, false));
-/*
-    return Completable.fromSingle(Observable.from(updates)
-        .map(app -> mapAppUpdate(app, false))
-        .toList()
-        .toSingle()
-        .flatMap(updateList -> {
-          Logger.getInstance()
-              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
-                  updateList.size()));
-          return saveNonExcludedUpdates(updateList);
-        }));*/
   }
 
   private Completable saveNewUpgrades(List<App> upgrades) {
     return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(upgrades, true));
-
-  /*  return Completable.fromSingle(Observable.from(upgrades)
-        .map(app -> mapAppUpdate(app, true))
-        .toList()
-        .toSingle()
-        .flatMap(updateList -> {
-          Logger.getInstance()
-              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
-                  updateList.size()));
-          return saveNonExcludedUpdates(updateList);
-        }));*/
   }
 
   public Completable removeAll(List<RoomUpdate> updates) {
