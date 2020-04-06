@@ -113,8 +113,7 @@ public class DefaultInstaller implements Installer {
                 installation.setStatus(RoomInstalled.STATUS_COMPLETED);
                 return installation.save()
                     .toObservable()
-                    .map(__ -> null);
-                //return Observable.just(null);
+                    .map(__ -> installation);
               } else {
                 if (forceDefaultInstall) {
                   return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
@@ -209,7 +208,6 @@ public class DefaultInstaller implements Installer {
               return updateInstallation(installation, RoomInstalled.TYPE_ROOT,
                   RoomInstalled.STATUS_ROOT_TIMEOUT).save()
                   .toObservable();
-              //return Observable.empty();
             } else {
               return Observable.error(throwable);
             }

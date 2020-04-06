@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2016.
- * Modified on 02/09/2016.
- */
-
 package cm.aptoide.pt.database;
 
 import androidx.annotation.NonNull;
@@ -19,9 +14,6 @@ import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-/**
- * Created on 01/09/16.
- */
 public class RoomInstalledPersistence implements InstalledPersistence {
 
   private final InstallationPersistence roomInstallationPersistence;
@@ -42,10 +34,6 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  /**
-   * @return all the entries from this table even not installed apps
-   * if you want only installed apps consider using the install manager
-   */
   public Observable<List<RoomInstalled>> getAll() {
     return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
@@ -102,7 +90,7 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Completable clearAndAddAll(List<RoomInstalled> list) {
+  public Completable replaceAllBy(List<RoomInstalled> list) {
     return Completable.fromAction(() -> {
       installedDao.removeAll();
       installedDao.insertAll(list);

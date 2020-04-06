@@ -785,7 +785,7 @@ public abstract class AptoideApplication extends Application {
             .first()
             .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
                 installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
-        .flatMapCompletable(list -> roomInstalledPersistence.clearAndAddAll(list))
+        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
         .toCompletable();
   }
 
