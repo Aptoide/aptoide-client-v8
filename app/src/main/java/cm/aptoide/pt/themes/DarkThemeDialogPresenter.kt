@@ -33,7 +33,7 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
           view.dismissView()
           themeManager.setThemeOption(ThemeManager.ThemeOption.DARK)
           themeManager.resetToBaseTheme()
-          themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark())
+          themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode())
           themeAnalytics.sendDarkThemeDialogTurnItOnClickEvent("HomeFragment")
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
