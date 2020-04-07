@@ -6,15 +6,15 @@ import rx.Completable
 import rx.Observable
 
 class AptoideInstallManager(val installedRepository: InstalledRepository,
-                            val aptoideInstallPersistence: AptoideInstallPersistence,
+                            val aptoideInstallRepository: AptoideInstallRepository,
                             val aptoideInstallExperiment: AptoideInstallExperiment) {
 
   fun addAptoideInstallCandidate(packageName: String) {
-    aptoideInstallPersistence.addAptoideInstallCandidate(packageName)
+    aptoideInstallRepository.addAptoideInstallCandidate(packageName)
   }
 
   fun persistCandidate(packageName: String) {
-    aptoideInstallPersistence.persistCandidate(packageName)
+    aptoideInstallRepository.persistCandidate(packageName)
   }
 
   fun isInstalledWithAptoide(packageName: String): Observable<Boolean> {
@@ -24,7 +24,7 @@ class AptoideInstallManager(val installedRepository: InstalledRepository,
             if (isSplitInstalledWithAptoide(packageName)) {
               return@flatMapObservable Observable.just(true)
             }
-            return@flatMapObservable aptoideInstallPersistence.isInstalledWithAptoide(packageName)
+            return@flatMapObservable aptoideInstallRepository.isInstalledWithAptoide(packageName)
           }
           return@flatMapObservable Observable.just(false)
         }
