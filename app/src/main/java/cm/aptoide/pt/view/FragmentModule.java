@@ -45,6 +45,7 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.FlagManager;
 import cm.aptoide.pt.app.FlagService;
 import cm.aptoide.pt.app.ReviewsManager;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsInfoView;
 import cm.aptoide.pt.app.view.AppViewFragment;
@@ -553,11 +554,11 @@ import rx.subscriptions.CompositeSubscription;
       InstallManager installManager, AppMapper appMapper, DownloadAnalytics downloadAnalytics,
       InstallAnalytics installAnalytics, UpdatesAnalytics updatesAnalytics,
       DownloadFactory downloadFactory, MoPubAdsManager moPubAdsManager,
-      PromotionsManager promotionsManager) {
+      PromotionsManager promotionsManager, AptoideInstallManager aptoideInstallManager) {
     return new AppsManager(updatesManager, installManager, appMapper, downloadAnalytics,
         installAnalytics, updatesAnalytics, fragment.getContext()
         .getPackageManager(), fragment.getContext(), downloadFactory, moPubAdsManager,
-        promotionsManager);
+        promotionsManager, aptoideInstallManager);
   }
 
   @FragmentScope @Provides AppsPresenter providesAppsPresenter(AppsManager appsManager,

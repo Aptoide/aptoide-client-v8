@@ -123,6 +123,20 @@ class ThemeManager(private val activity: Activity,
             && activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES)
   }
 
+  fun getDarkThemeMode(): DarkThemeMode {
+    return when (getThemeOption()) {
+      ThemeOption.DARK -> DarkThemeMode.DARK
+      ThemeOption.LIGHT -> DarkThemeMode.LIGHT
+      ThemeOption.SYSTEM_DEFAULT -> {
+        if (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+          DarkThemeMode.SYSTEM_DARK
+        } else {
+          DarkThemeMode.SYSTEM_LIGHT
+        }
+      }
+    }
+  }
+
   fun getThemeOption(): ThemeOption {
     return ThemeOption.values()[sharedPreferences.getInt(THEME_PREFERENCE_KEY, 0)]
   }

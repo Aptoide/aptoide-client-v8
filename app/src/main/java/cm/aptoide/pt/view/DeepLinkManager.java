@@ -200,7 +200,7 @@ public class DeepLinkManager {
       // Set new feature action
       themeManager.setThemeOption(ThemeManager.ThemeOption.DARK);
       themeManager.resetToBaseTheme();
-      themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
+      themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     }
   }
 

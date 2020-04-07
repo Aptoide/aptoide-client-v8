@@ -61,7 +61,7 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
-    themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
+    themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     darkThemeNewFeatureManager.scheduleNotification();
 
     setupUpdatesNotification();

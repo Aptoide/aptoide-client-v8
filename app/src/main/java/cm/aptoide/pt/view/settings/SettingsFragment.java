@@ -277,7 +277,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           themeManager.setThemeOption(themeVariant);
           themeManager.resetToBaseTheme();
           themeAnalytics.sendThemeChangedEvent(themeVariant, TAG);
-          themeAnalytics.setDarkThemeUserProperty(themeManager.isThemeDark());
+          themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
         })
         .retry()
         .subscribe());

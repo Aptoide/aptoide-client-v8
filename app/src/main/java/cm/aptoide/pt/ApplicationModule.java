@@ -54,6 +54,7 @@ import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
+import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
@@ -95,6 +96,9 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
 import cm.aptoide.pt.app.migration.AppcMigrationRepository;
@@ -124,6 +128,7 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
+import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -131,6 +136,7 @@ import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
+import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.cache.POSTCacheInterceptor;
@@ -341,10 +347,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences defaultSharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      AptoideInstallManager aptoideInstallManager) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
-        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager);
+        downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
+        aptoideInstallManager);
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
@@ -1517,7 +1525,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
         AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM);
+        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
+        AptoideInstallAnalytics.CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
@@ -1555,8 +1564,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         appBundlesVisibilityManager);
   }
 
-  @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager() {
-    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI());
+  @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
+      HardwareSpecsFilterPersistence hardwareSpecsFilterPersistence) {
+    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
+        hardwareSpecsFilterPersistence);
+  }
+
+  @Singleton @Provides HardwareSpecsFilterPersistence providesHardwareSpecsFilterPersistence(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return new HardwareSpecsFilterPersistence(sharedPreferences);
   }
 
   @Singleton @Provides AppCenterRepository providesAppCenterRepository(AppService appService) {
@@ -2054,5 +2070,32 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, NewFeature newFeature,
       LocalNotificationSyncManager localNotificationSyncManager) {
     return new NewFeatureManager(sharedPreferences, localNotificationSyncManager, newFeature);
+  }
+
+  @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
+      InstalledRepository installedRepository, AptoideInstallPersistence aptoideInstallPersistence,
+      AptoideInstallExperiment aptoideInstallExperiment) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallPersistence,
+        aptoideInstallExperiment);
+  }
+
+  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
+      AptoideInstallAccessor aptoideInstallAccessor) {
+    return new AptoideInstallPersistence(aptoideInstallAccessor);
+  }
+
+  @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
+    return new AptoideInstallAccessor(database);
+  }
+
+  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
+      @Named("ab-test") ABTestManager abTestManager,
+      AptoideInstallAnalytics aptoideInstallAnalytics) {
+    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
+  }
+
+  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
   }
 }

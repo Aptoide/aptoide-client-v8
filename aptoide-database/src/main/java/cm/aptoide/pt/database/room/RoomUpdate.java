@@ -7,7 +7,6 @@ package cm.aptoide.pt.database.room;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import java.util.List;
 
@@ -17,27 +16,10 @@ import java.util.List;
 
 @Entity(tableName = "update") public class RoomUpdate {
 
-  @Ignore public static final String LABEL = "label";
-  @Ignore public static final String ICON = "icon";
-  @Ignore public static final String PACKAGE_NAME = "packageName";
-  @Ignore public static final String VERSION_CODE = "versionCode";
-  @Ignore public static final String SIGNATURE = "signature";
-  @Ignore public static final String TIMESTAMP = "timestamp";
-  @Ignore public static final String MD5 = "md5";
-  @Ignore public static final String APK_PATH = "apkPath";
-  @Ignore public static final String FILE_SIZE = "fileSize";
-  @Ignore public static final String UPDATE_VERSION_NAME = "updateVersionName";
-  @Ignore public static final String ALTERNATIVE_URL = "alternativeApkPath";
-  @Ignore public static final String UPDATE_VERSION_CODE = "updateVersionCode";
-  @Ignore public static final String EXCLUDED = "excluded";
-  @Ignore public static final String APPC_UPGRADE = "appcUpgrade";
-
   @NonNull @PrimaryKey private String packageName;
   private long appId;
   private String label;
   private String icon;
-  private int versionCode;
-  private long timestamp;
   private String md5;
   private String apkPath;
   private long size;
@@ -125,24 +107,8 @@ import java.util.List;
     return packageName;
   }
 
-  public void setPackageName(String packageName) {
+  public void setPackageName(@NonNull String packageName) {
     this.packageName = packageName;
-  }
-
-  public int getVersionCode() {
-    return versionCode;
-  }
-
-  public void setVersionCode(int versionCode) {
-    this.versionCode = versionCode;
-  }
-
-  public long getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(long timestamp) {
-    this.timestamp = timestamp;
   }
 
   public String getMd5() {
@@ -269,10 +235,6 @@ import java.util.List;
     return hasAppc;
   }
 
-  public void setHasAppc(boolean hasAppc) {
-    this.hasAppc = hasAppc;
-  }
-
   public List<RoomSplit> getRoomSplits() {
     return roomSplits;
   }
@@ -299,5 +261,9 @@ import java.util.List;
 
   public void setStoreName(String storeName) {
     this.storeName = storeName;
+  }
+
+  public void setHasAppc(boolean hasAppc) {
+    this.hasAppc = hasAppc;
   }
 }

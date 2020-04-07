@@ -22,16 +22,13 @@ public class PromotionsAnalytics {
   private static final String ACTION_INSTALL = "install";
   private static final String AMOUNT = "amount";
   private static final String PACKAGE = "package";
-  private static final String RELOAD = "reload";
   private static final String VIEW = "view";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String CONTEXT = "context";
   private final String NEXT = "next";
   private final String CANCEL = "cancel";
   private final String OPEN_WALLET = "open wallet";
-  private final String CLAIM = "claim";
   private final String WALLET_DIALOG = "wallet dialog";
-  private final String CAPTCHA_DIALOG = "captcha dialog";
   private final String SIGNATURE = "signature";
   private final AnalyticsManager analyticsManager;
   private final NavigationTracker navigationTracker;
@@ -110,26 +107,6 @@ public class PromotionsAnalytics {
         navigationTracker.getViewName(true));
   }
 
-  public void sendClickOnCaptchaDialogClaim(String packageName) {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, CLAIM);
-    data.put(PACKAGE, packageName);
-    data.put(VIEW, CAPTCHA_DIALOG);
-
-    analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendClickOnCaptchaDialogCancel(String packageName) {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, CANCEL);
-    data.put(PACKAGE, packageName);
-    data.put(VIEW, CAPTCHA_DIALOG);
-
-    analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
   public void sendPromotionsAppInteractClaimEvent(String packageName, float appcValue) {
     analyticsManager.logEvent(createPromotionsInteractMap(ACTION_CLAIM, packageName, appcValue),
         PROMOTIONS_INTERACT, AnalyticsManager.Action.CLICK, getViewName(true));
@@ -161,16 +138,6 @@ public class PromotionsAnalytics {
       analyticsManager.logEvent(map, AppViewAnalytics.CLICK_INSTALL, AnalyticsManager.Action.CLICK,
           context);
     }
-  }
-
-  public void sendRefreshCaptchaEvent(String packageName) {
-    final Map<String, Object> data = new HashMap<>();
-    data.put(ACTION, RELOAD);
-    data.put(PACKAGE, packageName);
-    data.put(VIEW, CAPTCHA_DIALOG);
-
-    analyticsManager.logEvent(data, PROMOTION_DIALOG, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
   }
 
   public void sendValentineMigratorEvent(String packageName, Boolean signatureMatch) {
