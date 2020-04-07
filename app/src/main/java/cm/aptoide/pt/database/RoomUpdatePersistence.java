@@ -41,7 +41,7 @@ public class RoomUpdatePersistence implements UpdatePersistence {
   }
 
   public Single<Boolean> contains(String packageName, boolean isExcluded) {
-    return RxJavaInterop.toV1Single(updateDao.containsByPackageAndExcluded(packageName, isExcluded))
+    return RxJavaInterop.toV1Single(updateDao.getByPackageAndExcluded(packageName, isExcluded))
         .onErrorReturn(throwable -> null)
         .map(update -> update != null)
         .subscribeOn(Schedulers.io());
@@ -49,7 +49,7 @@ public class RoomUpdatePersistence implements UpdatePersistence {
 
   public Single<Boolean> contains(String packageName, boolean isExcluded, boolean isAppcUpgrade) {
     return RxJavaInterop.toV1Single(
-        updateDao.containsByPackageAndExcludedAndUpgrade(packageName, isExcluded, isAppcUpgrade))
+        updateDao.getByPackageAndExcludedAndUpgrade(packageName, isExcluded, isAppcUpgrade))
         .onErrorReturn(throwable -> null)
         .map(update -> update != null)
         .subscribeOn(Schedulers.io());
@@ -76,7 +76,7 @@ public class RoomUpdatePersistence implements UpdatePersistence {
   }
 
   public Single<Boolean> isExcluded(String packageName) {
-    return RxJavaInterop.toV1Single(updateDao.isExcluded(packageName, true)
+    return RxJavaInterop.toV1Single(updateDao.getByPackageAndExcluded(packageName, true)
         .map(update -> update != null))
         .onErrorReturn(throwable -> false)
         .subscribeOn(Schedulers.io());
