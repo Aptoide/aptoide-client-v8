@@ -1,10 +1,10 @@
 package cm.aptoide.pt.app.aptoideinstall
 
-import cm.aptoide.pt.database.accessors.AptoideInstallAccessor
-import rx.Observable
+import cm.aptoide.pt.install.AptoideInstallPersistence
+import rx.Single
 import java.util.*
 
-class AptoideInstallRepository(val aptoideInstallAccessor: AptoideInstallAccessor) {
+class AptoideInstallRepository(val aptoideInstallPersistence: AptoideInstallPersistence) {
 
   private val aptoideInstallCandidates = ArrayList<String>()
 
@@ -16,12 +16,12 @@ class AptoideInstallRepository(val aptoideInstallAccessor: AptoideInstallAccesso
 
   fun persistCandidate(packageName: String) {
     if (aptoideInstallCandidates.contains(packageName)) {
-      aptoideInstallAccessor.insert(packageName)
+      aptoideInstallPersistence.insert(packageName)
       aptoideInstallCandidates.remove(packageName)
     }
   }
 
-  fun isInstalledWithAptoide(packageName: String): Observable<Boolean> {
-    return aptoideInstallAccessor.isInstalledWithAptoide(packageName)
+  fun isInstalledWithAptoide(packageName: String): Single<Boolean> {
+    return aptoideInstallPersistence.isInstalledWithAptoide(packageName)
   }
 }
