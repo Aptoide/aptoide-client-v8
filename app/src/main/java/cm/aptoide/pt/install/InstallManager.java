@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
@@ -47,12 +48,14 @@ public class InstallManager {
   private final InstalledRepository installedRepository;
   private final RootAvailabilityManager rootAvailabilityManager;
   private final ForegroundManager foregroundManager;
+  private final AptoideInstallManager aptoideInstallManager;
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
       SharedPreferences sharedPreferences, SharedPreferences securePreferences,
       DownloadsRepository downloadRepository, InstalledRepository installedRepository,
-      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager) {
+      PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
+      AptoideInstallManager aptoideInstallManager) {
     this.aptoideDownloadManager = aptoideDownloadManager;
     this.installer = installer;
     this.context = context;
@@ -63,6 +66,7 @@ public class InstallManager {
     this.securePreferences = securePreferences;
     this.packageInstallerManager = packageInstallerManager;
     this.foregroundManager = foregroundManager;
+    this.aptoideInstallManager = aptoideInstallManager;
   }
 
   public void start() {
@@ -227,6 +231,7 @@ public class InstallManager {
         .map(storedDownload -> updateDownloadAction(download, storedDownload))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(storedDownload -> {
+          aptoideInstallManager.addAptoideInstallCandidate(storedDownload.getPackageName());
           if (storedDownload.getOverallDownloadStatus() == Download.ERROR) {
             storedDownload.setOverallDownloadStatus(Download.INVALID_STATUS);
             downloadRepository.save(storedDownload);

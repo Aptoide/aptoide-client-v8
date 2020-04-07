@@ -1,6 +1,5 @@
 package cm.aptoide.pt.home.apps;
 
-import android.util.Log;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
@@ -43,14 +42,10 @@ public class AppMapper {
     return installedAppsList;
   }
 
-  public List<UpdateApp> mapUpdateToUpdateAppList(List<Update> updates) {
-    List<UpdateApp> updatesList = new ArrayList<>();
-    for (Update update : updates) {
-      updatesList.add(new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
-          StateApp.Status.STANDBY, update.getAppId()));
-    }
-    return updatesList;
+  public UpdateApp mapUpdateToUpdateApp(Update update, boolean isInstalledWithAptoide) {
+    return new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
+        update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+        StateApp.Status.STANDBY, update.getAppId(), isInstalledWithAptoide);
   }
 
   public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
@@ -64,19 +59,11 @@ public class AppMapper {
     return updatesList;
   }
 
-  public List<UpdateApp> getUpdatesList(List<Install> installs) {
-    List<UpdateApp> updatesList = new ArrayList<>();
-    for (Install install : installs) {
-      Log.i("DownloadProgressView_A", install.getPackageName() + ": " + install.getState()
-          .toString() + "____" + install.getProgress());
-      if (install.getAppName() != null && install.getIcon() != null) {
-        updatesList.add(new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
-            install.getPackageName(), install.getProgress(), install.getVersionName(),
-            install.getVersionCode(), mapDownloadStatus(install.getState()),
-            -1)); //Updates in progress (downloads) dont have app id.
-      }
-    }
-    return updatesList;
+  public UpdateApp mapInstallToUpdateApp(Install install, boolean isInstalledWithAptoide) {
+    return new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
+        install.getPackageName(), install.getProgress(), install.getVersionName(),
+        install.getVersionCode(), mapDownloadStatus(install.getState()), -1,
+        isInstalledWithAptoide);
   }
 
   private StateApp.Status mapDownloadStatus(Install.InstallationStatus state) {

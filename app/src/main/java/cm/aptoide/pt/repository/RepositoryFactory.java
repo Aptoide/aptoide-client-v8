@@ -13,6 +13,7 @@ import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
+import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -34,7 +35,9 @@ public final class RepositoryFactory {
             .getApplicationContext()).getDatabase(), Store.class), getIdsRepository(context),
         getBaseBodyInterceptorV7(context), getHttpClient(context), WebService.getDefaultConverter(),
         getTokenInvalidator(context), sharedPreferences, context.getPackageManager(),
-        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI()));
+        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
+            new HardwareSpecsFilterPersistence(
+                ((AptoideApplication) context.getApplicationContext()).getDefaultSharedPreferences())));
   }
 
   private static IdsRepository getIdsRepository(Context context) {

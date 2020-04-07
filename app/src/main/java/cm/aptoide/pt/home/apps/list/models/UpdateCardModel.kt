@@ -3,6 +3,8 @@ package cm.aptoide.pt.home.apps.list.models
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
 import cm.aptoide.pt.R
@@ -17,6 +19,7 @@ import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fa.epoxysample.bundles.models.base.BaseViewHolder
 import rx.subjects.PublishSubject
+
 
 @EpoxyModelClass(layout = R.layout.apps_update_app_item)
 abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder>() {
@@ -106,16 +109,37 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
 
   private fun setDownloadViewVisibility(holder: CardHolder, app: UpdateApp, visible: Boolean,
                                         error: Boolean) {
+
     if (visible) {
       holder.downloadProgressView.visibility = View.VISIBLE
       holder.secondaryIcon.visibility = View.GONE
       holder.secondaryText.visibility = View.GONE
+      holder.tertiaryText.visibility = View.GONE
       holder.actionButton.visibility = View.INVISIBLE
+
+      val constraintSet = ConstraintSet()
+      constraintSet.clone(holder.rootLayout)
+      constraintSet.connect(R.id.apps_app_name, ConstraintSet.BOTTOM, R.id.apps_app_icon,
+          ConstraintSet.BOTTOM)
+      constraintSet.connect(R.id.apps_app_name, ConstraintSet.TOP, R.id.apps_app_icon,
+          ConstraintSet.TOP)
+      constraintSet.setVerticalBias(R.id.apps_app_name, 0f)
+      constraintSet.applyTo(holder.rootLayout)
     } else {
       holder.downloadProgressView.visibility = View.GONE
       holder.secondaryIcon.visibility = View.VISIBLE
       holder.secondaryText.visibility = View.VISIBLE
+      holder.tertiaryText.visibility = if (app.isInstalledWithAptoide) View.VISIBLE else View.GONE
       holder.actionButton.visibility = View.VISIBLE
+
+      val constraintSet = ConstraintSet()
+      constraintSet.clone(holder.rootLayout)
+      constraintSet.connect(R.id.apps_app_name, ConstraintSet.BOTTOM, R.id.apps_secondary_text,
+          ConstraintSet.TOP)
+      constraintSet.connect(R.id.apps_app_name, ConstraintSet.TOP, holder.rootLayout.id,
+          ConstraintSet.TOP)
+      constraintSet.setVerticalBias(R.id.apps_app_name, 0.5f)
+      constraintSet.applyTo(holder.rootLayout)
     }
     if (error) {
       holder.secondaryIcon.setImageResource(R.drawable.ic_error_outline_red)
@@ -138,7 +162,9 @@ abstract class UpdateCardModel : EpoxyModelWithHolder<UpdateCardModel.CardHolder
     val appIcon by bind<ImageView>(R.id.apps_app_icon)
     val secondaryText by bind<TextView>(R.id.apps_secondary_text)
     val secondaryIcon by bind<ImageView>(R.id.secondary_icon)
+    val tertiaryText by bind<TextView>(R.id.apps_tertiary_text)
     val actionButton by bind<ImageView>(R.id.apps_action_button)
     val downloadProgressView by bind<DownloadProgressView>(R.id.download_progress_view)
+    val rootLayout by bind<ConstraintLayout>(R.id.root_layout)
   }
 }

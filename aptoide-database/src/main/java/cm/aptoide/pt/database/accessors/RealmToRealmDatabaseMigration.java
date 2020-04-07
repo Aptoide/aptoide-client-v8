@@ -524,5 +524,11 @@ public class RealmToRealmDatabaseMigration implements RealmMigration {
           .addField("actionStringRes", int.class);
       oldVersion++;
     }
+    if (oldVersion == 8107) {
+      schema.create("AptoideInstallApp")
+          .addField("packageName", String.class, FieldAttribute.PRIMARY_KEY,
+              FieldAttribute.REQUIRED);
+      oldVersion++;
+    }
   }
 }

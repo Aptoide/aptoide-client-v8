@@ -10,7 +10,8 @@ data class UpdateApp(val name: String,
                      val version: String,
                      override val versionCode: Int,
                      override var status: StateApp.Status? = null,
-                     val appId: Long) : StateApp {
+                     val appId: Long,
+                     val isInstalledWithAptoide: Boolean) : StateApp {
 
 
   override fun getIdentifier(): String {

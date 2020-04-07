@@ -25,7 +25,6 @@ import retrofit2.Converter;
 import rx.Single;
 
 public class PromotionsService {
-  private static final String WRONG_CAPTCHA = "PROMOTION-1";
   private static final String WRONG_ADDRESS = "PROMOTION-2";
   private static final String ALREADY_CLAIMED = "PROMOTION-3";
   private static final String WALLET_NOT_VERIFIED = "PROMOTION-5";
