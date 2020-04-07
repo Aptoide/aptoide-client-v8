@@ -99,10 +99,10 @@ public class AppsManager {
     return updatesManager.getUpdatesList(true)
         .distinctUntilChanged()
         .flatMap(updates -> Observable.from(updates)
-            .flatMap(update -> aptoideInstallManager.isInstalledWithAptoide(update.getPackageName())
-                .first()
-                .map(isAptoideInstalled -> appMapper.mapUpdateToUpdateApp(update,
-                    isAptoideInstalled)), 1)
+            .flatMapSingle(
+                update -> aptoideInstallManager.isInstalledWithAptoide(update.getPackageName())
+                    .map(isAptoideInstalled -> appMapper.mapUpdateToUpdateApp(update,
+                        isAptoideInstalled)), false, 1)
             .toSortedList((updateApp, updateApp2) -> {
               if (updateApp.isInstalledWithAptoide() && !updateApp2.isInstalledWithAptoide()) {
                 return -1;
@@ -128,9 +128,8 @@ public class AppsManager {
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
               .flatMap(updatesManager::filterAppcUpgrade)
-              .flatMap(
+              .flatMapSingle(
                   install -> aptoideInstallManager.isInstalledWithAptoide(install.getPackageName())
-                      .first()
                       .map(isAptoideInstalled -> appMapper.mapInstallToUpdateApp(install,
                           isAptoideInstalled)))
               .toList();

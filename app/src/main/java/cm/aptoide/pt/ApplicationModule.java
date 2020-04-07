@@ -116,6 +116,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
+import cm.aptoide.pt.database.RoomAptoideInstallPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
@@ -125,7 +126,6 @@ import cm.aptoide.pt.database.RoomInstallationPersistence;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
@@ -181,6 +181,7 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.AptoideInstallPersistence;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallEvents;
@@ -2049,13 +2050,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoideInstallExperiment);
   }
 
-  @Singleton @Provides AptoideInstallRepository providesAptoideInstallPersistence(
-      AptoideInstallAccessor aptoideInstallAccessor) {
-    return new AptoideInstallRepository(aptoideInstallAccessor);
+  @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(
+      AptoideInstallPersistence aptoideInstallPersistence) {
+    return new AptoideInstallRepository(aptoideInstallPersistence);
   }
 
-  @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
-    return new AptoideInstallAccessor(database);
+  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
+      AptoideDatabase database) {
+    return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
   }
 
   @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(

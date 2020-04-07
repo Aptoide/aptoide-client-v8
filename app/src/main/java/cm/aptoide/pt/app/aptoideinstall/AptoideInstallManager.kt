@@ -3,7 +3,7 @@ package cm.aptoide.pt.app.aptoideinstall
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment
 import cm.aptoide.pt.install.InstalledRepository
 import rx.Completable
-import rx.Observable
+import rx.Single
 
 class AptoideInstallManager(val installedRepository: InstalledRepository,
                             val aptoideInstallRepository: AptoideInstallRepository,
@@ -17,16 +17,16 @@ class AptoideInstallManager(val installedRepository: InstalledRepository,
     aptoideInstallRepository.persistCandidate(packageName)
   }
 
-  fun isInstalledWithAptoide(packageName: String): Observable<Boolean> {
+  fun isInstalledWithAptoide(packageName: String): Single<Boolean> {
     return aptoideInstallExperiment.shouldShowAptoideInstallFeature()
-        .flatMapObservable { shouldShow ->
+        .flatMap { shouldShow ->
           if (shouldShow) {
             if (isSplitInstalledWithAptoide(packageName)) {
-              return@flatMapObservable Observable.just(true)
+              return@flatMap Single.just(true)
             }
-            return@flatMapObservable aptoideInstallRepository.isInstalledWithAptoide(packageName)
+            return@flatMap aptoideInstallRepository.isInstalledWithAptoide(packageName)
           }
-          return@flatMapObservable Observable.just(false)
+          return@flatMap Single.just(false)
         }
   }
 
