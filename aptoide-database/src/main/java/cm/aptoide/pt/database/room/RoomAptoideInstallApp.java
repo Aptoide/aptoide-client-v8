@@ -15,8 +15,4 @@ import androidx.room.PrimaryKey;
   @NonNull public String getPackageName() {
     return packageName;
   }
-
-  public void setPackageName(@NonNull String packageName) {
-    this.packageName = packageName;
-  }
 }
