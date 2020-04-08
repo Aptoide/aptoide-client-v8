@@ -13,13 +13,12 @@ import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.realm.Update;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.ReferrerUtils;
@@ -37,9 +36,9 @@ public class InstalledIntentService extends IntentService {
   @Inject CampaignAnalytics campaignAnalytics;
   @Inject AppcMigrationManager appcMigrationManager;
   @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
+  @Inject UpdateRepository updatesRepository;
   @Inject AptoideInstallManager aptoideInstallManager;
   private SharedPreferences sharedPreferences;
-  private UpdateRepository updatesRepository;
   private CompositeSubscription subscriptions;
   private InstallManager installManager;
   private RootAvailabilityManager rootAvailabilityManager;
@@ -60,7 +59,6 @@ public class InstalledIntentService extends IntentService {
 
     final SharedPreferences sharedPreferences =
         ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences();
-    updatesRepository = RepositoryFactory.getUpdateRepository(this, sharedPreferences);
     subscriptions = new CompositeSubscription();
     installManager = ((AptoideApplication) getApplicationContext()).getInstallManager();
     rootAvailabilityManager =
@@ -178,7 +176,7 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
-    final Update update = updatesRepository.get(packageName)
+    final RoomUpdate update = updatesRepository.get(packageName)
         .first()
         .doOnError(throwable -> {
           CrashReport.getInstance()
@@ -205,7 +203,7 @@ public class InstalledIntentService extends IntentService {
 
   private void databaseOnPackageRemoved(String packageName) {
     installManager.onAppRemoved(packageName)
-        .andThen(Completable.fromAction(() -> updatesRepository.remove(packageName)))
+        .andThen(updatesRepository.remove(packageName))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageRemoved: " + packageName),
             throwable -> CrashReport.getInstance()

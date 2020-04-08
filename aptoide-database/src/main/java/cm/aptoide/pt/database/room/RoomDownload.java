@@ -3,47 +3,49 @@
  * Modified by Neurophobic Animal on 24/05/2016.
  */
 
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
-public class Download extends RealmObject {
+@Entity(tableName = "download") public class RoomDownload {
 
-  public static final int ACTION_INSTALL = 0;
-  public static final int ACTION_UPDATE = 1;
-  public static final int ACTION_DOWNGRADE = 2;
-  public static final String DOWNLOAD_ID = "appId";
-  public static final String MD5 = "md5";
-  public static final int INVALID_STATUS = 0;
-  public static final int COMPLETED = 1;
-  public static final int BLOCK_COMPLETE = 2;
-  public static final int CONNECTED = 3;
-  public static final int PENDING = 4;
-  public static final int PROGRESS = 5;
-  public static final int PAUSED = 6;
-  public static final int WARN = 7;
-  public static final int STARTED = 8;
-  public static final int ERROR = 9;
-  public static final int FILE_MISSING = 10;
-  public static final int RETRY = 11;
-  public static final int NOT_DOWNLOADED = 12;
-  public static final int IN_QUEUE = 13;
-  public static final int WAITING_TO_MOVE_FILES = 14;
+  @Ignore public static final int ACTION_INSTALL = 0;
+  @Ignore public static final int ACTION_UPDATE = 1;
+  @Ignore public static final int ACTION_DOWNGRADE = 2;
+  @Ignore public static final String DOWNLOAD_ID = "appId";
+  @Ignore public static final String MD5 = "md5";
+  @Ignore public static final int INVALID_STATUS = 0;
+  @Ignore public static final int COMPLETED = 1;
+  @Ignore public static final int BLOCK_COMPLETE = 2;
+  @Ignore public static final int CONNECTED = 3;
+  @Ignore public static final int PENDING = 4;
+  @Ignore public static final int PROGRESS = 5;
+  @Ignore public static final int PAUSED = 6;
+  @Ignore public static final int WARN = 7;
+  @Ignore public static final int STARTED = 8;
+  @Ignore public static final int ERROR = 9;
+  @Ignore public static final int FILE_MISSING = 10;
+  @Ignore public static final int RETRY = 11;
+  @Ignore public static final int NOT_DOWNLOADED = 12;
+  @Ignore public static final int IN_QUEUE = 13;
+  @Ignore public static final int WAITING_TO_MOVE_FILES = 14;
   //errors
-  public static final int NO_ERROR = 0;
-  public static final int GENERIC_ERROR = 1;
-  public static final int NOT_ENOUGH_SPACE_ERROR = 2;
-  public static String TAG = Download.class.getSimpleName();
-  RealmList<FileToDownload> filesToDownload;
+  @Ignore public static final int NO_ERROR = 0;
+  @Ignore public static final int NOT_ENOUGH_SPACE_ERROR = 2;
+  @Ignore public static final int GENERIC_ERROR = 1;
+  public static String TAG = RoomDownload.class.getSimpleName();
+  List<RoomFileToDownload> filesToDownload;
   @DownloadState int overallDownloadStatus = 0;
   @IntRange(from = 0, to = 100) int overallProgress = 0;
-  @PrimaryKey private String md5;
+  @PrimaryKey @NonNull private String md5;
   private String appName;
   private String Icon;
   private long timeStamp;
@@ -56,12 +58,12 @@ public class Download extends RealmObject {
   private long size;
   private String storeName;
   private String trustedBadge;
-  @Download.DownloadError private int downloadError;
+  @RoomDownload.DownloadError private int downloadError;
 
-  public Download() {
+  public RoomDownload() {
   }
 
-  public @Download.DownloadError int getDownloadError() {
+  public @RoomDownload.DownloadError int getDownloadError() {
     return downloadError;
   }
 
@@ -85,11 +87,11 @@ public class Download extends RealmObject {
     this.appName = appName;
   }
 
-  public RealmList<FileToDownload> getFilesToDownload() {
+  public List<RoomFileToDownload> getFilesToDownload() {
     return filesToDownload;
   }
 
-  public void setFilesToDownload(RealmList<FileToDownload> filesToDownload) {
+  public void setFilesToDownload(List<RoomFileToDownload> filesToDownload) {
     this.filesToDownload = filesToDownload;
   }
 
@@ -193,7 +195,7 @@ public class Download extends RealmObject {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
 
-    Download download = (Download) o;
+    RoomDownload download = (RoomDownload) o;
 
     if (getOverallDownloadStatus() != download.getOverallDownloadStatus()) return false;
     if (getOverallProgress() != download.getOverallProgress()) return false;
@@ -227,8 +229,8 @@ public class Download extends RealmObject {
   }
 
   public boolean hasSplits() {
-    for (FileToDownload fileToDownload : filesToDownload) {
-      if (fileToDownload.getFileType() == FileToDownload.SPLIT) {
+    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
+      if (roomFileToDownload.getFileType() == RoomFileToDownload.SPLIT) {
         return true;
       }
     }

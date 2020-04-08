@@ -20,9 +20,6 @@ import androidx.room.PrimaryKey;
     this.data = data;
   }
 
-  public RoomEvent() {
-  }
-
   public long getTimestamp() {
     return timestamp;
   }

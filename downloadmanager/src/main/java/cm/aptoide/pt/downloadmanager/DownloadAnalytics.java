@@ -1,6 +1,6 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 
 public interface DownloadAnalytics {
 
@@ -8,5 +8,5 @@ public interface DownloadAnalytics {
 
   void onError(String packageName, int versionCode, String md5, Throwable throwable);
 
-  void startProgress(Download download);
+  void startProgress(RoomDownload download);
 }

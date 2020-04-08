@@ -2,11 +2,12 @@ package cm.aptoide.pt.database.room;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "installation") public class RoomInstallation {
 
-  public static final String PACKAGE_NAME = "packageName";
+  @Ignore public static final String PACKAGE_NAME = "packageName";
 
   @PrimaryKey @NonNull private String packageName;
   private String icon;

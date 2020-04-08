@@ -33,6 +33,7 @@ import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
 import cm.aptoide.pt.themes.DarkThemeDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
+import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
 import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
@@ -128,4 +129,6 @@ public interface FragmentComponent {
   void inject(DarkThemeDialogFragment darkThemeDialogFragment);
 
   void inject(SendFeedbackFragment sendFeedbackFragment);
+
+  void inject(ExcludedUpdatesFragment excludedUpdatesFragment);
 }

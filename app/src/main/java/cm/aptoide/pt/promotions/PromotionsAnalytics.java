@@ -5,7 +5,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -44,7 +44,7 @@ public class PromotionsAnalytics {
     this.installAnalytics = installAnalytics;
   }
 
-  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+  public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       Origin origin, boolean isAppBundle) {
     downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,

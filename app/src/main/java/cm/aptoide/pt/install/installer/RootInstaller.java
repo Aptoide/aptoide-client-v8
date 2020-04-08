@@ -1,6 +1,6 @@
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.install.InstallerAnalytics;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.logger.Logger;
@@ -58,7 +58,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
     sessionIdMatcher.find();
     int sessionId = Integer.parseInt(sessionIdMatcher.group(1));
 
-    for (FileToDownload apkFile : installation.getFiles()) {
+    for (RoomFileToDownload apkFile : installation.getFiles()) {
       Logger.getInstance()
           .d(TAG, "started instalation of file: " + apkFile.getFileName());
       File file = new File(apkFile.getPath() + apkFile.getFileName());
@@ -100,7 +100,7 @@ public class RootInstaller implements Observable.OnSubscribe<Void> {
 
   private int getFilesSize(Installation installation) {
     int totalSize = 0;
-    for (FileToDownload apkFile : installation.getFiles()) {
+    for (RoomFileToDownload apkFile : installation.getFiles()) {
       File file = new File(apkFile.getPath() + apkFile.getFileName());
       totalSize += file.length();
     }

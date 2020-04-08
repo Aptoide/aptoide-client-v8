@@ -2,12 +2,13 @@ package cm.aptoide.pt.database.room;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "notification") public class RoomNotification {
 
-  public final static String KEY = "key";
-  public static final int NOT_DISMISSED = -1;
+  @Ignore public final static String KEY = "key";
+  @Ignore public static final int NOT_DISMISSED = -1;
 
   private final Long expire;
   private final String abTestingGroup;

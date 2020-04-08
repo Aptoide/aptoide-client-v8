@@ -9,13 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.updates.UpdatePersistence;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.NotBottomNavigationView;
 import cm.aptoide.pt.view.fragment.AptoideBaseFragment;
@@ -24,6 +22,7 @@ import com.trello.rxlifecycle.android.FragmentEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -31,6 +30,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
     implements NotBottomNavigationView {
 
   private static final String TAG = ExcludedUpdatesFragment.class.getSimpleName();
+  @Inject UpdatePersistence updatesPersistence;
   private TextView emptyData;
 
   public ExcludedUpdatesFragment() {
@@ -46,7 +46,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void bindViews(View view) {
     super.bindViews(view);
-    emptyData = (TextView) view.findViewById(R.id.empty_data);
+    emptyData = view.findViewById(R.id.empty_data);
   }
 
   @Override public void load(boolean create, boolean refresh, Bundle savedInstanceState) {
@@ -58,18 +58,16 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     setHasOptionsMenu(true);
   }
 
   private void fetchExcludedUpdates() {
-    UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Update.class);
-    updateAccessor.getAll(true)
+
+    updatesPersistence.getAllSorted(true)
         .observeOn(AndroidSchedulers.mainThread())
-        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-        .subscribe(excludedUpdates -> {
-          if (excludedUpdates == null || excludedUpdates.isEmpty()) {
+        .doOnNext(excluded -> {
+          if (excluded == null || excluded.isEmpty()) {
             emptyData.setText(R.string.no_excluded_updates_msg);
             emptyData.setVisibility(View.VISIBLE);
             clearDisplayables();
@@ -77,11 +75,14 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
           } else {
             emptyData.setVisibility(View.GONE);
             List<ExcludedUpdateDisplayable> displayables = new ArrayList<>();
-            for (Update excludedUpdate : excludedUpdates) {
+            for (RoomUpdate excludedUpdate : excluded) {
               displayables.add(new ExcludedUpdateDisplayable(excludedUpdate));
             }
             clearDisplayables().addDisplayables(displayables, true);
           }
+        })
+        .compose(bindUntilEvent(FragmentEvent.DESTROY_VIEW))
+        .subscribe(__ -> {
         }, t -> {
           CrashReport.getInstance()
               .log(t);
@@ -115,7 +116,7 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
 
     if (itemId == R.id.menu_restore_updates) {
       // get all selected ExcludedUpdates and restore them in the updates
-      LinkedList<Update> excludedUpdatesToRestore = new LinkedList<>();
+      LinkedList<RoomUpdate> excludedUpdatesToRestore = new LinkedList<>();
       BaseAdapter adapter = getAdapter();
       for (int i = 0; i < adapter.getItemCount(); ++i) {
         ExcludedUpdateDisplayable displayable =
@@ -130,25 +131,13 @@ public class ExcludedUpdatesFragment extends AptoideBaseFragment<BaseAdapter>
         return true;
       }
 
-      // restore updates and remove them from excluded
-      //@Cleanup Realm realm = DeprecatedDatabase.get();
-      //realm.beginTransaction();
-      //for (Update e : excludedUpdatesToRestore) {
-      //  e.setExcluded(false);
-      //}
-      //realm.copyToRealmOrUpdate(excludedUpdatesToRestore);
-      //realm.commitTransaction();
-
-      UpdateAccessor updateAccessor = AccessorFactory.getAccessorFor(
-          ((AptoideApplication) getContext().getApplicationContext()
-              .getApplicationContext()).getDatabase(), Update.class);
       Observable.from(excludedUpdatesToRestore)
           .doOnNext(update -> update.setExcluded(false))
           .toList()
-          .subscribe(updates -> updateAccessor.insertAll(updates), err -> {
-            CrashReport.getInstance()
-                .log(err);
-          });
+          .flatMapCompletable(updatesList -> updatesPersistence.saveAll(updatesList))
+          .subscribe(__ -> {
+          }, err -> CrashReport.getInstance()
+              .log(err));
 
       return true;
     }
