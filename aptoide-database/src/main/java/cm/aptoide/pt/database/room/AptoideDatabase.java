@@ -13,7 +13,7 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
 @Database(entities = {
     RoomEvent.class, RoomExperiment.class, RoomStoredMinimalAd.class, RoomNotification.class,
     RoomLocalNotificationSync.class, RoomInstalled.class, RoomInstallation.class,
-    RoomMigratedApp.class, RoomUpdate.class, RoomDownload.class
+    RoomMigratedApp.class, RoomUpdate.class, RoomDownload.class, RoomAptoideInstallApp.class
 }, version = VERSION) @TypeConverters({
     SplitTypeConverter.class, StringTypeConverter.class, FileToDownloadTypeConverter.class
 }) public abstract class AptoideDatabase extends RoomDatabase {
@@ -42,4 +42,6 @@ import static cm.aptoide.pt.database.room.AptoideDatabase.VERSION;
   public abstract UpdateDao updateDao();
 
   public abstract DownloadDAO downloadDAO();
+
+  public abstract AptoideInstallDao aptoideInstallDao();
 }
