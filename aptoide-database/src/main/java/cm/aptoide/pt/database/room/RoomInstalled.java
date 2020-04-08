@@ -6,28 +6,29 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import cm.aptoide.pt.utils.AptoideUtils;
 
 @Entity(tableName = "installed") public class RoomInstalled {
 
-  public static final String ICON = "icon";
-  public static final String PACKAGE_NAME = "packageName";
-  public static final String NAME = "name";
-  public static final String VERSION_CODE = "versionCode";
-  public static final String VERSION_NAME = "versionName";
-  public static final String SIGNATURE = "signature";
-  public static final String STORE_NAME = "storeName";
-  public static final int STATUS_UNINSTALLED = 1;
-  public static final int STATUS_WAITING = 2;
-  public static final int STATUS_INSTALLING = 3;
-  public static final int STATUS_COMPLETED = 4;
-  public static final int STATUS_ROOT_TIMEOUT = 5;
-  public static final int TYPE_DEFAULT = 0;
-  public static final int TYPE_ROOT = 1;
-  public static final int TYPE_SYSTEM = 2;
-  public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
-  public static final int TYPE_UNKNOWN = -1;
+  @Ignore public static final String ICON = "icon";
+  @Ignore public static final String PACKAGE_NAME = "packageName";
+  @Ignore public static final String NAME = "name";
+  @Ignore public static final String VERSION_CODE = "versionCode";
+  @Ignore public static final String VERSION_NAME = "versionName";
+  @Ignore public static final String SIGNATURE = "signature";
+  @Ignore public static final String STORE_NAME = "storeName";
+  @Ignore public static final int STATUS_UNINSTALLED = 1;
+  @Ignore public static final int STATUS_WAITING = 2;
+  @Ignore public static final int STATUS_INSTALLING = 3;
+  @Ignore public static final int STATUS_COMPLETED = 4;
+  @Ignore public static final int STATUS_ROOT_TIMEOUT = 5;
+  @Ignore public static final int TYPE_DEFAULT = 0;
+  @Ignore public static final int TYPE_ROOT = 1;
+  @Ignore public static final int TYPE_SYSTEM = 2;
+  @Ignore public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
+  @Ignore public static final int TYPE_UNKNOWN = -1;
 
   @PrimaryKey @NonNull private String packageAndVersionCode;
   private String icon;

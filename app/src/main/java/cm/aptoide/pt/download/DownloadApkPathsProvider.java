@@ -1,6 +1,6 @@
 package cm.aptoide.pt.download;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 
 public class DownloadApkPathsProvider {
 
@@ -17,15 +17,15 @@ public class DownloadApkPathsProvider {
   public ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
     String oemid = getOemidQueryString();
     switch (downloadAction) {
-      case Download.ACTION_INSTALL:
+      case RoomDownload.ACTION_INSTALL:
         path += INSTALL_ACTION + oemid;
         altPath += INSTALL_ACTION + oemid;
         break;
-      case Download.ACTION_DOWNGRADE:
+      case RoomDownload.ACTION_DOWNGRADE:
         path += DOWNGRADE_ACTION + oemid;
         altPath += DOWNGRADE_ACTION + oemid;
         break;
-      case Download.ACTION_UPDATE:
+      case RoomDownload.ACTION_UPDATE:
         path += UPDATE_ACTION + oemid;
         altPath += UPDATE_ACTION + oemid;
         break;

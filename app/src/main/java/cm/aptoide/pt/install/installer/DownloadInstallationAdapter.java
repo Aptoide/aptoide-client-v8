@@ -5,10 +5,10 @@
 
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.install.InstalledRepository;
 import java.io.File;
 import java.util.List;
@@ -19,15 +19,15 @@ import rx.Completable;
  */
 public class DownloadInstallationAdapter implements Installation {
 
-  private final Download download;
-  private DownloadAccessor downloadAccessor;
+  private final RoomDownload download;
+  private DownloadPersistence downloadPersistence;
   private InstalledRepository ongoingInstallProvider;
   private RoomInstalled installed;
 
-  public DownloadInstallationAdapter(Download download, DownloadAccessor downloadAccessor,
+  public DownloadInstallationAdapter(RoomDownload download, DownloadPersistence downloadPersistence,
       InstalledRepository installedRepository, RoomInstalled installed) {
     this.download = download;
-    this.downloadAccessor = downloadAccessor;
+    this.downloadPersistence = downloadPersistence;
     this.ongoingInstallProvider = installedRepository;
     this.installed = installed;
   }
@@ -78,11 +78,11 @@ public class DownloadInstallationAdapter implements Installation {
     installed.setType(type);
   }
 
-  @Override public List<FileToDownload> getFiles() {
+  @Override public List<RoomFileToDownload> getFiles() {
     return download.getFilesToDownload();
   }
 
   @Override public void saveFileChanges() {
-    downloadAccessor.save(download);
+    downloadPersistence.save(download);
   }
 }

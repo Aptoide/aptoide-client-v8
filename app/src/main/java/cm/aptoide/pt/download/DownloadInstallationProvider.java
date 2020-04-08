@@ -8,12 +8,12 @@ package cm.aptoide.pt.download;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.exception.InstallationException;
 import cm.aptoide.pt.install.installer.DownloadInstallationAdapter;
@@ -31,16 +31,16 @@ public class DownloadInstallationProvider implements InstallationProvider {
 
   private static final String TAG = "DownloadInstallationPro";
   private final AptoideDownloadManager downloadManager;
-  private final DownloadAccessor downloadAccessor;
+  private final DownloadPersistence downloadPersistence;
   private final MinimalAdMapper adMapper;
   private final InstalledRepository installedRepository;
   private final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
 
   public DownloadInstallationProvider(AptoideDownloadManager downloadManager,
-      DownloadAccessor downloadAccessor, InstalledRepository installedRepository,
+      DownloadPersistence downloadPersistence, InstalledRepository installedRepository,
       MinimalAdMapper adMapper, RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     this.downloadManager = downloadManager;
-    this.downloadAccessor = downloadAccessor;
+    this.downloadPersistence = downloadPersistence;
     this.adMapper = adMapper;
     this.installedRepository = installedRepository;
     this.roomStoredMinimalAdPersistence = roomStoredMinimalAdPersistence;
@@ -49,16 +49,16 @@ public class DownloadInstallationProvider implements InstallationProvider {
   @Override public Observable<Installation> getInstallation(String md5) {
     Logger.getInstance()
         .d(TAG, "Getting the installation " + md5);
-    return downloadManager.getDownload(md5)
-        .first()
+    return downloadManager.getDownloadAsSingle(md5)
+        .toObservable()
         .flatMap(download -> {
-          if (download.getOverallDownloadStatus() == Download.COMPLETED) {
+          if (download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
             return installedRepository.get(download.getPackageName(), download.getVersionCode())
                 .map(installed -> {
                   if (installed == null) {
                     installed = convertDownloadToInstalled(download);
                   }
-                  return new DownloadInstallationAdapter(download, downloadAccessor,
+                  return new DownloadInstallationAdapter(download, downloadPersistence,
                       installedRepository, installed);
                 })
                 .doOnNext(downloadInstallationAdapter -> {
@@ -77,7 +77,7 @@ public class DownloadInstallationProvider implements InstallationProvider {
         });
   }
 
-  @NonNull private RoomInstalled convertDownloadToInstalled(Download download) {
+  @NonNull private RoomInstalled convertDownloadToInstalled(RoomDownload download) {
     RoomInstalled installed = new RoomInstalled();
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());

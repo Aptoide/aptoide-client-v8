@@ -116,6 +116,7 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
+import cm.aptoide.pt.database.RoomDownloadPersistence;
 import cm.aptoide.pt.database.RoomEventMapper;
 import cm.aptoide.pt.database.RoomEventPersistence;
 import cm.aptoide.pt.database.RoomExperimentMapper;
@@ -125,12 +126,11 @@ import cm.aptoide.pt.database.RoomInstallationPersistence;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
@@ -161,6 +161,7 @@ import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
 import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
@@ -254,6 +255,8 @@ import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.updates.UpdateMapper;
+import cm.aptoide.pt.updates.UpdatePersistence;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -467,8 +470,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(
-      DownloadAccessor downloadAccessor) {
-    return new DownloadsRepository(downloadAccessor);
+      DownloadPersistence downloadPersistence) {
+    return new DownloadsRepository(downloadPersistence);
   }
 
   @Singleton @Provides DownloadStatusMapper downloadStatusMapper() {
@@ -496,11 +499,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
+      AptoideDownloadManager downloadManager, DownloadPersistence downloadPersistence,
       InstalledRepository installedRepository,
       RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
-    return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
-        new MinimalAdMapper(), roomStoredMinimalAdPersistence);
+    return new DownloadInstallationProvider(downloadManager, downloadPersistence,
+        installedRepository, new MinimalAdMapper(), roomStoredMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -582,8 +585,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomInstallationPersistence(database.installationDao());
   }
 
-  @Singleton @Provides DownloadAccessor provideDownloadAccessor(Database database) {
-    return new DownloadAccessor(database);
+  @Singleton @Provides DownloadPersistence provideDownloadPersistence(AptoideDatabase database) {
+    return new RoomDownloadPersistence(database.downloadDAO());
   }
 
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
@@ -975,8 +978,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreAccessor(database);
   }
 
-  @Singleton @Provides UpdateAccessor providesUpdateAccessor(Database database) {
-    return new UpdateAccessor(database);
+  @Singleton @Provides UpdatePersistence providesUpdatePersistence(AptoideDatabase database) {
+    return new RoomUpdatePersistence(database.updateDao());
   }
 
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
@@ -1643,15 +1646,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UpdatesManager(updateRepository);
   }
 
-  @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
-      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
+  @Singleton @Provides UpdateRepository providesUpdateRepository(
+      UpdatePersistence updatePersistence, StoreAccessor storeAccessor, IdsRepository idsRepository,
+      @Named("mature-pool-v7")
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
-    return new UpdateRepository(updateAccessor, storeAccessor, idsRepository, bodyInterceptorPoolV7,
-        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        application.getPackageManager(), appBundlesVisibilityManager);
+      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
+    return new UpdateRepository(updatePersistence, storeAccessor, idsRepository,
+        bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        application.getPackageManager(), appBundlesVisibilityManager, updateMapper);
+  }
+
+  @Singleton @Provides UpdateMapper providesUpdateMapper() {
+    return new UpdateMapper();
   }
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(

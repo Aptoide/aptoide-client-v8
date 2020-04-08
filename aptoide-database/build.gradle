@@ -71,4 +71,6 @@ dependencies {
 
   implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_2_VERSION}"
   implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_2_VERSION}"
+
+  implementation "com.google.code.gson:gson:${GSON_VERSION}"
 }

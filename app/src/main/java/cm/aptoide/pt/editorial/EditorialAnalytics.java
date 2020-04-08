@@ -4,7 +4,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.AppViewAnalytics;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class EditorialAnalytics {
     this.installAnalytics = installAnalytics;
   }
 
-  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+  public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       AnalyticsManager.Action action, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       String trustedBadge, String storeName, String installType) {
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(), action,

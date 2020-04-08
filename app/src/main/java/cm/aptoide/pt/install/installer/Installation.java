@@ -5,7 +5,7 @@
 
 package cm.aptoide.pt.install.installer;
 
-import cm.aptoide.pt.database.realm.FileToDownload;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import java.io.File;
 import java.util.List;
 import rx.Completable;
@@ -38,7 +38,7 @@ public interface Installation {
 
   void setType(int type);
 
-  List<FileToDownload> getFiles();
+  List<RoomFileToDownload> getFiles();
 
   void saveFileChanges();
 }

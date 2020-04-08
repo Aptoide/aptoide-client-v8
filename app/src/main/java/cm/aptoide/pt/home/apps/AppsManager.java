@@ -7,7 +7,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
@@ -127,7 +127,8 @@ public class AppsManager {
           return Observable.just(installations)
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() == UPDATE)
-              .flatMap(updatesManager::filterAppcUpgrade)
+              .flatMapSingle(updatesManager::filterAppcUpgrade)
+              .filter(upgrade -> upgrade != null)
               .flatMap(
                   install -> aptoideInstallManager.isInstalledWithAptoide(install.getPackageName())
                       .first()
@@ -155,29 +156,27 @@ public class AppsManager {
     return installManager.fetchInstalled()
         .distinctUntilChanged()
         .flatMapIterable(list -> list)
-        .flatMap(updatesManager::filterUpdates)
+        .flatMapSingle(updatesManager::filterUpdates)
+        .filter(update -> update != null)
         .toList()
         .map(appMapper::mapInstalledToInstalledApps);
   }
 
   public Observable<List<DownloadApp>> getDownloadApps() {
     return installManager.getInstallations()
-        .doOnNext(installs -> Logger.getInstance()
-            .d("Apps", "emit list of installs from getDownloadApps - before throttle"))
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {
             return Observable.just(Collections.emptyList());
           }
           return Observable.just(installations)
-              .doOnNext(__ -> Logger.getInstance()
-                  .d("Apps", "emit list of installs from getDownloadApps - after throttle"))
               .flatMapIterable(installs -> installs)
               .filter(install -> install.getType() != Install.InstallationType.UPDATE)
               .flatMap(installManager::filterInstalled)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered installed - is not installed -> " + item.getPackageName()))
-              .flatMap(updatesManager::filterAppcUpgrade)
+              .flatMapSingle(updatesManager::filterAppcUpgrade)
+              .filter(upgrade -> upgrade != null)
               .doOnNext(item -> Logger.getInstance()
                   .d("Apps", "filtered upgrades - is not upgrade -> " + item.getPackageName()))
               .toList()
@@ -217,7 +216,7 @@ public class AppsManager {
         .flatMapCompletable(installManager::install);
   }
 
-  private void setupDownloadEvents(Download download,
+  private void setupDownloadEvents(RoomDownload download,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
@@ -231,7 +230,7 @@ public class AppsManager {
         download.getTrustedBadge(), download.getStoreName());
   }
 
-  private void setupUpdateEvents(Download download, Origin origin,
+  private void setupUpdateEvents(RoomDownload download, Origin origin,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
       String tag, String storeName, String installType) {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
@@ -248,11 +247,11 @@ public class AppsManager {
   private Origin getOrigin(int action) {
     switch (action) {
       default:
-      case Download.ACTION_INSTALL:
+      case RoomDownload.ACTION_INSTALL:
         return Origin.INSTALL;
-      case Download.ACTION_UPDATE:
+      case RoomDownload.ACTION_UPDATE:
         return Origin.UPDATE;
-      case Download.ACTION_DOWNGRADE:
+      case RoomDownload.ACTION_DOWNGRADE:
         return Origin.DOWNGRADE;
     }
   }
@@ -266,7 +265,7 @@ public class AppsManager {
     return updatesManager.getUpdate(packageName)
         .flatMapCompletable(update -> moPubAdsManager.getAdsVisibilityStatus()
             .flatMap(status -> {
-              Download value = downloadFactory.create(update, isAppcUpdate);
+              RoomDownload value = downloadFactory.create(update, isAppcUpdate);
               String type = isAppcUpdate ? "update_to_appc" : "update";
               updatesAnalytics.sendUpdateClickedEvent(packageName, update.hasSplits(),
                   update.hasAppc(), false, update.getTrustedBadge(), status.toString()
@@ -311,7 +310,7 @@ public class AppsManager {
         .toCompletable();
   }
 
-  public Observable<Void> excludeUpdate(App app) {
+  public Completable excludeUpdate(App app) {
     return updatesManager.excludeUpdate(((UpdateApp) app).getPackageName());
   }
 

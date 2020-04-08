@@ -1,19 +1,13 @@
-package cm.aptoide.pt.database.realm;
+package cm.aptoide.pt.database.room;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class Split extends RealmObject {
-  @PrimaryKey private String md5;
+public class RoomSplit {
+  private String md5;
   private String path;
   private String type;
   private String name;
   private long fileSize;
 
-  public Split() {
-  }
-
-  public Split(String md5, String path, String type, String name, long fileSize) {
+  public RoomSplit(String md5, String path, String type, String name, long fileSize) {
     this.md5 = md5;
     this.path = path;
     this.type = type;
