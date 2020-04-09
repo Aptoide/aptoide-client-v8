@@ -61,6 +61,9 @@ import cm.aptoide.pt.autoupdate.AutoUpdateDialogPresenter;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
+import cm.aptoide.pt.comments.refactor.CommentsManager;
+import cm.aptoide.pt.comments.refactor.CommentsPresenter;
+import cm.aptoide.pt.comments.refactor.CommentsRepository;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -79,6 +82,8 @@ import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.editorial.Slug;
+import cm.aptoide.pt.editorial.epoxy.ReactionAnalytics;
+import cm.aptoide.pt.editorial.epoxy.ReactionsModelPresenter;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
@@ -641,5 +646,22 @@ import rx.subscriptions.CompositeSubscription;
       InstallManager installManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
         baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
+  }
+
+  @Provides CommentsPresenter providesCommentsPresenter(AptoideAccountManager accountManager,
+      CommentsManager commentsManager, CrashReport crashReport) {
+    return new CommentsPresenter(accountManager, commentsManager, AndroidSchedulers.mainThread(),
+        crashReport);
+  }
+
+  @Provides CommentsManager providesCommentsManager(CommentsRepository commentsRepository) {
+    return new CommentsManager(commentsRepository);
+  }
+
+  @Provides ReactionsModelPresenter providesReactionsModelPresenter(
+      ReactionsManager reactionsManager, ReactionAnalytics reactionAnalytics,
+      CrashReport crashReport) {
+    return new ReactionsModelPresenter(reactionsManager, reactionAnalytics,
+        AndroidSchedulers.mainThread(), crashReport);
   }
 }

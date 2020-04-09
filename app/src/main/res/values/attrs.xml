@@ -221,5 +221,8 @@
   <declare-styleable name="ToolbarArcBackground">
     <attr name="arcColor" format="color|reference" />
   </declare-styleable>
+  <declare-styleable name="CommentsView">
+    <attr name="title" format="string" />
+  </declare-styleable>
 
 </resources>

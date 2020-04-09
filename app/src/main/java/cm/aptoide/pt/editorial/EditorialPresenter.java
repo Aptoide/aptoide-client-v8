@@ -7,12 +7,11 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.network.LoadReactionModel;
-import cm.aptoide.pt.reactions.network.ReactionsResponse;
+import java.util.ArrayList;
+import java.util.List;
 import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 /**
@@ -45,53 +44,104 @@ public class EditorialPresenter implements Presenter {
   }
 
   @Override public void present() {
-    onCreateLoadAppOfTheWeek();
+    firstLoad();
     handleRetryClick();
     handleClickOnMedia();
-    handleClickOnAppCard();
 
-    handleInstallClick();
-    pauseDownload();
-    resumeDownload();
-    cancelDownload();
-    loadDownloadApp();
-
-    handlePlaceHolderVisibilityChange();
-    handlePlaceHolderVisibility();
-    handleMediaListDescriptionVisibility();
+    handleBottomCardVisibilityChange();
     handleClickActionButtonCard();
-    handleMovingCollapse();
 
-    handleReactionButtonClick();
-    handleUserReaction();
-    handleLongPressReactionButton();
     handleSnackLogInClick();
-    onCreateLoadReactionModel();
   }
 
-  @VisibleForTesting public void onCreateLoadAppOfTheWeek() {
+  @VisibleForTesting public void firstLoad() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .doOnNext(created -> view.showLoading())
-        .flatMapSingle(created -> loadEditorialViewModel())
+        .flatMap(__ -> loadEditorial())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
   }
 
-  private Single<EditorialViewModel> loadEditorialViewModel() {
+  @VisibleForTesting public Observable<EditorialViewModel> loadEditorial() {
     return editorialManager.loadEditorialViewModel()
+        .toObservable()
         .observeOn(viewScheduler)
-        .doOnSuccess(editorialViewModel -> {
-          if (!editorialViewModel.isLoading()) {
-            view.hideLoading();
-          }
-          if (editorialViewModel.hasError()) {
-            view.showError(editorialViewModel.getError());
-          } else {
-            view.populateView(editorialViewModel);
-          }
-        })
-        .map(editorialViewModel -> editorialViewModel);
+        .doOnNext(this::populateView)
+        .filter(editorialViewModel -> !editorialViewModel.hasError())
+        .flatMap(
+            editorialViewModel -> Observable.mergeDelayError(observeAppsState(editorialViewModel),
+                handleClickOnAppCard(editorialViewModel), handleInstallClick(editorialViewModel),
+                pauseDownload(editorialViewModel), resumeDownload(editorialViewModel),
+                cancelDownload(editorialViewModel))
+                .map(__ -> editorialViewModel));
+  }
+
+  public Observable<EditorialViewModel> observeAppsState(EditorialViewModel editorialViewModel) {
+    List<EditorialContent> appContent = editorialViewModel.getPlaceHolderContent();
+    if (appContent != null && appContent.size() > 0) {
+      return loadDownloadModels(editorialViewModel).observeOn(viewScheduler)
+          .doOnNext(view::populateCardContent)
+          .doOnError(e -> e.printStackTrace());
+    }
+    return Observable.just(editorialViewModel)
+        .observeOn(viewScheduler)
+        .doOnNext(view::populateCardContent);
+  }
+
+  private Observable<EditorialViewModel> loadDownloadModels(EditorialViewModel editorialViewModel) {
+    ArrayList<Observable<EditorialDownloadModel>> downloadModels = new ArrayList<>();
+    for (int i = 0; i < editorialViewModel.getPlaceHolderContent()
+        .size(); i++) {
+      EditorialAppModel app = editorialViewModel.getPlaceHolderContent()
+          .get(i)
+          .getApp();
+      downloadModels.add(editorialManager.loadDownloadModel(app.getMd5sum(), app.getPackageName(),
+          app.getVerCode(), editorialViewModel.getPlaceHolderContent()
+              .get(i)
+              .getPosition()));
+    }
+    return Observable.combineLatest(downloadModels, args -> {
+      // Deep copy the model with the update download models
+      ArrayList<EditorialContent> content = new ArrayList<>(editorialViewModel.getContentList());
+      ArrayList<EditorialContent> placeHolderContent = new ArrayList<>();
+      for (int i = 0; i < args.length; i++) {
+        EditorialDownloadModel model = (EditorialDownloadModel) args[i];
+        placeHolderContent.add(
+            new EditorialContent(editorialViewModel.getContent(model.getPosition()),
+                new EditorialDownloadModel(model)));
+        content.set(model.getPosition(),
+            new EditorialContent(editorialViewModel.getContent(model.getPosition()),
+                new EditorialDownloadModel(model)));
+      }
+      return deepCopyEditorial(editorialViewModel, content, placeHolderContent);
+    });
+  }
+
+  private EditorialViewModel deepCopyEditorial(EditorialViewModel editorialViewModel,
+      List<EditorialContent> content, List<EditorialContent> placeholderContent) {
+    EditorialAppModel bottomAppModel = null;
+    if (placeholderContent != null && placeholderContent.size() > 0) {
+      bottomAppModel = placeholderContent.get(0)
+          .getApp();
+    }
+    return new EditorialViewModel(content, editorialViewModel.getTitle(),
+        editorialViewModel.getCaption(), editorialViewModel.getBackgroundImage(),
+        editorialViewModel.getPlaceHolderPositions(), placeholderContent,
+        editorialViewModel.shouldHaveAnimation(), editorialViewModel.getCardId(),
+        editorialViewModel.getGroupId(), editorialViewModel.getCaptionColor(), bottomAppModel);
+  }
+
+  private void populateView(EditorialViewModel editorialViewModel) {
+    if (!editorialViewModel.isLoading()) {
+      view.hideLoading();
+    }
+    if (editorialViewModel.hasError()) {
+      view.showError(editorialViewModel.getError());
+    } else {
+      view.populateView(editorialViewModel);
+    }
   }
 
   @VisibleForTesting public void handleRetryClick() {
@@ -100,7 +150,7 @@ public class EditorialPresenter implements Presenter {
         .flatMap(viewCreated -> view.retryClicked()
             .observeOn(viewScheduler)
             .doOnNext(bottom -> view.showLoading())
-            .flatMapSingle(__ -> loadEditorialViewModel()))
+            .flatMap(__ -> loadEditorial()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(notificationUrl -> {
         }, crashReporter::log);
@@ -116,18 +166,13 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  @VisibleForTesting public void handleClickOnAppCard() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> setUpViewModelOnViewReady())
-        .flatMap(view::appCardClicked)
+  @VisibleForTesting
+  public Observable<EditorialEvent> handleClickOnAppCard(EditorialViewModel editorialViewModel) {
+    return view.appCardClicked(editorialViewModel)
         .doOnNext(editorialEvent -> {
           editorialNavigator.navigateToAppView(editorialEvent.getId(),
               editorialEvent.getPackageName());
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReporter::log);
+        });
   }
 
   @VisibleForTesting public void handleClickActionButtonCard() {
@@ -140,108 +185,88 @@ public class EditorialPresenter implements Presenter {
         }, crashReporter::log);
   }
 
-  private void handleInstallClick() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.installButtonClick(editorialViewModel)
-            .flatMapCompletable(editorialDownloadEvent -> {
-              Completable completable = null;
-              DownloadModel.Action action = editorialDownloadEvent.getAction();
-              switch (action) {
-                case INSTALL:
-                case UPDATE:
-                  completable = editorialManager.loadEditorialViewModel()
-                      .flatMapCompletable(
-                          viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
-                              .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
-                                  editorialDownloadEvent.getPackageName(), action.toString(),
-                                  viewModel.hasSplits(), viewModel.hasAppc(), false,
-                                  viewModel.getRank(), null, viewModel.getStoreName())));
-                  break;
-                case OPEN:
-                  completable = editorialManager.loadEditorialViewModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(appViewViewModel -> openInstalledApp(
-                          editorialDownloadEvent.getPackageName()).doOnCompleted(
+  private Observable<EditorialDownloadEvent> handleInstallClick(
+      EditorialViewModel editorialViewModel) {
+    return view.installButtonClick(editorialViewModel)
+        .flatMapCompletable(editorialDownloadEvent -> {
+          Completable completable = null;
+          DownloadModel.Action action = editorialDownloadEvent.getAction();
+          switch (action) {
+            case INSTALL:
+            case UPDATE:
+              completable = editorialManager.loadEditorialViewModel()
+                  .flatMapCompletable(
+                      viewModel -> downloadApp(editorialDownloadEvent).observeOn(viewScheduler)
+                          .doOnCompleted(() -> editorialAnalytics.clickOnInstallButton(
+                              editorialDownloadEvent.getPackageName(), action.toString(),
+                              viewModel.getBottomCardAppModel()
+                                  .hasSplits(), viewModel.getBottomCardAppModel()
+                                  .hasAppc(), false, viewModel.getBottomCardAppModel()
+                                  .getRank(), null, viewModel.getBottomCardAppModel()
+                                  .getStoreName())));
+              break;
+            case OPEN:
+              completable = editorialManager.loadEditorialViewModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(appViewViewModel -> openInstalledApp(
+                      editorialDownloadEvent.getPackageName()).doOnCompleted(
+                      () -> editorialAnalytics.clickOnInstallButton(
+                          editorialDownloadEvent.getPackageName(), action.toString(),
+                          appViewViewModel.getBottomCardAppModel()
+                              .hasSplits(), appViewViewModel.getBottomCardAppModel()
+                              .hasAppc(), false, appViewViewModel.getBottomCardAppModel()
+                              .getRank(), null, appViewViewModel.getBottomCardAppModel()
+                              .getStoreName())));
+              break;
+            case DOWNGRADE:
+              completable = editorialManager.loadEditorialViewModel()
+                  .observeOn(viewScheduler)
+                  .flatMapCompletable(
+                      appViewViewModel -> downgradeApp(editorialDownloadEvent).doOnCompleted(
                           () -> editorialAnalytics.clickOnInstallButton(
                               editorialDownloadEvent.getPackageName(), action.toString(),
-                              appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
-                              appViewViewModel.getRank(), null, appViewViewModel.getStoreName())));
-                  break;
-                case DOWNGRADE:
-                  completable = editorialManager.loadEditorialViewModel()
-                      .observeOn(viewScheduler)
-                      .flatMapCompletable(
-                          appViewViewModel -> downgradeApp(editorialDownloadEvent).doOnCompleted(
-                              () -> editorialAnalytics.clickOnInstallButton(
-                                  editorialDownloadEvent.getPackageName(), action.toString(),
-                                  appViewViewModel.hasSplits(), appViewViewModel.hasAppc(), false,
-                                  appViewViewModel.getRank(), null,
-                                  appViewViewModel.getStoreName())));
-                  break;
-              }
-              return completable;
-            })
-            .doOnError(throwable -> throwable.printStackTrace())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-          throw new IllegalStateException(error);
-        });
+                              appViewViewModel.getBottomCardAppModel()
+                                  .hasSplits(), appViewViewModel.getBottomCardAppModel()
+                                  .hasAppc(), false, appViewViewModel.getBottomCardAppModel()
+                                  .getRank(), null, appViewViewModel.getBottomCardAppModel()
+                                  .getStoreName())));
+              break;
+          }
+          return completable;
+        })
+        .doOnError(Throwable::printStackTrace)
+        .retry();
   }
 
-  private void cancelDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.cancelDownload(editorialViewModel)
-            .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadCancelEvent(
-                editorialEvent.getPackageName()))
-            .flatMapCompletable(
-                editorialEvent -> editorialManager.cancelDownload(editorialEvent.getMd5(),
-                    editorialEvent.getPackageName(), editorialEvent.getVerCode()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-        });
+  private Observable<EditorialDownloadEvent> cancelDownload(EditorialViewModel editorialViewModel) {
+    return view.cancelDownload(editorialViewModel)
+        .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadCancelEvent(
+            editorialEvent.getPackageName()))
+        .flatMapCompletable(
+            editorialEvent -> editorialManager.cancelDownload(editorialEvent.getMd5(),
+                editorialEvent.getPackageName(), editorialEvent.getVerCode()))
+        .retry();
   }
 
-  private void resumeDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.resumeDownload(editorialViewModel)
-            .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
-                .flatMap(success -> permissionManager.requestExternalStoragePermission(
-                    permissionService))
-                .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
-                    editorialEvent.getPackageName(), editorialEvent.getAppId(),
-                    editorialEvent.getAction()
-                        .toString()))
-                .retry()))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-        });
+  private Observable<Void> resumeDownload(EditorialViewModel editorialViewModel) {
+    return view.resumeDownload(editorialViewModel)
+        .flatMap(editorialEvent -> permissionManager.requestDownloadAccess(permissionService)
+            .flatMap(
+                success -> permissionManager.requestExternalStoragePermission(permissionService))
+            .flatMapCompletable(__ -> editorialManager.resumeDownload(editorialEvent.getMd5(),
+                editorialEvent.getPackageName(), editorialEvent.getAppId(),
+                editorialEvent.getAction()
+                    .toString()))
+            .retry());
   }
 
-  private void pauseDownload() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(__ -> setUpViewModelOnViewReady())
-        .flatMap(editorialViewModel -> view.pauseDownload(editorialViewModel)
-            .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadPauseEvent(
-                editorialEvent.getPackageName()))
-            .flatMapCompletable(
-                editorialEvent -> editorialManager.pauseDownload(editorialEvent.getMd5()))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> {
-        });
+  private Observable<EditorialDownloadEvent> pauseDownload(EditorialViewModel editorialViewModel) {
+    return view.pauseDownload(editorialViewModel)
+        .doOnNext(editorialEvent -> editorialAnalytics.sendDownloadPauseEvent(
+            editorialEvent.getPackageName()))
+        .flatMapCompletable(
+            editorialEvent -> editorialManager.pauseDownload(editorialEvent.getMd5()))
+        .retry();
   }
 
   private Completable downloadApp(EditorialDownloadEvent editorialDownloadEvent) {
@@ -261,135 +286,25 @@ public class EditorialPresenter implements Presenter {
         .toCompletable();
   }
 
-  @VisibleForTesting public void loadDownloadApp() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isViewReady())
-        .flatMap(create -> editorialManager.loadEditorialViewModel()
-            .toObservable())
-        .flatMapIterable(editorialViewModel -> editorialViewModel.getPlaceHolderContent())
-        .flatMap(
-            editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
-                editorialContent.getPackageName(), editorialContent.getVerCode(),
-                editorialContent.getPosition()))
-        .observeOn(viewScheduler)
-        .doOnNext(view::showDownloadModel)
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void handlePlaceHolderVisibility() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
-        .flatMap(created -> view.isViewReady())
-        .observeOn(viewScheduler)
-        .doOnNext(model -> view.managePlaceHolderVisibity())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(created -> {
-        }, error -> crashReporter.log(error));
-  }
-
   private Completable openInstalledApp(String packageName) {
     return Completable.fromAction(() -> view.openApp(packageName));
   }
 
-  @VisibleForTesting public void handlePlaceHolderVisibilityChange() {
+  @VisibleForTesting public void handleBottomCardVisibilityChange() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.placeHolderVisibilityChange())
-        .doOnNext(scrollEvent -> {
-          if (scrollEvent.getItemShown()) {
-            view.removeBottomCardAnimation();
-          } else if (!scrollEvent.getItemShown()) {
+        .flatMap(created -> view.bottomCardVisibilityChange())
+        .distinctUntilChanged()
+        .doOnNext(shouldSetToVisible -> {
+          if (shouldSetToVisible) {
             view.addBottomCardAnimation();
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
-  @VisibleForTesting public void handleMediaListDescriptionVisibility() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.mediaListDescriptionChanged())
-        .observeOn(viewScheduler)
-        .filter(editorialEvent -> editorialEvent.getFirstVisiblePosition() >= 0)
-        .doOnNext(editorialEvent -> {
-          int firstVisiblePosition = editorialEvent.getFirstVisiblePosition();
-          if (isOnlyOneMediaVisible(firstVisiblePosition,
-              editorialEvent.getLastVisibleItemPosition())) {
-            view.manageMediaListDescriptionAnimationVisibility(editorialEvent);
           } else {
-            view.setMediaListDescriptionsVisible(editorialEvent);
+            view.removeBottomCardAnimation();
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void handleMovingCollapse() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.handleMovingCollapse())
-        .observeOn(viewScheduler)
-        .doOnNext(isItemShown -> {
-          if (isItemShown) {
-            view.removeBottomCardAnimation();
-          } else {
-            view.addBottomCardAnimation();
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
-  private Observable<LoadReactionModel> handleSinglePressReactionButton(
-      EditorialViewModel editorialViewModel) {
-    return editorialManager.isFirstReaction(editorialViewModel.getCardId(),
-        editorialViewModel.getGroupId())
-        .flatMapObservable(firstReaction -> {
-          if (firstReaction) {
-            editorialAnalytics.sendReactionButtonClickEvent();
-            view.showReactionsPopup(editorialViewModel.getCardId(),
-                editorialViewModel.getGroupId());
-            return Observable.just(new LoadReactionModel());
-          } else {
-            return editorialManager.deleteReaction(editorialViewModel.getCardId(),
-                editorialViewModel.getGroupId())
-                .toObservable()
-                .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, true))
-                .filter(ReactionsResponse::wasSuccess)
-                .flatMapSingle(__ -> loadReactionModel(editorialViewModel.getCardId(),
-                    editorialViewModel.getGroupId()));
-          }
-        });
-  }
-
-  private Single<LoadReactionModel> loadReactionModel(String cardId, String groupId) {
-    return editorialManager.loadReactionModel(cardId, groupId)
-        .observeOn(viewScheduler)
-        .doOnSuccess(reactionModel -> view.showTopReactions(reactionModel.getMyReaction(),
-            reactionModel.getTopReactionList(), reactionModel.getTotal()));
-  }
-
-  private void handleReactionsResponse(ReactionsResponse reactionsResponse, boolean isDelete) {
-    if (reactionsResponse.wasSuccess()) {
-      if (isDelete) {
-        editorialAnalytics.sendDeletedEvent();
-      } else {
-        editorialAnalytics.sendReactedEvent();
-      }
-    } else if (reactionsResponse.reactionsExceeded()) {
-      view.showLoginDialog();
-    } else if (reactionsResponse.wasNetworkError()) {
-      view.showNetworkErrorToast();
-    } else if (reactionsResponse.wasGeneralError()) {
-      view.showGenericErrorToast();
-    }
   }
 
   private boolean isOnlyOneMediaVisible(int firstVisiblePosition, int lastVisiblePosition) {
@@ -403,74 +318,11 @@ public class EditorialPresenter implements Presenter {
         .toCompletable();
   }
 
-  private Observable<EditorialViewModel> setUpViewModelOnViewReady() {
-    return view.isViewReady()
-        .flatMap(__ -> editorialManager.loadEditorialViewModel()
-            .toObservable())
-        .observeOn(viewScheduler);
-  }
-
-  @VisibleForTesting public void handleReactionButtonClick() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionsButtonClicked())
-        .flatMapSingle(click -> editorialManager.loadEditorialViewModel())
-        .observeOn(viewScheduler)
-        .flatMap(editorialViewModel -> handleSinglePressReactionButton(editorialViewModel))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, throwable -> crashReporter.log(throwable));
-  }
-
-  @VisibleForTesting public void handleUserReaction() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionClicked())
-        .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
-            reactionEvent.getGroupId(), reactionEvent.getReactionType())
-            .toObservable()
-            .filter(ReactionsResponse::differentReaction)
-            .observeOn(viewScheduler)
-            .doOnNext(reactionsResponse -> handleReactionsResponse(reactionsResponse, false))
-            .filter(ReactionsResponse::wasSuccess)
-            .flatMapSingle(
-                __ -> loadReactionModel(reactionEvent.getCardId(), reactionEvent.getGroupId())))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void handleLongPressReactionButton() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> view.reactionsButtonLongPressed())
-        .flatMap(click -> editorialManager.loadEditorialViewModel()
-            .toObservable())
-        .doOnNext(editorialViewModel -> {
-          editorialAnalytics.sendReactionButtonClickEvent();
-          view.showReactionsPopup(editorialViewModel.getCardId(), editorialViewModel.getGroupId());
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
-  }
-
   @VisibleForTesting public void handleSnackLogInClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.snackLoginClick())
         .doOnNext(homeEvent -> editorialNavigator.navigateToLogIn())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(lifecycleEvent -> {
-        }, crashReporter::log);
-  }
-
-  @VisibleForTesting public void onCreateLoadReactionModel() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(created -> setUpViewModelOnViewReady())
-        .flatMapSingle(editorialViewModel -> loadReactionModel(editorialViewModel.getCardId(),
-            editorialViewModel.getGroupId()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(lifecycleEvent -> {
         }, crashReporter::log);

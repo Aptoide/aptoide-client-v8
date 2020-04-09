@@ -19,6 +19,7 @@ public class Comment {
   private User user;
   private Long parentReview;
   private Parent parent;
+  private Stats stats;
 
   public Comment() {
   }
@@ -91,6 +92,14 @@ public class Comment {
 
   protected boolean canEqual(Object other) {
     return other instanceof Comment;
+  }
+
+  public Stats getStats() {
+    return stats;
+  }
+
+  public void setStats(Stats stats) {
+    this.stats = stats;
   }
 
   public enum Access {
@@ -228,6 +237,30 @@ public class Comment {
 
     public String toString() {
       return "Comment.Parent(id=" + this.getId() + ")";
+    }
+  }
+
+  public static class Stats {
+    private int points;
+    private int comments;
+
+    private Stats() {
+    }
+
+    public int getPoints() {
+      return points;
+    }
+
+    public void setPoints(int points) {
+      this.points = points;
+    }
+
+    public int getComments() {
+      return comments;
+    }
+
+    public void setComments(int comments) {
+      this.comments = comments;
     }
   }
 

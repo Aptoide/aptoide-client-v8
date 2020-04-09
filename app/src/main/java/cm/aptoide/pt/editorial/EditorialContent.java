@@ -1,7 +1,5 @@
 package cm.aptoide.pt.editorial;
 
-import cm.aptoide.pt.aab.Split;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import java.util.List;
 
 /**
@@ -14,62 +12,36 @@ public class EditorialContent {
   private final List<EditorialMedia> media;
   private final String message;
   private final String type;
-  private final long id;
-  private final String name;
-  private final String icon;
-  private final float avg;
-  private final String packageName;
-  private final long size;
-  private final String graphic;
-  private final Obb obb;
-  private final long storeId;
-  private final String storeName;
-  private final String verName;
-  private final int verCode;
-  private final String path;
-  private final String pathAlt;
-  private final String md5sum;
   private final String actionTitle;
   private final String url;
+
   private final int position;
-  private final boolean isPlaceHolder;
-  private final List<Split> splits;
-  private final List<String> requiredSplits;
-  private boolean hasAppc;
-  private String rank;
+
+  private final EditorialAppModel editorialAppModel;
+
+  public EditorialContent(EditorialContent editorialContent,
+      EditorialDownloadModel editorialDownloadModel) {
+    this.title = editorialContent.getTitle();
+    this.media = editorialContent.getMedia();
+    this.message = editorialContent.getMessage();
+    this.type = editorialContent.getType();
+    this.actionTitle = editorialContent.getActionTitle();
+    this.url = editorialContent.getActionUrl();
+    this.editorialAppModel =
+        new EditorialAppModel(editorialContent.getEditorialAppModel(), editorialDownloadModel);
+    this.position = editorialContent.getPosition();
+  }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      long id, String name, String icon, float avg, String packageName, long size, String graphic,
-      Obb obb, long storeId, String storeName, String verName, int verCode, String path,
-      String pathAlt, String md5sum, String actionTitle, String url, int position,
-      List<Split> splits, List<String> requiredSplits, boolean hasAppc, String rank) {
+      String actionTitle, String url, int position, EditorialAppModel editorialAppModel) {
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.id = id;
-    this.name = name;
-    this.icon = icon;
-    this.avg = avg;
-    this.packageName = packageName;
-    this.size = size;
-    this.graphic = graphic;
-    this.obb = obb;
-    this.storeId = storeId;
-    this.storeName = storeName;
-    this.verName = verName;
-    this.verCode = verCode;
-    this.path = path;
-    this.pathAlt = pathAlt;
-    this.md5sum = md5sum;
     this.actionTitle = actionTitle;
     this.url = url;
+    this.editorialAppModel = editorialAppModel;
     this.position = position;
-    this.splits = splits;
-    this.requiredSplits = requiredSplits;
-    this.rank = rank;
-    this.isPlaceHolder = true;
-    this.hasAppc = hasAppc;
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
@@ -80,59 +52,18 @@ public class EditorialContent {
     this.type = type;
     this.actionTitle = actionTitle;
     this.url = url;
+    this.editorialAppModel = null;
     this.position = position;
-    this.isPlaceHolder = false;
-    id = -1;
-    name = "";
-    icon = null;
-    avg = 0;
-    packageName = "";
-    size = 0;
-    graphic = "";
-    obb = null;
-    storeId = -1;
-    storeName = "";
-    verName = "";
-    verCode = -1;
-    path = "";
-    pathAlt = "";
-    md5sum = "";
-    splits = null;
-    requiredSplits = null;
-    hasAppc = false;
-    rank = "";
   }
 
   public EditorialContent(String title, List<EditorialMedia> media, String message, String type,
-      long id, String name, String icon, float avg, String packageName, long size, String graphic,
-      Obb obb, long storeId, String storeName, String verName, int verCode, String path,
-      String pathAlt, String md5sum, int position, List<Split> splits, List<String> requiredSplits,
-      boolean hasAppc, String rank) {
+      int position, EditorialAppModel editorialAppModel) {
     this.title = title;
     this.media = media;
     this.message = message;
     this.type = type;
-    this.id = id;
-    this.name = name;
-    this.icon = icon;
-    this.avg = avg;
-    this.packageName = packageName;
-    this.size = size;
-    this.graphic = graphic;
-    this.obb = obb;
-    this.storeId = storeId;
-    this.storeName = storeName;
-    this.verName = verName;
-    this.verCode = verCode;
-    this.path = path;
-    this.pathAlt = pathAlt;
-    this.md5sum = md5sum;
     this.position = position;
-    this.splits = splits;
-    this.requiredSplits = requiredSplits;
-    this.hasAppc = hasAppc;
-    this.rank = rank;
-    this.isPlaceHolder = true;
+    this.editorialAppModel = editorialAppModel;
     actionTitle = "";
     url = "";
   }
@@ -144,28 +75,9 @@ public class EditorialContent {
     this.message = message;
     this.type = type;
     this.position = position;
-    this.isPlaceHolder = false;
-    id = -1;
-    name = "";
-    icon = null;
-    avg = 0;
-    packageName = "";
-    size = 0;
-    graphic = "";
-    obb = null;
-    storeId = -1;
-    storeName = "";
-    verName = "";
-    verCode = -1;
-    path = "";
-    pathAlt = "";
-    md5sum = "";
+    this.editorialAppModel = null;
     actionTitle = "";
     url = "";
-    this.splits = null;
-    this.requiredSplits = null;
-    hasAppc = false;
-    rank = "";
   }
 
   public String getMessage() {
@@ -180,8 +92,12 @@ public class EditorialContent {
     return type;
   }
 
-  public boolean isPlaceHolderType() {
-    return isPlaceHolder;
+  public boolean hasApp() {
+    return editorialAppModel != null;
+  }
+
+  public EditorialAppModel getApp() {
+    return editorialAppModel;
   }
 
   public List<EditorialMedia> getMedia() {
@@ -204,6 +120,26 @@ public class EditorialContent {
     return title != null && !title.equals("");
   }
 
+  public String getActionTitle() {
+    return actionTitle;
+  }
+
+  public String getActionUrl() {
+    return url;
+  }
+
+  public int getPosition() {
+    return position;
+  }
+
+  public boolean hasAction() {
+    return !actionTitle.equals("");
+  }
+
+  public EditorialAppModel getEditorialAppModel() {
+    return editorialAppModel;
+  }
+
   public boolean hasAnyMediaDescription() {
     for (EditorialMedia editorialMedia : media) {
       if (editorialMedia.hasDescription()) {
@@ -213,95 +149,35 @@ public class EditorialContent {
     return false;
   }
 
-  public String getAppName() {
-    return name;
+  @Override public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof EditorialContent)) return false;
+
+    EditorialContent content = (EditorialContent) o;
+
+    if (position != content.position) return false;
+    if (title != null ? !title.equals(content.title) : content.title != null) return false;
+    if (media != null ? !media.equals(content.media) : content.media != null) return false;
+    if (message != null ? !message.equals(content.message) : content.message != null) return false;
+    if (type != null ? !type.equals(content.type) : content.type != null) return false;
+    if (actionTitle != null ? !actionTitle.equals(content.actionTitle)
+        : content.actionTitle != null) {
+      return false;
+    }
+    if (url != null ? !url.equals(content.url) : content.url != null) return false;
+    return editorialAppModel != null ? editorialAppModel.equals(content.editorialAppModel)
+        : content.editorialAppModel == null;
   }
 
-  public String getIcon() {
-    return icon;
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public float getRating() {
-    return avg;
-  }
-
-  public String getPackageName() {
-    return packageName;
-  }
-
-  public long getSize() {
-    return size;
-  }
-
-  public String getGraphic() {
-    return graphic;
-  }
-
-  public Obb getObb() {
-    return obb;
-  }
-
-  public long getStoreId() {
-    return storeId;
-  }
-
-  public String getStoreName() {
-    return storeName;
-  }
-
-  public String getVerName() {
-    return verName;
-  }
-
-  public int getVerCode() {
-    return verCode;
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public String getPathAlt() {
-    return pathAlt;
-  }
-
-  public String getMd5sum() {
-    return md5sum;
-  }
-
-  public String getActionTitle() {
-    return actionTitle;
-  }
-
-  public String getActionUrl() {
-    return url;
-  }
-
-  public boolean hasAction() {
-    return !actionTitle.equals("");
-  }
-
-  public int getPosition() {
-    return position;
-  }
-
-  public List<Split> getSplits() {
-    return this.splits;
-  }
-
-  public List<String> getRequiredSplits() {
-    return this.requiredSplits;
-  }
-
-  public boolean hasAppc() {
-    return hasAppc;
-  }
-
-  public String getRank() {
-    return rank;
+  @Override public int hashCode() {
+    int result = title != null ? title.hashCode() : 0;
+    result = 31 * result + (media != null ? media.hashCode() : 0);
+    result = 31 * result + (message != null ? message.hashCode() : 0);
+    result = 31 * result + (type != null ? type.hashCode() : 0);
+    result = 31 * result + (actionTitle != null ? actionTitle.hashCode() : 0);
+    result = 31 * result + (url != null ? url.hashCode() : 0);
+    result = 31 * result + position;
+    result = 31 * result + (editorialAppModel != null ? editorialAppModel.hashCode() : 0);
+    return result;
   }
 }

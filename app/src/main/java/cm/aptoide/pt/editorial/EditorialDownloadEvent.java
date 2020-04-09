@@ -51,22 +51,23 @@ public class EditorialDownloadEvent {
       DownloadModel.Action action) {
     super();
     this.button = null;
-    this.appName = editorialViewModel.getBottomCardAppName();
-    this.packageName = editorialViewModel.getBottomCardPackageName();
-    this.md5sum = editorialViewModel.getBottomCardMd5();
-    this.icon = editorialViewModel.getBottomCardIcon();
-    this.verName = editorialViewModel.getBottomCardVersionName();
-    this.verCode = editorialViewModel.getBottomCardVersionCode();
-    this.path = editorialViewModel.getBottomCardPath();
-    this.pathAlt = editorialViewModel.getBottomCardPathAlt();
-    this.obb = editorialViewModel.getBottomCardObb();
-    this.appId = editorialViewModel.getBottomCardAppId();
-    this.size = editorialViewModel.getBottomCardSize();
-    this.splits = editorialViewModel.getBottomCardSplits();
-    this.requiredSplits = editorialViewModel.getBottomCardRequiredSplits();
+    EditorialAppModel bottomAppModel = editorialViewModel.getBottomCardAppModel();
+    this.appName = bottomAppModel.getName();
+    this.packageName = bottomAppModel.getPackageName();
+    this.md5sum = bottomAppModel.getMd5sum();
+    this.icon = bottomAppModel.getIcon();
+    this.verName = bottomAppModel.getVerName();
+    this.verCode = bottomAppModel.getVerCode();
+    this.path = bottomAppModel.getPath();
+    this.pathAlt = bottomAppModel.getPathAlt();
+    this.obb = bottomAppModel.getObb();
+    this.appId = bottomAppModel.getId();
+    this.size = bottomAppModel.getSize();
+    this.splits = bottomAppModel.getSplits();
+    this.requiredSplits = bottomAppModel.getRequiredSplits();
     this.action = action;
-    this.storeName = editorialViewModel.getStoreName();
-    this.trustedBadge = editorialViewModel.getRank();
+    this.storeName = bottomAppModel.getStoreName();
+    this.trustedBadge = bottomAppModel.getRank();
   }
 
   public EditorialDownloadEvent(Type button, String packageName, String md5, int verCode,

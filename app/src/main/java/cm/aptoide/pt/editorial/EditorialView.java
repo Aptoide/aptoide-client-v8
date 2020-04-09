@@ -1,9 +1,7 @@
 package cm.aptoide.pt.editorial;
 
+import cm.aptoide.pt.comments.refactor.CommentsView;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.reactions.ReactionEvent;
-import cm.aptoide.pt.reactions.data.TopReaction;
-import java.util.List;
 import rx.Observable;
 
 /**
@@ -26,8 +24,6 @@ public interface EditorialView extends View {
 
   void showError(EditorialViewModel.Error error);
 
-  void showDownloadModel(EditorialDownloadModel model);
-
   Observable<Boolean> showRootInstallWarningPopup();
 
   void openApp(String packageName);
@@ -40,9 +36,7 @@ public interface EditorialView extends View {
 
   Observable<EditorialDownloadEvent> cancelDownload(EditorialViewModel editorialViewModel);
 
-  Observable<Void> isViewReady();
-
-  Observable<ScrollEvent> placeHolderVisibilityChange();
+  Observable<Boolean> bottomCardVisibilityChange();
 
   void removeBottomCardAnimation();
 
@@ -50,37 +44,13 @@ public interface EditorialView extends View {
 
   Observable<EditorialEvent> mediaContentClicked();
 
-  void managePlaceHolderVisibity();
-
   Observable<EditorialEvent> mediaListDescriptionChanged();
-
-  void manageMediaListDescriptionAnimationVisibility(EditorialEvent editorialEvent);
-
-  void setMediaListDescriptionsVisible(EditorialEvent editorialEvent);
-
-  Observable<Boolean> handleMovingCollapse();
 
   Observable<Boolean> showDowngradeMessage();
 
-  void showDowngradingMessage();
-
-  Observable<Void> reactionsButtonClicked();
-
-  Observable<Void> reactionsButtonLongPressed();
-
-  void showTopReactions(String userReaction, List<TopReaction> reactions, int numberOfReactions);
-
-  void showReactionsPopup(String cardId, String groupId);
-
-  Observable<ReactionEvent> reactionClicked();
-
-  void setUserReaction(String reaction);
-
-  void showLoginDialog();
-
   Observable<Void> snackLoginClick();
 
-  void showGenericErrorToast();
+  CommentsView getCommentsView();
 
-  void showNetworkErrorToast();
+  void populateCardContent(EditorialViewModel editorialViewModel);
 }
