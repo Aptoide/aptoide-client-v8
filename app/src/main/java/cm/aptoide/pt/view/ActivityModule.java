@@ -291,8 +291,8 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
       ThemeManager themeManager) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName, marketResourceFormatter, themeManager);
+        converterFactory, installedRepository, tokenInvalidator, sharedPreferences,
+        marketResourceFormatter, themeManager);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(

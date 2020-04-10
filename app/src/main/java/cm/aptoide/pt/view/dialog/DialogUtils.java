@@ -8,7 +8,6 @@ package cm.aptoide.pt.view.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.style.BulletSpan;
 import android.view.ContextThemeWrapper;
@@ -66,17 +65,14 @@ import rx.subscriptions.Subscriptions;
   private final InstalledRepository installedRepository;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final Resources resources;
-  private final String marketName;
   private final MarketResourceFormatter marketResourceFormatter;
   private final ThemeManager themeManager;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
-      String marketName, MarketResourceFormatter marketResourceFormatter,
-      ThemeManager themeManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -85,8 +81,6 @@ import rx.subscriptions.Subscriptions;
     this.installedRepository = installedRepository;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.resources = resources;
-    this.marketName = marketName;
     this.marketResourceFormatter = marketResourceFormatter;
     this.themeManager = themeManager;
   }
