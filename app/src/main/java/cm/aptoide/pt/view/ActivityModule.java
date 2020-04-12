@@ -17,6 +17,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -287,12 +288,12 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
-      ThemeManager themeManager) {
+      @Named("default") SharedPreferences sharedPreferences,
+      MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager,
+      UserFeedbackAnalytics userFeedbackAnalaytics) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
         converterFactory, installedRepository, tokenInvalidator, sharedPreferences,
-        marketResourceFormatter, themeManager);
+        marketResourceFormatter, themeManager, userFeedbackAnalaytics);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(
