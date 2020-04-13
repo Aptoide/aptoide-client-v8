@@ -2,6 +2,7 @@ package cm.aptoide.pt.home;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.bundles.HomeBundlesModel;
@@ -40,9 +41,11 @@ public class HomePresenter implements Presenter {
   private final HomeNavigator homeNavigator;
   private final AdMapper adMapper;
   private final HomeAnalytics homeAnalytics;
+  private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public HomePresenter(HomeView view, Home home, Scheduler viewScheduler, CrashReport crashReporter,
-      HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics) {
+      HomeNavigator homeNavigator, AdMapper adMapper, HomeAnalytics homeAnalytics,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     this.view = view;
     this.home = home;
     this.viewScheduler = viewScheduler;
@@ -50,6 +53,7 @@ public class HomePresenter implements Presenter {
     this.homeNavigator = homeNavigator;
     this.adMapper = adMapper;
     this.homeAnalytics = homeAnalytics;
+    this.userFeedbackAnalytics = userFeedbackAnalytics;
   }
 
   @Override public void present() {
@@ -278,6 +282,7 @@ public class HomePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
+        .doOnNext(__ -> userFeedbackAnalytics.sendReactionEvent())
         .flatMap(homeEvent -> home.setReaction(homeEvent.getCardId(), homeEvent.getGroupId(),
             homeEvent.getReaction())
             .toObservable()

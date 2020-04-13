@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -275,9 +276,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
@@ -457,10 +458,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
-      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator) {
+      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
+        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
+        userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
@@ -493,11 +496,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
       EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
-      EditorialListNavigator editorialListNavigator,
-      EditorialListAnalytics editorialListAnalytics) {
+      EditorialListNavigator editorialListNavigator, EditorialListAnalytics editorialListAnalytics,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
         aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
-        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+        CrashReport.getInstance(), AndroidSchedulers.mainThread(), userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(

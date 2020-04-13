@@ -66,4 +66,8 @@ class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
     sendUserFeedbackEvent(CONTEXT_APP, TYPE_VOTE_DOWN)
   }
 
+  fun sendReactionEvent() {
+    sendUserFeedbackEvent(CONTEXT_EDITORIAL, TYPE_REACTION);
+  }
+
 }

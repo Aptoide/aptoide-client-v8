@@ -63,7 +63,8 @@ public class EditorialPresenterTest {
   @Before public void setupEditorialPresenter() {
     MockitoAnnotations.initMocks(this);
     presenter = new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
-        permissionManager, permissionService, editorialAnalytics, editorialNavigator);
+        permissionManager, permissionService, editorialAnalytics, editorialNavigator,
+        userFeedbackAnalytics);
     lifecycleEvent = PublishSubject.create();
     reactionButtonClickEvent = PublishSubject.create();
     reactionButtonLongPressEvent = PublishSubject.create();
