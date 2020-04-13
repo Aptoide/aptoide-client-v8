@@ -3,10 +3,10 @@ package cm.aptoide.pt.themes
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 
-class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
-                               val newFeatureManager: NewFeatureManager,
-                               val themeManager: ThemeManager,
-                               val themeAnalytics: ThemeAnalytics) : Presenter {
+class NewFeatureDialogPresenter(val view: NewFeatureDialogView,
+                                val newFeatureManager: NewFeatureManager,
+                                val themeManager: ThemeManager,
+                                val themeAnalytics: ThemeAnalytics) : Presenter {
 
   override fun present() {
     handleDialogShown()

@@ -153,9 +153,8 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
-import cm.aptoide.pt.themes.DarkThemeDialogView;
-import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
+import cm.aptoide.pt.themes.NewFeatureDialogPresenter;
+import cm.aptoide.pt.themes.NewFeatureDialogView;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -537,13 +536,11 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
-      CrashReport crashReport, AptoideAccountManager accountManager,
-      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
+      AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
+      ChipManager chipManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        darkThemeNewFeatureManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -627,10 +624,10 @@ import rx.subscriptions.CompositeSubscription;
     return new ExternalNavigator(fragment.getContext(), themeManager);
   }
 
-  @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
+  @FragmentScope @Provides NewFeatureDialogPresenter providesDarkthemeDialogPresenter(
       NewFeatureManager newFeatureManager, ThemeManager themeManager,
       ThemeAnalytics themeAnalytics) {
-    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, newFeatureManager,
+    return new NewFeatureDialogPresenter((NewFeatureDialogView) fragment, newFeatureManager,
         themeManager, themeAnalytics);
   }
 

@@ -6,7 +6,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
-import cm.aptoide.pt.themes.DarkThemeDialogFragment;
+import cm.aptoide.pt.themes.NewFeatureDialogFragment;
 import rx.Observable;
 
 public class HomeContainerNavigator {
@@ -18,11 +18,6 @@ public class HomeContainerNavigator {
 
   public HomeContainerNavigator(FragmentNavigator childFragmentNavigator) {
     this.childFragmentNavigator = childFragmentNavigator;
-  }
-
-  public void showDarkThemeDialog() {
-    DarkThemeDialogFragment darkThemeDialogFragment = new DarkThemeDialogFragment();
-    childFragmentNavigator.navigateToDialogFragment(darkThemeDialogFragment);
   }
 
   public void loadMainHomeContent() {
