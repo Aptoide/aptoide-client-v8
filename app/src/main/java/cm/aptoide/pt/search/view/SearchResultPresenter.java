@@ -210,8 +210,7 @@ import rx.schedulers.Schedulers;
           if (storeName != null && !storeName.trim()
               .equals("")) {
             return loadDataForSpecificStore(viewModel.getSearchQueryModel()
-                    .getFinalQuery(), storeName, viewModel.getFollowedStoresOffset()).map(
-                    searchResult -> new Pair<>(searchResult, null));
+                .getFinalQuery(), storeName, viewModel.getFollowedStoresOffset());
           }
           return loadDataFromFollowedStores(viewModel.getSearchQueryModel()
               .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset());
@@ -222,7 +221,7 @@ import rx.schedulers.Schedulers;
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList((SearchResult) data)));
+              getItemCount(getResultList(data)));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
