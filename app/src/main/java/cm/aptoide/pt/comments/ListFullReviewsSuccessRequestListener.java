@@ -1,6 +1,7 @@
 package cm.aptoide.pt.comments;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.comments.view.ConcreteItemCommentAdder;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -33,12 +34,13 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
   private final StoreCredentialsProvider storeCredentialsProvider;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
+  private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public ListFullReviewsSuccessRequestListener(RateAndReviewsFragment fragment,
       StoreCredentialsProvider storeCredentialsProvider,
       BodyInterceptor<BaseBody> baseBodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences) {
+      SharedPreferences sharedPreferences, UserFeedbackAnalytics userFeedbackAnalytics) {
     this.fragment = fragment;
     this.httpClient = httpClient;
     this.storeCredentialsProvider = storeCredentialsProvider;
@@ -46,6 +48,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
+    this.userFeedbackAnalytics = userFeedbackAnalytics;
   }
 
   @Override public void call(ListReviews listFullReviews) {
@@ -87,7 +90,7 @@ public class ListFullReviewsSuccessRequestListener implements SuccessRequestList
       displayables.add(
           new RateAndReviewCommentDisplayable(new ReviewWithAppName(fragment.getAppName(), review),
               new ConcreteItemCommentAdder(count, fragment, review), review.getCommentList()
-              .getTotal()));
+              .getTotal(), userFeedbackAnalytics));
 
       if (review.getId() == fragment.getReviewId()) {
         index = count;

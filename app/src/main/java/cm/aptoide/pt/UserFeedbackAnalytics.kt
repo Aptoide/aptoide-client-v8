@@ -58,4 +58,12 @@ class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
     sendUserFeedbackEvent(CONTEXT_APP, TYPE_COMMENT_LEVEL_2)
   }
 
+  fun sendVoteUpEvent() {
+    sendUserFeedbackEvent(CONTEXT_APP, TYPE_VOTE_UP)
+  }
+
+  fun sendVoteDownEvent() {
+    sendUserFeedbackEvent(CONTEXT_APP, TYPE_VOTE_DOWN)
+  }
+
 }

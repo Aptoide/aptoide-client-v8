@@ -154,10 +154,16 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
             .log(err)));
 
     compositeSubscription.add(RxView.clicks(helpfulButton)
-        .subscribe(a -> setReviewRating(review.getId(), true)));
+        .doOnNext(__ -> setReviewRating(review.getId(), true))
+        .doOnNext(__ -> displayable.sendVoteUpEvent())
+        .subscribe(aVoid -> {
+        }));
 
     compositeSubscription.add(RxView.clicks(notHelpfulButton)
-        .subscribe(a -> setReviewRating(review.getId(), false)));
+        .doOnNext(__ -> setReviewRating(review.getId(), false))
+        .doOnNext(__ -> displayable.sendVoteDownEvent())
+        .subscribe(a -> {
+        }));
 
     compositeSubscription.add(RxView.clicks(showHideReplies)
         .subscribe(a -> {
