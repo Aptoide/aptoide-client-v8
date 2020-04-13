@@ -25,6 +25,7 @@
   <color name="curation_gold">#f19c23</color>
   <color name="appc_spend">#e74258</color>
   <color name="promotions_reward">#ff6b6d</color>
+  <color name="comments_shadow">#22000000</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>

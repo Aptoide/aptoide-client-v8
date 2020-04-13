@@ -6,10 +6,10 @@
   style="?attr/backgroundCard"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:outlineAmbientShadowColor="@color/grey"
-  android:outlineSpotShadowColor="@color/grey"
+  android:outlineAmbientShadowColor="@color/comments_shadow"
+  android:outlineSpotShadowColor="@color/comments_shadow"
   app:cardCornerRadius="4dp"
-  app:cardElevation="20dp">
+  app:cardElevation="4dp">
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -98,7 +98,7 @@
 
     <Button
       android:id="@+id/replyButton"
-      style="@style/Aptoide.Button.Flat"
+      style="@style/Aptoide.Button.Flat.Medium.GreyMedium"
       android:layout_width="wrap_content"
       android:layout_height="26dp"
       android:layout_marginTop="14dp"

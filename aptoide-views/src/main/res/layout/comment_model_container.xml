@@ -8,10 +8,10 @@
   android:layout_marginBottom="4dp"
   android:clipChildren="false"
   android:clipToPadding="false"
-  android:outlineAmbientShadowColor="@color/grey"
-  android:outlineSpotShadowColor="@color/grey"
+  android:outlineAmbientShadowColor="@color/comments_shadow"
+  android:outlineSpotShadowColor="@color/comments_shadow"
   app:cardCornerRadius="4dp"
-  app:cardElevation="20dp">
+  app:cardElevation="4dp">
 
   <LinearLayout
     android:id="@+id/epoxy_model_group_child_container"
