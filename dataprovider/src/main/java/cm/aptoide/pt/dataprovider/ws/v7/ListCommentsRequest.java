@@ -172,8 +172,9 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.order = order;
     }
 
-    public Body(long storeId, Order order, int subLimit, int offset, CommentType commentType) {
-      this.limit = 5;
+    public Body(long storeId, int limit, Order order, int subLimit, int offset,
+        CommentType commentType) {
+      this.limit = limit;
       this.storeId = storeId;
       this.order = order;
       this.subLimit = subLimit;

@@ -1,12 +1,16 @@
 package cm.aptoide.pt.editorial;
 
+import android.util.Pair;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.comments.refactor.CommentsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.dataprovider.util.CommentType;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
+import com.google.android.exoplayer2.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import rx.Completable;
@@ -29,10 +33,12 @@ public class EditorialPresenter implements Presenter {
   private final EditorialAnalytics editorialAnalytics;
   private final EditorialNavigator editorialNavigator;
 
+  private final CommentsManager commentsManager;
+
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
       Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
       PermissionService permissionService, EditorialAnalytics editorialAnalytics,
-      EditorialNavigator editorialNavigator) {
+      EditorialNavigator editorialNavigator, CommentsManager commentsManager) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
@@ -41,6 +47,7 @@ public class EditorialPresenter implements Presenter {
     this.permissionService = permissionService;
     this.editorialAnalytics = editorialAnalytics;
     this.editorialNavigator = editorialNavigator;
+    this.commentsManager = commentsManager;
   }
 
   @Override public void present() {
@@ -52,6 +59,15 @@ public class EditorialPresenter implements Presenter {
     handleClickActionButtonCard();
 
     handleSnackLogInClick();
+  }
+
+  private Observable<EditorialViewModel> handleListReachBottom(
+      EditorialViewModel editorialViewModel) {
+    return view.reachesBottom()
+        .flatMapSingle(__ -> commentsManager.loadMoreComments(15, CommentType.STORE))
+        .doOnError(e -> Log.e("ERROR", e.getMessage()))
+        .retry()
+        .map(__ -> editorialViewModel);
   }
 
   @VisibleForTesting public void firstLoad() {
@@ -71,23 +87,29 @@ public class EditorialPresenter implements Presenter {
         .doOnNext(this::populateView)
         .filter(editorialViewModel -> !editorialViewModel.hasError())
         .flatMap(
-            editorialViewModel -> Observable.mergeDelayError(observeAppsState(editorialViewModel),
+            editorialViewModel -> Observable.mergeDelayError(observeEditorial(editorialViewModel),
                 handleClickOnAppCard(editorialViewModel), handleInstallClick(editorialViewModel),
                 pauseDownload(editorialViewModel), resumeDownload(editorialViewModel),
-                cancelDownload(editorialViewModel))
+                cancelDownload(editorialViewModel), handleListReachBottom(editorialViewModel))
                 .map(__ -> editorialViewModel));
   }
 
-  public Observable<EditorialViewModel> observeAppsState(EditorialViewModel editorialViewModel) {
+  public Observable<EditorialViewModel> observeEditorial(EditorialViewModel editorialViewModel) {
+    return Observable.combineLatest(commentsManager.observeComments(15, CommentType.STORE),
+        observeDownloadModels(editorialViewModel),
+        (comments, viewModel) -> new Pair<>(viewModel, comments))
+        .observeOn(viewScheduler)
+        .doOnNext(pair -> view.populateCardContent(pair.first, pair.second))
+        .map(pair -> pair.first);
+  }
+
+  public Observable<EditorialViewModel> observeDownloadModels(
+      EditorialViewModel editorialViewModel) {
     List<EditorialContent> appContent = editorialViewModel.getPlaceHolderContent();
     if (appContent != null && appContent.size() > 0) {
-      return loadDownloadModels(editorialViewModel).observeOn(viewScheduler)
-          .doOnNext(view::populateCardContent)
-          .doOnError(e -> e.printStackTrace());
+      return loadDownloadModels(editorialViewModel).observeOn(viewScheduler);
     }
-    return Observable.just(editorialViewModel)
-        .observeOn(viewScheduler)
-        .doOnNext(view::populateCardContent);
+    return Observable.just(editorialViewModel);
   }
 
   private Observable<EditorialViewModel> loadDownloadModels(EditorialViewModel editorialViewModel) {

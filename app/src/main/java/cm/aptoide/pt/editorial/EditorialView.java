@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorial;
 
-import cm.aptoide.pt.comments.refactor.CommentsView;
+import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
 import cm.aptoide.pt.presenter.View;
 import rx.Observable;
 
@@ -9,6 +9,8 @@ import rx.Observable;
  */
 
 public interface EditorialView extends View {
+
+  Observable<Object> reachesBottom();
 
   void showLoading();
 
@@ -50,7 +52,6 @@ public interface EditorialView extends View {
 
   Observable<Void> snackLoginClick();
 
-  CommentsView getCommentsView();
-
-  void populateCardContent(EditorialViewModel editorialViewModel);
+  void populateCardContent(EditorialViewModel editorialViewModel,
+      CommentsResponseModel commentsResponseModel);
 }

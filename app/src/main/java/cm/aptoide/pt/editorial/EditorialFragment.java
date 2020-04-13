@@ -25,11 +25,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.comments.refactor.CommentsView;
+import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.epoxy.EditorialController;
 import cm.aptoide.pt.editorial.epoxy.ReactionConfiguration;
@@ -46,6 +47,7 @@ import com.airbnb.epoxy.EpoxyRecyclerView;
 import com.airbnb.epoxy.EpoxyVisibilityTracker;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
 import javax.inject.Inject;
@@ -95,7 +97,6 @@ public class EditorialFragment extends NavigationTrackFragment
   private ImageView resumeDownload;
   private View downloadControlsLayout;
   private RelativeLayout cardInfoLayout;
-  private CommentsView commentsView;
 
   private DownloadModel.Action action;
   private Subscription errorMessageSubscription;
@@ -135,7 +136,6 @@ public class EditorialFragment extends NavigationTrackFragment
     if (actionBar != null) {
       actionBar.setDisplayHomeAsUpEnabled(true);
     }
-    commentsView = view.findViewById(R.id.comments_view);
     backArrow = toolbar.getNavigationIcon();
     appBarLayout = view.findViewById(R.id.app_bar_layout);
     appImage = view.findViewById(R.id.app_graphic);
@@ -154,7 +154,8 @@ public class EditorialFragment extends NavigationTrackFragment
     epoxyVisibilityTracker.attach(editorialItems);
     editorialController =
         new EditorialController(downloadEventListener, oneDecimalFormatter, reactionsModelPresenter,
-            themeManager);
+            themeManager, AptoideUtils.DateTimeU.getInstance(getContext()),
+            getString(R.string.comments_title_comments));
     editorialItems.setController(editorialController);
 
     cardInfoLayout = view.findViewById(R.id.card_info_install_layout);
@@ -277,6 +278,22 @@ public class EditorialFragment extends NavigationTrackFragment
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_editorial, container, false);
+  }
+
+  @Override public Observable<Object> reachesBottom() {
+    return RxRecyclerView.scrollEvents(editorialItems)
+        .map(scroll -> isEndReached())
+        .distinctUntilChanged()
+        .filter(isEnd -> isEnd)
+        .cast(Object.class);
+  }
+
+  private boolean isEndReached() {
+    LinearLayoutManager layoutManager = (LinearLayoutManager) editorialItems.getLayoutManager();
+    if (layoutManager == null) {
+      return false;
+    }
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition() <= 2;
   }
 
   @Override public void showLoading() {
@@ -421,10 +438,6 @@ public class EditorialFragment extends NavigationTrackFragment
     return snackListener;
   }
 
-  @Override public CommentsView getCommentsView() {
-    return commentsView;
-  }
-
   @Override public void populateView(EditorialViewModel editorialViewModel) {
     populateAppContent(editorialViewModel);
   }
@@ -479,13 +492,14 @@ public class EditorialFragment extends NavigationTrackFragment
     }
   }
 
-  @Override public void populateCardContent(EditorialViewModel editorialViewModel) {
+  @Override public void populateCardContent(EditorialViewModel editorialViewModel,
+      CommentsResponseModel commentsResponseModel) {
     if (editorialViewModel.hasContent()) {
       editorialItems.setVisibility(View.VISIBLE);
       editorialController.setData(editorialViewModel.getContentList(),
           editorialViewModel.shouldHaveAnimation(),
           new ReactionConfiguration(editorialViewModel.getCardId(), editorialViewModel.getGroupId(),
-              ReactionConfiguration.ReactionSource.CURATION_DETAIL));
+              ReactionConfiguration.ReactionSource.CURATION_DETAIL), commentsResponseModel);
     }
     setBottomAppCardInfo(editorialViewModel);
   }

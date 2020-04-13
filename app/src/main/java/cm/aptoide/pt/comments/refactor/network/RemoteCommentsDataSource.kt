@@ -31,7 +31,7 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
     return if (loadingComments) {
       Single.just(CommentsResponseModel(true))
     } else ListCommentsRequest(
-        ListCommentsRequest.Body(id, Order.desc, 3, offset, type),
+        ListCommentsRequest.Body(id, 5, Order.desc, 3, offset, type),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
         sharedPreferences).observe(invalidateHttpCache)
         .cast(ListComments::class.java)
@@ -41,7 +41,8 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
         .flatMapSingle { response ->
           if (response.isOk) {
             return@flatMapSingle Single.just(
-                CommentsResponseModel(mapComments(response.dataList.list), response.dataList.next))
+                CommentsResponseModel(mapComments(response.dataList.list), response.dataList.next,
+                    response.dataList.total))
           }
           return@flatMapSingle Single.error<CommentsResponseModel>(
               IllegalArgumentException(response.error.description))

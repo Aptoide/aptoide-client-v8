@@ -94,20 +94,12 @@
     android:id="@+id/editorial_items"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="8dp"
-    android:layout_marginLeft="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginRight="8dp"
-    android:paddingBottom="32dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-  <cm.aptoide.pt.comments.refactor.CommentsView
-    android:id="@+id/comments_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:visibility="gone" />
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="32dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
   <FrameLayout
     android:layout_width="match_parent"
