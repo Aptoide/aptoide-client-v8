@@ -128,7 +128,7 @@ public class RateAndReviewCommentWidget extends Widget<RateAndReviewCommentDispl
           if (accountManager.isLoggedIn()) {
             FragmentManager fm = context.getSupportFragmentManager();
             CommentDialogFragment commentDialogFragment =
-                CommentDialogFragment.newInstanceReview(review.getId(), appName);
+                CommentDialogFragment.newInstanceReviewReply(review.getId(), appName);
             commentDialogFragment.show(fm, "fragment_comment_dialog");
 
             return commentDialogFragment.lifecycle()

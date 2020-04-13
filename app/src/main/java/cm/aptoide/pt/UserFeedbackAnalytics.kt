@@ -12,12 +12,12 @@ class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
     var USER_FEEDBACK_EVENT_NAME: String = "user_feedback"
     var TYPE = "type"
     var CONTEXT = "context"
-    var COMMENT_LEVEL_1_TYPE = "comment_level_1"
-    var COMMENT_LEVEL_2_TYPE = "comment_level_2"
-    var RATE_TYPE = "rate"
-    var VOTE_UP_TYPE = "vote_up"
-    var VOTE_DOWN_TYPE = "vote_down"
-    var REACTION_TYPE = "reaction"
+    var TYPE_COMMENT_LEVEL_1 = "comment_level_1"
+    var TYPE_COMMENT_LEVEL_2 = "comment_level_2"
+    var TYPE_RATE = "rate"
+    var TYPE_VOTE_UP = "vote_up"
+    var TYPE_VOTE_DOWN = "vote_down"
+    var TYPE_REACTION = "reaction"
     var CONTEXT_APP = "app"
     var CONTEXT_STORES = "stores"
     var CONTEXT_EDITORIAL = "editorial"
@@ -31,19 +31,31 @@ class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
   }
 
   private fun sendFirstLevelCommentEvent(context: String) {
+    sendUserFeedbackEvent(context, TYPE_COMMENT_LEVEL_1)
+  }
+
+  private fun sendRatingEvent(context: String) {
+    sendUserFeedbackEvent(context, TYPE_RATE)
+  }
+
+  private fun sendUserFeedbackEvent(context: String, type: String) {
     val map = HashMap<String, Any>()
-    map[TYPE] = COMMENT_LEVEL_1_TYPE
+    map[TYPE] = type
     map[CONTEXT] = context
     analyticsManager.logEvent(map, USER_FEEDBACK_EVENT_NAME, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true))
   }
 
-  private fun sendRatingEvent(context: String) {
-    val map = HashMap<String, Any>()
-    map[TYPE] = RATE_TYPE
-    map[CONTEXT] = context
-    analyticsManager.logEvent(map, USER_FEEDBACK_EVENT_NAME, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true))
+  fun sendStoreCommentEvent() {
+    sendUserFeedbackEvent(CONTEXT_STORES, TYPE_COMMENT_LEVEL_1)
+  }
+
+  fun sendStoreCommentReplyEvent() {
+    sendUserFeedbackEvent(CONTEXT_STORES, TYPE_COMMENT_LEVEL_2)
+  }
+
+  fun sendAppReviewReplyComment() {
+    sendUserFeedbackEvent(CONTEXT_APP, TYPE_COMMENT_LEVEL_2)
   }
 
 }
