@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
@@ -64,6 +65,7 @@ public class HomePresenterTest {
   @Mock private AptoideAccountManager aptoideAccountManager;
   @Mock private Account account;
   @Mock private HomeAnalytics homeAnalytics;
+  @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
 
   private HomePresenter presenter;
   private HomeBundlesModel bundlesModel;

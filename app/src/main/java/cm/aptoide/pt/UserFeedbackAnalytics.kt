@@ -4,8 +4,8 @@ import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker
 import java.util.*
 
-class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
-                            val navigationTracker: NavigationTracker) {
+open class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
+                                 val navigationTracker: NavigationTracker) {
 
   companion object {
     @JvmField
@@ -66,7 +66,7 @@ class UserFeedbackAnalytics(val analyticsManager: AnalyticsManager,
     sendUserFeedbackEvent(CONTEXT_APP, TYPE_VOTE_DOWN)
   }
 
-  fun sendReactionEvent() {
+  open fun sendReactionEvent() {
     sendUserFeedbackEvent(CONTEXT_EDITORIAL, TYPE_REACTION);
   }
 
