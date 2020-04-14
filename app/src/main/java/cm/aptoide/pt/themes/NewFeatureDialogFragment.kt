@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cm.aptoide.pt.R
+import cm.aptoide.pt.feature.NewFeatureDialogPresenter
 import cm.aptoide.pt.view.fragment.BaseBottomSheetDialogView
 import com.jakewharton.rxbinding.view.RxView
 import kotlinx.android.synthetic.main.dialog_new_feature.*

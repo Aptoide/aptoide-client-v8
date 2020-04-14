@@ -86,6 +86,8 @@ import cm.aptoide.pt.editorialList.EditorialListPresenter;
 import cm.aptoide.pt.editorialList.EditorialListRepository;
 import cm.aptoide.pt.editorialList.EditorialListService;
 import cm.aptoide.pt.editorialList.EditorialListView;
+import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
+import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
@@ -153,10 +155,8 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.themes.NewFeatureDialogPresenter;
 import cm.aptoide.pt.themes.NewFeatureDialogView;
 import cm.aptoide.pt.themes.NewFeatureManager;
-import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -625,10 +625,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides NewFeatureDialogPresenter providesDarkthemeDialogPresenter(
-      NewFeatureManager newFeatureManager, ThemeManager themeManager,
-      ThemeAnalytics themeAnalytics) {
+      NewFeatureManager newFeatureManager) {
     return new NewFeatureDialogPresenter((NewFeatureDialogView) fragment, newFeatureManager,
-        themeManager, themeAnalytics);
+        new NoBehaviourNewFeatureListener());
   }
 
   @FragmentScope @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(
