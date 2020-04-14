@@ -22,7 +22,7 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
   @EpoxyAttribute
   var comment: Comment? = null
 
-  override fun bind(holder: CommentModel.CardHolder) {
+  override fun bind(holder: CardHolder) {
     comment?.let { c ->
       holder.username.text = c.user?.name
       c.user?.avatar?.let { a ->
@@ -30,7 +30,7 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
       }
       holder.body.text = c.message
       val dateDiff: String =
-          dateUtils?.getTimeDiffString(holder.itemView.context, c.date?.time ?: 0,
+          dateUtils?.getTimeDiffAll(holder.itemView.context, c.date?.time ?: 0,
               holder.itemView.context
                   .resources) ?: ""
       holder.timestamp.text = dateDiff

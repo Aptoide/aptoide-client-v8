@@ -32,14 +32,32 @@
     app:layout_constraintTop_toTopOf="parent"
     tools:text="10" />
 
-  <Spinner
-    android:id="@+id/comments_filter"
+  <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginRight="16dp"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent">
+
+    <Spinner
+      android:id="@+id/comments_filter"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:background="@color/transparent"
+      android:gravity="end"
+      android:paddingRight="25dp"
+      android:textAlignment="textEnd" />
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end|bottom"
+      android:contentDescription="@null"
+      android:paddingTop="13dp"
+      android:src="@drawable/ic_down_arrow"
+      android:tint="?attr/colorPrimaryDark" />
+
+  </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

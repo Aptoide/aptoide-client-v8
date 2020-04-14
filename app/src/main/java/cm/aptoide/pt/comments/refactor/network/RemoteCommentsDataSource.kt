@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody
 import cm.aptoide.pt.dataprovider.ws.v7.ListCommentsRequest
 import cm.aptoide.pt.dataprovider.ws.v7.Order
+import cm.aptoide.pt.editorial.epoxy.comments.CommentFilters
 import okhttp3.OkHttpClient
 import retrofit2.Converter
 import rx.Completable
@@ -26,12 +27,13 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
   private var loadingComments: Boolean = false
 
   private fun loadComments(id: Long, type: CommentType,
-                           invalidateHttpCache: Boolean,
+                           invalidateHttpCache: Boolean, filters: CommentFilters,
                            offset: Int): Single<CommentsResponseModel> {
     return if (loadingComments) {
-      Single.just(CommentsResponseModel(true))
+      Single.just(CommentsResponseModel(true, filters))
     } else ListCommentsRequest(
-        ListCommentsRequest.Body(id, 5, Order.desc, 3, offset, type),
+        ListCommentsRequest.Body(id, 5, Order.desc, 3, offset, type,
+            filters.getActiveFilter().value),
         bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
         sharedPreferences).observe(invalidateHttpCache)
         .cast(ListComments::class.java)
@@ -42,7 +44,7 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
           if (response.isOk) {
             return@flatMapSingle Single.just(
                 CommentsResponseModel(mapComments(response.dataList.list), response.dataList.next,
-                    response.dataList.total))
+                    response.dataList.total, filters))
           }
           return@flatMapSingle Single.error<CommentsResponseModel>(
               IllegalArgumentException(response.error.description))
@@ -82,25 +84,26 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
     return comments
   }
 
-  override fun loadComments(id: Long, type: CommentType,
+  override fun loadComments(id: Long, type: CommentType, filters: CommentFilters,
                             invalidateHttpCache: Boolean): Single<CommentsResponseModel> {
-    return loadComments(id, type, invalidateHttpCache, 0)
+    return loadComments(id, type, invalidateHttpCache, filters, 0)
   }
 
-  override fun loadFreshComments(id: Long, type: CommentType): Single<CommentsResponseModel> {
-    return loadComments(id, type, true)
+  override fun loadFreshComments(id: Long, type: CommentType,
+                                 filters: CommentFilters): Single<CommentsResponseModel> {
+    return loadComments(id, type, filters, true)
 
   }
 
-  override fun loadNextComments(id: Long, type: CommentType,
+  override fun loadNextComments(id: Long, type: CommentType, filters: CommentFilters,
                                 offset: Int): Single<CommentsResponseModel> {
-    return loadComments(id, type, false, offset)
+    return loadComments(id, type, false, filters, offset)
 
   }
 
   // TODO
   override fun loadReplies(commentId: Long, offset: Int): Single<CommentsResponseModel> {
-    return Single.just(CommentsResponseModel(false))
+    return Single.just(null)
   }
 
   // TODO

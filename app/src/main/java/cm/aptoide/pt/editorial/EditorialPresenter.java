@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.comments.refactor.CommentsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.editorial.epoxy.comments.CommentFilters;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import com.google.android.exoplayer2.util.Log;
@@ -64,10 +65,23 @@ public class EditorialPresenter implements Presenter {
   private Observable<EditorialViewModel> handleListReachBottom(
       EditorialViewModel editorialViewModel) {
     return view.reachesBottom()
-        .flatMapSingle(__ -> commentsManager.loadMoreComments(15, CommentType.STORE))
+        .flatMapSingle(__ -> commentsManager.loadMoreComments(15, CommentType.STORE,
+            getDefaultCommentFilters()))
         .doOnError(e -> Log.e("ERROR", e.getMessage()))
         .retry()
         .map(__ -> editorialViewModel);
+  }
+
+  private Observable<EditorialViewModel> handleFilterEventChange(
+      EditorialViewModel editorialViewModel) {
+    return view.filterEventChange()
+        .flatMapSingle(
+            e -> commentsManager.loadFreshComments(15, CommentType.STORE, e.getFilters()))
+        .map(__ -> editorialViewModel);
+  }
+
+  private CommentFilters getDefaultCommentFilters() {
+    return new CommentFilters(view.getLanguageFilters(), 1);
   }
 
   @VisibleForTesting public void firstLoad() {
@@ -90,12 +104,14 @@ public class EditorialPresenter implements Presenter {
             editorialViewModel -> Observable.mergeDelayError(observeEditorial(editorialViewModel),
                 handleClickOnAppCard(editorialViewModel), handleInstallClick(editorialViewModel),
                 pauseDownload(editorialViewModel), resumeDownload(editorialViewModel),
-                cancelDownload(editorialViewModel), handleListReachBottom(editorialViewModel))
+                cancelDownload(editorialViewModel), handleListReachBottom(editorialViewModel),
+                handleFilterEventChange(editorialViewModel))
                 .map(__ -> editorialViewModel));
   }
 
   public Observable<EditorialViewModel> observeEditorial(EditorialViewModel editorialViewModel) {
-    return Observable.combineLatest(commentsManager.observeComments(15, CommentType.STORE),
+    return Observable.combineLatest(
+        commentsManager.observeComments(15, CommentType.STORE, getDefaultCommentFilters()),
         observeDownloadModels(editorialViewModel),
         (comments, viewModel) -> new Pair<>(viewModel, comments))
         .observeOn(viewScheduler)

@@ -35,7 +35,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.epoxy.EditorialController;
 import cm.aptoide.pt.editorial.epoxy.ReactionConfiguration;
 import cm.aptoide.pt.editorial.epoxy.ReactionsModelPresenter;
+import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -50,6 +52,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.jakewharton.rxbinding.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding.view.RxView;
 import java.text.DecimalFormat;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -502,6 +505,14 @@ public class EditorialFragment extends NavigationTrackFragment
               ReactionConfiguration.ReactionSource.CURATION_DETAIL), commentsResponseModel);
     }
     setBottomAppCardInfo(editorialViewModel);
+  }
+
+  @Override public Observable<ChangeFilterEvent> filterEventChange() {
+    return editorialController.getFilterChangedEventSubject();
+  }
+
+  @Override public List<LanguageFilterHelper.LanguageFilter> getLanguageFilters() {
+    return new LanguageFilterHelper(getContext().getResources()).getLanguageFilterList();
   }
 
   private void setButtonText(DownloadModel model) {

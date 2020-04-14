@@ -1,7 +1,10 @@
 package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
+import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent;
 import cm.aptoide.pt.presenter.View;
+import cm.aptoide.pt.reviews.LanguageFilterHelper;
+import java.util.List;
 import rx.Observable;
 
 /**
@@ -54,4 +57,8 @@ public interface EditorialView extends View {
 
   void populateCardContent(EditorialViewModel editorialViewModel,
       CommentsResponseModel commentsResponseModel);
+
+  Observable<ChangeFilterEvent> filterEventChange();
+
+  List<LanguageFilterHelper.LanguageFilter> getLanguageFilters();
 }
