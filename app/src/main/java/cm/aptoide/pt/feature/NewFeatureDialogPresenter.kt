@@ -1,12 +1,13 @@
-package cm.aptoide.pt.themes
+package cm.aptoide.pt.feature
 
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
+import cm.aptoide.pt.themes.NewFeatureDialogView
+import cm.aptoide.pt.themes.NewFeatureManager
 
-class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
-                               val newFeatureManager: NewFeatureManager,
-                               val themeManager: ThemeManager,
-                               val themeAnalytics: ThemeAnalytics) : Presenter {
+class NewFeatureDialogPresenter(val view: NewFeatureDialogView,
+                                private val newFeatureManager: NewFeatureManager,
+                                private val newFeatureListener: NewFeatureListener) : Presenter {
 
   override fun present() {
     handleDialogShown()
@@ -31,10 +32,7 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .flatMap { view.clickTurnItOn() }
         .doOnNext {
           view.dismissView()
-          themeManager.setThemeOption(ThemeManager.ThemeOption.DARK)
-          themeManager.resetToBaseTheme()
-          themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode())
-          themeAnalytics.sendDarkThemeDialogTurnItOnClickEvent("HomeFragment")
+          newFeatureListener.onActivateFeature()
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {})
@@ -46,7 +44,7 @@ class DarkThemeDialogPresenter(val view: DarkThemeDialogView,
         .flatMap { view.clickDismiss() }
         .doOnNext {
           view.dismissView()
-          themeAnalytics.sendDarkThemeDismissClickEvent("HomeFragment")
+          newFeatureListener.onDismiss()
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, {})
