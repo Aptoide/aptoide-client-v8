@@ -58,6 +58,7 @@ public class RoomStorePersistence implements StorePersistence {
   }
 
   @Override public Completable saveAll(List<RoomStore> stores) {
-    return Completable.fromAction(() -> storeDao.saveAll(stores));
+    return Completable.fromAction(() -> storeDao.saveAll(stores))
+        .subscribeOn(Schedulers.io());
   }
 }

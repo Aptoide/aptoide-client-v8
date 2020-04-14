@@ -999,8 +999,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides RealmStoreMigrator providesStoreRealmMigrator(
-      StorePersistence storePersistence, StoreRepository storeRepository) {
-    return new RealmStoreMigrator(storePersistence, storeRepository);
+      StorePersistence storePersistence, StoreRepository storeRepository,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new RealmStoreMigrator(storePersistence, storeRepository, defaultSharedPreferences);
   }
 
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
@@ -1043,7 +1044,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
     return Room.databaseBuilder(getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
+        .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
         .build();
+  }
+
+  private int[] getSQLiteIntArrayVersions() {
+    int minSQLiteVersion = 0;
+    int maxSQLiteVersion = 60;
+    int count = maxSQLiteVersion - minSQLiteVersion + 1;
+    int[] SQLiteVersions = new int[count];
+    for (int i = minSQLiteVersion; i <= maxSQLiteVersion; i++) {
+      SQLiteVersions[i - minSQLiteVersion] = i;
+    }
+    return SQLiteVersions;
   }
 
   @Singleton @Provides RoomEventPersistence providesRoomEventPersistence(
