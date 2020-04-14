@@ -105,21 +105,21 @@ class WalletInstallActivity : ActivityView(), WalletInstallView {
   }
 
   override fun showInstallationSuccessView() {
-    showSuccessView(getString(R.string.wallet_install_complete_title),
-        getString(R.string.wallet_install_complete_body))
+    install_complete_message.visibility = View.INVISIBLE
+    showSuccessView(getString(R.string.wallet_install_complete_title))
   }
 
   override fun showWalletInstalledAlreadyView() {
-    showSuccessView(getString(R.string.wallet_install_request_already_installed_title),
-        getString(R.string.wallet_install_request_already_installed_body))
+    install_complete_message.text =
+        getString(R.string.wallet_install_request_already_installed_body)
+    showSuccessView(getString(R.string.wallet_install_request_already_installed_title))
   }
 
-  private fun showSuccessView(title: String, body: String) {
+  private fun showSuccessView(title: String) {
     app_icon_imageview.setImageDrawable(
-        getResources().getDrawable(R.drawable.ic_check_orange_gradient_start))
+        resources.getDrawable(R.drawable.ic_check_orange_gradient_start))
     message_textview.text = title
     message_textview.setSubstringTypeface(Pair(title, Typeface.BOLD))
-    install_complete_message.text = body
     progress_view.visibility = View.GONE
     wallet_install_success_view_group.visibility = View.VISIBLE
     close_button.visibility = View.VISIBLE
