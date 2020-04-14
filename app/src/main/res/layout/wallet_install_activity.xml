@@ -81,7 +81,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/message_textview"
-      tools:text="Just tap to buy again"
+      tools:text="Already installed lorem ipsum"
       />
 
   <Button
@@ -92,7 +92,7 @@
       android:layout_marginEnd="16dp"
       android:layout_marginRight="16dp"
       android:layout_marginBottom="8dp"
-      android:text="@string/got_it_button_text"
+      android:text="@string/continue_button"
       android:visibility="gone"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
