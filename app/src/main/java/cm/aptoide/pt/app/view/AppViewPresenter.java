@@ -1119,7 +1119,10 @@ public class AppViewPresenter implements Presenter {
               }
               return completable;
             })
-            .doOnError(throwable -> throwable.printStackTrace())
+            .doOnError(throwable -> {
+              crashReport.log(throwable);
+              view.showGenericErrorDialog();
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {

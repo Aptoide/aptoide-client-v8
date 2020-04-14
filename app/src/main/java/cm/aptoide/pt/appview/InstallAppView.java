@@ -28,4 +28,6 @@ public interface InstallAppView extends View {
   Observable<DownloadModel.Action> resumeDownload();
 
   Observable<Void> cancelDownload();
+
+  void showGenericErrorDialog();
 }
