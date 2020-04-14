@@ -28,7 +28,11 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
       c.user?.avatar?.let { a ->
         ImageLoader.with(holder.itemView.context).loadUsingCircleTransform(a, holder.avatar)
       }
+      holder.body.maxLines = 4
       holder.body.text = c.message
+      holder.body.setOnClickListener {
+        holder.body.maxLines = Integer.MAX_VALUE
+      }
       val dateDiff: String =
           dateUtils?.getTimeDiffAll(holder.itemView.context, c.date?.time ?: 0,
               holder.itemView.context

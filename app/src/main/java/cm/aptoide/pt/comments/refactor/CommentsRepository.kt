@@ -59,7 +59,7 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
           if (!cached.hasMore()) {
             return@flatMap Single.just(cached)
           }
-          return@flatMap dataSource.loadNextComments(id, type, defaultFilters, offset)
+          return@flatMap dataSource.loadNextComments(id, type, cached.filters, offset)
               .map { next ->
                 val comments = mergeComments(cached, next)
                 cache[cacheKey]?.onNext(comments)
