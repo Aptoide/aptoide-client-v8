@@ -26,7 +26,5 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
   @Insert(onConflict = REPLACE) void insert(RoomStore store);
 
-  @Query("SELECT COUNT(*) FROM store") Observable<Long> countAll();
-
   @Insert(onConflict = REPLACE) void saveAll(List<RoomStore> storeList);
 }

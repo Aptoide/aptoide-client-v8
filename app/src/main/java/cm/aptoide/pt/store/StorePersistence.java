@@ -19,7 +19,5 @@ public interface StorePersistence {
 
   Observable<Boolean> isSubscribed(long storeId);
 
-  Observable<Long> countAll();
-
   Completable saveAll(List<RoomStore> stores);
 }

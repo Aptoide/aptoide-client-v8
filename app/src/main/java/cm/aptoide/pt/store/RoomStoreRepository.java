@@ -18,10 +18,6 @@ public class RoomStoreRepository {
     return storePersistence.isSubscribed(storeId);
   }
 
-  public Observable<Long> count() {
-    return storePersistence.countAll();
-  }
-
   public Observable<List<RoomStore>> getAll() {
     return storePersistence.getAll();
   }
@@ -45,8 +41,4 @@ public class RoomStoreRepository {
   public Completable remove(String storeName) {
     return storePersistence.remove(storeName);
   }
-
-  /*public Observable<RoomStore> getByName(String storeName) {
-    return storePersistence.get(storeName);
-  }*/
 }

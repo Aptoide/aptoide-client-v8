@@ -23,7 +23,6 @@ import rx.functions.Action1;
  */
 
 public class RecommendedStoresFragment extends GetStoreEndlessFragment<ListStores> {
-  //// TODO(pedro): 19/07/17 More recommended store events here
 
   @Inject StoreCredentialsProvider storeCredentialsProvider;
   @Inject RoomStoreRepository storeRepository;

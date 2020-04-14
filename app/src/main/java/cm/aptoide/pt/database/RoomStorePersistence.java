@@ -52,11 +52,6 @@ public class RoomStorePersistence implements StorePersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<Long> countAll() {
-    return RxJavaInterop.toV1Observable(storeDao.countAll(), BackpressureStrategy.BUFFER)
-        .subscribeOn(Schedulers.io());
-  }
-
   @Override public Completable saveAll(List<RoomStore> stores) {
     return Completable.fromAction(() -> storeDao.saveAll(stores))
         .subscribeOn(Schedulers.io());
