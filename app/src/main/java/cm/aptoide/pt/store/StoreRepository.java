@@ -1,4 +1,4 @@
-package cm.aptoide.pt.repository;
+package cm.aptoide.pt.store;
 
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
