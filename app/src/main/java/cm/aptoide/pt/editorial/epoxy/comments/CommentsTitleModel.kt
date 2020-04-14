@@ -63,7 +63,7 @@ abstract class CommentsTitleModel : EpoxyModelWithHolder<CommentsTitleModel.Card
     val adapter =
         ArrayAdapter(context, R.layout.simple_language_spinner_item,
             createSpinnerAdapterRowsList(filters, context.resources))
-    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    adapter.setDropDownViewResource(R.layout.simple_dropdown_language_item)
     return adapter
   }
 
