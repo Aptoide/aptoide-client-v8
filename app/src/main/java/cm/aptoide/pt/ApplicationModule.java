@@ -329,7 +329,6 @@ import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.UI_MODE_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
@@ -357,12 +356,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
-    return new ForegroundManager(getApplicationContext());
+    return new ForegroundManager(application.getApplicationContext());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
       InstallerAnalytics installerAnalytics) {
-    return new RootInstallerProvider(installerAnalytics, getApplicationContext().getPackageName());
+    return new RootInstallerProvider(installerAnalytics, application.getApplicationContext()
+        .getPackageName());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -687,7 +687,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(
       @Named("default") SharedPreferences defaultSharedPreferences) {
-    return SecurePreferencesImplementation.getInstance(getApplicationContext(),
+    return SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
         defaultSharedPreferences);
   }
 
@@ -1043,7 +1043,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
-    return Room.databaseBuilder(getApplicationContext(), AptoideDatabase.class,
+    return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
         .build();
@@ -1625,7 +1625,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         storeCredentialsProvider, idsRepository,
-        AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        AdNetworkUtils.isGooglePlayServicesAvailable(application.getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
@@ -2044,7 +2044,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
-    return new CaptionBackgroundPainter(getApplicationContext().getResources());
+    return new CaptionBackgroundPainter(application.getApplicationContext()
+        .getResources());
   }
 
   @Singleton @Provides AptoideMd5Manager providesAptoideMd5Manager(
