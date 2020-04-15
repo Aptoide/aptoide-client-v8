@@ -75,6 +75,19 @@ public class AppsPresenter implements Presenter {
     handleRefreshApps();
 
     handleAppcoinsMigrationUpgradeClick();
+
+    handleInstalledWithAptoideAbTestImpression();
+  }
+
+  private void handleInstalledWithAptoideAbTestImpression() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(__ -> appsManager.getUpdatesList())
+        .first()
+        .flatMapCompletable(__ -> appsManager.sendInstalledWithAptoideImpression())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, error -> crashReport.log(error));
   }
 
   private void handleAppcoinsMigrationUpgradeClick() {
