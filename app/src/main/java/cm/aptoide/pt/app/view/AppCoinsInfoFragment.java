@@ -61,6 +61,7 @@ public class AppCoinsInfoFragment extends BackButtonFragment
   private Button bottomInstallButton;
   private Button catappultDevButton;
   private NestedScrollView scrollView;
+  private TextView appcMessageAppCoinsSection1;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -79,10 +80,18 @@ public class AppCoinsInfoFragment extends BackButtonFragment
 
     youtubePlayer = view.findViewById(R.id.youtube_player);
 
-    setupTextView(R.drawable.ic_get_appc, getString(R.string.appc_info_view_body_3),
-        appcMessageAppcoinsSection3);
-    setupTextView(R.drawable.ic_spend_appc, getString(R.string.appc_info_view_title_5),
-        appcMessageAppcoinsSection4);
+    String format = "<img width='24px' height='20px' src=\"%1$s\"/>";
+    final String getAppcoinsLogo = String.format(format, R.drawable.ic_get_appc);
+    final String spendAppcoinsLogo = String.format(format, R.drawable.ic_spend_appc);
+
+    setupTextView(getString(R.string.appc_info_view_body_3), appcMessageAppcoinsSection3,
+        getAppcoinsLogo);
+    setupTextView(getString(R.string.appc_info_view_title_5_variable), appcMessageAppcoinsSection4,
+        "25", spendAppcoinsLogo);
+
+    appcMessageAppCoinsSection1 = view.findViewById(R.id.appc_message_appcoins_section_1);
+    appcMessageAppCoinsSection1.setText(
+        String.format(getString(R.string.appc_info_view_body_1_variable), "25"));
 
     appCardViewLayout = view.findViewById(R.id.app_card_layout);
     appCardView = appCardViewLayout.findViewById(R.id.app_cardview);
@@ -145,11 +154,9 @@ public class AppCoinsInfoFragment extends BackButtonFragment
     super.onDestroyView();
   }
 
-  private void setupTextView(int image, String text, TextView appcMessageAppcoinsSection) {
-    final String spendGetAppcoinsLogo =
-        String.format("<img width='24px' height='20px' src=\"%1$s\"/>", image);
-    final String formatedText = String.format(text, spendGetAppcoinsLogo);
-    appcMessageAppcoinsSection.setText(Html.fromHtml(formatedText, getImageGetter(), null));
+  private void setupTextView(String text, TextView appcMessageAppcoinsSection, Object... args) {
+    appcMessageAppcoinsSection.setText(
+        Html.fromHtml(String.format(text, args), getImageGetter(), null));
   }
 
   private void setupToolbar() {

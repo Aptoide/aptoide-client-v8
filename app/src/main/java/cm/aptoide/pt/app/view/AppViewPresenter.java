@@ -67,6 +67,7 @@ public class AppViewPresenter implements Presenter {
   private final CrashReport crashReport;
   private final ApkfyExperiment apkfyExperiment;
   private final ExternalNavigator externalNavigator;
+  private boolean openTypeAlreadyRegistered = false;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
       AppViewAnalytics appViewAnalytics, CampaignAnalytics campaignAnalytics,
@@ -310,16 +311,19 @@ public class AppViewPresenter implements Presenter {
   }
 
   private Observable<Boolean> handleOpenAppViewDialogInput(AppModel appModel) {
-    if (appModel.getOpenType() == AppViewFragment.OpenType.OPEN_AND_INSTALL) {
-      return Observable.just(true);
-    } else if (appModel.getOpenType() == AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
-      return view.showOpenAndInstallDialog(appModel.getMarketName(), appModel.getAppName())
-          .map(__ -> true);
-    } else if (appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
-      return view.showOpenAndInstallApkFyDialog(appModel.getMarketName(), appModel.getAppName(),
-          appModel.getAppc(), appModel.getRating()
-              .getAverage(), appModel.getIcon(), appModel.getPackageDownloads())
-          .map(__ -> true);
+    if (!openTypeAlreadyRegistered) {
+      openTypeAlreadyRegistered = true;
+      if (appModel.getOpenType() == AppViewFragment.OpenType.OPEN_AND_INSTALL) {
+        return Observable.just(true);
+      } else if (appModel.getOpenType() == AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP) {
+        return view.showOpenAndInstallDialog(appModel.getMarketName(), appModel.getAppName())
+            .map(__ -> true);
+      } else if (appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
+        return view.showOpenAndInstallApkFyDialog(appModel.getMarketName(), appModel.getAppName(),
+            appModel.getAppc(), appModel.getRating()
+                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads())
+            .map(__ -> true);
+      }
     }
     return Observable.just(false);
   }

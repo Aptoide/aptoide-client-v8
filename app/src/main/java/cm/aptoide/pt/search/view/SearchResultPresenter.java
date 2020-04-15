@@ -205,8 +205,16 @@ import rx.schedulers.Schedulers;
         .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataFromFollowedStores(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset()))
+        .flatMapSingle(viewModel -> {
+          String storeName = viewModel.getStoreName();
+          if (storeName != null && !storeName.trim()
+              .equals("")) {
+            return loadDataForSpecificStore(viewModel.getSearchQueryModel()
+                .getFinalQuery(), storeName, viewModel.getFollowedStoresOffset());
+          }
+          return loadDataFromFollowedStores(viewModel.getSearchQueryModel()
+              .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset());
+        })
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
