@@ -1,8 +1,9 @@
 package cm.aptoide.pt.account;
 
 import cm.aptoide.accountmanager.Store;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -10,11 +11,12 @@ import rx.Single;
 
 public class DatabaseStoreDataPersist {
 
-  private final StoreAccessor accessor;
   private final DatabaseStoreMapper databaseStoreMapper;
+  private final RoomStoreRepository storeRepository;
 
-  public DatabaseStoreDataPersist(StoreAccessor accessor, DatabaseStoreMapper databaseStoreMapper) {
-    this.accessor = accessor;
+  public DatabaseStoreDataPersist(DatabaseStoreMapper databaseStoreMapper,
+      RoomStoreRepository storeRepository) {
+    this.storeRepository = storeRepository;
     this.databaseStoreMapper = databaseStoreMapper;
   }
 
@@ -22,12 +24,12 @@ public class DatabaseStoreDataPersist {
     return Observable.from(stores)
         .map(store -> databaseStoreMapper.toDatabase(store))
         .toList()
-        .doOnNext(storeList -> accessor.insertAll(storeList))
+        .flatMapCompletable(storeList -> storeRepository.saveAll(storeList))
         .toCompletable();
   }
 
   public Single<List<Store>> get() {
-    return accessor.getAll()
+    return storeRepository.getAll()
         .first()
         .flatMapIterable(list -> list)
         .map(store -> databaseStoreMapper.fromDatabase(store))
@@ -41,8 +43,8 @@ public class DatabaseStoreDataPersist {
 
   public static class DatabaseStoreMapper {
 
-    public cm.aptoide.pt.database.realm.Store toDatabase(Store store) {
-      cm.aptoide.pt.database.realm.Store result = new cm.aptoide.pt.database.realm.Store();
+    public RoomStore toDatabase(Store store) {
+      RoomStore result = new RoomStore();
       result.setDownloads(store.getDownloadCount());
       result.setIconPath(store.getAvatar());
       result.setStoreId(store.getId());
@@ -53,7 +55,7 @@ public class DatabaseStoreDataPersist {
       return result;
     }
 
-    public Store fromDatabase(cm.aptoide.pt.database.realm.Store store) {
+    public Store fromDatabase(RoomStore store) {
       return new Store(store.getDownloads(), store.getIconPath(), store.getStoreId(),
           store.getStoreName(), store.getTheme(), store.getUsername(), store.getPasswordSha1(),
           true);

@@ -31,8 +31,6 @@ import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.comments.CommentNode;
 import cm.aptoide.pt.comments.ComplexComment;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
@@ -49,7 +47,6 @@ import cm.aptoide.pt.navigator.ActivityResultNavigator;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.CommentOperations;
@@ -90,6 +87,7 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
   @Inject ThemeManager themeManager;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   //
   // vars
   //
@@ -108,7 +106,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
   private AptoideAccountManager accountManager;
   private AccountNavigator accountNavigator;
   private BodyInterceptor<BaseBody> bodyDecorator;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private TokenInvalidator tokenInvalidator;
@@ -135,9 +132,6 @@ public class CommentListFragment extends GridRecyclerSwipeFragment
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     tokenInvalidator = application.getTokenInvalidator();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     httpClient = application.getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     super.onCreate(savedInstanceState);

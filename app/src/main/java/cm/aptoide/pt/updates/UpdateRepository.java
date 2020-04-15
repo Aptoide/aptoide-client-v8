@@ -3,7 +3,6 @@ package cm.aptoide.pt.updates;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -14,6 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -33,7 +33,7 @@ public class UpdateRepository {
 
   private final IdsRepository idsRepository;
   private final UpdatePersistence updatePersistence;
-  private final StoreAccessor storeAccessor;
+  private final RoomStoreRepository storeRepository;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -43,14 +43,14 @@ public class UpdateRepository {
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
 
-  public UpdateRepository(UpdatePersistence updatePersistence, StoreAccessor storeAccessor,
+  public UpdateRepository(UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
       PackageManager packageManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
       UpdateMapper updateMapper) {
     this.updatePersistence = updatePersistence;
-    this.storeAccessor = storeAccessor;
+    this.storeRepository = storeRepository;
     this.idsRepository = idsRepository;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -63,7 +63,7 @@ public class UpdateRepository {
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
-    return storeAccessor.getAll()
+    return storeRepository.getAll()
         .first()
         .observeOn(Schedulers.io())
         .flatMap(stores -> Observable.from(stores)
