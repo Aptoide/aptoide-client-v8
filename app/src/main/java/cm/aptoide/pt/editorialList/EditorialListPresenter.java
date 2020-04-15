@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorialList;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
 import cm.aptoide.pt.presenter.Presenter;
@@ -21,11 +22,13 @@ public class EditorialListPresenter implements Presenter {
   private final EditorialListAnalytics editorialListAnalytics;
   private final CrashReport crashReporter;
   private final Scheduler viewScheduler;
+  private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public EditorialListPresenter(EditorialListView editorialListView,
       EditorialListManager editorialListManager, AptoideAccountManager accountManager,
       EditorialListNavigator editorialListNavigator, EditorialListAnalytics editorialListAnalytics,
-      CrashReport crashReporter, Scheduler viewScheduler) {
+      CrashReport crashReporter, Scheduler viewScheduler,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     this.view = editorialListView;
     this.editorialListManager = editorialListManager;
     this.accountManager = accountManager;
@@ -33,6 +36,7 @@ public class EditorialListPresenter implements Presenter {
     this.editorialListAnalytics = editorialListAnalytics;
     this.crashReporter = crashReporter;
     this.viewScheduler = viewScheduler;
+    this.userFeedbackAnalytics = userFeedbackAnalytics;
   }
 
   @Override public void present() {
@@ -242,6 +246,7 @@ public class EditorialListPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
+        .doOnNext(__ -> userFeedbackAnalytics.sendReactionEvent())
         .flatMap(
             reactionsHomeEvent -> editorialListManager.setReaction(reactionsHomeEvent.getCardId(),
                 reactionsHomeEvent.getGroupId(), reactionsHomeEvent.getReaction())

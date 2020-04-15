@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.app.AppNavigator;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.comments.ListFullReviewsSuccessRequestListener;
@@ -67,6 +68,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject MarketResourceFormatter marketResourceFormatter;
   @Inject ThemeManager themeManager;
   @Inject DialogUtils dialogUtils;
+  @Inject UserFeedbackAnalytics userFeedbackAnalytics;
   private SharedPreferences preferences;
   private long reviewId;
   private String storeName;
@@ -248,8 +250,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
                     ((AptoideApplication) getContext().getApplicationContext()
                         .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator,
-                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()),
-            (throwable) -> throwable.printStackTrace());
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
+                userFeedbackAnalytics), (throwable) -> throwable.printStackTrace());
 
     endlessRecyclerOnScrollListener.addOnEndlessFinishListener(endlessRecyclerOnScrollListener1 -> {
       if (languageFilter.hasMoreCountryCodes()) {

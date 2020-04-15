@@ -1806,6 +1806,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new MoPubAnalytics();
   }
 
+  @Singleton @Provides UserFeedbackAnalytics providesUserFeedbackAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
+    return new UserFeedbackAnalytics(analyticsManager, navigationTracker);
+  }
+
   @Singleton @Provides @Named("flurryEvents") Collection<String> provideFlurryEvents() {
     List<String> flurryEvents = new LinkedList<>(Arrays.asList(InstallAnalytics.APPLICATION_INSTALL,
         DownloadAnalytics.EDITORS_CHOICE_DOWNLOAD_COMPLETE_EVENT_NAME,
@@ -1859,7 +1864,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.APPC_SIMILAR_APP_INTERACT, AppViewAnalytics.BONUS_MIGRATION_APPVIEW,
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
-        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT);
+        AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
+        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

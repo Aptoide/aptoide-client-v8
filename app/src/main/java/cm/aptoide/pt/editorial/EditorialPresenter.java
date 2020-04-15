@@ -1,6 +1,7 @@
 package cm.aptoide.pt.editorial;
 
 import androidx.annotation.VisibleForTesting;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -29,11 +30,12 @@ public class EditorialPresenter implements Presenter {
   private final CrashReport crashReporter;
   private final EditorialAnalytics editorialAnalytics;
   private final EditorialNavigator editorialNavigator;
+  private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
       Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
       PermissionService permissionService, EditorialAnalytics editorialAnalytics,
-      EditorialNavigator editorialNavigator) {
+      EditorialNavigator editorialNavigator, UserFeedbackAnalytics userFeedbackAnalytics) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
@@ -42,6 +44,7 @@ public class EditorialPresenter implements Presenter {
     this.permissionService = permissionService;
     this.editorialAnalytics = editorialAnalytics;
     this.editorialNavigator = editorialNavigator;
+    this.userFeedbackAnalytics = userFeedbackAnalytics;
   }
 
   @Override public void present() {
@@ -426,6 +429,7 @@ public class EditorialPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(created -> view.reactionClicked())
+        .doOnNext(__ -> userFeedbackAnalytics.sendReactionEvent())
         .flatMap(reactionEvent -> editorialManager.setReaction(reactionEvent.getCardId(),
             reactionEvent.getGroupId(), reactionEvent.getReactionType())
             .toObservable()

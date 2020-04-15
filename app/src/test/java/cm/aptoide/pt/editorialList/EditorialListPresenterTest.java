@@ -2,6 +2,7 @@ package cm.aptoide.pt.editorialList;
 
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.home.bundles.editorial.EditorialHomeEvent;
@@ -32,6 +33,7 @@ public class EditorialListPresenterTest {
   @Mock EditorialListAnalytics editorialListAnalytics;
   @Mock CrashReport crashReporter;
   @Mock Account account;
+  @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
   private EditorialListPresenter presenter;
   private EditorialListViewModel successEditorialViewModel;
   private EditorialListViewModel loadingEditorialViewModel;
@@ -68,7 +70,8 @@ public class EditorialListPresenterTest {
     snackLoginEvent = PublishSubject.create();
 
     presenter = new EditorialListPresenter(view, editorialListManager, accountManager,
-        editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate());
+        editorialListNavigator, editorialListAnalytics, crashReporter, Schedulers.immediate(),
+        userFeedbackAnalytics);
     CurationCard curationCard =
         new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56", "");
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);

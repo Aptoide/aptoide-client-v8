@@ -10,6 +10,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
+import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -125,4 +126,6 @@ public interface FragmentComponent {
   void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
 
   void inject(NewFeatureDialogFragment newFeatureDialogFragment);
+
+  void inject(CommentDialogFragment commentDialogFragment);
 }
