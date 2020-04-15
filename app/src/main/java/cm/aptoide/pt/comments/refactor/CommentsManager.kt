@@ -6,7 +6,7 @@ import cm.aptoide.pt.editorial.epoxy.comments.CommentFilters
 import rx.Observable
 import rx.Single
 
-class CommentsManager(val repository: CommentsRepository) {
+open class CommentsManager(val repository: CommentsRepository) {
 
   fun observeComments(id: Long, type: CommentType,
                       defaultFilters: CommentFilters): Observable<CommentsResponseModel> {
