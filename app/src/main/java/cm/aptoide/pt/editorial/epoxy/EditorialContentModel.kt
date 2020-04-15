@@ -86,32 +86,6 @@ abstract class EditorialContentModel : EpoxyModelWithHolder<EditorialContentMode
     }
   }
 
-  override fun unbind(holder: CardHolder) {
-    shouldAnimate?.let { animate ->
-      if (animate) {
-        bottomCardVisibilityChange?.onNext(true)
-      }
-    }
-    super.unbind(holder)
-  }
-
-  override fun onVisibilityChanged(percentVisibleHeight: Float, percentVisibleWidth: Float,
-                                   visibleHeight: Int, visibleWidth: Int, holder: CardHolder) {
-    var isVisible = isVisible(holder, visibleHeight.toFloat(), visibleWidth.toFloat())
-    shouldAnimate?.let { animate ->
-      if (animate && isVisible != isSoloCardVisible) {
-        if (isVisible) {
-          bottomCardVisibilityChange?.onNext(false)
-        } else {
-          bottomCardVisibilityChange?.onNext(true)
-        }
-        isSoloCardVisible = isVisible
-      }
-    }
-    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
-        visibleWidth, holder)
-  }
-
   private fun setDownloadModel(holder: CardHolder, downloadModel: EditorialDownloadModel?) {
     val resources = holder.itemView.resources
     downloadModel?.let { model ->
@@ -341,11 +315,38 @@ abstract class EditorialContentModel : EpoxyModelWithHolder<EditorialContentMode
     }
   }
 
+  override fun unbind(holder: CardHolder) {
+    shouldAnimate?.let { animate ->
+      if (animate && editorialContent?.hasApp() == true) {
+        bottomCardVisibilityChange?.onNext(true)
+      }
+    }
+    super.unbind(holder)
+  }
+
+  override fun onVisibilityChanged(percentVisibleHeight: Float, percentVisibleWidth: Float,
+                                   visibleHeight: Int, visibleWidth: Int, holder: CardHolder) {
+    super.onVisibilityChanged(percentVisibleHeight, percentVisibleWidth, visibleHeight,
+        visibleWidth, holder)
+    shouldAnimate?.let { animate ->
+      var isVisible = isVisible(holder, visibleHeight.toFloat(), visibleWidth.toFloat())
+      if (animate && isSoloCardVisible != isVisible && editorialContent?.hasApp() == true) {
+        if (isVisible) {
+          bottomCardVisibilityChange?.onNext(false)
+        } else {
+          bottomCardVisibilityChange?.onNext(true)
+        }
+        isSoloCardVisible = isVisible
+      }
+    }
+
+  }
+
   open fun isVisible(holder: CardHolder, screenHeight: Float, screenWidth: Float): Boolean {
     val placeHolderPosition = Rect()
     holder.appCardLayout.getLocalVisibleRect(placeHolderPosition)
     val screen = Rect(0, 0, screenWidth.toInt(),
-        screenHeight.toInt() - holder.appCardLayout.height * 2)
+        screenHeight.toInt() + holder.appCardLayout.height)
     return placeHolderPosition.intersect(screen)
   }
 
