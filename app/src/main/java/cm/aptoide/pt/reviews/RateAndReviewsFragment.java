@@ -22,8 +22,6 @@ import cm.aptoide.pt.comments.view.ItemCommentAdderView;
 import cm.aptoide.pt.comments.view.RateAndReviewCommentDisplayable;
 import cm.aptoide.pt.comments.view.SimpleReviewCommentAdder;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -38,7 +36,6 @@ import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.dialog.DialogUtils;
@@ -68,6 +65,7 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   @Inject ThemeManager themeManager;
   @Inject DialogUtils dialogUtils;
   @Inject InstalledRepository installedRepository;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   @Inject UserFeedbackAnalytics userFeedbackAnalytics;
   private SharedPreferences preferences;
   private long reviewId;
@@ -78,7 +76,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
   private String storeTheme;
   private MenuItem installMenuItem;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -244,11 +241,8 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
     getRecyclerView().removeOnScrollListener(endlessRecyclerOnScrollListener);
     endlessRecyclerOnScrollListener =
         new EndlessRecyclerOnScrollListener(this.getAdapter(), reviewsRequest,
-            new ListFullReviewsSuccessRequestListener(this, new StoreCredentialsProviderImpl(
-                AccessorFactory.getAccessorFor(
-                    ((AptoideApplication) getContext().getApplicationContext()
-                        .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
-                httpClient, converterFactory, tokenInvalidator,
+            new ListFullReviewsSuccessRequestListener(this, storeCredentialsProvider,
+                baseBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
                 ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
                 userFeedbackAnalytics), (throwable) -> throwable.printStackTrace());
 
@@ -290,9 +284,6 @@ public class RateAndReviewsFragment extends AptoideBaseFragment<CommentsAdapter>
         ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     converterFactory = WebService.getDefaultConverter();
     setHasOptionsMenu(true);

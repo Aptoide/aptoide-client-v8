@@ -30,11 +30,10 @@ import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -80,7 +79,7 @@ import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
@@ -184,6 +183,8 @@ public abstract class AptoideApplication extends Application {
   @Inject NewFeatureManager newFeatureManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  @Inject StoreCredentialsProvider storeCredentials;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
   @Inject NotificationAnalytics notificationAnalytics;
@@ -200,6 +201,7 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject ApkfyExperiment apkfyExperiment;
+  @Inject RealmStoreMigrator realmStoreMigrator;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -324,6 +326,10 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     startNotificationCleaner();
+
+    realmStoreMigrator.performMigration()
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
 
     rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRootAvailable -> {
@@ -693,25 +699,13 @@ public abstract class AptoideApplication extends Application {
 
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun() {
-    return Completable.defer(() -> {
-
-      final StoreCredentialsProviderImpl storeCredentials =
-          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
-
-      StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
-              storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),
-              defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-              getDefaultSharedPreferences());
-
-      return generateAptoideUuid().andThen(
-          setDefaultFollowedStores(storeCredentials, proxy).andThen(refreshUpdates())
-              .doOnError(err -> CrashReport.getInstance()
-                  .log(err)));
-    });
+    return Completable.defer(() -> generateAptoideUuid().andThen(
+        setDefaultFollowedStores(storeCredentials, storeUtilsProxy).andThen(refreshUpdates())
+            .doOnError(err -> CrashReport.getInstance()
+                .log(err))));
   }
 
-  private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
+  private Completable setDefaultFollowedStores(StoreCredentialsProvider storeCredentials,
       StoreUtilsProxy proxy) {
 
     return Observable.from(defaultFollowedStores)
@@ -919,6 +913,10 @@ public abstract class AptoideApplication extends Application {
 
   public SettingsManager getSettingsManager() {
     return settingsManager;
+  }
+
+  public StoreCredentialsProvider getStoreCredentials() {
+    return storeCredentials;
   }
 }
 

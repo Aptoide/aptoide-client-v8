@@ -8,6 +8,13 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     // This should be a property set in Java code by the user of this lib
     buildConfigField 'boolean', 'DELETE_DB', 'false'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation":
+                         "$projectDir/schemas".toString()]
+      }
+    }
   }
 
   buildTypes {

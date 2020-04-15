@@ -9,6 +9,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
+import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
@@ -25,7 +26,9 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.store.view.AddStoreDialog;
 import cm.aptoide.pt.store.view.ListStoresFragment;
+import cm.aptoide.pt.store.view.PrivateStoreDialog;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.TopStoresFragment;
@@ -135,4 +138,9 @@ public interface FragmentComponent {
 
   void inject(ExcludedUpdatesFragment excludedUpdatesFragment);
 
+  void inject(OtherVersionsFragment otherVersionsFragment);
+
+  void inject(AddStoreDialog addStoreDialog);
+
+  void inject(PrivateStoreDialog privateStoreDialog);
 }

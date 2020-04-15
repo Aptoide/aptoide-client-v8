@@ -14,18 +14,13 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.ActivityResultNavigator;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
@@ -33,7 +28,6 @@ import cm.aptoide.pt.view.recycler.displayable.DisplayablesFactory;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
-import okhttp3.OkHttpClient;
 import rx.Observable;
 
 /**
@@ -42,13 +36,15 @@ import rx.Observable;
 public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRecyclerFragment {
 
   protected AptoideAccountManager accountManager;
-  protected StoreUtilsProxy storeUtilsProxy;
   protected StoreAnalytics storeAnalytics;
   protected NavigationTracker navigationTracker;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   @Inject InstalledRepository installedRepository;
   @Inject AnalyticsManager analyticsManager;
   @Inject @Named("marketName") String marketName;
   @Inject ThemeManager themeManager;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
+  @Inject RoomStoreRepository storeRepository;
   private StoreTabNavigator storeTabNavigator;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,22 +52,9 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
     getFragmentComponent(savedInstanceState).inject(this);
     navigationTracker =
         ((AptoideApplication) getContext().getApplicationContext()).getNavigationTracker();
-    final StoreCredentialsProvider storeCredentialsProvider = new StoreCredentialsProviderImpl(
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
-    final OkHttpClient httpClient =
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();
-    final BodyInterceptor<BaseBody> bodyInterceptor =
-        ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
-    final TokenInvalidator tokenInvalidator =
-        ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator();
-    storeUtilsProxy = new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class), httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator,
-        ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences());
+
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
     storeTabNavigator = new StoreTabNavigator(getFragmentNavigator());
   }
@@ -88,12 +71,11 @@ public abstract class StoreTabWidgetsGridRecyclerFragment extends StoreTabGridRe
           AptoideApplication application =
               (AptoideApplication) getContext().getApplicationContext();
           return DisplayablesFactory.parse(marketName, wsWidget, storeTheme, storeRepository,
-              storeContext, getContext(), accountManager, storeUtilsProxy,
+              storeCredentialsProvider, storeContext, getContext(), accountManager, storeUtilsProxy,
               (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE),
               getContext().getResources(), installedRepository, storeAnalytics, storeTabNavigator,
               navigationTracker, new BadgeDialogFactory(getActivity(), themeManager),
               ((ActivityResultNavigator) getContext()).getFragmentNavigator(),
-              AccessorFactory.getAccessorFor(application.getDatabase(), Store.class),
               application.getBodyInterceptorPoolV7(), application.getDefaultClient(),
               WebService.getDefaultConverter(), application.getTokenInvalidator(),
               application.getDefaultSharedPreferences(), themeManager);
