@@ -25,6 +25,8 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
   @EpoxyAttribute
   var comment: Comment? = null
 
+  var isExpanded = false
+
   override fun bind(holder: CardHolder) {
     comment?.let { c ->
       holder.username.text = c.user?.name
@@ -34,7 +36,12 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
       holder.body.maxLines = 4
       holder.body.text = c.message
       holder.body.setOnClickListener {
-        holder.body.maxLines = Integer.MAX_VALUE
+        if (isExpanded) {
+          holder.body.maxLines = 4
+        } else {
+          holder.body.maxLines = Integer.MAX_VALUE
+        }
+        isExpanded = !isExpanded
       }
       val dateDiff: String =
           dateUtils?.getTimeDiffAll(holder.itemView.context, c.date?.time ?: 0,
