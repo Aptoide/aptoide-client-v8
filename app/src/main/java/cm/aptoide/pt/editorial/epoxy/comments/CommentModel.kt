@@ -1,7 +1,6 @@
 package cm.aptoide.pt.editorial.epoxy.comments
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import cm.aptoide.pt.R
@@ -12,12 +11,16 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fa.epoxysample.bundles.models.base.BaseViewHolder
+import rx.subjects.PublishSubject
 
 @EpoxyModelClass(layout = R.layout.comment_item)
 abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
 
   @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
   var dateUtils: AptoideUtils.DateTimeU? = null
+
+  @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+  var eventSubject: PublishSubject<CommentEvent>? = null
 
   @EpoxyAttribute
   var comment: Comment? = null
@@ -39,12 +42,25 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
                   .resources) ?: ""
       holder.timestamp.text = dateDiff
       if (c.repliesNr > 0) {
-        holder.repliesButton.text = "${c.repliesNr} replies"
-        holder.repliesButton.visibility = View.VISIBLE
+        holder.showRepliesText.text =
+            holder.itemView.context.getString(R.string.reviews_expand_button, c.repliesNr)
+        holder.showRepliesButton.visibility = View.VISIBLE
       } else {
-        holder.repliesButton.visibility = View.GONE
+        holder.showRepliesButton.visibility = View.GONE
       }
+      setListeners(holder, c)
+    }
+  }
 
+  private fun setListeners(holder: CardHolder, c: Comment) {
+    holder.replyButton.setOnClickListener {
+      eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.REPLY_CLICK))
+    }
+    holder.userSection.setOnClickListener {
+      eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.USER_PROFILE_CLICK))
+    }
+    holder.showRepliesButton.setOnClickListener {
+      eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.SHOW_REPLIES_CLICK))
     }
   }
 
@@ -53,6 +69,9 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
     val avatar by bind<ImageView>(R.id.user_icon)
     val body by bind<TextView>(R.id.textBody)
     val timestamp by bind<TextView>(R.id.timestamp)
-    val repliesButton by bind<Button>(R.id.toggleRepliesButton)
+    val showRepliesButton by bind<View>(R.id.toggleRepliesButton)
+    val showRepliesText by bind<TextView>(R.id.toggleRepliesText)
+    val replyButton by bind<View>(R.id.replyButton)
+    val userSection by bind<View>(R.id.user_clickable_section)
   }
 }

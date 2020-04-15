@@ -3,10 +3,7 @@ package cm.aptoide.pt.editorial.epoxy
 import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel
 import cm.aptoide.pt.editorial.EditorialContent
 import cm.aptoide.pt.editorial.EditorialDownloadEvent
-import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent
-import cm.aptoide.pt.editorial.epoxy.comments.CommentGroupModel
-import cm.aptoide.pt.editorial.epoxy.comments.CommentsTitleModel_
-import cm.aptoide.pt.editorial.epoxy.comments.LoadingViewModel_
+import cm.aptoide.pt.editorial.epoxy.comments.*
 import cm.aptoide.pt.themes.ThemeManager
 import cm.aptoide.pt.utils.AptoideUtils
 import com.airbnb.epoxy.EpoxyModel
@@ -24,7 +21,6 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
     Typed4EpoxyController<List<EditorialContent>, Boolean, ReactionConfiguration, CommentsResponseModel>() {
 
   val bottomCardVisibilityChange = PublishSubject.create<Boolean>()
-  val filterChangedEventSubject = PublishSubject.create<ChangeFilterEvent>()
 
   override fun buildModels(data: List<EditorialContent>, isSingleApp: Boolean,
                            reactionConfiguration: ReactionConfiguration,
@@ -49,6 +45,12 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
     add(getCommentsModels(comments))
   }
 
+  /**
+   * Comments
+   */
+  val filterChangedEventSubject = PublishSubject.create<ChangeFilterEvent>()
+  val commentEventSubject = PublishSubject.create<CommentEvent>()
+
   fun getCommentsModels(comments: CommentsResponseModel): List<EpoxyModel<*>> {
     val models = ArrayList<EpoxyModel<*>>()
 
@@ -62,7 +64,7 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
     )
     for (comment in comments.comments) {
       models.add(
-          CommentGroupModel(dateUtils, comment)
+          CommentGroupModel(dateUtils, comment, commentEventSubject)
       )
     }
     if (comments.hasMore() || comments.loading) {

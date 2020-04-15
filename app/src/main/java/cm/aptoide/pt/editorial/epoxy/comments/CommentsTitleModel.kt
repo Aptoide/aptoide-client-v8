@@ -22,7 +22,8 @@ abstract class CommentsTitleModel : EpoxyModelWithHolder<CommentsTitleModel.Card
   var count: Int? = null
   @EpoxyAttribute
   var commentFilters: CommentFilters? = null
-  @EpoxyAttribute
+
+  @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
   var filterChangeSubject: PublishSubject<ChangeFilterEvent>? = null
 
   override fun bind(holder: CardHolder) {

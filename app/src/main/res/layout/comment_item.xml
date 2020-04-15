@@ -43,6 +43,23 @@
       android:orientation="horizontal"
       app:layout_constraintGuide_begin="8dp" />
 
+    <View
+      android:id="@+id/user_clickable_section"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="@+id/user_icon"
+      app:layout_constraintEnd_toStartOf="@+id/barrier"
+      app:layout_constraintStart_toStartOf="@+id/guideline"
+      app:layout_constraintTop_toTopOf="@+id/guideline4" />
+
+    <androidx.constraintlayout.widget.Barrier
+      android:id="@+id/barrier"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:barrierDirection="end"
+      app:constraint_referenced_ids="user_icon,username,timestamp"
+      tools:layout_editor_absoluteX="40dp" />
+
     <ImageView
       android:id="@+id/user_icon"
       android:layout_width="32dp"
@@ -56,6 +73,7 @@
       style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
       android:layout_marginLeft="8dp"
       app:layout_constraintStart_toEndOf="@+id/user_icon"
       app:layout_constraintTop_toTopOf="@+id/guideline4"
@@ -70,6 +88,7 @@
       app:layout_constraintStart_toStartOf="@+id/username"
       app:layout_constraintTop_toBottomOf="@+id/username"
       tools:text="2 hours ago" />
+
 
     <cm.aptoide.aptoideviews.common.EllipsizedTextView
       android:id="@+id/textBody"
@@ -92,42 +111,67 @@
       layout="@layout/reactions_layout"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="14dp"
-      android:layout_marginBottom="18dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="12dp"
       app:layout_constraintBottom_toTopOf="@+id/toggleRepliesButton"
       app:layout_constraintStart_toStartOf="@+id/textBody"
       app:layout_constraintTop_toBottomOf="@+id/textBody" />
 
-    <Button
+    <LinearLayout
       android:id="@+id/replyButton"
-      style="@style/Aptoide.Button.Flat.Medium.GreyMedium"
       android:layout_width="wrap_content"
-      android:layout_height="26dp"
-      android:layout_marginTop="14dp"
-      android:drawableStart="@drawable/ic_reply"
-      android:drawableLeft="@drawable/ic_reply"
-      android:paddingTop="0dp"
-      android:paddingBottom="0dp"
-      android:text="@string/reply"
-      android:textAllCaps="false"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="9dp"
+      android:layout_marginEnd="3dp"
+      android:layout_marginRight="3dp"
+      android:padding="8dp"
       app:layout_constraintEnd_toStartOf="@+id/guideline2"
-      app:layout_constraintTop_toBottomOf="@+id/textBody" />
+      app:layout_constraintTop_toBottomOf="@+id/textBody">
 
-    <Button
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:src="@drawable/ic_reply" />
+
+      <TextView
+        style="@style/Aptoide.TextView.Medium.XS.GreyMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/reply" />
+    </LinearLayout>
+
+    <LinearLayout
       android:id="@+id/toggleRepliesButton"
-      style="@style/Aptoide.Button.Flat"
       android:layout_width="wrap_content"
-      android:layout_height="32dp"
+      android:layout_height="wrap_content"
       android:layout_marginBottom="10dp"
-      android:drawableRight="@drawable/ic_down_arrow"
-      android:drawableTint="?attr/colorPrimaryDark"
-      android:paddingTop="0dp"
-      android:paddingBottom="0dp"
-      android:textAllCaps="true"
+      android:paddingTop="2dp"
+      android:paddingBottom="2dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintStart_toStartOf="@+id/include"
-      app:layout_constraintTop_toBottomOf="@+id/include"
-      tools:text="2 replies" />
+      app:layout_constraintTop_toBottomOf="@+id/include">
+
+      <TextView
+        android:id="@+id/toggleRepliesText"
+        style="@style/Aptoide.TextView.Medium.XS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAllCaps="true"
+        android:textColor="?attr/colorPrimaryDark"
+        tools:text="2 replies" />
+
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_down_arrow"
+        android:tint="?attr/colorPrimaryDark" />
+    </LinearLayout>
 
 
   </androidx.constraintlayout.widget.ConstraintLayout>
