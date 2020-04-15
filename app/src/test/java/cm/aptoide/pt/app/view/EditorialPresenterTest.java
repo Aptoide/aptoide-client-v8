@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.view;
 
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.app.DownloadModel;
@@ -47,6 +48,7 @@ public class EditorialPresenterTest {
   @Mock private PermissionService permissionService;
   @Mock private EditorialAnalytics editorialAnalytics;
   @Mock private EditorialNavigator editorialNavigator;
+  @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
 
   private EditorialPresenter presenter;
   private EditorialViewModel editorialViewModel;
@@ -63,7 +65,8 @@ public class EditorialPresenterTest {
   @Before public void setupEditorialPresenter() {
     MockitoAnnotations.initMocks(this);
     presenter = new EditorialPresenter(view, editorialManager, Schedulers.immediate(), crashReport,
-        permissionManager, permissionService, editorialAnalytics, editorialNavigator);
+        permissionManager, permissionService, editorialAnalytics, editorialNavigator,
+        userFeedbackAnalytics);
     lifecycleEvent = PublishSubject.create();
     reactionButtonClickEvent = PublishSubject.create();
     reactionButtonLongPressEvent = PublishSubject.create();

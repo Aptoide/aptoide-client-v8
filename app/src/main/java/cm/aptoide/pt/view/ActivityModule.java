@@ -17,6 +17,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -81,9 +82,7 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
-import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import cm.aptoide.pt.themes.NewFeature;
-import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.ApkFy;
@@ -287,12 +286,12 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptor,
       @Named("default") OkHttpClient httpClient, Converter.Factory converterFactory,
       InstalledRepository installedRepository, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Resources resources,
-      @Named("marketName") String marketName, MarketResourceFormatter marketResourceFormatter,
-      ThemeManager themeManager) {
+      @Named("default") SharedPreferences sharedPreferences,
+      MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager,
+      UserFeedbackAnalytics userFeedbackAnalaytics) {
     return new DialogUtils(accountManager, accountNavigator, bodyInterceptor, httpClient,
-        converterFactory, installedRepository, tokenInvalidator, sharedPreferences, resources,
-        marketName, marketResourceFormatter, themeManager);
+        converterFactory, installedRepository, tokenInvalidator, sharedPreferences,
+        marketResourceFormatter, themeManager, userFeedbackAnalaytics);
   }
 
   @ActivityScope @Provides AppNavigator providesAppNavigator(
@@ -415,10 +414,5 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides ThemeManager providesThemeManager() {
     return new ThemeManager(activity,
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
-  }
-
-  @ActivityScope @Provides DarkThemeNewFeatureManager providesDarkThemeDialogManager(
-      ThemeManager themeManager, NewFeatureManager newFeatureManager) {
-    return new DarkThemeNewFeatureManager(themeManager, newFeatureManager);
   }
 }

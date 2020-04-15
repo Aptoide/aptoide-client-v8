@@ -9,6 +9,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
@@ -86,6 +87,8 @@ import cm.aptoide.pt.editorialList.EditorialListPresenter;
 import cm.aptoide.pt.editorialList.EditorialListRepository;
 import cm.aptoide.pt.editorialList.EditorialListService;
 import cm.aptoide.pt.editorialList.EditorialListView;
+import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
+import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
@@ -153,11 +156,8 @@ import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
 import cm.aptoide.pt.store.view.my.MyStoresPresenter;
 import cm.aptoide.pt.store.view.my.MyStoresView;
-import cm.aptoide.pt.themes.DarkThemeDialogPresenter;
-import cm.aptoide.pt.themes.DarkThemeDialogView;
-import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
+import cm.aptoide.pt.themes.NewFeatureDialogView;
 import cm.aptoide.pt.themes.NewFeatureManager;
-import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.view.app.AppCenter;
@@ -275,9 +275,9 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,
       HomeNavigator homeNavigator, AdMapper adMapper, AptoideAccountManager aptoideAccountManager,
-      HomeAnalytics homeAnalytics) {
+      HomeAnalytics homeAnalytics, UserFeedbackAnalytics userFeedbackAnalytics) {
     return new HomePresenter((HomeView) fragment, home, AndroidSchedulers.mainThread(),
-        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics);
+        CrashReport.getInstance(), homeNavigator, adMapper, homeAnalytics, userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides HomeNavigator providesHomeNavigator(
@@ -457,10 +457,12 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
-      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator) {
+      EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator);
+        ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
+        userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
@@ -493,11 +495,11 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides EditorialListPresenter providesEditorialListPresenter(
       EditorialListManager editorialListManager, AptoideAccountManager aptoideAccountManager,
-      EditorialListNavigator editorialListNavigator,
-      EditorialListAnalytics editorialListAnalytics) {
+      EditorialListNavigator editorialListNavigator, EditorialListAnalytics editorialListAnalytics,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     return new EditorialListPresenter((EditorialListView) fragment, editorialListManager,
         aptoideAccountManager, editorialListNavigator, editorialListAnalytics,
-        CrashReport.getInstance(), AndroidSchedulers.mainThread());
+        CrashReport.getInstance(), AndroidSchedulers.mainThread(), userFeedbackAnalytics);
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
@@ -537,13 +539,11 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides HomeContainerPresenter providesHomeContainerPresenter(
-      CrashReport crashReport, AptoideAccountManager accountManager,
-      HomeContainerNavigator homeContainerNavigator, HomeNavigator homeNavigator,
-      HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
+      AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
+      ChipManager chipManager) {
     return new HomeContainerPresenter((HomeContainerView) fragment, AndroidSchedulers.mainThread(),
-        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager,
-        darkThemeNewFeatureManager);
+        accountManager, homeContainerNavigator, homeNavigator, homeAnalytics, home, chipManager);
   }
 
   @FragmentScope @Provides AppMapper providesAppMapper() {
@@ -627,11 +627,10 @@ import rx.subscriptions.CompositeSubscription;
     return new ExternalNavigator(fragment.getContext(), themeManager);
   }
 
-  @FragmentScope @Provides DarkThemeDialogPresenter providesDarkthemeDialogPresenter(
-      NewFeatureManager newFeatureManager, ThemeManager themeManager,
-      ThemeAnalytics themeAnalytics) {
-    return new DarkThemeDialogPresenter((DarkThemeDialogView) fragment, newFeatureManager,
-        themeManager, themeAnalytics);
+  @FragmentScope @Provides NewFeatureDialogPresenter providesDarkthemeDialogPresenter(
+      NewFeatureManager newFeatureManager) {
+    return new NewFeatureDialogPresenter((NewFeatureDialogView) fragment, newFeatureManager,
+        new NoBehaviourNewFeatureListener());
   }
 
   @FragmentScope @Provides RewardAppCoinsAppsRepository providesRewardAppCoinsAppsRepository(

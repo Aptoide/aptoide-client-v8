@@ -14,6 +14,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.comments.CommentDialogCallbackContract;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -32,6 +33,7 @@ import cm.aptoide.pt.view.fragment.BaseDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jakewharton.rxbinding.view.RxView;
 import com.trello.rxlifecycle.android.FragmentEvent;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -44,6 +46,7 @@ public class CommentDialogFragment extends BaseDialogFragment {
   private static final String RESOURCE_ID_AS_STRING = "resource_id_as_string";
   private static final String COMMENT_TYPE = "comment_type";
   private static final String PREVIOUS_COMMENT_ID = "previous_comment_id";
+  @Inject UserFeedbackAnalytics userFeedbackAnalytics;
   private String onEmptyTextError;
   private String appOrStoreName;
   private long idAsLong;
@@ -78,7 +81,7 @@ public class CommentDialogFragment extends BaseDialogFragment {
     return fragment;
   }
 
-  public static CommentDialogFragment newInstanceReview(long id, String appName) {
+  public static CommentDialogFragment newInstanceReviewReply(long id, String appName) {
     Bundle args = new Bundle();
     args.putString(COMMENT_TYPE, CommentType.REVIEW.name());
     args.putLong(RESOURCE_ID_AS_LONG, id);
@@ -108,6 +111,7 @@ public class CommentDialogFragment extends BaseDialogFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     AptoideApplication application = (AptoideApplication) getContext().getApplicationContext();
     sharedPreferences = application.getDefaultSharedPreferences();
     tokenInvalidator = application.getTokenInvalidator();
@@ -127,7 +131,7 @@ public class CommentDialogFragment extends BaseDialogFragment {
 
     View view = inflater.inflate(R.layout.dialog_comment_on_review, container);
 
-    TextView titleTextView = (TextView) view.findViewById(R.id.title);
+    TextView titleTextView = view.findViewById(R.id.title);
     titleTextView.setVisibility(View.VISIBLE);
 
     switch (commentType) {
@@ -141,11 +145,11 @@ public class CommentDialogFragment extends BaseDialogFragment {
         break;
     }
 
-    Button cancelButton = (Button) view.findViewById(R.id.cancel_button);
+    Button cancelButton = view.findViewById(R.id.cancel_button);
     cancelButton.setOnClickListener(a -> CommentDialogFragment.this.dismiss());
 
-    textInputLayout = (TextInputLayout) view.findViewById(R.id.input_layout_title);
-    commentButton = (Button) view.findViewById(R.id.comment_button);
+    textInputLayout = view.findViewById(R.id.input_layout_title);
+    commentButton = view.findViewById(R.id.comment_button);
 
     setupLogic();
     storeAnalytics = new StoreAnalytics(analyticsManager, navigationTracker);
@@ -243,6 +247,7 @@ public class CommentDialogFragment extends BaseDialogFragment {
     switch (commentType) {
       case REVIEW:
         // new comment on a review
+        userFeedbackAnalytics.sendAppReviewReplyComment();
         return PostCommentForReview.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
             converterFactory, tokenInvalidator, sharedPreferences)
             .observe(true, true);
@@ -250,11 +255,13 @@ public class CommentDialogFragment extends BaseDialogFragment {
       case STORE:
         // check if this is a new comment on a store or a reply to a previous one
         if (previousCommentId == null) {
+          userFeedbackAnalytics.sendStoreCommentEvent();
           storeAnalytics.sendStoreInteractEvent("Write a Comment", "Home", appOrStoreName);
           return PostCommentForStore.of(idAsLong, inputText, baseBodyBodyInterceptor, httpClient,
               converterFactory, tokenInvalidator, sharedPreferences)
               .observe(true, true);
         }
+        userFeedbackAnalytics.sendStoreCommentReplyEvent();
         storeAnalytics.sendStoreInteractEvent("Reply to Comment", "Home", appOrStoreName);
         return PostCommentForStore.of(idAsLong, previousCommentId, inputText,
             baseBodyBodyInterceptor, httpClient, converterFactory, tokenInvalidator,

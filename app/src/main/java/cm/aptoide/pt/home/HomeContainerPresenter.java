@@ -5,7 +5,6 @@ import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.themes.DarkThemeNewFeatureManager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.exceptions.OnErrorNotImplementedException;
@@ -20,12 +19,11 @@ public class HomeContainerPresenter implements Presenter {
   private final HomeAnalytics homeAnalytics;
   private final Home home;
   private final ChipManager chipManager;
-  private final DarkThemeNewFeatureManager darkThemeNewFeatureManager;
 
   public HomeContainerPresenter(HomeContainerView view, Scheduler viewScheduler,
       AptoideAccountManager accountManager, HomeContainerNavigator homeContainerNavigator,
-      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home, ChipManager chipManager,
-      DarkThemeNewFeatureManager darkThemeNewFeatureManager) {
+      HomeNavigator homeNavigator, HomeAnalytics homeAnalytics, Home home,
+      ChipManager chipManager) {
     this.view = view;
     this.viewScheduler = viewScheduler;
     this.accountManager = accountManager;
@@ -34,11 +32,9 @@ public class HomeContainerPresenter implements Presenter {
     this.homeAnalytics = homeAnalytics;
     this.home = home;
     this.chipManager = chipManager;
-    this.darkThemeNewFeatureManager = darkThemeNewFeatureManager;
   }
 
   @Override public void present() {
-    loadNewFeatureDialog();
     loadMainHomeContent();
     loadUserImage();
     handleUserImageClick();
@@ -54,21 +50,6 @@ public class HomeContainerPresenter implements Presenter {
     handleClickOnGamesChip();
     handleClickOnAppsChip();
     handleBottomNavigationEvents();
-  }
-
-  private void loadNewFeatureDialog() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.RESUME))
-        .doOnNext(__ -> {
-          if (darkThemeNewFeatureManager.shouldShowFeature()) {
-            homeContainerNavigator.showDarkThemeDialog();
-          }
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          throw new OnErrorNotImplementedException(err);
-        });
   }
 
   @VisibleForTesting public void loadMainHomeContent() {

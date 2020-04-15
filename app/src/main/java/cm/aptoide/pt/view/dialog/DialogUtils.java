@@ -8,7 +8,6 @@ package cm.aptoide.pt.view.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.text.SpannableString;
 import android.text.style.BulletSpan;
 import android.view.ContextThemeWrapper;
@@ -22,6 +21,7 @@ import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.fragment.app.DialogFragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -66,17 +66,16 @@ import rx.subscriptions.Subscriptions;
   private final InstalledRepository installedRepository;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final Resources resources;
-  private final String marketName;
   private final MarketResourceFormatter marketResourceFormatter;
   private final ThemeManager themeManager;
+  private final UserFeedbackAnalytics userFeedbackAnalytics;
 
   public DialogUtils(AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, InstalledRepository installedRepository,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, Resources resources,
-      String marketName, MarketResourceFormatter marketResourceFormatter,
-      ThemeManager themeManager) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      MarketResourceFormatter marketResourceFormatter, ThemeManager themeManager,
+      UserFeedbackAnalytics userFeedbackAnalytics) {
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
     this.bodyInterceptor = bodyInterceptor;
@@ -85,10 +84,9 @@ import rx.subscriptions.Subscriptions;
     this.installedRepository = installedRepository;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.resources = resources;
-    this.marketName = marketName;
     this.marketResourceFormatter = marketResourceFormatter;
     this.themeManager = themeManager;
+    this.userFeedbackAnalytics = userFeedbackAnalytics;
   }
 
   public Observable<GenericDialogs.EResponse> showRateDialog(@NonNull Activity activity,
@@ -100,9 +98,8 @@ import rx.subscriptions.Subscriptions;
           themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
       if (!accountManager.isLoggedIn()) {
         ShowMessage.asSnack(activity, R.string.you_need_to_be_logged_in, R.string.login,
-            snackView -> {
-              accountNavigator.navigateToAccountView(AccountAnalytics.AccountOrigins.RATE_DIALOG);
-            }, Snackbar.LENGTH_SHORT);
+            snackView -> accountNavigator.navigateToAccountView(
+                AccountAnalytics.AccountOrigins.RATE_DIALOG), Snackbar.LENGTH_SHORT);
         subscriber.onNext(GenericDialogs.EResponse.CANCEL);
         subscriber.onCompleted();
         return;
@@ -161,6 +158,7 @@ import rx.subscriptions.Subscriptions;
         }
         dialog.dismiss();
 
+        userFeedbackAnalytics.sendSubmitAppRateEvent(!reviewText.isEmpty());
         // WS success listener
         final SuccessRequestListener<BaseV7Response> successRequestListener = response -> {
           if (response.isOk()) {

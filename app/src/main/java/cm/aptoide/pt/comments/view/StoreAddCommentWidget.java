@@ -1,6 +1,5 @@
 package cm.aptoide.pt.comments.view;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.Button;
 import androidx.annotation.NonNull;
@@ -37,8 +36,6 @@ public class StoreAddCommentWidget extends Widget<StoreAddCommentDisplayable> {
   }
 
   @Override public void bindView(StoreAddCommentDisplayable displayable, int position) {
-
-    final Context context = getContext();
 
     accountManager =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountManager();

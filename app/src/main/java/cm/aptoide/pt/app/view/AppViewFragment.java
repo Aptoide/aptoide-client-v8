@@ -1712,6 +1712,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     return cancelClickSubject;
   }
 
+  public void showGenericErrorDialog() {
+    showErrorDialog("", getContext().getString(R.string.error_occured));
+  }
+
   private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, double appcReward,
       double fiatReward, String fiatCurrency, double appcBudget, String date) {
     if (hasAdvertising) {
@@ -1778,7 +1782,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private void handleDownloadError(DownloadModel.DownloadState downloadState) {
     switch (downloadState) {
       case ERROR:
-        showErrorDialog("", getContext().getString(R.string.error_occured));
+        showGenericErrorDialog();
         break;
       case NOT_ENOUGH_STORAGE_ERROR:
         showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),

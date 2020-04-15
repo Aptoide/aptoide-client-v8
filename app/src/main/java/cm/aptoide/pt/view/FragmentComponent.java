@@ -10,6 +10,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
+import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
@@ -30,7 +31,7 @@ import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
-import cm.aptoide.pt.themes.DarkThemeDialogFragment;
+import cm.aptoide.pt.themes.NewFeatureDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
@@ -126,9 +127,12 @@ public interface FragmentComponent {
 
   void inject(AutoUpdateDialogFragment autoUpdateDialogFragment);
 
-  void inject(DarkThemeDialogFragment darkThemeDialogFragment);
+  void inject(NewFeatureDialogFragment newFeatureDialogFragment);
+
+  void inject(CommentDialogFragment commentDialogFragment);
 
   void inject(SendFeedbackFragment sendFeedbackFragment);
 
   void inject(ExcludedUpdatesFragment excludedUpdatesFragment);
+
 }

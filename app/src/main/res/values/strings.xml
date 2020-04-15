@@ -538,9 +538,7 @@
   <string name="appc_title_homepage_card">You can get AppCoins now!</string>
   <string name="appc_message_homepage_card">The cryptocurrency for the app economy is here! Get free AppCoins by using your favorite apps.</string>
   <string name="appc_title_appcoins_header_1">Everything you need to know about AppCoins</string>
-  <string name="appc_message_appcoins_section_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You’ll earn up to <b>30% bonus with all purchases!</b></string>
   <string name="appc_message_appcoins_header_2">First Things First</string>
-  <string name="appc_message_appcoins_section_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You’ll earn up to <b>%s%% bonus with all purchases!</b></string>
 
   <!-- Check this code: for the strings with comments: https://gist.github.com/analaragomes/f82de0d3bc26ff15f3a196ce2e20ff1b -->
   <!--This variable is a link to AppCoins wallet app view. The text is AppCoins Wallet. This is done using html-->
@@ -552,8 +550,6 @@
   <string name="appc_message_appcoins_header_4">A Bonus on Every Purchase!</string>
   <string name="appc_message_appcoins_header_5">Benefits</string>
   <!--This variable is an image with APPC icon followed by id.string=appc_short_spend_appc. This is done using html -->
-  <string name="appc_message_appcoins_section_4">You\'ll get up to 30%% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
-  <string name="appc_message_appcoins_section_4_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s Take advantage and become the ultimate gamer!</string>
   <string name="appc_message_appcoins_benefit_1">Huge discounts</string>
   <string name="appc_message_appcoins_benefit_2">Earn free AppCoins Credits</string>
   <string name="appc_message_appcoins_benefit_3">100% secure</string>
@@ -712,7 +708,6 @@
   <string name="wallet_install_request_close_button">CLOSE</string>
   <string name="wallet_install_request_install_button">INSTALL WALLET</string>
   <string name="wallet_install_complete_title">Installation Complete</string>
-  <string name="wallet_install_complete_body">Go back to the game to make your purchase!</string>
   <string name="appc_not_supported_body">It seems this device doesn\'t support AppCoins. Try with a different one!</string>
   <string name="wallet_install_request_already_installed_title">AppCoins Wallet Install</string>
   <string name="wallet_install_request_already_installed_body">Enjoy the bonus on every in-app purchase!</string>
@@ -741,7 +736,6 @@
   <string name="appc_info_card_title">Introducing the AppCoins Universe!</string>
   <string name="appc_info_card_body">Earn AppCoins Credits for free to buy items in your favorite apps.</string>
   <string name="appc_info_view_title_1">Everything You Need to Know About AppCoins</string>
-  <string name="appc_info_view_body_1">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>30% bonus in all purchases!</b></string>
   <string name="appc_info_view_body_1_variable">AppCoins and AppCoins Credits are the currencies for in-app transactions. The best part? You\'ll earn up to <b>%s%% bonus in all purchases!</b></string>
 
   <string name="appc_info_view_title_2">First Things First</string>
@@ -749,7 +743,6 @@
   <string name="appc_info_view_title_3">Get Rewarded for Installing Apps!</string>
   <string name="appc_info_view_body_3">You\'ll get a reward for installing and spending 2 minutes in the apps with the symbol %s. You can find them all in the bundle \"Earn AppCoins Credits\" in Aptoide home!</string>
   <string name="appc_info_view_title_4">A Bonus on Every Purchase!</string>
-  <string name="appc_info_view_title_5">You\'ll get up to 30%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
   <string name="appc_info_view_title_5_variable">You\'ll get up to %s%% Bonus for every purchase you make in an app with the symbol %s. Take advantage and become the ultimate gamer!</string>
 
   <string name="appc_info_view_devs_title">Are you a developer?</string>
