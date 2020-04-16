@@ -73,7 +73,7 @@
 
         <Button
             android:id="@+id/create_user_create_profile"
-            style="@style/Aptoide.Button"
+            style="@style/Aptoide.Button.Alternative"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/padding_smaller"
             android:layout_marginLeft="@dimen/padding_smaller"
