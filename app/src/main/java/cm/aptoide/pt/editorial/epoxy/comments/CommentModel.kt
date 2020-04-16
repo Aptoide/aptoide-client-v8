@@ -3,6 +3,7 @@ package cm.aptoide.pt.editorial.epoxy.comments
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import cm.aptoide.aptoideviews.common.AnimatedImageView
 import cm.aptoide.pt.R
 import cm.aptoide.pt.comments.refactor.data.Comment
 import cm.aptoide.pt.networking.image.ImageLoader
@@ -67,7 +68,13 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
       eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.USER_PROFILE_CLICK))
     }
     holder.showRepliesButton.setOnClickListener {
-      eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.SHOW_REPLIES_CLICK))
+      if (c.repliesToShowNr > 0) {
+        holder.showRepliesIcon.play()
+        eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.HIDE_REPLIES_CLICK))
+      } else {
+        holder.showRepliesIcon.playReverse()
+        eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.SHOW_REPLIES_CLICK))
+      }
     }
   }
 
@@ -78,6 +85,7 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
     val timestamp by bind<TextView>(R.id.timestamp)
     val showRepliesButton by bind<View>(R.id.toggleRepliesButton)
     val showRepliesText by bind<TextView>(R.id.toggleRepliesText)
+    val showRepliesIcon by bind<AnimatedImageView>(R.id.toggleRepliesIcon)
     val replyButton by bind<View>(R.id.replyButton)
     val userSection by bind<View>(R.id.user_clickable_section)
   }

@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatImageView
 import cm.aptoide.aptoideviews.R
 
-class AnimatedImageView : ImageView {
+class AnimatedImageView : AppCompatImageView {
 
   var animation: Animatable? = null
   var reverse: Animatable? = null

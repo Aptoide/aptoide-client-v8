@@ -1,9 +1,11 @@
 package cm.aptoide.pt.comments.refactor
 
+import cm.aptoide.pt.comments.refactor.data.Comment
 import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel
 import cm.aptoide.pt.comments.refactor.network.CommentsDataSource
 import cm.aptoide.pt.dataprovider.util.CommentType
 import cm.aptoide.pt.editorial.epoxy.comments.CommentFilters
+import rx.Completable
 import rx.Observable
 import rx.Single
 import rx.subjects.BehaviorSubject
@@ -67,6 +69,40 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
                 return@map comments
               }
         }
+  }
+
+  fun showCommentReplies(comment: Comment, id: Long, type: CommentType): Completable {
+    return showCommentReplies(3, comment, id, type)
+  }
+
+  fun hideCommentReplies(comment: Comment, id: Long, type: CommentType): Completable {
+    return showCommentReplies(0, comment, id, type)
+  }
+
+  private fun showCommentReplies(nrReplies: Int, comment: Comment, id: Long,
+                                 type: CommentType): Completable {
+    val cacheKey = getCacheKey(id, type)
+    val cachedComment = cache[cacheKey] ?: return Completable.complete()
+    return cachedComment.doOnNext { responseModel ->
+      val position = getCommentPosition(comment, responseModel.comments)
+      if (position >= 0) {
+        val newList = ArrayList(responseModel.comments)
+        newList[position] = Comment(responseModel.comments[position], nrReplies)
+        cache[cacheKey]?.onNext(
+            CommentsResponseModel(newList, responseModel.offset, responseModel.total,
+                responseModel.filters, responseModel.loading))
+      }
+    }.first().toSingle().toCompletable()
+  }
+
+
+  fun getCommentPosition(comment: Comment, list: List<Comment>): Int {
+    for ((index, c) in list.withIndex()) {
+      if (c.id == comment.id) {
+        return index
+      }
+    }
+    return -1
   }
 
   private fun mergeComments(cachedComments: CommentsResponseModel,

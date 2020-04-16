@@ -8,6 +8,7 @@ import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.comments.refactor.CommentsManager;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.util.CommentType;
+import cm.aptoide.pt.editorial.epoxy.comments.CommentEvent;
 import cm.aptoide.pt.editorial.epoxy.comments.CommentFilters;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -62,6 +63,19 @@ public class EditorialPresenter implements Presenter {
     handleSnackLogInClick();
   }
 
+  private Observable<CommentEvent> handleCommentEvents(EditorialViewModel editorialViewModel) {
+    return view.getCommentEvents()
+        .flatMapCompletable(event -> {
+          switch (event.getType()) {
+            case SHOW_REPLIES_CLICK:
+              return commentsManager.showCommentReplies(event.getComment(), 15, CommentType.STORE);
+            case HIDE_REPLIES_CLICK:
+              return commentsManager.hideCommentReplies(event.getComment(), 15, CommentType.STORE);
+          }
+          return Completable.complete();
+        });
+  }
+
   private Observable<EditorialViewModel> handleListReachBottom(
       EditorialViewModel editorialViewModel) {
     return view.reachesBottom()
@@ -105,7 +119,8 @@ public class EditorialPresenter implements Presenter {
                 handleClickOnAppCard(editorialViewModel), handleInstallClick(editorialViewModel),
                 pauseDownload(editorialViewModel), resumeDownload(editorialViewModel),
                 cancelDownload(editorialViewModel), handleListReachBottom(editorialViewModel),
-                handleFilterEventChange(editorialViewModel))
+                handleFilterEventChange(editorialViewModel),
+                handleCommentEvents(editorialViewModel))
                 .map(__ -> editorialViewModel));
   }
 

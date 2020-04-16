@@ -2,6 +2,7 @@ package cm.aptoide.pt.editorial;
 
 import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
 import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent;
+import cm.aptoide.pt.editorial.epoxy.comments.CommentEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import java.util.List;
@@ -14,6 +15,8 @@ import rx.Observable;
 public interface EditorialView extends View {
 
   Observable<Object> reachesBottom();
+
+  Observable<CommentEvent> getCommentEvents();
 
   void showLoading();
 

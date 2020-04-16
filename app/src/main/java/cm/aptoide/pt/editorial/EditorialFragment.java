@@ -36,6 +36,7 @@ import cm.aptoide.pt.editorial.epoxy.EditorialController;
 import cm.aptoide.pt.editorial.epoxy.ReactionConfiguration;
 import cm.aptoide.pt.editorial.epoxy.ReactionsModelPresenter;
 import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent;
+import cm.aptoide.pt.editorial.epoxy.comments.CommentEvent;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -289,6 +290,10 @@ public class EditorialFragment extends NavigationTrackFragment
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .cast(Object.class);
+  }
+
+  @Override public Observable<CommentEvent> getCommentEvents() {
+    return editorialController.getCommentEventSubject();
   }
 
   private boolean isEndReached() {

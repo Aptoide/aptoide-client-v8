@@ -166,12 +166,16 @@
         android:textColor="?attr/textColorOrangeGradientEnd"
         tools:text="2 replies" />
 
-      <ImageView
+      <cm.aptoide.aptoideviews.common.AnimatedImageView
+        android:id="@+id/toggleRepliesIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:src="@drawable/ic_down_arrow"
-        android:tint="?attr/textColorOrangeGradientEnd" />
+        android:tint="?attr/textColorOrangeGradientEnd"
+        app:animation="@drawable/ic_up_to_down_arrow_orange"
+        app:reverseAnimation="@drawable/ic_down_to_up_arrow_orange"
+        tools:visibility="visible" />
     </LinearLayout>
 
 

@@ -61,7 +61,7 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
     for (comment in listComments) {
       val mappedComment = Comment(comment.id, comment.body,
           User(comment.user.id, comment.user.avatar, comment.user.name), ArrayList(),
-          comment.stats.comments, comment.added)
+          comment.stats.comments, 0, comment.added)
       if (comment.parent != null && comment.parent.id > 0) {
         replies[comment.parent.id]?.add(mappedComment)
         if (replies[comment.parent.id] == null) {
