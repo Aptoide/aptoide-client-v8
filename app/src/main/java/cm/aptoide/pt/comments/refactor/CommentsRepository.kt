@@ -62,16 +62,16 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
             return@flatMap Single.just(cached)
           }
           return@flatMap dataSource.loadNextComments(id, type, cached.filters, offset)
-              .flatMap { next ->
-                // We load the latest cache value again before merge to avoid sync issues between
-                // the WS request and response
-                cache[cacheKey]?.first()?.toSingle()?.map { cached2 ->
-                  val comments = mergeComments(cached2, next)
-                  cache[cacheKey]?.onNext(comments)
-                  offsetCache[cacheKey] = next.offset
-                  return@map comments
-                }
-              }
+        }
+        .flatMap { next ->
+          // We load the latest cache value again before merge to avoid sync issues between
+          // the WS request and response
+          cache[cacheKey]?.first()?.toSingle()?.map { cached ->
+            val comments = mergeComments(cached, next)
+            cache[cacheKey]?.onNext(comments)
+            offsetCache[cacheKey] = next.offset
+            return@map comments
+          }
         }
   }
 
