@@ -6,8 +6,8 @@
   style="?attr/backgroundCard"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:outlineAmbientShadowColor="@color/comments_shadow"
-  android:outlineSpotShadowColor="@color/comments_shadow"
+  android:outlineAmbientShadowColor="?attr/commentsCardShadow"
+  android:outlineSpotShadowColor="?attr/commentsCardShadow"
   app:cardCornerRadius="4dp"
   app:cardElevation="4dp">
 

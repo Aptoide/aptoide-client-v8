@@ -133,6 +133,8 @@
   <attr name="textColorFacebook" format="reference|color" />
 
   <attr name="commentReplyBackgroundColor" format="reference|color" />
+  <attr name="commentsCardShadow" format="reference|color" />
+
 
   <!--Swipe Refresh-->
   <attr name="swipeProgressColor1" format="reference|color" />
