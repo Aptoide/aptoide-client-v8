@@ -3,7 +3,6 @@ package cm.aptoide.pt.editorial.epoxy.comments
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
@@ -26,8 +25,7 @@ class SpaceView : FrameLayout {
   }
 
   fun dpToPx(dp: Int): Int {
-    val metrics = Resources.getSystem()
-        .displayMetrics
-    return dp * (metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT)
+    val density = Resources.getSystem().displayMetrics.density
+    return (dp * density + 0.5).toInt()
   }
 }
