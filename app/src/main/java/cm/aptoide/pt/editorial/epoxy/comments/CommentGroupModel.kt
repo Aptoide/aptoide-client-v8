@@ -23,8 +23,9 @@ class CommentGroupModel(private val dateUtils: AptoideUtils.DateTimeU,
     lt.disableTransitionType(LayoutTransition.CHANGE_APPEARING)
     lt.disableTransitionType(LayoutTransition.CHANGING)
     lt.enableTransitionType(LayoutTransition.CHANGE_DISAPPEARING)
-    holder.rootView.findViewById<LinearLayout>(R.id.epoxy_model_group_child_container)
-        .layoutTransition = lt
+    val childrenLayout =
+        holder.rootView.findViewById<LinearLayout>(R.id.epoxy_model_group_child_container)
+    childrenLayout.layoutTransition = lt
     super.bind(holder)
   }
 
@@ -45,6 +46,14 @@ class CommentGroupModel(private val dateUtils: AptoideUtils.DateTimeU,
       val repliesLeftToShow = comment.repliesNr - repliesToShowNr
       if (repliesLeftToShow > 0) {
         // TODO: Add See more
+      } else {
+        if (repliesToShowNr > 0) {
+          models.add(
+              SpaceViewModel_()
+                  .id("space1")
+                  .spaceHeight(8)
+          )
+        }
       }
       for (i in 0 until repliesToShowNr) {
         val reply = comment.getReplies()[i]
@@ -53,6 +62,13 @@ class CommentGroupModel(private val dateUtils: AptoideUtils.DateTimeU,
                 .id(reply.id)
                 .dateUtils(dateUtils)
                 .comment(reply)
+        )
+      }
+      if (repliesToShowNr > 0) {
+        models.add(
+            SpaceViewModel_()
+                .id("space2")
+                .spaceHeight(8)
         )
       }
 

@@ -86,7 +86,7 @@
     <item name="backgroundCardSecondaryColor">@color/grey_fog_lighter</item>
     <item name="searchDropdownBackgroundColor">@color/white</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
-
+    <item name="commentReplyBackgroundColor">@color/grey_fog_lighter</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
@@ -339,6 +339,8 @@
     <item name="backgroundCardSecondaryColor">@color/grey_dark</item>
     <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
+    <item name="commentReplyBackgroundColor">@color/grey_fog_light</item>
+
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>

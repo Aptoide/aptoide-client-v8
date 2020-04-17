@@ -9,6 +9,7 @@ import cm.aptoide.pt.comments.refactor.data.Comment
 import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.utils.AptoideUtils
 import com.airbnb.epoxy.EpoxyAttribute
+import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.fa.epoxysample.bundles.models.base.BaseViewHolder
@@ -56,7 +57,25 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
       } else {
         holder.showRepliesButton.visibility = View.GONE
       }
+
+      if (c.repliesToShowNr > 0) {
+        holder.showRepliesIcon.setImageResource(R.drawable.ic_up_arrow)
+      } else {
+        holder.showRepliesIcon.setImageResource(R.drawable.ic_down_arrow)
+      }
+
       setListeners(holder, c)
+    }
+  }
+
+  override fun bind(holder: CardHolder, previouslyBoundModel: EpoxyModel<*>) {
+    super.bind(holder, previouslyBoundModel)
+    comment?.let { c ->
+      if (c.repliesToShowNr > 0) {
+        holder.showRepliesIcon.playReverse()
+      } else {
+        holder.showRepliesIcon.play()
+      }
     }
   }
 
@@ -69,10 +88,8 @@ abstract class CommentModel : EpoxyModelWithHolder<CommentModel.CardHolder>() {
     }
     holder.showRepliesButton.setOnClickListener {
       if (c.repliesToShowNr > 0) {
-        holder.showRepliesIcon.play()
         eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.HIDE_REPLIES_CLICK))
       } else {
-        holder.showRepliesIcon.playReverse()
         eventSubject?.onNext(CommentEvent(c, CommentEvent.Type.SHOW_REPLIES_CLICK))
       }
     }
