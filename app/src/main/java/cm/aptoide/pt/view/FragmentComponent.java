@@ -34,6 +34,7 @@ import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.themes.NewFeatureDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
@@ -73,6 +74,8 @@ public interface FragmentComponent {
   void inject(MyStoresSubscribedFragment myStoresSubscribedFragment);
 
   void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
+
+  void inject(RecommendedStoresFragment recommendedStoresFragment);
 
   void inject(MyStoresFragment myStoresFragment);
 
