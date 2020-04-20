@@ -62,17 +62,47 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
             return@flatMap Single.just(cached)
           }
           return@flatMap dataSource.loadNextComments(id, type, cached.filters, offset)
+              .flatMap { next ->
+                // We load the latest cache value again before merge to avoid sync issues between
+                // the WS request and response (the state might've changed)
+                cache[cacheKey]?.first()?.toSingle()?.map { cached2 ->
+                  val comments: CommentsResponseModel = mergeComments(cached2, next)
+                  cache[cacheKey]?.onNext(comments)
+                  offsetCache[cacheKey] = next.offset
+                  return@map comments
+                }
+              }
         }
-        .flatMap { next ->
-          // We load the latest cache value again before merge to avoid sync issues between
-          // the WS request and response
-          cache[cacheKey]?.first()?.toSingle()?.map { cached ->
-            val comments = mergeComments(cached, next)
-            cache[cacheKey]?.onNext(comments)
-            offsetCache[cacheKey] = next.offset
-            return@map comments
-          }
-        }
+  }
+
+  fun loadMoreReplies(comment: Comment, id: Long,
+                      type: CommentType, nrRepliesToLoad: Int): Single<CommentsResponseModel> {
+    val cacheKey = getCacheKey(id, type)
+    val value: BehaviorSubject<CommentsResponseModel> = cache[cacheKey]
+        ?: return Single.just(CommentsResponseModel(true))
+
+    return value.first().toSingle().flatMap { cached ->
+      val position = getCommentPosition(comment, cached.comments)
+      if (position >= 0 && cached.comments[position].getReplies().size >= cached.comments[position].repliesNr) {
+        return@flatMap Single.just(cached)
+      }
+      // We change repliesToShow BEFORE the WS. This is important because if we change after the WS
+      // response it may cause sync issues (e.g. between the request and response,
+      // the user might want to hide the comments)
+      return@flatMap setCommentRepliesToLoading(comment.repliesToShowNr + nrRepliesToLoad, comment,
+          id, type)
+          .andThen(dataSource.loadReplies(comment.id, comment.getReplies().size - 1, cached.filters,
+              type, nrRepliesToLoad)
+              .flatMap { response ->
+                // We load the latest cache value again before merge to avoid sync issues between
+                // the WS request and response (the state might've changed)
+                cache[cacheKey]?.first()?.toSingle()?.map { cached2 ->
+                  val comments: CommentsResponseModel = mergeReplies(cached2, comment, response)
+                  cache[cacheKey]?.onNext(comments)
+                  return@map comments
+                }
+              })
+    }
   }
 
   fun showCommentReplies(comment: Comment, id: Long, type: CommentType): Completable {
@@ -81,6 +111,22 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
 
   fun hideCommentReplies(comment: Comment, id: Long, type: CommentType): Completable {
     return showCommentReplies(0, comment, id, type)
+  }
+
+  private fun setCommentRepliesToLoading(nrReplies: Int, comment: Comment, id: Long,
+                                         type: CommentType): Completable {
+    val cacheKey = getCacheKey(id, type)
+    val cachedComment = cache[cacheKey] ?: return Completable.complete()
+    return cachedComment.doOnNext { responseModel ->
+      val position = getCommentPosition(comment, responseModel.comments)
+      if (position >= 0) {
+        val newList = ArrayList(responseModel.comments)
+        newList[position] = Comment(responseModel.comments[position], nrReplies, true)
+        cache[cacheKey]?.onNext(
+            CommentsResponseModel(newList, responseModel.offset, responseModel.total,
+                responseModel.filters, responseModel.loading))
+      }
+    }.first().toSingle().toCompletable()
   }
 
   private fun showCommentReplies(nrReplies: Int, comment: Comment, id: Long,
@@ -100,7 +146,7 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
   }
 
 
-  fun getCommentPosition(comment: Comment, list: List<Comment>): Int {
+  private fun getCommentPosition(comment: Comment, list: List<Comment>): Int {
     for ((index, c) in list.withIndex()) {
       if (c.id == comment.id) {
         return index
@@ -111,10 +157,31 @@ class CommentsRepository(val dataSource: CommentsDataSource) {
 
   private fun mergeComments(cachedComments: CommentsResponseModel,
                             nextComments: CommentsResponseModel): CommentsResponseModel {
-    var commentList = ArrayList(cachedComments.comments)
+    val commentList = ArrayList(cachedComments.comments)
     commentList.addAll(nextComments.comments)
     return CommentsResponseModel(commentList, nextComments.offset, nextComments.total,
         nextComments.filters)
+  }
+
+  private fun mergeReplies(cachedComments: CommentsResponseModel,
+                           parentComment: Comment,
+                           replies: CommentsResponseModel): CommentsResponseModel {
+    val position = getCommentPosition(parentComment, cachedComments.comments)
+    if (position < 0) {
+      return cachedComments
+    }
+    val commentsCopy = ArrayList(cachedComments.comments)
+    if (replies.loading) {
+      commentsCopy[position] = Comment(commentsCopy[position], true)
+    } else {
+      val parentCommentReplies = ArrayList(cachedComments.comments[position].getReplies())
+      parentCommentReplies.addAll(0, replies.comments)
+      commentsCopy[position] = Comment(commentsCopy[position], parentCommentReplies, false)
+    }
+
+    return CommentsResponseModel(commentsCopy, cachedComments.offset,
+        cachedComments.total,
+        cachedComments.filters)
   }
 
   private fun getCacheKey(id: Long, type: CommentType): String {

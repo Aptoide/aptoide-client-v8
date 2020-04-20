@@ -65,14 +65,21 @@ public class EditorialPresenter implements Presenter {
 
   private Observable<CommentEvent> handleCommentEvents(EditorialViewModel editorialViewModel) {
     return view.getCommentEvents()
-        .flatMapCompletable(event -> {
+        .flatMap(event -> {
           switch (event.getType()) {
             case SHOW_REPLIES_CLICK:
-              return commentsManager.showCommentReplies(event.getComment(), 15, CommentType.STORE);
+              return commentsManager.showCommentReplies(event.getComment(), 15, CommentType.STORE)
+                  .toObservable();
             case HIDE_REPLIES_CLICK:
-              return commentsManager.hideCommentReplies(event.getComment(), 15, CommentType.STORE);
+              return commentsManager.hideCommentReplies(event.getComment(), 15, CommentType.STORE)
+                  .toObservable();
+            case SEE_MORE_CLICK:
+              return commentsManager.loadMoreCommentReplies(event.getComment(), 15,
+                  CommentType.STORE)
+                  .toObservable()
+                  .map(__ -> event);
           }
-          return Completable.complete();
+          return Observable.just(event);
         });
   }
 

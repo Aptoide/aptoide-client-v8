@@ -38,4 +38,8 @@ open class CommentsManager(val repository: CommentsRepository) {
     return repository.hideCommentReplies(comment, id, type)
   }
 
+  fun loadMoreCommentReplies(comment: Comment, id: Long, type: CommentType): Single<CommentsResponseModel>{
+    return repository.loadMoreReplies(comment, id, type, 3)
+  }
+
 }

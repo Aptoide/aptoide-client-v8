@@ -25,6 +25,7 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
     CommentsDataSource {
 
   private var loadingComments: Boolean = false
+  private var loadingReplies: Boolean = false
 
   private fun loadComments(id: Long, type: CommentType,
                            invalidateHttpCache: Boolean, filters: CommentFilters,
@@ -61,7 +62,7 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
     for (comment in listComments) {
       val mappedComment = Comment(comment.id, comment.body,
           User(comment.user.id, comment.user.avatar, comment.user.name), ArrayList(),
-          comment.stats.comments, 0, comment.added)
+          comment.stats.comments, 0, false, comment.added)
       if (comment.parent != null && comment.parent.id > 0) {
         replies[comment.parent.id]?.add(mappedComment)
         if (replies[comment.parent.id] == null) {
@@ -101,9 +102,41 @@ class RemoteCommentsDataSource(private val bodyInterceptor: BodyInterceptor<Base
 
   }
 
-  // TODO
-  override fun loadReplies(commentId: Long, offset: Int): Single<CommentsResponseModel> {
-    return Single.just(null)
+  override fun loadReplies(commentId: Long, offset: Int, filters: CommentFilters,
+                           type: CommentType, limit: Int): Single<CommentsResponseModel> {
+    return if (loadingReplies) {
+      Single.just(CommentsResponseModel(true, filters))
+    } else ListCommentsRequest(
+        ListCommentsRequest.Body(commentId, Order.desc, limit, offset, type),
+        bodyInterceptor, okHttpClient, converterFactory, tokenInvalidator,
+        sharedPreferences).observe(false)
+        .cast(ListComments::class.java)
+        .doOnSubscribe { loadingReplies = true }
+        .doOnUnsubscribe { loadingReplies = false }
+        .doOnTerminate { loadingReplies = false }
+        .flatMapSingle { response ->
+          if (response.isOk) {
+            return@flatMapSingle Single.just(
+                CommentsResponseModel(mapReplies(response.dataList.list), response.dataList.next,
+                    response.dataList.total, filters))
+          }
+          return@flatMapSingle Single.error<CommentsResponseModel>(
+              IllegalArgumentException(response.error.description))
+        }
+        .toSingle()
+  }
+
+  private fun mapReplies(
+      listComments: List<cm.aptoide.pt.dataprovider.model.v7.Comment>): List<Comment> {
+    val replies: ArrayList<Comment> = ArrayList()
+    for (comment in listComments) {
+      val mappedReply = Comment(comment.id, comment.body,
+          User(comment.user.id, comment.user.avatar, comment.user.name), ArrayList(),
+          comment.stats.comments, 0, false, comment.added)
+      replies.add(mappedReply)
+    }
+    replies.reverse()
+    return replies
   }
 
   // TODO

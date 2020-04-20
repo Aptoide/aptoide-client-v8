@@ -10,6 +10,10 @@ data class CommentsResponseModel(val comments: List<Comment>, val offset: Int,
       filters,
       loading)
 
+  constructor(loading: Boolean) : this(Collections.emptyList(), -1, -1,
+      CommentFilters(Collections.emptyList(), -1),
+      loading)
+
   constructor(comments: List<Comment>, offset: Int, total: Int, filters: CommentFilters) : this(
       comments,
       offset, total, filters,

@@ -184,11 +184,12 @@ public class ListCommentsRequest extends V7<ListComments, ListCommentsRequest.Bo
       this.sort = sort;
     }
 
-    public Body(long commentId, Order order, int subLimit, int offset) {
+    public Body(long commentId, Order order, int subLimit, int offset, CommentType commentType) {
       this.commentId = commentId;
       this.order = order;
       this.subLimit = subLimit;
       this.offset = offset;
+      this.commentType = commentType.name();
     }
 
     @Override public int getOffset() {

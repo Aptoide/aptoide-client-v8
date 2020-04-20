@@ -17,7 +17,8 @@ interface CommentsDataSource {
   fun loadNextComments(id: Long, type: CommentType, filters: CommentFilters,
                        offset: Int): Single<CommentsResponseModel>
 
-  fun loadReplies(commentId: Long, offset: Int): Single<CommentsResponseModel>
+  fun loadReplies(commentId: Long, offset: Int, filters: CommentFilters,
+                  type: CommentType, limit: Int): Single<CommentsResponseModel>
 
   fun writeComment(id: Long, type: CommentType, message: String): Completable
 

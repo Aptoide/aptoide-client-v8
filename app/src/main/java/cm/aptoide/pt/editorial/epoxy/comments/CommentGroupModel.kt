@@ -44,8 +44,14 @@ class CommentGroupModel(private val dateUtils: AptoideUtils.DateTimeU,
 
       val repliesToShowNr = comment.getReplies().size.coerceAtMost(comment.repliesToShowNr)
       val repliesLeftToShow = comment.repliesNr - repliesToShowNr
-      if (repliesLeftToShow > 0) {
-        // TODO: Add See more
+      if (repliesToShowNr > 0 && repliesLeftToShow > 0) {
+        models.add(
+            SeeMoreModel_()
+                .id("see_more", comment.id)
+                .comment(comment)
+                .repliesLeft(repliesLeftToShow)
+                .eventSubject(commentEventSubject)
+        )
       } else {
         if (repliesToShowNr > 0) {
           models.add(
