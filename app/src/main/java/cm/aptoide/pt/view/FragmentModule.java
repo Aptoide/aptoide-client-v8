@@ -649,8 +649,9 @@ import rx.subscriptions.CompositeSubscription;
         baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
   }
 
-  @Provides CommentsManager providesCommentsManager(CommentsRepository commentsRepository) {
-    return new CommentsManager(commentsRepository);
+  @Provides CommentsManager providesCommentsManager(CommentsRepository commentsRepository,
+      AptoideAccountManager accountManager) {
+    return new CommentsManager(commentsRepository, accountManager);
   }
 
   @Provides ReactionsModelPresenter providesReactionsModelPresenter(
