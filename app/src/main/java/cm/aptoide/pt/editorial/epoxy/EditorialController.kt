@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorial.epoxy
 
-import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel
+import cm.aptoide.pt.comments.refactor.data.CommentsWrapperModel
 import cm.aptoide.pt.editorial.EditorialContent
 import cm.aptoide.pt.editorial.EditorialDownloadEvent
 import cm.aptoide.pt.editorial.epoxy.comments.*
@@ -18,13 +18,13 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
                           val themeManager: ThemeManager,
                           val dateUtils: AptoideUtils.DateTimeU,
                           val commentsTitle: String) :
-    Typed4EpoxyController<List<EditorialContent>, Boolean, ReactionConfiguration, CommentsResponseModel>() {
+    Typed4EpoxyController<List<EditorialContent>, Boolean, ReactionConfiguration, CommentsWrapperModel>() {
 
   val bottomCardVisibilityChange = PublishSubject.create<Boolean>()
 
   override fun buildModels(data: List<EditorialContent>, isSingleApp: Boolean,
                            reactionConfiguration: ReactionConfiguration,
-                           comments: CommentsResponseModel) {
+                           comments: CommentsWrapperModel) {
     for (content in data) {
       EditorialContentModel_()
           .id(content.position)
@@ -51,8 +51,9 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
   val filterChangedEventSubject = PublishSubject.create<ChangeFilterEvent>()
   val commentEventSubject = PublishSubject.create<CommentEvent>()
 
-  fun getCommentsModels(comments: CommentsResponseModel): List<EpoxyModel<*>> {
+  fun getCommentsModels(commentsModel: CommentsWrapperModel): List<EpoxyModel<*>> {
     val models = ArrayList<EpoxyModel<*>>()
+    val comments = commentsModel.commentsResponseModel
 
     models.add(
         CommentsTitleModel_()
@@ -62,6 +63,8 @@ class EditorialController(val downloadEventListener: PublishSubject<EditorialDow
             .filterChangeSubject(filterChangedEventSubject)
             .count(comments.total)
     )
+    models.add(AddCommentModel_().user(commentsModel.loggedUser).id("add_comment"))
+
     for (comment in comments.comments) {
       models.add(
           CommentGroupModel(dateUtils, comment, commentEventSubject)

@@ -1,6 +1,6 @@
 package cm.aptoide.pt.editorial;
 
-import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
+import cm.aptoide.pt.comments.refactor.data.CommentsWrapperModel;
 import cm.aptoide.pt.editorial.epoxy.comments.ChangeFilterEvent;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.reviews.LanguageFilterHelper;
@@ -56,7 +56,7 @@ public interface EditorialView extends View {
   Observable<Void> snackLoginClick();
 
   void populateCardContent(EditorialViewModel editorialViewModel,
-      CommentsResponseModel commentsResponseModel);
+      CommentsWrapperModel commentsWrapperModel);
 
   Observable<ChangeFilterEvent> filterEventChange();
 

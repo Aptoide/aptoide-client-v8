@@ -30,7 +30,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.DownloadModel;
-import cm.aptoide.pt.comments.refactor.data.CommentsResponseModel;
+import cm.aptoide.pt.comments.refactor.data.CommentsWrapperModel;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.epoxy.EditorialController;
 import cm.aptoide.pt.editorial.epoxy.ReactionConfiguration;
@@ -291,14 +291,6 @@ public class EditorialFragment extends NavigationTrackFragment
         .cast(Object.class);
   }
 
-  private boolean isEndReached() {
-    LinearLayoutManager layoutManager = (LinearLayoutManager) editorialItems.getLayoutManager();
-    if (layoutManager == null) {
-      return false;
-    }
-    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition() <= 2;
-  }
-
   @Override public void showLoading() {
     actionItemCard.setVisibility(View.GONE);
     editorialItems.setVisibility(View.GONE);
@@ -333,6 +325,10 @@ public class EditorialFragment extends NavigationTrackFragment
   @Override public Observable<EditorialEvent> actionButtonClicked() {
     return uiEventsListener.filter(editorialEvent -> editorialEvent.getClickType()
         .equals(EditorialEvent.Type.ACTION));
+  }
+
+  @Override public void populateView(EditorialViewModel editorialViewModel) {
+    populateAppContent(editorialViewModel);
   }
 
   @Override public void showError(EditorialViewModel.Error error) {
@@ -441,8 +437,32 @@ public class EditorialFragment extends NavigationTrackFragment
     return snackListener;
   }
 
-  @Override public void populateView(EditorialViewModel editorialViewModel) {
-    populateAppContent(editorialViewModel);
+  @Override public void populateCardContent(EditorialViewModel editorialViewModel,
+      CommentsWrapperModel commentsWrapperModel) {
+    if (editorialViewModel.hasContent()) {
+      editorialItems.setVisibility(View.VISIBLE);
+      editorialController.setData(editorialViewModel.getContentList(),
+          editorialViewModel.shouldHaveAnimation(),
+          new ReactionConfiguration(editorialViewModel.getCardId(), editorialViewModel.getGroupId(),
+              ReactionConfiguration.ReactionSource.CURATION_DETAIL), commentsWrapperModel);
+    }
+    setBottomAppCardInfo(editorialViewModel);
+  }
+
+  @Override public Observable<ChangeFilterEvent> filterEventChange() {
+    return editorialController.getFilterChangedEventSubject();
+  }
+
+  @Override public List<LanguageFilterHelper.LanguageFilter> getLanguageFilters() {
+    return new LanguageFilterHelper(getContext().getResources()).getLanguageFilterList();
+  }
+
+  private boolean isEndReached() {
+    LinearLayoutManager layoutManager = (LinearLayoutManager) editorialItems.getLayoutManager();
+    if (layoutManager == null) {
+      return false;
+    }
+    return layoutManager.getItemCount() - layoutManager.findLastVisibleItemPosition() <= 2;
   }
 
   private void populateAppContent(EditorialViewModel editorialViewModel) {
@@ -493,26 +513,6 @@ public class EditorialFragment extends NavigationTrackFragment
         }
       }
     }
-  }
-
-  @Override public void populateCardContent(EditorialViewModel editorialViewModel,
-      CommentsResponseModel commentsResponseModel) {
-    if (editorialViewModel.hasContent()) {
-      editorialItems.setVisibility(View.VISIBLE);
-      editorialController.setData(editorialViewModel.getContentList(),
-          editorialViewModel.shouldHaveAnimation(),
-          new ReactionConfiguration(editorialViewModel.getCardId(), editorialViewModel.getGroupId(),
-              ReactionConfiguration.ReactionSource.CURATION_DETAIL), commentsResponseModel);
-    }
-    setBottomAppCardInfo(editorialViewModel);
-  }
-
-  @Override public Observable<ChangeFilterEvent> filterEventChange() {
-    return editorialController.getFilterChangedEventSubject();
-  }
-
-  @Override public List<LanguageFilterHelper.LanguageFilter> getLanguageFilters() {
-    return new LanguageFilterHelper(getContext().getResources()).getLanguageFilterList();
   }
 
   private void setButtonText(DownloadModel model) {
