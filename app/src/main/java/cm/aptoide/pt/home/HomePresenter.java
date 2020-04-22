@@ -370,7 +370,7 @@ public class HomePresenter implements Presenter {
         .doOnNext(view::showBundlesSkeleton)
         .filter(HomeBundlesModel::isComplete)
         .observeOn(viewScheduler)
-        .doOnNext(bundlesModel -> handleBundlesResult(bundlesModel));
+        .doOnNext(this::handleBundlesResult);
   }
 
   private void handleBundlesResult(HomeBundlesModel bundlesModel) {
