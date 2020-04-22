@@ -84,6 +84,7 @@
   <string name="appview_message_apkfy_1">100%% safe updates of %1$s</string>
   <string name="appview_message_apkfy_2">Access to unrestricted apps</string>
   <string name="apkfy_install_message">Do you want to install this app?</string>
+  <string name="appview_download_error_missing_splits">Oops, there was a problem downloading this app. We\'ll fix it soon!</string>
 
 
   <!-- AppView Donations-->
