@@ -187,9 +187,7 @@ public class DeepLinkManager {
       return false;
     }
     List<ScreenTagHistory> screenHistory = navigationTracker.getHistoryList();
-    if (screenHistory.size() == 0) {
-      navigationTracker.registerScreen(ScreenTagHistory.Builder.build(APP_SHORTCUT));
-    } else if (screenHistory.get(screenHistory.size() - 1)
+    if (screenHistory.get(screenHistory.size() - 1)
         .getFragment()
         .equals("Notification")) {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
