@@ -24,6 +24,7 @@ import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
@@ -300,8 +301,13 @@ public class AppViewPresenter implements Presenter {
                     .getName(),
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
             .flatMapCompletable(status -> downloadApp(action, appModel, status,
-                appModel.getOpenType()
-                    == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).onErrorComplete()))
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
+                throwable -> {
+                  if (throwable instanceof InvalidAppException) {
+                    view.showInvalidAppInfoErrorDialog();
+                  }
+                })
+                .onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -1125,7 +1131,11 @@ public class AppViewPresenter implements Presenter {
             })
             .doOnError(throwable -> {
               crashReport.log(throwable);
-              view.showGenericErrorDialog();
+              if (throwable instanceof InvalidAppException) {
+                view.showInvalidAppInfoErrorDialog();
+              } else {
+                view.showGenericErrorDialog();
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
