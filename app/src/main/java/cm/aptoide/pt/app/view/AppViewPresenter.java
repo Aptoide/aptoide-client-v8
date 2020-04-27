@@ -305,6 +305,8 @@ public class AppViewPresenter implements Presenter {
                 throwable -> {
                   if (throwable instanceof InvalidAppException) {
                     view.showInvalidAppInfoErrorDialog();
+                  } else {
+                    view.showGenericErrorDialog();
                   }
                 })
                 .onErrorComplete()))
