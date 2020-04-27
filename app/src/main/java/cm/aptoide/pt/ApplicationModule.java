@@ -54,7 +54,6 @@ import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.RealmExperimentMapper;
 import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
-import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
@@ -1496,7 +1495,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK,
-        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
         FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
         AptoideInstallAnalytics.CONVERSION_EVENT);
   }
@@ -1989,12 +1987,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
-  }
-
-  @Singleton @Provides ApkfyExperiment providesApkfyExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics,
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new ApkfyExperiment(abTestManager, appViewAnalytics, sharedPreferences);
   }
 
   @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(
