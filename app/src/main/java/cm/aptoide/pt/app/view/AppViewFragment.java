@@ -1713,6 +1713,10 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     showErrorDialog("", getContext().getString(R.string.error_occured));
   }
 
+  @Override public void showInvalidAppInfoErrorDialog() {
+    showErrorDialog("", getContext().getString(R.string.appview_download_error_missing_splits));
+  }
+
   private void showAppcInfo(boolean hasAdvertising, boolean hasBilling, double appcReward,
       double fiatReward, String fiatCurrency, double appcBudget, String date) {
     if (hasAdvertising) {

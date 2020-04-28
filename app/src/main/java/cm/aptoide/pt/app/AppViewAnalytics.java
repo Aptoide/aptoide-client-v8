@@ -531,4 +531,13 @@ public class AppViewAnalytics {
     data.put("group", assignment);
     return data;
   }
+
+  public void sendInvalidAppEventError(String packageName, DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      Throwable throwable) {
+    downloadAnalytics.sendAppNotValidError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy,
+        throwable);
+  }
 }

@@ -146,6 +146,33 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
+  public void sendAppNotValidError(String packageName, InstallType installType,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      Throwable throwable) {
+
+    String previousContext = navigationTracker.getPreviousViewName();
+    String context = navigationTracker.getCurrentViewName();
+    String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
+        .getTag() : "";
+
+    HashMap<String, Object> result =
+        createRakamDownloadEvent(packageName, installType.toString(), offerResponseStatus,
+            isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, previousContext,
+            context, tag);
+
+    result.put(STATUS, "fail");
+    result.put(ERROR_TYPE, throwable.getClass()
+        .getSimpleName());
+    result.put(ERROR_MESSAGE, throwable.getMessage());
+
+    DownloadEvent downloadEvent =
+        new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
+
+    analyticsManager.logEvent(result, downloadEvent.getEventName(), downloadEvent.getAction(),
+        downloadEvent.getContext());
+  }
+
   private void sendDownloadCompletedEvent(String packageName, int versionCode) {
     String key = packageName + versionCode + DOWNLOAD_EVENT_NAME;
     DownloadEvent downloadEvent = cache.get(key);
@@ -371,9 +398,22 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
       boolean isApkfy) {
     String previousContext = navigationTracker.getPreviousViewName();
     String context = navigationTracker.getCurrentViewName();
-    String tag_ =
-        navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
-            .getTag() : "";
+    String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
+        .getTag() : "";
+
+    HashMap<String, Object> result =
+        createRakamDownloadEvent(packageName, action, offerResponseStatus, isMigration, isAppBundle,
+            hasAppc, trustedBadge, storeName, isApkfy, previousContext, context, tag);
+
+    DownloadEvent downloadEvent =
+        new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
+    cache.put(md5 + RAKAM_DOWNLOAD_EVENT, downloadEvent);
+  }
+
+  private HashMap<String, Object> createRakamDownloadEvent(String packageName, String action,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      String previousContext, String context, String tag) {
 
     HashMap<String, Object> result = new HashMap<>();
     result.put(CONTEXT, context);
@@ -387,14 +427,11 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
     result.put(ADS_BLOCKED, offerResponseStatus.toString()
         .toLowerCase());
-    if (!tag_.isEmpty()) {
-      result.put(TAG, tag_);
+    if (!tag.isEmpty()) {
+      result.put(TAG, tag);
     }
     result.put(STORE, storeName);
-
-    DownloadEvent downloadEvent =
-        new DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context, AnalyticsManager.Action.CLICK);
-    cache.put(md5 + RAKAM_DOWNLOAD_EVENT, downloadEvent);
+    return result;
   }
 
   public void downloadCompleteEvent(ScreenTagHistory previousScreen, ScreenTagHistory currentScreen,
