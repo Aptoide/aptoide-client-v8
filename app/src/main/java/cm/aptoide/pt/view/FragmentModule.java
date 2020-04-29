@@ -107,6 +107,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListAnalytics;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
@@ -455,19 +456,21 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
       EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
-      UserFeedbackAnalytics userFeedbackAnalytics) {
+      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
-        userFeedbackAnalytics);
+        userFeedbackAnalytics, moPubAdsManager);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType,
+        moPubAdsManager);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -576,12 +579,17 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
-      EarnAppcListConfiguration earnAppcListConfiguration,
-      EarnAppcListManager earnAppcListManager) {
+      EarnAppcListConfiguration earnAppcListConfiguration, EarnAppcListManager earnAppcListManager,
+      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics) {
     return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
         appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics);
+  }
+
+  @FragmentScope @Provides EarnAppcListAnalytics provideEarnAppcListAnalytics(
+      DownloadAnalytics downloadAnalytics) {
+    return new EarnAppcListAnalytics(downloadAnalytics);
   }
 
   @FragmentScope @Provides EarnAppcListManager provideEarnAppcListManager(

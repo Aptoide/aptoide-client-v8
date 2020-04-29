@@ -146,6 +146,31 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     }
   }
 
+  public void sendNotEnoughSpaceError(String packageName, InstallType installType,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
+      boolean isApkfy) {
+    String previousContext = navigationTracker.getPreviousViewName();
+    String context = navigationTracker.getCurrentViewName();
+    String tag = navigationTracker.getCurrentScreen() != null ? navigationTracker.getCurrentScreen()
+        .getTag() : "";
+
+    HashMap<String, Object> result =
+        createRakamDownloadEvent(packageName, installType.toString(), offerResponseStatus,
+            isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy, previousContext,
+            context, tag);
+
+    result.put(STATUS, "incomplete");
+    result.put(ERROR_TYPE, "FileDownloadOutOfSpace");
+
+    DownloadAnalytics.DownloadEvent downloadEvent =
+        new DownloadAnalytics.DownloadEvent(RAKAM_DOWNLOAD_EVENT, result, context,
+            AnalyticsManager.Action.CLICK);
+
+    analyticsManager.logEvent(result, downloadEvent.getEventName(), downloadEvent.getAction(),
+        downloadEvent.getContext());
+  }
+
   public void sendAppNotValidError(String packageName, InstallType installType,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
       boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
