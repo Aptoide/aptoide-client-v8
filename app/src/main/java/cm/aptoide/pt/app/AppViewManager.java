@@ -305,7 +305,7 @@ public class AppViewManager {
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
-            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
   }
 
   public Completable pauseDownload(String md5) {

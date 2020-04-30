@@ -14,9 +14,9 @@ public class PromotionViewAppMapper {
 
   public PromotionViewApp mapInstallToPromotionApp(Install install, PromotionApp promotionApp) {
     return new PromotionViewApp(
-        getDownloadModel(install.getType(), install.getProgress(), install.getState()),
-        promotionApp.getName(), promotionApp.getPackageName(), promotionApp.getAppId(),
-        promotionApp.getDownloadPath(), promotionApp.getAlternativePath(),
+        getDownloadModel(install.getType(), install.getProgress(), install.getState(),
+            install.isIndeterminate()), promotionApp.getName(), promotionApp.getPackageName(),
+        promotionApp.getAppId(), promotionApp.getDownloadPath(), promotionApp.getAlternativePath(),
         promotionApp.getAppIcon(), promotionApp.isClaimed(), promotionApp.getDescription(),
         promotionApp.getSize(), promotionApp.getRating(), promotionApp.getNumberOfDownloads(),
         promotionApp.getMd5(), promotionApp.getVersionCode(), promotionApp.getVersionName(),
@@ -27,8 +27,8 @@ public class PromotionViewAppMapper {
   }
 
   private DownloadModel getDownloadModel(Install.InstallationType type, int progress,
-      Install.InstallationStatus state) {
+      Install.InstallationStatus state, boolean isIndeterminate) {
     return new DownloadModel(downloadStateParser.parseDownloadType(type, false), progress,
-        downloadStateParser.parseDownloadState(state));
+        downloadStateParser.parseDownloadState(state, isIndeterminate));
   }
 }
