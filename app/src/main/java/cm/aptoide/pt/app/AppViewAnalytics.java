@@ -540,4 +540,12 @@ public class AppViewAnalytics {
         offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy,
         throwable);
   }
+
+  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
+      boolean isApkfy) {
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
+  }
 }

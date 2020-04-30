@@ -365,10 +365,12 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
       WalletInstallConfiguration configuration, WalletInstallNavigator walletInstallNavigator,
-      WalletInstallManager walletInstallManager) {
+      WalletInstallManager walletInstallManager, WalletInstallAnalytics walletInstallAnalytics,
+      MoPubAdsManager moPubAdsManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
         walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
-        AndroidSchedulers.mainThread(), Schedulers.io(), configuration);
+        AndroidSchedulers.mainThread(), Schedulers.io(), configuration, walletInstallAnalytics,
+        moPubAdsManager);
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(

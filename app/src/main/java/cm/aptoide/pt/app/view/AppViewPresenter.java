@@ -19,6 +19,7 @@ import cm.aptoide.pt.app.AppViewModel;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.PromotionViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
@@ -366,6 +367,7 @@ public class AppViewPresenter implements Presenter {
             }
           }
         })
+        .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -377,7 +379,52 @@ public class AppViewPresenter implements Presenter {
     return appViewManager.observeAppViewModel()
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
-            model.getAppCoinsViewModel()));
+            model.getAppCoinsViewModel()))
+        .flatMap(this::verifyNotEnoughSpaceError);
+  }
+
+  private Observable<AppViewModel> verifyNotEnoughSpaceError(AppViewModel appViewModel) {
+    AppModel appModel = appViewModel.getAppModel();
+    DownloadModel downloadModel = appViewModel.getDownloadModel();
+    if (appViewModel.getDownloadModel()
+        .getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return appViewManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            appViewAnalytics.sendNotEnoughSpaceErrorEvent(appModel.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE), !appModel.getSplits()
+                    .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
+                appModel.getMalware()
+                    .getRank()
+                    .toString(), appModel.getStore()
+                    .getName(),
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+          })
+          .toObservable()
+          .map(__ -> appViewModel);
+    }
+    return Observable.just(appViewModel);
+  }
+
+  private Observable<PromotionViewModel> verifyNotEnoughSpaceError(
+      PromotionViewModel promotionViewModel) {
+    WalletApp walletApp = promotionViewModel.getWalletApp();
+    DownloadModel downloadModel = walletApp.getDownloadModel();
+    if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return appViewManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            appViewAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE),
+                !walletApp.getSplits()
+                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false);
+          })
+          .toObservable()
+          .map(__ -> promotionViewModel);
+    }
+    return Observable.just(promotionViewModel);
   }
 
   private void handleDownloadingSimilarApp() {
