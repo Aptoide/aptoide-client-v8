@@ -318,13 +318,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     super.onViewCreated(view, savedInstanceState);
 
     ViewStub.OnInflateListener installInflateListener = (viewStub, view1) -> {
-      install = ((Button) view1.findViewById(R.id.appview_install_button));
-      downloadInfoLayout = ((LinearLayout) view1.findViewById(R.id.appview_transfer_info));
-      downloadProgressBar = ((ProgressBar) view1.findViewById(R.id.appview_download_progress_bar));
-      downloadProgressValue = (TextView) view1.findViewById(R.id.appview_download_progress_number);
-      cancelDownload = ((ImageView) view1.findViewById(R.id.appview_download_cancel_button));
-      resumeDownload = ((ImageView) view1.findViewById(R.id.appview_download_resume_download));
-      pauseDownload = ((ImageView) view1.findViewById(R.id.appview_download_pause_download));
+      install = view1.findViewById(R.id.appview_install_button);
+      downloadInfoLayout = view1.findViewById(R.id.appview_transfer_info);
+      downloadProgressBar = view1.findViewById(R.id.appview_download_progress_bar);
+      downloadProgressValue = view1.findViewById(R.id.appview_download_progress_number);
+      cancelDownload = view1.findViewById(R.id.appview_download_cancel_button);
+      resumeDownload = view1.findViewById(R.id.appview_download_resume_download);
+      pauseDownload = view1.findViewById(R.id.appview_download_pause_download);
       installStateText = view1.findViewById(R.id.appview_download_download_state);
       downloadControlsLayout = view1.findViewById(R.id.install_controls_layout);
 
