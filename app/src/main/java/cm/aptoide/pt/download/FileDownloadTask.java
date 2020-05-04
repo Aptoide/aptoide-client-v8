@@ -52,6 +52,12 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
     new Thread(() -> {
+      FileDownloadTaskStatus fileDownloadTaskStatus1 =
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY,
+              new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
+                  baseDownloadTask.getLargeFileTotalBytes()), md5);
+      downloadStatus.onNext(fileDownloadTaskStatus1);
+
       FileDownloadTaskStatus fileDownloadTaskStatus;
       if (md5Comparator.compareMd5(md5, fileName)) {
         fileDownloadTaskStatus =
