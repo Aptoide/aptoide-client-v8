@@ -80,50 +80,52 @@ public class AppDownloadStatus {
   private AppDownloadState getAppDownloadState() {
     AppDownloadStatus.AppDownloadState previousState = null;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      switch (fileDownloadCallback.getDownloadState()) {
-        case ERROR:
-          return AppDownloadState.ERROR;
-        case ERROR_MD5_DOES_NOT_MATCH:
-          return AppDownloadState.ERROR_MD5_DOES_NOT_MATCH;
-        case ERROR_FILE_NOT_FOUND:
-          return AppDownloadState.ERROR_FILE_NOT_FOUND;
-        case ERROR_NOT_ENOUGH_SPACE:
-          return AppDownloadState.ERROR_NOT_ENOUGH_SPACE;
-        case WARN:
-          return AppDownloadState.WARN;
-        case PAUSED:
-          return AppDownloadState.PAUSED;
-        case INVALID_STATUS:
-          return AppDownloadState.INVALID_STATUS;
-        case VERIFYING_FILE_INTEGRITY:
-          if (previousState != null && (previousState
-              != AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY
-              && previousState != AppDownloadState.COMPLETED)) {
-            return AppDownloadState.PROGRESS;
-          } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
-              == fileDownloadCallbackList.size() - 1) {
-            return AppDownloadState.VERIFYING_FILE_INTEGRITY;
-          }
-        case COMPLETED:
-          if (previousState != null
-              && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
-            return AppDownloadState.PROGRESS;
-          } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
-              == fileDownloadCallbackList.size() - 1) {
-            Logger.getInstance()
-                .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
-            return AppDownloadState.COMPLETED;
-          }
-        case PENDING:
-          if (previousState != null
-              && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
-            return AppDownloadState.PROGRESS;
-          } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
-              == fileDownloadCallbackList.size() - 1) {
-            return AppDownloadState.PENDING;
-          }
+      if (fileDownloadCallback.getDownloadState() != null) {
+        switch (fileDownloadCallback.getDownloadState()) {
+          case ERROR:
+            return AppDownloadState.ERROR;
+          case ERROR_MD5_DOES_NOT_MATCH:
+            return AppDownloadState.ERROR_MD5_DOES_NOT_MATCH;
+          case ERROR_FILE_NOT_FOUND:
+            return AppDownloadState.ERROR_FILE_NOT_FOUND;
+          case ERROR_NOT_ENOUGH_SPACE:
+            return AppDownloadState.ERROR_NOT_ENOUGH_SPACE;
+          case WARN:
+            return AppDownloadState.WARN;
+          case PAUSED:
+            return AppDownloadState.PAUSED;
+          case INVALID_STATUS:
+            return AppDownloadState.INVALID_STATUS;
+          case VERIFYING_FILE_INTEGRITY:
+            if (previousState != null && (previousState
+                != AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY
+                && previousState != AppDownloadState.COMPLETED)) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              return AppDownloadState.VERIFYING_FILE_INTEGRITY;
+            }
+          case COMPLETED:
+            if (previousState != null
+                && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              Logger.getInstance()
+                  .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
+              return AppDownloadState.COMPLETED;
+            }
+          case PENDING:
+            if (previousState != null
+                && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              return AppDownloadState.PENDING;
+            }
+        }
+        previousState = fileDownloadCallback.getDownloadState();
       }
-      previousState = fileDownloadCallback.getDownloadState();
     }
     return AppDownloadState.PROGRESS;
   }

@@ -108,19 +108,21 @@ public class AppDownloadManager implements AppDownloader {
     return fileDownloader.observeFileDownloadProgress()
         .doOnNext(fileDownloadCallback -> fileDownloadSubject.onNext(fileDownloadCallback))
         .doOnNext(fileDownloadCallback -> {
-          switch (fileDownloadCallback.getDownloadState()) {
-            case COMPLETED:
-              handleCompletedFileDownload(fileDownloader);
-              break;
-            case ERROR_FILE_NOT_FOUND:
-            case ERROR:
-            case ERROR_NOT_ENOUGH_SPACE:
-              handleErrorFileDownload();
-              if (fileDownloadCallback.hasError()) {
-                downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(), app.getMd5(),
-                    fileDownloadCallback.getError());
-              }
-              break;
+          if (fileDownloadCallback.getDownloadState() != null) {
+            switch (fileDownloadCallback.getDownloadState()) {
+              case COMPLETED:
+                handleCompletedFileDownload(fileDownloader);
+                break;
+              case ERROR_FILE_NOT_FOUND:
+              case ERROR:
+              case ERROR_NOT_ENOUGH_SPACE:
+                handleErrorFileDownload();
+                if (fileDownloadCallback.hasError()) {
+                  downloadAnalytics.onError(app.getPackageName(), app.getVersionCode(),
+                      app.getMd5(), fileDownloadCallback.getError());
+                }
+                break;
+            }
           }
         });
   }
