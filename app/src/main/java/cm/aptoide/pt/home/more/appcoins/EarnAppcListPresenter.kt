@@ -3,7 +3,10 @@ package cm.aptoide.pt.home.more.appcoins
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
+import cm.aptoide.pt.ads.MoPubAdsManager
+import cm.aptoide.pt.ads.WalletAdsOfferManager.OfferResponseStatus
 import cm.aptoide.pt.app.AppNavigator
+import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.crashreports.CrashReport
 import cm.aptoide.pt.home.bundles.apps.RewardApp
 import cm.aptoide.pt.home.more.base.ListAppsClickEvent
@@ -25,7 +28,9 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
                             private val earnAppcListConfiguration: EarnAppcListConfiguration,
                             private val earnAppcListManager: EarnAppcListManager,
                             private val permissionManager: PermissionManager,
-                            private val permissionService: PermissionService) :
+                            private val permissionService: PermissionService,
+                            private val moPubAdsManager: MoPubAdsManager,
+                            private val earnAppcListAnalytics: EarnAppcListAnalytics) :
     ListAppsPresenter<RewardApp>(view, viewScheduler, crashReporter) {
 
   override fun present() {
@@ -129,9 +134,29 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
 
   private fun observeWalletState(): Observable<WalletApp> {
     return earnAppcListManager.observeWalletApp()
+        .flatMap { walletApp -> verifyNotEnoughSpaceError(walletApp) }
         .observeOn(viewScheduler)
         .doOnNext { walletApp -> view.updateState(walletApp) }
         .doOnError { e -> e.printStackTrace() }
+  }
+
+  private fun verifyNotEnoughSpaceError(walletApp: WalletApp): Observable<WalletApp> {
+    walletApp.downloadModel?.let { downloadModel ->
+      if (downloadModel.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+        moPubAdsManager.getAdsVisibilityStatus()
+            .doOnSuccess { offerResponseStatus: OfferResponseStatus? ->
+              val action = downloadModel.action
+              earnAppcListAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,
+                  downloadModel.action, offerResponseStatus,
+                  action != null && action == DownloadModel.Action.MIGRATE,
+                  walletApp.splits.isNotEmpty(), true, walletApp.trustedBadge,
+                  walletApp.storeName, false)
+            }
+            .toObservable()
+            .map { downloadModel }
+      }
+    }
+    return Observable.just(walletApp)
   }
 
   override fun getApps(refresh: Boolean): Observable<List<RewardApp>> {

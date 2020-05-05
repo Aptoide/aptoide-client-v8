@@ -106,7 +106,8 @@ public class EditorialManager {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), position));
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
+            position));
   }
 
   public Completable pauseDownload(String md5) {

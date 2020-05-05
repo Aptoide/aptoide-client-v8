@@ -3,6 +3,7 @@ package cm.aptoide.pt.promotions;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
@@ -23,12 +24,14 @@ public class PromotionsPresenter implements Presenter {
   private final PromotionsNavigator promotionsNavigator;
   private final PromotionsAnalytics promotionsAnalytics;
   private final String promotionType;
+  private final MoPubAdsManager moPubAdsManager;
   private String promotionId;
 
   public PromotionsPresenter(PromotionsView view, PromotionsManager promotionsManager,
       PermissionManager permissionManager, PermissionService permissionService,
       Scheduler viewScheduler, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, String promotionType) {
+      PromotionsNavigator promotionsNavigator, String promotionType,
+      MoPubAdsManager moPubAdsManager) {
     this.view = view;
     this.promotionsManager = promotionsManager;
     this.permissionManager = permissionManager;
@@ -37,6 +40,7 @@ public class PromotionsPresenter implements Presenter {
     this.promotionsAnalytics = promotionsAnalytics;
     this.promotionsNavigator = promotionsNavigator;
     this.promotionType = promotionType;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   @Override public void present() {
@@ -259,6 +263,7 @@ public class PromotionsPresenter implements Presenter {
         .flatMap(__ -> Observable.just(promotionsModel)
             .flatMapIterable(promotionsModel1 -> promotionsModel.getAppsList())
             .flatMap(promotionViewApp -> promotionsManager.getDownload(promotionViewApp))
+            .flatMap(this::verifyNotEnoughSpaceError)
             .observeOn(viewScheduler)
             .doOnNext(promotionViewApp -> view.showPromotionApp(promotionViewApp,
                 promotionsModel.isWalletInstalled()))
@@ -273,5 +278,25 @@ public class PromotionsPresenter implements Presenter {
                 .doOnNext(signatureMatch -> promotionsAnalytics.sendValentineMigratorEvent(
                     promotionViewApp.getPackageName(), signatureMatch))
                 .map(__2 -> promotionsModel)));
+  }
+
+  private Observable<PromotionViewApp> verifyNotEnoughSpaceError(
+      PromotionViewApp promotionViewApp) {
+    DownloadModel downloadModel = promotionViewApp.getDownloadModel();
+    if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return moPubAdsManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            promotionsAnalytics.sendNotEnoughSpaceErrorEvent(promotionViewApp.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE),
+                !promotionViewApp.getSplits()
+                    .isEmpty(), promotionViewApp.hasAppc(), promotionViewApp.getRank(),
+                promotionViewApp.getStoreName(), false);
+          })
+          .toObservable()
+          .map(__ -> promotionViewApp);
+    }
+    return Observable.just(promotionViewApp);
   }
 }

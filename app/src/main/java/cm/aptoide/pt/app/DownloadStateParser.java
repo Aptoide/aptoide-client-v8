@@ -14,37 +14,41 @@ public class DownloadStateParser {
   public DownloadStateParser() {
   }
 
-  public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
+  public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state,
+      boolean isIndeterminate) {
     DownloadModel.DownloadState downloadState;
-    switch (state) {
-      case DOWNLOADING:
-        downloadState = DownloadModel.DownloadState.ACTIVE;
-        break;
-      case PAUSED:
-        downloadState = DownloadModel.DownloadState.PAUSE;
-        break;
-      case IN_QUEUE:
-      case INITIAL_STATE:
-        downloadState = DownloadModel.DownloadState.INDETERMINATE;
-        break;
-      case INSTALLED:
-        downloadState = DownloadModel.DownloadState.COMPLETE;
-        break;
-      case UNINSTALLED:
-        downloadState = DownloadModel.DownloadState.COMPLETE;
-        break;
-      case INSTALLATION_TIMEOUT:
-      case GENERIC_ERROR:
-        downloadState = DownloadModel.DownloadState.ERROR;
-        break;
-      case NOT_ENOUGH_SPACE_ERROR:
-        downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
-        break;
-      case INSTALLING:
-        downloadState = DownloadModel.DownloadState.INSTALLING;
-        break;
-      default:
-        throw new IllegalStateException("Wrong type of download state");
+    if (isIndeterminate) {
+      downloadState = DownloadModel.DownloadState.INDETERMINATE;
+    } else {
+
+      switch (state) {
+        case DOWNLOADING:
+          downloadState = DownloadModel.DownloadState.ACTIVE;
+          break;
+        case PAUSED:
+          downloadState = DownloadModel.DownloadState.PAUSE;
+          break;
+        case IN_QUEUE:
+        case INITIAL_STATE:
+          downloadState = DownloadModel.DownloadState.INDETERMINATE;
+          break;
+        case INSTALLED:
+        case UNINSTALLED:
+          downloadState = DownloadModel.DownloadState.COMPLETE;
+          break;
+        case INSTALLATION_TIMEOUT:
+        case GENERIC_ERROR:
+          downloadState = DownloadModel.DownloadState.ERROR;
+          break;
+        case NOT_ENOUGH_SPACE_ERROR:
+          downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+          break;
+        case INSTALLING:
+          downloadState = DownloadModel.DownloadState.INSTALLING;
+          break;
+        default:
+          throw new IllegalStateException("Wrong type of download state");
+      }
     }
     return downloadState;
   }

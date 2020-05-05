@@ -53,7 +53,6 @@ import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
 import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
@@ -185,6 +184,7 @@ import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.AptoideInstallPersistence;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -348,11 +348,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
-      AptoideInstallManager aptoideInstallManager) {
+      AptoideInstallManager aptoideInstallManager,
+      InstallAppSizeValidator installAppSizeValidator) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
         downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
-        aptoideInstallManager);
+        aptoideInstallManager, installAppSizeValidator);
+  }
+
+  @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator() {
+    return new InstallAppSizeValidator();
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
@@ -1537,10 +1542,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         InstallAnalytics.RAKAM_INSTALL_EVENT,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK,
-        AppViewAnalytics.ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT);
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
@@ -2056,12 +2059,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides SplitsMapper providesSplitsMapper() {
     return new SplitsMapper();
-  }
-
-  @Singleton @Provides ApkfyExperiment providesApkfyExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppViewAnalytics appViewAnalytics,
-      @Named("default") SharedPreferences sharedPreferences) {
-    return new ApkfyExperiment(abTestManager, appViewAnalytics, sharedPreferences);
   }
 
   @Singleton @Provides @Named("base-rakam-host") String providesBaseRakamHost(

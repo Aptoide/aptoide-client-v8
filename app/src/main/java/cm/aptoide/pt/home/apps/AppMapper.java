@@ -25,7 +25,8 @@ public class AppMapper {
       Install install = installations.get(i);
       downloadsList.add(new DownloadApp(install.getAppName(), install.getMd5(), install.getIcon(),
           install.getPackageName(), install.getProgress(), install.getVersionName(),
-          install.getVersionCode(), mapDownloadStatus(install.getState()), -1));
+          install.getVersionCode(),
+          mapDownloadStatus(install.getState(), install.isIndeterminate()), -1));
     }
     Collections.sort(downloadsList, (app1, app2) -> app1.getName()
         .compareToIgnoreCase(app2.getName()));
@@ -62,35 +63,41 @@ public class AppMapper {
   public UpdateApp mapInstallToUpdateApp(Install install, boolean isInstalledWithAptoide) {
     return new UpdateApp(install.getAppName(), install.getMd5(), install.getIcon(),
         install.getPackageName(), install.getProgress(), install.getVersionName(),
-        install.getVersionCode(), mapDownloadStatus(install.getState()), -1,
-        isInstalledWithAptoide);
+        install.getVersionCode(), mapDownloadStatus(install.getState(), install.isIndeterminate()),
+        -1, isInstalledWithAptoide);
   }
 
-  private StateApp.Status mapDownloadStatus(Install.InstallationStatus state) {
+  private StateApp.Status mapDownloadStatus(Install.InstallationStatus state,
+      boolean isIndeterminate) {
     StateApp.Status status;
-    switch (state) {
-      case GENERIC_ERROR:
-      case INSTALLATION_TIMEOUT:
-      case NOT_ENOUGH_SPACE_ERROR:
-        status = StateApp.Status.ERROR;
-        break;
-      case IN_QUEUE:
-        status = StateApp.Status.IN_QUEUE;
-        break;
-      case PAUSED:
-        status = StateApp.Status.PAUSE;
-        break;
-      case DOWNLOADING:
-        status = StateApp.Status.ACTIVE;
-        break;
-      case INSTALLING:
-        status = StateApp.Status.INSTALLING;
-        break;
-      case UNINSTALLED:
-      case INITIAL_STATE:
-      default:
-        status = StateApp.Status.STANDBY;
-        break;
+    if (isIndeterminate) {
+      status = StateApp.Status.INSTALLING;
+    } else {
+
+      switch (state) {
+        case GENERIC_ERROR:
+        case INSTALLATION_TIMEOUT:
+        case NOT_ENOUGH_SPACE_ERROR:
+          status = StateApp.Status.ERROR;
+          break;
+        case IN_QUEUE:
+          status = StateApp.Status.IN_QUEUE;
+          break;
+        case PAUSED:
+          status = StateApp.Status.PAUSE;
+          break;
+        case DOWNLOADING:
+          status = StateApp.Status.ACTIVE;
+          break;
+        case INSTALLING:
+          status = StateApp.Status.INSTALLING;
+          break;
+        case UNINSTALLED:
+        case INITIAL_STATE:
+        default:
+          status = StateApp.Status.STANDBY;
+          break;
+      }
     }
     return status;
   }

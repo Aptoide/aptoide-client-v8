@@ -131,7 +131,7 @@ public class DownloadFactory {
       download.setSize(update.getSize());
       return download;
     } else {
-      throw new IllegalArgumentException(validationResult.getMessage());
+      throw new InvalidAppException(validationResult.getMessage());
     }
   }
 
@@ -197,7 +197,7 @@ public class DownloadFactory {
 
       return download;
     } else {
-      throw new IllegalArgumentException(validationResult.getMessage());
+      throw new InvalidAppException(validationResult.getMessage());
     }
   }
 }
