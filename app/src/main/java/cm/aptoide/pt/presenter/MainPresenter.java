@@ -6,9 +6,11 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -56,6 +58,8 @@ public class MainPresenter implements Presenter {
   private final AutoUpdateManager autoUpdateManager;
   private final PermissionService permissionService;
   private final RootAvailabilityManager rootAvailabilityManager;
+  private final AppsNameExperiment appsNameExperiment;
+  private final BottomNavigationMapper bottomNavigationMapper;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -66,7 +70,8 @@ public class MainPresenter implements Presenter {
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
-      RootAvailabilityManager rootAvailabilityManager) {
+      RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
+      BottomNavigationMapper bottomNavigationMapper) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -88,9 +93,20 @@ public class MainPresenter implements Presenter {
     this.autoUpdateManager = autoUpdateManager;
     this.permissionService = permissionService;
     this.rootAvailabilityManager = rootAvailabilityManager;
+    this.appsNameExperiment = appsNameExperiment;
+    this.bottomNavigationMapper = bottomNavigationMapper;
   }
 
   @Override public void present() {
+
+    view.getLifecycleEvent()
+        .filter(View.LifecycleEvent.CREATE::equals)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMapSingle(__ -> appsNameExperiment.getAppsName())
+        .doOnNext(name -> aptoideBottomNavigator.setAppsName(name))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFy.run())
@@ -107,7 +123,13 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
             .observeOn(viewScheduler)
-            .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
+            .doOnNext(fragmentid -> {
+              if (bottomNavigationMapper.mapToBottomNavigationPosition(fragmentid)
+                  == BottomNavigationMapper.APPS_POSITION) {
+                appsNameExperiment.recordConversion();
+              }
+              aptoideBottomNavigator.showFragment(fragmentid);
+            })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

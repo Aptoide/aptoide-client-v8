@@ -18,6 +18,7 @@ import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
+import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -191,14 +192,16 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      RootAvailabilityManager rootAvailabilityManager) {
+      RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
+        appsNameExperiment, bottomNavigationMapper);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

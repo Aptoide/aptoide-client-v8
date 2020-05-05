@@ -22,6 +22,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
+import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -196,6 +197,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
+  @Inject AppsNameExperimentManager appsNameExperimentManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -302,6 +304,7 @@ public abstract class AptoideApplication extends Application {
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
         .andThen(setUpFirstRunAnalytics())
+        .andThen(setUpAppsNameAbTest())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -350,6 +353,23 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
+  }
+
+  private Completable setUpAppsNameAbTest() {
+    if (SecurePreferences.isAppsAbTest(
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()))) {
+      return setUpAbTest().doOnCompleted(() -> SecurePreferences.setAppsAbTest(false,
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences())))
+          .subscribeOn(Schedulers.newThread());
+    } else {
+      return Completable.complete();
+    }
+  }
+
+  private Completable setUpAbTest() {
+    return appsNameExperimentManager.setUpExperiment();
   }
 
   private Completable checkAdsUserProperty() {
