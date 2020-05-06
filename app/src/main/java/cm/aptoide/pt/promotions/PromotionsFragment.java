@@ -221,17 +221,20 @@ public class PromotionsFragment extends NavigationTrackFragment implements Promo
       showWallet(promotionViewApp, isWalletInstalled);
       setWalletItemClickListener(promotionViewApp);
     } else {
-      if (promotionViewApp.getDownloadModel()
-          .hasError()) {
-        handleDownloadError(promotionViewApp.getDownloadModel()
-            .getDownloadState());
-      }
       promotionsAdapter.setPromotionApp(promotionViewApp);
     }
     loading.setVisibility(View.GONE);
     toolbarImagePlaceholder.setVisibility(View.GONE);
     toolbarImage.setVisibility(View.VISIBLE);
     promotionsView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void showDownloadError(PromotionViewApp promotionViewApp) {
+    if (promotionViewApp.getDownloadModel()
+        .hasError()) {
+      handleDownloadError(promotionViewApp.getDownloadModel()
+          .getDownloadState());
+    }
   }
 
   @Override public Observable<PromotionViewApp> installButtonClick() {

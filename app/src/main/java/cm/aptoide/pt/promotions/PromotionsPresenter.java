@@ -219,7 +219,8 @@ public class PromotionsPresenter implements Presenter {
       view.setPromotionMessage((appsModel.getDescription()));
       view.showPromotionTitle(appsModel.getTitle());
       view.showPromotionFeatureGraphic(appsModel.getFeatureGraphic());
-      return handlePromotionApps(appsModel);
+      return Observable.mergeDelayError(handlePromotionApps(appsModel),
+          handleDownloadErrors(appsModel));
     }
   }
 
@@ -278,6 +279,18 @@ public class PromotionsPresenter implements Presenter {
                 .doOnNext(signatureMatch -> promotionsAnalytics.sendValentineMigratorEvent(
                     promotionViewApp.getPackageName(), signatureMatch))
                 .map(__2 -> promotionsModel)));
+  }
+
+  private Observable<PromotionsModel> handleDownloadErrors(PromotionsModel promotionsModel) {
+    return Observable.merge(view.installButtonClick(), view.resumeDownload())
+        .flatMap(__ -> Observable.from(promotionsModel.getAppsList())
+            .flatMap(promotionApp -> promotionsManager.getDownload(promotionApp)
+                .filter(download -> download.getDownloadModel()
+                    .hasError())
+                .first()
+                .flatMap(this::verifyNotEnoughSpaceError)
+                .doOnNext(view::showDownloadError)))
+        .map(__ -> promotionsModel);
   }
 
   private Observable<PromotionViewApp> verifyNotEnoughSpaceError(

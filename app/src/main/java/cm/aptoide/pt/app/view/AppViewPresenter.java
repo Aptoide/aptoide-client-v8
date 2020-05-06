@@ -149,7 +149,8 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            loadTopDonations(appViewModel), observeDownloadApp(),
+            observePromotionDownloadErrors(appViewModel), loadTopDonations(appViewModel),
+            observeDownloadApp(), observeDownloadErrors(),
             loadOtherAppViewComponents(appViewModel)));
   }
 
@@ -375,12 +376,39 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  public Observable<AppViewModel> observePromotionDownloadErrors(AppViewModel appViewModel) {
+    return Observable.merge(view.resumePromotionDownload(), view.installWalletButtonClick())
+        .flatMap(__ -> Observable.just(appViewModel.getAppModel()))
+        .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
+        .flatMap(__ -> appViewManager.loadPromotionViewModel()
+            .filter(promotionViewModel -> promotionViewModel.getWalletApp()
+                .getDownloadModel() != null && promotionViewModel.getWalletApp()
+                .getDownloadModel()
+                .hasError())
+            .first())
+        .doOnNext(promotionViewModel -> view.showDownloadError(promotionViewModel.getWalletApp()
+            .getDownloadModel()))
+        .flatMap(this::verifyNotEnoughSpaceError)
+        .map(__ -> appViewModel)
+        .retry();
+  }
+
   public Observable<AppViewModel> observeDownloadApp() {
     return appViewManager.observeAppViewModel()
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
-            model.getAppCoinsViewModel()))
-        .flatMap(this::verifyNotEnoughSpaceError);
+            model.getAppCoinsViewModel()));
+  }
+
+  private Observable<AppViewModel> observeDownloadErrors() {
+    return Observable.merge(view.installAppClick(), view.resumeDownload())
+        .flatMap(__ -> appViewManager.observeAppViewModel()
+            .filter(appViewModel -> appViewModel.getDownloadModel()
+                .hasError())
+            .first())
+        .doOnNext(appViewModel -> view.showDownloadError(appViewModel.getDownloadModel()))
+        .flatMap(this::verifyNotEnoughSpaceError)
+        .retry();
   }
 
   private Observable<AppViewModel> verifyNotEnoughSpaceError(AppViewModel appViewModel) {
