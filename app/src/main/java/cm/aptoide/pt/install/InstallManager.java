@@ -355,6 +355,7 @@ public class InstallManager {
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
         case Download.IN_QUEUE:
+        case Download.VERIFYING_FILE_INTEGRITY:
         case Download.WAITING_TO_MOVE_FILES:
           isIndeterminate = true;
           break;
