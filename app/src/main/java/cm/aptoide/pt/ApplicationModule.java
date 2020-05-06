@@ -184,6 +184,7 @@ import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
+import cm.aptoide.pt.install.InstallAppSizeValidator;
 import cm.aptoide.pt.install.InstallEvents;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.InstalledRepository;
@@ -344,11 +345,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       DownloadsRepository downloadsRepository, InstalledRepository installedRepository,
       PackageInstallerManager packageInstallerManager, ForegroundManager foregroundManager,
-      AptoideInstallManager aptoideInstallManager) {
+      AptoideInstallManager aptoideInstallManager,
+      InstallAppSizeValidator installAppSizeValidator) {
     return new InstallManager(application, aptoideDownloadManager, defaultInstaller,
         rootAvailabilityManager, defaultSharedPreferences, secureSharedPreferences,
         downloadsRepository, installedRepository, packageInstallerManager, foregroundManager,
-        aptoideInstallManager);
+        aptoideInstallManager, installAppSizeValidator);
+  }
+
+  @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator() {
+    return new InstallAppSizeValidator();
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
