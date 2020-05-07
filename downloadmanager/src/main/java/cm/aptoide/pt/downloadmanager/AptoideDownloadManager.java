@@ -21,8 +21,6 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final DownloadAppMapper downloadAppMapper;
   private final String cachePath;
-  private final String apkPath;
-  private final String obbPath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
@@ -31,20 +29,21 @@ public class AptoideDownloadManager implements DownloadManager {
   private Subscription moveFilesSubscription;
   private DownloadAnalytics downloadAnalytics;
   private FileUtils fileUtils;
+  private PathProvider pathProvider;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics, String apkPath, String obbPath, FileUtils fileUtils) {
+      DownloadAnalytics downloadAnalytics, FileUtils fileUtils,
+      PathProvider pathProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
     this.downloadAnalytics = downloadAnalytics;
-    this.apkPath = apkPath;
-    this.obbPath = obbPath;
     this.fileUtils = fileUtils;
+    this.pathProvider = pathProvider;
     this.appDownloaderMap = new HashMap<>();
   }
 
@@ -235,7 +234,9 @@ public class AptoideDownloadManager implements DownloadManager {
   }
 
   @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    String path;
+    return pathProvider.getFilePathFromFileType(fileToDownload);
+
+    /*String path;
     switch (fileToDownload.getFileType()) {
       case FileToDownload.APK:
         path = apkPath;
@@ -251,7 +252,7 @@ public class AptoideDownloadManager implements DownloadManager {
         path = cachePath;
         break;
     }
-    return path;
+    return path;*/
   }
 
   private void removeDownloadFiles(Download download) {

@@ -240,7 +240,7 @@ public class InstallManager {
           }
         })
         .flatMap(savedDownload -> {
-          if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload.getSize())) {
+          if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload)) {
             download.setOverallDownloadStatus(Download.ERROR);
             download.setDownloadError(Download.NOT_ENOUGH_SPACE_ERROR);
             downloadRepository.save(download);
