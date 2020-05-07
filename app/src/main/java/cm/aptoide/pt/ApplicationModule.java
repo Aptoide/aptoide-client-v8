@@ -179,6 +179,7 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.FilePathProvider;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallAppSizeValidator;
@@ -350,8 +351,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         aptoideInstallManager, installAppSizeValidator);
   }
 
-  @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator() {
-    return new InstallAppSizeValidator();
+  @Singleton @Provides InstallAppSizeValidator providesInstallAppSizeValidator(
+      FilePathProvider filePathProvider) {
+    return new InstallAppSizeValidator(filePathProvider);
+  }
+
+  @Singleton @Provides FilePathProvider filePathManager(@Named("cachePath") String cachePath,
+      @Named("apkPath") String apkPath, @Named("obbPath") String obbPath) {
+    return new FilePathProvider(apkPath, obbPath, cachePath);
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
@@ -421,12 +428,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       DownloadsRepository downloadsRepository, DownloadStatusMapper downloadStatusMapper,
       @Named("cachePath") String cachePath, DownloadAppMapper downloadAppMapper,
       AppDownloaderProvider appDownloaderProvider, @Named("apkPath") String apkPath,
-      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics) {
+      @Named("obbPath") String obbPath, DownloadAnalytics downloadAnalytics,
+      FilePathProvider filePathProvider) {
     FileUtils.createDir(apkPath);
     FileUtils.createDir(obbPath);
     return new AptoideDownloadManager(downloadsRepository, downloadStatusMapper, cachePath,
-        downloadAppMapper, appDownloaderProvider, downloadAnalytics, apkPath, obbPath,
-        new FileUtils());
+        downloadAppMapper, appDownloaderProvider, downloadAnalytics, new FileUtils(),
+        filePathProvider);
   }
 
   @Provides @Singleton DownloadAppFileMapper providesDownloadAppFileMapper() {
@@ -1500,9 +1508,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         InstallAnalytics.RAKAM_INSTALL_EVENT,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
         AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT);
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
