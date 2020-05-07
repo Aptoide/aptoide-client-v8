@@ -88,12 +88,16 @@ class AppsController(val themeManager: ThemeManager) :
 
   private fun getPromotionValue(migrations: List<AppcUpdateApp>): Float {
     var promotionValue = 0f
+    var shouldShow = true
     for (migration in migrations) {
       if (migration.hasPromotion) {
         promotionValue += migration.appcReward
+      } else {
+        shouldShow = false
+        break
       }
     }
-    return promotionValue
+    return if (shouldShow) promotionValue else 0f
   }
 
 

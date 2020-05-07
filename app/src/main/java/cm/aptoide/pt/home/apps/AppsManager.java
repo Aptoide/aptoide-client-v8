@@ -2,7 +2,6 @@ package cm.aptoide.pt.home.apps;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.Pair;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
@@ -21,6 +20,7 @@ import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.promotions.PromotionApp;
 import cm.aptoide.pt.promotions.PromotionsManager;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -140,16 +140,13 @@ public class AppsManager {
   }
 
   public Observable<List<AppcUpdateApp>> getAppcUpgradesList() {
-    return migrationPromotionActive().flatMap(pair -> updatesManager.getAppcUpgradesList(false)
+    return getMigrationPromotions().flatMap(promotions -> updatesManager.getAppcUpgradesList(false)
         .distinctUntilChanged()
-        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, pair.first, pair.second)));
+        .map(updates -> appMapper.mapUpdateToUpdateAppcAppList(updates, promotions)));
   }
 
-  public Observable<Pair<Boolean, Float>> migrationPromotionActive() {
+  public Observable<List<PromotionApp>> getMigrationPromotions() {
     return promotionsManager.getPromotionApps(MIGRATION_PROMOTION)
-        .map(promotions -> new Pair<>(!promotions.isEmpty(),
-            !promotions.isEmpty() ? promotions.get(0)
-                .getAppcValue() : 0))
         .toObservable();
   }
 

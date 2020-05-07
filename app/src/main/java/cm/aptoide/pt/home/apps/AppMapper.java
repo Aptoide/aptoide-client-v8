@@ -8,6 +8,7 @@ import cm.aptoide.pt.home.apps.model.InstalledApp;
 import cm.aptoide.pt.home.apps.model.StateApp;
 import cm.aptoide.pt.home.apps.model.UpdateApp;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.promotions.PromotionApp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +51,18 @@ public class AppMapper {
   }
 
   public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
-      boolean hasPromotion, float appcValue) {
+      List<PromotionApp> promotions) {
     List<AppcUpdateApp> updatesList = new ArrayList<>();
     for (Update update : updates) {
+      boolean hasPromotion = false;
+      float appcValue = 0f;
+      for (PromotionApp promotion : promotions) {
+        if (promotion.getPackageName()
+            .equals(update.getPackageName())) {
+          appcValue = promotion.getAppcValue();
+          hasPromotion = !promotion.isClaimed();
+        }
+      }
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
           update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
           StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));
