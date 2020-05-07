@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.database.realm.FileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -34,8 +33,7 @@ public class AptoideDownloadManager implements DownloadManager {
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics, FileUtils fileUtils,
-      PathProvider pathProvider) {
+      DownloadAnalytics downloadAnalytics, FileUtils fileUtils, PathProvider pathProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
@@ -211,13 +209,13 @@ public class AptoideDownloadManager implements DownloadManager {
   public void moveCompletedDownloadFiles(Download download) {
     for (final FileToDownload fileToDownload : download.getFilesToDownload()) {
       if (!FileUtils.fileExists(
-          getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
+          pathProvider.getFilePathFromFileType(fileToDownload) + fileToDownload.getFileName())) {
         Logger.getInstance()
             .d(TAG, "trying to move file : "
                 + fileToDownload.getFileName()
                 + " "
                 + fileToDownload.getPackageName());
-        String newFilePath = getFilePathFromFileType(fileToDownload);
+        String newFilePath = pathProvider.getFilePathFromFileType(fileToDownload);
         fileUtils.copyFile(fileToDownload.getPath(), newFilePath, fileToDownload.getFileName());
         fileToDownload.setPath(newFilePath);
       } else {
@@ -231,28 +229,6 @@ public class AptoideDownloadManager implements DownloadManager {
     }
     download.setOverallDownloadStatus(Download.COMPLETED);
     downloadsRepository.save(download);
-  }
-
-  @NonNull private String getFilePathFromFileType(FileToDownload fileToDownload) {
-    return pathProvider.getFilePathFromFileType(fileToDownload);
-
-    /*String path;
-    switch (fileToDownload.getFileType()) {
-      case FileToDownload.APK:
-        path = apkPath;
-        break;
-      case FileToDownload.OBB:
-        path = obbPath + fileToDownload.getPackageName() + "/";
-        break;
-      case FileToDownload.SPLIT:
-        path = apkPath + fileToDownload.getPackageName() + "-splits/";
-        break;
-      case FileToDownload.GENERIC:
-      default:
-        path = cachePath;
-        break;
-    }
-    return path;*/
   }
 
   private void removeDownloadFiles(Download download) {
