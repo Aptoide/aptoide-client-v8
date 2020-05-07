@@ -117,17 +117,17 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         bottomNavigationNavigator.getBottomNavigationItems());
   }
 
-  private String mapAppsName(String name) {
+  private int mapAppsName(String name) {
     switch (name) {
       case "my_apps":
-        return "My Apps";
+        return R.string.bottomnavigation_button_my_apps;
       case "manager":
-        return "Manager";
+        return R.string.bottomnavigation_button_manager;
       case "updates":
-        return "Updates";
+        return R.string.bottomnavigation_button_updates;
       case "control":
       default:
-        return "Apps";
+        return R.string.bottomnavigation_button_apps;
     }
   }
 }

@@ -22,7 +22,7 @@ class AppsNameExperiment(private val abTestManager: ABTestManager,
       return abTestManager.getExperiment(EXPERIMENT_ID, type)
           .toSingle()
           .flatMap { experiment ->
-            var experimentAssignment = "apps"
+            var experimentAssignment = "control"
             if (!experiment.isExperimentOver && experiment.isPartOfExperiment) {
               experimentAssignment = experiment.assignment
             }
@@ -40,7 +40,7 @@ class AppsNameExperiment(private val abTestManager: ABTestManager,
                 return@flatMap Single.just(assignment)
               }
               "apps", "control" -> {
-                assignment = "apps"
+                assignment = "control"
                 return@flatMap Single.just(assignment)
               }
               else -> {
