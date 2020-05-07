@@ -3,15 +3,12 @@ package cm.aptoide.pt.install
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
-import kotlin.math.roundToLong
 
 class InstallAppSizeValidator {
 
   fun hasEnoughSpaceToInstallApp(downloadSize: Long): Boolean {
-    val bufferedAppSize = getBufferedAppSize(downloadSize)
     val availableSpace = getAvailableSpace()
-
-    return bufferedAppSize < availableSpace
+    return downloadSize <= availableSpace
   }
 
   private fun getAvailableSpace(): Long {
@@ -23,8 +20,4 @@ class InstallAppSizeValidator {
     }
   }
 
-  private fun getBufferedAppSize(appSize: Long): Long {
-    val sizePercentage = (appSize * 0.20).roundToLong()
-    return appSize + sizePercentage
-  }
 }

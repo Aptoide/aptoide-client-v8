@@ -35,6 +35,7 @@ public class Download extends RealmObject {
   public static final int NOT_DOWNLOADED = 12;
   public static final int IN_QUEUE = 13;
   public static final int WAITING_TO_MOVE_FILES = 14;
+  public static final int VERIFYING_FILE_INTEGRITY = 15;
   //errors
   public static final int NO_ERROR = 0;
   public static final int GENERIC_ERROR = 1;

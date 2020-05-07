@@ -7,6 +7,7 @@ import cm.aptoide.pt.app.AppViewAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.database.realm.Download;
 import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.InstallAnalytics;
 import java.util.HashMap;
@@ -147,5 +148,33 @@ public class PromotionsAnalytics {
 
     analyticsManager.logEvent(data, VALENTINE_MIGRATOR, AnalyticsManager.Action.CLICK,
         navigationTracker.getViewName(true));
+  }
+
+  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
+      boolean isApkfy) {
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
+  }
+
+  private InstallType mapDownloadAction(DownloadModel.Action downloadAction) {
+    InstallType installType = InstallType.INSTALL;
+    switch (downloadAction) {
+      case DOWNGRADE:
+        installType = InstallType.DOWNGRADE;
+        break;
+      case INSTALL:
+        installType = InstallType.INSTALL;
+        break;
+      case UPDATE:
+        installType = InstallType.UPDATE;
+        break;
+      case MIGRATE:
+      case OPEN:
+        throw new IllegalStateException(
+            "Mapping an invalid download action " + downloadAction.name());
+    }
+    return installType;
   }
 }

@@ -17,6 +17,9 @@ public class DownloadStatusMapper {
       case INVALID_STATUS:
         downloadState = Download.INVALID_STATUS;
         break;
+      case VERIFYING_FILE_INTEGRITY:
+        downloadState = Download.VERIFYING_FILE_INTEGRITY;
+        break;
       case COMPLETED:
         downloadState = Download.WAITING_TO_MOVE_FILES;
         break;

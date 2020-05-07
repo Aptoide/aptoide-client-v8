@@ -227,7 +227,7 @@ public class AptoideUtils {
 
     public static String computeMd5(File f) {
       long time = System.currentTimeMillis();
-      byte[] buffer = new byte[1024];
+      byte[] buffer = new byte[1024 * 1024];
       int read, i;
       String md5hash;
       try {

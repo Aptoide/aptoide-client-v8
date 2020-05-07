@@ -318,13 +318,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     super.onViewCreated(view, savedInstanceState);
 
     ViewStub.OnInflateListener installInflateListener = (viewStub, view1) -> {
-      install = ((Button) view1.findViewById(R.id.appview_install_button));
-      downloadInfoLayout = ((LinearLayout) view1.findViewById(R.id.appview_transfer_info));
-      downloadProgressBar = ((ProgressBar) view1.findViewById(R.id.appview_download_progress_bar));
-      downloadProgressValue = (TextView) view1.findViewById(R.id.appview_download_progress_number);
-      cancelDownload = ((ImageView) view1.findViewById(R.id.appview_download_cancel_button));
-      resumeDownload = ((ImageView) view1.findViewById(R.id.appview_download_resume_download));
-      pauseDownload = ((ImageView) view1.findViewById(R.id.appview_download_pause_download));
+      install = view1.findViewById(R.id.appview_install_button);
+      downloadInfoLayout = view1.findViewById(R.id.appview_transfer_info);
+      downloadProgressBar = view1.findViewById(R.id.appview_download_progress_bar);
+      downloadProgressValue = view1.findViewById(R.id.appview_download_progress_number);
+      cancelDownload = view1.findViewById(R.id.appview_download_cancel_button);
+      resumeDownload = view1.findViewById(R.id.appview_download_resume_download);
+      pauseDownload = view1.findViewById(R.id.appview_download_pause_download);
       installStateText = view1.findViewById(R.id.appview_download_download_state);
       downloadControlsLayout = view1.findViewById(R.id.install_controls_layout);
 
@@ -341,7 +341,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     poaInstall.setLayoutResource(R.layout.install_app_view);
     poaInstall.setOnInflateListener(installInflateListener);
 
-    scrollView = (NestedScrollView) view.findViewById(R.id.scroll_view_app);
+    scrollView = view.findViewById(R.id.scroll_view_app);
     errorView = view.findViewById(R.id.error_view);
     reviewsLayout = view.findViewById(R.id.reviews_layout);
     appIcon = view.findViewById(R.id.app_icon);
@@ -366,30 +366,30 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     poaCountdownSeconds = view.findViewById(R.id.seconds);
     iabInfo = view.findViewById(R.id.iap_appc_label);
     versionsLayout = view.findViewById(R.id.versions_layout);
-    latestVersionTitle = (TextView) view.findViewById(R.id.latest_version_title);
+    latestVersionTitle = view.findViewById(R.id.latest_version_title);
     latestVersion = versionsLayout.findViewById(R.id.latest_version);
     rewardAppLatestVersion = view.findViewById(R.id.appview_reward_app_versions_element);
-    otherVersions = (TextView) view.findViewById(R.id.other_versions);
+    otherVersions = view.findViewById(R.id.other_versions);
 
-    screenshots = (RecyclerView) view.findViewById(R.id.screenshots_list);
+    screenshots = view.findViewById(R.id.screenshots_list);
     screenshots.setLayoutManager(
         new LinearLayoutManager(view.getContext(), RecyclerView.HORIZONTAL, false));
     screenshots.setNestedScrollingEnabled(false);
 
-    descriptionText = (TextView) view.findViewById(R.id.description_text);
-    descriptionReadMore = (Button) view.findViewById(R.id.description_see_more);
-    topReviewsProgress = (ContentLoadingProgressBar) view.findViewById(R.id.top_comments_progress);
+    descriptionText = view.findViewById(R.id.description_text);
+    descriptionReadMore = view.findViewById(R.id.description_see_more);
+    topReviewsProgress = view.findViewById(R.id.top_comments_progress);
     ratingLayout = view.findViewById(R.id.rating_layout);
     emptyReviewsLayout = view.findViewById(R.id.empty_reviews_layout);
     topReviewsLayout = view.findViewById(R.id.comments_layout);
-    rateAppButtonLarge = (Button) view.findViewById(R.id.rate_this_button2);
-    emptyReviewTextView = (TextView) view.findViewById(R.id.empty_review_text);
-    reviewUsers = (TextView) view.findViewById(R.id.users_voted);
-    avgReviewScore = (TextView) view.findViewById(R.id.rating_value);
-    avgReviewScoreBar = (RatingBar) view.findViewById(R.id.rating_bar);
-    reviewsView = (RecyclerView) view.findViewById(R.id.top_comments_list);
-    rateAppButton = (Button) view.findViewById(R.id.rate_this_button);
-    showAllReviewsButton = (Button) view.findViewById(R.id.read_all_button);
+    rateAppButtonLarge = view.findViewById(R.id.rate_this_button2);
+    emptyReviewTextView = view.findViewById(R.id.empty_review_text);
+    reviewUsers = view.findViewById(R.id.users_voted);
+    avgReviewScore = view.findViewById(R.id.rating_value);
+    avgReviewScoreBar = view.findViewById(R.id.rating_bar);
+    reviewsView = view.findViewById(R.id.top_comments_list);
+    rateAppButton = view.findViewById(R.id.rate_this_button);
+    showAllReviewsButton = view.findViewById(R.id.read_all_button);
     apkfyElement = view.findViewById(R.id.apkfy_element);
 
     flagThisAppSection = view.findViewById(R.id.flag_this_app_section);

@@ -9,6 +9,7 @@ import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.database.realm.Download
 import cm.aptoide.pt.download.AppContext
 import cm.aptoide.pt.download.DownloadAnalytics
+import cm.aptoide.pt.download.InstallType
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.notification.NotificationAnalytics
 import java.util.*
@@ -92,5 +93,28 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
 
   private fun getHistoryTracker(): ScreenTagHistory? {
     return ScreenTagHistory.Builder.build(VIEW_CONTEXT)
+  }
+
+  fun sendNotEnoughSpaceErrorEvent(packageName: String?,
+                                   downloadAction: DownloadModel.Action,
+                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus?,
+                                   isMigration: Boolean,
+                                   isAppBundle: Boolean, hasAppc: Boolean,
+                                   trustedBadge: String?, storeName: String?,
+                                   isApkfy: Boolean) {
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy)
+  }
+
+  private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {
+    var installType = InstallType.INSTALL
+    installType = when (downloadAction) {
+      DownloadModel.Action.DOWNGRADE -> InstallType.DOWNGRADE
+      DownloadModel.Action.INSTALL -> InstallType.INSTALL
+      DownloadModel.Action.UPDATE -> InstallType.UPDATE
+      DownloadModel.Action.MIGRATE, DownloadModel.Action.OPEN -> throw IllegalStateException(
+          "Mapping an invalid download action " + downloadAction.name)
+    }
+    return installType
   }
 }

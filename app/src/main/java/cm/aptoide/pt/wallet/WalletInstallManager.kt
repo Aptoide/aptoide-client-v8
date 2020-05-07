@@ -98,7 +98,8 @@ class WalletInstallManager(val packageManager: PackageManager,
     return installManager.getInstall(walletApp.md5sum, walletApp.packageName, walletApp.versionCode)
         .map { install ->
           DownloadModel(downloadStateParser.parseDownloadType(install.type, false),
-              install.progress, downloadStateParser.parseDownloadState(install.state))
+              install.progress, downloadStateParser.parseDownloadState(install.state,
+              install.isIndeterminate))
         }
   }
 

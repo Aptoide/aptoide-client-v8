@@ -50,6 +50,9 @@
   <string name="bottomnavigation_button_news">News</string>
   <string name="bottomnavigation_button_trending">Trending</string>
   <string name="bottomnavigation_button_discover">Discover</string>
+  <string name="bottomnavigation_button_manager">Manager</string>
+  <string name="bottomnavigation_button_updates">Updates</string>
+  <string name="bottomnavigation_button_my_apps">My apps</string>
 
   <!-- AppView -->
   <string name="appview_short_developer_website">Website</string>
