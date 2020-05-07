@@ -805,6 +805,8 @@
   <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
   <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
-
+  <string name="login_error_invalid_email">This email isn\'t valid!</string>
+  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_body">Ready for the best apps?</string>
 
 </resources>
