@@ -7,8 +7,9 @@ import rx.Completable
 import rx.Single
 import java.util.*
 
-class AppsNameExperiment(private val abTestManager: ABTestManager,
-                         private val appsNameAnalytics: AppsNameAnalytics) : RakamExperiment() {
+open class AppsNameExperiment(private val abTestManager: ABTestManager,
+                              private val appsNameAnalytics: AppsNameAnalytics) :
+    RakamExperiment() {
 
   private val EXPERIMENT_ID = "MOB-512-Apps_Name"
 
