@@ -27,13 +27,18 @@ class InstallAppSizeValidator(val filePathProvider: FilePathProvider) {
 
 
   private fun isAppAlreadyDownloaded(download: Download): Boolean {
-    for (fileToDownload in download.filesToDownload) {
-      if (!FileUtils.fileExists(
-              filePathProvider.getFilePathFromFileType(fileToDownload) + fileToDownload.fileName)) {
-        return false
+    if (download.filesToDownload.isEmpty()) {
+      return false
+    } else {
+      for (fileToDownload in download.filesToDownload) {
+        if (!FileUtils.fileExists(
+                filePathProvider.getFilePathFromFileType(
+                    fileToDownload) + fileToDownload.fileName)) {
+          return false
+        }
       }
+      return true
     }
-    return true
 
   }
 }
