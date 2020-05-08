@@ -67,16 +67,17 @@ open class AppsNameExperiment(private val abTestManager: ABTestManager,
   }
 
 
-  fun recordConversion() {
+  fun recordConversion(): Completable {
     if (isTestingLanguage()) {
-      abTestManager.getExperiment(EXPERIMENT_ID, type)
+      return abTestManager.getExperiment(EXPERIMENT_ID, type)
           .filter { !it.isExperimentOver && it.isPartOfExperiment && assignment != null }
           .doOnNext {
             assignment?.let { assign ->
-              appsNameAnalytics.sendAbTestConvertingEvent(assignment!!)
+              appsNameAnalytics.sendAbTestConvertingEvent(assign)
             }
-          }
+          }.toCompletable()
     }
+    return Completable.complete()
   }
 
   private fun isTestingLanguage(): Boolean {

@@ -29,6 +29,7 @@ import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -123,13 +124,9 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
             .observeOn(viewScheduler)
-            .doOnNext(fragmentid -> {
-              if (bottomNavigationMapper.mapToBottomNavigationPosition(fragmentid)
-                  == BottomNavigationMapper.APPS_POSITION) {
-                appsNameExperiment.recordConversion();
-              }
-              aptoideBottomNavigator.showFragment(fragmentid);
-            })
+            .flatMapCompletable(
+                fragmentid -> handleAppsNameExperimentConversion(fragmentid).doOnCompleted(
+                    () -> aptoideBottomNavigator.showFragment(fragmentid)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -140,6 +137,14 @@ public class MainPresenter implements Presenter {
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
+  }
+
+  private Completable handleAppsNameExperimentConversion(Integer fragmentid) {
+    if (bottomNavigationMapper.mapToBottomNavigationPosition(fragmentid)
+        == BottomNavigationMapper.APPS_POSITION) {
+      return appsNameExperiment.recordConversion();
+    }
+    return Completable.complete();
   }
 
   private void setupUpdatesNumber() {
