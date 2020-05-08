@@ -22,8 +22,6 @@ public class AptoideDownloadManager implements DownloadManager {
   private static final String TAG = "AptoideDownloadManager";
   private final DownloadAppMapper downloadAppMapper;
   private final String cachePath;
-  private final String apkPath;
-  private final String obbPath;
   private DownloadsRepository downloadsRepository;
   private HashMap<String, AppDownloader> appDownloaderMap;
   private DownloadStatusMapper downloadStatusMapper;
@@ -32,20 +30,20 @@ public class AptoideDownloadManager implements DownloadManager {
   private Subscription moveFilesSubscription;
   private DownloadAnalytics downloadAnalytics;
   private FileUtils fileUtils;
+  private PathProvider pathProvider;
 
   public AptoideDownloadManager(DownloadsRepository downloadsRepository,
       DownloadStatusMapper downloadStatusMapper, String cachePath,
       DownloadAppMapper downloadAppMapper, AppDownloaderProvider appDownloaderProvider,
-      DownloadAnalytics downloadAnalytics, String apkPath, String obbPath, FileUtils fileUtils) {
+      DownloadAnalytics downloadAnalytics, FileUtils fileUtils, PathProvider pathProvider) {
     this.downloadsRepository = downloadsRepository;
     this.downloadStatusMapper = downloadStatusMapper;
     this.cachePath = cachePath;
     this.downloadAppMapper = downloadAppMapper;
     this.appDownloaderProvider = appDownloaderProvider;
     this.downloadAnalytics = downloadAnalytics;
-    this.apkPath = apkPath;
-    this.obbPath = obbPath;
     this.fileUtils = fileUtils;
+    this.pathProvider = pathProvider;
     this.appDownloaderMap = new HashMap<>();
   }
 
@@ -210,13 +208,13 @@ public class AptoideDownloadManager implements DownloadManager {
   public void moveCompletedDownloadFiles(RoomDownload download) {
     for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
       if (!FileUtils.fileExists(
-          getFilePathFromFileType(roomFileToDownload) + roomFileToDownload.getFileName())) {
+          pathProvider.getFilePathFromFileType(roomFileToDownload) + roomFileToDownload.getFileName())) {
         Logger.getInstance()
             .d(TAG, "trying to move file : "
                 + roomFileToDownload.getFileName()
                 + " "
                 + roomFileToDownload.getPackageName());
-        String newFilePath = getFilePathFromFileType(roomFileToDownload);
+        String newFilePath = pathProvider.getFilePathFromFileType(roomFileToDownload);
         fileUtils.copyFile(roomFileToDownload.getPath(), newFilePath,
             roomFileToDownload.getFileName());
         roomFileToDownload.setPath(newFilePath);
@@ -233,30 +231,10 @@ public class AptoideDownloadManager implements DownloadManager {
     downloadsRepository.save(download);
   }
 
-  @NonNull private String getFilePathFromFileType(RoomFileToDownload roomFileToDownload) {
-    String path;
-    switch (roomFileToDownload.getFileType()) {
-      case RoomFileToDownload.APK:
-        path = apkPath;
-        break;
-      case RoomFileToDownload.OBB:
-        path = obbPath + roomFileToDownload.getPackageName() + "/";
-        break;
-      case RoomFileToDownload.SPLIT:
-        path = apkPath + roomFileToDownload.getPackageName() + "-splits/";
-        break;
-      case RoomFileToDownload.GENERIC:
-      default:
-        path = cachePath;
-        break;
-    }
-    return path;
-  }
-
   private void removeDownloadFiles(RoomDownload download) {
-    for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
-      FileUtils.removeFile(roomFileToDownload.getFilePath());
-      FileUtils.removeFile(cachePath + roomFileToDownload.getFileName() + ".temp");
+    for (final RoomFileToDownload fileToDownload : download.getFilesToDownload()) {
+      FileUtils.removeFile(fileToDownload.getFilePath());
+      FileUtils.removeFile(cachePath + fileToDownload.getFileName() + ".temp");
     }
   }
 

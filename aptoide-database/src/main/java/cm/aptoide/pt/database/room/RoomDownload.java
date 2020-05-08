@@ -37,6 +37,8 @@ import java.util.List;
   @Ignore public static final int NOT_DOWNLOADED = 12;
   @Ignore public static final int IN_QUEUE = 13;
   @Ignore public static final int WAITING_TO_MOVE_FILES = 14;
+  @Ignore public static final int VERIFYING_FILE_INTEGRITY = 15;
+
   //errors
   @Ignore public static final int NO_ERROR = 0;
   @Ignore public static final int NOT_ENOUGH_SPACE_ERROR = 2;

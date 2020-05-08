@@ -241,7 +241,7 @@ public class InstallManager {
           }
         })
         .flatMap(savedDownload -> {
-          if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload.getSize())) {
+          if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload)) {
             download.setOverallDownloadStatus(RoomDownload.ERROR);
             download.setDownloadError(RoomDownload.NOT_ENOUGH_SPACE_ERROR);
             downloadRepository.save(download);
@@ -357,6 +357,7 @@ public class InstallManager {
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
         case RoomDownload.IN_QUEUE:
+        case RoomDownload.VERIFYING_FILE_INTEGRITY:
         case RoomDownload.WAITING_TO_MOVE_FILES:
           isIndeterminate = true;
           break;
