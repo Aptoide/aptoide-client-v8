@@ -25,8 +25,7 @@ public class AppMapper {
       Install install = installations.get(i);
       downloadsList.add(new DownloadApp(install.getAppName(), install.getMd5(), install.getIcon(),
           install.getPackageName(), install.getProgress(), install.getVersionName(),
-          install.getVersionCode(),
-          mapDownloadStatus(install.getState(), install.isIndeterminate()), -1));
+          install.getVersionCode(), mapDownloadStatus(install.getState(), false), -1));
     }
     Collections.sort(downloadsList, (app1, app2) -> app1.getName()
         .compareToIgnoreCase(app2.getName()));
@@ -71,7 +70,7 @@ public class AppMapper {
       boolean isIndeterminate) {
     StateApp.Status status;
     if (isIndeterminate) {
-      status = StateApp.Status.INSTALLING;
+      status = StateApp.Status.STANDBY;
     } else {
 
       switch (state) {
