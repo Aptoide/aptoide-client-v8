@@ -97,6 +97,12 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         .setChecked(true);
   }
 
+  @Override public void setAppsName(String name) {
+    bottomNavigationView.getMenu()
+        .getItem(4)
+        .setTitle(mapAppsName(name));
+  }
+
   @Override public void onBackPressed() {
     if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
       bottomNavigationNavigator.navigateBack();
@@ -109,5 +115,19 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     super.onSaveInstanceState(outState);
     outState.putIntegerArrayList(ITEMS_LIST_KEY,
         bottomNavigationNavigator.getBottomNavigationItems());
+  }
+
+  private int mapAppsName(String name) {
+    switch (name) {
+      case "my_apps":
+        return R.string.bottomnavigation_button_my_apps;
+      case "manager":
+        return R.string.bottomnavigation_button_manager;
+      case "updates":
+        return R.string.bottomnavigation_button_updates;
+      case "control":
+      default:
+        return R.string.bottomnavigation_button_apps;
+    }
   }
 }

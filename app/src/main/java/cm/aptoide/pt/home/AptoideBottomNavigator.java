@@ -39,4 +39,6 @@ public interface AptoideBottomNavigator {
    * @param bottomNavigationItem Button to give focus
    */
   void requestFocus(BottomNavigationItem bottomNavigationItem);
+
+  void setAppsName(String name);
 }
