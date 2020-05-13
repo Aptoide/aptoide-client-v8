@@ -103,8 +103,8 @@ import rx.schedulers.Schedulers;
 
         case APPCOINS_ADS:
           return new GetAppCoinsCampaignsRequest(new GetAppCoinsCampaignsRequest.Body(0, limit),
-              httpClient, converterFactory, bodyInterceptor, tokenInvalidator,
-              sharedPreferences).observe(bypassCache, bypassServerCache)
+              httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,
+              appBundlesVisibilityManager).observe(bypassCache, bypassServerCache)
               .observeOn(Schedulers.io())
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())

@@ -1581,9 +1581,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
-      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory) {
+      @Named("default") SharedPreferences sharedPreferences, Converter.Factory converterFactory,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new AppCoinsService(okHttpClient, tokenInvalidator, sharedPreferences,
-        bodyInterceptorPoolV7, converterFactory);
+        bodyInterceptorPoolV7, converterFactory, appBundlesVisibilityManager);
   }
 
   @Named("remote") @Singleton @Provides BundleDataSource providesRemoteBundleDataSource(

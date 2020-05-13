@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.AppCoinsCampaign;
 import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
@@ -18,21 +19,24 @@ public class AppCoinsService {
   private final SharedPreferences preferences;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final Converter.Factory converterFactory;
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   public AppCoinsService(OkHttpClient httpClient, TokenInvalidator tokenInvalidator,
       SharedPreferences preferences, BodyInterceptor<BaseBody> bodyInterceptor,
-      Converter.Factory converterFactory) {
+      Converter.Factory converterFactory, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     this.httpClient = httpClient;
     this.tokenInvalidator = tokenInvalidator;
     this.preferences = preferences;
     this.bodyInterceptor = bodyInterceptor;
     this.converterFactory = converterFactory;
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   public Single<AppCoinsAdvertisingModel> getValidCampaign(String packageName, int versionCode) {
     return new GetAppCoinsCampaignsRequest(
         new GetAppCoinsCampaignsRequest.Body(packageName, versionCode), httpClient,
-        converterFactory, bodyInterceptor, tokenInvalidator, preferences).observe()
+        converterFactory, bodyInterceptor, tokenInvalidator, preferences,
+        appBundlesVisibilityManager).observe()
         .toSingle()
         .map(listAppCoinsCampaigns -> mapAdvertising(listAppCoinsCampaigns));
   }

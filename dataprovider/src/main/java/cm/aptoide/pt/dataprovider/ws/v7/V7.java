@@ -451,8 +451,8 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("appcoins/catappult/campaigns/get/limit={limit}")
     Observable<ListAppCoinsCampaigns> getAppCoinsAds(@Body GetAppCoinsCampaignsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache,
-        @Path(value = "limit") int limit);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Path(value = "limit") int limit,
+        @Query("aab") boolean showAabs);
 
     @POST("{url}") Observable<ActionItemResponse> getActionItem(
         @Path(value = "url", encoded = true) String path, @Body GetActionItemRequest.Body body,
@@ -482,7 +482,7 @@ public abstract class V7<U, B extends RefreshBody> extends WebService<V7.Interfa
 
     @POST("appcoins/promotions/get") Observable<GetPromotionsResponse> getPromotions(
         @Body GetPromotionsRequest.Body body,
-        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache);
+        @Header(WebService.BYPASS_HEADER_KEY) boolean bypassCache, @Query("aab") boolean showAabs);
   }
 }
 
