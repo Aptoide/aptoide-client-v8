@@ -71,7 +71,7 @@ public class AppMapper {
       boolean isIndeterminate) {
     StateApp.Status status;
     if (isIndeterminate) {
-      status = StateApp.Status.INSTALLING;
+      status = StateApp.Status.IN_QUEUE;
     } else {
 
       switch (state) {
