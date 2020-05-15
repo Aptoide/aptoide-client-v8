@@ -137,9 +137,7 @@ public class AppViewModelManager {
 
   private Single<AppModel> loadAppModel(String packageName, String storeName) {
     if (cachedApp != null && cachedApp.getPackageName()
-        .equals(packageName) && cachedApp.getStore()
-        .getName()
-        .equals(storeName)) {
+        .equals(packageName)) {
       return Single.just(cachedApp);
     }
     return appCenter.loadDetailedApp(packageName, storeName)
