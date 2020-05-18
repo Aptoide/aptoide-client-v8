@@ -124,10 +124,6 @@
         android:configChanges="orientation|screenSize" />
 
     <meta-data
-        android:name="io.fabric.ApiKey"
-        android:value="${fabricApiKey}" />
-
-    <meta-data
         android:name="applovin.sdk.key"
         android:value="${appLovinApiKey}" />
 

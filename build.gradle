@@ -20,7 +20,6 @@ buildscript {
 allprojects {
   repositories {
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url "https://jitpack.io" }
     maven { url "https://dl.bintray.com/asf/asf" }
@@ -158,8 +157,6 @@ ext {
   PARCELER_VERSION = '1.1.12'
 
   DAGGER_VERSION = '2.24'
-
-  FABRIC_VERSION = '1.29.0'
 
   APPC_CONTRACT_PROXY_VERSION = '0.4.5.19b'
 

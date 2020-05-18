@@ -23,7 +23,6 @@ public class AptoideBiAnalytics {
   private final long sendInterval;
   private final Scheduler timerScheduler;
   private final long initialDelay;
-  private final CrashLogger crashReport;
   private final AnalyticsLogger debugLogger;
 
   /**
@@ -33,7 +32,7 @@ public class AptoideBiAnalytics {
    */
   public AptoideBiAnalytics(EventsPersistence persistence, SessionPersistence sessionPersistence,
       AptoideBiEventService service, CompositeSubscription subscriptions, Scheduler timerScheduler,
-      long initialDelay, long sendInterval, CrashLogger crashReport, AnalyticsLogger debugLogger) {
+      long initialDelay, long sendInterval, AnalyticsLogger debugLogger) {
     this.persistence = persistence;
     this.sessionPersistence = sessionPersistence;
     this.service = service;
@@ -41,7 +40,6 @@ public class AptoideBiAnalytics {
     this.timerScheduler = timerScheduler;
     this.sendInterval = sendInterval;
     this.initialDelay = initialDelay;
-    this.crashReport = crashReport;
     this.debugLogger = debugLogger;
   }
 
@@ -68,7 +66,6 @@ public class AptoideBiAnalytics {
                 .first())
             .filter(events -> events.size() > 0)
             .flatMapCompletable(events -> sendEvents(new ArrayList<>(events)))
-            .doOnError(throwable -> crashReport.log(throwable))
             .retry()
             .subscribe());
   }
