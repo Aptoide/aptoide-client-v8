@@ -36,7 +36,6 @@ public class AptoideBiAnalyticsTest {
     EventsPersistence eventPersistenceMock = mock(EventsPersistence.class);
     SessionPersistence sessionPersistence = mock(SessionPersistence.class);
     AnalyticsLogger debugLogger = mock(AnalyticsLogger.class);
-    CrashLogger crashReport = mock(CrashLogger.class);
     String eventName = "test event";
     String context = "test context";
     Map<String, Object> data = new HashMap<>();
@@ -44,7 +43,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport, debugLogger);
+            new CompositeSubscription(), scheduler, 0, 200, debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -73,7 +72,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 0, 200, crashReport, debugLogger);
+            new CompositeSubscription(), scheduler, 0, 200 , debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
@@ -104,7 +103,7 @@ public class AptoideBiAnalyticsTest {
     TestScheduler scheduler = Schedulers.test();
     AptoideBiAnalytics analytics =
         new AptoideBiAnalytics(eventPersistenceMock, sessionPersistence, aptoideBiEventService,
-            new CompositeSubscription(), scheduler, 200000, 20000, crashReport, debugLogger);
+            new CompositeSubscription(), scheduler, 200000, 20000, debugLogger);
     when(aptoideBiEventService.send(any())).thenReturn(Completable.complete());
     List<Event> eventList = setupPersistence(eventPersistenceMock);
     analytics.setup();
