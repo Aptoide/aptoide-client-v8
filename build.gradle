@@ -124,7 +124,6 @@ ext {
   // Flurry Android SDK
   FLURRY_VERSION = '12.1.0'
 
-  CRASHLYTICS_VERSION = '2.10.0'
 
   //Rakam
   RAKAM_VERSION = '2.7.14'

@@ -114,7 +114,6 @@ android {
     debug {
       testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
-      ext.enableCrashlytics = false
       zipAlignEnabled false
       minifyEnabled false
       shrinkResources false
