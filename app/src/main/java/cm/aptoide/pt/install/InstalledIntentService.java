@@ -15,7 +15,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.room.RoomStoredMinimalAd;
-import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -176,15 +175,6 @@ public class InstalledIntentService extends IntentService {
   }
 
   private PackageInfo databaseOnPackageReplaced(String packageName) {
-    final RoomUpdate update = updatesRepository.get(packageName)
-        .first()
-        .doOnError(throwable -> {
-          CrashReport.getInstance()
-              .log(throwable);
-        })
-        .onErrorReturn(throwable -> null)
-        .toBlocking()
-        .first();
 
     PackageInfo packageInfo = AptoideUtils.SystemU.getPackageInfo(packageName, getPackageManager());
 
@@ -193,7 +183,7 @@ public class InstalledIntentService extends IntentService {
     }
 
     installManager.onUpdateConfirmed(new RoomInstalled(packageInfo, packageManager))
-        .andThen(updatesRepository.remove(update))
+        .andThen(updatesRepository.remove(packageName))
         .subscribe(() -> Logger.getInstance()
                 .d(TAG, "databaseOnPackageReplaced: " + packageName),
             throwable -> CrashReport.getInstance()

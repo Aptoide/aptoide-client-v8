@@ -23,8 +23,9 @@ public class RoomUpdatePersistence implements UpdatePersistence {
     this.updateDao = updateDao;
   }
 
-  public Observable<RoomUpdate> get(String packageName) {
-    return RxJavaInterop.toV1Observable(updateDao.get(packageName), BackpressureStrategy.BUFFER)
+  public Single<RoomUpdate> get(String packageName) {
+    return RxJavaInterop.toV1Single(updateDao.get(packageName))
+        .onErrorReturn(throwable -> null)
         .subscribeOn(Schedulers.io());
   }
 

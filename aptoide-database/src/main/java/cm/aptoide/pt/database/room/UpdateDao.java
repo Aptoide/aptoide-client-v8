@@ -12,7 +12,7 @@ import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao public interface UpdateDao {
 
-  @Query("SELECT * from `update` where packageName = :packageName") Observable<RoomUpdate> get(
+  @Query("SELECT * from `update` where packageName = :packageName") Single<RoomUpdate> get(
       String packageName);
 
   @Query("SELECT * from `update` where excluded = :isExcluded")
