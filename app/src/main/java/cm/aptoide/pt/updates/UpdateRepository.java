@@ -161,7 +161,7 @@ public class UpdateRepository {
     return updatePersistence.getAllSorted(isExcluded);
   }
 
-  public Observable<RoomUpdate> get(String packageName) {
+  public Single<RoomUpdate> get(String packageName) {
     return updatePersistence.get(packageName);
   }
 
@@ -177,10 +177,8 @@ public class UpdateRepository {
     return updatePersistence.remove(packageName);
   }
 
-  public Completable setExcluded(String packageName, boolean excluded) {
+  public Completable setExcluded(String packageName) {
     return updatePersistence.get(packageName)
-        .first()
-        .toSingle()
         .flatMap(update -> {
           update.setExcluded(true);
           return Single.just(update);

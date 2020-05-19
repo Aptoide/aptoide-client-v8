@@ -8,7 +8,7 @@ import rx.Single;
 
 public interface UpdatePersistence {
 
-  Observable<RoomUpdate> get(String packageName);
+  Single<RoomUpdate> get(String packageName);
 
   Single<List<RoomUpdate>> getAll(boolean isExcluded);
 

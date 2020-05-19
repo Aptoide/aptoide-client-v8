@@ -67,7 +67,7 @@ public class UpdatesManager {
         .sample(750, TimeUnit.MILLISECONDS);
   }
 
-  public Observable<RoomUpdate> getUpdate(String packageName) {
+  public Single<RoomUpdate> getUpdate(String packageName) {
     return updateRepository.get(packageName);
   }
 
@@ -80,7 +80,7 @@ public class UpdatesManager {
   }
 
   public Completable excludeUpdate(String packageName) {
-    return updateRepository.setExcluded(packageName, true);
+    return updateRepository.setExcluded(packageName);
   }
 
   public Completable refreshUpdates() {

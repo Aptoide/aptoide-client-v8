@@ -277,7 +277,7 @@ public class AppsManager {
             })
             .flatMapCompletable(download -> installManager.install(download))
             .andThen(aptoideInstallManager.sendConversionEvent()))
-        .toCompletable();
+        .onErrorComplete();
   }
 
   public boolean showWarning() {
