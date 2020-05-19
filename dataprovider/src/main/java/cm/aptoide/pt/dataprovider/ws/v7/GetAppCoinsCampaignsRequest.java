@@ -3,6 +3,7 @@ package cm.aptoide.pt.dataprovider.ws.v7;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.dataprovider.BuildConfig;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.ListAppCoinsCampaigns;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -18,23 +19,29 @@ import rx.Observable;
 public class GetAppCoinsCampaignsRequest
     extends V7<ListAppCoinsCampaigns, GetAppCoinsCampaignsRequest.Body> {
 
+  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+
   public GetAppCoinsCampaignsRequest(Body body, OkHttpClient httpClient,
       Converter.Factory converterFactory, BodyInterceptor bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
     super(body, getHost(sharedPreferences), httpClient, converterFactory, bodyInterceptor,
         tokenInvalidator);
+    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
   @NonNull public static String getHost(SharedPreferences sharedPreferences) {
     return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
         : BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
-        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST + "/api/7.20191202/";
+        + BuildConfig.APTOIDE_WEB_SERVICES_V7_HOST
+        + "/api/7.20191202/";
   }
 
   @Override protected Observable<ListAppCoinsCampaigns> loadDataFromNetwork(Interfaces interfaces,
       boolean bypassCache) {
-    return interfaces.getAppCoinsAds(body, bypassCache, body.getLimit());
+    return interfaces.getAppCoinsAds(body, bypassCache, body.getLimit(),
+        appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   public static class Body extends BaseBody implements Endless {
