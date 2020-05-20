@@ -233,6 +233,11 @@ android {
     variant.buildConfigField "String", "APPNEXT_SDK_VERSION",
         "\"" + APPNEXT_SDK_VERSION + "\""
 
+    variant.buildConfigField "int", "ROOM_SCHEMA_VERSION",
+        project.ROOM_SCHEMA_VERSION
+    variant.buildConfigField "String", "ROOM_DATABASE_NAME",
+        "\"" + project.ROOM_DATABASE_NAME + "\""
+
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_MINUS",
@@ -540,6 +545,17 @@ dependencies {
 
   //careful updating this because of support library conflicts
   implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
+
+  // Room components
+  implementation "androidx.room:room-runtime:${ROOM_VERSION}"
+  annotationProcessor "androidx.room:room-compiler:${ROOM_VERSION}"
+  androidTestImplementation "androidx.room:room-testing:${ROOM_VERSION}"
+
+  // RxJava support for Room
+  implementation "androidx.room:room-rxjava2:${ROOM_VERSION}"
+
+  // Rxjava Interop
+  implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
 }
 
 String getDate() {

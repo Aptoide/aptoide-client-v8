@@ -21,6 +21,7 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import androidx.core.app.NotificationCompat;
+import androidx.room.Room;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -53,8 +54,6 @@ import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.RealmExperimentMapper;
-import cm.aptoide.pt.abtesting.RealmExperimentPersistence;
 import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
@@ -64,7 +63,6 @@ import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
-import cm.aptoide.pt.account.AndroidAccountDataMigration;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
@@ -91,8 +89,6 @@ import cm.aptoide.pt.ads.WalletAdsOfferService;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.analytics.TrackerFilter;
 import cm.aptoide.pt.analytics.analytics.AnalyticsBodyInterceptorV7;
-import cm.aptoide.pt.analytics.analytics.RealmEventMapper;
-import cm.aptoide.pt.analytics.analytics.RealmEventPersistence;
 import cm.aptoide.pt.app.AdsManager;
 import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.app.AppCoinsService;
@@ -104,9 +100,10 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
-import cm.aptoide.pt.app.aptoideinstall.AptoideInstallPersistence;
+import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
-import cm.aptoide.pt.app.migration.AppcMigrationService;
+import cm.aptoide.pt.app.migration.AppcMigrationPersistence;
+import cm.aptoide.pt.app.migration.AppcMigrationRepository;
 import cm.aptoide.pt.app.view.donations.DonationsAnalytics;
 import cm.aptoide.pt.app.view.donations.DonationsService;
 import cm.aptoide.pt.app.view.donations.WalletService;
@@ -119,20 +116,25 @@ import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
-import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
+import cm.aptoide.pt.database.RealmStoreMigrator;
+import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
+import cm.aptoide.pt.database.RoomAptoideInstallPersistence;
+import cm.aptoide.pt.database.RoomDownloadPersistence;
+import cm.aptoide.pt.database.RoomEventMapper;
+import cm.aptoide.pt.database.RoomEventPersistence;
+import cm.aptoide.pt.database.RoomExperimentMapper;
+import cm.aptoide.pt.database.RoomExperimentPersistence;
+import cm.aptoide.pt.database.RoomInstallationMapper;
+import cm.aptoide.pt.database.RoomInstallationPersistence;
+import cm.aptoide.pt.database.RoomInstalledPersistence;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
+import cm.aptoide.pt.database.RoomStorePersistence;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
+import cm.aptoide.pt.database.RoomUpdatePersistence;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.DownloadAccessor;
-import cm.aptoide.pt.database.accessors.InstallationAccessor;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.Notification;
-import cm.aptoide.pt.database.realm.Store;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -147,7 +149,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.AppValidationAnalytics;
 import cm.aptoide.pt.download.AppValidator;
 import cm.aptoide.pt.download.DownloadAnalytics;
@@ -162,6 +163,7 @@ import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
 import cm.aptoide.pt.downloadmanager.DownloadAppMapper;
+import cm.aptoide.pt.downloadmanager.DownloadPersistence;
 import cm.aptoide.pt.downloadmanager.DownloadStatusMapper;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
 import cm.aptoide.pt.downloadmanager.FileDownloaderProvider;
@@ -182,6 +184,7 @@ import cm.aptoide.pt.home.bundles.RemoteBundleDataSource;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
 import cm.aptoide.pt.install.AppInstallerStatusReceiver;
+import cm.aptoide.pt.install.AptoideInstallPersistence;
 import cm.aptoide.pt.install.FilePathProvider;
 import cm.aptoide.pt.install.ForegroundManager;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -215,8 +218,8 @@ import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
-import cm.aptoide.pt.notification.RealmLocalNotificationSyncMapper;
-import cm.aptoide.pt.notification.RealmLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
+import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -234,7 +237,6 @@ import cm.aptoide.pt.promotions.PromotionsService;
 import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService;
 import cm.aptoide.pt.reactions.network.ReactionsService;
-import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
@@ -245,9 +247,12 @@ import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionService;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.suggestions.TrendingService;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StorePersistence;
+import cm.aptoide.pt.store.StoreRepository;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -257,6 +262,8 @@ import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.updates.UpdateMapper;
+import cm.aptoide.pt.updates.UpdatePersistence;
 import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.updates.UpdatesAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
@@ -326,7 +333,6 @@ import rx.subscriptions.CompositeSubscription;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.UI_MODE_SERVICE;
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
 @Module public class ApplicationModule {
@@ -365,12 +371,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides ForegroundManager providesForegroundManager() {
-    return new ForegroundManager(getApplicationContext());
+    return new ForegroundManager(application.getApplicationContext());
   }
 
   @Singleton @Provides RootInstallerProvider providesRootInstallerProvider(
       InstallerAnalytics installerAnalytics) {
-    return new RootInstallerProvider(installerAnalytics, getApplicationContext().getPackageName());
+    return new RootInstallerProvider(installerAnalytics, application.getApplicationContext()
+        .getPackageName());
   }
 
   @Singleton @Provides InstallerAnalytics providesInstallerAnalytics(
@@ -482,8 +489,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides DownloadsRepository provideDownloadsRepository(
-      DownloadAccessor downloadAccessor) {
-    return new DownloadsRepository(downloadAccessor);
+      DownloadPersistence downloadPersistence) {
+    return new DownloadsRepository(downloadPersistence);
   }
 
   @Singleton @Provides DownloadStatusMapper downloadStatusMapper() {
@@ -511,10 +518,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstallationProvider provideInstallationProvider(
-      AptoideDownloadManager downloadManager, DownloadAccessor downloadAccessor,
-      InstalledRepository installedRepository, Database database) {
-    return new DownloadInstallationProvider(downloadManager, downloadAccessor, installedRepository,
-        new MinimalAdMapper(), AccessorFactory.getAccessorFor(database, StoredMinimalAd.class));
+      AptoideDownloadManager downloadManager, DownloadPersistence downloadPersistence,
+      InstalledRepository installedRepository,
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
+    return new DownloadInstallationProvider(downloadManager, downloadPersistence,
+        installedRepository, new MinimalAdMapper(), roomStoredMinimalAdPersistence);
   }
 
   @Singleton @Provides CacheHelper provideCacheHelper(
@@ -551,8 +559,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
-      InstalledAccessor installedAccessor) {
-    return new InstalledRepository(installedAccessor);
+      RoomInstalledPersistence roomInstalledPersistence) {
+    return new InstalledRepository(roomInstalledPersistence);
   }
 
   @Singleton @Provides OemidProvider providesOemidProvider() {
@@ -580,17 +588,24 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new DownloadFactory(marketName, downloadApkPathsProvider, cachePath, appValidator);
   }
 
-  @Singleton @Provides InstalledAccessor provideInstalledAccessor(Database database,
-      InstallationAccessor installationAccessor) {
-    return new InstalledAccessor(database, installationAccessor);
+  @Singleton @Provides RoomInstalledPersistence provideRoomInstalledPersistence(
+      AptoideDatabase database, RoomInstallationPersistence roomInstallationPersistence,
+      RoomInstallationMapper roomInstallationMapper) {
+    return new RoomInstalledPersistence(database.installedDao(), roomInstallationPersistence,
+        roomInstallationMapper);
   }
 
-  @Singleton @Provides InstallationAccessor providesInstallationAccessor(Database database) {
-    return new InstallationAccessor(database);
+  @Singleton @Provides RoomInstallationMapper providesRoomInstallationMapper() {
+    return new RoomInstallationMapper();
   }
 
-  @Singleton @Provides DownloadAccessor provideDownloadAccessor(Database database) {
-    return new DownloadAccessor(database);
+  @Singleton @Provides RoomInstallationPersistence providesInstallationAccessor(
+      AptoideDatabase database) {
+    return new RoomInstallationPersistence(database.installationDao());
+  }
+
+  @Singleton @Provides DownloadPersistence provideDownloadPersistence(AptoideDatabase database) {
+    return new RoomDownloadPersistence(database.downloadDAO());
   }
 
   @Singleton @Provides @Named("user-agent") Interceptor provideUserAgentInterceptor(
@@ -688,7 +703,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("secureShared") SharedPreferences providesSecureSharedPreferences(
       @Named("default") SharedPreferences defaultSharedPreferences) {
-    return SecurePreferencesImplementation.getInstance(getApplicationContext(),
+    return SecurePreferencesImplementation.getInstance(application.getApplicationContext(),
         defaultSharedPreferences);
   }
 
@@ -730,28 +745,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
-      StoreAccessor storeAccessor, AccountManager accountManager,
-      @Named("default") SharedPreferences defaultSharedPreferences,
-      AuthenticationPersistence authenticationPersistence,
-      AndroidAccountProvider androidAccountProvider, GoogleApiClient googleApiClient,
-      StoreManager storeManager, AccountService accountService, AccountFactory accountFactory,
-      LoginPreferences loginPreferences) {
+      GoogleApiClient googleApiClient, StoreManager storeManager, AccountService accountService,
+      LoginPreferences loginPreferences, AccountPersistence accountPersistence) {
     FacebookSdk.sdkInitialize(application);
-
-    final AndroidAccountDataMigration accountDataMigration = new AndroidAccountDataMigration(
-        SecurePreferencesImplementation.getInstance(application, defaultSharedPreferences),
-        defaultSharedPreferences, AccountManager.get(application),
-        new SecureCoderDecoder.Builder(application, defaultSharedPreferences).create(),
-        SQLiteDatabaseHelper.DATABASE_VERSION,
-        application.getDatabasePath(SQLiteDatabaseHelper.DATABASE_NAME)
-            .getPath(), application.getAccountType(), BuildConfig.VERSION_NAME, Schedulers.io());
-
-    final AccountPersistence accountPersistence =
-        new AndroidAccountManagerPersistence(accountManager,
-            new DatabaseStoreDataPersist(storeAccessor,
-                new DatabaseStoreDataPersist.DatabaseStoreMapper()), accountFactory,
-            accountDataMigration, androidAccountProvider, authenticationPersistence,
-            Schedulers.io());
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
         new MatureContentPersistence(accountPersistence, adultContent))
@@ -764,6 +760,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
+  }
+
+  @Singleton @Provides AccountPersistence providesAccountPersistence(AccountManager accountManager,
+      DatabaseStoreDataPersist databaseStoreDataPersist, AccountFactory accountFactory,
+      AndroidAccountProvider androidAccountProvider,
+      AuthenticationPersistence authenticationPersistence) {
+    return new AndroidAccountManagerPersistence(accountManager, databaseStoreDataPersist,
+        accountFactory, androidAccountProvider, authenticationPersistence, Schedulers.io());
+  }
+
+  @Singleton @Provides DatabaseStoreDataPersist providesDatabaseStoreDataPersist(
+      RoomStoreRepository storeRepository) {
+    return new DatabaseStoreDataPersist(new DatabaseStoreDataPersist.DatabaseStoreMapper(),
+        storeRepository);
   }
 
   @Singleton @Provides AccountFactory provideAccountFactory() {
@@ -875,8 +885,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new File(application.getCacheDir(), AptoideApplication.CACHE_FILE_NAME));
   }
 
-  @Singleton @Provides NotificationAccessor provideNotificationAccessor(Database database) {
-    return new NotificationAccessor(database);
+  @Singleton @Provides RoomNotificationPersistence provideRoomNotificationPersistence(
+      AptoideDatabase database) {
+    return new RoomNotificationPersistence(database.notificationDao());
   }
 
   @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
@@ -885,18 +896,19 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides SyncStorage provideSyncStorage(
-      RealmLocalNotificationSyncPersistence persistence) {
+      RoomLocalNotificationSyncPersistence persistence) {
     return new SyncStorage(new HashMap<>(), persistence);
   }
 
   @Singleton @Provides StoreUtilsProxy provideStoreUtilsProxy(AptoideAccountManager accountManager,
-      StoreAccessor storeAccessor, @Named("default") OkHttpClient httpClient,
+      RoomStoreRepository storeRepository, @Named("default") OkHttpClient httpClient,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("mature-pool-v7")
-          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor) {
-    return new StoreUtilsProxy(accountManager, bodyInterceptor,
-        new StoreCredentialsProviderImpl(storeAccessor), storeAccessor, httpClient,
-        WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
+          BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptor,
+      StoreCredentialsProvider storeCredentialsProvider) {
+    return new StoreUtilsProxy(accountManager, bodyInterceptor, storeCredentialsProvider,
+        storeRepository, httpClient, WebService.getDefaultConverter(), tokenInvalidator,
+        sharedPreferences);
   }
 
   @Singleton @Provides TokenInvalidator provideTokenInvalidator(
@@ -990,8 +1002,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new StoreAccessor(database);
   }
 
-  @Singleton @Provides UpdateAccessor providesUpdateAccessor(Database database) {
-    return new UpdateAccessor(database);
+  @Singleton @Provides UpdatePersistence providesUpdatePersistence(AptoideDatabase database) {
+    return new RoomUpdatePersistence(database.updateDao());
   }
 
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
@@ -1001,6 +1013,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides StoreRepository provideStoreRepository(StoreAccessor storeAccessor) {
     return new StoreRepository(storeAccessor);
+  }
+
+  @Singleton @Provides RealmStoreMigrator providesStoreRealmMigrator(
+      StorePersistence storePersistence, StoreRepository storeRepository,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new RealmStoreMigrator(storePersistence, storeRepository, defaultSharedPreferences);
   }
 
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
@@ -1040,6 +1058,39 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new Database();
   }
 
+  @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
+    return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
+        BuildConfig.ROOM_DATABASE_NAME)
+        .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
+        .build();
+  }
+
+  private int[] getSQLiteIntArrayVersions() {
+    int minSQLiteVersion = 0;
+    int maxSQLiteVersion = 60;
+    int count = maxSQLiteVersion - minSQLiteVersion + 1;
+    int[] SQLiteVersions = new int[count];
+    for (int i = minSQLiteVersion; i <= maxSQLiteVersion; i++) {
+      SQLiteVersions[i - minSQLiteVersion] = i;
+    }
+    return SQLiteVersions;
+  }
+
+  @Singleton @Provides RoomEventPersistence providesRoomEventPersistence(
+      AptoideDatabase aptoideDatabase, RoomEventMapper roomEventMapper) {
+    return new RoomEventPersistence(aptoideDatabase.eventDAO(), roomEventMapper);
+  }
+
+  @Singleton @Provides RoomEventMapper providesRoomEventMapper(
+      @Named("default") ObjectMapper objectMapper) {
+    return new RoomEventMapper(objectMapper);
+  }
+
+  @Singleton @Provides EventsPersistence providesEventsPersistence(AptoideDatabase aptoideDatabase,
+      RoomEventMapper mapper) {
+    return new RoomEventPersistence(aptoideDatabase.eventDAO(), mapper);
+  }
+
   @Singleton @Provides CallbackManager provideCallbackManager() {
     return new CallbackManagerImpl();
   }
@@ -1067,7 +1118,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
       @Named("default") SharedPreferences defaultSharedPreferences,
       TokenInvalidator tokenInvalidator, RequestBodyFactory requestBodyFactory,
-      @Named("default") ObjectMapper nonNullObjectMapper, StoreRepository storeRepository) {
+      @Named("default") ObjectMapper nonNullObjectMapper, RoomStoreRepository storeRepository) {
     return new StoreManager(okHttpClient, WebService.getDefaultConverter(),
         multipartBodyInterceptor, bodyInterceptorV3, accountSettingsBodyInterceptorPoolV7,
         defaultSharedPreferences, tokenInvalidator, requestBodyFactory, nonNullObjectMapper,
@@ -1122,8 +1173,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides StoreCredentialsProvider providesStoreCredentialsProvider(
-      StoreAccessor storeAccessor) {
-    return new StoreCredentialsProviderImpl(storeAccessor);
+      RoomStoreRepository storeRepository) {
+    return new StoreCredentialsProviderImpl(storeRepository);
   }
 
   @Singleton @Provides TrendingService providesTrendingService(
@@ -1154,11 +1205,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
-        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(
-        AccessorFactory.getAccessorFor(database, Store.class)), adsRepository, database,
-        accountManager, moPubAdsManager, appBundlesVisibilityManager);
+        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
+        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager,
+        storeRepository);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1364,16 +1416,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides CrashReport providesCrashReports() {
     return CrashReport.getInstance();
-  }
-
-  @Singleton @Provides RealmEventMapper providesRealmEventMapper(
-      @Named("default") ObjectMapper objectMapper) {
-    return new RealmEventMapper(objectMapper);
-  }
-
-  @Singleton @Provides EventsPersistence providesEventsPersistence(Database database,
-      RealmEventMapper mapper) {
-    return new RealmEventPersistence(database, mapper);
   }
 
   @Singleton @Provides AptoideBiEventService providesRetrofitAptoideBiService(
@@ -1597,15 +1639,25 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       QManager qManager, Resources resources, WindowManager windowManager,
       ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
-      OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      StoreCredentialsProvider storeCredentialsProvider) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
-        new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class)),
-        idsRepository, AdNetworkUtils.isGooglePlayServicesAvailable(getApplicationContext()),
+        storeCredentialsProvider, idsRepository,
+        AdNetworkUtils.isGooglePlayServicesAvailable(application.getApplicationContext()),
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
         10, 10, appBundlesVisibilityManager);
+  }
+
+  @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {
+    return new RoomStorePersistence(aptoideDatabase.storeDao());
+  }
+
+  @Singleton @Provides RoomStoreRepository providesRoomStoreRepository(
+      StorePersistence storePersistence) {
+    return new RoomStoreRepository(storePersistence);
   }
 
   @Singleton @Provides BundlesRepository providesBundleRepository(
@@ -1649,15 +1701,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new UpdatesManager(updateRepository);
   }
 
-  @Singleton @Provides UpdateRepository providesUpdateRepository(UpdateAccessor updateAccessor,
-      StoreAccessor storeAccessor, IdsRepository idsRepository, @Named("mature-pool-v7")
+  @Singleton @Provides UpdateRepository providesUpdateRepository(
+      UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
+      IdsRepository idsRepository, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
-    return new UpdateRepository(updateAccessor, storeAccessor, idsRepository, bodyInterceptorPoolV7,
-        okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        application.getPackageManager(), appBundlesVisibilityManager);
+      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
+    return new UpdateRepository(updatePersistence, storeRepository, idsRepository,
+        bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        application.getPackageManager(), appBundlesVisibilityManager, updateMapper);
+  }
+
+  @Singleton @Provides UpdateMapper providesUpdateMapper() {
+    return new UpdateMapper();
   }
 
   @Singleton @Provides AppViewAnalytics providesAppViewAnalytics(
@@ -1690,10 +1747,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         WebService.getDefaultConverter(), tokenInvalidator, sharedPreferences);
   }
 
-  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository) {
-    return new AdsManager(adsRepository, AccessorFactory.getAccessorFor(
-        ((AptoideApplication) application.getApplicationContext()).getDatabase(),
-        StoredMinimalAd.class), new MinimalAdMapper());
+  @Singleton @Provides AdsManager providesAdsManager(AdsRepository adsRepository,
+      RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
+    return new AdsManager(adsRepository, roomStoredMinimalAdPersistence, new MinimalAdMapper());
   }
 
   @Singleton @Provides ABTestService providesABTestService(
@@ -1702,9 +1758,18 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new ABTestService(abTestServiceProvider, idsRepository, Schedulers.io());
   }
 
-  @Singleton @Provides RealmExperimentPersistence providesRealmExperimentPersistence(
-      Database database) {
-    return new RealmExperimentPersistence(database, new RealmExperimentMapper());
+  @Singleton @Provides RoomExperimentPersistence providesRoomExperimentPersistence(
+      AptoideDatabase database, RoomExperimentMapper mapper) {
+    return new RoomExperimentPersistence(database.experimentDAO(), mapper);
+  }
+
+  @Singleton @Provides RoomExperimentMapper providesRoomExperimentMapper() {
+    return new RoomExperimentMapper();
+  }
+
+  @Singleton @Provides RoomStoredMinimalAdPersistence providesRoomStoreMinimalAdPersistence(
+      AptoideDatabase database) {
+    return new RoomStoredMinimalAdPersistence(database.storeMinimalAdDAO());
   }
 
   @Singleton @Provides @Named("ab-test-local-cache")
@@ -1718,7 +1783,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides ABTestCenterRepository providesABTestCenterRepository(
-      ABTestService abTestService, RealmExperimentPersistence persistence,
+      ABTestService abTestService, RoomExperimentPersistence persistence,
       @Named("ab-test-local-cache") HashMap<String, ExperimentModel> localCache,
       AbTestCacheValidator cacheValidator) {
     return new ABTestCenterRepository(abTestService, localCache, persistence, cacheValidator);
@@ -1961,16 +2026,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new PackageInstallerManager();
   }
 
-  @Singleton @Provides NotificationProvider providesNotificationProvider(Database database) {
-    return new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
-        Schedulers.io());
+  @Singleton @Provides NotificationProvider provideNotificationProvider(
+      RoomNotificationPersistence notificationPersistence) {
+    return new NotificationProvider(notificationPersistence, Schedulers.io());
   }
 
   @Singleton @Provides
-  RealmLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
-      Database database, NotificationProvider provider) {
-    return new RealmLocalNotificationSyncPersistence(database,
-        new RealmLocalNotificationSyncMapper(), provider);
+  RoomLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
+      AptoideDatabase database, NotificationProvider provider) {
+    return new RoomLocalNotificationSyncPersistence(new RoomLocalNotificationSyncMapper(), provider,
+        database.localNotificationSyncDao());
   }
 
   @Singleton @Provides LocalNotificationSyncManager providesLocalNotificationSyncManager(
@@ -1983,21 +2048,23 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppcMigrationManager providesAppcMigrationManager(
-      InstalledRepository repository, AppcMigrationService appcMigrationService) {
-    return new AppcMigrationManager(repository, appcMigrationService);
+      InstalledRepository repository, AppcMigrationRepository appcMigrationRepository) {
+    return new AppcMigrationManager(repository, appcMigrationRepository);
   }
 
-  @Singleton @Provides AppcMigrationService providesAppcMigrationService(
-      AppcMigrationAccessor accessor) {
-    return new AppcMigrationService(accessor);
+  @Singleton @Provides AppcMigrationRepository providesAppcMigrationService(
+      AppcMigrationPersistence appcMigrationPersistence) {
+    return new AppcMigrationRepository(appcMigrationPersistence);
   }
 
-  @Singleton @Provides AppcMigrationAccessor providesAppcMigrationAccessor(Database database) {
-    return new AppcMigrationAccessor(database);
+  @Singleton @Provides AppcMigrationPersistence providesAppcMigrationAccessor(
+      AptoideDatabase database) {
+    return new RoomAppcMigrationPersistence(database.migratedAppDAO());
   }
 
   @Singleton @Provides CaptionBackgroundPainter providesCaptionBackgroundPainter() {
-    return new CaptionBackgroundPainter(getApplicationContext().getResources());
+    return new CaptionBackgroundPainter(application.getApplicationContext()
+        .getResources());
   }
 
   @Singleton @Provides AptoideMd5Manager providesAptoideMd5Manager(
@@ -2040,19 +2107,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallPersistence aptoideInstallPersistence,
+      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository,
       AptoideInstallExperiment aptoideInstallExperiment) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallPersistence,
+    return new AptoideInstallManager(installedRepository, aptoideInstallRepository,
         aptoideInstallExperiment);
   }
 
-  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
-      AptoideInstallAccessor aptoideInstallAccessor) {
-    return new AptoideInstallPersistence(aptoideInstallAccessor);
+  @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(
+      AptoideInstallPersistence aptoideInstallPersistence) {
+    return new AptoideInstallRepository(aptoideInstallPersistence);
   }
 
-  @Singleton @Provides AptoideInstallAccessor providesAptoideInstallAccessor(Database database) {
-    return new AptoideInstallAccessor(database);
+  @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
+      AptoideDatabase database) {
+    return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
   }
 
   @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(

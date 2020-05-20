@@ -1,6 +1,7 @@
 package cm.aptoide.pt.abtesting;
 
-import rx.Observable;
+import rx.Completable;
+import rx.Single;
 
 /**
  * Created by franciscocalado on 20/06/18.
@@ -8,7 +9,7 @@ import rx.Observable;
 
 public interface ExperimentPersistence {
 
-  void save(String experimentName, Experiment experiment);
+  Completable save(String experimentName, Experiment experiment);
 
-  Observable<ExperimentModel> get(String identifier);
+  Single<ExperimentModel> get(String identifier);
 }

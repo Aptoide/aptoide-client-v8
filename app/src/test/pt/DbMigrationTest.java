@@ -18,7 +18,6 @@ import cm.aptoide.pt.V8Engine;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.UpdateAccessor;
 import cm.aptoide.pt.database.realm.Update;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.table.ColumnDefinition;
 import cm.aptoide.pt.table.ExcludedTable;

@@ -6,7 +6,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
-import cm.aptoide.pt.database.realm.Download
+import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.AppContext
 import cm.aptoide.pt.download.DownloadAnalytics
 import cm.aptoide.pt.download.InstallType
@@ -30,7 +30,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
   private val VIEW_CONTEXT = "WalletInstallActivity"
 
 
-  private fun setupDownloadAnalyticsEvents(download: Download, campaignId: Int, abTestGroup: String,
+  private fun setupDownloadAnalyticsEvents(download: RoomDownload, campaignId: Int, abTestGroup: String,
                                            downloadAction: DownloadModel.Action?,
                                            action: AnalyticsManager.Action,
                                            offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
@@ -48,7 +48,7 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
     }
   }
 
-  fun setupDownloadEvents(download: Download, downloadAction: DownloadModel.Action?, appId: Long,
+  fun setupDownloadEvents(download: RoomDownload, downloadAction: DownloadModel.Action?, appId: Long,
                           offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus) {
 
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)

@@ -6,20 +6,20 @@
 package cm.aptoide.pt.updates.view.excluded;
 
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
 
 /**
  * Created on 15/06/16.
  */
-public class ExcludedUpdateDisplayable extends DisplayablePojo<Update> {
+public class ExcludedUpdateDisplayable extends DisplayablePojo<RoomUpdate> {
 
   private boolean selected;
 
   public ExcludedUpdateDisplayable() {
   }
 
-  public ExcludedUpdateDisplayable(Update pojo) {
+  public ExcludedUpdateDisplayable(RoomUpdate pojo) {
     super(pojo);
   }
 

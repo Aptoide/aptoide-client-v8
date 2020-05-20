@@ -248,6 +248,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<SearchAdResult> loadOrganicAds(AppViewModel appViewModel) {
     return Single.just(appViewModel.getAppModel()
         .getMinimalAd())
+        .observeOn(Schedulers.io())
         .flatMap(adResult -> {
           if (adResult == null) {
             return appViewManager.loadAdsFromAppView()
@@ -255,13 +256,16 @@ public class AppViewPresenter implements Presenter {
                   appViewManager.setSearchAdResult(ad);
                   handleAdsLogic(appViewManager.getSearchAdResult());
                 })
-                .doOnError(throwable -> crashReport.log(throwable));
+                .doOnError(throwable -> {
+                  crashReport.log(throwable);
+                });
           }
           return Single.just(adResult)
               .doOnSuccess(__ -> handleAdsLogic(adResult));
         })
         .onErrorReturn(__ -> null)
-        .toObservable();
+        .toObservable()
+        .observeOn(viewScheduler);
   }
 
   @VisibleForTesting

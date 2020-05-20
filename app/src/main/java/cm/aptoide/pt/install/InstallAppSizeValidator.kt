@@ -3,12 +3,12 @@ package cm.aptoide.pt.install
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
-import cm.aptoide.pt.database.realm.Download
+import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.utils.FileUtils
 
 class InstallAppSizeValidator(val filePathProvider: FilePathProvider) {
 
-  fun hasEnoughSpaceToInstallApp(download: Download): Boolean {
+  fun hasEnoughSpaceToInstallApp(download: RoomDownload): Boolean {
     if (isAppAlreadyDownloaded(download)) {
       return true
     } else {
@@ -26,7 +26,7 @@ class InstallAppSizeValidator(val filePathProvider: FilePathProvider) {
   }
 
 
-  private fun isAppAlreadyDownloaded(download: Download): Boolean {
+  private fun isAppAlreadyDownloaded(download: RoomDownload): Boolean {
     if (download.filesToDownload.isEmpty()) {
       return false
     } else {

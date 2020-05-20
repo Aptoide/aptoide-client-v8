@@ -18,7 +18,7 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.themes.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   private final TokenInvalidator tokenInvalidator;
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
-  private final StoreRepository storeRepository;
+  private final RoomStoreRepository storeRepository;
 
   public StoreManager(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
@@ -55,7 +55,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper,
-      StoreRepository storeRepository) {
+      RoomStoreRepository storeRepository) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;

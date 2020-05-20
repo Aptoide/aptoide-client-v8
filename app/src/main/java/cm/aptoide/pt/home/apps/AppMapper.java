@@ -1,7 +1,7 @@
 package cm.aptoide.pt.home.apps;
 
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomInstalled;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.home.apps.model.AppcUpdateApp;
 import cm.aptoide.pt.home.apps.model.DownloadApp;
 import cm.aptoide.pt.home.apps.model.InstalledApp;
@@ -33,28 +33,28 @@ public class AppMapper {
     return downloadsList;
   }
 
-  public List<InstalledApp> mapInstalledToInstalledApps(List<Installed> installeds) {
+  public List<InstalledApp> mapInstalledToInstalledApps(List<RoomInstalled> installeds) {
     List<InstalledApp> installedAppsList = new ArrayList<>();
 
-    for (Installed installed : installeds) {
+    for (RoomInstalled installed : installeds) {
       installedAppsList.add(new InstalledApp(installed.getName(), installed.getPackageName(),
           installed.getVersionName(), installed.getIcon()));
     }
     return installedAppsList;
   }
 
-  public UpdateApp mapUpdateToUpdateApp(Update update, boolean isInstalledWithAptoide) {
+  public UpdateApp mapUpdateToUpdateApp(RoomUpdate update, boolean isInstalledWithAptoide) {
     return new UpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-        update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+        update.getPackageName(), 0, update.getUpdateVersionName(), update.getUpdateVersionCode(),
         StateApp.Status.STANDBY, update.getAppId(), isInstalledWithAptoide);
   }
 
-  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
+  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<RoomUpdate> updates,
       boolean hasPromotion, float appcValue) {
     List<AppcUpdateApp> updatesList = new ArrayList<>();
-    for (Update update : updates) {
+    for (RoomUpdate update : updates) {
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+          update.getPackageName(), 0, update.getUpdateVersionName(), update.getUpdateVersionCode(),
           StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));
     }
     return updatesList;

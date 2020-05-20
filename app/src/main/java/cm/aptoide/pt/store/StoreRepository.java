@@ -1,4 +1,4 @@
-package cm.aptoide.pt.repository;
+package cm.aptoide.pt.store;
 
 import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.realm.Store;
@@ -19,11 +19,6 @@ public class StoreRepository {
   public Observable<Boolean> isSubscribed(long storeId) {
     return storeAccessor.getAsList(storeId)
         .map(stores -> stores != null && stores.size() > 0);
-  }
-
-  public Observable<Boolean> isSubscribed(String storeName) {
-    return storeAccessor.getAsList(storeName)
-        .map(stores -> !stores.isEmpty());
   }
 
   public Observable<Long> count() {
