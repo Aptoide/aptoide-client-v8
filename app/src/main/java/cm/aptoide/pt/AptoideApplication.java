@@ -29,7 +29,6 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
@@ -101,7 +100,6 @@ import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
-import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -165,7 +163,6 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("default") OkHttpClient defaultClient;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject AuthenticationPersistence authenticationPersistence;
-  @Inject Crashlytics crashlytics;
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
@@ -238,7 +235,6 @@ public abstract class AptoideApplication extends Application {
 
     getApplicationComponent().inject(this);
     CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(crashlytics))
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
