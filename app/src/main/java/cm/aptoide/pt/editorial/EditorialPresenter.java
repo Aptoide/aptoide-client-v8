@@ -58,6 +58,7 @@ public class EditorialPresenter implements Presenter {
     handleClickOnAppCard();
 
     handleInstallClick();
+    observeDownloadErrors();
     pauseDownload();
     resumeDownload();
     cancelDownload();
@@ -279,10 +280,31 @@ public class EditorialPresenter implements Presenter {
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
                 editorialContent.getPackageName(), editorialContent.getVerCode(),
                 editorialContent.getPosition())
+                .observeOn(viewScheduler)
+                .doOnNext(view::showDownloadModel))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, crashReporter::log);
+  }
+
+  public void observeDownloadErrors() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMap(editorialViewModel -> Observable.merge(view.installButtonClick(editorialViewModel),
+            view.resumeDownload(editorialViewModel))
+            .map(__ -> editorialViewModel))
+        .flatMapIterable(EditorialViewModel::getPlaceHolderContent)
+        .flatMap(
+            editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
+                editorialContent.getPackageName(), editorialContent.getVerCode(),
+                editorialContent.getPosition())
+                .filter(DownloadModel::hasError)
+                .first()
                 .flatMap(editorialDownloadModel -> verifyNotEnoughSpaceError(editorialContent,
                     editorialDownloadModel))
                 .observeOn(viewScheduler)
-                .doOnNext(view::showDownloadModel))
+                .doOnNext(view::showDownloadError))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, crashReporter::log);

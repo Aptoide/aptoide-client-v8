@@ -28,6 +28,8 @@ public interface EditorialView extends View {
 
   void showDownloadModel(EditorialDownloadModel model);
 
+  void showDownloadError(EditorialDownloadModel editorialDownloadModel);
+
   Observable<Boolean> showRootInstallWarningPopup();
 
   void openApp(String packageName);
