@@ -1425,8 +1425,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
             service, new CompositeSubscription(), Schedulers.computation(),
             BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, debugLogger),
-        BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, CrashReport.getInstance(),
+            debugLogger), BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
   @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
@@ -1847,7 +1847,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
         AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
-        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME);
+        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME, InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {

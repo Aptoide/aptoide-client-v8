@@ -2,12 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-buildscript {
-
-  repositories {
-    maven { url 'https://maven.fabric.io/public' }
-  }
-}
+buildscript { }
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
