@@ -35,7 +35,6 @@ import cm.aptoide.analytics.implementation.AptoideBiEventService;
 import cm.aptoide.analytics.implementation.EventsPersistence;
 import cm.aptoide.analytics.implementation.PageViewsAnalytics;
 import cm.aptoide.analytics.implementation.loggers.AptoideBiEventLogger;
-import cm.aptoide.analytics.implementation.loggers.FabricEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
@@ -118,7 +117,6 @@ import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
 import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.database.accessors.AppcMigrationAccessor;
 import cm.aptoide.pt.database.accessors.AptoideInstallAccessor;
@@ -269,9 +267,6 @@ import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -291,7 +286,6 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import dagger.Module;
 import dagger.Provides;
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import java.io.File;
@@ -533,21 +527,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppEventsLogger provideAppEventsLogger() {
     return AppEventsLogger.newLogger(application);
-  }
-
-  @Singleton @Provides Answers provideAnswers(Fabric fabric) {
-    return fabric.getKit(Answers.class);
-  }
-
-  @Singleton @Provides Crashlytics provideCrashlytics(Fabric fabric) {
-    return fabric.getKit(Crashlytics.class);
-  }
-
-  @Singleton @Provides Fabric provideFabric() {
-    return Fabric.with(application, new Answers(), new Crashlytics.Builder().core(
-        new CrashlyticsCore.Builder().disabled(BuildConfig.CRASH_REPORTS_DISABLED)
-            .build())
-        .build());
   }
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
@@ -1440,20 +1419,14 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides @Named("aptoide") AptoideBiEventLogger providesAptoideBILogger(
-      EventsPersistence persistence, AptoideBiEventService service, Crashlytics crashlytics,
+      EventsPersistence persistence, AptoideBiEventService service,
       @Named("default") SharedPreferences preferences, AnalyticsLogger debugLogger) {
     return new AptoideBiEventLogger(
         new AptoideBiAnalytics(persistence, new SharedPreferencesSessionPersistence(preferences),
             service, new CompositeSubscription(), Schedulers.computation(),
             BuildConfig.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS,
-            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS,
-            new CrashlyticsCrashLogger(crashlytics), debugLogger),
-        BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
-  }
-
-  @Singleton @Provides @Named("fabric") EventLogger providesFabricEventLogger(Answers fabric,
-      AnalyticsLogger logger) {
-    return new FabricEventLogger(fabric, logger);
+            BuildConfig.ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS, CrashReport.getInstance(),
+            debugLogger), BuildConfig.ANALYTICS_SESSION_INTERVAL_IN_MILLIS);
   }
 
   @Singleton @Provides HttpKnockEventLogger providesknockEventLogger(
@@ -1469,20 +1442,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         PromotionsAnalytics.VALENTINE_MIGRATOR);
   }
 
-  @Singleton @Provides @Named("fabricEvents") Collection<String> provideFabricEvents() {
-    return Arrays.asList(DownloadAnalytics.DOWNLOAD_COMPLETE_EVENT, InstallEvents.ROOT_V2_COMPLETE,
-        InstallEvents.ROOT_V2_START, InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
-        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
-  }
-
   @Singleton @Provides AnalyticsManager providesAnalyticsManager(
       @Named("aptoideLogger") EventLogger aptoideBiEventLogger,
       @Named("facebook") EventLogger facebookEventLogger,
-      @Named("fabric") EventLogger fabricEventLogger,
       @Named("flurryLogger") EventLogger flurryEventLogger, HttpKnockEventLogger knockEventLogger,
       @Named("aptoideEvents") Collection<String> aptoideEvents,
       @Named("facebookEvents") Collection<String> facebookEvents,
-      @Named("fabricEvents") Collection<String> fabricEvents,
       @Named("flurryEvents") Collection<String> flurryEvents,
       @Named("flurrySession") SessionLogger flurrySessionLogger,
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
@@ -1494,7 +1459,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
-        .addLogger(fabricEventLogger, fabricEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
         .addLogger(uxCamEventLogger, uxCamEvents)
@@ -1884,7 +1848,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppViewAnalytics.BONUS_GAME_WALLET_OFFER_19, DeepLinkAnalytics.APPCOINS_WALLET_DEEPLINK,
         InstallEvents.MIUI_INSTALLATION_ABOVE_20_EVENT_NAME,
         AptoideApplicationAnalytics.IS_ANDROID_TV, ThemeAnalytics.DARK_THEME_INTERACT_EVENT,
-        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME);
+        UserFeedbackAnalytics.USER_FEEDBACK_EVENT_NAME,
+        InstallEvents.IS_INSTALLATION_TYPE_EVENT_NAME,
+        AppValidationAnalytics.INVALID_DOWNLOAD_PATH_EVENT);
   }
 
   @Singleton @Provides AptoideShortcutManager providesShortcutManager() {
