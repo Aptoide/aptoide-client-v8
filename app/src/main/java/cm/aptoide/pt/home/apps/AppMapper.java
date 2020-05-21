@@ -50,10 +50,10 @@ public class AppMapper {
         StateApp.Status.STANDBY, update.getAppId(), isInstalledWithAptoide);
   }
 
-  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<Update> updates,
+  public List<AppcUpdateApp> mapUpdateToUpdateAppcAppList(List<RoomUpdate> updates,
       List<PromotionApp> promotions) {
     List<AppcUpdateApp> updatesList = new ArrayList<>();
-    for (Update update : updates) {
+    for (RoomUpdate update : updates) {
       boolean hasPromotion = false;
       float appcValue = 0f;
       for (PromotionApp promotion : promotions) {
@@ -64,7 +64,7 @@ public class AppMapper {
         }
       }
       updatesList.add(new AppcUpdateApp(update.getLabel(), update.getMd5(), update.getIcon(),
-          update.getPackageName(), 0, update.getUpdateVersionName(), update.getVersionCode(),
+          update.getPackageName(), 0, update.getUpdateVersionName(), update.getUpdateVersionCode(),
           StateApp.Status.STANDBY, update.getAppId(), hasPromotion, appcValue));
     }
     return updatesList;
