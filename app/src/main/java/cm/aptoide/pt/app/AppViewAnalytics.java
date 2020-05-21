@@ -6,7 +6,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
@@ -300,7 +300,7 @@ public class AppViewAnalytics {
     return navigationTracker.getViewName(isCurrent);
   }
 
-  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+  public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       String storeName, boolean isApkfy) {

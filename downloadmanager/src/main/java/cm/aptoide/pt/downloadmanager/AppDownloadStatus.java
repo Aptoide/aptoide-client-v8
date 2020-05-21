@@ -105,6 +105,7 @@ public class AppDownloadStatus {
                 == fileDownloadCallbackList.size() - 1) {
               return AppDownloadState.VERIFYING_FILE_INTEGRITY;
             }
+            break;
           case COMPLETED:
             if (previousState != null
                 && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
@@ -115,6 +116,7 @@ public class AppDownloadStatus {
                   .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
               return AppDownloadState.COMPLETED;
             }
+            break;
           case PENDING:
             if (previousState != null
                 && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
@@ -123,6 +125,7 @@ public class AppDownloadStatus {
                 == fileDownloadCallbackList.size() - 1) {
               return AppDownloadState.PENDING;
             }
+            break;
         }
         previousState = fileDownloadCallback.getDownloadState();
       }

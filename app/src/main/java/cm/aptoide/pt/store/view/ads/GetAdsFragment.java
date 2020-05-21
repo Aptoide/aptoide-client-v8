@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.view.recycler.displayable.Displayable;
 import cm.aptoide.pt.view.recycler.displayable.DisplayableGroup;

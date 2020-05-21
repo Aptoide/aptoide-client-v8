@@ -789,29 +789,24 @@
   <!--New Login-->
   <string name="login_connect_with_email_button">Connect with email</string>
   <string name="login_email_field_text">Your email here</string>
-  <string name="login_send_code_body">We\'ll send you a temporary login code.</string>
+  <string name="login_send_magic_link_body">We\'ll send you a magic link.</string>
+  <string name="login_send_magic_link_button">Send magic link</string>
   <string name="login_safe_body_1">Secure login</string>
   <string name="login_safe_body_2">No passwords saved on our side</string>
   <string name="login_check_email_title">Check your email!</string>
-  <string name="login_check_email_body">Use the code we\'ve sent you to log in.</string>
-  <string name="login_check_email_under_field_body">We\'ve sent a temporary login code. Please check your inbox or spam folder.</string>
-  <string name="login_enter_code_field">Enter code here</string>
-  <string name="login_code_not_received_1">Didn\'t receive it?</string>
-  <string name="login_code_not_received_2_link">Generate a new code</string>
-  <string name="login_finish_button">FINISH</string>
-  <string name="login_generating_code_body">Generating new code&#8230;</string>
-  <string name="login_email_subject_line">Your Aptoide login code</string>
+  <string name="login_check_email_body">We\'ve sent a magic link to %s to log in.</string>
+  <string name="login_check_email_button">Open email app</string>
+  <string name="login_email_subject_line">Log in to Aptoide!</string>
   <string name="login_email_header">Almost there!</string>
-  <string name="login_email_body_1">To complete the process, please copy and paste this temporary login code:</string>
-  <string name="login_email_under_code_field">This code is valid for 30 minutes.</string>
+  <string name="login_email_body_1">Please tap this button to log in to Aptoide:</string>
+  <string name="login_email_magic_link_button">Log in to Aptoide</string>
+  <string name="login_email_alternative_link">Or copy and paste this link to your browser:</string>
+  <string name="login_email_under_magic_link_expiry_body">This magic link will <b>expire in 90 minutes</b> and you can only use it once.</string>
   <string name="login_email_body_2">If you didn\'t start the login process, you can safely ignore this email.</string>
   <string name="login_email_rights_reserved">© 2020 aptoide.com‎ All rights reserved.</string>
+  <string name="login_error_magic_link_expired">Your magic link expired! Send a new one to your email.</string>
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
-  <string name="login_error_expire_code">This code has expired. Generate a new one!</string>
-  <string name="login_error_wrong_code">Wrong code! Please try again.</string>
-  <string name="login_error_missing_code">Insert your code.</string>
-  
-
-
+  <string name="login_completed_title">Done!</string>
+  <string name="login_completed_body">Ready for the best apps?</string>
 
 </resources>

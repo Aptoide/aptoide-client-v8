@@ -57,7 +57,8 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
         .observeOn(viewScheduler)
         .doOnNext { walletApp -> view.setupWallet(walletApp) }
         .flatMap {
-          Observable.mergeDelayError(observeWalletState(), handleOnWalletInstalled())
+          Observable.mergeDelayError(observeWalletState(), handleOnWalletInstalled(),
+              observeWalletDownloadError())
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe({}, { e -> crashReporter.log(e) })
@@ -140,10 +141,24 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
         .doOnError { e -> e.printStackTrace() }
   }
 
+  private fun observeWalletDownloadError(): Observable<WalletApp> {
+    return Observable.merge(view.resumeDownload(), view.onWalletInstallClick())
+        .flatMap {
+          earnAppcListManager.observeWalletApp()
+              .filter { walletApp -> walletApp.downloadModel?.hasError() }
+              .first()
+        }
+        .flatMap { walletApp -> verifyNotEnoughSpaceError(walletApp) }
+        .observeOn(viewScheduler)
+        .doOnNext { walletApp -> view.showDownloadError(walletApp) }
+        .doOnError { e -> e.printStackTrace() }
+        .retry()
+  }
+
   private fun verifyNotEnoughSpaceError(walletApp: WalletApp): Observable<WalletApp> {
     walletApp.downloadModel?.let { downloadModel ->
       if (downloadModel.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
-        moPubAdsManager.getAdsVisibilityStatus()
+        moPubAdsManager.adsVisibilityStatus
             .doOnSuccess { offerResponseStatus: OfferResponseStatus? ->
               val action = downloadModel.action
               earnAppcListAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,

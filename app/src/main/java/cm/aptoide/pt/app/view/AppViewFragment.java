@@ -67,6 +67,7 @@ import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundleAdapter;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
@@ -141,6 +142,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   @Inject @Named("rating-one-decimal-format") DecimalFormat oneDecimalFormat;
   @Inject @Named("mopub-consent-dialog-view") MoPubConsentDialogView consentDialogView;
   @Inject ThemeManager themeManager;
+  @Inject RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence;
   private Menu menu;
   private Toolbar toolbar;
   private ActionBar actionBar;
@@ -408,28 +410,28 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     donationsList.setLayoutManager(linearLayoutManager);
 
-    workingWellText = (TextView) view.findViewById(R.id.working_well_count);
-    needsLicenceText = (TextView) view.findViewById(R.id.needs_licence_count);
-    fakeAppText = (TextView) view.findViewById(R.id.fake_app_count);
-    virusText = (TextView) view.findViewById(R.id.virus_count);
+    workingWellText = view.findViewById(R.id.working_well_count);
+    needsLicenceText = view.findViewById(R.id.needs_licence_count);
+    fakeAppText = view.findViewById(R.id.fake_app_count);
+    virusText = view.findViewById(R.id.virus_count);
     storeLayout = view.findViewById(R.id.store_uploaded_layout);
-    storeIcon = (ImageView) view.findViewById(R.id.store_icon);
-    storeName = (TextView) view.findViewById(R.id.store_name);
-    storeFollowers = (TextView) view.findViewById(R.id.user_count);
-    storeDownloads = (TextView) view.findViewById(R.id.download_count);
-    storeFollow = (Button) view.findViewById(R.id.follow_button);
+    storeIcon = view.findViewById(R.id.store_icon);
+    storeName = view.findViewById(R.id.store_name);
+    storeFollowers = view.findViewById(R.id.user_count);
+    storeDownloads = view.findViewById(R.id.download_count);
+    storeFollow = view.findViewById(R.id.follow_button);
     similarListRecyclerView = view.findViewById(R.id.similar_list);
-    similarDownloadPlaceholder = (View) view.findViewById(R.id.similar_download_placeholder);
-    similarBottomPlaceholder = (View) view.findViewById(R.id.similar_bottom_placeholder);
+    similarDownloadPlaceholder = view.findViewById(R.id.similar_download_placeholder);
+    similarBottomPlaceholder = view.findViewById(R.id.similar_bottom_placeholder);
     infoWebsite = view.findViewById(R.id.website_label);
     infoEmail = view.findViewById(R.id.email_label);
     infoPrivacy = view.findViewById(R.id.privacy_policy_label);
     infoPermissions = view.findViewById(R.id.permissions_label);
     catappultCard = view.findViewById(R.id.catappult_card);
 
-    viewProgress = (ProgressBar) view.findViewById(R.id.appview_progress);
+    viewProgress = view.findViewById(R.id.appview_progress);
     appview = view.findViewById(R.id.appview_full);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    toolbar = view.findViewById(R.id.toolbar);
     collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
 
     promotionView = view.findViewById(R.id.wallet_install_promotion);
@@ -501,8 +503,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       scrollViewY = savedInstanceState.getInt(KEY_SCROLL_Y, 0);
     }
 
-    collapsingToolbarLayout =
-        ((CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar_layout));
+    collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar_layout);
     collapsingToolbarLayout.setExpandedTitleColor(
         getResources().getColor(android.R.color.transparent));
 
@@ -1052,12 +1053,13 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   @Override public void extractReferrer(SearchAdResult searchAdResult) {
+
     AptoideUtils.ThreadU.runOnUiThread(
         () -> ReferrerUtils.extractReferrer(searchAdResult, ReferrerUtils.RETRIES, false,
             adsRepository, httpClient, converterFactory, qManager,
             getContext().getApplicationContext(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
-            new MinimalAdMapper()));
+            new MinimalAdMapper(), roomStoredMinimalAdPersistence));
   }
 
   @Override public void recoverScrollViewState() {
@@ -1336,8 +1338,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         downloadWalletProgressBar.setIndeterminate(false);
         downloadWalletProgressBar.setProgress(walletApp.getDownloadModel()
             .getProgress());
-        downloadWalletProgressValue.setText(String.valueOf(walletApp.getDownloadModel()
-            .getProgress()) + "%");
+        downloadWalletProgressValue.setText(walletApp.getDownloadModel()
+            .getProgress() + "%");
         pauseWalletDownload.setVisibility(View.VISIBLE);
         pauseWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
             new PromotionEvent(promotion, walletApp, PromotionEvent.ClickType.PAUSE_DOWNLOAD)));
@@ -1358,8 +1360,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         downloadWalletProgressBar.setIndeterminate(false);
         downloadWalletProgressBar.setProgress(walletApp.getDownloadModel()
             .getProgress());
-        downloadWalletProgressValue.setText(String.valueOf(walletApp.getDownloadModel()
-            .getProgress()) + "%");
+        downloadWalletProgressValue.setText(walletApp.getDownloadModel()
+            .getProgress() + "%");
         pauseWalletDownload.setVisibility(View.GONE);
         cancelWalletDownload.setVisibility(View.VISIBLE);
         cancelWalletDownload.setOnClickListener(__ -> promotionAppClick.onNext(
@@ -1674,9 +1676,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       downloadInfoLayout.setVisibility(View.GONE);
       install.setVisibility(View.VISIBLE);
       setButtonText(downloadModel);
-      if (downloadModel.hasError()) {
-        handleDownloadError(downloadModel.getDownloadState());
-      }
+    }
+  }
+
+  @Override public void showDownloadError(DownloadModel downloadModel) {
+    if (downloadModel.hasError()) {
+      handleDownloadError(downloadModel.getDownloadState());
     }
   }
 
@@ -1855,13 +1860,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         resumeDownload.setVisibility(View.GONE);
         downloadControlsLayout.setVisibility(View.GONE);
         installStateText.setText(getString(R.string.appview_short_installing));
-        break;
-      case ERROR:
-        showErrorDialog("", getContext().getString(R.string.error_occured));
-        break;
-      case NOT_ENOUGH_STORAGE_ERROR:
-        showErrorDialog(getContext().getString(R.string.out_of_space_dialog_title),
-            getContext().getString(R.string.out_of_space_dialog_message));
         break;
     }
   }

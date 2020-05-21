@@ -11,8 +11,6 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.model.v7.FullReview;
 import cm.aptoide.pt.dataprovider.model.v7.ListFullReviews;
@@ -22,7 +20,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.ListFullReviewsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeFragment;
 import cm.aptoide.pt.view.recycler.EndlessRecyclerOnScrollListener;
@@ -41,10 +38,10 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   private static final String STORE_CONTEXT = "STORE_CONTEXT";
   @Inject AnalyticsManager analyticsManager;
   @Inject NavigationTracker navigationTracker;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private long storeId;
   private EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
   private List<Displayable> displayables;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private BodyInterceptor<BaseBody> baseBodyInterceptor;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
@@ -63,9 +60,6 @@ public class LatestReviewsFragment extends GridRecyclerSwipeFragment {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     baseBodyInterceptor =
         ((AptoideApplication) getContext().getApplicationContext()).getAccountSettingsBodyInterceptorPoolV7();
     httpClient = ((AptoideApplication) getContext().getApplicationContext()).getDefaultClient();

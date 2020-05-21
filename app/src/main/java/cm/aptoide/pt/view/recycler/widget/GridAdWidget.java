@@ -6,8 +6,8 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.MinimalAd;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.recycler.displayable.GridAdDisplayable;
@@ -28,9 +28,9 @@ public class GridAdWidget extends Widget<GridAdDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    name = (TextView) itemView.findViewById(R.id.name);
-    icon = (ImageView) itemView.findViewById(R.id.icon);
-    rating = (TextView) itemView.findViewById(R.id.rating_label);
+    name = itemView.findViewById(R.id.name);
+    icon = itemView.findViewById(R.id.icon);
+    rating = itemView.findViewById(R.id.rating_label);
   }
 
   @Override public void bindView(GridAdDisplayable displayable, int position) {

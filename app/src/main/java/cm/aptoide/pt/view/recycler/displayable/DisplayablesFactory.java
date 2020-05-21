@@ -14,7 +14,6 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.MyStoreManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginDisplayable;
@@ -23,8 +22,6 @@ import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.app.view.GridAppDisplayable;
 import cm.aptoide.pt.app.view.GridAppListDisplayable;
 import cm.aptoide.pt.app.view.OfficialAppDisplayable;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
@@ -47,9 +44,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.MyStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.BadgeDialogFactory;
 import cm.aptoide.pt.store.view.GridDisplayDisplayable;
@@ -78,15 +75,15 @@ import rx.schedulers.Schedulers;
  */
 public class DisplayablesFactory {
   public static Observable<Displayable> parse(String marketName, GetStoreWidgets.WSWidget widget,
-      String storeTheme, StoreRepository storeRepository, StoreContext storeContext,
-      Context context, AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      String storeTheme, RoomStoreRepository storeRepository,
+      StoreCredentialsProvider storeCredentials, StoreContext storeContext, Context context,
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       WindowManager windowManager, Resources resources, InstalledRepository installedRepository,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
       NavigationTracker navigationTracker, BadgeDialogFactory badgeDialogFactory,
-      FragmentNavigator fragmentNavigator, StoreAccessor storeAccessor,
-      BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client, Converter.Factory converter,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      ThemeManager themeManager) {
+      FragmentNavigator fragmentNavigator, BodyInterceptor<BaseBody> bodyInterceptorV7,
+      OkHttpClient client, Converter.Factory converter, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, ThemeManager themeManager) {
 
     LinkedList<Displayable> displayables = new LinkedList<>();
 
@@ -136,13 +133,11 @@ public class DisplayablesFactory {
           }
 
         case HOME_META:
-          return Observable.just(new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(),
-              new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-                  ((AptoideApplication) context.getApplicationContext()
-                      .getApplicationContext()).getDatabase(),
-                  cm.aptoide.pt.database.realm.Store.class)), storeAnalytics, badgeDialogFactory,
-              fragmentNavigator, storeAccessor, bodyInterceptorV7, client, converter,
-              tokenInvalidator, sharedPreferences, themeManager));
+          return Observable.just(
+              new GridStoreMetaDisplayable((GetHomeMeta) widget.getViewObject(), storeCredentials,
+                  storeAnalytics, badgeDialogFactory, fragmentNavigator, storeRepository,
+                  bodyInterceptorV7, client, converter, tokenInvalidator, sharedPreferences,
+                  themeManager, storeUtilsProxy, accountManager));
 
         case MY_STORE_META:
           return Observable.from(
@@ -156,9 +151,9 @@ public class DisplayablesFactory {
 
         case STORES_RECOMMENDED:
           return Observable.just(
-              createRecommendedStores(marketName, widget, storeTheme, storeRepository, storeContext,
-                  context, accountManager, storeUtilsProxy, windowManager, resources,
-                  storeTabNavigator, navigationTracker, themeManager));
+              createRecommendedStores(marketName, widget, storeTheme, storeRepository,
+                  storeCredentials, storeContext, context, accountManager, storeUtilsProxy,
+                  windowManager, resources, storeTabNavigator, navigationTracker, themeManager));
 
         case COMMENTS_GROUP:
           return Observable.from(
@@ -169,11 +164,16 @@ public class DisplayablesFactory {
         case APP_META:
           GetStoreWidgets.WSWidget.Data dataObj = widget.getData();
           String message = dataObj.getMessage();
+          boolean isAppInstalled = installedRepository.isInstalled(
+              ((GetAppMeta) widget.getViewObject()).getData()
+                  .getPackageName())
+              .toBlocking()
+              .first();
           return Observable.just(
               new OfficialAppDisplayable(new Pair<>(message, (GetAppMeta) widget.getViewObject()),
                   themeManager.getAttributeForTheme(storeTheme, R.attr.colorPrimary).data,
-                  themeManager.getAttributeForTheme(storeTheme,
-                      R.attr.raisedButtonBackground).data));
+                  themeManager.getAttributeForTheme(storeTheme, R.attr.raisedButtonBackground).data,
+                  isAppInstalled));
       }
     }
     return Observable.empty();
@@ -257,7 +257,7 @@ public class DisplayablesFactory {
   }
 
   private static Observable<Displayable> getMyStores(String marketName,
-      GetStoreWidgets.WSWidget wsWidget, StoreRepository storeRepository, String storeTheme,
+      GetStoreWidgets.WSWidget wsWidget, RoomStoreRepository storeRepository, String storeTheme,
       StoreContext storeContext, WindowManager windowManager, Resources resources, Context context,
       StoreAnalytics storeAnalytics, StoreTabNavigator storeTabNavigator,
       NavigationTracker navigationTracker, ThemeManager themeManager) {
@@ -431,11 +431,11 @@ public class DisplayablesFactory {
   }
 
   private static Displayable createRecommendedStores(String marketName,
-      GetStoreWidgets.WSWidget wsWidget, String storeTheme, StoreRepository storeRepository,
-      StoreContext storeContext, Context context, AptoideAccountManager accountManager,
-      StoreUtilsProxy storeUtilsProxy, WindowManager windowManager, Resources resources,
-      StoreTabNavigator storeTabNavigator, NavigationTracker navigationTracker,
-      ThemeManager themeManager) {
+      GetStoreWidgets.WSWidget wsWidget, String storeTheme, RoomStoreRepository storeRepository,
+      StoreCredentialsProvider storeCredentials, StoreContext storeContext, Context context,
+      AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
+      WindowManager windowManager, Resources resources, StoreTabNavigator storeTabNavigator,
+      NavigationTracker navigationTracker, ThemeManager themeManager) {
     ListStores listStores = (ListStores) wsWidget.getViewObject();
     if (listStores == null) {
       return new EmptyDisplayable();
@@ -452,10 +452,7 @@ public class DisplayablesFactory {
           .getLayout() == Layout.LIST) {
         displayables.add(
             new RecommendedStoreDisplayable(store, storeRepository, accountManager, storeUtilsProxy,
-                new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-                    ((AptoideApplication) context.getApplicationContext()
-                        .getApplicationContext()).getDatabase(),
-                    cm.aptoide.pt.database.realm.Store.class))));
+                storeCredentials));
       } else {
         displayables.add(new GridStoreDisplayable(store));
       }
@@ -497,7 +494,8 @@ public class DisplayablesFactory {
     return displayables;
   }
 
-  public static Observable<List<Store>> loadLocalSubscribedStores(StoreRepository storeRepository) {
+  public static Observable<List<Store>> loadLocalSubscribedStores(
+      RoomStoreRepository storeRepository) {
     return storeRepository.getAll()
         .first()
         .observeOn(Schedulers.computation())

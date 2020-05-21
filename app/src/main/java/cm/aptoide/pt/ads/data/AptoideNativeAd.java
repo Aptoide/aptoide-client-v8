@@ -1,7 +1,7 @@
 package cm.aptoide.pt.ads.data;
 
 import android.view.View;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.view.app.Application;
 

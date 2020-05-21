@@ -3,9 +3,8 @@ package cm.aptoide.pt.notification;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.NotificationAccessor;
-import cm.aptoide.pt.database.realm.Notification;
-import io.realm.Sort;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
+import cm.aptoide.pt.database.room.RoomNotification;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -27,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 public class NotificationsCleanerTest {
 
   @Test public void cleanOtherUsersNotifications() throws Exception {
-    Map<String, Notification> list = new HashMap<>();
+    Map<String, RoomNotification> list = new HashMap<>();
     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
     long timeStamp = calendar.getTimeInMillis();
-    Notification notification = createNotification(timeStamp + 1000, timeStamp, "me", true);
+    RoomNotification notification = createNotification(timeStamp + 1000, timeStamp, "me", true);
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 1000, timeStamp - 1, "me", true);
@@ -38,11 +37,12 @@ public class NotificationsCleanerTest {
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
     list.put(notification.getKey(), notification);
-    NotificationAccessor notificationAccessor = new NotAccessor(list);
+    RoomNotificationPersistence roomNotificationPersistence = new NotPersistenceRoom(list);
 
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
-        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
-        getNotificationProvider(), CrashReport.getInstance());
+    NotificationsCleaner notificationsCleaner =
+        new NotificationsCleaner(roomNotificationPersistence,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+            getNotificationProvider(), CrashReport.getInstance());
 
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
     notificationsCleaner.cleanOtherUsersNotifications("you")
@@ -50,7 +50,7 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(notificationAccessor.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 0);
@@ -59,9 +59,9 @@ public class NotificationsCleanerTest {
   @Test public void cleanLimitExceededNotificationsWithAExpiredNotification() throws Exception {
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
 
-    Map<String, Notification> list = new HashMap<>();
+    Map<String, RoomNotification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(timeStamp, timeStamp, "me", true);
+    RoomNotification notification = createNotification(timeStamp, timeStamp, "me", true);
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 10000, timeStamp - 1000, "me", true);
@@ -69,17 +69,18 @@ public class NotificationsCleanerTest {
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 20000, timeStamp - 2000, "me", true);
     list.put(notification.getKey(), notification);
-    NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
-        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
-        getNotificationProvider(), CrashReport.getInstance());
+    RoomNotificationPersistence roomNotificationPersistence = new NotPersistenceRoom(list);
+    NotificationsCleaner notificationsCleaner =
+        new NotificationsCleaner(roomNotificationPersistence,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+            getNotificationProvider(), CrashReport.getInstance());
 
     notificationsCleaner.cleanLimitExceededNotifications(2)
         .subscribe(objectTestSubscriber);
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(2, notificationAccessor.getAllSorted(null)
+    assertEquals(2, roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size());
@@ -88,9 +89,9 @@ public class NotificationsCleanerTest {
   @Test public void cleanLimitExceededNotificationsWithAExpiredNotificationAndExceedingLimit()
       throws Exception {
 
-    Map<String, Notification> list = new HashMap<>();
+    Map<String, RoomNotification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(0L, timeStamp, "me", true);
+    RoomNotification notification = createNotification(0L, timeStamp, "me", true);
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 2000, timeStamp - 10000, "me", true);
@@ -98,13 +99,14 @@ public class NotificationsCleanerTest {
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 2000, timeStamp - 20000, "me", true);
     list.put(notification.getKey(), notification);
-    NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
-        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
-        getNotificationProvider(), CrashReport.getInstance());
+    RoomNotificationPersistence roomNotificationPersistence = new NotPersistenceRoom(list);
+    NotificationsCleaner notificationsCleaner =
+        new NotificationsCleaner(roomNotificationPersistence,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+            getNotificationProvider(), CrashReport.getInstance());
 
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
-    List<Notification> notificationList = notificationAccessor.getAllSorted(Sort.DESCENDING)
+    List<RoomNotification> notificationList = roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first();
     notificationsCleaner.cleanLimitExceededNotifications(1)
@@ -112,11 +114,11 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(notificationAccessor.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 1);
-    assertEquals(notificationAccessor.getAllSorted(Sort.DESCENDING)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .get(0)
@@ -127,9 +129,9 @@ public class NotificationsCleanerTest {
   @Test public void cleanLimitExceededNotificationsExceedingLimit() throws Exception {
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
 
-    Map<String, Notification> list = new HashMap<>();
+    Map<String, RoomNotification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(timeStamp + 2000, timeStamp, "me", true);
+    RoomNotification notification = createNotification(timeStamp + 2000, timeStamp, "me", true);
     list.put(notification.getKey(), notification);
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 2000, timeStamp - 1, "me", true);
@@ -137,12 +139,13 @@ public class NotificationsCleanerTest {
     timeStamp = System.currentTimeMillis();
     notification = createNotification(timeStamp + 2000, timeStamp - 2, "me", true);
     list.put(notification.getKey(), notification);
-    NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
-        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
-        getNotificationProvider(), CrashReport.getInstance());
+    RoomNotificationPersistence roomNotificationPersistence = new NotPersistenceRoom(list);
+    NotificationsCleaner notificationsCleaner =
+        new NotificationsCleaner(roomNotificationPersistence,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+            getNotificationProvider(), CrashReport.getInstance());
 
-    List<Notification> notificationList = notificationAccessor.getAllSorted(Sort.DESCENDING)
+    List<RoomNotification> notificationList = roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first();
     notificationsCleaner.cleanLimitExceededNotifications(1)
@@ -150,11 +153,11 @@ public class NotificationsCleanerTest {
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(notificationAccessor.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 1);
-    assertEquals(notificationAccessor.getAllSorted(Sort.DESCENDING)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .get(0)
@@ -165,25 +168,26 @@ public class NotificationsCleanerTest {
   @Test public void cleanLimitExceededNotificationsNotExpiring() throws Exception {
     TestSubscriber<Object> objectTestSubscriber = TestSubscriber.create();
 
-    Map<String, Notification> list = new HashMap<>();
+    Map<String, RoomNotification> list = new HashMap<>();
     long timeStamp = System.currentTimeMillis();
-    Notification notification = createNotification(null, timeStamp, "me", true);
+    RoomNotification notification = createNotification(null, timeStamp, "me", true);
     list.put(notification.getKey(), notification);
     notification = createNotification(null, timeStamp - 1, "me", true);
     list.put(notification.getKey(), notification);
     notification = createNotification(null, timeStamp - 2, "me", true);
     list.put(notification.getKey(), notification);
-    NotificationAccessor notificationAccessor = new NotAccessor(list);
-    NotificationsCleaner notificationsCleaner = new NotificationsCleaner(notificationAccessor,
-        Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
-        getNotificationProvider(), CrashReport.getInstance());
+    RoomNotificationPersistence roomNotificationPersistence = new NotPersistenceRoom(list);
+    NotificationsCleaner notificationsCleaner =
+        new NotificationsCleaner(roomNotificationPersistence,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC")), getAptoideAccountManager(),
+            getNotificationProvider(), CrashReport.getInstance());
 
     notificationsCleaner.cleanLimitExceededNotifications(3)
         .subscribe(objectTestSubscriber);
     objectTestSubscriber.awaitTerminalEvent();
     objectTestSubscriber.assertCompleted();
     objectTestSubscriber.assertNoErrors();
-    assertEquals(notificationAccessor.getAllSorted(null)
+    assertEquals(roomNotificationPersistence.getAllSortedDesc()
         .toBlocking()
         .first()
         .size(), 3);
@@ -197,23 +201,23 @@ public class NotificationsCleanerTest {
     return Mockito.mock(AptoideAccountManager.class);
   }
 
-  @NonNull private Notification createNotification(Long expire, long timeStamp, String ownerId,
+  @NonNull private RoomNotification createNotification(Long expire, long timeStamp, String ownerId,
       boolean processed) {
-    return new Notification(expire, null, null, 0, null, null, null, null, null, null, timeStamp, 0,
-        0, null, null, ownerId, processed, 0);
+    return new RoomNotification(expire, null, null, 0, null, null, null, null, null, null,
+        timeStamp, 0, 0, null, null, ownerId, processed, 0);
   }
 
-  private class NotAccessor extends NotificationAccessor {
+  private class NotPersistenceRoom extends RoomNotificationPersistence {
 
-    private Map<String, Notification> list;
+    private Map<String, RoomNotification> list;
 
-    public NotAccessor(Map<String, Notification> list) {
+    public NotPersistenceRoom(Map<String, RoomNotification> list) {
       super(null);
       this.list = list;
     }
 
-    @Override public Observable<List<Notification>> getAllSorted(Sort sort) {
-      ArrayList<Notification> value = new ArrayList<>(list.values());
+    @Override public Observable<List<RoomNotification>> getAllSortedDesc() {
+      ArrayList<RoomNotification> value = new ArrayList<>(list.values());
       Collections.sort(value, (notification, t1) -> t1.getKey()
           .compareTo(notification.getKey()));
       return Observable.just(value);
@@ -221,7 +225,7 @@ public class NotificationsCleanerTest {
 
     @Override public Completable deleteAllExcluding(List<String> ids) {
       List<String> idsToRemove = new ArrayList<>();
-      for (Notification notification : list.values()) {
+      for (RoomNotification notification : list.values()) {
         if (shouldRemove(notification, ids)) {
           idsToRemove.add(notification.getKey());
         }
@@ -231,7 +235,7 @@ public class NotificationsCleanerTest {
           .toCompletable();
     }
 
-    @Override public Completable delete(String[] keys) {
+    @Override public Completable delete(List<String> keys) {
       return Completable.fromAction(() -> {
         for (String key : keys) {
           list.remove(key);
@@ -239,7 +243,7 @@ public class NotificationsCleanerTest {
       });
     }
 
-    private boolean shouldRemove(Notification notification, List<String> ids) {
+    private boolean shouldRemove(RoomNotification notification, List<String> ids) {
       for (String id : ids) {
         if (notification.getOwnerId()
             .equals(id)) {
