@@ -204,6 +204,8 @@
   <attr name="wizardBackgroundBottom" format="color" />
   <attr name="wizardRadioBackgroundColor" format="color" />
   <attr name="appDescriptionToolbarAppc" format="reference" />
+  <attr name="secureLoginBackground" format="color" />
+  <attr name="loginInputBackground" format="reference" />
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />

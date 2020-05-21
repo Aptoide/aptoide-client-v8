@@ -10,54 +10,24 @@ public class CredentialsValidator {
    * returns true if password is at least 8 characters long and has at least 1 number and 1 letter.
    *
    * @param credentials
-   * @param validatePassword whether password content should be validated.
    */
-  public Completable validate(AptoideCredentials credentials, boolean validatePassword) {
+  public Completable validate(AptoideCredentials credentials) {
     return Completable.defer(() -> {
-      int x = validateFields(credentials, validatePassword);
-      if (x != -1) return Completable.error(new AccountValidationException(x));
+      int result = validateFields(credentials);
+      if (result != -1) return Completable.error(new AccountValidationException(result));
       return Completable.complete();
     });
   }
 
-  @Nullable @VisibleForTesting
-  protected int validateFields(AptoideCredentials credentials, boolean validatePassword) {
-    if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getPassword())) {
-      return AccountValidationException.EMPTY_EMAIL_AND_PASSWORD;
-    } else if (isEmpty(credentials.getPassword())) {
-      return AccountValidationException.EMPTY_PASSWORD;
+  @Nullable @VisibleForTesting protected int validateFields(AptoideCredentials credentials) {
+    if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getCode())) {
+      return AccountValidationException.EMPTY_EMAIL_AND_CODE;
+    } else if (isEmpty(credentials.getCode())) {
+      return AccountValidationException.EMPTY_CODE;
     } else if (isEmpty(credentials.getEmail())) {
       return AccountValidationException.EMPTY_EMAIL;
-    } else if (validatePassword && (credentials.getPassword()
-        .length() < 8 || !has1number1letter(credentials.getPassword()))) {
-      return AccountValidationException.INVALID_PASSWORD;
     }
     return -1;
-  }
-
-  @VisibleForTesting protected boolean has1number1letter(String password) {
-    boolean hasLetter = false;
-    boolean hasNumber = false;
-
-    for (char c : password.toCharArray()) {
-      if (!hasLetter && Character.isLetter(c)) {
-        if (hasNumber) return true;
-        hasLetter = true;
-      } else if (!hasNumber && Character.isDigit(c)) {
-        if (hasLetter) return true;
-        hasNumber = true;
-      }
-    }
-    if (password.contains("!")
-        || password.contains("@")
-        || password.contains("#")
-        || password.contains("$")
-        || password.contains("#")
-        || password.contains("*")) {
-      hasNumber = true;
-    }
-
-    return hasNumber && hasLetter;
   }
 
   private boolean isEmpty(CharSequence str) {

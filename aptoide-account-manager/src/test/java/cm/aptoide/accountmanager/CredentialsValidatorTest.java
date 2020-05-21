@@ -40,7 +40,7 @@ public class CredentialsValidatorTest {
     emptyCredentials = new AptoideCredentials("", "", true);
 
     result = credentialsValidator.validateFields(emptyCredentials, true);
-    assertEquals(AccountValidationException.EMPTY_EMAIL_AND_PASSWORD, result);
+    assertEquals(AccountValidationException.EMPTY_EMAIL_AND_CODE, result);
   }
 
   @Test public void validateEmptyEmailCredentialsErrorTest() {
@@ -54,7 +54,7 @@ public class CredentialsValidatorTest {
     emptyPasswordCredentials = new AptoideCredentials("test@test.com", "", true);
 
     result = credentialsValidator.validateFields(emptyPasswordCredentials, true);
-    assertEquals(AccountValidationException.EMPTY_PASSWORD, result);
+    assertEquals(AccountValidationException.EMPTY_CODE, result);
   }
 
   @Test public void validateInvalidPasswordErrorTest() {

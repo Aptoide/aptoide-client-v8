@@ -91,8 +91,8 @@ public class AccountServiceV3 implements AccountService {
     this.oAuthModeProvider = oAuthModeProvider;
   }
 
-  @Override public Single<Account> getAccount(String email, String password) {
-    return createAccount(email.toLowerCase(), password, null,
+  @Override public Single<Account> getAccount(String email, String code) {
+    return createAccount(email.toLowerCase(), code, null,
         AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
   }
 
@@ -121,8 +121,8 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override public Single<Account> createAccount(String email, String password) {
-    return CreateUserRequest.of(email.toLowerCase(), password, v3NoAuthorizationBodyInterceptor,
+  @Override public Single<Account> createAccount(String email, String code) {
+    return CreateUserRequest.of(email.toLowerCase(), code, v3NoAuthorizationBodyInterceptor,
         httpClient, tokenInvalidator, sharedPreferences, extraId)
         .observe(true)
         .toSingle()
@@ -130,7 +130,7 @@ public class AccountServiceV3 implements AccountService {
           if (response.hasErrors()) {
             return Single.error(new AccountException(response.getErrors()));
           }
-          return getAccount(email, password);
+          return getAccount(email, code);
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {

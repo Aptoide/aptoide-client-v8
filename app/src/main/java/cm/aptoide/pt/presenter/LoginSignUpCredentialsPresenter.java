@@ -6,7 +6,6 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
@@ -16,7 +15,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class LoginSignUpCredentialsPresenter
@@ -54,9 +52,9 @@ public abstract class LoginSignUpCredentialsPresenter
 
   @Override public void present() {
 
-    handleAptoideLoginEvent();
-    handleAptoideSignUpEvent();
+    handleAptoideEmailSubmitEvent();
 
+    handleAptoideLoginEvent();
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
@@ -64,57 +62,45 @@ public abstract class LoginSignUpCredentialsPresenter
     handleFacebookSignUpEvent();
     handleFacebookSignUpWithRequiredPermissionsEvent();
 
-    handleAptoideShowLoginEvent();
     handleAccountStatusChangeWhileShowingView();
-    handleForgotPasswordClick();
-    handleTogglePasswordVisibility();
+
+    handleCancelEmailInput();
   }
 
-  private void handleTogglePasswordVisibility() {
+  private void handleCancelEmailInput() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> togglePasswordVisibility())
+        .flatMap(__ -> view.emailSetClickEvent()
+            .doOnNext(aVoid -> view.showAptoideLoginArea())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> crashReport.log(err));
+        }, crashReport::log);
   }
 
-  private void handleForgotPasswordClick() {
+  private void handleAptoideEmailSubmitEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> forgotPasswordSelection())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleAptoideSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> getAptoideSignUpEvent().doOnNext(click -> {
-          view.hideKeyboard();
-          view.showLoading();
-          lockScreenRotation();
-          accountAnalytics.sendAptoideSignUpButtonPressed();
-        })
-            .flatMapCompletable(
-                credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
-                    credentials)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnCompleted(() -> {
-                      accountAnalytics.loginSuccess();
-                      navigateToCreateProfile();
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    })
-                    .doOnError(throwable -> {
-                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                          throwable);
-                      view.showError(errorMapper.map(throwable));
-                      crashReport.log(throwable);
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    }))
+        .flatMap(__ -> view.emailSubmitEvent()
+            .doOnNext(click -> {
+              view.hideKeyboard();
+              view.showLoading();
+              lockScreenRotation();
+            })
+            .flatMapCompletable(email -> accountManager.generateEmailCode(email)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnCompleted(() -> {
+                  view.hideLoading();
+                  view.showAptoideLoginCodeArea(email);
+                })
+                .doOnError(throwable -> {
+                  view.showEmailError(errorMapper.map(throwable));
+                  view.hideLoading();
+                  crashReport.log(throwable);
+                  unlockScreenRotation();
+                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
+                      throwable);
+                }))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
@@ -122,7 +108,7 @@ public abstract class LoginSignUpCredentialsPresenter
 
   private void handleAptoideLoginEvent() {
     view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.aptoideLoginEvent()
             .doOnNext(click -> {
               view.hideKeyboard();
@@ -139,7 +125,7 @@ public abstract class LoginSignUpCredentialsPresenter
                   view.hideLoading();
                 })
                 .doOnError(throwable -> {
-                  view.showError(errorMapper.map(throwable));
+                  view.showLoginError(errorMapper.map(throwable));
                   view.hideLoading();
                   crashReport.log(throwable);
                   unlockScreenRotation();
@@ -149,19 +135,6 @@ public abstract class LoginSignUpCredentialsPresenter
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
-  }
-
-  private void handleAptoideShowLoginEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideShowLoginClick())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> {
-          view.hideLoading();
-          view.showError(errorMapper.map(err));
-          crashReport.log(err);
-        });
   }
 
   private void handleAccountStatusChangeWhileShowingView() {
@@ -293,27 +266,6 @@ public abstract class LoginSignUpCredentialsPresenter
         .subscribe();
   }
 
-  private Observable<Void> aptoideShowLoginClick() {
-    return view.showAptoideLoginAreaClick()
-        .doOnNext(__ -> view.showAptoideLoginArea());
-  }
-
-  private Observable<Void> forgotPasswordSelection() {
-    return view.forgotPasswordClick()
-        .doOnNext(selection -> accountNavigator.navigateToRecoverPasswordView());
-  }
-
-  private Observable<Void> togglePasswordVisibility() {
-    return view.showHidePasswordClick()
-        .doOnNext(__ -> {
-          if (view.isPasswordVisible()) {
-            view.hidePassword();
-          } else {
-            view.showPassword();
-          }
-        });
-  }
-
   private void showOrHideFacebookSignUp() {
     if (accountManager.isSignUpEnabled(FacebookSignUpAdapter.TYPE)) {
       view.showFacebookLogin();
@@ -339,8 +291,6 @@ public abstract class LoginSignUpCredentialsPresenter
       navigateBack();
     }
   }
-
-  protected abstract Observable<AptoideCredentials> getAptoideSignUpEvent();
 
   void lockScreenRotation() {
     view.lockScreenRotation();

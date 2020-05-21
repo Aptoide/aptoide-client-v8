@@ -83,8 +83,8 @@ public class AptoideAccountManager {
   }
 
   public Completable login(AptoideCredentials credentials) {
-    return credentialsValidator.validate(credentials, false)
-        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
+    return credentialsValidator.validate(credentials)
+        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode()))
         .flatMapCompletable(account -> saveAccount(account));
   }
 
@@ -244,6 +244,14 @@ public class AptoideAccountManager {
     return storeManager.createOrUpdate(storeName, storeDescription, storeImagePath, hasNewAvatar,
         storeThemeName, storeExists, storeLinksList, storeDeleteLinksList)
         .andThen(syncAccount());
+  }
+
+  public Completable generateEmailCode(String email) {
+    if (email.isEmpty()) {
+      return Completable.error(
+          new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
+    }
+    return Completable.complete();
   }
 
   public static class Builder {

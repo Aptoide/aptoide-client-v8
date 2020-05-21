@@ -27,7 +27,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
         sharedPreferences);
   }
 
-  public static OAuth2AuthenticationRequest of(String username, String password, String mode,
+  public static OAuth2AuthenticationRequest of(String username, String metadata, String mode,
       @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId,
@@ -35,7 +35,7 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
 
     final BaseBody body = new BaseBody();
 
-    body.put("grant_type", "password");
+    body.put("grant_type", "code");
     body.put("client_id", "Aptoide");
     body.put("mode", "json");
 
@@ -43,20 +43,20 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
       switch (mode) {
         case "APTOIDE":
           body.put("username", username);
-          body.put("password", password);
+          body.put("code", metadata);
           break;
         case "GOOGLE":
           body.put("authMode", authMode);
           body.put("oauthUserName", nameForGoogle);
-          body.put("oauthToken", password);
+          body.put("oauthToken", metadata);
           break;
         case "FACEBOOK":
           body.put("authMode", authMode);
-          body.put("oauthToken", password);
+          body.put("oauthToken", metadata);
           break;
         case "ABAN":
           body.put("oauthUserName", username);
-          body.put("oauthToken", password);
+          body.put("oauthToken", metadata);
           body.put("authMode", authMode);
           body.put("oauthUser", nameForGoogle);
           break;

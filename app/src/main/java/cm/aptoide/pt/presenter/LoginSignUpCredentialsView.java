@@ -12,29 +12,19 @@ import rx.Observable;
 
 public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
-  Observable<Void> showAptoideLoginAreaClick();
-
-  Observable<Boolean> showAptoideSignUpAreaClick();
+  Observable<Boolean> showAptoideLoginAreaClick();
 
   Observable<Void> googleSignUpEvent();
-
-  Observable<Void> showHidePasswordClick();
-
-  Observable<Void> forgotPasswordClick();
 
   Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
   Observable<Void> facebookSignUpEvent();
 
-  Observable<AptoideCredentials> aptoideLoginEvent();
-
-  Observable<AptoideCredentials> aptoideSignUpEvent();
+  Observable<String> emailSubmitEvent();
 
   Observable<Void> termsAndConditionsClickEvent();
 
   Observable<Void> privacyPolicyClickEvent();
-
-  void showAptoideSignUpArea();
 
   void showAptoideLoginArea();
 
@@ -52,10 +42,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void hideFacebookLogin();
 
-  void showPassword();
-
-  void hidePassword();
-
   void dismiss();
 
   void hideKeyboard();
@@ -65,8 +51,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   void hideGoogleLogin();
 
   boolean tryCloseLoginBottomSheet(boolean shouldShowTCandPP);
-
-  boolean isPasswordVisible();
 
   Context getApplicationContext();
 
@@ -79,4 +63,14 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   void hideTCandPP();
 
   void showTCandPP();
+
+  Observable<AptoideCredentials> aptoideLoginEvent();
+
+  void showAptoideLoginCodeArea(String email);
+
+  Observable<Void> emailSetClickEvent();
+
+  void showLoginError(String message);
+
+  void showEmailError(String message);
 }

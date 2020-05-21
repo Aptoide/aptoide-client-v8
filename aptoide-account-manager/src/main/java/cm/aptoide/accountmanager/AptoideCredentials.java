@@ -3,12 +3,12 @@ package cm.aptoide.accountmanager;
 public class AptoideCredentials {
 
   private final String email;
-  private final String password;
+  private final String code;
   private final boolean isChecked;
 
-  public AptoideCredentials(String email, String password, boolean isChecked) {
+  public AptoideCredentials(String email, String code, boolean isChecked) {
     this.email = email;
-    this.password = password;
+    this.code = code;
     this.isChecked = isChecked;
   }
 
@@ -16,8 +16,8 @@ public class AptoideCredentials {
     return email;
   }
 
-  public String getPassword() {
-    return password;
+  public String getCode() {
+    return code;
   }
 
   public boolean isChecked() {

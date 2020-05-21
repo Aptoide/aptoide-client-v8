@@ -157,7 +157,7 @@ public class MockApplicationModule extends ApplicationModule {
       }
     };
     final AccountService accountServiceMock = new AccountService() {
-      @Override public Single<Account> getAccount(String email, String password) {
+      @Override public Single<Account> getAccount(String email, String code) {
         List<ErrorResponse> list = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {

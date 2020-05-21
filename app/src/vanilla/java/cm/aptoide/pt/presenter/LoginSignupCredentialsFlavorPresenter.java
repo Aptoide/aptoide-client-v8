@@ -1,7 +1,6 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -39,12 +38,6 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
     handleClickOnTermsAndConditions();
     handleClickOnPrivacyPolicy();
     showTCandPP();
-  }
-
-  protected Observable<AptoideCredentials> getAptoideSignUpEvent() {
-    return view.aptoideSignUpEvent()
-        .doOnNext(credentials -> showNotCheckedMessage(credentials.isChecked()))
-        .filter(AptoideCredentials::isChecked);
   }
 
   private void handleClickOnTermsAndConditions() {
@@ -89,10 +82,10 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
   }
 
   private Observable<Boolean> showAptoideSignUpEvent() {
-    return view.showAptoideSignUpAreaClick()
+    return view.showAptoideLoginAreaClick()
         .doOnNext(this::showNotCheckedMessage)
         .filter(event -> event)
-        .doOnNext(__ -> view.showAptoideSignUpArea());
+        .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
   private void showNotCheckedMessage(boolean checked) {
