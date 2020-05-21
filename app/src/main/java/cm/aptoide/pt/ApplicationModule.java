@@ -129,7 +129,6 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
-
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -303,6 +302,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -724,9 +724,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides @Named("facebookLoginPermissions")
+  List<String> providesFacebookLoginPermissions() {
+    return Collections.singletonList("email");
+  }
+
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       GoogleApiClient googleApiClient, StoreManager storeManager, AccountService accountService,
-      LoginPreferences loginPreferences, AccountPersistence accountPersistence) {
+      LoginPreferences loginPreferences, AccountPersistence accountPersistence,
+      @Named("facebookLoginPermissions") List<String> facebookPermissions) {
     FacebookSdk.sdkInitialize(application);
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
@@ -736,7 +742,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-            new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+            new FacebookSignUpAdapter(facebookPermissions, LoginManager.getInstance(),
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();
