@@ -282,9 +282,7 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -717,8 +715,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
     return new GoogleApiClient.Builder(application).addApi(GOOGLE_SIGN_IN_API,
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-            .requestScopes(new Scope(Scopes.PROFILE))
             .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
             .build())
         .build();
