@@ -19,7 +19,6 @@ import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserNewsletterSubscription;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTermsAndConditionsStatusRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
@@ -158,20 +157,6 @@ public class AccountServiceV3 implements AccountService {
   @Override public Completable updateTermsAndConditions() {
     return UpdateTermsAndConditionsRequest.of(defaultBodyInterceptorV3, converterFactory,
         httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
-        });
-  }
-
-  @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-    return ChangeUserNewsletterSubscription.of(isSubscribed, defaultBodyInterceptorV3,
-        converterFactory, httpClient, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {

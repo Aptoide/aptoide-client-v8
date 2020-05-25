@@ -241,34 +241,6 @@
           </RelativeLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/newsletter_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="30dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            >
-          <CheckBox
-              android:id="@+id/newsletter_checkbox"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              />
-          <TextView
-              style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:layout_marginStart="6dp"
-              android:layout_marginLeft="6dp"
-              android:gravity="center"
-              android:text="@string/createuser_short_subscribe_newsletter"
-              android:textAlignment="center"
-              />
-        </LinearLayout>
-
       </LinearLayout>
 
     </ScrollView>

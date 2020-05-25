@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -75,9 +74,7 @@ public class ManageUserFragment extends BackButtonFragment
   private View calendarLayout;
   private DatePickerDialog datePickerDialog;
   private TextView calendarDateView;
-  private CheckBox newsletterCheckBox;
   private View birthdayLayout;
-  private View newsLetterLayout;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -150,7 +147,6 @@ public class ManageUserFragment extends BackButtonFragment
       cancelUserProfile.setVisibility(View.VISIBLE);
     } else {
       birthdayLayout.setVisibility(View.VISIBLE);
-      handleNewsletterVisibility();
       setupDatePickerDialog(calendar);
     }
     attachPresenters();
@@ -159,14 +155,6 @@ public class ManageUserFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  private void handleNewsletterVisibility() {
-    if (newsletterManager.shouldShowNewsletter()) {
-      newsLetterLayout.setVisibility(View.VISIBLE);
-    } else {
-      newsLetterLayout.setVisibility(View.GONE);
-    }
   }
 
   private void setupDatePickerDialog(Calendar calendar) {
@@ -232,10 +220,8 @@ public class ManageUserFragment extends BackButtonFragment
     cancelUserProfile = view.findViewById(R.id.create_user_cancel_button);
     userPicture = view.findViewById(R.id.create_user_image);
     birthdayLayout = view.findViewById(R.id.birthday_layout);
-    newsLetterLayout = view.findViewById(R.id.newsletter_layout);
     calendarLayout = view.findViewById(R.id.calendar_layout);
     calendarDateView = view.findViewById(R.id.calendar_date);
-    newsletterCheckBox = view.findViewById(R.id.newsletter_checkbox);
   }
 
   private void setupToolbar() {
@@ -261,10 +247,8 @@ public class ManageUserFragment extends BackButtonFragment
       uploadWaitDialog.dismiss();
     }
     birthdayLayout = null;
-    newsLetterLayout = null;
     calendarLayout = null;
     calendarDateView = null;
-    newsletterCheckBox = null;
     super.onDestroyView();
   }
 
@@ -361,7 +345,7 @@ public class ManageUserFragment extends BackButtonFragment
   @Nullable public ViewModel updateModelAndGet() {
     return ViewModel.from(currentModel, userName.getText()
         .toString(), calendarDateView.getText()
-        .toString(), newsletterCheckBox.isChecked());
+        .toString());
   }
 
   @Parcel protected static class ViewModel {
@@ -369,7 +353,6 @@ public class ManageUserFragment extends BackButtonFragment
     String pictureUri;
     String date;
     String requestDate;
-    boolean hasNewsletterSubscribe;
     boolean hasNewPicture;
     boolean hasDateError;
     private int year;
@@ -385,7 +368,6 @@ public class ManageUserFragment extends BackButtonFragment
       month = -1;
       day = -1;
       hasNewPicture = false;
-      hasNewsletterSubscribe = false;
       hasDateError = false;
     }
 
@@ -399,15 +381,12 @@ public class ManageUserFragment extends BackButtonFragment
       month = -1;
       day = -1;
       hasNewPicture = false;
-      hasNewsletterSubscribe = false;
       hasDateError = false;
     }
 
-    public static ViewModel from(ViewModel otherModel, String otherName, String date,
-        boolean hasNewsletterSubscribe) {
+    public static ViewModel from(ViewModel otherModel, String otherName, String date) {
       otherModel.setName(otherName);
       otherModel.setDate(date);
-      otherModel.setNewsLetterSubscribe(hasNewsletterSubscribe);
       return otherModel;
     }
 
@@ -445,14 +424,6 @@ public class ManageUserFragment extends BackButtonFragment
 
     public String getRequestDate() {
       return requestDate;
-    }
-
-    public boolean getNewsletterSubscribe() {
-      return hasNewsletterSubscribe;
-    }
-
-    void setNewsLetterSubscribe(boolean hasNewsLetterSubscribe) {
-      this.hasNewsletterSubscribe = hasNewsLetterSubscribe;
     }
 
     void setDate(int year, int month, int day) {

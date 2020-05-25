@@ -166,12 +166,10 @@ public class ManageUserPresenter implements Presenter {
         final String mediaStoragePath =
             uriToPathResolver.getMediaStoragePath(Uri.parse(userData.getPictureUri()));
         return accountManager.updateAccount(userData.getName(), mediaStoragePath)
-            .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()))
-            .mergeWith(accountManager.changeSubscribeNewsletter(userData.getNewsletterSubscribe()));
+            .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()));
       }
       return accountManager.updateAccount(userData.getName())
-          .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()))
-          .mergeWith(accountManager.changeSubscribeNewsletter(userData.getNewsletterSubscribe()));
+          .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()));
     }
   }
 }

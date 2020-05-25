@@ -196,10 +196,6 @@ public class MockApplicationModule extends ApplicationModule {
         return null;
       }
 
-      @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-        return null;
-      }
-
       @Override public Single<Account> getAccount() {
         return Single.just(account);
       }

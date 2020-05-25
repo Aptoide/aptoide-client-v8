@@ -193,14 +193,6 @@ public class AptoideAccountManager {
         .toCompletable();
   }
 
-  public Completable changeSubscribeNewsletter(boolean isSubscribed) {
-    if (isSubscribed) {
-      return accountService.changeSubscribeNewsletter("1");
-    } else {
-      return accountService.changeSubscribeNewsletter("0");
-    }
-  }
-
   public Observable<Boolean> pinRequired() {
     return adultContent.pinRequired();
   }
