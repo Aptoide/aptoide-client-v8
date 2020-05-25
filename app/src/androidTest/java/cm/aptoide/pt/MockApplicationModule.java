@@ -170,8 +170,7 @@ public class MockApplicationModule extends ApplicationModule {
         return Single.just(account);
       }
 
-      @Override public Single<Account> createAccount(String email, String metadata, String name,
-          String type) {
+      @Override public Single<Account> createAccount(String email, String metadata, String type) {
         return Single.just(account);
       }
 

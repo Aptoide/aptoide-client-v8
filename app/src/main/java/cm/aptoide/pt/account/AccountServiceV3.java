@@ -92,15 +92,13 @@ public class AccountServiceV3 implements AccountService {
   }
 
   @Override public Single<Account> getAccount(String email, String password) {
-    return createAccount(email.toLowerCase(), password, null,
-        AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
+    return createAccount(email.toLowerCase(), password, AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
   }
 
-  @Override
-  public Single<Account> createAccount(String email, String metadata, String name, String type) {
-    return OAuth2AuthenticationRequest.of(email, metadata, type, null,
-        v3NoAuthorizationBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, extraId, oAuthModeProvider.getAuthMode(type))
+  @Override public Single<Account> createAccount(String email, String metadata, String type) {
+    return OAuth2AuthenticationRequest.of(email, metadata, type, v3NoAuthorizationBodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, extraId,
+        oAuthModeProvider.getAuthMode(type))
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
