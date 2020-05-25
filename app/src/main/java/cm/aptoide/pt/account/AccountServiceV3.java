@@ -18,7 +18,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTermsAndConditionsStatusRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
@@ -137,20 +136,6 @@ public class AccountServiceV3 implements AccountService {
             return Single.error(new AccountException(exception));
           }
           return Single.error(throwable);
-        });
-  }
-
-  @Override public Completable changeBirthdate(String birthdate) {
-    return ChangeUserBirthdateRequest.of(birthdate, defaultBodyInterceptorV3, converterFactory,
-        httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
         });
   }
 

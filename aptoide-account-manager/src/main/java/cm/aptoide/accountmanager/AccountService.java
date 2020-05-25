@@ -11,8 +11,6 @@ public interface AccountService {
 
   Single<Account> createAccount(String email, String password);
 
-  Completable changeBirthdate(String birthdate);
-
   Completable updateTermsAndConditions();
 
   Single<Account> getAccount();

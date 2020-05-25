@@ -121,11 +121,13 @@ public interface Account {
      * Account information is going to be visible e.g. user's nickname and avatar are
      * going to be visible in social timeline.
      */
-    PUBLIC, /**
+    PUBLIC,
+    /**
      * Account information is going to be hidden e.g. user's nickname and avatar are
      * not going to be visible in social timeline.
      */
-    PRIVATE, /**
+    PRIVATE,
+    /**
      * User did not confirm the account access level yet. By all means account is considered
      * {@link #PRIVATE}.
      */
