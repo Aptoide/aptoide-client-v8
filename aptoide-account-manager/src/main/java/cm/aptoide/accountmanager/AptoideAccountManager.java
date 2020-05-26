@@ -184,7 +184,7 @@ public class AptoideAccountManager {
             new AptoideAccount(account.getId(), account.getEmail(), account.getNickname(),
                 account.getAvatar(), account.getStore(), account.isAdultContentEnabled(),
                 account.getAccess(), account.isAccessConfirmed(), account.getSubscribedStores(),
-                true, true, account.getBirthDate())))
+                true, true)))
         .toCompletable();
   }
 

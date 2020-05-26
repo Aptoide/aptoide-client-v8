@@ -1,6 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -105,13 +104,6 @@ public interface Account {
    * @return True if the account has accepted the privacy policy. False otherwise.
    */
   boolean acceptedPrivacyPolicy();
-
-  /**
-   * Returns the date of birth associated with the account
-   *
-   * @return Date of birth associated with the account.
-   */
-  Date getBirthDate();
 
   /**
    * Account information access level.
