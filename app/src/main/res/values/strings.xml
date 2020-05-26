@@ -449,7 +449,7 @@
 
   <!-- Review Activity-->
   <string name="review_success">Review submitted successfully!</string>
-  <string name="store_username">Username</string>
+  <string name="store_username">Nickname</string>
 
 
   <!-- ABTesting -->
