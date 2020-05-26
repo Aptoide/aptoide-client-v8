@@ -1,20 +1,10 @@
 package cm.aptoide.pt.account.view.store;
 
 import android.text.TextUtils;
-import cm.aptoide.accountmanager.SocialLink;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.themes.StoreTheme;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.parceler.Parcel;
 
 @Parcel public class ManageStoreViewModel {
-
-  public static final String FACEBOOK_BASE_URL = "https://www.facebook.com/";
-  public static final String TWITCH_BASE_URL = "https://go.twitch.tv/";
-  public static final String TWITTER_BASE_URL = "https://twitter.com/";
-  public static final String YOUTUBE_BASE_URL = "https://www.youtube.com/";
 
   long storeId;
   String storeName;
@@ -22,8 +12,6 @@ import org.parceler.Parcel;
   String pictureUri;
   StoreTheme storeTheme;
   boolean newAvatar;
-  List<SocialLink> socialLinks;
-  List<Store.SocialChannelType> socialDelLinks;
 
   public ManageStoreViewModel() {
     this.storeId = -1;
@@ -32,20 +20,16 @@ import org.parceler.Parcel;
     this.pictureUri = "";
     this.storeTheme = StoreTheme.DEFAULT;
     this.newAvatar = false;
-    this.socialLinks = Collections.emptyList();
-    this.socialDelLinks = Collections.emptyList();
   }
 
   public ManageStoreViewModel(long storeId, StoreTheme storeTheme, String storeName,
-      String storeDescription, String pictureUri, List<Store.SocialChannel> storeLinks) {
+      String storeDescription, String pictureUri) {
     this.storeId = storeId;
     this.storeName = storeName;
     this.storeDescription = storeDescription;
     this.pictureUri = pictureUri;
     this.storeTheme = storeTheme;
     this.newAvatar = false;
-    this.socialLinks = buildSocialLinksList(storeLinks);
-    this.socialDelLinks = new ArrayList<>();
   }
 
   public static ManageStoreViewModel update(ManageStoreViewModel model, String storeName,
@@ -62,14 +46,6 @@ import org.parceler.Parcel;
     }
 
     return model;
-  }
-
-  private List<SocialLink> buildSocialLinksList(List<Store.SocialChannel> socialChannels) {
-    List<SocialLink> storeLinks = new ArrayList<>();
-    for (Store.SocialChannel socialChannel : socialChannels) {
-      storeLinks.add(new SocialLink(socialChannel.getType(), socialChannel.getUrl()));
-    }
-    return storeLinks;
   }
 
   public void setNewAvatar(boolean newAvatar) {
@@ -126,21 +102,5 @@ import org.parceler.Parcel;
 
   public boolean storeExists() {
     return storeId >= 0L;
-  }
-
-  public List<SocialLink> getSocialLinks() {
-    return socialLinks;
-  }
-
-  public void setSocialLinks(List<SocialLink> socialLinks) {
-    this.socialLinks = socialLinks;
-  }
-
-  public List<Store.SocialChannelType> getSocialDeleteLinks() {
-    return socialDelLinks;
-  }
-
-  public void setSocialDelLinks(List<Store.SocialChannelType> socialDelLinks) {
-    this.socialDelLinks = socialDelLinks;
   }
 }

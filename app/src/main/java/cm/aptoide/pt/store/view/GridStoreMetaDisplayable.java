@@ -19,8 +19,6 @@ import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import java.util.Collections;
-import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -77,11 +75,6 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_store_meta;
-  }
-
-  public List<Store.SocialChannel> getSocialLinks() {
-    return getStore() == null || getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
-        : getStore().getSocialChannels();
   }
 
   public StoreCredentialsProvider getStoreCredentialsProvider() {
@@ -231,9 +224,9 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
         .first())
         .flatMap(isFollowing -> isStoreOwner(accountManager).map(
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
-                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
-                getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
-                getDescription(), themeManager.getStoreTheme(getStoreThemeName()),
+                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing, getAppsCount(),
+                getFollowersCount(), getFollowingsCount(), getDescription(),
+                themeManager.getStoreTheme(getStoreThemeName()),
                 themeManager.getAttributeForTheme(R.attr.themeTextColor).data, getStoreId(),
                 hasStore(), getBadge())));
   }
