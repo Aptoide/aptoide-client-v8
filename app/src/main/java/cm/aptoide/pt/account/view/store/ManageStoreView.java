@@ -15,14 +15,6 @@ public interface ManageStoreView extends ImagePickerView {
 
   void dismissWaitProgressBar();
 
-  void showFacebookError(String error);
-
-  void showTwitterError(String error);
-
-  void showTwitchError(String error);
-
-  void showYoutubeError(String error);
-
   void showError(String error);
 
   void showSuccessMessage();
