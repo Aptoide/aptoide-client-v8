@@ -14,5 +14,6 @@ include 'app',
     ':aptoide-analytics-core',
     ':aptoide-analytics-default-implementation',
     ':aptoide-views',
-    ':packageinstaller'
-
+    ':packageinstaller',
+    ':aptoide-authentication-core',
+    ':aptoide-authentication-rx'

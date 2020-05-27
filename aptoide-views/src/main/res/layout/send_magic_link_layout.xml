@@ -13,7 +13,7 @@
     android:background="?attr/loginInputBackground"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:hint="Your email here..."
+    android:hint="@string/login_email_field_text"
     android:imeOptions="actionDone"
     android:inputType="textEmailAddress"
     android:maxLength="@integer/max_username_char_length"
@@ -30,7 +30,7 @@
     android:layout_width="match_parent"
     android:layout_height="24dp"
     android:layout_marginTop="14dp"
-    android:text="We'll send you a magic link to your email."
+    android:text="@string/login_send_magic_link_body"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/email" />
@@ -45,7 +45,7 @@
     android:drawableLeft="@drawable/ic_error_outline_red"
     android:drawablePadding="8dp"
     android:drawableTint="@color/red"
-    android:text="This email isn't valid"
+    android:text="@string/login_error_invalid_email"
     android:visibility="gone"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -64,12 +64,13 @@
     style="@style/Aptoide.Button.Install"
     android:layout_width="match_parent"
     android:layout_marginTop="20dp"
-    android:text="Send magic link"
+    android:text="@string/login_send_magic_link_button"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/tip_barrier" />
 
   <TextView
+    android:id="@+id/login_benefits_textview"
     style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -78,9 +79,9 @@
     android:drawableLeft="@drawable/ic_shield"
     android:drawablePadding="5dp"
     android:gravity="center_vertical"
-    android:text="Secure Login - No passwords saved on our side"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/send_magic_link_button" />
+    app:layout_constraintTop_toBottomOf="@+id/send_magic_link_button"
+    tools:text="Secure Login - No passwords saved on our side" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
