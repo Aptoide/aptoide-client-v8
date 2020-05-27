@@ -1,10 +1,13 @@
 package cm.aptoide.aptoideviews.login
 
 import android.content.Context
+import android.text.SpannedString
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import cm.aptoide.aptoideviews.R
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxTextView
@@ -18,7 +21,19 @@ class SendMagicLinkView : FrameLayout {
       defStyleAttr) {
     inflate(context, R.layout.send_magic_link_layout, this)
     setState(State.Initial)
+    setupViews()
     isSaveEnabled = true
+  }
+
+  private fun setupViews() {
+    val string: SpannedString = buildSpannedString {
+      bold {
+        append(context.getText(R.string.login_safe_body_1))
+      }
+      append(" - ")
+      append(context.getText(R.string.login_safe_body_2))
+    }
+    login_benefits_textview.text = string
   }
 
   fun setState(state: State) = when (state) {
