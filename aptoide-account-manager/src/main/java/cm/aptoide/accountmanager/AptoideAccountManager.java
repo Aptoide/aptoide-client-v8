@@ -87,6 +87,10 @@ public class AptoideAccountManager {
         .flatMapCompletable(account -> saveAccount(account));
   }
 
+  public Completable sendMagicLink(String email) {
+    return accountService.sendMagicLink(email);
+  }
+
   public Single<Boolean> isEmailValid(String email) {
     return credentialsValidator.isEmailValid(email);
   }

@@ -35,7 +35,9 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -63,6 +65,7 @@ public class AccountServiceV3 implements AccountService {
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
   private final OAuthModeProvider oAuthModeProvider;
+  private final AptoideAuthenticationRx aptoideAuthentication;
 
   public AccountServiceV3(AccountFactory accountFactory, OkHttpClient httpClient,
       OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory,
@@ -73,7 +76,7 @@ public class AccountServiceV3 implements AccountService {
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      OAuthModeProvider oAuthModeProvider) {
+      OAuthModeProvider oAuthModeProvider, AptoideAuthenticationRx aptoideAuthentication) {
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
     this.longTimeoutHttpClient = longTimeoutHttpClient;
@@ -89,6 +92,7 @@ public class AccountServiceV3 implements AccountService {
     this.bodyInterceptorWebV7 = bodyInterceptorWebV7;
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
     this.oAuthModeProvider = oAuthModeProvider;
+    this.aptoideAuthentication = aptoideAuthentication;
   }
 
   @Override public Single<Account> getAccount(String email, String code) {
@@ -260,10 +264,16 @@ public class AccountServiceV3 implements AccountService {
     return authenticationPersistence.removeAuthentication();
   }
 
+  @Override public Completable sendMagicLink(String email) {
+    return RxJavaInterop.toV1Completable(aptoideAuthentication.sendMagicLink(email)
+        //here we need to persist both agent and state because they will be used in further authenticate calls.
+        .ignoreElement());
+  }
+
   /**
    * This retry occurs when user user is being propagated through the server slave machines
-   * (specifically on user creation) so we use a retry with exponential back-off with three
-   * retries to get the data.
+   * (specifically on user creation) so we use a retry with exponential back-off with three retries
+   * to get the data.
    */
   private Observable<Throwable> retryOnTicket(Observable<? extends Throwable> observableError) {
     return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {

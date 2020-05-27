@@ -32,4 +32,6 @@ public interface AccountService {
   Completable updateAccount(boolean adultContentEnabled);
 
   Completable removeAccount();
+
+  Completable sendMagicLink(String email);
 }
