@@ -1,7 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -76,8 +73,6 @@ dependencies {
   implementation project(path: ':aptoide-analytics-default-implementation')
   implementation project(path: ':utils')
   api project(path: ':aptoide-authentication-rx')
-
-  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

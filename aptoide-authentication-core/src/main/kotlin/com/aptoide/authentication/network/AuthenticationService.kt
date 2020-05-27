@@ -2,11 +2,22 @@ package com.aptoide.authentication.network
 
 import com.aptoide.authentication.model.CodeAuth
 import com.aptoide.authentication.model.OAuth2
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.delay
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-class AuthenticationService(private val service: AuthorizationV7) {
+class AuthenticationService() {
+  val authorizationV7: AuthorizationV7 =
+      Retrofit.Builder().baseUrl("https://ws2.aptoide.com/api/7/")
+          .addConverterFactory(MoshiConverterFactory.create(
+              Moshi.Builder().add(KotlinJsonAdapterFactory())
+                  .build()))
+          .build()
+          .create(AuthorizationV7::class.java)
 
   suspend fun sendMagicLink(email: String): CodeAuth {
 //    service.sendMagicLink(email, Type.EMAIL, arrayOf("CODE:TOKEN:EMAIL"))

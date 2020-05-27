@@ -294,8 +294,6 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
@@ -324,7 +322,6 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
-import retrofit2.converter.moshi.MoshiConverterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -2122,14 +2119,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
-    AuthenticationService.AuthorizationV7 authorizationV7 =
-        new Retrofit.Builder().baseUrl("https://ws2.aptoide.com/api/7/")
-            .addConverterFactory(MoshiConverterFactory.create(
-                new Moshi.Builder().add(new KotlinJsonAdapterFactory())
-                    .build()))
-            .build()
-            .create(AuthenticationService.AuthorizationV7.class);
-    return new AptoideAuthenticationRx(
-        new AptoideAuthentication(new AuthenticationService(authorizationV7)));
+    return new AptoideAuthenticationRx(new AptoideAuthentication(new AuthenticationService()));
   }
 }
