@@ -129,7 +129,6 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
-
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -275,6 +274,9 @@ import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.aptoide.authentication.AptoideAuthentication;
+import com.aptoide.authentication.network.AuthenticationService;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -2114,5 +2116,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
       AppsNameExperiment appsNameExperiment) {
     return new AppsNameExperimentManager(appsNameExperiment);
+  }
+
+  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
+    return new AptoideAuthenticationRx(new AptoideAuthentication(new AuthenticationService()));
   }
 }
