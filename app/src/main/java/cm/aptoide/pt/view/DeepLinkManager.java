@@ -22,8 +22,7 @@ import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
 import cm.aptoide.pt.dataprovider.model.v7.Layout;
@@ -36,12 +35,12 @@ import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.promotions.PromotionsFragment;
-import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.Source;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -67,13 +66,12 @@ public class DeepLinkManager {
   private static final String APP_SHORTCUT = "App_Shortcut";
   private static final String TAG = DeepLinkManager.class.getName();
   private final StoreUtilsProxy storeUtilsProxy;
-  private final StoreRepository storeRepository;
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final SearchNavigator searchNavigator;
   private final DeepLinkMessages deepLinkMessages;
   private final SharedPreferences sharedPreferences;
-  private final StoreAccessor storeAccessor;
+  private final RoomStoreRepository storeRepository;
   private final NavigationTracker navigationTracker;
   private final NotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
@@ -89,24 +87,22 @@ public class DeepLinkManager {
   private final ThemeManager themeManager;
   private final ThemeAnalytics themeAnalytics;
 
-  public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
-      FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
-      SearchNavigator searchNavigator, DeepLinkMessages deepLinkMessages,
-      SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
-      SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
-      AptoideAccountManager accountManager, DeepLinkAnalytics deepLinkAnalytics,
-      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
-      InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
-      ThemeAnalytics themeAnalytics) {
+  public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, FragmentNavigator fragmentNavigator,
+      BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
+      DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
+      RoomStoreRepository storeRepository, NotificationAnalytics notificationAnalytics,
+      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
+      DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
+      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
+      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
     this.storeUtilsProxy = storeUtilsProxy;
-    this.storeRepository = storeRepository;
     this.fragmentNavigator = fragmentNavigator;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.searchNavigator = searchNavigator;
     this.deepLinkMessages = deepLinkMessages;
     this.sharedPreferences = sharedPreferences;
-    this.storeAccessor = storeAccessor;
+    this.storeRepository = storeRepository;
     this.navigationTracker = navigationTracker;
     this.notificationAnalytics = notificationAnalytics;
     this.searchAnalytics = searchAnalytics;
@@ -145,7 +141,7 @@ public class DeepLinkManager {
           intent.getBooleanExtra(FROM_SHORTCUT, false));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO)) {
       newRepoDeepLink(intent, intent.getExtras()
-          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeAccessor);
+          .getStringArrayList(DeepLinkIntentReceiver.DeepLinksTargets.NEW_REPO), storeRepository);
     } else if (intent.hasExtra(
         DeepLinkIntentReceiver.DeepLinksTargets.FROM_DOWNLOAD_NOTIFICATION)) {
       downloadNotificationDeepLink();
@@ -187,9 +183,8 @@ public class DeepLinkManager {
       return false;
     }
     List<ScreenTagHistory> screenHistory = navigationTracker.getHistoryList();
-    if (screenHistory.size() == 0) {
-      navigationTracker.registerScreen(ScreenTagHistory.Builder.build(APP_SHORTCUT));
-    } else if (screenHistory.get(screenHistory.size() - 1)
+    if (screenHistory != null && screenHistory.size() > 0 && screenHistory.get(
+        screenHistory.size() - 1)
         .getFragment()
         .equals("Notification")) {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build("Notification"));
@@ -287,11 +282,11 @@ public class DeepLinkManager {
   }
 
   private void newRepoDeepLink(Intent intent, ArrayList<String> repos,
-      StoreAccessor storeAccessor) {
+      RoomStoreRepository roomStoreRepository) {
     if (repos != null) {
       subscriptions.add(Observable.from(repos)
-          .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName, storeAccessor)
-              .first()
+          .flatMap(storeName -> StoreUtils.isSubscribedStore(storeName, roomStoreRepository)
+              .toObservable()
               .observeOn(AndroidSchedulers.mainThread())
               .flatMap(isFollowed -> {
                 if (isFollowed) {
@@ -308,9 +303,8 @@ public class DeepLinkManager {
           .toList()
           .flatMap(stores -> {
             if (stores.size() == 1) {
-              return storeRepository.getByName(stores.get(0))
-                  .flatMapCompletable(store -> openStore(store))
-                  .map(success -> stores);
+              return roomStoreRepository.get(stores.get(0))
+                  .flatMapObservable(store -> openStore(store).andThen(Observable.just(stores)));
             } else {
               return navigateToStores().toObservable()
                   .map(success -> stores);
@@ -331,7 +325,7 @@ public class DeepLinkManager {
     return Completable.fromAction(bottomNavigationNavigator::navigateToStore);
   }
 
-  @NonNull private Completable openStore(Store store) {
+  @NonNull private Completable openStore(RoomStore store) {
     return Completable.fromAction(() -> fragmentNavigator.navigateTo(
         AptoideApplication.getFragmentProvider()
             .newStoreFragment(store.getStoreName(), store.getTheme()), true));

@@ -1,8 +1,8 @@
 package cm.aptoide.pt.install;
 
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installation;
-import cm.aptoide.pt.database.realm.Installed;
+import cm.aptoide.pt.database.RoomInstalledPersistence;
+import cm.aptoide.pt.database.room.RoomInstallation;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.database.schedulers.RealmSchedulers;
 import java.util.List;
 import rx.Completable;
@@ -14,18 +14,18 @@ import rx.schedulers.Schedulers;
  */
 public class InstalledRepository {
 
-  private final InstalledAccessor accessor;
+  private final RoomInstalledPersistence installedPersistence;
 
-  public InstalledRepository(InstalledAccessor accessor) {
-    this.accessor = accessor;
+  public InstalledRepository(RoomInstalledPersistence installedPersistence) {
+    this.installedPersistence = installedPersistence;
   }
 
-  public void save(Installed installed) {
-    accessor.insert(installed);
+  public Completable save(RoomInstalled installed) {
+    return installedPersistence.insert(installed);
   }
 
   public boolean contains(String packageName) {
-    return accessor.isInstalled(packageName)
+    return installedPersistence.isInstalled(packageName)
         .toBlocking()
         .first();
   }
@@ -39,51 +39,47 @@ public class InstalledRepository {
    *
    * @return an observable with a list of installed apps
    */
-  public Observable<List<Installed>> getAllInstalled() {
-    return accessor.getAllInstalled();
+  public Observable<List<RoomInstalled>> getAllInstalled() {
+    return installedPersistence.getAllInstalled();
   }
 
-  public Observable<Installed> getAsList(String packageName, int versionCode) {
-    return accessor.getAsList(packageName, versionCode)
+  public Observable<RoomInstalled> getAsList(String packageName, int versionCode) {
+    return installedPersistence.getAsList(packageName, versionCode)
         .observeOn(Schedulers.io())
-        .map(installeds -> {
-          if (installeds.isEmpty()) {
+        .map(installedList -> {
+          if (installedList.isEmpty()) {
             return null;
           } else {
-            return installeds.get(0);
+            return installedList.get(0);
           }
         });
   }
 
-  public Observable<List<Installed>> getAsList(String packageName) {
-    return accessor.getAllAsList(packageName);
+  public Observable<List<RoomInstalled>> getAsList(String packageName) {
+    return installedPersistence.getAllAsList(packageName);
   }
 
-  public Observable<Installed> getInstalled(String packageName) {
-    return accessor.getInstalled(packageName);
+  public Observable<RoomInstalled> getInstalled(String packageName) {
+    return installedPersistence.getInstalled(packageName);
   }
 
   public Completable remove(String packageName, int versionCode) {
-    return accessor.remove(packageName, versionCode);
+    return installedPersistence.remove(packageName, versionCode);
   }
 
   public Observable<Boolean> isInstalled(String packageName) {
-    return accessor.isInstalled(packageName);
+    return installedPersistence.isInstalled(packageName);
   }
 
-  public Observable<List<Installed>> getAllInstalledSorted() {
-    return accessor.getAllInstalledSorted();
+  public Observable<List<RoomInstalled>> getAllInstalledSorted() {
+    return installedPersistence.getAllInstalledSorted();
   }
 
-  public Observable<Installed> get(String packageName, int versionCode) {
-    return accessor.get(packageName, versionCode);
+  public Observable<RoomInstalled> get(String packageName, int versionCode) {
+    return installedPersistence.get(packageName, versionCode);
   }
 
-  public Observable<List<Installation>> getInstallationsHistory() {
-    return accessor.getInstallationsHistory();
-  }
-
-  public Observable<List<Installed>> getInstalled(String[] packageNames) {
-    return accessor.getInstalled(packageNames);
+  public Observable<List<RoomInstallation>> getInstallationsHistory() {
+    return installedPersistence.getInstallationsHistory();
   }
 }

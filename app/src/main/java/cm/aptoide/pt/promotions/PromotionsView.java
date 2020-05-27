@@ -40,4 +40,6 @@ public interface PromotionsView extends View {
   void showPromotionFeatureGraphic(String background);
 
   Observable<PromotionAppClick> appCardClick();
+
+  void showDownloadError(PromotionViewApp promotioViewApp);
 }

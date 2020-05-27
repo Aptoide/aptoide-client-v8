@@ -187,4 +187,6 @@ public interface AppViewView extends InstallAppView {
   void showConsentDialog();
 
   void setInstallButton(AppCoinsViewModel appCoinsViewModel);
+
+  void showDownloadError(DownloadModel downloadModel);
 }

@@ -1,5 +1,6 @@
 package cm.aptoide.pt.home;
 
+import android.util.Log;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
@@ -52,7 +53,7 @@ public class Home {
   public Observable<HomeBundlesModel> loadHomeBundles() {
     return bundlesRepository.loadHomeBundles()
         .flatMap(bundlesModel -> {
-          if (bundlesModel.hasErrors() || bundlesModel.isLoading()) {
+          if (bundlesModel.hasErrors() || bundlesModel.isLoading() || !bundlesModel.isComplete()) {
             return Observable.just(bundlesModel);
           }
           return addAdBundle(bundlesModel);

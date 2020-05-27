@@ -8,6 +8,13 @@ android {
     minSdkVersion project.MINIMUM_SDK_VERSION
     // This should be a property set in Java code by the user of this lib
     buildConfigField 'boolean', 'DELETE_DB', 'false'
+
+    javaCompileOptions {
+      annotationProcessorOptions {
+        arguments = ["room.schemaLocation":
+                         "$projectDir/schemas".toString()]
+      }
+    }
   }
 
   buildTypes {
@@ -41,6 +48,14 @@ android {
   lintOptions {
     abortOnError false
   }
+
+  libraryVariants.all { variant ->
+
+    variant.buildConfigField "int", "ROOM_SCHEMA_VERSION",
+        project.ROOM_SCHEMA_VERSION
+    variant.buildConfigField "String", "ROOM_DATABASE_NAME",
+        "\"" + project.ROOM_DATABASE_NAME + "\""
+  }
 }
 
 dependencies {
@@ -55,4 +70,14 @@ dependencies {
   implementation "nl.littlerobots.rxlint:rxlint:${Rx_lint_version}"
   // And ProGuard rules for RxJava!
   implementation "com.artemzin.rxjava:proguard-rules:${RXJAVA_PROGUARD_RULES_VERSION}"
+  implementation "androidx.room:room-runtime:${ROOM_VERSION}"
+  annotationProcessor "androidx.room:room-compiler:${ROOM_VERSION}"
+
+  // RxJava support for Room
+  implementation "androidx.room:room-rxjava2:${ROOM_VERSION}"
+
+  implementation "io.reactivex.rxjava2:rxjava:${RXJAVA_2_VERSION}"
+  implementation "io.reactivex.rxjava2:rxandroid:${RXANDROID_2_VERSION}"
+
+  implementation "com.google.code.gson:gson:${GSON_VERSION}"
 }

@@ -5,7 +5,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager
 import cm.aptoide.pt.ads.WalletAdsOfferManager
 import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.app.DownloadStateParser
-import cm.aptoide.pt.database.realm.Download
+import cm.aptoide.pt.database.room.RoomDownload
 import cm.aptoide.pt.download.DownloadFactory
 import cm.aptoide.pt.install.AppInstallerStatusReceiver
 import cm.aptoide.pt.install.InstallManager
@@ -43,14 +43,14 @@ class WalletInstallManager(val packageManager: PackageManager,
 
   fun downloadApp(walletApp: WalletApp): Completable {
     return Observable.just(
-        downloadFactory.create(
-            downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
-            walletApp.appName,
-            walletApp.packageName,
-            walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
-            walletApp.path, walletApp.pathAlt, walletApp.obb,
-            false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
-            walletApp.trustedBadge, walletApp.storeName))
+            downloadFactory.create(
+                downloadStateParser.parseDownloadAction(DownloadModel.Action.INSTALL),
+                walletApp.appName,
+                walletApp.packageName,
+                walletApp.md5sum, walletApp.icon, walletApp.versionName, walletApp.versionCode,
+                walletApp.path, walletApp.pathAlt, walletApp.obb,
+                false, walletApp.size, walletApp.splits, walletApp.requiredSplits,
+                walletApp.trustedBadge, walletApp.storeName))
         .flatMapSingle { download ->
           moPubAdsManager.getAdsVisibilityStatus().doOnSuccess { responseStatus ->
             setupDownloadEvents(download, DownloadModel.Action.INSTALL, walletApp.id,
@@ -65,7 +65,7 @@ class WalletInstallManager(val packageManager: PackageManager,
         .toCompletable()
   }
 
-  private fun setupDownloadEvents(download: Download,
+  private fun setupDownloadEvents(download: RoomDownload,
                                   downloadAction: DownloadModel.Action?,
                                   appId: Long,
                                   offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus,
@@ -98,7 +98,8 @@ class WalletInstallManager(val packageManager: PackageManager,
     return installManager.getInstall(walletApp.md5sum, walletApp.packageName, walletApp.versionCode)
         .map { install ->
           DownloadModel(downloadStateParser.parseDownloadType(install.type, false),
-              install.progress, downloadStateParser.parseDownloadState(install.state))
+              install.progress, downloadStateParser.parseDownloadState(install.state,
+              install.isIndeterminate))
         }
   }
 

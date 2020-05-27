@@ -123,7 +123,8 @@ public class AppViewModelManager {
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
-            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
+            install.getProgress(),
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
   }
 
   private Single<AppModel> loadAppModel(long appId, String storeName, String packageName) {
@@ -136,9 +137,7 @@ public class AppViewModelManager {
 
   private Single<AppModel> loadAppModel(String packageName, String storeName) {
     if (cachedApp != null && cachedApp.getPackageName()
-        .equals(packageName) && cachedApp.getStore()
-        .getName()
-        .equals(storeName)) {
+        .equals(packageName)) {
       return Single.just(cachedApp);
     }
     return appCenter.loadDetailedApp(packageName, storeName)

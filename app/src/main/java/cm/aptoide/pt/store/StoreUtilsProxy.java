@@ -4,8 +4,7 @@ import android.content.SharedPreferences;
 import androidx.annotation.Nullable;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.interfaces.ErrorRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.SuccessRequestListener;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -30,7 +29,7 @@ import rx.Observable;
  */
 public class StoreUtilsProxy {
 
-  private final StoreAccessor storeAccessor;
+  private final RoomStoreRepository storeRepository;
   private final AptoideAccountManager accountManager;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final StoreCredentialsProvider storeCredentialsProvider;
@@ -41,12 +40,13 @@ public class StoreUtilsProxy {
 
   public StoreUtilsProxy(AptoideAccountManager accountManager,
       BodyInterceptor<BaseBody> bodyInterceptor, StoreCredentialsProvider storeCredentialsProvider,
-      StoreAccessor storeAccessor, OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
+      RoomStoreRepository storeRepository, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences) {
     this.accountManager = accountManager;
     this.bodyInterceptor = bodyInterceptor;
     this.storeCredentialsProvider = storeCredentialsProvider;
-    this.storeAccessor = storeAccessor;
+    this.storeRepository = storeRepository;
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
@@ -64,7 +64,7 @@ public class StoreUtilsProxy {
     return StoreUtils.subscribeStore(
         GetStoreMetaRequest.of(StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider),
             bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences),
-        accountManager, null, null, storeAccessor);
+        accountManager, null, null, storeRepository);
   }
 
   public void subscribeStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -82,7 +82,7 @@ public class StoreUtilsProxy {
       AptoideAccountManager accountManager, String storeUserName, String storePassword) {
 
     StoreUtils.subscribeStore(getStoreMetaRequest, successRequestListener, errorRequestListener,
-        accountManager, storeUserName, storePassword, storeAccessor);
+        accountManager, storeUserName, storePassword, storeRepository);
   }
 
   public void subscribeStore(String storeName,
@@ -95,13 +95,8 @@ public class StoreUtilsProxy {
         successRequestListener, errorRequestListener, storeName, accountManager);
   }
 
-  public void unSubscribeStore(String storeName,
-      StoreCredentialsProvider storeCredentialsProvider) {
-    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
-  }
-
   public void unSubscribeStore(String storeName) {
-    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeAccessor);
+    StoreUtils.unSubscribeStore(storeName, accountManager, storeCredentialsProvider, storeRepository);
   }
 
   public Completable addDefaultStore(GetStoreMetaRequest getStoreMetaRequest,
@@ -123,16 +118,15 @@ public class StoreUtilsProxy {
             return Observable.error(new Exception("Something went wrong while getting store meta"));
           }
         })
-        .doOnNext(
-            getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest, storeAccessor))
+        .flatMapCompletable(getStoreMeta -> saveStore(getStoreMeta.getData(), getStoreMetaRequest))
         .doOnError((throwable) -> CrashReport.getInstance()
             .log(throwable))
         .toCompletable();
   }
 
-  private void saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
-      GetStoreMetaRequest getStoreMetaRequest, StoreAccessor storeAccessor) {
-    Store store = new Store();
+  private Completable saveStore(cm.aptoide.pt.dataprovider.model.v7.store.Store storeData,
+      GetStoreMetaRequest getStoreMetaRequest) {
+    RoomStore store = new RoomStore();
 
     store.setStoreId(storeData.getId());
     store.setStoreName(storeData.getName());
@@ -149,7 +143,7 @@ public class StoreUtilsProxy {
       store.setPasswordSha1(getStoreMetaRequest.getBody()
           .getStorePassSha1());
     }
-    storeAccessor.save(store);
+    return storeRepository.save(store);
   }
 
   private boolean isPrivateCredentialsSet(GetStoreMetaRequest getStoreMetaRequest) {

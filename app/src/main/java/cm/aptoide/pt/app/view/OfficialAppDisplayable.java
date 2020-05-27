@@ -11,6 +11,7 @@ public class OfficialAppDisplayable extends Displayable {
 
   private int primaryColor;
   private int raisedButtonDrawable;
+  private boolean isAppInstalled;
 
   public OfficialAppDisplayable() {
     messageGetApp = null;
@@ -19,10 +20,11 @@ public class OfficialAppDisplayable extends Displayable {
   }
 
   public OfficialAppDisplayable(Pair<String, GetAppMeta> messageGetApp, int primaryColor,
-      int raisedButtonDrawable) {
+      int raisedButtonDrawable, boolean isAppInstalled) {
     this.messageGetApp = messageGetApp;
     this.primaryColor = primaryColor;
     this.raisedButtonDrawable = raisedButtonDrawable;
+    this.isAppInstalled = isAppInstalled;
   }
 
   public Pair<String, GetAppMeta> getMessageGetApp() {
@@ -43,5 +45,9 @@ public class OfficialAppDisplayable extends Displayable {
 
   public int getRaisedButtonDrawable() {
     return raisedButtonDrawable;
+  }
+
+  public boolean isAppInstalled() {
+    return isAppInstalled;
   }
 }

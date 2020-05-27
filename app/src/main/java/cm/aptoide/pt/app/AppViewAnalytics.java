@@ -6,7 +6,7 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.ApplicationAd;
 import cm.aptoide.pt.app.view.AppViewSimilarAppsAdapter;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.InstallType;
@@ -39,8 +39,6 @@ public class AppViewAnalytics {
       "asv_2053_similar_apps_converting";
   public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
       "asv_2053_similar_apps_participating";
-  public static final String ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME =
-      "asv_2119_apkfy_ads_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -302,7 +300,7 @@ public class AppViewAnalytics {
     return navigationTracker.getViewName(isCurrent);
   }
 
-  public void setupDownloadEvents(Download download, int campaignId, String abTestGroup,
+  public void setupDownloadEvents(RoomDownload download, int campaignId, String abTestGroup,
       DownloadModel.Action downloadAction, AnalyticsManager.Action action, String trustedValue,
       String editorsChoice, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus,
       String storeName, boolean isApkfy) {
@@ -528,16 +526,26 @@ public class AppViewAnalytics {
     return getABTestMap(isControlGroup ? "control" : "appc_bundle");
   }
 
-  public void sendApkfyABTestImpressionEvent(String assignment) {
-    HashMap<String, Object> data = new HashMap<>();
-    data.put("group", assignment);
-    analyticsManager.logEvent(data, ASV_2119_APKFY_ADS_PARTICIPATING_EVENT_NAME,
-        AnalyticsManager.Action.IMPRESSION, navigationTracker.getViewName(true));
-  }
-
   private HashMap<String, Object> getABTestMap(String assignment) {
     HashMap<String, Object> data = new HashMap<>();
     data.put("group", assignment);
     return data;
+  }
+
+  public void sendInvalidAppEventError(String packageName, DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName, boolean isApkfy,
+      Throwable throwable) {
+    downloadAnalytics.sendAppNotValidError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy,
+        throwable);
+  }
+
+  public void sendNotEnoughSpaceErrorEvent(String packageName, DownloadModel.Action downloadAction,
+      WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, boolean isMigration,
+      boolean isAppBundle, boolean hasAppc, String trustedBadge, String storeName,
+      boolean isApkfy) {
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
+        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy);
   }
 }

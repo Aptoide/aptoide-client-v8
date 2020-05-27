@@ -2,13 +2,13 @@ package cm.aptoide.pt.app;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
+import cm.aptoide.pt.ads.MinimalAd;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.ads.data.AptoideNativeAd;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppViewFragment;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.MinimalAd;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
 import cm.aptoide.pt.download.AppContext;
@@ -63,7 +63,7 @@ public class AppViewManagerTest {
   @Mock private AppViewAnalytics appViewAnalytics;
   @Mock private NotificationAnalytics notificationAnalytics;
   @Mock private GenericResponseV2 genericResponseV2;
-  @Mock private Download download;
+  @Mock private RoomDownload download;
   @Mock private DownloadFactory downloadFactory;
   @Mock private AppCoinsManager appCoinsManager;
   @Mock private MoPubAdsManager moPubAdsManager;

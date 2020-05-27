@@ -1,7 +1,7 @@
 package cm.aptoide.pt.notification;
 
 import androidx.annotation.IntDef;
-import cm.aptoide.pt.database.realm.Notification;
+import cm.aptoide.pt.database.room.RoomNotification;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -19,7 +19,7 @@ public class AptoideNotification {
   public static final int NEW_ACTIVITY = 6;
   public static final int APPC_PROMOTION = 7;
   public static final int NEW_FEATURE = 8;
-  public static final int NOT_DISMISSED = Notification.NOT_DISMISSED;
+  public static final int NOT_DISMISSED = RoomNotification.NOT_DISMISSED;
   private Long expire;
   private String appName;
   private String graphic;

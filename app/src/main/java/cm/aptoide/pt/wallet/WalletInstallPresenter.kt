@@ -3,6 +3,9 @@ package cm.aptoide.pt.wallet
 import android.os.Build
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
+import cm.aptoide.pt.ads.MoPubAdsManager
+import cm.aptoide.pt.ads.WalletAdsOfferManager
+import cm.aptoide.pt.app.DownloadModel
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import cm.aptoide.pt.promotions.WalletApp
@@ -18,7 +21,9 @@ class WalletInstallPresenter(val view: WalletInstallView,
                              val permissionService: PermissionService,
                              val viewScheduler: Scheduler,
                              val io: Scheduler,
-                             val configuration: WalletInstallConfiguration) : Presenter {
+                             val configuration: WalletInstallConfiguration,
+                             val walletInstallAnalytics: WalletInstallAnalytics,
+                             val moPubAdsManager: MoPubAdsManager) : Presenter {
 
   override fun present() {
     loadWalletInstall()
@@ -89,8 +94,28 @@ class WalletInstallPresenter(val view: WalletInstallView,
   }
 
   private fun observeDownloadProgress(walletApp: WalletApp): Observable<WalletApp> {
-    return walletInstallManager.loadDownloadModel(walletApp).observeOn(viewScheduler)
+    return walletInstallManager.loadDownloadModel(walletApp)
+        .flatMap { downloadModel -> verifyNotEnoughSpaceError(downloadModel, walletApp) }
+        .observeOn(viewScheduler)
         .doOnNext { view.showDownloadState(it) }.map { walletApp }
+  }
+
+  private fun verifyNotEnoughSpaceError(downloadModel: DownloadModel,
+                                        walletApp: WalletApp): Observable<DownloadModel> {
+    if (downloadModel.downloadState == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      moPubAdsManager.getAdsVisibilityStatus()
+          .doOnSuccess { offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus? ->
+            val action = downloadModel.action
+            walletInstallAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,
+                downloadModel.action, offerResponseStatus,
+                action != null && action == DownloadModel.Action.MIGRATE,
+                walletApp.splits.isNotEmpty(), true, walletApp.trustedBadge,
+                walletApp.storeName, false)
+          }
+          .toObservable()
+          .map { downloadModel }
+    }
+    return Observable.just(downloadModel)
   }
 
   private fun startWalletDownload(walletApp: WalletApp): Completable {
