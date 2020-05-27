@@ -96,8 +96,19 @@ public class AccountServiceV3 implements AccountService {
   }
 
   @Override public Single<Account> getAccount(String email, String code) {
-    return createAccount(email.toLowerCase(), code, null,
-        AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
+    return RxJavaInterop.toV1Single(aptoideAuthentication.authenticate(code, "", ""))
+        .flatMap(oAuth2 -> authenticationPersistence.createAuthentication(email, code,
+            oAuth2.getData()
+                .getRefreshToken(), oAuth2.getData()
+                .getAccessToken(), AptoideAccountManager.APTOIDE_SIGN_UP_TYPE)
+            .andThen(getAccount()))
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof AptoideWsV3Exception) {
+            AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
+            return Single.error(new AccountException(exception));
+          }
+          return Single.error(throwable);
+        });
   }
 
   @Override
