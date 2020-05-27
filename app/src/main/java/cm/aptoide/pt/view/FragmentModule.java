@@ -22,6 +22,8 @@ import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
+import cm.aptoide.pt.account.view.magiclink.MagicLinkView;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkPresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
@@ -203,6 +205,12 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
+      AptoideAccountManager accountManager) {
+    return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager,
+        AndroidSchedulers.mainThread());
   }
 
   @FragmentScope @Provides @Named("home-fragment-navigator")

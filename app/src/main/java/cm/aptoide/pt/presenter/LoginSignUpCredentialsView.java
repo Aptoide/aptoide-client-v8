@@ -6,7 +6,6 @@
 package cm.aptoide.pt.presenter;
 
 import android.content.Context;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.view.GooglePlayServicesView;
 import rx.Observable;
 
@@ -19,8 +18,6 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
   Observable<Void> facebookSignUpWithRequiredPermissionsInEvent();
 
   Observable<Void> facebookSignUpEvent();
-
-  Observable<String> emailSubmitEvent();
 
   Observable<Void> termsAndConditionsClickEvent();
 
@@ -60,17 +57,5 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void setCobrandText();
 
-  void hideTCandPP();
-
   void showTCandPP();
-
-  Observable<AptoideCredentials> aptoideLoginEvent();
-
-  void showAptoideLoginCodeArea(String email);
-
-  Observable<Void> emailSetClickEvent();
-
-  void showLoginError(String message);
-
-  void showEmailError(String message);
 }

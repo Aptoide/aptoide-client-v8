@@ -51,10 +51,6 @@ public abstract class LoginSignUpCredentialsPresenter
   }
 
   @Override public void present() {
-
-    handleAptoideEmailSubmitEvent();
-
-    handleAptoideLoginEvent();
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
@@ -63,78 +59,6 @@ public abstract class LoginSignUpCredentialsPresenter
     handleFacebookSignUpWithRequiredPermissionsEvent();
 
     handleAccountStatusChangeWhileShowingView();
-
-    handleCancelEmailInput();
-  }
-
-  private void handleCancelEmailInput() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.emailSetClickEvent()
-            .doOnNext(aVoid -> view.showAptoideLoginArea())
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, crashReport::log);
-  }
-
-  private void handleAptoideEmailSubmitEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.emailSubmitEvent()
-            .doOnNext(click -> {
-              view.hideKeyboard();
-              view.showLoading();
-              lockScreenRotation();
-            })
-            .flatMapCompletable(email -> accountManager.generateEmailCode(email)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  view.hideLoading();
-                  view.showAptoideLoginCodeArea(email);
-                })
-                .doOnError(throwable -> {
-                  view.showEmailError(errorMapper.map(throwable));
-                  view.hideLoading();
-                  crashReport.log(throwable);
-                  unlockScreenRotation();
-                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                      throwable);
-                }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
-  private void handleAptoideLoginEvent() {
-    view.getLifecycleEvent()
-        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.aptoideLoginEvent()
-            .doOnNext(click -> {
-              view.hideKeyboard();
-              view.showLoading();
-              lockScreenRotation();
-              accountAnalytics.sendAptoideLoginButtonPressed();
-            })
-            .flatMapCompletable(credentials -> accountManager.login(credentials)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  unlockScreenRotation();
-                  accountAnalytics.loginSuccess();
-                  navigateToMainView();
-                  view.hideLoading();
-                })
-                .doOnError(throwable -> {
-                  view.showLoginError(errorMapper.map(throwable));
-                  view.hideLoading();
-                  crashReport.log(throwable);
-                  unlockScreenRotation();
-                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                      throwable);
-                }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
   }
 
   private void handleAccountStatusChangeWhileShowingView() {

@@ -88,6 +88,7 @@
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
     <item name="secureLoginBackground">@color/grey_fog_normal</item>
     <item name="loginInputBackground">@drawable/button_border_grey</item>
+    <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
 
 
     <!-- separators -->
@@ -343,6 +344,7 @@
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
     <item name="secureLoginBackground">@color/grey_dark</item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
+    <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>
