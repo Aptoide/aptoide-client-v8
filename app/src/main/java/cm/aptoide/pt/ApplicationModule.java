@@ -129,7 +129,6 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
-
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -275,6 +274,9 @@ import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.aptoide.authentication.AptoideAuthentication;
+import com.aptoide.authentication.network.AuthenticationService;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -292,6 +294,8 @@ import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
@@ -320,6 +324,7 @@ import retrofit2.CallAdapter;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 import rx.Completable;
 import rx.Single;
 import rx.schedulers.Schedulers;
@@ -2114,5 +2119,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
       AppsNameExperiment appsNameExperiment) {
     return new AppsNameExperimentManager(appsNameExperiment);
+  }
+
+  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
+    AuthenticationService.AuthorizationV7 authorizationV7 =
+        new Retrofit.Builder().baseUrl("https://ws2.aptoide.com/api/7/")
+            .addConverterFactory(MoshiConverterFactory.create(
+                new Moshi.Builder().add(new KotlinJsonAdapterFactory())
+                    .build()))
+            .build()
+            .create(AuthenticationService.AuthorizationV7.class);
+    return new AptoideAuthenticationRx(
+        new AptoideAuthentication(new AuthenticationService(authorizationV7)));
   }
 }
