@@ -15,10 +15,10 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.store.StoreAnalytics;
-import cm.aptoide.pt.store.view.MetaStoresBaseWidget;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.view.recycler.widget.Widget;
 import cm.aptoide.pt.view.spannable.SpannableFactory;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -26,7 +26,7 @@ import com.jakewharton.rxbinding.view.RxView;
  * Created by trinkes on 05/12/2016.
  */
 
-public class StoreWidget extends MetaStoresBaseWidget<StoreDisplayable> {
+public class StoreWidget extends Widget<StoreDisplayable> {
 
   private ImageView storeIcon;
   private TextView storeName;

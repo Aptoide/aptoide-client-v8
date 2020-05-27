@@ -5,25 +5,14 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
-import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.dataprovider.model.v7.BaseV7Response;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-
-import static cm.aptoide.pt.account.view.store.StoreValidationException.FACEBOOK_1;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.FACEBOOK_2;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITCH_1;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITCH_2;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITTER_1;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.TWITTER_2;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.YOUTUBE_1;
-import static cm.aptoide.pt.account.view.store.StoreValidationException.YOUTUBE_2;
 
 public class ManageStorePresenter implements Presenter {
 
@@ -79,15 +68,15 @@ public class ManageStorePresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveDataClick()
-            .flatMapCompletable(storeModel -> handleSaveClick(storeModel))
-            .doOnError(err -> crashReport.log(err))
+            .flatMapCompletable(this::handleSaveClick)
+            .doOnError(crashReport::log)
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe();
   }
 
   private Completable handleSaveClick(ManageStoreViewModel storeModel) {
-    return Completable.fromAction(() -> view.showWaitProgressBar())
+    return Completable.fromAction(view::showWaitProgressBar)
         .observeOn(Schedulers.io())
         .andThen(saveData(storeModel))
         .observeOn(AndroidSchedulers.mainThread())
@@ -117,8 +106,7 @@ public class ManageStorePresenter implements Presenter {
             mediaStoragePath -> accountManager.createOrUpdate(storeModel.getStoreName(),
                 storeModel.getStoreDescription(), mediaStoragePath, storeModel.hasNewAvatar(),
                 storeModel.getStoreTheme()
-                    .getThemeName(), storeModel.storeExists(), storeModel.getSocialLinks(),
-                storeModel.getSocialDeleteLinks()));
+                    .getThemeName(), storeModel.storeExists()));
   }
 
   private void navigate(boolean success) {
@@ -165,51 +153,7 @@ public class ManageStorePresenter implements Presenter {
       }
     }
 
-    if (err instanceof SocialLinkException) {
-      for (BaseV7Response.StoreLinks storeLink : ((SocialLinkException) err).getStoreLinks()) {
-        final String error = errorMapper.getError(getErrorMessage(storeLink.getType()
-            .toString()));
-
-        switch (storeLink.getType()) {
-          case FACEBOOK_1:
-          case FACEBOOK_2:
-            view.showFacebookError(error);
-            break;
-          case TWITTER_1:
-          case TWITTER_2:
-            view.showTwitterError(error);
-            break;
-          case TWITCH_1:
-          case TWITCH_2:
-            view.showTwitchError(error);
-            break;
-          case YOUTUBE_1:
-          case YOUTUBE_2:
-            view.showYoutubeError(error);
-            break;
-        }
-      }
-      return;
-    }
-
     crashReport.log(err);
     view.showError(errorMapper.getGenericError());
-  }
-
-  private ManageStoreErrorMapper.SocialErrorType getErrorMessage(String type) {
-    switch (type) {
-      case TWITCH_1:
-      case FACEBOOK_1:
-      case TWITTER_1:
-      case YOUTUBE_1:
-        return ManageStoreErrorMapper.SocialErrorType.INVALID_URL_TEXT;
-      case TWITCH_2:
-      case YOUTUBE_2:
-        return ManageStoreErrorMapper.SocialErrorType.LINK_CHANNEL_ERROR;
-      case FACEBOOK_2:
-      case TWITTER_2:
-        return ManageStoreErrorMapper.SocialErrorType.PAGE_DOES_NOT_EXIST;
-    }
-    return ManageStoreErrorMapper.SocialErrorType.GENERIC_ERROR;
   }
 }

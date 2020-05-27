@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import rx.Completable;
 import rx.Observable;
@@ -242,11 +241,9 @@ public class AptoideAccountManager {
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
-      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SocialLink> storeLinksList,
-      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return storeManager.createOrUpdate(storeName, storeDescription, storeImagePath, hasNewAvatar,
-        storeThemeName, storeExists, storeLinksList, storeDeleteLinksList)
+        storeThemeName, storeExists)
         .andThen(syncAccount());
   }
 
