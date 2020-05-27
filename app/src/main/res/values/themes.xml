@@ -87,6 +87,7 @@
     <item name="searchDropdownBackgroundColor">@color/white</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar</item>
     <item name="secureLoginBackground">@color/grey_fog_normal</item>
+    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners</item>
     <item name="loginInputBackground">@drawable/button_border_grey</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
 
@@ -343,6 +344,7 @@
     <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
     <item name="secureLoginBackground">@color/grey_dark</item>
+    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark</item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
 
