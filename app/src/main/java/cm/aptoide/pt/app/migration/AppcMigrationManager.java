@@ -8,12 +8,12 @@ public class AppcMigrationManager {
   private static final long BDS_STORE_ID = 1966380;
 
   private InstalledRepository repository;
-  private AppcMigrationService appcMigrationService;
+  private AppcMigrationRepository appcMigrationRepository;
 
   public AppcMigrationManager(InstalledRepository repository,
-      AppcMigrationService appcMigrationService) {
+      AppcMigrationRepository appcMigrationRepository) {
     this.repository = repository;
-    this.appcMigrationService = appcMigrationService;
+    this.appcMigrationRepository = appcMigrationRepository;
   }
 
   public Observable<Boolean> isMigrationApp(String packageName, String signature, int versionCode,
@@ -29,14 +29,14 @@ public class AppcMigrationManager {
   }
 
   public void addMigrationCandidate(String packageName) {
-    appcMigrationService.addMigrationCandidate(packageName);
+    appcMigrationRepository.addMigrationCandidate(packageName);
   }
 
   public void persistCandidate(String packageName) {
-    appcMigrationService.persistCandidate(packageName);
+    appcMigrationRepository.persistCandidate(packageName);
   }
 
   public Observable<Boolean> isAppMigrated(String packageName) {
-    return appcMigrationService.isAppMigrated(packageName);
+    return appcMigrationRepository.isAppMigrated(packageName);
   }
 }

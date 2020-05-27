@@ -6,8 +6,8 @@ public class EditorialDownloadModel extends DownloadModel {
 
   private final int position;
 
-  public EditorialDownloadModel(DownloadModel.Action action, int progress,
-      DownloadModel.DownloadState downloadState, int position) {
+  public EditorialDownloadModel(Action action, int progress, DownloadState downloadState,
+      int position) {
     super(action, progress, downloadState);
     this.position = position;
   }

@@ -4,10 +4,9 @@ import android.content.Context;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.AccessorFactory;
 import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -21,7 +20,7 @@ import rx.Observable;
 public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
 
   private AptoideAccountManager accountManager;
-  private StoreRepository storeRepository;
+  private RoomStoreRepository storeRepository;
   private StoreUtilsProxy storeUtilsProxy;
   private StoreCredentialsProvider storeCredentialsProvider;
   private String origin = "";
@@ -29,7 +28,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
   public RecommendedStoreDisplayable() {
   }
 
-  public RecommendedStoreDisplayable(Store pojo, StoreRepository storeRepository,
+  public RecommendedStoreDisplayable(Store pojo, RoomStoreRepository storeRepository,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       StoreCredentialsProvider storeCredentialsProvider) {
     super(pojo);
@@ -39,7 +38,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
     this.storeCredentialsProvider = storeCredentialsProvider;
   }
 
-  public RecommendedStoreDisplayable(Store store, StoreRepository storeRepository,
+  public RecommendedStoreDisplayable(Store store, RoomStoreRepository storeRepository,
       AptoideAccountManager accountManager, StoreUtilsProxy storeUtilsProxy,
       StoreCredentialsProvider storeCredentialsProvider, String origin) {
     super(store);
@@ -74,9 +73,7 @@ public class RecommendedStoreDisplayable extends DisplayablePojo<Store> {
               .getPasswordSha1());
     }
     StoreUtils.unSubscribeStore(getPojo().getName(), accountManager, storeCredentialsProvider,
-        AccessorFactory.getAccessorFor(
-            ((AptoideApplication) context.getApplicationContext()).getDatabase(),
-            cm.aptoide.pt.database.realm.Store.class));
+        storeRepository);
   }
 
   void openStoreFragment(FragmentNavigator navigator) {

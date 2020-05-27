@@ -102,9 +102,14 @@ class EarnAppcListFragment : ListAppsFragment<RewardApp, EarnAppcListViewHolder>
       } else if (!walletApp.isInstalled) {
         appview_transfer_info.visibility = View.GONE
         install_group.visibility = View.VISIBLE
-        if (downloadModel.hasError()) {
-          handleDownloadError(downloadModel.downloadState)
-        }
+      }
+    }
+  }
+
+  override fun showDownloadError(walletApp: WalletApp) {
+    walletApp.downloadModel?.also { downloadModel ->
+      if (downloadModel.hasError()) {
+        handleDownloadError(downloadModel.downloadState)
       }
     }
   }

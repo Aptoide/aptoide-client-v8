@@ -3,14 +3,9 @@ package cm.aptoide.pt.updates;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.accessors.UpdateAccessor;
-import cm.aptoide.pt.database.realm.RealmString;
-import cm.aptoide.pt.database.realm.Split;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.App;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
@@ -18,7 +13,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
-import io.realm.RealmList;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -37,8 +32,8 @@ public class UpdateRepository {
   private static final String TAG = UpdateRepository.class.getName();
 
   private final IdsRepository idsRepository;
-  private final UpdateAccessor updateAccessor;
-  private final StoreAccessor storeAccessor;
+  private final UpdatePersistence updatePersistence;
+  private final RoomStoreRepository storeRepository;
   private final BodyInterceptor<BaseBody> bodyInterceptor;
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -46,14 +41,16 @@ public class UpdateRepository {
   private final SharedPreferences sharedPreferences;
   private final PackageManager packageManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+  private final UpdateMapper updateMapper;
 
-  public UpdateRepository(UpdateAccessor updateAccessor, StoreAccessor storeAccessor,
+  public UpdateRepository(UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      PackageManager packageManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
-    this.updateAccessor = updateAccessor;
-    this.storeAccessor = storeAccessor;
+      PackageManager packageManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
+      UpdateMapper updateMapper) {
+    this.updatePersistence = updatePersistence;
+    this.storeRepository = storeRepository;
     this.idsRepository = idsRepository;
     this.bodyInterceptor = bodyInterceptor;
     this.httpClient = httpClient;
@@ -62,10 +59,11 @@ public class UpdateRepository {
     this.sharedPreferences = sharedPreferences;
     this.packageManager = packageManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+    this.updateMapper = updateMapper;
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
-    return storeAccessor.getAll()
+    return storeRepository.getAll()
         .first()
         .observeOn(Schedulers.io())
         .flatMap(stores -> Observable.from(stores)
@@ -122,182 +120,77 @@ public class UpdateRepository {
   }
 
   public Completable removeAllNonExcluded() {
-    return updateAccessor.getAll(false)
-        .first()
-        .toSingle()
+    return updatePersistence.getAll(false)
         .flatMapCompletable(updates -> removeAll(updates));
   }
 
   private Completable saveNewUpdates(List<App> updates) {
-    return Completable.fromSingle(Observable.from(updates)
-        .map(app -> mapAppUpdate(app, false))
-        .toList()
-        .toSingle()
-        .flatMap(updateList -> {
-          Logger.getInstance()
-              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
-                  updateList.size()));
-          return saveNonExcludedUpdates(updateList);
-        }));
+    return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(updates, false));
   }
 
   private Completable saveNewUpgrades(List<App> upgrades) {
-    return Completable.fromSingle(Observable.from(upgrades)
-        .map(app -> mapAppUpdate(app, true))
-        .toList()
-        .toSingle()
-        .flatMap(updateList -> {
-          Logger.getInstance()
-              .d(TAG, String.format("filter %d updates for non excluded and save the remainder",
-                  updateList.size()));
-          return saveNonExcludedUpdates(updateList);
-        }));
+    return saveNonExcludedUpdates(updateMapper.mapAppUpdateList(upgrades, true));
   }
 
-  private Update mapAppUpdate(App app, boolean isAppcUpgrade) {
-
-    final Obb obb = app.getObb();
-
-    String mainObbFileName = null;
-    String mainObbPath = null;
-    String mainObbMd5 = null;
-    String patchObbFileName = null;
-    String patchObbPath = null;
-    String patchObbMd5 = null;
-
-    if (obb != null) {
-      final Obb.ObbItem mainObb = obb.getMain();
-      final Obb.ObbItem patchObb = obb.getPatch();
-      if (mainObb != null) {
-        mainObbFileName = mainObb.getFilename();
-        mainObbPath = mainObb.getPath();
-        mainObbMd5 = mainObb.getMd5sum();
-      }
-
-      if (patchObb != null) {
-        patchObbFileName = patchObb.getFilename();
-        patchObbPath = patchObb.getPath();
-        patchObbMd5 = patchObb.getMd5sum();
-      }
-    }
-
-    return new Update(app.getId(), app.getName(), app.getIcon(), app.getPackageName(), app.getFile()
-        .getMd5sum(), app.getFile()
-        .getPath(), app.getSize(), app.getFile()
-        .getVername(), app.getFile()
-        .getPathAlt(), app.getFile()
-        .getVercode(), app.getFile()
-        .getMalware()
-        .getRank()
-        .name(), mainObbFileName, mainObbPath, mainObbMd5, patchObbFileName, patchObbPath,
-        patchObbMd5, isAppcUpgrade, app.hasAdvertising() || app.hasBilling(),
-        map(app.hasSplits() ? app.getAab()
-            .getSplits() : Collections.emptyList()), mapRequiredSplits(
-        app.hasSplits() ? app.getAab()
-            .getRequiredSplits() : Collections.emptyList()), app.getStore()
-        .getName());
+  public Completable removeAll(List<RoomUpdate> updates) {
+    return updatePersistence.removeAll(updates);
   }
 
-  private RealmList<RealmString> mapRequiredSplits(List<String> requiredSplits) {
-    RealmList<RealmString> requiredSplitsResult = new RealmList<>();
-    if (requiredSplits == null) return requiredSplitsResult;
-    for (String required : requiredSplits) {
-      requiredSplitsResult.add(new RealmString(required));
-    }
-    return requiredSplitsResult;
-  }
-
-  private RealmList<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
-    RealmList<Split> splitsResult = new RealmList<>();
-    if (splits == null) return splitsResult;
-    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
-      splitsResult.add(
-          new Split(split.getMd5sum(), split.getPath(), split.getType(), split.getName(),
-              split.getFilesize()));
-    }
-    return splitsResult;
-  }
-
-  public Completable removeAll(List<Update> updates) {
-    return Observable.from(updates)
-        .map(update -> update.getPackageName())
-        .toList()
-        .flatMap(updatesAsPackageNames -> {
-          if (updatesAsPackageNames != null && !updatesAsPackageNames.isEmpty()) {
-            updateAccessor.removeAll(updatesAsPackageNames);
-          }
-          return null;
-        })
-        .toCompletable();
-  }
-
-  @NonNull private Single<List<Update>> saveNonExcludedUpdates(List<Update> updateList) {
+  @NonNull private Completable saveNonExcludedUpdates(List<RoomUpdate> updateList) {
     // remove excluded from list
     // save the remainder
     return Observable.from(updateList)
-        .flatMap(update -> updateAccessor.isExcluded(update.getPackageName())
+        .flatMapSingle(update -> updatePersistence.isExcluded(update.getPackageName())
             .flatMap(excluded -> {
               if (excluded) {
-                return Observable.empty();
+                return Single.just(null);
               }
-              return Observable.just(update);
+              return Single.just(update);
             }))
         .toList()
         .toSingle()
-        .doOnSuccess(updateListFiltered -> {
-          if (updateListFiltered != null && !updateList.isEmpty()) {
-            updateAccessor.saveAll(updateListFiltered);
+        .flatMapCompletable(filteredUpdates -> {
+          if (filteredUpdates != null && !filteredUpdates.isEmpty()) {
+            return updatePersistence.saveAll(filteredUpdates);
           }
+          return Completable.complete();
         });
   }
 
-  public @NonNull Observable<List<Update>> getAll(boolean isExcluded) {
-    return updateAccessor.getAllSorted(isExcluded);
+  public @NonNull Observable<List<RoomUpdate>> getAll(boolean isExcluded) {
+    return updatePersistence.getAllSorted(isExcluded);
   }
 
-  public Observable<Update> get(String packageName) {
-    return updateAccessor.get(packageName);
+  public Single<RoomUpdate> get(String packageName) {
+    return updatePersistence.get(packageName);
   }
 
-  public Completable remove(List<Update> updates) {
-    return Observable.from(updates)
-        .map(update -> update.getPackageName())
-        .toList()
-        .doOnNext(updatesAsPackages -> updateAccessor.removeAll(updatesAsPackages))
-        .toCompletable();
+  public Completable remove(List<RoomUpdate> updates) {
+    return updatePersistence.removeAll(updates);
   }
 
-  public Completable remove(Update update) {
-    return Completable.fromAction(() -> updateAccessor.remove(update.getPackageName()));
+  public Completable remove(RoomUpdate update) {
+    return updatePersistence.remove(update.getPackageName());
   }
 
-  public void remove(String packageName) {
-    updateAccessor.remove(packageName);
+  public Completable remove(String packageName) {
+    return updatePersistence.remove(packageName);
   }
 
-  public Observable<List<Update>> getNonExcludedUpdates() {
-    return updateAccessor.getAll()
-        .flatMap(updates -> Observable.from(updates)
-            .filter(update -> !update.isExcluded())
-            .toList());
+  public Completable setExcluded(String packageName) {
+    return updatePersistence.get(packageName)
+        .flatMap(update -> {
+          update.setExcluded(true);
+          return Single.just(update);
+        })
+        .flatMapCompletable(update -> updatePersistence.save(update));
   }
 
-  public Observable<Void> setExcluded(String packageName, boolean excluded) {
-    return updateAccessor.get(packageName)
-        .first()
-        .map(update -> {
-          update.setExcluded(excluded);
-          updateAccessor.insert(update);
-          return null;
-        });
+  public Single<Boolean> contains(String packageName, boolean isExcluded) {
+    return updatePersistence.contains(packageName, isExcluded);
   }
 
-  public Observable<Boolean> contains(String packageName, boolean isExcluded) {
-    return updateAccessor.contains(packageName, isExcluded);
-  }
-
-  public Observable<Boolean> contains(String packageName, boolean isExcluded,
-      boolean isAppcUpgrade) {
-    return updateAccessor.contains(packageName, isExcluded, isAppcUpgrade);
+  public Single<Boolean> contains(String packageName, boolean isExcluded, boolean isAppcUpgrade) {
+    return updatePersistence.contains(packageName, isExcluded, isAppcUpgrade);
   }
 }

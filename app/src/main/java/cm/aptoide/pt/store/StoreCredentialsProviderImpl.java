@@ -1,8 +1,7 @@
 package cm.aptoide.pt.store;
 
 import androidx.annotation.Nullable;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 
@@ -12,17 +11,17 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7Url;
 
 public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
-  private final StoreAccessor storeAccessor;
+  private final RoomStoreRepository storeRepository;
 
-  public StoreCredentialsProviderImpl(StoreAccessor storeAccessor) {
-    this.storeAccessor = storeAccessor;
+  public StoreCredentialsProviderImpl(RoomStoreRepository storeRepository) {
+    this.storeRepository = storeRepository;
   }
 
   @Override public BaseRequestWithStore.StoreCredentials get(long storeId) {
 
-    Store store = storeAccessor.get(storeId)
+    RoomStore store = storeRepository.get(storeId)
         .toBlocking()
-        .first();
+        .value();
 
     String username = null;
     String passwordSha1 = null;
@@ -39,9 +38,9 @@ public class StoreCredentialsProviderImpl implements StoreCredentialsProvider {
 
   @Override public BaseRequestWithStore.StoreCredentials get(String storeName) {
 
-    Store store = storeAccessor.get(storeName)
+    RoomStore store = storeRepository.get(storeName)
         .toBlocking()
-        .first();
+        .value();
 
     String username = null;
     String passwordSha1 = null;

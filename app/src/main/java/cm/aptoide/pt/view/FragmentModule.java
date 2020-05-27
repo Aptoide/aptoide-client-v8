@@ -10,7 +10,6 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
-import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
@@ -22,6 +21,8 @@ import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
+import cm.aptoide.pt.account.view.magiclink.MagicLinkView;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkPresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
@@ -64,6 +65,7 @@ import cm.aptoide.pt.blacklist.BlacklistManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
+import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -108,6 +110,7 @@ import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
 import cm.aptoide.pt.home.bundles.ads.AdMapper;
 import cm.aptoide.pt.home.bundles.ads.banner.BannerRepository;
+import cm.aptoide.pt.home.more.appcoins.EarnAppcListAnalytics;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListConfiguration;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.home.more.appcoins.EarnAppcListManager;
@@ -203,6 +206,12 @@ import rx.subscriptions.CompositeSubscription;
         arguments.getBoolean("clean_back_stack"), accountNavigator,
         Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
         accountAnalytics);
+  }
+
+  @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
+      AptoideAccountManager accountManager) {
+    return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager,
+        AndroidSchedulers.mainThread());
   }
 
   @FragmentScope @Provides @Named("home-fragment-navigator")
@@ -372,13 +381,11 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator,
-      ApkfyExperiment apkfyExperiment) {
+      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, externalNavigator,
-        apkfyExperiment);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, externalNavigator);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -458,19 +465,21 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EditorialPresenter providesEditorialPresenter(
       EditorialManager editorialManager, CrashReport crashReport,
       EditorialAnalytics editorialAnalytics, EditorialNavigator editorialNavigator,
-      UserFeedbackAnalytics userFeedbackAnalytics) {
+      UserFeedbackAnalytics userFeedbackAnalytics, MoPubAdsManager moPubAdsManager) {
     return new EditorialPresenter((EditorialView) fragment, editorialManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
         ((PermissionService) fragment.getContext()), editorialAnalytics, editorialNavigator,
-        userFeedbackAnalytics);
+        userFeedbackAnalytics, moPubAdsManager);
   }
 
   @FragmentScope @Provides PromotionsPresenter providesPromotionsPresenter(
       PromotionsManager promotionsManager, PromotionsAnalytics promotionsAnalytics,
-      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType) {
+      PromotionsNavigator promotionsNavigator, @Named("homePromotionsId") String promotionsType,
+      MoPubAdsManager moPubAdsManager) {
     return new PromotionsPresenter((PromotionsView) fragment, promotionsManager,
         new PermissionManager(), ((PermissionService) fragment.getContext()),
-        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType);
+        AndroidSchedulers.mainThread(), promotionsAnalytics, promotionsNavigator, promotionsType,
+        moPubAdsManager);
   }
 
   @FragmentScope @Provides PromotionViewAppMapper providesPromotionViewAppMapper(
@@ -579,12 +588,17 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides EarnAppcListPresenter provideEarnAppCoinsListPresenter(
       CrashReport crashReport, RewardAppCoinsAppsRepository rewardAppCoinsAppsRepository,
       AnalyticsManager analyticsManager, AppNavigator appNavigator,
-      EarnAppcListConfiguration earnAppcListConfiguration,
-      EarnAppcListManager earnAppcListManager) {
+      EarnAppcListConfiguration earnAppcListConfiguration, EarnAppcListManager earnAppcListManager,
+      MoPubAdsManager moPubAdsManager, EarnAppcListAnalytics earnAppcListAnalytics) {
     return new EarnAppcListPresenter((EarnAppcListFragment) fragment,
         AndroidSchedulers.mainThread(), crashReport, rewardAppCoinsAppsRepository, analyticsManager,
         appNavigator, earnAppcListConfiguration, earnAppcListManager, new PermissionManager(),
-        ((PermissionService) fragment.getContext()));
+        ((PermissionService) fragment.getContext()), moPubAdsManager, earnAppcListAnalytics);
+  }
+
+  @FragmentScope @Provides EarnAppcListAnalytics provideEarnAppcListAnalytics(
+      DownloadAnalytics downloadAnalytics) {
+    return new EarnAppcListAnalytics(downloadAnalytics);
   }
 
   @FragmentScope @Provides EarnAppcListManager provideEarnAppcListManager(
@@ -637,8 +651,9 @@ import rx.subscriptions.CompositeSubscription;
       @Named("default") OkHttpClient okHttpClient, @Named("mature-pool-v7")
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      InstallManager installManager) {
+      InstallManager installManager, AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
-        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager);
+        baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager,
+        appBundlesVisibilityManager);
   }
 }

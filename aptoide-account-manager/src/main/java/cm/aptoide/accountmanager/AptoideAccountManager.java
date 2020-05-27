@@ -88,6 +88,10 @@ public class AptoideAccountManager {
         .flatMapCompletable(account -> saveAccount(account));
   }
 
+  public Single<Boolean> isEmailValid(String email) {
+    return credentialsValidator.isEmailValid(email);
+  }
+
   public <T> Completable signUp(String type, T data) {
     return adapterRegistry.signUp(type, data)
         .flatMapCompletable(account -> saveAccount(account));

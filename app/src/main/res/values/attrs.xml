@@ -206,6 +206,7 @@
   <attr name="appDescriptionToolbarAppc" format="reference" />
   <attr name="secureLoginBackground" format="color" />
   <attr name="loginInputBackground" format="reference" />
+  <attr name="loginInputErrorBackground" format="reference" />
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />

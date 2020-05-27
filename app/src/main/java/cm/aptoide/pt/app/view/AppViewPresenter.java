@@ -5,7 +5,6 @@ import android.text.format.DateUtils;
 import androidx.annotation.VisibleForTesting;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
@@ -20,10 +19,12 @@ import cm.aptoide.pt.app.AppViewModel;
 import cm.aptoide.pt.app.AppViewSimilarApp;
 import cm.aptoide.pt.app.CampaignAnalytics;
 import cm.aptoide.pt.app.DownloadModel;
+import cm.aptoide.pt.app.PromotionViewModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
 import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
@@ -65,7 +66,6 @@ public class AppViewPresenter implements Presenter {
   private final AptoideAccountManager accountManager;
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
-  private final ApkfyExperiment apkfyExperiment;
   private final ExternalNavigator externalNavigator;
   private boolean openTypeAlreadyRegistered = false;
 
@@ -74,8 +74,7 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator,
-      ApkfyExperiment apkfyExperiment) {
+      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -89,7 +88,6 @@ public class AppViewPresenter implements Presenter {
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
     this.externalNavigator = externalNavigator;
-    this.apkfyExperiment = apkfyExperiment;
   }
 
   @Override public void present() {
@@ -151,7 +149,8 @@ public class AppViewPresenter implements Presenter {
             .hasError())
         .flatMap(appViewModel -> Observable.mergeDelayError(loadAds(appViewModel),
             handleAppViewOpenOptions(appViewModel), loadAppcPromotion(appViewModel),
-            loadTopDonations(appViewModel), observeDownloadApp(),
+            observePromotionDownloadErrors(appViewModel), loadTopDonations(appViewModel),
+            observeDownloadApp(), observeDownloadErrors(),
             loadOtherAppViewComponents(appViewModel)));
   }
 
@@ -210,7 +209,6 @@ public class AppViewPresenter implements Presenter {
 
   public Observable<AppViewModel> loadAds(AppViewModel appViewModel) {
     return Observable.mergeDelayError(loadInterstitialAds(appViewModel.getAppModel()
-        .getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP, appViewModel.getAppModel()
         .isMature(), appViewModel.getAppModel()
         .getPackageName()), loadOrganicAds(appViewModel), loadBannerAds(appViewModel.getAppModel()
         .isMature()))
@@ -221,11 +219,8 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> loadInterstitialAds(boolean isFromApkfy, boolean isMature,
-      String packageName) {
-    return shouldLoadInterstitialAdFromApky(isFromApkfy).filter(shouldLoad -> shouldLoad)
-        .toSingle()
-        .flatMap(__ -> appViewManager.shouldLoadInterstitialAd(packageName))
+  private Observable<Boolean> loadInterstitialAds(boolean isMature, String packageName) {
+    return appViewManager.shouldLoadInterstitialAd(packageName)
         .observeOn(viewScheduler)
         .flatMap(shouldLoad -> {
           if (shouldLoad) {
@@ -236,19 +231,6 @@ public class AppViewPresenter implements Presenter {
         })
         .onErrorReturn(__ -> null)
         .toObservable();
-  }
-
-  private Observable<Boolean> shouldLoadInterstitialAdFromApky(boolean isFromApky) {
-    return Observable.just(isFromApky)
-        .flatMap(__ -> {
-          if (!isFromApky) {
-            return Observable.just(true);
-          }
-          return apkfyExperiment.shouldShowApkfyInterstital()
-              .flatMap(shouldShow -> apkfyExperiment.recordImpression()
-                  .toSingle(() -> shouldShow))
-              .toObservable();
-        });
   }
 
   private Observable<Boolean> loadBannerAds(boolean isMature) {
@@ -266,6 +248,7 @@ public class AppViewPresenter implements Presenter {
   private Observable<SearchAdResult> loadOrganicAds(AppViewModel appViewModel) {
     return Single.just(appViewModel.getAppModel()
         .getMinimalAd())
+        .observeOn(Schedulers.io())
         .flatMap(adResult -> {
           if (adResult == null) {
             return appViewManager.loadAdsFromAppView()
@@ -273,13 +256,16 @@ public class AppViewPresenter implements Presenter {
                   appViewManager.setSearchAdResult(ad);
                   handleAdsLogic(appViewManager.getSearchAdResult());
                 })
-                .doOnError(throwable -> crashReport.log(throwable));
+                .doOnError(throwable -> {
+                  crashReport.log(throwable);
+                });
           }
           return Single.just(adResult)
               .doOnSuccess(__ -> handleAdsLogic(adResult));
         })
         .onErrorReturn(__ -> null)
-        .toObservable();
+        .toObservable()
+        .observeOn(viewScheduler);
   }
 
   @VisibleForTesting
@@ -300,8 +286,15 @@ public class AppViewPresenter implements Presenter {
                     .getName(),
                 appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP))
             .flatMapCompletable(status -> downloadApp(action, appModel, status,
-                appModel.getOpenType()
-                    == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).onErrorComplete()))
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP).doOnError(
+                throwable -> {
+                  if (throwable instanceof InvalidAppException) {
+                    view.showInvalidAppInfoErrorDialog();
+                  } else {
+                    view.showGenericErrorDialog();
+                  }
+                })
+                .onErrorComplete()))
         .switchIfEmpty(Observable.just(false))
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
@@ -379,6 +372,7 @@ public class AppViewPresenter implements Presenter {
             }
           }
         })
+        .flatMap(this::verifyNotEnoughSpaceError)
         .map(__ -> appViewModel)
         .onErrorReturn(throwable -> {
           crashReport.log(throwable);
@@ -386,11 +380,83 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
+  public Observable<AppViewModel> observePromotionDownloadErrors(AppViewModel appViewModel) {
+    return Observable.merge(view.resumePromotionDownload(), view.installWalletButtonClick())
+        .flatMap(__ -> Observable.just(appViewModel.getAppModel()))
+        .filter(appModel -> appModel.hasBilling() || appModel.hasAdvertising())
+        .flatMap(__ -> appViewManager.loadPromotionViewModel()
+            .filter(promotionViewModel -> promotionViewModel.getWalletApp()
+                .getDownloadModel() != null && promotionViewModel.getWalletApp()
+                .getDownloadModel()
+                .hasError())
+            .first())
+        .doOnNext(promotionViewModel -> view.showDownloadError(promotionViewModel.getWalletApp()
+            .getDownloadModel()))
+        .flatMap(this::verifyNotEnoughSpaceError)
+        .map(__ -> appViewModel)
+        .retry();
+  }
+
   public Observable<AppViewModel> observeDownloadApp() {
     return appViewManager.observeAppViewModel()
         .observeOn(viewScheduler)
         .doOnNext(model -> view.showDownloadAppModel(model.getDownloadModel(),
             model.getAppCoinsViewModel()));
+  }
+
+  private Observable<AppViewModel> observeDownloadErrors() {
+    return Observable.merge(view.installAppClick(), view.resumeDownload())
+        .flatMap(__ -> appViewManager.observeAppViewModel()
+            .filter(appViewModel -> appViewModel.getDownloadModel()
+                .hasError())
+            .first())
+        .doOnNext(appViewModel -> view.showDownloadError(appViewModel.getDownloadModel()))
+        .flatMap(this::verifyNotEnoughSpaceError)
+        .retry();
+  }
+
+  private Observable<AppViewModel> verifyNotEnoughSpaceError(AppViewModel appViewModel) {
+    AppModel appModel = appViewModel.getAppModel();
+    DownloadModel downloadModel = appViewModel.getDownloadModel();
+    if (appViewModel.getDownloadModel()
+        .getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return appViewManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            appViewAnalytics.sendNotEnoughSpaceErrorEvent(appModel.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE), !appModel.getSplits()
+                    .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
+                appModel.getMalware()
+                    .getRank()
+                    .toString(), appModel.getStore()
+                    .getName(),
+                appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP);
+          })
+          .toObservable()
+          .map(__ -> appViewModel);
+    }
+    return Observable.just(appViewModel);
+  }
+
+  private Observable<PromotionViewModel> verifyNotEnoughSpaceError(
+      PromotionViewModel promotionViewModel) {
+    WalletApp walletApp = promotionViewModel.getWalletApp();
+    DownloadModel downloadModel = walletApp.getDownloadModel();
+    if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return appViewManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            appViewAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE),
+                !walletApp.getSplits()
+                    .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false);
+          })
+          .toObservable()
+          .map(__ -> promotionViewModel);
+    }
+    return Observable.just(promotionViewModel);
   }
 
   private void handleDownloadingSimilarApp() {
@@ -1125,7 +1191,11 @@ public class AppViewPresenter implements Presenter {
             })
             .doOnError(throwable -> {
               crashReport.log(throwable);
-              view.showGenericErrorDialog();
+              if (throwable instanceof InvalidAppException) {
+                view.showInvalidAppInfoErrorDialog();
+              } else {
+                view.showGenericErrorDialog();
+              }
             })
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

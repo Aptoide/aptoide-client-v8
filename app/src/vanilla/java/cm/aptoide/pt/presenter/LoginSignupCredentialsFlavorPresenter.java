@@ -6,7 +6,6 @@ import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
-import rx.Observable;
 
 public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredentialsPresenter {
 
@@ -30,11 +29,9 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
   }
 
   @Override public void present() {
-
     super.present();
 
-    showAptoideSignUpEvent();
-    handleAptoideShowSignUpEvent();
+    handleConnectWithEmailClick();
     handleClickOnTermsAndConditions();
     handleClickOnPrivacyPolicy();
     showTCandPP();
@@ -68,10 +65,14 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
         .subscribe();
   }
 
-  private void handleAptoideShowSignUpEvent() {
+  private void handleConnectWithEmailClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> showAptoideSignUpEvent())
+        .flatMap(__ -> view.showAptoideLoginAreaClick()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
+            .doOnNext(___ -> view.showAptoideLoginArea())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -79,13 +80,6 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
           view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
-  }
-
-  private Observable<Boolean> showAptoideSignUpEvent() {
-    return view.showAptoideLoginAreaClick()
-        .doOnNext(this::showNotCheckedMessage)
-        .filter(event -> event)
-        .doOnNext(__ -> view.showAptoideLoginArea());
   }
 
   private void showNotCheckedMessage(boolean checked) {

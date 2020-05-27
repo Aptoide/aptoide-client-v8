@@ -1,6 +1,6 @@
 package cm.aptoide.pt.app;
 
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
@@ -14,37 +14,41 @@ public class DownloadStateParser {
   public DownloadStateParser() {
   }
 
-  public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state) {
+  public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state,
+      boolean isIndeterminate) {
     DownloadModel.DownloadState downloadState;
-    switch (state) {
-      case DOWNLOADING:
-        downloadState = DownloadModel.DownloadState.ACTIVE;
-        break;
-      case PAUSED:
-        downloadState = DownloadModel.DownloadState.PAUSE;
-        break;
-      case IN_QUEUE:
-      case INITIAL_STATE:
-        downloadState = DownloadModel.DownloadState.INDETERMINATE;
-        break;
-      case INSTALLED:
-        downloadState = DownloadModel.DownloadState.COMPLETE;
-        break;
-      case UNINSTALLED:
-        downloadState = DownloadModel.DownloadState.COMPLETE;
-        break;
-      case INSTALLATION_TIMEOUT:
-      case GENERIC_ERROR:
-        downloadState = DownloadModel.DownloadState.ERROR;
-        break;
-      case NOT_ENOUGH_SPACE_ERROR:
-        downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
-        break;
-      case INSTALLING:
-        downloadState = DownloadModel.DownloadState.INSTALLING;
-        break;
-      default:
-        throw new IllegalStateException("Wrong type of download state");
+    if (isIndeterminate) {
+      downloadState = DownloadModel.DownloadState.INDETERMINATE;
+    } else {
+
+      switch (state) {
+        case DOWNLOADING:
+          downloadState = DownloadModel.DownloadState.ACTIVE;
+          break;
+        case PAUSED:
+          downloadState = DownloadModel.DownloadState.PAUSE;
+          break;
+        case IN_QUEUE:
+        case INITIAL_STATE:
+          downloadState = DownloadModel.DownloadState.INDETERMINATE;
+          break;
+        case INSTALLED:
+        case UNINSTALLED:
+          downloadState = DownloadModel.DownloadState.COMPLETE;
+          break;
+        case INSTALLATION_TIMEOUT:
+        case GENERIC_ERROR:
+          downloadState = DownloadModel.DownloadState.ERROR;
+          break;
+        case NOT_ENOUGH_SPACE_ERROR:
+          downloadState = DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+          break;
+        case INSTALLING:
+          downloadState = DownloadModel.DownloadState.INSTALLING;
+          break;
+        default:
+          throw new IllegalStateException("Wrong type of download state");
+      }
     }
     return downloadState;
   }
@@ -80,16 +84,16 @@ public class DownloadStateParser {
     int downloadAction;
     switch (action) {
       case INSTALL:
-        downloadAction = Download.ACTION_INSTALL;
+        downloadAction = RoomDownload.ACTION_INSTALL;
         break;
       case UPDATE:
-        downloadAction = Download.ACTION_UPDATE;
+        downloadAction = RoomDownload.ACTION_UPDATE;
         break;
       case DOWNGRADE:
-        downloadAction = Download.ACTION_DOWNGRADE;
+        downloadAction = RoomDownload.ACTION_DOWNGRADE;
         break;
       case MIGRATE:
-        downloadAction = Download.ACTION_DOWNGRADE;
+        downloadAction = RoomDownload.ACTION_DOWNGRADE;
         break;
       default:
         throw new IllegalArgumentException("Invalid action " + action.toString());
@@ -100,11 +104,11 @@ public class DownloadStateParser {
   public Origin getOrigin(int action) {
     switch (action) {
       default:
-      case Download.ACTION_INSTALL:
+      case RoomDownload.ACTION_INSTALL:
         return Origin.INSTALL;
-      case Download.ACTION_UPDATE:
+      case RoomDownload.ACTION_UPDATE:
         return Origin.UPDATE;
-      case Download.ACTION_DOWNGRADE:
+      case RoomDownload.ACTION_DOWNGRADE:
         return Origin.DOWNGRADE;
     }
   }
@@ -112,11 +116,11 @@ public class DownloadStateParser {
   public InstallType getInstallType(int action) {
     switch (action) {
       default:
-      case Download.ACTION_INSTALL:
+      case RoomDownload.ACTION_INSTALL:
         return InstallType.INSTALL;
-      case Download.ACTION_UPDATE:
+      case RoomDownload.ACTION_UPDATE:
         return InstallType.UPDATE;
-      case Download.ACTION_DOWNGRADE:
+      case RoomDownload.ACTION_DOWNGRADE:
         return InstallType.DOWNGRADE;
     }
   }

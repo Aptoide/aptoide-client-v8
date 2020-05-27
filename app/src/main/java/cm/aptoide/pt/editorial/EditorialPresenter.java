@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.presenter.Presenter;
@@ -31,11 +32,13 @@ public class EditorialPresenter implements Presenter {
   private final EditorialAnalytics editorialAnalytics;
   private final EditorialNavigator editorialNavigator;
   private final UserFeedbackAnalytics userFeedbackAnalytics;
+  private final MoPubAdsManager moPubAdsManager;
 
   public EditorialPresenter(EditorialView view, EditorialManager editorialManager,
       Scheduler viewScheduler, CrashReport crashReporter, PermissionManager permissionManager,
       PermissionService permissionService, EditorialAnalytics editorialAnalytics,
-      EditorialNavigator editorialNavigator, UserFeedbackAnalytics userFeedbackAnalytics) {
+      EditorialNavigator editorialNavigator, UserFeedbackAnalytics userFeedbackAnalytics,
+      MoPubAdsManager moPubAdsManager) {
     this.view = view;
     this.editorialManager = editorialManager;
     this.viewScheduler = viewScheduler;
@@ -45,6 +48,7 @@ public class EditorialPresenter implements Presenter {
     this.editorialAnalytics = editorialAnalytics;
     this.editorialNavigator = editorialNavigator;
     this.userFeedbackAnalytics = userFeedbackAnalytics;
+    this.moPubAdsManager = moPubAdsManager;
   }
 
   @Override public void present() {
@@ -54,6 +58,7 @@ public class EditorialPresenter implements Presenter {
     handleClickOnAppCard();
 
     handleInstallClick();
+    observeDownloadErrors();
     pauseDownload();
     resumeDownload();
     cancelDownload();
@@ -274,12 +279,54 @@ public class EditorialPresenter implements Presenter {
         .flatMap(
             editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
                 editorialContent.getPackageName(), editorialContent.getVerCode(),
-                editorialContent.getPosition()))
-        .observeOn(viewScheduler)
-        .doOnNext(view::showDownloadModel)
+                editorialContent.getPosition())
+                .observeOn(viewScheduler)
+                .doOnNext(view::showDownloadModel))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(created -> {
         }, crashReporter::log);
+  }
+
+  public void observeDownloadErrors() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE)
+        .flatMap(created -> setUpViewModelOnViewReady())
+        .flatMap(editorialViewModel -> Observable.merge(view.installButtonClick(editorialViewModel),
+            view.resumeDownload(editorialViewModel))
+            .map(__ -> editorialViewModel))
+        .flatMapIterable(EditorialViewModel::getPlaceHolderContent)
+        .flatMap(
+            editorialContent -> editorialManager.loadDownloadModel(editorialContent.getMd5sum(),
+                editorialContent.getPackageName(), editorialContent.getVerCode(),
+                editorialContent.getPosition())
+                .filter(DownloadModel::hasError)
+                .first()
+                .flatMap(editorialDownloadModel -> verifyNotEnoughSpaceError(editorialContent,
+                    editorialDownloadModel))
+                .observeOn(viewScheduler)
+                .doOnNext(view::showDownloadError))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(created -> {
+        }, crashReporter::log);
+  }
+
+  private Observable<EditorialDownloadModel> verifyNotEnoughSpaceError(
+      EditorialContent editorialContent, EditorialDownloadModel downloadModel) {
+    if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+      return moPubAdsManager.getAdsVisibilityStatus()
+          .doOnSuccess(offerResponseStatus -> {
+            DownloadModel.Action action = downloadModel.getAction();
+            editorialAnalytics.sendNotEnoughSpaceErrorEvent(editorialContent.getPackageName(),
+                downloadModel.getAction(), offerResponseStatus,
+                action != null && action.equals(DownloadModel.Action.MIGRATE),
+                !editorialContent.getSplits()
+                    .isEmpty(), editorialContent.hasAppc(), editorialContent.getRank(),
+                editorialContent.getStoreName(), false);
+          })
+          .toObservable()
+          .map(__ -> downloadModel);
+    }
+    return Observable.just(downloadModel);
   }
 
   @VisibleForTesting public void handlePlaceHolderVisibility() {

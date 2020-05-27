@@ -14,18 +14,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import androidx.annotation.Nullable;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.link.AptoideInstall;
@@ -37,7 +34,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -81,7 +77,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private String TMP_MYAPP_FILE;
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
-  private MinimalAdMapper adMapper;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private DeepLinkAnalytics deepLinkAnalytics;
@@ -95,7 +90,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
     navigationTracker = application.getNavigationTracker();
     deepLinkAnalytics = new DeepLinkAnalytics(analyticsManager, navigationTracker);
 
-    adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
     deepLinkAnalytics.website(uri);
@@ -142,8 +136,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("play.google.com") && u.getPath()
           .contains("store/apps/details")) {
         intent = dealWithGoogleHost(u);
-      } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithAptword(uri);
       } else if ("file".equalsIgnoreCase(u.getScheme())) {
         downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
@@ -215,37 +207,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromAppcAds();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
-    }
-    return null;
-  }
-
-  private Intent dealWithAptword(String uri) {
-    // TODO: 12-08-2016 neuro aptword Seems discontinued???
-    String param = uri.substring("aptword://".length());
-
-    if (!TextUtils.isEmpty(param)) {
-
-      param = param.replaceAll("\\*", "_")
-          .replaceAll("\\+", "/");
-
-      String json = new String(Base64.decode(param.getBytes(), 0));
-
-      Logger.getInstance()
-          .d("AptoideAptWord", json);
-
-      GetAdsResponse.Ad ad = null;
-      try {
-        ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
-      } catch (IOException e) {
-        CrashReport.getInstance()
-            .log(e);
-      }
-
-      if (ad != null) {
-        Intent intent = new Intent(this, startClass);
-        intent.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-        return intent;
-      }
     }
     return null;
   }

@@ -19,12 +19,13 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.model.v7.Event;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.view.GridStoreDisplayable;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.timeline.view.displayable.FollowStoreDisplayable;
@@ -47,6 +48,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
   private static final String TAG = MyStoresFragment.class.getSimpleName();
   private static final BottomNavigationItem BOTTOM_NAVIGATION_ITEM = BottomNavigationItem.STORES;
   @Inject MyStoresPresenter myStoresPresenter;
+  @Inject RoomStoreRepository storeRepository;
   private ImageView userAvatar;
   private BottomNavigationActivity bottomNavigationActivity;
 
@@ -93,7 +95,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     }
     registerForViewChanges();
     if (getView() != null) {
-      userAvatar = (ImageView) getView().findViewById(R.id.user_actionbar_icon);
+      userAvatar = getView().findViewById(R.id.user_actionbar_icon);
     }
     attachPresenter(myStoresPresenter);
   }
@@ -156,7 +158,7 @@ public class MyStoresFragment extends StoreTabWidgetsGridRecyclerFragment implem
     Observable<Account> loginObservable = accountManager.accountStatus()
         .doOnNext(__ -> reloadData());
 
-    Observable<List<Store>> storesObservable = storeRepository.getAll()
+    Observable<List<RoomStore>> storesObservable = storeRepository.getAll()
         .skip(1)
         .doOnNext(__ -> {
           Logger.getInstance()

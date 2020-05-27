@@ -1,14 +1,18 @@
 package cm.aptoide.pt.bottomNavigation;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.view.LoginBottomSheetActivity;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.view.NotBottomNavigationView;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import javax.inject.Inject;
 import rx.Observable;
@@ -97,6 +101,30 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
         .setChecked(true);
   }
 
+  @Override public void setAppsName(String name) {
+    bottomNavigationView.getMenu()
+        .getItem(4)
+        .setTitle(mapAppsName(name));
+
+    BottomNavigationMenuView menuView =
+        (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
+    for (int i = 0; i < menuView.getChildCount(); i++) {
+      BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+      View largeLabel = item.findViewById(R.id.largeLabel);
+      View smallLabel = item.findViewById(R.id.smallLabel);
+
+      if (largeLabel instanceof TextView) {
+        largeLabel.setPadding(0, 0, 0, 0);
+        ((TextView) largeLabel).setEllipsize(TextUtils.TruncateAt.END);
+      }
+
+      if (smallLabel instanceof TextView) {
+        smallLabel.setPadding(0, 0, 0, 0);
+        ((TextView) smallLabel).setEllipsize(TextUtils.TruncateAt.END);
+      }
+    }
+  }
+
   @Override public void onBackPressed() {
     if (getFragmentNavigator().peekLast() == null && bottomNavigationNavigator.canNavigateBack()) {
       bottomNavigationNavigator.navigateBack();
@@ -109,5 +137,19 @@ public abstract class BottomNavigationActivity extends LoginBottomSheetActivity
     super.onSaveInstanceState(outState);
     outState.putIntegerArrayList(ITEMS_LIST_KEY,
         bottomNavigationNavigator.getBottomNavigationItems());
+  }
+
+  private int mapAppsName(String name) {
+    switch (name) {
+      case "my_apps":
+        return R.string.bottomnavigation_button_my_apps;
+      case "manager":
+        return R.string.bottomnavigation_button_manager;
+      case "updates":
+        return R.string.bottomnavigation_button_updates;
+      case "control":
+      default:
+        return R.string.bottomnavigation_button_apps;
+    }
   }
 }

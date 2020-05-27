@@ -3,11 +3,11 @@ package cm.aptoide.accountmanager;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import rx.Completable;
+import rx.Single;
 
 public class CredentialsValidator {
   /**
    * Returns true if email and password are not empty. If validate password content is enable
-   * returns true if password is at least 8 characters long and has at least 1 number and 1 letter.
    *
    * @param credentials
    */
@@ -17,6 +17,13 @@ public class CredentialsValidator {
       if (result != -1) return Completable.error(new AccountValidationException(result));
       return Completable.complete();
     });
+  }
+
+  public Single<Boolean> isEmailValid(String email) {
+    if (isEmpty(email)) {
+      return Single.just(false);
+    }
+    return Single.just(true);
   }
 
   @Nullable @VisibleForTesting protected int validateFields(AptoideCredentials credentials) {

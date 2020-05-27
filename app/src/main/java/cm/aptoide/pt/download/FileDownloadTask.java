@@ -51,22 +51,30 @@ public class FileDownloadTask extends FileDownloadLargeFileListener {
   }
 
   @Override protected void completed(BaseDownloadTask baseDownloadTask) {
-    FileDownloadTaskStatus fileDownloadTaskStatus;
-    if (md5Comparator.compareMd5(md5, fileName)) {
-      fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
+    new Thread(() -> {
+      FileDownloadTaskStatus fileDownloadTaskStatus1 =
+          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY,
               new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
                   baseDownloadTask.getLargeFileTotalBytes()), md5);
-      Logger.getInstance()
-          .d(TAG, " Download completed");
-    } else {
-      Logger.getInstance()
-          .d(TAG, " Download error in md5");
-      fileDownloadTaskStatus =
-          new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH,
-              md5, new Md5DownloadComparisonException("md5 does not match"));
-    }
-    downloadStatus.onNext(fileDownloadTaskStatus);
+      downloadStatus.onNext(fileDownloadTaskStatus1);
+
+      FileDownloadTaskStatus fileDownloadTaskStatus;
+      if (md5Comparator.compareMd5(md5, fileName)) {
+        fileDownloadTaskStatus =
+            new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.COMPLETED,
+                new FileDownloadProgressResult(baseDownloadTask.getLargeFileTotalBytes(),
+                    baseDownloadTask.getLargeFileTotalBytes()), md5);
+        Logger.getInstance()
+            .d(TAG, " Download completed");
+      } else {
+        Logger.getInstance()
+            .d(TAG, " Download error in md5");
+        fileDownloadTaskStatus =
+            new FileDownloadTaskStatus(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH,
+                md5, new Md5DownloadComparisonException("md5 does not match"));
+      }
+      downloadStatus.onNext(fileDownloadTaskStatus);
+    }).start();
   }
 
   @Override protected void error(BaseDownloadTask baseDownloadTask, Throwable error) {
