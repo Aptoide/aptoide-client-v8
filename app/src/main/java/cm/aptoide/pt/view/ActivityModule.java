@@ -178,7 +178,7 @@ import static android.content.Context.WINDOW_SERVICE;
       AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
       NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
-        bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
+        bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkView) activity,
         sharedPreferences, storeAccessor, notificationAnalytics, navigationTracker, searchAnalytics,
         appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
         appNavigator, installManager, newFeature, themeManager, themeAnalytics);

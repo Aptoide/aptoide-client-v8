@@ -24,6 +24,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -35,7 +36,7 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class MainActivity extends BottomNavigationActivity
-    implements MainView, DeepLinkManager.DeepLinkMessages {
+    implements MainView, DeepLinkManager.DeepLinkView {
 
   @Inject Presenter presenter;
   @Inject Resources resources;
@@ -49,6 +50,7 @@ public class MainActivity extends BottomNavigationActivity
   private TextView updatesNumber;
   private ProgressDialog autoUpdateDialog;
   private PublishSubject<PermissionService> autoUpdateDialogSubject;
+  private ProgressDialog progressDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -60,6 +62,8 @@ public class MainActivity extends BottomNavigationActivity
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
 
     setupUpdatesNotification();
 
@@ -74,6 +78,7 @@ public class MainActivity extends BottomNavigationActivity
     updatesBadge = null;
     snackBarLayout = null;
     snackbar = null;
+    progressDialog = null;
     super.onDestroy();
     MoPub.onDestroy(this);
   }
@@ -188,5 +193,13 @@ public class MainActivity extends BottomNavigationActivity
     ShowMessage.asLongSnack(this,
         AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
             storeName));
+  }
+
+  @Override public void showLoadingView() {
+    progressDialog.show();
+  }
+
+  @Override public void hideLoadingView() {
+    progressDialog.hide();
   }
 }

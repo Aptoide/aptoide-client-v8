@@ -71,7 +71,7 @@ public class DeepLinkManager {
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final SearchNavigator searchNavigator;
-  private final DeepLinkMessages deepLinkMessages;
+  private final DeepLinkView deepLinkView;
   private final SharedPreferences sharedPreferences;
   private final StoreAccessor storeAccessor;
   private final NavigationTracker navigationTracker;
@@ -91,7 +91,7 @@ public class DeepLinkManager {
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, StoreRepository storeRepository,
       FragmentNavigator fragmentNavigator, BottomNavigationNavigator bottomNavigationNavigator,
-      SearchNavigator searchNavigator, DeepLinkMessages deepLinkMessages,
+      SearchNavigator searchNavigator, DeepLinkView deepLinkView,
       SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
       NotificationAnalytics notificationAnalytics, NavigationTracker navigationTracker,
       SearchAnalytics searchAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
@@ -104,7 +104,7 @@ public class DeepLinkManager {
     this.fragmentNavigator = fragmentNavigator;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.searchNavigator = searchNavigator;
-    this.deepLinkMessages = deepLinkMessages;
+    this.deepLinkView = deepLinkView;
     this.sharedPreferences = sharedPreferences;
     this.storeAccessor = storeAccessor;
     this.navigationTracker = navigationTracker;
@@ -182,6 +182,8 @@ public class DeepLinkManager {
         sendFeatureAction(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ID),
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ACTION));
       }
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH)) {
+      userAuthentication(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN));
     } else {
       deepLinkAnalytics.launcher();
       return false;
@@ -197,6 +199,14 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
+  }
+
+  private void userAuthentication(String authToken) {
+
+    // TODO: 5/27/20 perform request authentication 2.
+    deepLinkView.showLoadingView();
+    Logger.getInstance()
+        .d("lol", "token inserido is: " + authToken + " going to make the requests");
   }
 
   private void sendFeatureAction(String id, String action) {
@@ -296,12 +306,12 @@ public class DeepLinkManager {
               .flatMap(isFollowed -> {
                 if (isFollowed) {
                   return Observable.fromCallable(() -> {
-                    deepLinkMessages.showStoreAlreadyAdded();
+                    deepLinkView.showStoreAlreadyAdded();
                     return null;
                   });
                 } else {
                   return storeUtilsProxy.subscribeStoreObservable(storeName)
-                      .doOnNext(getStoreMeta -> deepLinkMessages.showStoreFollowed(storeName));
+                      .doOnNext(getStoreMeta -> deepLinkView.showStoreFollowed(storeName));
                 }
               })
               .map(isSubscribed -> storeName))
@@ -437,10 +447,14 @@ public class DeepLinkManager {
     }
   }
 
-  public interface DeepLinkMessages {
+  public interface DeepLinkView {
     void showStoreAlreadyAdded();
 
     void showStoreFollowed(String storeName);
+
+    void showLoadingView();
+
+    void hideLoadingView();
   }
 
   private static final class ShortcutDestinations {
