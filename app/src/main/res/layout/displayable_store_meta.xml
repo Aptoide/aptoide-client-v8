@@ -114,6 +114,19 @@
       tools:text="TextView"
       />
 
+  <View
+      android:id="@+id/separator"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginTop="16dp"
+      android:background="?attr/separatorColor"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/description"
+      />
+
   <TextView
       android:id="@+id/apps_text_view"
       android:layout_width="0dp"
@@ -128,7 +141,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toLeftOf="@+id/following_text_view"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/description"
+      app:layout_constraintTop_toBottomOf="@+id/separator"
       tools:text="@string/apps"
       />
   <TextView
@@ -145,7 +158,7 @@
       app:layout_constraintLeft_toRightOf="@id/apps_text_view"
       app:layout_constraintRight_toLeftOf="@id/followers_text_view"
       app:layout_constraintStart_toEndOf="@+id/apps_text_view"
-      app:layout_constraintTop_toBottomOf="@+id/description"
+      app:layout_constraintTop_toBottomOf="@+id/separator"
       tools:layout_editor_absoluteX="127dp"
       tools:text="17"
       />
@@ -163,7 +176,7 @@
       app:layout_constraintLeft_toRightOf="@+id/following_text_view"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintStart_toEndOf="@id/following_text_view"
-      app:layout_constraintTop_toBottomOf="@+id/description"
+      app:layout_constraintTop_toBottomOf="@+id/separator"
       tools:text="100"
       />
 
