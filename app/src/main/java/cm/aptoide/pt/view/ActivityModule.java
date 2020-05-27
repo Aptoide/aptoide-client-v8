@@ -18,6 +18,7 @@ import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
+import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.account.view.ImagePickerNavigator;
@@ -41,7 +42,6 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -75,10 +75,10 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.ClaimPromotionsNavigator;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
-import cm.aptoide.pt.repository.StoreRepository;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
@@ -168,18 +168,18 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
       NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
-      StoreRepository storeRepository,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
-      @Named("default") SharedPreferences sharedPreferences, StoreAccessor storeAccessor,
-      NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
-      DeepLinkAnalytics deepLinkAnalytics, AppShortcutsAnalytics appShortcutsAnalytics,
-      AptoideAccountManager accountManager, StoreAnalytics storeAnalytics,
-      AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
-      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
-    return new DeepLinkManager(storeUtilsProxy, storeRepository, fragmentNavigator,
-        bottomNavigationNavigator, searchNavigator, (DeepLinkManager.DeepLinkMessages) activity,
-        sharedPreferences, storeAccessor, notificationAnalytics, navigationTracker, searchAnalytics,
+      @Named("default") SharedPreferences sharedPreferences,
+      RoomStoreRepository roomStoreRepository, NavigationTracker navigationTracker,
+      SearchAnalytics searchAnalytics, DeepLinkAnalytics deepLinkAnalytics,
+      AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
+      StoreAnalytics storeAnalytics, AdsRepository adsRepository, AppNavigator appNavigator,
+      InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
+      ThemeAnalytics themeAnalytics) {
+    return new DeepLinkManager(storeUtilsProxy, fragmentNavigator, bottomNavigationNavigator,
+        searchNavigator, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
+        roomStoreRepository, notificationAnalytics, navigationTracker, searchAnalytics,
         appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
         appNavigator, installManager, newFeature, themeManager, themeAnalytics);
   }
@@ -191,14 +191,16 @@ import static android.content.Context.WINDOW_SERVICE;
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
-      RootAvailabilityManager rootAvailabilityManager) {
+      RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
+      BottomNavigationMapper bottomNavigationMapper) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
-        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager);
+        autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
+        appsNameExperiment, bottomNavigationMapper);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
@@ -365,10 +367,12 @@ import static android.content.Context.WINDOW_SERVICE;
 
   @ActivityScope @Provides WalletInstallPresenter providesWalletInstallPresenter(
       WalletInstallConfiguration configuration, WalletInstallNavigator walletInstallNavigator,
-      WalletInstallManager walletInstallManager) {
+      WalletInstallManager walletInstallManager, WalletInstallAnalytics walletInstallAnalytics,
+      MoPubAdsManager moPubAdsManager) {
     return new WalletInstallPresenter((WalletInstallView) view, walletInstallManager,
         walletInstallNavigator, new PermissionManager(), ((PermissionService) activity),
-        AndroidSchedulers.mainThread(), Schedulers.io(), configuration);
+        AndroidSchedulers.mainThread(), Schedulers.io(), configuration, walletInstallAnalytics,
+        moPubAdsManager);
   }
 
   @ActivityScope @Provides WalletInstallNavigator providesWalletInstallNavigator(

@@ -33,16 +33,18 @@ class WalletAppProvider(val appCenter: AppCenter, val installedRepository: Insta
   private fun mergeToWalletApp(walletApp: WalletApp, isInstalled: Boolean,
                                walletDownload: Install): WalletApp {
     val downloadModel = mapToDownloadModel(walletDownload.type, walletDownload.progress,
-        walletDownload.state)
+        walletDownload.state, walletDownload.isIndeterminate)
     walletApp.downloadModel = downloadModel
     walletApp.isInstalled = isInstalled
     return walletApp
   }
 
-  private fun mapToDownloadModel(type: Install.InstallationType, progress: Int,
-                                 state: Install.InstallationStatus): DownloadModel {
+  private fun mapToDownloadModel(type: Install.InstallationType,
+                                 progress: Int,
+                                 state: Install.InstallationStatus,
+                                 isIndeterminate: Boolean): DownloadModel {
     return DownloadModel(downloadStateParser.parseDownloadType(type, false),
-        progress, downloadStateParser.parseDownloadState(state))
+        progress, downloadStateParser.parseDownloadState(state, isIndeterminate))
   }
 
   private fun mapToWalletApp(result: DetailedAppRequestResult): WalletApp {

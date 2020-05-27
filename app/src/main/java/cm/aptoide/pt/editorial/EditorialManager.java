@@ -4,7 +4,7 @@ import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -87,7 +87,7 @@ public class EditorialManager {
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, String packageName, long appId,
+  private void setupDownloadEvents(RoomDownload download, String packageName, long appId,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String trustedBadge,
       String storeName, String installType) {
     int campaignId = notificationAnalytics.getCampaignId(packageName, appId);
@@ -106,7 +106,8 @@ public class EditorialManager {
     return installManager.getInstall(md5, packageName, versionCode)
         .map(install -> new EditorialDownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), false), install.getProgress(),
-            downloadStateParser.parseDownloadState(install.getState()), position));
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate()),
+            position));
   }
 
   public Completable pauseDownload(String md5) {

@@ -112,7 +112,7 @@ public class PromotionsService {
 
   public Single<List<PromotionMeta>> getPromotions(String type) {
     return GetPromotionsRequest.of(type, bodyInterceptorPoolV7, okHttpClient, converterFactory,
-        tokenInvalidator, sharedPreferences)
+        tokenInvalidator, sharedPreferences, appBundlesVisibilityManager)
         .observe()
         .map(promotionsResponse -> map(promotionsResponse))
         .toSingle();

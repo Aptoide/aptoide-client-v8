@@ -22,9 +22,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.accessors.StoredMinimalAdAccessor;
-import cm.aptoide.pt.database.realm.StoredMinimalAd;
+import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.dataprovider.ads.AdNetworkUtils;
 import cm.aptoide.pt.dataprovider.util.referrer.SimpleTimedFuture;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.RegisterAdRefererRequest;
@@ -41,7 +39,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
+import rx.Completable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by neuro on 20-06-2016.
@@ -53,7 +53,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
   public static void extractReferrer(SearchAdResult searchAdResult, final int retries,
       boolean broadcastReferrer, AdsRepository adsRepository, final OkHttpClient httpClient,
       final Converter.Factory converterFactory, final QManager qManager, Context context,
-      final SharedPreferences sharedPreferences, MinimalAdMapper adMapper) {
+      final SharedPreferences sharedPreferences, MinimalAdMapper adMapper,
+      final RoomStoredMinimalAdPersistence roomStoredMinimalAdPersistence) {
     String packageName = searchAdResult.getPackageName();
     long networkId = searchAdResult.getNetworkId();
     String clickUrl = searchAdResult.getClickUrl();
@@ -139,10 +140,10 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
               if (broadcastReferrer) {
                 broadcastReferrer(packageName, referrer, context);
               } else {
-                StoredMinimalAdAccessor storedMinimalAdAccessor = AccessorFactory.getAccessorFor(
-                    ((AptoideApplication) context.getApplicationContext()
-                        .getApplicationContext()).getDatabase(), StoredMinimalAd.class);
-                storedMinimalAdAccessor.insert(adMapper.map(searchAdResult, referrer));
+                Completable.fromAction(() -> roomStoredMinimalAdPersistence.insert(
+                    adMapper.map(searchAdResult, referrer)))
+                    .subscribeOn(Schedulers.io())
+                    .subscribe();
               }
               if (future != null) {
                 future.cancel(false);
@@ -217,7 +218,8 @@ public class ReferrerUtils extends cm.aptoide.pt.dataprovider.util.referrer.Refe
                       .subscribe(
                           minimalAd1 -> extractReferrer(new SearchAdResult(minimalAd1), retries - 1,
                               broadcastReferrer, adsRepository, httpClient, converterFactory,
-                              qManager, context, sharedPreferences, new MinimalAdMapper()),
+                              qManager, context, sharedPreferences, new MinimalAdMapper(),
+                              roomStoredMinimalAdPersistence),
                           throwable -> clearExcludedNetworks(packageName));
                 } else {
                   // Must clean Excluded Networks least after each "round"

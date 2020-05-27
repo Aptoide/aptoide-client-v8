@@ -1,1 +1,4 @@
 /build
+
+#database schema
+*.json

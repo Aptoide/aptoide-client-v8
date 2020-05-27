@@ -15,8 +15,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.app.view.displayable.OtherVersionDisplayable;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
@@ -29,6 +27,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppVersionsRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.util.AppBarStateChangeListener;
@@ -41,16 +40,16 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 
 public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   private static final String TAG = OtherVersionsFragment.class.getSimpleName();
-
+  @Inject RoomStoreRepository storeRepository;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private ViewHeader header;
-
   private String appName;
   private String appImgUrl;
   private String appPackge;
@@ -86,6 +85,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    getFragmentComponent(savedInstanceState).inject(this);
     themeManager = new ThemeManager(getActivity(),
         ((AptoideApplication) getActivity().getApplicationContext()).getDefaultSharedPreferences());
     sharedPreferences =
@@ -121,7 +121,7 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     header = new ViewHeader(view, sharedPreferences);
-    collapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
+    collapsingToolbarLayout = view.findViewById(R.id.collapsing_toolbar);
     super.onViewCreated(view, savedInstanceState);
   }
 
@@ -150,11 +150,8 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
         };
 
     endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(this.getAdapter(),
-        ListAppVersionsRequest.of(appPackge, StoreUtils.getSubscribedStoresAuthMap(
-            AccessorFactory.getAccessorFor(
-                ((AptoideApplication) getContext().getApplicationContext()
-                    .getApplicationContext()).getDatabase(), Store.class)), baseBodyInterceptor,
-            httpClient, converterFactory,
+        ListAppVersionsRequest.of(appPackge, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
+            baseBodyInterceptor, httpClient, converterFactory,
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),

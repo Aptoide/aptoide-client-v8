@@ -336,7 +336,7 @@ public class SystemNotificationShower implements Presenter {
             themeAnalytics.sendDarkThemeDismissClickEvent("Notification");
           }
         })
-        .doOnNext(notificationInfo -> dismissNotificationAfterAction(
+        .flatMapCompletable(notificationInfo -> dismissNotificationAfterAction(
             notificationInfo.getNotificationType()))
         .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
             notificationInfo.getNotificationType())[0].equals(AptoideNotification.APPC_PROMOTION))
@@ -369,9 +369,9 @@ public class SystemNotificationShower implements Presenter {
             .doOnSuccess(notification -> navigationTracker.registerScreen(
                 ScreenTagHistory.Builder.build("Notification")))
             .map(notification -> notificationInfo))
-        .doOnNext(notificationInfo -> {
+        .flatMapCompletable(notificationInfo -> {
           callDeepLink(context, notificationInfo);
-          dismissNotificationAfterAction(notificationInfo.getNotificationType());
+          return dismissNotificationAfterAction(notificationInfo.getNotificationType());
         })
         .filter(notificationInfo -> notificationIdsMapper.getNotificationType(
             notificationInfo.getNotificationType())[0].equals(AptoideNotification.APPC_PROMOTION))

@@ -80,47 +80,55 @@ public class AppDownloadStatus {
   private AppDownloadState getAppDownloadState() {
     AppDownloadStatus.AppDownloadState previousState = null;
     for (FileDownloadCallback fileDownloadCallback : fileDownloadCallbackList) {
-      if (fileDownloadCallback.getDownloadState() == AppDownloadStatus.AppDownloadState.ERROR) {
-        return AppDownloadState.ERROR;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadState.ERROR_MD5_DOES_NOT_MATCH) {
-        return AppDownloadState.ERROR_MD5_DOES_NOT_MATCH;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.ERROR_FILE_NOT_FOUND) {
-        return AppDownloadState.ERROR_FILE_NOT_FOUND;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.ERROR_NOT_ENOUGH_SPACE) {
-        return AppDownloadState.ERROR_NOT_ENOUGH_SPACE;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.WARN) {
-        return AppDownloadState.WARN;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.PAUSED) {
-        return AppDownloadState.PAUSED;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.INVALID_STATUS) {
-        return AppDownloadState.INVALID_STATUS;
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.COMPLETED) {
-        if (previousState != null
-            && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
-          return AppDownloadState.PROGRESS;
-        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
-            == fileDownloadCallbackList.size() - 1) {
-          Logger.getInstance()
-              .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
-          return AppDownloadState.COMPLETED;
+      if (fileDownloadCallback.getDownloadState() != null) {
+        switch (fileDownloadCallback.getDownloadState()) {
+          case ERROR:
+            return AppDownloadState.ERROR;
+          case ERROR_MD5_DOES_NOT_MATCH:
+            return AppDownloadState.ERROR_MD5_DOES_NOT_MATCH;
+          case ERROR_FILE_NOT_FOUND:
+            return AppDownloadState.ERROR_FILE_NOT_FOUND;
+          case ERROR_NOT_ENOUGH_SPACE:
+            return AppDownloadState.ERROR_NOT_ENOUGH_SPACE;
+          case WARN:
+            return AppDownloadState.WARN;
+          case PAUSED:
+            return AppDownloadState.PAUSED;
+          case INVALID_STATUS:
+            return AppDownloadState.INVALID_STATUS;
+          case VERIFYING_FILE_INTEGRITY:
+            if (previousState != null && (previousState
+                != AppDownloadStatus.AppDownloadState.VERIFYING_FILE_INTEGRITY
+                && previousState != AppDownloadState.COMPLETED)) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              return AppDownloadState.VERIFYING_FILE_INTEGRITY;
+            }
+            break;
+          case COMPLETED:
+            if (previousState != null
+                && previousState != AppDownloadStatus.AppDownloadState.COMPLETED) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              Logger.getInstance()
+                  .d("AppDownloadState", "emitting APPDOWNLOADSTATE completed " + md5);
+              return AppDownloadState.COMPLETED;
+            }
+            break;
+          case PENDING:
+            if (previousState != null
+                && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
+              return AppDownloadState.PROGRESS;
+            } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
+                == fileDownloadCallbackList.size() - 1) {
+              return AppDownloadState.PENDING;
+            }
+            break;
         }
-      } else if (fileDownloadCallback.getDownloadState()
-          == AppDownloadStatus.AppDownloadState.PENDING) {
-        if (previousState != null && previousState != AppDownloadStatus.AppDownloadState.PENDING) {
-          return AppDownloadState.PROGRESS;
-        } else if (fileDownloadCallbackList.indexOf(fileDownloadCallback)
-            == fileDownloadCallbackList.size() - 1) {
-          return AppDownloadState.PENDING;
-        }
+        previousState = fileDownloadCallback.getDownloadState();
       }
-      previousState = fileDownloadCallback.getDownloadState();
     }
     return AppDownloadState.PROGRESS;
   }
@@ -169,6 +177,6 @@ public class AppDownloadStatus {
   }
 
   public enum AppDownloadState {
-    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, ERROR_FILE_NOT_FOUND, ERROR_NOT_ENOUGH_SPACE, ERROR_MD5_DOES_NOT_MATCH, PROGRESS, WAITING_TO_MOVE_FILES
+    INVALID_STATUS, COMPLETED, PENDING, PAUSED, WARN, ERROR, ERROR_FILE_NOT_FOUND, ERROR_NOT_ENOUGH_SPACE, ERROR_MD5_DOES_NOT_MATCH, PROGRESS, WAITING_TO_MOVE_FILES, VERIFYING_FILE_INTEGRITY
   }
 }

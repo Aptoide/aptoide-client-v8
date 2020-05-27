@@ -30,4 +30,6 @@ public interface InstallAppView extends View {
   Observable<Void> cancelDownload();
 
   void showGenericErrorDialog();
+
+  void showInvalidAppInfoErrorDialog();
 }
