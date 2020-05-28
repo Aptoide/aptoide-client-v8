@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
-import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
@@ -185,10 +184,6 @@ public class MainPresenter implements Presenter {
 
   private void handleFirstSession() {
     // TODO: 5/27/20 check if should show wizard
-  }
-
-  private Boolean isAuthenticationDeepLink(Intent intent) {
-    return intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH, false);
   }
 
   private Completable handleAppsNameExperimentConversion(Integer fragmentid) {
