@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
@@ -51,7 +50,6 @@ public class MainActivity extends BottomNavigationActivity
   private View updatesBadge;
   private TextView updatesNumber;
   private ProgressDialog autoUpdateDialog;
-  private PublishSubject<PermissionService> autoUpdateDialogSubject;
   private ProgressDialog progressDialog;
   private PublishSubject<String> authenticationSubject;
 
@@ -65,7 +63,6 @@ public class MainActivity extends BottomNavigationActivity
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-    autoUpdateDialogSubject = PublishSubject.create();
     authenticationSubject = PublishSubject.create();
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
@@ -80,7 +77,6 @@ public class MainActivity extends BottomNavigationActivity
   @Override protected void onDestroy() {
     Logger.getInstance()
         .d("lol", "inside ondestroy of main activity");
-    autoUpdateDialogSubject = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
@@ -88,6 +84,7 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = null;
     snackbar = null;
     progressDialog = null;
+    authenticationSubject = null;
     super.onDestroy();
     MoPub.onDestroy(this);
   }
