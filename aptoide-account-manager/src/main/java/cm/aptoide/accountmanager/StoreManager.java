@@ -1,7 +1,5 @@
 package cm.aptoide.accountmanager;
 
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
-import java.util.List;
 import rx.Completable;
 
 /**
@@ -10,6 +8,5 @@ import rx.Completable;
 
 public interface StoreManager {
   Completable createOrUpdate(String storeName, String storeDescription, String storeImagePath,
-      boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SocialLink> storeLinksList, List<Store.SocialChannelType> storeDeleteLinksList);
+      boolean hasNewAvatar, String storeThemeName, boolean storeExists);
 }

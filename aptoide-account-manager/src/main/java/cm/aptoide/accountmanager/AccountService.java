@@ -7,7 +7,7 @@ public interface AccountService {
 
   Single<Account> getAccount(String email, String code);
 
-  Single<Account> createAccount(String email, String metadata, String name, String type);
+  Single<Account> createAccount(String email, String metadata, String type);
 
   Single<Account> createAccount(String email, String password);
 
@@ -32,4 +32,6 @@ public interface AccountService {
   Completable updateAccount(boolean adultContentEnabled);
 
   Completable removeAccount();
+
+  Completable sendMagicLink(String email);
 }

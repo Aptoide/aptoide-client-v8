@@ -12,7 +12,6 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.FacebookLoginResult;
@@ -170,8 +169,7 @@ public class MockApplicationModule extends ApplicationModule {
         return Single.just(account);
       }
 
-      @Override public Single<Account> createAccount(String email, String metadata, String name,
-          String type) {
+      @Override public Single<Account> createAccount(String email, String metadata, String type) {
         return Single.just(account);
       }
 
@@ -304,8 +302,7 @@ public class MockApplicationModule extends ApplicationModule {
             tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override
           public Completable createOrUpdate(String a, String b, String c, boolean d, String e,
-              boolean f, List<SocialLink> storeLinksList,
-              List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
+              boolean f) {
             return Completable.complete();
           }
         };

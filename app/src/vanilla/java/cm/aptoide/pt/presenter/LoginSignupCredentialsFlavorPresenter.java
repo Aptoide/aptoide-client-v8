@@ -18,10 +18,9 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
       AptoideAccountManager accountManager, CrashReport crashReport,
       boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper,
-      AccountAnalytics accountAnalytics) {
+      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
     super(view, accountManager, crashReport, dismissToNavigateToMainView, navigateToHome,
-        accountNavigator, permissions, requiredPermissions, errorMapper, accountAnalytics);
+        accountNavigator, permissions, errorMapper, accountAnalytics);
     this.view = view;
     this.errorMapper = errorMapper;
     this.crashReport = crashReport;
