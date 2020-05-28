@@ -57,13 +57,6 @@ public class CredentialsValidatorTest {
     assertEquals(AccountValidationException.EMPTY_CODE, result);
   }
 
-  @Test public void validateInvalidPasswordErrorTest() {
-    invalidPasswordCredentials = new AptoideCredentials("test", "error", true);
-
-    result = credentialsValidator.validateFields(invalidPasswordCredentials);
-    assertEquals(AccountValidationException.INVALID_PASSWORD, result);
-  }
-
   @After public void teardownCredentialsValidator() {
     credentialsValidator = null;
     result = -2;
