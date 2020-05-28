@@ -75,8 +75,6 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   @Override protected void onDestroy() {
-    Logger.getInstance()
-        .d("lol", "inside ondestroy of main activity");
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
@@ -91,8 +89,6 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    Logger.getInstance()
-        .d("lol", "ON NEW INTENT !!!! ");
     handleAuthenticationIntent(intent);
   }
 
@@ -109,37 +105,26 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStart() {
     super.onStart();
-    Logger.getInstance()
-        .d("lol", "inside onstart of main activity");
     MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
-    Logger.getInstance()
-        .d("lol", "inside onresume of main activity");
     MoPub.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
-    Logger.getInstance()
-        .d("lol", "inside onpause of main activity");
     MoPub.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
-    Logger.getInstance()
-        .d("lol", "inside onpause of main activity");
     MoPub.onStop(this);
   }
 
   @Override protected void onRestart() {
     super.onRestart();
-    Logger.getInstance()
-        .d("lol", "inside onrestart of main activity");
-
     MoPub.onRestart(this);
   }
 
