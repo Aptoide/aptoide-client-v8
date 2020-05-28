@@ -1,6 +1,7 @@
 package cm.aptoide.pt.navigation;
 
 import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -56,6 +57,7 @@ public class BottomNavigationPresenterTest {
   @Mock private RootAvailabilityManager rootAvailabilityManager;
   @Mock private AppsNameExperiment appsNameExperiment;
   @Mock private BottomNavigationMapper bottomNavigationMapper;
+  @Mock private AptoideAccountManager accountManager;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
