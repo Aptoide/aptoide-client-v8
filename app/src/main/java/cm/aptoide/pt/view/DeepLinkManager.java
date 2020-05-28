@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
-import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -53,7 +52,6 @@ import cm.aptoide.pt.themes.ThemeManager;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -194,35 +192,6 @@ public class DeepLinkManager {
       navigationTracker.registerScreen(ScreenTagHistory.Builder.build(DEEPLINK_KEY));
     }
     return true;
-  }
-
-  private void userAuthentication(String authToken) {
-
-    // TODO: 5/27/20 perform request authentication 2, waiting for its implementation
-
-    //accountManager.login(null)
-    Completable.fromAction(() -> Logger.getInstance()
-        .d("test", "inserted token is " + authToken))
-        .andThen(throwException())
-        .doOnSubscribe(__ -> deepLinkView.showLoadingView())
-        .doOnCompleted(deepLinkView::hideLoadingView)
-        .doOnCompleted(() -> handleFirstSession())
-        .doOnError(throwable -> {
-          deepLinkView.hideLoadingView();
-          if (throwable instanceof AccountException) {
-            deepLinkView.showGenericErrorMessage();
-          }
-        })
-        .subscribe(() -> {
-        }, throwable1 -> throwable1.printStackTrace());
-  }
-
-  private Completable throwException() {
-    return Completable.error(new AccountException(Collections.emptyList()));
-  }
-
-  private void handleFirstSession() {
-    // TODO: 5/27/20 check if should show wizard
   }
 
   private void sendFeatureAction(String id, String action) {
@@ -466,12 +435,6 @@ public class DeepLinkManager {
     void showStoreAlreadyAdded();
 
     void showStoreFollowed(String storeName);
-
-    void showLoadingView();
-
-    void hideLoadingView();
-
-    void showGenericErrorMessage();
   }
 
   private static final class ShortcutDestinations {
