@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import android.util.Patterns;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import rx.Completable;
@@ -20,10 +21,15 @@ public class CredentialsValidator {
   }
 
   public Single<Boolean> isEmailValid(String email) {
-    if (isEmpty(email)) {
-      return Single.just(false);
+    return Single.just(checkIsEmailValid(email));
+  }
+
+  private boolean checkIsEmailValid(String email) {
+    if (!isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email)
+        .matches()) {
+      return true;
     }
-    return Single.just(true);
+    return false;
   }
 
   @Nullable @VisibleForTesting protected int validateFields(AptoideCredentials credentials) {
