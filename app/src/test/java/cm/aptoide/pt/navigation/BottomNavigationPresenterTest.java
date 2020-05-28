@@ -71,7 +71,7 @@ public class BottomNavigationPresenterTest {
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
-        rootAvailabilityManager, appsNameExperiment, bottomNavigationMapper);
+        rootAvailabilityManager, appsNameExperiment, bottomNavigationMapper, accountManager);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

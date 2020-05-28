@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -52,6 +53,7 @@ public class MainActivity extends BottomNavigationActivity
   private ProgressDialog autoUpdateDialog;
   private PublishSubject<PermissionService> autoUpdateDialogSubject;
   private ProgressDialog progressDialog;
+  private PublishSubject<String> authenticationSubject;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,9 +66,12 @@ public class MainActivity extends BottomNavigationActivity
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
     autoUpdateDialogSubject = PublishSubject.create();
+    authenticationSubject = PublishSubject.create();
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+
+    handleAuthenticationIntent(getIntent());
 
     setupUpdatesNotification();
 
@@ -86,6 +91,24 @@ public class MainActivity extends BottomNavigationActivity
     progressDialog = null;
     super.onDestroy();
     MoPub.onDestroy(this);
+  }
+
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    Logger.getInstance()
+        .d("lol", "ON NEW INTENT !!!! ");
+    handleAuthenticationIntent(intent);
+  }
+
+  private void handleAuthenticationIntent(Intent intent) {
+    if (isAuthenticationDeepLink(intent)) {
+      String token = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN);
+      authenticationSubject.onNext(token);
+    }
+  }
+
+  private Boolean isAuthenticationDeepLink(Intent intent) {
+    return intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH, false);
   }
 
   @Override protected void onStart() {
@@ -201,16 +224,6 @@ public class MainActivity extends BottomNavigationActivity
     }
   }
 
-  @Override public void showStoreAlreadyAdded() {
-    ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
-  }
-
-  @Override public void showStoreFollowed(String storeName) {
-    ShowMessage.asLongSnack(this,
-        AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
-            storeName));
-  }
-
   @Override public void showLoadingView() {
     progressDialog.show();
   }
@@ -221,5 +234,19 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void showGenericErrorMessage() {
     ShowMessage.asLongSnack(this, getString(R.string.all_message_general_error));
+  }
+
+  @Override public Observable<String> onAuthenticationIntent() {
+    return authenticationSubject;
+  }
+
+  @Override public void showStoreAlreadyAdded() {
+    ShowMessage.asLongSnack(this, getString(R.string.store_already_added));
+  }
+
+  @Override public void showStoreFollowed(String storeName) {
+    ShowMessage.asLongSnack(this,
+        AptoideUtils.StringU.getFormattedString(R.string.store_followed, getResources(),
+            storeName));
   }
 }

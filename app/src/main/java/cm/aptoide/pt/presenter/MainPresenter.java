@@ -7,6 +7,10 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AccountException;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
@@ -29,6 +33,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -62,6 +67,7 @@ public class MainPresenter implements Presenter {
   private final RootAvailabilityManager rootAvailabilityManager;
   private final AppsNameExperiment appsNameExperiment;
   private final BottomNavigationMapper bottomNavigationMapper;
+  private final AptoideAccountManager accountManager;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -73,7 +79,7 @@ public class MainPresenter implements Presenter {
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
       RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -97,6 +103,7 @@ public class MainPresenter implements Presenter {
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.appsNameExperiment = appsNameExperiment;
     this.bottomNavigationMapper = bottomNavigationMapper;
+    this.accountManager = accountManager;
   }
 
   @Override public void present() {
@@ -138,6 +145,47 @@ public class MainPresenter implements Presenter {
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
+
+    handleAuthentication();
+  }
+
+  private void handleAuthentication() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.onAuthenticationIntent())
+        .flatMapCompletable(token -> authenticate(token))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private Completable authenticate(String authToken) {
+
+    // TODO: 5/27/20 perform request authentication 2, waiting for its implementation
+    return accountManager.login(new AptoideCredentials("", authToken, true))
+        .andThen(throwException())
+        .doOnSubscribe(__ -> view.showLoadingView())
+        .doOnCompleted(() -> view.hideLoadingView())
+        .doOnCompleted(() -> handleFirstSession())
+        .doOnError(throwable -> {
+          view.hideLoadingView();
+          if (throwable instanceof AccountException) {
+            view.showGenericErrorMessage();
+          }
+          view.showGenericErrorMessage();
+        });
+  }
+
+  private Completable throwException() {
+    return Completable.error(new AccountException(Collections.emptyList()));
+  }
+
+  private void handleFirstSession() {
+    // TODO: 5/27/20 check if should show wizard
+  }
+
+  private Boolean isAuthenticationDeepLink(Intent intent) {
+    return intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH, false);
   }
 
   private Completable handleAppsNameExperimentConversion(Integer fragmentid) {
@@ -226,10 +274,6 @@ public class MainPresenter implements Presenter {
   // proper up/back navigation to home if needed
   private void navigate() {
     Intent intent = view.getIntentAfterCreate();
- /*   if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH)) {
-      deepLinkManager.showDeepLink(intent);
-      SecurePreferences.setWizardAvailable(false, securePreferences);
-    } else {*/
     showHome();
     if (deepLinkManager.showDeepLink(intent)) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
@@ -239,7 +283,6 @@ public class MainPresenter implements Presenter {
         SecurePreferences.setWizardAvailable(false, securePreferences);
       }
     }
-    //}
   }
 
   private Single<Boolean> isAutoUpdateDownloaded() {

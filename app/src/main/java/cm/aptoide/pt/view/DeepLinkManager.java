@@ -180,8 +180,6 @@ public class DeepLinkManager {
         sendFeatureAction(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ID),
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.ACTION));
       }
-    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH)) {
-      userAuthentication(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN));
     } else {
       deepLinkAnalytics.launcher();
       return false;
