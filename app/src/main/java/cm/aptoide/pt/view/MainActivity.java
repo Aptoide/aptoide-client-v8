@@ -71,11 +71,10 @@ public class MainActivity extends BottomNavigationActivity
     progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
         themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
 
-    handleAuthenticationIntent(getIntent());
-
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+    handleAuthenticationIntent(getIntent());
   }
 
   @Override protected void onDestroy() {
