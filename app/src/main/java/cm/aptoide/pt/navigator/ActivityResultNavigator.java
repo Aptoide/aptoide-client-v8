@@ -130,6 +130,10 @@ public abstract class ActivityResultNavigator extends BaseActivity implements Ac
     startActivity(intent);
   }
 
+  @Override public void navigateWithIntent(Intent intent) {
+    startActivity(intent);
+  }
+
   @Override public Observable<Result> results() {
     return resultRelay;
   }

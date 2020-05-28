@@ -9,6 +9,7 @@ import rx.Scheduler
 class SendMagicLinkPresenter(
     private val view: MagicLinkView,
     private val accountManager: AptoideAccountManager,
+    private val navigator: SendMagicLinkNavigator,
     private val viewScheduler: Scheduler) : Presenter {
 
   override fun present() {
@@ -36,8 +37,16 @@ class SendMagicLinkPresenter(
               .flatMap { email ->
                 validateEmail(email)
                     .filter { valid -> valid }
+                    .observeOn(viewScheduler)
                     .doOnNext { view.setLoadingScreen() }
-                // TODO: Send magic link, remove loading and navigate
+                    .flatMapCompletable {
+                      accountManager.sendMagicLink(email)
+                          .observeOn(viewScheduler)
+                          .doOnCompleted {
+                            view.removeLoadingScreen()
+                            navigator.navigateToCheckYourEmail(email)
+                          }
+                    }
               }
               .retry()
         }

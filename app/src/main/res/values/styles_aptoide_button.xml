@@ -22,6 +22,16 @@
     <item name="android:textColor">?attr/inverseTextColor</item>
   </style>
 
+  <style name="Aptoide.Button.Solid">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">@dimen/button_height</item>
+    <item name="android:fontFamily">?attr/buttonTextFont</item>
+    <item name="android:textSize">?attr/buttonTextSizeMedium</item>
+    <item name="android:textColor">?attr/textColorOpenEmailAppButton</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:background">@drawable/round_button_white</item>
+  </style>
+
   <!-- Ghost button-->
   <style name="Aptoide.Button.Ghost">
     <item name="android:layout_width">wrap_content</item>
