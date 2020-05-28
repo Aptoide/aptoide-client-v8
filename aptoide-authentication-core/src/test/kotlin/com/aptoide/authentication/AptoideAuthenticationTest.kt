@@ -53,7 +53,7 @@ class AptoideAuthenticationTest {
 
   @ExperimentalCoroutinesApi
   @Test
-  fun `authenticate sucess test`() = runBlockingTest {
+  fun `authenticate success test`() = runBlockingTest {
     //given
     val authentication = AptoideAuthentication(service)
     `when`(service.authenticate(anyString(), anyString(), anyString())).thenReturn(getValidOAuth2())
