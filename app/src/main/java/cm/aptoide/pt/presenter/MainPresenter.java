@@ -165,6 +165,7 @@ public class MainPresenter implements Presenter {
     // TODO: 5/27/20 finish request information passed
     return accountManager.login(new AptoideCredentials("", authToken, true))
         .andThen(throwException())
+        .observeOn(viewScheduler)
         .doOnSubscribe(__ -> view.showLoadingView())
         .doOnCompleted(() -> view.hideLoadingView())
         .doOnCompleted(() -> handleFirstSession())
