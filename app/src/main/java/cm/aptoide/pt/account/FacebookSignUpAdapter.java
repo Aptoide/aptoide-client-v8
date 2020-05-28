@@ -56,7 +56,7 @@ public class FacebookSignUpAdapter implements SignUpAdapter<FacebookLoginResult>
     return getFacebookEmail(result.getResult()
         .getAccessToken()).flatMap(email -> service.createAccount(email, result.getResult()
         .getAccessToken()
-        .getToken(), null, TYPE));
+        .getToken(), TYPE));
   }
 
   @Override public Completable logout() {
