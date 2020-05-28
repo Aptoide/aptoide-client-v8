@@ -32,35 +32,35 @@ public class CredentialsValidatorTest {
   @Test public void validateSuccessTest() {
     validCredentials = new AptoideCredentials("test@test.com", "mypasstest1", true);
 
-    result = credentialsValidator.validateFields(validCredentials, true);
+    result = credentialsValidator.validateFields(validCredentials);
     assertEquals(-1, result);
   }
 
   @Test public void validateEmptyCredentialsErrorTest() {
     emptyCredentials = new AptoideCredentials("", "", true);
 
-    result = credentialsValidator.validateFields(emptyCredentials, true);
+    result = credentialsValidator.validateFields(emptyCredentials);
     assertEquals(AccountValidationException.EMPTY_EMAIL_AND_CODE, result);
   }
 
   @Test public void validateEmptyEmailCredentialsErrorTest() {
     emptyEmailCredentials = new AptoideCredentials("", "test1", true);
 
-    result = credentialsValidator.validateFields(emptyEmailCredentials, true);
+    result = credentialsValidator.validateFields(emptyEmailCredentials);
     assertEquals(AccountValidationException.EMPTY_EMAIL, result);
   }
 
   @Test public void validateEmptyPasswordCredentialsErrorTest() {
     emptyPasswordCredentials = new AptoideCredentials("test@test.com", "", true);
 
-    result = credentialsValidator.validateFields(emptyPasswordCredentials, true);
+    result = credentialsValidator.validateFields(emptyPasswordCredentials);
     assertEquals(AccountValidationException.EMPTY_CODE, result);
   }
 
   @Test public void validateInvalidPasswordErrorTest() {
     invalidPasswordCredentials = new AptoideCredentials("test", "error", true);
 
-    result = credentialsValidator.validateFields(invalidPasswordCredentials, true);
+    result = credentialsValidator.validateFields(invalidPasswordCredentials);
     assertEquals(AccountValidationException.INVALID_PASSWORD, result);
   }
 
