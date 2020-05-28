@@ -153,6 +153,7 @@ public class MainPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(__ -> view.onAuthenticationIntent())
+        .retry()
         .flatMapCompletable(token -> authenticate(token))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -161,7 +162,7 @@ public class MainPresenter implements Presenter {
 
   private Completable authenticate(String authToken) {
 
-    // TODO: 5/27/20 perform request authentication 2, waiting for its implementation
+    // TODO: 5/27/20 finish request information passed
     return accountManager.login(new AptoideCredentials("", authToken, true))
         .andThen(throwException())
         .doOnSubscribe(__ -> view.showLoadingView())
@@ -173,7 +174,8 @@ public class MainPresenter implements Presenter {
             view.showGenericErrorMessage();
           }
           view.showGenericErrorMessage();
-        });
+        })
+        .onErrorComplete();
   }
 
   private Completable throwException() {
