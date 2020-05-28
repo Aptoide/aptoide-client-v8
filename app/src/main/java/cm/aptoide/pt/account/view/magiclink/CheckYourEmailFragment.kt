@@ -1,11 +1,14 @@
 package cm.aptoide.pt.account.view.magiclink
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory
+import cm.aptoide.aptoideviews.common.NonbreakingSpan
 import cm.aptoide.pt.R
 import cm.aptoide.pt.view.NotBottomNavigationView
 import cm.aptoide.pt.view.fragment.BaseToolbarFragment
@@ -55,7 +58,15 @@ class CheckYourEmailFragment : BaseToolbarFragment(), CheckYourEmailView, NotBot
     view?.let { v ->
       openEmailAppButton = v.findViewById(R.id.open_email_app_button)
       openEmailBody = v.findViewById(R.id.check_your_email_body_text)
-      openEmailBody.text = getString(R.string.login_check_email_body, email)
+
+      email?.let { e ->
+        val emailString: String = getString(R.string.login_check_email_body, e)
+        val spannable = SpannableString(emailString)
+        spannable.setSpan(NonbreakingSpan(), emailString.indexOf(e),
+            emailString.indexOf(e) + e.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        openEmailBody.text = spannable
+      }
+
     }
   }
 
