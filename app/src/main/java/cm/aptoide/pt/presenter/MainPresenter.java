@@ -5,6 +5,7 @@
 
 package cm.aptoide.pt.presenter;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.actions.PermissionService;
@@ -224,8 +225,13 @@ public class MainPresenter implements Presenter {
 
   // proper up/back navigation to home if needed
   private void navigate() {
+    Intent intent = view.getIntentAfterCreate();
+ /*   if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH)) {
+      deepLinkManager.showDeepLink(intent);
+      SecurePreferences.setWizardAvailable(false, securePreferences);
+    } else {*/
     showHome();
-    if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
+    if (deepLinkManager.showDeepLink(intent)) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
     } else {
       if (SecurePreferences.isWizardAvailable(securePreferences)) {
@@ -233,6 +239,7 @@ public class MainPresenter implements Presenter {
         SecurePreferences.setWizardAvailable(false, securePreferences);
       }
     }
+    //}
   }
 
   private Single<Boolean> isAutoUpdateDownloaded() {

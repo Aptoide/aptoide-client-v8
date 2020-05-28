@@ -162,6 +162,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.APTOIDE_AUTH, true);
     intent.putExtra(DeepLinksKeys.AUTH_TOKEN, token);
+    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     return intent;
   }
 

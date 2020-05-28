@@ -19,6 +19,7 @@ import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.ThemeAnalytics;
@@ -54,6 +55,8 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Logger.getInstance()
+        .d("lol", "inside onCreate of main activity");
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     MoPub.onCreate(this);
@@ -71,6 +74,8 @@ public class MainActivity extends BottomNavigationActivity
   }
 
   @Override protected void onDestroy() {
+    Logger.getInstance()
+        .d("lol", "inside ondestroy of main activity");
     autoUpdateDialogSubject = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
@@ -85,26 +90,37 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onStart() {
     super.onStart();
+    Logger.getInstance()
+        .d("lol", "inside onstart of main activity");
     MoPub.onStart(this);
   }
 
   @Override protected void onResume() {
     super.onResume();
+    Logger.getInstance()
+        .d("lol", "inside onresume of main activity");
     MoPub.onResume(this);
   }
 
   @Override protected void onPause() {
     super.onPause();
+    Logger.getInstance()
+        .d("lol", "inside onpause of main activity");
     MoPub.onPause(this);
   }
 
   @Override protected void onStop() {
     super.onStop();
+    Logger.getInstance()
+        .d("lol", "inside onpause of main activity");
     MoPub.onStop(this);
   }
 
   @Override protected void onRestart() {
     super.onRestart();
+    Logger.getInstance()
+        .d("lol", "inside onrestart of main activity");
+
     MoPub.onRestart(this);
   }
 
@@ -201,5 +217,9 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override public void hideLoadingView() {
     progressDialog.hide();
+  }
+
+  @Override public void showGenericErrorMessage() {
+    ShowMessage.asLongSnack(this, getString(R.string.all_message_general_error));
   }
 }
