@@ -31,8 +31,7 @@ public class GoogleSignUpAdapter implements SignUpAdapter<GoogleSignInResult> {
 
     final GoogleSignInAccount account = result.getSignInAccount();
     if (result.isSuccess() && account != null) {
-      return service.createAccount(account.getEmail(), account.getServerAuthCode(),
-          account.getDisplayName(), "GOOGLE");
+      return service.createAccount(account.getEmail(), account.getServerAuthCode(), "GOOGLE");
     } else {
       return Single.error(new GoogleSignUpException(GoogleSignInStatusCodes.getStatusCodeString(
           result.getStatus()

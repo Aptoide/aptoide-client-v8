@@ -7,7 +7,6 @@ package cm.aptoide.pt.dataprovider.ws.v3;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import androidx.annotation.Nullable;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.OAuth;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
@@ -28,10 +27,9 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
   }
 
   public static OAuth2AuthenticationRequest of(String username, String metadata, String mode,
-      @Nullable String nameForGoogle, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, Converter.Factory converterFactory,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId,
-      String authMode) {
+      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
+      Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, String extraId, String authMode) {
 
     final BaseBody body = new BaseBody();
 
@@ -46,10 +44,6 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
           body.put("code", metadata);
           break;
         case "GOOGLE":
-          body.put("authMode", authMode);
-          body.put("oauthUserName", nameForGoogle);
-          body.put("oauthToken", metadata);
-          break;
         case "FACEBOOK":
           body.put("authMode", authMode);
           body.put("oauthToken", metadata);
@@ -58,7 +52,6 @@ public class OAuth2AuthenticationRequest extends V3<OAuth> {
           body.put("oauthUserName", username);
           body.put("oauthToken", metadata);
           body.put("authMode", authMode);
-          body.put("oauthUser", nameForGoogle);
           break;
       }
     }

@@ -175,7 +175,7 @@ import cm.aptoide.pt.wallet.WalletInstallManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
@@ -203,13 +203,13 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
+      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics,
+      @Named("facebookLoginPermissions") List<String> facebookPermissions) {
     return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
         accountManager, CrashReport.getInstance(),
         arguments.getBoolean("dismiss_to_navigate_to_main_view"),
-        arguments.getBoolean("clean_back_stack"), accountNavigator,
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
-        accountAnalytics);
+        arguments.getBoolean("clean_back_stack"), accountNavigator, facebookPermissions,
+        errorMapper, accountAnalytics);
   }
 
   @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
