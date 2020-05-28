@@ -111,11 +111,10 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override
-  public Single<Account> createAccount(String email, String metadata, String name, String type) {
-    return OAuth2AuthenticationRequest.of(email, metadata, type, null,
-        v3NoAuthorizationBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, extraId, oAuthModeProvider.getAuthMode(type))
+  @Override public Single<Account> createAccount(String email, String metadata, String type) {
+    return OAuth2AuthenticationRequest.of(email, metadata, type, v3NoAuthorizationBodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, extraId,
+        oAuthModeProvider.getAuthMode(type))
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
