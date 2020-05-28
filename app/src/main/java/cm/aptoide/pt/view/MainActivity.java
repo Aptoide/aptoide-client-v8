@@ -14,16 +14,18 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.AptoideApplication;
+import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.utils.AptoideUtils;
+import cm.aptoide.pt.utils.GenericDialogs;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -35,7 +37,7 @@ import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class MainActivity extends BottomNavigationActivity
-    implements MainView, DeepLinkManager.DeepLinkMessages {
+    implements MainView, DeepLinkManager.DeepLinkView {
 
   @Inject Presenter presenter;
   @Inject Resources resources;
@@ -48,34 +50,57 @@ public class MainActivity extends BottomNavigationActivity
   private View updatesBadge;
   private TextView updatesNumber;
   private ProgressDialog autoUpdateDialog;
-  private PublishSubject<PermissionService> autoUpdateDialogSubject;
+  private ProgressDialog progressDialog;
+  private PublishSubject<String> authenticationSubject;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Logger.getInstance()
+        .d("lol", "inside onCreate of main activity");
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     MoPub.onCreate(this);
     installManager = application.getInstallManager();
     snackBarLayout = findViewById(R.id.snackbar_layout);
     installErrorsDismissEvent = PublishRelay.create();
-    autoUpdateDialogSubject = PublishSubject.create();
+    authenticationSubject = PublishSubject.create();
     themeAnalytics.setDarkThemeUserProperty(themeManager.getDarkThemeMode());
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(this,
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
 
     setupUpdatesNotification();
 
     attachPresenter(presenter);
+    handleAuthenticationIntent(getIntent());
   }
 
   @Override protected void onDestroy() {
-    autoUpdateDialogSubject = null;
     autoUpdateDialog = null;
     installErrorsDismissEvent = null;
     installManager = null;
     updatesBadge = null;
     snackBarLayout = null;
     snackbar = null;
+    progressDialog = null;
+    authenticationSubject = null;
     super.onDestroy();
     MoPub.onDestroy(this);
+  }
+
+  @Override protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    handleAuthenticationIntent(intent);
+  }
+
+  private void handleAuthenticationIntent(Intent intent) {
+    if (isAuthenticationDeepLink(intent)) {
+      String token = intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.AUTH_TOKEN);
+      authenticationSubject.onNext(token);
+    }
+  }
+
+  private Boolean isAuthenticationDeepLink(Intent intent) {
+    return intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksTargets.APTOIDE_AUTH, false);
   }
 
   @Override protected void onStart() {
@@ -178,6 +203,22 @@ public class MainActivity extends BottomNavigationActivity
     if (autoUpdateDialog != null && autoUpdateDialog.isShowing()) {
       autoUpdateDialog.dismiss();
     }
+  }
+
+  @Override public void showLoadingView() {
+    progressDialog.show();
+  }
+
+  @Override public void hideLoadingView() {
+    progressDialog.hide();
+  }
+
+  @Override public void showGenericErrorMessage() {
+    ShowMessage.asLongSnack(this, getString(R.string.all_message_general_error));
+  }
+
+  @Override public Observable<String> onAuthenticationIntent() {
+    return authenticationSubject;
   }
 
   @Override public void showStoreAlreadyAdded() {

@@ -178,7 +178,7 @@ import static android.content.Context.WINDOW_SERVICE;
       InstallManager installManager, NewFeature newFeature, ThemeManager themeManager,
       ThemeAnalytics themeAnalytics) {
     return new DeepLinkManager(storeUtilsProxy, fragmentNavigator, bottomNavigationNavigator,
-        searchNavigator, (DeepLinkManager.DeepLinkMessages) activity, sharedPreferences,
+        searchNavigator, (DeepLinkManager.DeepLinkView) activity, sharedPreferences,
         roomStoreRepository, notificationAnalytics, navigationTracker, searchAnalytics,
         appShortcutsAnalytics, accountManager, deepLinkAnalytics, storeAnalytics, adsRepository,
         appNavigator, installManager, newFeature, themeManager, themeAnalytics);
@@ -192,7 +192,7 @@ import static android.content.Context.WINDOW_SERVICE;
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
       RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -200,7 +200,7 @@ import static android.content.Context.WINDOW_SERVICE;
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
         autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
-        appsNameExperiment, bottomNavigationMapper);
+        appsNameExperiment, bottomNavigationMapper, accountManager);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(
