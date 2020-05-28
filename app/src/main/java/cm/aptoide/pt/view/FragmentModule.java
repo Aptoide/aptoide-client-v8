@@ -21,7 +21,11 @@ import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailNavigator;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailPresenter;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailView;
 import cm.aptoide.pt.account.view.magiclink.MagicLinkView;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkNavigator;
 import cm.aptoide.pt.account.view.magiclink.SendMagicLinkPresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
@@ -209,9 +213,23 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
-      AptoideAccountManager accountManager) {
-    return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager,
+      AptoideAccountManager accountManager, SendMagicLinkNavigator navigator) {
+    return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager, navigator,
         AndroidSchedulers.mainThread());
+  }
+
+  @FragmentScope @Provides SendMagicLinkNavigator providesSendMagicLinkNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
+    return new SendMagicLinkNavigator(fragmentNavigator);
+  }
+
+  @FragmentScope @Provides CheckYourEmailPresenter provideCheckYourEmailPresenter(
+      CheckYourEmailNavigator navigator) {
+    return new CheckYourEmailPresenter((CheckYourEmailView) fragment, navigator);
+  }
+
+  @FragmentScope @Provides CheckYourEmailNavigator providesCheckYourEmailNavigator() {
+    return new CheckYourEmailNavigator(((ActivityNavigator) fragment.getActivity()));
   }
 
   @FragmentScope @Provides @Named("home-fragment-navigator")

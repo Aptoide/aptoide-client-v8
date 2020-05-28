@@ -401,6 +401,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     showLoading();
   }
 
+  @Override public void removeLoadingScreen() {
+    hideKeyboard();
+    hideLoading();
+  }
+
   @Override public void setInitialState() {
     sendMagicLinkView.setState(SendMagicLinkView.State.Initial.INSTANCE);
   }

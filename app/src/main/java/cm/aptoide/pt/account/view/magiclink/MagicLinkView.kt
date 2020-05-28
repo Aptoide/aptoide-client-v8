@@ -16,6 +16,8 @@ interface MagicLinkView : View {
 
   fun setLoadingScreen()
 
+  fun removeLoadingScreen()
+
   fun getEmailTextChangeEvent(): Observable<String>
 
 }

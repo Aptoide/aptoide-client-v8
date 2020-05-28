@@ -43,6 +43,7 @@
     <item name="buttonTextFont">sans-serif-medium</item>
     <item name="buttonTextSize">14sp</item>
     <item name="buttonTextSizeSmall">10sp</item>
+    <item name="buttonTextSizeMedium">12sp</item>
     <item name="installButtonBackground">@drawable/aptoide_gradient_rounded</item>
     <item name="followStoreCardBackground">@style/backgroundCardAccentStyle</item>
     <item name="addCircleButtonDrawable">@drawable/ic_add_circle_outline</item>
@@ -90,6 +91,8 @@
     <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners</item>
     <item name="loginInputBackground">@drawable/button_border_grey</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
+    <item name="checkYourEmailBackground">@drawable/aptoide_gradient_vertical</item>
+
 
 
     <!-- separators -->
@@ -160,6 +163,7 @@
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
     <item name="textColorSpendAppc">@color/appc_spend</item>
@@ -347,6 +351,8 @@
     <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark</item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
+    <item name="checkYourEmailBackground">@color/grey_dark</item>
+
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>
@@ -417,6 +423,8 @@
     <item name="textColorRed700">@color/red_700</item>
     <item name="textColorOrange">@color/orange</item>
     <item name="textColorOrangeGradientEnd">@color/default_orange_gradient_end</item>
+    <item name="textColorOpenEmailAppButton">@color/grey_dark</item>
+
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
     <item name="textColorSpendAppc">@color/appc_spend</item>

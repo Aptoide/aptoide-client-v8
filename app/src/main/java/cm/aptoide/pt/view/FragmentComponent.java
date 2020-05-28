@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
@@ -146,4 +147,6 @@ public interface FragmentComponent {
   void inject(AddStoreDialog addStoreDialog);
 
   void inject(PrivateStoreDialog privateStoreDialog);
+
+  void inject(CheckYourEmailFragment checkYourEmailFragment);
 }
