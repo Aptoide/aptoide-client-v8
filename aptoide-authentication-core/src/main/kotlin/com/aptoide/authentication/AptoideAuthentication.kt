@@ -2,7 +2,7 @@ package com.aptoide.authentication
 
 import com.aptoide.authentication.model.CodeAuth
 import com.aptoide.authentication.model.OAuth2
-import com.aptoide.authentication.network.AuthenticationService
+import com.aptoide.authentication.service.AuthenticationService
 
 class AptoideAuthentication(private val service: AuthenticationService) {
   suspend fun sendMagicLink(email: String): CodeAuth {
