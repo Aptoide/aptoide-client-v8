@@ -7,6 +7,7 @@ package cm.aptoide.pt.account.view;
 
 import android.app.Activity;
 import android.net.Uri;
+import androidx.fragment.app.Fragment;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -167,5 +168,16 @@ public class AccountNavigator {
         .openInChromeCustomTab(activityNavigator.getActivity()
                 .getString(R.string.all_url_privacy_policy), activityNavigator.getActivity(),
             themeManager.getAttributeForTheme(R.attr.colorPrimary).resourceId);
+  }
+
+  public void clearBackStackUntilLogin() {
+    for (int i = 0; i < fragmentNavigator.getBackStackEntryCount(); i++) {
+      String tag = fragmentNavigator.getTagByBackStackEntry(i);
+      Fragment fragment = fragmentNavigator.getFragment(tag);
+      if (fragment instanceof LoginSignUpFragment) {
+        fragmentNavigator.popBackStackUntil(tag);
+        return;
+      }
+    }
   }
 }

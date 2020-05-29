@@ -192,7 +192,8 @@ import static android.content.Context.WINDOW_SERVICE;
       DeepLinkManager deepLinkManager, BottomNavigationNavigator bottomNavigationNavigator,
       UpdatesManager updatesManager, AutoUpdateManager autoUpdateManager,
       RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager) {
+      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
         CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
@@ -200,7 +201,7 @@ import static android.content.Context.WINDOW_SERVICE;
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
         AndroidSchedulers.mainThread(), Schedulers.io(), bottomNavigationNavigator, updatesManager,
         autoUpdateManager, (PermissionService) activity, rootAvailabilityManager,
-        appsNameExperiment, bottomNavigationMapper, accountManager);
+        appsNameExperiment, bottomNavigationMapper, accountManager, accountNavigator);
   }
 
   @ActivityScope @Provides AccountNavigator provideAccountNavigator(

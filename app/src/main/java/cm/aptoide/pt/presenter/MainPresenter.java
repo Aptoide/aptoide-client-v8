@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -66,6 +67,7 @@ public class MainPresenter implements Presenter {
   private final AppsNameExperiment appsNameExperiment;
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AptoideAccountManager accountManager;
+  private final AccountNavigator accountNavigator;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -77,7 +79,8 @@ public class MainPresenter implements Presenter {
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
       RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
-      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager) {
+      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -102,6 +105,7 @@ public class MainPresenter implements Presenter {
     this.appsNameExperiment = appsNameExperiment;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.accountManager = accountManager;
+    this.accountNavigator = accountNavigator;
   }
 
   @Override public void present() {
@@ -152,6 +156,7 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(__ -> view.onAuthenticationIntent())
         .retry()
+        .doOnNext(__ -> accountNavigator.clearBackStackUntilLogin())
         .flatMapCompletable(token -> authenticate(token))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -159,8 +164,7 @@ public class MainPresenter implements Presenter {
   }
 
   private Completable authenticate(String authToken) {
-
-    return accountManager.login(new AptoideCredentials("", authToken, true))
+    return accountManager.login(new AptoideCredentials("filipao@aptoide.com", authToken, true))
         .observeOn(viewScheduler)
         .doOnSubscribe(__ -> view.showLoadingView())
         .doOnCompleted(() -> view.hideLoadingView())
