@@ -128,6 +128,19 @@ public class FragmentResultNavigator implements FragmentNavigator {
     handleNavigationResult(result);
   }
 
+  @Override public void popBackStackUntil(String foundFragmentTag) {
+    fragmentManager.popBackStack(foundFragmentTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+  }
+
+  @Override public int getBackStackEntryCount() {
+    return fragmentManager.getBackStackEntryCount();
+  }
+
+  @Override public String getTagByBackStackEntry(int i) {
+    return fragmentManager.getBackStackEntryAt(i)
+        .getName();
+  }
+
   private void setUpNavigationForResult(Fragment fragment, int requestCode) {
     Bundle extras = fragment.getArguments();
     if (extras == null) {

@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
@@ -58,6 +59,7 @@ public class BottomNavigationPresenterTest {
   @Mock private AppsNameExperiment appsNameExperiment;
   @Mock private BottomNavigationMapper bottomNavigationMapper;
   @Mock private AptoideAccountManager accountManager;
+  @Mock private AccountNavigator accountNavigator;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -73,7 +75,8 @@ public class BottomNavigationPresenterTest {
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
-        rootAvailabilityManager, appsNameExperiment, bottomNavigationMapper, accountManager);
+        rootAvailabilityManager, appsNameExperiment, bottomNavigationMapper, accountManager,
+        accountNavigator);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);
