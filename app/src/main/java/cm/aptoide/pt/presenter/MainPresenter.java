@@ -32,7 +32,6 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
-import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -161,9 +160,7 @@ public class MainPresenter implements Presenter {
 
   private Completable authenticate(String authToken) {
 
-    // TODO: 5/27/20 finish request information passed
     return accountManager.login(new AptoideCredentials("", authToken, true))
-        .andThen(throwException())
         .observeOn(viewScheduler)
         .doOnSubscribe(__ -> view.showLoadingView())
         .doOnCompleted(() -> view.hideLoadingView())
@@ -176,10 +173,6 @@ public class MainPresenter implements Presenter {
           view.showGenericErrorMessage();
         })
         .onErrorComplete();
-  }
-
-  private Completable throwException() {
-    return Completable.error(new AccountException(Collections.emptyList()));
   }
 
   private void handleFirstSession() {
