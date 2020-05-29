@@ -39,10 +39,10 @@ class SendMagicLinkPresenter(
                     .filter { valid -> valid }
                     .observeOn(viewScheduler)
                     .doOnNext { view.setLoadingScreen() }
-                    .flatMapCompletable {
+                    .flatMapSingle {
                       accountManager.sendMagicLink(email)
                           .observeOn(viewScheduler)
-                          .doOnCompleted {
+                          .doOnSuccess {
                             view.removeLoadingScreen()
                             navigator.navigateToCheckYourEmail(email)
                           }

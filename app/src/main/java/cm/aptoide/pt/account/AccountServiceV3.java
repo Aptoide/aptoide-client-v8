@@ -35,6 +35,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import com.aptoide.authentication.model.CodeAuth;
 import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
@@ -274,10 +275,8 @@ public class AccountServiceV3 implements AccountService {
     return authenticationPersistence.removeAuthentication();
   }
 
-  @Override public Completable sendMagicLink(String email) {
-    return RxJavaInterop.toV1Completable(aptoideAuthentication.sendMagicLink(email)
-        //here we need to persist both agent and state because they will be used in further authenticate calls.
-        .ignoreElement());
+  @Override public Single<CodeAuth> sendMagicLink(String email) {
+    return RxJavaInterop.toV1Single(aptoideAuthentication.sendMagicLink(email));
   }
 
   /**
