@@ -25,6 +25,8 @@ public interface LoginSignUpCredentialsView extends GooglePlayServicesView {
 
   void showAptoideLoginArea();
 
+  void showMagicLinkError(String error);
+
   void showLoading();
 
   void hideLoading();

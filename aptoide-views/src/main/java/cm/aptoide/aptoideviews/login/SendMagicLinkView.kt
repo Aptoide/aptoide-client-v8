@@ -15,12 +15,13 @@ import kotlinx.android.synthetic.main.send_magic_link_layout.view.*
 import rx.Observable
 
 class SendMagicLinkView : FrameLayout {
+  private var currentState: State? = null
+
   constructor(context: Context) : this(context, null)
   constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
       defStyleAttr) {
     inflate(context, R.layout.send_magic_link_layout, this)
-    setState(State.Initial)
     setupViews()
     isSaveEnabled = true
   }
@@ -36,11 +37,14 @@ class SendMagicLinkView : FrameLayout {
     login_benefits_textview.text = string
   }
 
-  fun setState(state: State) = when (state) {
-    State.Initial ->
-      setInitialState()
-    is State.Error ->
-      setErrorState(state.message, state.isTextFieldError)
+  fun setState(state: State) {
+    when (state) {
+      State.Initial ->
+        setInitialState()
+      is State.Error ->
+        setErrorState(state.message, state.isTextFieldError)
+    }
+    currentState = state
   }
 
   fun getMagicLinkSubmit(): Observable<String> {
@@ -73,6 +77,14 @@ class SendMagicLinkView : FrameLayout {
       val typedValue = TypedValue()
       context.theme.resolveAttribute(R.attr.loginInputErrorBackground, typedValue, true)
       email.setBackgroundResource(typedValue.resourceId)
+    }
+  }
+
+  fun resetTextFieldError() {
+    currentState?.let { state ->
+      if (state is State.Error && state.isTextFieldError) {
+        setState(State.Initial)
+      }
     }
   }
 

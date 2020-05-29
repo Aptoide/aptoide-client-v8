@@ -22,7 +22,7 @@ class SendMagicLinkPresenter(
         .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
         .flatMap {
           view.getEmailTextChangeEvent()
-              .doOnNext { view.setInitialState() }
+              .doOnNext { view.removeTextFieldError() }
               .retry()
         }
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

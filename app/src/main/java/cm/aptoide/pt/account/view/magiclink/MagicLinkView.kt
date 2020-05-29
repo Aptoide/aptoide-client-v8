@@ -10,9 +10,9 @@ interface MagicLinkView : View {
 
   fun setInitialState()
 
-  fun setEmailInvalidError()
+  fun removeTextFieldError()
 
-  fun setExpiredMagicLinkError()
+  fun setEmailInvalidError()
 
   fun setLoadingScreen()
 

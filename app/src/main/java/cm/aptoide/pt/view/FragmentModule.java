@@ -19,6 +19,8 @@ import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
 import cm.aptoide.pt.account.view.magiclink.CheckYourEmailNavigator;
@@ -204,12 +206,25 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
       AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics,
-      @Named("facebookLoginPermissions") List<String> facebookPermissions) {
+      @Named("facebookLoginPermissions") List<String> facebookPermissions,
+      LoginSignUpCredentialsConfiguration loginSignUpCredentialsConfiguration) {
     return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
-        accountManager, CrashReport.getInstance(),
-        arguments.getBoolean("dismiss_to_navigate_to_main_view"),
-        arguments.getBoolean("clean_back_stack"), accountNavigator, facebookPermissions,
-        errorMapper, accountAnalytics);
+        accountManager, CrashReport.getInstance(), loginSignUpCredentialsConfiguration,
+        accountNavigator, facebookPermissions, errorMapper, accountAnalytics);
+  }
+
+  @FragmentScope @Provides
+  LoginSignUpCredentialsConfiguration providesLoginSignUpCredentialsConfiguration() {
+    String magicLinkErrorMessage =
+        arguments.getString(LoginSignUpCredentialsFragment.MAGIC_LINK_ERROR_MESSAGE);
+    if (magicLinkErrorMessage == null) {
+      magicLinkErrorMessage = "";
+    }
+    return new LoginSignUpCredentialsConfiguration(
+        arguments.getBoolean(LoginSignUpCredentialsFragment.DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
+        arguments.getBoolean(LoginSignUpCredentialsFragment.CLEAN_BACK_STACK),
+        arguments.getBoolean(LoginSignUpCredentialsFragment.HAS_MAGIC_LINK_ERROR),
+        magicLinkErrorMessage);
   }
 
   @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
