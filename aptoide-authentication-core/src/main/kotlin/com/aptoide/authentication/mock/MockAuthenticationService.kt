@@ -19,8 +19,8 @@ class MockAuthenticationService :
     delay(200)
     return OAuth2("OAUTH2",
         false,
-        OAuth2.Data("349f2d2d6ea41401292b65f9e2548602b44c722b", 3000,
-            "349f2d2d6ea41401292b65f9e2548602b44c722b",
+        OAuth2.Data("accesst0k3nF4k3", 3000,
+            "r3fr3shT0k3nF4k3",
             "Bearer", null))
   }
 }
