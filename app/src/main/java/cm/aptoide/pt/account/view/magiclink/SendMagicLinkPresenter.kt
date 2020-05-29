@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account.view.magiclink
 
 import cm.aptoide.accountmanager.AptoideAccountManager
+import cm.aptoide.pt.account.AgentPersistence
 import cm.aptoide.pt.presenter.Presenter
 import cm.aptoide.pt.presenter.View
 import rx.Observable
@@ -10,7 +11,8 @@ class SendMagicLinkPresenter(
     private val view: MagicLinkView,
     private val accountManager: AptoideAccountManager,
     private val navigator: SendMagicLinkNavigator,
-    private val viewScheduler: Scheduler) : Presenter {
+    private val viewScheduler: Scheduler,
+    private val agentPersistence: AgentPersistence) : Presenter {
 
   override fun present() {
     handleSendMagicLinkClick()
@@ -39,10 +41,11 @@ class SendMagicLinkPresenter(
                     .filter { valid -> valid }
                     .observeOn(viewScheduler)
                     .doOnNext { view.setLoadingScreen() }
-                    .flatMapCompletable {
+                    .flatMapSingle {
                       accountManager.sendMagicLink(email)
                           .observeOn(viewScheduler)
-                          .doOnCompleted {
+                          .doOnSuccess {
+                            agentPersistence.persistAgent(it.agent, it.state)
                             view.removeLoadingScreen()
                             navigator.navigateToCheckYourEmail(email)
                           }

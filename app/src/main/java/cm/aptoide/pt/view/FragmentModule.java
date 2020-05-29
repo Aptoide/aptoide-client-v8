@@ -11,6 +11,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -228,9 +229,10 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
-      AptoideAccountManager accountManager, SendMagicLinkNavigator navigator) {
+      AptoideAccountManager accountManager, SendMagicLinkNavigator navigator,
+      AgentPersistence agentPersitence) {
     return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager, navigator,
-        AndroidSchedulers.mainThread());
+        AndroidSchedulers.mainThread(), agentPersitence);
   }
 
   @FragmentScope @Provides SendMagicLinkNavigator providesSendMagicLinkNavigator(

@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import com.aptoide.authentication.model.CodeAuth;
 import rx.Completable;
 import rx.Single;
 
@@ -33,5 +34,5 @@ public interface AccountService {
 
   Completable removeAccount();
 
-  Completable sendMagicLink(String email);
+  Single<CodeAuth> sendMagicLink(String email);
 }
