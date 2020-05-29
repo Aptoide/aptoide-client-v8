@@ -392,8 +392,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void setEmailInvalidError() {
-    // TODO: HARDCODED STRING
-    sendMagicLinkView.setState(new SendMagicLinkView.State.Error("The email isn't valid!", true));
+    sendMagicLinkView.setState(
+        new SendMagicLinkView.State.Error(getString(R.string.login_error_invalid_email), true));
   }
 
   @Override public void setLoadingScreen() {
