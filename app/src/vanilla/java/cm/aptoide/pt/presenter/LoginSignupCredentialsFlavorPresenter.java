@@ -3,6 +3,7 @@ package cm.aptoide.pt.presenter;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
@@ -16,11 +17,11 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
 
   public LoginSignupCredentialsFlavorPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
-    super(view, accountManager, crashReport, dismissToNavigateToMainView, navigateToHome,
-        accountNavigator, permissions, errorMapper, accountAnalytics);
+      LoginSignUpCredentialsConfiguration configuration, AccountNavigator accountNavigator,
+      Collection<String> permissions, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
+    super(view, accountManager, crashReport, configuration, accountNavigator, permissions,
+        errorMapper, accountAnalytics);
     this.view = view;
     this.errorMapper = errorMapper;
     this.crashReport = crashReport;
@@ -28,12 +29,11 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
   }
 
   @Override public void present() {
+    showTCandPP();
     super.present();
-
     handleConnectWithEmailClick();
     handleClickOnTermsAndConditions();
     handleClickOnPrivacyPolicy();
-    showTCandPP();
   }
 
   private void handleClickOnTermsAndConditions() {

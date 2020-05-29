@@ -11,6 +11,7 @@ import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
@@ -24,23 +25,21 @@ public abstract class LoginSignUpCredentialsPresenter
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
-  private final boolean navigateToHome;
+  private final LoginSignUpCredentialsConfiguration configuration;
   private final AccountNavigator accountNavigator;
   private final Collection<String> permissions;
   private final ThrowableToStringMapper errorMapper;
   private final AccountAnalytics accountAnalytics;
-  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
+      LoginSignUpCredentialsConfiguration configuration, AccountNavigator accountNavigator,
+      Collection<String> permissions, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
-    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
-    this.navigateToHome = navigateToHome;
+    this.configuration = configuration;
     this.accountNavigator = accountNavigator;
     this.permissions = permissions;
     this.errorMapper = errorMapper;
@@ -48,6 +47,7 @@ public abstract class LoginSignUpCredentialsPresenter
   }
 
   @Override public void present() {
+    handleOpenOptions();
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
@@ -56,6 +56,21 @@ public abstract class LoginSignUpCredentialsPresenter
     handleFacebookSignUpWithRequiredPermissionsEvent();
 
     handleAccountStatusChangeWhileShowingView();
+  }
+
+  private void handleOpenOptions() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .doOnNext(__ -> {
+          if (configuration.getHasMagicLinkError()) {
+            view.showAptoideLoginArea();
+            view.showMagicLinkError(configuration.getMagicLinkErrorMessage());
+          }
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void handleAccountStatusChangeWhileShowingView() {
@@ -204,9 +219,9 @@ public abstract class LoginSignUpCredentialsPresenter
   }
 
   private void navigateToMainView() {
-    if (dismissToNavigateToMainView) {
+    if (configuration.getDismissToNavigateToMainView()) {
       view.dismiss();
-    } else if (navigateToHome) {
+    } else if (configuration.getCleanBackStack()) {
       navigateToMainViewCleaningBackStack();
     } else {
       navigateBack();

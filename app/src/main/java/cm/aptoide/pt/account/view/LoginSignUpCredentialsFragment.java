@@ -46,8 +46,10 @@ import rx.subjects.PublishSubject;
 public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     implements LoginSignUpCredentialsView, MagicLinkView, NotBottomNavigationView {
 
-  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
-  private static final String CLEAN_BACK_STACK = "clean_back_stack";
+  public static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
+  public static final String CLEAN_BACK_STACK = "clean_back_stack";
+  public static final String HAS_MAGIC_LINK_ERROR = "has_magic_link_error";
+  public static final String MAGIC_LINK_ERROR_MESSAGE = "magic_link_error_message";
 
   private static final String USERNAME_KEY = "username_key";
   @Inject LoginSignupCredentialsFlavorPresenter presenter;
@@ -60,7 +62,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
   private View facebookLoginButton;
-  private TextView loginDescription;
   private View loginSignupSelectionArea;
   private Button connectWithEmailButton;
   private TextView termsAndConditions;
@@ -76,11 +77,18 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
+    return newInstance(dismissToNavigateToMainView, cleanBackStack, false, "");
+  }
+
+  public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
+      boolean cleanBackStack, boolean hasMagicLinkError, String magicLinkErrorMessage) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
     bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
+    bundle.putBoolean(HAS_MAGIC_LINK_ERROR, hasMagicLinkError);
+    bundle.putString(MAGIC_LINK_ERROR_MESSAGE, magicLinkErrorMessage);
     fragment.setArguments(bundle);
 
     return fragment;
@@ -99,8 +107,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     sendMagicLinkView = view.findViewById(R.id.send_magic_link_view);
     socialLoginArea = view.findViewById(R.id.social_login_area);
     connectWithEmailButton = view.findViewById(R.id.show_login_with_aptoide_area);
-
-    loginDescription = view.findViewById(R.id.use_case_description);
 
     facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext(), themeManager).setMessage(
         R.string.facebook_email_permission_regected_message)
@@ -219,7 +225,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     hideSocialLoginArea();
     termsConditionCheckBox.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
-    loginDescription.setVisibility(View.VISIBLE);
   }
 
   @Override public void showLoading() {
@@ -391,12 +396,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     sendMagicLinkView.setState(new SendMagicLinkView.State.Error("The email isn't valid!", true));
   }
 
-  @Override public void setExpiredMagicLinkError() {
-    // TODO: HARDCODED STRING
-    sendMagicLinkView.setState(new SendMagicLinkView.State.Error(
-        "The link has expired. Send a new magic link to your email", false));
-  }
-
   @Override public void setLoadingScreen() {
     showLoading();
   }
@@ -410,7 +409,15 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     sendMagicLinkView.setState(SendMagicLinkView.State.Initial.INSTANCE);
   }
 
+  @Override public void showMagicLinkError(String error) {
+    sendMagicLinkView.setState(new SendMagicLinkView.State.Error(error, false));
+  }
+
   @NotNull @Override public Observable<String> getEmailTextChangeEvent() {
     return sendMagicLinkView.getEmailChangeEvent();
+  }
+
+  @Override public void removeTextFieldError() {
+    sendMagicLinkView.resetTextFieldError();
   }
 }

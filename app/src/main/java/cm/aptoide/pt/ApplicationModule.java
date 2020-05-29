@@ -62,6 +62,7 @@ import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
@@ -2124,5 +2125,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
     return new AptoideAuthenticationRx(new AptoideAuthentication(new MockAuthenticationService()));
+  }
+
+  @Singleton @Provides AgentPersistence providesAgentPersistence(
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new AgentPersistence(secureSharedPreferences);
   }
 }
