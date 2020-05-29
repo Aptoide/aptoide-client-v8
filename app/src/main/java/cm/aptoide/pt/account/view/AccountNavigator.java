@@ -180,4 +180,10 @@ public class AccountNavigator {
       }
     }
   }
+
+  public void navigateToLoginError() {
+    fragmentNavigator.navigateTo(LoginSignUpFragment.newInstance(false, false, false, false, true,
+        activityNavigator.getActivity()
+            .getString(R.string.login_error_magic_link_expired)), true);
+  }
 }

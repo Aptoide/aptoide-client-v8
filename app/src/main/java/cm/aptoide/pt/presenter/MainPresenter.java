@@ -7,7 +7,6 @@ package cm.aptoide.pt.presenter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
@@ -34,6 +33,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
+import com.aptoide.authentication.AuthenticationException;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
@@ -175,10 +175,14 @@ public class MainPresenter implements Presenter {
         .doOnCompleted(() -> handleFirstSession())
         .doOnError(throwable -> {
           view.hideLoadingView();
-          if (throwable instanceof AccountException) {
+          if (throwable instanceof AuthenticationException) {
+            if (((AuthenticationException) throwable).getCode() >= 400
+                && ((AuthenticationException) throwable).getCode() < 500) {
+              accountNavigator.navigateToLoginError();
+            }
+          } else {
             view.showGenericErrorMessage();
           }
-          view.showGenericErrorMessage();
         })
         .onErrorComplete();
   }
