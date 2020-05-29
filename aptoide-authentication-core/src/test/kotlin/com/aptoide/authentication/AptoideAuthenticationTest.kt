@@ -72,7 +72,7 @@ class AptoideAuthenticationTest {
     return CodeAuth("CODE",
         "STATE",
         "AGENT",
-        false, CodeAuth.Data("TOKEN", "EMAIL"))
+        false, CodeAuth.Data("TOKEN", "EMAIL"), "yes@wecamt")
   }
 
   private fun getValidOAuth2(): OAuth2 {
