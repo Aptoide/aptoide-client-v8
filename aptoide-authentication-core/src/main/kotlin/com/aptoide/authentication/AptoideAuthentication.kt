@@ -7,7 +7,7 @@ import com.aptoide.authentication.service.AuthenticationService
 class AptoideAuthentication(private val service: AuthenticationService) {
   suspend fun sendMagicLink(email: String): CodeAuth {
     if (email.isBlank()) {
-      throw AuthenticationException("Email is blank")
+      throw AuthenticationException(message = "Email is blank")
     }
     return service.sendMagicLink(email)
   }

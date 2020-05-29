@@ -33,8 +33,7 @@ class RemoteAuthenticationService :
         codeAuth.email = email
         return@withContext codeAuth!!
       } else {
-        throw AuthenticationException(
-            sendMagicLinkResponse.code().toString() + " " + sendMagicLinkResponse.message())
+        throw AuthenticationException(sendMagicLinkResponse.message(), sendMagicLinkResponse.code())
       }
     }
   }
@@ -47,8 +46,7 @@ class RemoteAuthenticationService :
       if (authenticateResponse.isSuccessful && oAuth2 != null) {
         return@withContext oAuth2!!
       } else
-        throw AuthenticationException(
-            authenticateResponse.code().toString() + " " + authenticateResponse.message())
+        throw AuthenticationException(authenticateResponse.message(), authenticateResponse.code())
     }
   }
 
