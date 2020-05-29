@@ -92,12 +92,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
-    deepLinkAnalytics.website(uri);
+
     shortcutNavigation = false;
     newFeature = application.getNewFeature();
-
-    Logger.getInstance()
-        .v(TAG, "uri: " + uri);
 
     dealWithShortcuts();
 
@@ -108,6 +105,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+
+    if (!"aptoideauth".equalsIgnoreCase(u.getScheme())) {
+      deepLinkAnalytics.website(uri);
+      Logger.getInstance()
+          .v(TAG, "uri: " + uri);
+    }
+
     Intent intent = null;
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
