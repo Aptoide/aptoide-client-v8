@@ -96,8 +96,9 @@ public class AccountServiceV3 implements AccountService {
     this.aptoideAuthentication = aptoideAuthentication;
   }
 
-  @Override public Single<Account> getAccount(String email, String code) {
-    return RxJavaInterop.toV1Single(aptoideAuthentication.authenticate(code, "", ""))
+  @Override
+  public Single<Account> getAccount(String email, String code, String state, String agent) {
+    return RxJavaInterop.toV1Single(aptoideAuthentication.authenticate(code, state, agent))
         .flatMap(oAuth2 -> authenticationPersistence.createAuthentication(email, code,
             oAuth2.getData()
                 .getRefreshToken(), oAuth2.getData()
@@ -145,7 +146,7 @@ public class AccountServiceV3 implements AccountService {
           if (response.hasErrors()) {
             return Single.error(new AccountException(response.getErrors()));
           }
-          return getAccount(email, code);
+          return getAccount(email, code, "", "");
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {

@@ -45,7 +45,7 @@ class SendMagicLinkPresenter(
                       accountManager.sendMagicLink(email)
                           .observeOn(viewScheduler)
                           .doOnSuccess {
-                            agentPersistence.persistAgent(it.agent, it.state)
+                            agentPersistence.persistAgent(it.agent, it.state, it.email)
                             view.removeLoadingScreen()
                             navigator.navigateToCheckYourEmail(email)
                           }

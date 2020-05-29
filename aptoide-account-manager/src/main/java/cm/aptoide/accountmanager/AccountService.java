@@ -6,7 +6,7 @@ import rx.Single;
 
 public interface AccountService {
 
-  Single<Account> getAccount(String email, String code);
+  Single<Account> getAccount(String email, String code, String state, String agent);
 
   Single<Account> createAccount(String email, String metadata, String type);
 

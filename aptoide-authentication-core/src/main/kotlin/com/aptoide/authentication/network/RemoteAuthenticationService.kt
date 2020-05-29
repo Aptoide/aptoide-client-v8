@@ -30,6 +30,7 @@ class RemoteAuthenticationService :
           authorizationV7.sendMagicLink(email, Type.EMAIL, arrayOf("CODE:TOKE:EMAIL"))
       val codeAuth = sendMagicLinkResponse.body()
       if (sendMagicLinkResponse.isSuccessful && codeAuth != null) {
+        codeAuth.email = email
         return@withContext codeAuth!!
       } else {
         throw AuthenticationException(

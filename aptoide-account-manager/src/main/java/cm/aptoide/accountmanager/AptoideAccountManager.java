@@ -84,7 +84,8 @@ public class AptoideAccountManager {
 
   public Completable login(AptoideCredentials credentials) {
     return credentialsValidator.validate(credentials)
-        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode()))
+        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode(),
+            credentials.getState(), credentials.getAgent()))
         .flatMapCompletable(account -> saveAccount(account));
   }
 

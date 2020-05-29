@@ -11,6 +11,7 @@ import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
@@ -68,6 +69,7 @@ public class MainPresenter implements Presenter {
   private final BottomNavigationMapper bottomNavigationMapper;
   private final AptoideAccountManager accountManager;
   private final AccountNavigator accountNavigator;
+  private final AgentPersistence agentPersistence;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -80,7 +82,7 @@ public class MainPresenter implements Presenter {
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
       RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
-      AccountNavigator accountNavigator) {
+      AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -106,6 +108,7 @@ public class MainPresenter implements Presenter {
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.accountManager = accountManager;
     this.accountNavigator = accountNavigator;
+    this.agentPersistence = agentPersistence;
   }
 
   @Override public void present() {
@@ -164,7 +167,8 @@ public class MainPresenter implements Presenter {
   }
 
   private Completable authenticate(String authToken) {
-    return accountManager.login(new AptoideCredentials("filipao@aptoide.com", authToken, true))
+    return accountManager.login(new AptoideCredentials(agentPersistence.getEmail(), authToken, true,
+        agentPersistence.getAgent(), agentPersistence.getState()))
         .observeOn(viewScheduler)
         .doOnSubscribe(__ -> view.showLoadingView())
         .doOnCompleted(() -> view.hideLoadingView())

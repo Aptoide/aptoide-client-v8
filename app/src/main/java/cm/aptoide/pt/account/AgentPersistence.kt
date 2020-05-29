@@ -4,12 +4,21 @@ import android.content.SharedPreferences
 
 class AgentPersistence(private val secureSharedPreferences: SharedPreferences) {
 
-  fun persistAgent(agent: String, state: String) {
-    secureSharedPreferences.edit().putString("AGENT", agent).putString("STATE", state).apply()
+  fun persistAgent(agent: String, state: String, email: String?) {
+    secureSharedPreferences.edit().putString("AGENT", agent).putString("STATE", state)
+        .putString("EMAIL", email).apply()
   }
 
-  fun getAgent(): Pair<String, String> {
-    return Pair(secureSharedPreferences.getString("AGENT", ""),
-        secureSharedPreferences.getString("STATE", ""))
+  fun getAgent(): String? {
+    return secureSharedPreferences.getString("AGENT", "")
   }
+
+  fun getState(): String? {
+    return secureSharedPreferences.getString("STATE", "")
+  }
+
+  fun getEmail(): String? {
+    return secureSharedPreferences.getString("EMAIL", "")
+  }
+
 }

@@ -3,6 +3,7 @@ package cm.aptoide.pt.navigation;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
@@ -60,6 +61,7 @@ public class BottomNavigationPresenterTest {
   @Mock private BottomNavigationMapper bottomNavigationMapper;
   @Mock private AptoideAccountManager accountManager;
   @Mock private AccountNavigator accountNavigator;
+  @Mock private AgentPersistence agentPersistence;
   private MainPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Integer> navigationEvent;
@@ -76,7 +78,7 @@ public class BottomNavigationPresenterTest {
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,
         rootAvailabilityManager, appsNameExperiment, bottomNavigationMapper, accountManager,
-        accountNavigator);
+        accountNavigator, agentPersistence);
 
     //simulate view lifecycle event
     when(mainView.getLifecycleEvent()).thenReturn(lifecycleEvent);

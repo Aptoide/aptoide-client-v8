@@ -13,7 +13,8 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("marcelo.benites@aptoide.com", "1aMarcelo", true))
+    validator.validate(
+        new AptoideCredentials("marcelo.benites@aptoide.com", "1aMarcelo", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertNoErrors();
@@ -26,7 +27,7 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("", "1aMarcelo", true))
+    validator.validate(new AptoideCredentials("", "1aMarcelo", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -41,7 +42,7 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "", true))
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -56,7 +57,7 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("", "", true))
+    validator.validate(new AptoideCredentials("", "", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);

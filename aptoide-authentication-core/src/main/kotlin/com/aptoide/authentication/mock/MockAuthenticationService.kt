@@ -12,14 +12,15 @@ class MockAuthenticationService :
     return CodeAuth("code",
         "estado de arte",
         "agente da pejota",
-        false, CodeAuth.Data("TOKEN", "EMAIL"))
+        false, CodeAuth.Data("TOKEN", "EMAIL"), "filipo@emailo.como")
   }
 
   override suspend fun authenticate(magicToken: String, state: String, agent: String): OAuth2 {
     delay(200)
     return OAuth2("OAUTH2",
         false,
-        OAuth2.Data("e05b19ewaewa7b3febf34aa5", 3000, "7605b19ewaewa7b3febf34aa5",
+        OAuth2.Data("349f2d2d6ea41401292b65f9e2548602b44c722b", 3000,
+            "349f2d2d6ea41401292b65f9e2548602b44c722b",
             "Bearer", null))
   }
 }

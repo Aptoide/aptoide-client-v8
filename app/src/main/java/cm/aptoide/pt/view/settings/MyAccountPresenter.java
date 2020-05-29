@@ -70,8 +70,7 @@ public class MyAccountPresenter implements Presenter {
   @VisibleForTesting public void populateAccountViews() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> accountManager.accountStatus()
-            .first())
+        .flatMap(resumed -> accountManager.accountStatus())
         .observeOn(scheduler)
         .doOnNext(account -> view.showAccount(account))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
