@@ -2,7 +2,7 @@ package cm.aptoide.pt.account
 
 import android.content.SharedPreferences
 
-class AgentPersistence(private val secureSharedPreferences: SharedPreferences) {
+open class AgentPersistence(private val secureSharedPreferences: SharedPreferences) {
 
   fun persistAgent(agent: String, state: String, email: String?) {
     secureSharedPreferences.edit().putString("AGENT", agent).putString("STATE", state)
