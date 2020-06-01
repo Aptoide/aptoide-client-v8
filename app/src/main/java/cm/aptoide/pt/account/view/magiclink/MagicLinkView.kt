@@ -20,4 +20,6 @@ interface MagicLinkView : View {
 
   fun getEmailTextChangeEvent(): Observable<String>
 
+  fun showUnknownError()
+
 }

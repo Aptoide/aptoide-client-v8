@@ -49,6 +49,10 @@ class SendMagicLinkPresenter(
                             view.removeLoadingScreen()
                             navigator.navigateToCheckYourEmail(email)
                           }
+                    }.observeOn(viewScheduler).doOnError {
+                      view.removeLoadingScreen()
+                      view.showUnknownError()
+                      it.printStackTrace()
                     }
               }
               .retry()
