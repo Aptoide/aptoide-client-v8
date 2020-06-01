@@ -17,7 +17,7 @@ import retrofit2.http.Query
 class RemoteAuthenticationService :
     AuthenticationService {
   private val authorizationV7: AuthorizationV7 =
-      Retrofit.Builder().baseUrl("https://ws2.aptoide.com/api/7/")
+      Retrofit.Builder().baseUrl("https://webservices-devel.aptoide.com/api/7/")
           .addConverterFactory(MoshiConverterFactory.create(
               Moshi.Builder().add(KotlinJsonAdapterFactory())
                   .build()))

@@ -276,7 +276,7 @@ import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
 import com.aptoide.authentication.AptoideAuthentication;
-import com.aptoide.authentication.mock.MockAuthenticationService;
+import com.aptoide.authentication.network.RemoteAuthenticationService;
 import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -2124,7 +2124,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
-    return new AptoideAuthenticationRx(new AptoideAuthentication(new MockAuthenticationService()));
+    return new AptoideAuthenticationRx(
+        new AptoideAuthentication(new RemoteAuthenticationService()));
   }
 
   @Singleton @Provides AgentPersistence providesAgentPersistence(
