@@ -27,7 +27,7 @@ class RemoteAuthenticationService :
   override suspend fun sendMagicLink(email: String): CodeAuth {
     return withContext(Dispatchers.IO) {
       val sendMagicLinkResponse =
-          authorizationV7.sendMagicLink(email, Type.EMAIL, arrayOf("CODE:TOKE:EMAIL"))
+          authorizationV7.sendMagicLink(email, Type.EMAIL, arrayOf("CODE:TOKEN:EMAIL"))
       val codeAuth = sendMagicLinkResponse.body()
       if (sendMagicLinkResponse.isSuccessful && codeAuth != null) {
         codeAuth.email = email
