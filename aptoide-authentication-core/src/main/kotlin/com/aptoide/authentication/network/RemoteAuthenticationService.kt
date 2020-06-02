@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 class RemoteAuthenticationService :
@@ -51,14 +51,14 @@ class RemoteAuthenticationService :
   }
 
   interface AuthorizationV7 {
-    @GET("user/authorize")
+    @POST("user/authorize")
     suspend fun authenticate(@Query("credential") credential: String,
                              @Query("type") type: Type, @Query(
             "supported") supported: Array<String>,
                              @Query("state") state: String,
                              @Query("agent") agent: String): Response<OAuth2>
 
-    @GET("user/authorize")
+    @POST("user/authorize")
     suspend fun sendMagicLink(@Query("credential") credential: String,
                               @Query("type") type: Type, @Query(
             "supported") supported: Array<String>): Response<CodeAuth>
