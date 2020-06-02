@@ -40,5 +40,5 @@ public interface FragmentNavigator {
 
   int getBackStackEntryCount();
 
-  String getTagByBackStackEntry(int i);
+  String getTagByBackStackEntry(int backstackEntry);
 }
