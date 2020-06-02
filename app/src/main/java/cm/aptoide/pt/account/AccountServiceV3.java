@@ -18,8 +18,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserNewsletterSubscription;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTermsAndConditionsStatusRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
@@ -36,7 +34,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -139,37 +136,9 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override public Completable changeBirthdate(String birthdate) {
-    return ChangeUserBirthdateRequest.of(birthdate, defaultBodyInterceptorV3, converterFactory,
-        httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
-        });
-  }
-
   @Override public Completable updateTermsAndConditions() {
     return UpdateTermsAndConditionsRequest.of(defaultBodyInterceptorV3, converterFactory,
         httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
-        });
-  }
-
-  @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-    return ChangeUserNewsletterSubscription.of(isSubscribed, defaultBodyInterceptorV3,
-        converterFactory, httpClient, tokenInvalidator, sharedPreferences)
         .observe(true)
         .toSingle()
         .flatMapCompletable(response -> {
@@ -295,8 +264,7 @@ public class AccountServiceV3 implements AccountService {
         String.valueOf(userData.getId()), userData.getIdentity()
             .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
-            .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
-        terms.isOk() ? terms.getBirthdate() : new Date(1970, 1, 1));
+            .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos());
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,

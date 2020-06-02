@@ -176,11 +176,6 @@ public class AptoideAccountManager {
     });
   }
 
-  public Completable changeBirthdayDate(String birthdate) {
-    return accountService.changeBirthdate(birthdate)
-        .andThen(syncAccount());
-  }
-
   public Completable updateTermsAndConditions() {
     return accountService.updateTermsAndConditions()
         .andThen(accountStatus())
@@ -188,16 +183,8 @@ public class AptoideAccountManager {
             new AptoideAccount(account.getId(), account.getEmail(), account.getNickname(),
                 account.getAvatar(), account.getStore(), account.isAdultContentEnabled(),
                 account.getAccess(), account.isAccessConfirmed(), account.getSubscribedStores(),
-                true, true, account.getBirthDate())))
+                true, true)))
         .toCompletable();
-  }
-
-  public Completable changeSubscribeNewsletter(boolean isSubscribed) {
-    if (isSubscribed) {
-      return accountService.changeSubscribeNewsletter("1");
-    } else {
-      return accountService.changeSubscribeNewsletter("0");
-    }
   }
 
   public Observable<Boolean> pinRequired() {

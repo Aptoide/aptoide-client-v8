@@ -46,18 +46,7 @@ public class ManageUserPresenter implements Presenter {
   @Override public void present() {
     handleSaveDataClick();
     handleCancelClick();
-    handleCalendarClickLayout();
     onViewCreatedLoadUserData();
-  }
-
-  private void handleCalendarClickLayout() {
-    view.getLifecycleEvent()
-        .filter(event -> event == View.LifecycleEvent.CREATE)
-        .flatMap(event -> view.calendarLayoutClick())
-        .doOnNext(click -> view.showCalendar())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
   }
 
   private void onViewCreatedLoadUserData() {
@@ -68,14 +57,12 @@ public class ManageUserPresenter implements Presenter {
             .first()
             .toSingle())
         .map(userAccount -> {
-
           // if it is an edition and not after a configuration change event
           // after a configuration change this values could differ
           if (isEditProfile) {
             return new ManageUserFragment.ViewModel(userAccount.getNickname(),
                 userAccount.getAvatar());
           }
-
           return null;
         })
         .filter(data -> data != null)
@@ -101,13 +88,7 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
-            .doOnNext(viewModel -> {
-              if (!viewModel.hasDate() && !isEditProfile) {
-                view.showEmptyBirthdayMessage();
-              }
-            })
-            .filter(
-                viewModel -> (isEditProfile || viewModel.hasDate() && !viewModel.hasDateError()))
+            .filter(viewModel -> (isEditProfile))
             .doOnNext(__2 -> view.showProgressDialog())
             .flatMapCompletable(userData -> saveUserData(userData))
             .retry())
@@ -165,13 +146,9 @@ public class ManageUserPresenter implements Presenter {
       if (userData.hasNewPicture()) {
         final String mediaStoragePath =
             uriToPathResolver.getMediaStoragePath(Uri.parse(userData.getPictureUri()));
-        return accountManager.updateAccount(userData.getName(), mediaStoragePath)
-            .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()))
-            .mergeWith(accountManager.changeSubscribeNewsletter(userData.getNewsletterSubscribe()));
+        return accountManager.updateAccount(userData.getName(), mediaStoragePath);
       }
-      return accountManager.updateAccount(userData.getName())
-          .mergeWith(accountManager.changeBirthdayDate(userData.getRequestDate()))
-          .mergeWith(accountManager.changeSubscribeNewsletter(userData.getNewsletterSubscribe()));
+      return accountManager.updateAccount(userData.getName());
     }
   }
 }
