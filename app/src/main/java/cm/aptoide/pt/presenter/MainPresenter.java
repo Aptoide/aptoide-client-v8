@@ -175,11 +175,10 @@ public class MainPresenter implements Presenter {
         .doOnCompleted(() -> handleFirstSession())
         .doOnError(throwable -> {
           view.hideLoadingView();
-          if (throwable instanceof AuthenticationException) {
-            if (((AuthenticationException) throwable).getCode() >= 400
-                && ((AuthenticationException) throwable).getCode() < 500) {
-              accountNavigator.navigateToLoginError();
-            }
+          if (throwable instanceof AuthenticationException
+              && (((AuthenticationException) throwable).getCode() >= 400
+              && ((AuthenticationException) throwable).getCode() < 500)) {
+            accountNavigator.navigateToLoginError();
           } else {
             view.showGenericErrorMessage();
           }
