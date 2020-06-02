@@ -227,6 +227,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     termsAndConditions.setVisibility(View.GONE);
   }
 
+  @Override public void showMagicLinkError(String error) {
+    sendMagicLinkView.setState(new SendMagicLinkView.State.Error(error, false));
+  }
+
   @Override public void showLoading() {
     progressDialog.show();
   }
@@ -391,6 +395,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return sendMagicLinkView.getMagicLinkSubmit();
   }
 
+  @Override public void setInitialState() {
+    sendMagicLinkView.setState(SendMagicLinkView.State.Initial.INSTANCE);
+  }
+
+  @Override public void removeTextFieldError() {
+    sendMagicLinkView.resetTextFieldError();
+  }
+
   @Override public void setEmailInvalidError() {
     sendMagicLinkView.setState(
         new SendMagicLinkView.State.Error(getString(R.string.login_error_invalid_email), true));
@@ -405,19 +417,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     hideLoading();
   }
 
-  @Override public void setInitialState() {
-    sendMagicLinkView.setState(SendMagicLinkView.State.Initial.INSTANCE);
-  }
-
-  @Override public void showMagicLinkError(String error) {
-    sendMagicLinkView.setState(new SendMagicLinkView.State.Error(error, false));
-  }
-
   @NotNull @Override public Observable<String> getEmailTextChangeEvent() {
     return sendMagicLinkView.getEmailChangeEvent();
   }
 
-  @Override public void removeTextFieldError() {
-    sendMagicLinkView.resetTextFieldError();
+  @Override public void showUnknownError() {
+    showMagicLinkError(getString(R.string.all_message_general_error));
   }
 }
