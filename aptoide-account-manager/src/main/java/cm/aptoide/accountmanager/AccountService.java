@@ -7,7 +7,7 @@ public interface AccountService {
 
   Single<Account> getAccount(String email, String password);
 
-  Single<Account> createAccount(String email, String metadata, String name, String type);
+  Single<Account> createAccount(String email, String metadata, String type);
 
   Single<Account> createAccount(String email, String password);
 

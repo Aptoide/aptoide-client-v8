@@ -129,7 +129,6 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
-
 import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
 import cm.aptoide.pt.database.accessors.StoreAccessor;
@@ -283,9 +282,7 @@ import com.facebook.login.LoginManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetClient;
 import com.jakewharton.rxrelay.BehaviorRelay;
@@ -303,6 +300,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -717,16 +715,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides GoogleApiClient provideGoogleApiClient() {
     return new GoogleApiClient.Builder(application).addApi(GOOGLE_SIGN_IN_API,
         new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail()
-            .requestScopes(new Scope("https://www.googleapis.com/auth/contacts.readonly"))
-            .requestScopes(new Scope(Scopes.PROFILE))
             .requestServerAuthCode(BuildConfig.GMS_SERVER_ID)
             .build())
         .build();
   }
 
+  @Singleton @Provides @Named("facebookLoginPermissions")
+  List<String> providesFacebookLoginPermissions() {
+    return Collections.singletonList("email");
+  }
+
   @Singleton @Provides AptoideAccountManager provideAptoideAccountManager(AdultContent adultContent,
       GoogleApiClient googleApiClient, StoreManager storeManager, AccountService accountService,
-      LoginPreferences loginPreferences, AccountPersistence accountPersistence) {
+      LoginPreferences loginPreferences, AccountPersistence accountPersistence,
+      @Named("facebookLoginPermissions") List<String> facebookPermissions) {
     FacebookSdk.sdkInitialize(application);
 
     return new AptoideAccountManager.Builder().setAccountPersistence(
@@ -736,7 +738,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .registerSignUpAdapter(GoogleSignUpAdapter.TYPE,
             new GoogleSignUpAdapter(googleApiClient, loginPreferences))
         .registerSignUpAdapter(FacebookSignUpAdapter.TYPE,
-            new FacebookSignUpAdapter(Arrays.asList("email"), LoginManager.getInstance(),
+            new FacebookSignUpAdapter(facebookPermissions, LoginManager.getInstance(),
                 loginPreferences))
         .setStoreManager(storeManager)
         .build();

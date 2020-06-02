@@ -29,7 +29,6 @@ public abstract class LoginSignUpCredentialsPresenter
   private final boolean navigateToHome;
   private final AccountNavigator accountNavigator;
   private final Collection<String> permissions;
-  private final Collection<String> requiredPermissions;
   private final ThrowableToStringMapper errorMapper;
   private final AccountAnalytics accountAnalytics;
   private boolean dismissToNavigateToMainView;
@@ -38,8 +37,7 @@ public abstract class LoginSignUpCredentialsPresenter
       AptoideAccountManager accountManager, CrashReport crashReport,
       boolean dismissToNavigateToMainView, boolean navigateToHome,
       AccountNavigator accountNavigator, Collection<String> permissions,
-      Collection<String> requiredPermissions, ThrowableToStringMapper errorMapper,
-      AccountAnalytics accountAnalytics) {
+      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
@@ -47,7 +45,6 @@ public abstract class LoginSignUpCredentialsPresenter
     this.navigateToHome = navigateToHome;
     this.accountNavigator = accountNavigator;
     this.permissions = permissions;
-    this.requiredPermissions = requiredPermissions;
     this.errorMapper = errorMapper;
     this.accountAnalytics = accountAnalytics;
   }
@@ -255,7 +252,7 @@ public abstract class LoginSignUpCredentialsPresenter
         .flatMap(__ -> view.facebookSignUpWithRequiredPermissionsInEvent())
         .doOnNext(event -> {
           view.showLoading();
-          accountNavigator.navigateToFacebookSignUpForResult(requiredPermissions);
+          accountNavigator.navigateToFacebookSignUpForResult(permissions);
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
