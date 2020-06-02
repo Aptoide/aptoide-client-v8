@@ -19,7 +19,6 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.install.InstallManager;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.MainView;
 import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.ThemeAnalytics;
@@ -55,8 +54,6 @@ public class MainActivity extends BottomNavigationActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Logger.getInstance()
-        .d("lol", "inside onCreate of main activity");
     getActivityComponent().inject(this);
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     MoPub.onCreate(this);

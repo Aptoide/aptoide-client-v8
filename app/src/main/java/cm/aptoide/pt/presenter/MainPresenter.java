@@ -157,10 +157,10 @@ public class MainPresenter implements Presenter {
   private void handleAuthentication() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
-        .flatMap(__ -> view.onAuthenticationIntent())
-        .retry()
-        .doOnNext(__ -> accountNavigator.clearBackStackUntilLogin())
-        .flatMapCompletable(token -> authenticate(token))
+        .flatMap(__ -> view.onAuthenticationIntent()
+            .doOnNext(__1 -> accountNavigator.clearBackStackUntilLogin())
+            .flatMapCompletable(token -> authenticate(token))
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
@@ -175,11 +175,10 @@ public class MainPresenter implements Presenter {
         .doOnCompleted(() -> handleFirstSession())
         .doOnError(throwable -> {
           view.hideLoadingView();
-          if (throwable instanceof AuthenticationException) {
-            if (((AuthenticationException) throwable).getCode() >= 400
-                && ((AuthenticationException) throwable).getCode() < 500) {
-              accountNavigator.navigateToLoginError();
-            }
+          if (throwable instanceof AuthenticationException
+              && (((AuthenticationException) throwable).getCode() >= 400
+              && ((AuthenticationException) throwable).getCode() < 500)) {
+            accountNavigator.navigateToLoginError();
           } else {
             view.showGenericErrorMessage();
           }
