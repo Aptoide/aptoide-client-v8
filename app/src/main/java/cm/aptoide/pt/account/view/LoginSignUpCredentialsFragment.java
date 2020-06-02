@@ -176,18 +176,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
-
-    //if (savedInstanceState != null) {
-    //aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
-    //}
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    //if (outState != null && aptoideEmailEditText != null) {
-    //  outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-    //      .toString());
-    //}
   }
 
   @Override public Observable<Boolean> showAptoideLoginAreaClick() {
@@ -376,7 +368,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
-    // TODO: Wtf is this?
     return AccountAnalytics.StartupClickOrigin.MAIN;
   }
 
