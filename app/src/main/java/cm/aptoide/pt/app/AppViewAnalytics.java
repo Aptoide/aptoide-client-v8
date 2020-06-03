@@ -35,10 +35,6 @@ public class AppViewAnalytics {
   public static final String APPC_SIMILAR_APP_INTERACT = "Appc_Similar_App_Interact";
   public static final String BONUS_MIGRATION_APPVIEW = "Bonus_Migration_19_App_View";
   public static final String BONUS_GAME_WALLET_OFFER_19 = "Bonus_Game_Wallet_Offer_19_App_View";
-  public static final String ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME =
-      "asv_2053_similar_apps_converting";
-  public static final String ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME =
-      "asv_2053_similar_apps_participating";
   private static final String APPLICATION_NAME = "Application Name";
   private static final String APPLICATION_PUBLISHER = "Application Publisher";
   private static final String ACTION = "Action";
@@ -508,18 +504,6 @@ public class AppViewAnalytics {
   public void sendSimilarABTestGroupEvent(boolean isControlGroup) {
     Logger.getInstance()
         .d("AppViewAnalytics", "similar_apps_control_group: " + isControlGroup);
-  }
-
-  public void sendSimilarABTestConversionEvent(boolean isControlGroup) {
-    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
-        ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, AnalyticsManager.Action.CLICK,
-        navigationTracker.getViewName(true));
-  }
-
-  public void sendSimilarABTestImpressionEvent(boolean isControlGroup) {
-    analyticsManager.logEvent(getSimilarABTestData(isControlGroup),
-        ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME, AnalyticsManager.Action.IMPRESSION,
-        navigationTracker.getViewName(true));
   }
 
   @NotNull private HashMap<String, Object> getSimilarABTestData(boolean isControlGroup) {

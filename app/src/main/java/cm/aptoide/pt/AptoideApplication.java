@@ -111,7 +111,6 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
-import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
@@ -297,7 +296,6 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeUXCam())
         .andThen(initializeSentry())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
@@ -381,10 +379,6 @@ public abstract class AptoideApplication extends Application {
     return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())));
-  }
-
-  private Completable initializeUXCam() {
-    return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
   }
 
   private Completable initializeSentry() {
