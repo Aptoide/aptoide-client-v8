@@ -18,7 +18,7 @@ public interface AccountService {
 
   Completable changeSubscribeNewsletter(String isSubscribed);
 
-  Single<Account> getAccount();
+  Single<Account> getAccount(String email);
 
   Completable updateAccount(String nickname, String avatarPath);
 

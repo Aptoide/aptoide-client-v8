@@ -199,7 +199,7 @@ public class MockApplicationModule extends ApplicationModule {
         return null;
       }
 
-      @Override public Single<Account> getAccount() {
+      @Override public Single<Account> getAccount(String email) {
         return Single.just(account);
       }
 

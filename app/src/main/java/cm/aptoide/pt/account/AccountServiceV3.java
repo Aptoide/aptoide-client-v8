@@ -103,7 +103,8 @@ public class AccountServiceV3 implements AccountService {
             oAuth2.getData()
                 .getRefreshToken(), oAuth2.getData()
                 .getAccessToken(), AptoideAccountManager.APTOIDE_SIGN_UP_TYPE)
-            .andThen(getAccount()))
+            .andThen(authenticationPersistence.getAuthentication()
+                .flatMap(auth -> getAccount(auth.getEmail()))))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
             AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
@@ -123,7 +124,8 @@ public class AccountServiceV3 implements AccountService {
           if (!oAuth.hasErrors()) {
             return authenticationPersistence.createAuthentication(email, metadata,
                 oAuth.getRefreshToken(), oAuth.getAccessToken(), type)
-                .andThen(getAccount());
+                .andThen(authenticationPersistence.getAuthentication()
+                    .flatMap(auth -> getAccount(auth.getEmail())));
           } else {
             return Single.error(new AccountException(oAuth));
           }
@@ -199,9 +201,9 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override public Single<Account> getAccount() {
+  @Override public Single<Account> getAccount(String email) {
     return Single.zip(getServerAccount(), getSubscribedStores(), getTermsAndConditionsForAccount(),
-        (response, stores, terms) -> mapServerAccountToAccount(response, stores, terms));
+        (response, stores, terms) -> mapServerAccountToAccount(response, stores, terms, email));
   }
 
   @Override public Completable updateAccount(String nickname, String avatarPath) {
@@ -306,7 +308,7 @@ public class AccountServiceV3 implements AccountService {
   }
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores,
-      TermsAndConditionsResponse terms) {
+      TermsAndConditionsResponse terms, String accountEmail) {
     final GetUserMeta.Data userData = userInfo.getNodes()
         .getMeta()
         .getData();
@@ -314,11 +316,25 @@ public class AccountServiceV3 implements AccountService {
         .getSettings()
         .getData();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
-        String.valueOf(userData.getId()), userData.getIdentity()
-            .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
+        String.valueOf(userData.getId()), getRemoteOrLocalEmail(accountEmail, userData),
+        userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
             .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
         terms.isOk() ? terms.getBirthdate() : new Date(1970, 1, 1));
+  }
+
+  private String getRemoteOrLocalEmail(String accountEmail, GetUserMeta.Data userData) {
+    String email;
+    if (userData.getIdentity()
+        .getEmail() == null || userData.getIdentity()
+        .getEmail()
+        .isEmpty()) {
+      email = accountEmail;
+    } else {
+      email = userData.getIdentity()
+          .getEmail();
+    }
+    return email;
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,

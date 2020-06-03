@@ -107,7 +107,8 @@ public class AptoideAccountManager {
   }
 
   private Completable syncAccount() {
-    return accountService.getAccount()
+    return accountPersistence.getAccount()
+        .flatMap(account -> accountService.getAccount(account.getEmail()))
         .flatMapCompletable(account -> saveAccount(account));
   }
 
