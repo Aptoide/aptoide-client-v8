@@ -28,8 +28,8 @@ class RemoteAuthenticationService :
   override suspend fun sendMagicLink(email: String): CodeAuth {
     return withContext(Dispatchers.IO) {
       val sendMagicLinkResponse =
-          authorizationV7.sendMagicLink(Type.EMAIL,
-              Credentials(email, arrayOf("TOS", "PRIVACY", "DISTRIBUTION"),
+          authorizationV7.sendMagicLink(Type.EMAIL, arrayOf("TOS", "PRIVACY", "DISTRIBUTION"),
+              Credentials(email,
                   arrayOf("CODE:TOKEN:EMAIL")))
       val codeAuth = sendMagicLinkResponse.body()
       if (sendMagicLinkResponse.isSuccessful && codeAuth != null) {
@@ -45,7 +45,8 @@ class RemoteAuthenticationService :
     return withContext(Dispatchers.IO) {
       val authenticateResponse =
           authorizationV7.authenticate(Type.CODE, state, agent,
-              Credentials(magicToken, arrayOf("TOS", "PRIVACY", "DISTRIBUTION"), arrayOf("OAUTH2")))
+              arrayOf("TOS", "PRIVACY", "DISTRIBUTION"),
+              Credentials(magicToken, arrayOf("OAUTH2")))
       val oAuth2 = authenticateResponse.body()
       if (authenticateResponse.isSuccessful && oAuth2 != null) {
         return@withContext oAuth2!!
@@ -59,16 +60,17 @@ class RemoteAuthenticationService :
     suspend fun authenticate(@Query("type") type: Type,
                              @Query("state") state: String,
                              @Query("agent") agent: String,
+                             @Query("accepted[]", encoded = true) accepted: Array<String>,
                              @Body credentials: Credentials): Response<OAuth2>
 
     @POST("user/authorize")
     suspend fun sendMagicLink(@Query("type") type: Type,
+                              @Query("accepted[]", encoded = true) accepted: Array<String>,
                               @Body credentials: Credentials): Response<CodeAuth>
 
   }
 
-  data class Credentials(val credential: String, val accepted: Array<String>,
-                         val supported: Array<String>)
+  data class Credentials(val credential: String, val supported: Array<String>)
 }
 
 enum class Type {
