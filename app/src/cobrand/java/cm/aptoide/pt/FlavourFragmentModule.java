@@ -1,6 +1,5 @@
 package cm.aptoide.pt;
 
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.FragmentScope;
 import cm.aptoide.pt.view.wizard.WizardFragmentProvider;

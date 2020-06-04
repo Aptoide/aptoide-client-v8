@@ -56,9 +56,6 @@ import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -1210,12 +1207,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
-      MoPubConsentManager moPubConsentDialogManager) {
-    return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, walletAdsOfferManager, moPubConsentDialogManager);
+      WalletAdsOfferManager walletAdsOfferManager, MoPubConsentManager moPubConsentDialogManager) {
+    return new MoPubAdsManager(walletAdsOfferManager, moPubConsentDialogManager);
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(

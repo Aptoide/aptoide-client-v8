@@ -1,9 +1,6 @@
 package cm.aptoide.pt;
 
 import cm.aptoide.accountmanager.AdultContent;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.MoPubConsentDialogManager;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
