@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -27,7 +28,9 @@ class RemoteAuthenticationService :
   override suspend fun sendMagicLink(email: String): CodeAuth {
     return withContext(Dispatchers.IO) {
       val sendMagicLinkResponse =
-          authorizationV7.sendMagicLink(email, Type.EMAIL, arrayOf("CODE:TOKEN:EMAIL"))
+          authorizationV7.sendMagicLink(Type.EMAIL,
+              Credentials(email, arrayOf("TOS", "PRIVACY", "DISTRIBUTION"),
+                  arrayOf("CODE:TOKEN:EMAIL")))
       val codeAuth = sendMagicLinkResponse.body()
       if (sendMagicLinkResponse.isSuccessful && codeAuth != null) {
         codeAuth.email = email
@@ -41,7 +44,8 @@ class RemoteAuthenticationService :
   override suspend fun authenticate(magicToken: String, state: String, agent: String): OAuth2 {
     return withContext(Dispatchers.IO) {
       val authenticateResponse =
-          authorizationV7.authenticate(magicToken, Type.CODE, arrayOf("OAUTH2"), state, agent)
+          authorizationV7.authenticate(Type.CODE, state, agent,
+              Credentials(magicToken, arrayOf("TOS", "PRIVACY", "DISTRIBUTION"), arrayOf("OAUTH2")))
       val oAuth2 = authenticateResponse.body()
       if (authenticateResponse.isSuccessful && oAuth2 != null) {
         return@withContext oAuth2!!
@@ -52,18 +56,19 @@ class RemoteAuthenticationService :
 
   interface AuthorizationV7 {
     @POST("user/authorize")
-    suspend fun authenticate(@Query("credential") credential: String,
-                             @Query("type") type: Type, @Query(
-            "supported") supported: Array<String>,
+    suspend fun authenticate(@Query("type") type: Type,
                              @Query("state") state: String,
-                             @Query("agent") agent: String): Response<OAuth2>
+                             @Query("agent") agent: String,
+                             @Body credentials: Credentials): Response<OAuth2>
 
     @POST("user/authorize")
-    suspend fun sendMagicLink(@Query("credential") credential: String,
-                              @Query("type") type: Type, @Query(
-            "supported") supported: Array<String>): Response<CodeAuth>
+    suspend fun sendMagicLink(@Query("type") type: Type,
+                              @Body credentials: Credentials): Response<CodeAuth>
 
   }
+
+  data class Credentials(val credential: String, val accepted: Array<String>,
+                         val supported: Array<String>)
 }
 
 enum class Type {
