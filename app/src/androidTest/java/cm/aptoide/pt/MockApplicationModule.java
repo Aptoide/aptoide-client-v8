@@ -150,10 +150,6 @@ public class MockApplicationModule extends ApplicationModule {
       @Override public boolean acceptedPrivacyPolicy() {
         return true;
       }
-
-      @Override public String getBirthDate() {
-        return "1995";
-      }
     };
     final AccountService accountServiceMock = new AccountService() {
       @Override
@@ -189,14 +185,6 @@ public class MockApplicationModule extends ApplicationModule {
           return Single.error(new AccountException(list));
         }
         return Single.just(account);
-      }
-
-      @Override public Completable changeBirthdate(String birthdate) {
-        return null;
-      }
-
-      @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-        return null;
       }
 
       @Override public Single<Account> getAccount(String email) {

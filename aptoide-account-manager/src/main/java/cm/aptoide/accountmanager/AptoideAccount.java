@@ -6,7 +6,6 @@
 package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
-import java.util.Date;
 import java.util.List;
 
 public final class AptoideAccount implements Account {
@@ -22,12 +21,10 @@ public final class AptoideAccount implements Account {
   private final List<Store> subscribedStores;
   private final boolean privacyPolicy;
   private final boolean termsAndConditions;
-  private final Date dateOfBirth;
 
   public AptoideAccount(String id, String email, String nickname, String avatar, Store store,
       boolean adultContentEnabled, Access access, boolean accessConfirmed,
-      List<Store> subscribedStores, boolean privacyPolicy, boolean termsAndConditions,
-      Date dateOfBirth) {
+      List<Store> subscribedStores, boolean privacyPolicy, boolean termsAndConditions) {
     this.id = id;
     this.email = email;
     this.nickname = nickname;
@@ -39,7 +36,6 @@ public final class AptoideAccount implements Account {
     this.subscribedStores = subscribedStores;
     this.privacyPolicy = privacyPolicy;
     this.termsAndConditions = termsAndConditions;
-    this.dateOfBirth = dateOfBirth;
   }
 
   @Override public List<Store> getSubscribedStores() {
@@ -100,9 +96,5 @@ public final class AptoideAccount implements Account {
 
   @Override public boolean acceptedPrivacyPolicy() {
     return privacyPolicy;
-  }
-
-  @Override public Date getBirthDate() {
-    return dateOfBirth;
   }
 }
