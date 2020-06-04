@@ -62,6 +62,7 @@ import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
@@ -274,6 +275,9 @@ import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.aptoide.authentication.AptoideAuthentication;
+import com.aptoide.authentication.network.RemoteAuthenticationService;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -777,11 +781,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
       @Named("extraID") String extraId, AccountFactory accountFactory,
-      OAuthModeProvider oAuthModeProvider) {
+      OAuthModeProvider oAuthModeProvider, AptoideAuthenticationRx aptoideAuthentication) {
     return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
         objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
         authenticationPersistence, noAuthenticationBodyInterceptorV3, bodyInterceptorV3,
-        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, oAuthModeProvider);
+        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, oAuthModeProvider,
+        aptoideAuthentication);
   }
 
   @Singleton @Provides OAuthModeProvider provideOAuthModeProvider() {
@@ -2116,5 +2121,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
       AppsNameExperiment appsNameExperiment) {
     return new AppsNameExperimentManager(appsNameExperiment);
+  }
+
+  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
+    return new AptoideAuthenticationRx(
+        new AptoideAuthentication(new RemoteAuthenticationService()));
+  }
+
+  @Singleton @Provides AgentPersistence providesAgentPersistence(
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new AgentPersistence(secureSharedPreferences);
   }
 }

@@ -31,6 +31,8 @@ public interface ActivityNavigator {
 
   void navigateTo(Uri uri);
 
+  void navigateWithIntent(Intent intent);
+
   Observable<Result> results();
 
   Activity getActivity();

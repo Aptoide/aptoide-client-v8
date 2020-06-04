@@ -8,7 +8,6 @@ import rx.Completable;
 import rx.Single;
 import rx.observers.TestSubscriber;
 
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -46,12 +45,11 @@ public class AptoideAccountManagerTest {
     final Account accountMock = mock(Account.class);
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("marcelo.benites@aptoide.com", "1234", true);
+        new AptoideCredentials("marcelo.benites@aptoide.com", "1234", true, "", "");
 
-    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
-        Completable.complete());
+    when(credentialsValidatorMock.validate(eq(credentials))).thenReturn(Completable.complete());
 
-    when(serviceMock.getAccount("marcelo.benites@aptoide.com", "1234")).thenReturn(
+    when(serviceMock.getAccount("marcelo.benites@aptoide.com", "1234", "", "")).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
@@ -73,10 +71,9 @@ public class AptoideAccountManagerTest {
     final Account accountMock = mock(Account.class);
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true);
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true, "", "");
 
-    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
-        Completable.complete());
+    when(credentialsValidatorMock.validate(eq(credentials))).thenReturn(Completable.complete());
 
     when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
         Single.just(accountMock));
@@ -97,10 +94,9 @@ public class AptoideAccountManagerTest {
   @Test public void shouldLoginOnSignUpTimeout() throws Exception {
 
     final AptoideCredentials credentials =
-        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true);
+        new AptoideCredentials("john.lennon@aptoide.com", "imagine", true, "", "");
 
-    when(credentialsValidatorMock.validate(eq(credentials), anyBoolean())).thenReturn(
-        Completable.complete());
+    when(credentialsValidatorMock.validate(eq(credentials))).thenReturn(Completable.complete());
 
     when(serviceMock.createAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
         Single.error(new SocketTimeoutException()));
@@ -109,7 +105,7 @@ public class AptoideAccountManagerTest {
 
     when(accountMock.getEmail()).thenReturn("john.lennon@aptoide.com");
 
-    when(serviceMock.getAccount("john.lennon@aptoide.com", "imagine")).thenReturn(
+    when(serviceMock.getAccount("john.lennon@aptoide.com", "imagine", "", "")).thenReturn(
         Single.just(accountMock));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());

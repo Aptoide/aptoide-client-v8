@@ -43,7 +43,7 @@ public class ReactionsPopup {
     popup.setFocusable(true);
     popup.setClippingEnabled(true);
     popup.setBackgroundDrawable(
-        ContextCompat.getDrawable(context, R.drawable.rounded_corners_white));
+        ContextCompat.getDrawable(context, R.drawable.rounded_corners_reactions));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       popup.setElevation(10);
     }

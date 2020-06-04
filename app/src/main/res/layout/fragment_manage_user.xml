@@ -168,7 +168,7 @@
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:layout_marginTop="@dimen/padding_very_small"
-              android:background="@drawable/rounded_corners_white"
+              android:background="@drawable/rounded_corners_reactions"
               android:hint="@string/create_user_username"
               android:imeOptions="actionDone"
               android:inputType="text"

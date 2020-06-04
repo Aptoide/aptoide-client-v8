@@ -7,6 +7,7 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import com.aptoide.authentication.model.CodeAuth;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,9 +83,18 @@ public class AptoideAccountManager {
   }
 
   public Completable login(AptoideCredentials credentials) {
-    return credentialsValidator.validate(credentials, false)
-        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
+    return credentialsValidator.validate(credentials)
+        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode(),
+            credentials.getState(), credentials.getAgent()))
         .flatMapCompletable(account -> saveAccount(account));
+  }
+
+  public Single<CodeAuth> sendMagicLink(String email) {
+    return accountService.sendMagicLink(email);
+  }
+
+  public Single<Boolean> isEmailValid(String email) {
+    return credentialsValidator.isEmailValid(email);
   }
 
   public <T> Completable signUp(String type, T data) {
@@ -97,7 +107,8 @@ public class AptoideAccountManager {
   }
 
   private Completable syncAccount() {
-    return accountService.getAccount()
+    return accountPersistence.getAccount()
+        .flatMap(account -> accountService.getAccount(account.getEmail()))
         .flatMapCompletable(account -> saveAccount(account));
   }
 
@@ -228,6 +239,14 @@ public class AptoideAccountManager {
     return storeManager.createOrUpdate(storeName, storeDescription, storeImagePath, hasNewAvatar,
         storeThemeName, storeExists)
         .andThen(syncAccount());
+  }
+
+  public Completable generateEmailCode(String email) {
+    if (email.isEmpty()) {
+      return Completable.error(
+          new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
+    }
+    return Completable.complete();
   }
 
   public static class Builder {

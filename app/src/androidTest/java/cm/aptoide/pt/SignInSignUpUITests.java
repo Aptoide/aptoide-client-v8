@@ -297,8 +297,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
    */
   private void performLogin(String email, String pass) {
     onView(withId(R.id.show_login_with_aptoide_area)).perform(click());
-    onView(withId(R.id.username)).perform(click());
-    onView(withId(R.id.username)).perform(replaceText(email));
+    onView(withId(R.id.email)).perform(click());
+    onView(withId(R.id.email)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_login)).perform(click());
@@ -309,8 +309,8 @@ import static cm.aptoide.pt.UITests.skipWizard;
    */
   private void performSignUp(String email, String pass) {
     onView(withId(R.id.show_join_aptoide_area)).perform(click());
-    onView(withId(R.id.username)).perform(click());
-    onView(withId(R.id.username)).perform(replaceText(email));
+    onView(withId(R.id.email)).perform(click());
+    onView(withId(R.id.email)).perform(replaceText(email));
     onView(withId(R.id.password)).perform(click());
     onView(withId(R.id.password)).perform(replaceText(pass), closeSoftKeyboard());
     onView(withId(R.id.button_sign_up)).perform(click());
