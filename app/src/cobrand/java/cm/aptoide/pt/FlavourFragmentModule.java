@@ -11,10 +11,6 @@ import dagger.Provides;
   public FlavourFragmentModule() {
   }
 
-  @FragmentScope @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment() {
-    return new MoPubInterstitialAdExperiment();
-  }
-
   @FragmentScope @Provides WizardFragmentProvider providesWizardFragmentProvider(
       ThemeManager themeManager) {
     return new WizardFragmentProvider(themeManager);

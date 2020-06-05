@@ -41,17 +41,6 @@ import javax.inject.Singleton;
     return new LoginPreferences();
   }
 
-  @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment() {
-    return new MoPubBannerAdExperiment();
-  }
-
-  @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment() {
-    return new MoPubNativeAdExperiment();
-  }
-
-  @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment() {
-    return new MoPubInterstitialAdExperiment();
-  }
 
   @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager() {
     return new WalletAdsOfferManager();
