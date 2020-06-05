@@ -1,5 +1,6 @@
 package cm.aptoide.accountmanager;
 
+import androidx.core.util.Pair;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.net.SocketTimeoutException;
 import org.junit.Before;
@@ -50,7 +51,7 @@ public class AptoideAccountManagerTest {
     when(credentialsValidatorMock.validate(eq(credentials))).thenReturn(Completable.complete());
 
     when(serviceMock.getAccount("marcelo.benites@aptoide.com", "1234", "", "")).thenReturn(
-        Single.just(accountMock));
+        Single.just(Pair.create(accountMock, true)));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 
@@ -106,7 +107,7 @@ public class AptoideAccountManagerTest {
     when(accountMock.getEmail()).thenReturn("john.lennon@aptoide.com");
 
     when(serviceMock.getAccount("john.lennon@aptoide.com", "imagine", "", "")).thenReturn(
-        Single.just(accountMock));
+        Single.just(Pair.create(accountMock, true)));
 
     when(dataPersistMock.saveAccount(accountMock)).thenReturn(Completable.complete());
 

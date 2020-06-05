@@ -1,6 +1,6 @@
 package cm.aptoide.accountmanager;
 
-import android.util.Pair;
+import androidx.core.util.Pair;
 import com.aptoide.authentication.model.CodeAuth;
 import rx.Completable;
 import rx.Single;

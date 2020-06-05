@@ -1,7 +1,7 @@
 package cm.aptoide.pt.account;
 
 import android.content.SharedPreferences;
-import android.util.Pair;
+import androidx.core.util.Pair;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
