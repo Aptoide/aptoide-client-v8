@@ -236,8 +236,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides SendMagicLinkNavigator providesSendMagicLinkNavigator(
-      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator) {
-    return new SendMagicLinkNavigator(fragmentNavigator);
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      ThemeManager themeManager) {
+    return new SendMagicLinkNavigator(fragmentNavigator, fragment.getContext(), themeManager);
   }
 
   @FragmentScope @Provides CheckYourEmailPresenter provideCheckYourEmailPresenter(

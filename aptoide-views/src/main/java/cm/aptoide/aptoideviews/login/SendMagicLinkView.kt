@@ -57,6 +57,10 @@ class SendMagicLinkView : FrameLayout {
         .map { email.text.toString() }
   }
 
+  fun getSecureLoginTextClick(): Observable<Void> {
+    return RxView.clicks(login_benefits_textview)
+  }
+
   private fun setInitialState() {
     tip.visibility = View.VISIBLE
     tip_error.visibility = View.GONE
