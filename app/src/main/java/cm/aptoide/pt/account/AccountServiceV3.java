@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account;
 
 import android.content.SharedPreferences;
+import android.util.Pair;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
@@ -94,14 +95,16 @@ public class AccountServiceV3 implements AccountService {
   }
 
   @Override
-  public Single<Account> getAccount(String email, String code, String state, String agent) {
+  public Single<Pair<Account, Boolean>> getAccount(String email, String code, String state,
+      String agent) {
     return RxJavaInterop.toV1Single(aptoideAuthentication.authenticate(code, state, agent))
         .flatMap(oAuth2 -> authenticationPersistence.createAuthentication(email, code,
             oAuth2.getData()
                 .getRefreshToken(), oAuth2.getData()
                 .getAccessToken(), AptoideAccountManager.APTOIDE_SIGN_UP_TYPE)
             .andThen(authenticationPersistence.getAuthentication()
-                .flatMap(auth -> getAccount(auth.getEmail()))))
+                .flatMap(auth -> getAccount(auth.getEmail()).map(
+                    account -> Pair.create(account, oAuth2.getSignup())))))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
             AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
@@ -145,7 +148,8 @@ public class AccountServiceV3 implements AccountService {
           if (response.hasErrors()) {
             return Single.error(new AccountException(response.getErrors()));
           }
-          return getAccount(email, code, "", "");
+          return getAccount(email, code, "", "").map(
+              accountBooleanPair -> accountBooleanPair.first);
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {

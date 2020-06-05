@@ -170,9 +170,9 @@ public class MainPresenter implements Presenter {
     return accountManager.login(new AptoideCredentials(agentPersistence.getEmail(), authToken, true,
         agentPersistence.getAgent(), agentPersistence.getState()))
         .observeOn(viewScheduler)
-        .doOnSubscribe(__ -> view.showLoadingView())
-        .doOnCompleted(() -> view.hideLoadingView())
-        .doOnCompleted(() -> handleFirstSession())
+        .doOnSubscribe(() -> view.showLoadingView())
+        .doOnSuccess(__ -> view.hideLoadingView())
+        .doOnSuccess(isSignup -> handleFirstSignup(isSignup))
         .doOnError(throwable -> {
           view.hideLoadingView();
           if (throwable instanceof AuthenticationException
@@ -183,11 +183,13 @@ public class MainPresenter implements Presenter {
             view.showGenericErrorMessage();
           }
         })
-        .onErrorComplete();
+        .toCompletable();
   }
 
-  private void handleFirstSession() {
-    // TODO: 5/27/20 check if should show wizard
+  private void handleFirstSignup(Boolean isSignup) {
+    if (isSignup) {
+      accountNavigator.navigateToCreateProfileView();
+    }
   }
 
   private Completable handleAppsNameExperimentConversion(Integer fragmentid) {

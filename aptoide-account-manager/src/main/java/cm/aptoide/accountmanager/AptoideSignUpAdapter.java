@@ -17,7 +17,8 @@ public class AptoideSignUpAdapter implements SignUpAdapter<AptoideCredentials> {
         .andThen(service.createAccount(credentials.getEmail(), credentials.getCode()))
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof SocketTimeoutException) {
-            return service.getAccount(credentials.getEmail(), credentials.getCode(), "", "");
+            return service.getAccount(credentials.getEmail(), credentials.getCode(), "", "")
+                .map(accountBooleanPair -> accountBooleanPair.first);
           }
           return Single.error(throwable);
         });

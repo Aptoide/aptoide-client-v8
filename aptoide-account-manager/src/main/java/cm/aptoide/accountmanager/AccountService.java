@@ -1,12 +1,13 @@
 package cm.aptoide.accountmanager;
 
+import android.util.Pair;
 import com.aptoide.authentication.model.CodeAuth;
 import rx.Completable;
 import rx.Single;
 
 public interface AccountService {
 
-  Single<Account> getAccount(String email, String code, String state, String agent);
+  Single<Pair<Account, Boolean>> getAccount(String email, String code, String state, String agent);
 
   Single<Account> createAccount(String email, String metadata, String type);
 

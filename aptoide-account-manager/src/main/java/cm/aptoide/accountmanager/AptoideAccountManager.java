@@ -82,11 +82,11 @@ public class AptoideAccountManager {
             .doOnCompleted(() -> accountRelay.call(createLocalAccount())));
   }
 
-  public Completable login(AptoideCredentials credentials) {
+  public Single<Boolean> login(AptoideCredentials credentials) {
     return credentialsValidator.validate(credentials)
         .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode(),
             credentials.getState(), credentials.getAgent()))
-        .flatMapCompletable(account -> saveAccount(account));
+        .flatMap(loginPair -> saveAccount(loginPair.first).andThen(Single.just(loginPair.second)));
   }
 
   public Single<CodeAuth> sendMagicLink(String email) {
