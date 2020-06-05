@@ -15,10 +15,12 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-class RemoteAuthenticationService :
+class RemoteAuthenticationService(
+    private val authenticationBaseHost: String) :
     AuthenticationService {
+
   private val authorizationV7: AuthorizationV7 =
-      Retrofit.Builder().baseUrl("https://webservices-devel.aptoide.com/api/7/")
+      Retrofit.Builder().baseUrl(authenticationBaseHost)
           .addConverterFactory(MoshiConverterFactory.create(
               Moshi.Builder().add(KotlinJsonAdapterFactory())
                   .build()))

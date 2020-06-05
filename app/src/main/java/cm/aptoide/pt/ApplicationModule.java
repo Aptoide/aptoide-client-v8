@@ -1266,6 +1266,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         + "/api/7/";
   }
 
+  @Singleton @Provides @Named("base-webservices-host") String providesBaseWebservicesHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_HOST
+        + "/api/7/";
+  }
+
   @Singleton @Provides @Named("retrofit-v7") Retrofit providesV7Retrofit(
       @Named("base-host") String baseHost, @Named("default") OkHttpClient httpClient,
       Converter.Factory converterFactory, @Named("rx") CallAdapter.Factory rxCallAdapterFactory) {
@@ -2123,9 +2132,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppsNameExperimentManager(appsNameExperiment);
   }
 
-  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication() {
+  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
+      @Named("base-webservices-host") String authenticationBaseHost) {
     return new AptoideAuthenticationRx(
-        new AptoideAuthentication(new RemoteAuthenticationService()));
+        new AptoideAuthentication(new RemoteAuthenticationService(authenticationBaseHost)));
   }
 
   @Singleton @Provides AgentPersistence providesAgentPersistence(
