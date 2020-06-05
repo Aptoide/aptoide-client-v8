@@ -415,4 +415,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   @Override public void showUnknownError() {
     showMagicLinkError(getString(R.string.all_message_general_error));
   }
+
+  @NotNull @Override public Observable<Void> getSecureLoginTextClick() {
+    return sendMagicLinkView.getSecureLoginTextClick();
+  }
 }

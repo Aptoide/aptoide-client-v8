@@ -22,4 +22,6 @@ interface MagicLinkView : View {
 
   fun showUnknownError()
 
+  fun getSecureLoginTextClick(): Observable<Void>
+
 }

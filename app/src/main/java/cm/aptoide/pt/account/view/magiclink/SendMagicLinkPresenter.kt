@@ -17,6 +17,20 @@ class SendMagicLinkPresenter(
   override fun present() {
     handleSendMagicLinkClick()
     handleEmailChangeEvents()
+    handleSecureLoginTextClick()
+  }
+
+  private fun handleSecureLoginTextClick() {
+    view.lifecycleEvent
+        .filter { lifecycleEvent -> View.LifecycleEvent.CREATE == lifecycleEvent }
+        .flatMap {
+          view.getSecureLoginTextClick()
+              .doOnNext { navigator.navigateToBlog() }
+              .retry()
+        }
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe({}, { e -> e.printStackTrace() })
+
   }
 
   private fun handleEmailChangeEvents() {
