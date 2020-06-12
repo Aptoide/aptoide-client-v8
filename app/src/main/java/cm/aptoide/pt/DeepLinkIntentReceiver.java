@@ -123,6 +123,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("imgs.aptoide.com")) {
         intent = dealWithImagesApoide(uri);
       } else if (u.getHost()
+          .contains("app.aptoide.com")) {
+        intent = dealWithAptoideAuthentication(uri);
+      } else if (u.getHost()
           .contains("aptoide.com")) {
         intent = dealWithAptoideWebsite(u);
       } else if ("aptoiderepo".equalsIgnoreCase(u.getScheme())) {
@@ -160,6 +163,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     deepLinkAnalytics.sendWebsite();
     finish();
+  }
+
+  private Intent dealWithAptoideAuthentication(String u) {
+    String path = u.split("app.aptoide.com/auth/code/")[1];
+    String code = path.split("/")[0];
+    return parseAptoideAuthUri(code);
   }
 
   private Intent parseAptoideAuthUri(String token) {
