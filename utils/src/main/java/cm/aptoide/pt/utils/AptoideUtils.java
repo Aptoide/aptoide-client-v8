@@ -94,6 +94,19 @@ public class AptoideUtils {
     return !TextUtils.isEmpty(getSystemProperty("ro.miui.ui.version.name"));
   }
 
+  public static boolean isMIUIwithAABFix() {
+    String systemProperty = getSystemProperty("ro.miui.version.code_time");
+    boolean versionSupportsAAB = false;
+    if (systemProperty != null) {
+      try {
+        versionSupportsAAB = Long.parseLong(systemProperty)
+            > 1583942400; // this is currently a xiaomi device that we have working with app bundles.
+      } catch (NumberFormatException ignore) {
+      }
+    }
+    return !TextUtils.isEmpty(systemProperty) && versionSupportsAAB;
+  }
+
   @SuppressLint("PrivateApi") private static String getSystemProperty(String key) {
     try {
       return (String) Class.forName("android.os.SystemProperties")
@@ -474,10 +487,9 @@ public class AptoideUtils {
     }
 
     /**
-     * get screen size in "pixels", i.e. touchevent/view units.
-     * on my droid 4, this is 360x640 or 540x960
-     * depending on whether the app is in screen compatibility mode
-     * (i.e. targetSdkVersion<=10 in the manifest) or not.
+     * get screen size in "pixels", i.e. touchevent/view units. on my droid 4, this is 360x640 or
+     * 540x960 depending on whether the app is in screen compatibility mode (i.e.
+     * targetSdkVersion<=10 in the manifest) or not.
      */
     // method deprecated since no usage was found.
     @Deprecated public static String getScreenSizePixels(Resources resources) {
@@ -527,15 +539,12 @@ public class AptoideUtils {
 
     /**
      * <p>Joins the elements of the provided {@code Iterable} into a single String containing the
-     * provided elements.</p> <p> <p>No delimiter is added
-     * before
-     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+     * provided elements.</p> <p> <p>No delimiter is added before or after the list. A {@code null}
+     * separator is the same as an empty String ("").</p>
      *
-     * @param iterable the {@code Iterable} providing the values to join together, may be null
+     * @param iterable  the {@code Iterable} providing the values to join together, may be null
      * @param separator the separator character to use, null treated as ""
-     *
      * @return the joined String, {@code null} if null iterator input
-     *
      * @since 2.3
      */
     public static String join(final Iterable<?> iterable, final String separator) {
@@ -547,13 +556,11 @@ public class AptoideUtils {
 
     /**
      * <p>Joins the elements of the provided {@code Iterator} into a single String containing the
-     * provided elements.</p> <p> <p>No delimiter is added
-     * before
-     * or after the list. A {@code null} separator is the same as an empty String ("").</p>
+     * provided elements.</p> <p> <p>No delimiter is added before or after the list. A {@code null}
+     * separator is the same as an empty String ("").</p>
      *
-     * @param iterator the {@code Iterator} of values to join together, may be null
+     * @param iterator  the {@code Iterator} of values to join together, may be null
      * @param separator the separator character to use, null treated as ""
-     *
      * @return the joined String, {@code null} if null iterator input
      */
     public static String join(final Iterator<?> iterator, final String separator) {
@@ -617,7 +624,6 @@ public class AptoideUtils {
 
     /**
      * @param bytes file size
-     *
      * @return formatted string for file file showing a Human perceptible file size
      */
     public static String formatBytes(long bytes, boolean speed) {
@@ -893,8 +899,8 @@ public class AptoideUtils {
     }
 
     /**
-     * If you are trying to use this method inside a fragment, the base fragment already has
-     * a copy of it. Use that instead.
+     * If you are trying to use this method inside a fragment, the base fragment already has a copy
+     * of it. Use that instead.
      */
     @Deprecated public static void hideKeyboard(Activity activity) {
       View view = activity.getCurrentFocus();
@@ -935,7 +941,7 @@ public class AptoideUtils {
 
     /**
      * from v7
-     *
+     * <p>
      * Use RootManager or other entity created for this effect in the engine
      */
     @Deprecated public static boolean hasRoot() {
@@ -1090,9 +1096,7 @@ public class AptoideUtils {
      * Singleton constructor, needed to get access to the application context & strings for i18n
      *
      * @param context Context
-     *
      * @return DateTimeUtils singleton instance
-     *
      * @throws Exception
      */
     public static DateTimeU getInstance(Context context) {
@@ -1133,7 +1137,6 @@ public class AptoideUtils {
      * Checks if the given date is yesterday.
      *
      * @param date - Date to check.
-     *
      * @return TRUE if the date is yesterday, FALSE otherwise.
      */
     private static boolean isYesterday(long date) {
@@ -1188,7 +1191,6 @@ public class AptoideUtils {
      * Displays a user-friendly date difference string
      *
      * @param timedate Timestamp to format as date difference from now
-     *
      * @return Friendly-formatted date diff string
      */
     public String getTimeDiffString(Context context, long timedate, Resources resources) {
@@ -1466,7 +1468,6 @@ public class AptoideUtils {
      * filename ends with <b>_icon</b> it is an HD icon.
      *
      * @param iconUrl The String with the URL of the icon
-     *
      * @return A String with
      */
     private static String parseIcon(String iconUrl, Resources resources,
@@ -1583,7 +1584,6 @@ public class AptoideUtils {
      * code from <a href="http://blog.danlew.net/2015/03/02/dont-break-the-chain/">http://blog.danlew.net/2015/03/02/dont-break-the-chain/</a>
      *
      * @param <T> Observable of T
-     *
      * @return original Observable subscribed in an io thread and observed in the main thread
      */
     public static <T> Observable.Transformer<T, T> applySchedulers() {

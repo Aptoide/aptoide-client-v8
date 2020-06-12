@@ -1,16 +1,19 @@
 package cm.aptoide.pt.dataprovider.aab;
 
 public class AppBundlesVisibilityManager {
-  private final boolean isDeviceMiui;
+  private final boolean isMIUIWithAABFix;
+  private boolean isDeviceMIUI;
   private final HardwareSpecsFilterProvider hardwareSpecsFilterProvider;
 
-  public AppBundlesVisibilityManager(boolean isDeviceMiui,
+  public AppBundlesVisibilityManager(boolean isMIUIWithAABFix, boolean isDeviceMIUI,
       HardwareSpecsFilterProvider hardwareSpecsFilterProvider) {
-    this.isDeviceMiui = isDeviceMiui;
+    this.isMIUIWithAABFix = isMIUIWithAABFix;
+    this.isDeviceMIUI = isDeviceMIUI;
     this.hardwareSpecsFilterProvider = hardwareSpecsFilterProvider;
   }
 
   public boolean shouldEnableAppBundles() {
-    return !isDeviceMiui || !hardwareSpecsFilterProvider.isOnlyShowCompatibleApps();
+    return !isDeviceMIUI || !hardwareSpecsFilterProvider.isOnlyShowCompatibleApps() || (isDeviceMIUI
+        && isMIUIWithAABFix);
   }
 }
