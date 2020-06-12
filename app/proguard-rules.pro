@@ -194,10 +194,6 @@
 -keep class com.google.android.gms.ads.** { *; }
 -dontwarn okio.**
 
-#uxcam
--keep class com.uxcam.** { *; }
--dontwarn com.uxcam.**
-
 #Moshi
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**

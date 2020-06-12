@@ -4,7 +4,6 @@ import android.os.Bundle;
 import cm.aptoide.pt.logger.Logger;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +33,6 @@ public class MoPubAnalytics {
     String adsStatusByRakamValue = mapAdsVisibilityToRakamValues(offerResponseStatus);
     Rakam.getInstance()
         .setSuperProperties(createRakamAdsSuperProperties(adsStatusByRakamValue));
-    UXCam.setUserProperty(ADS_STATUS_USER_PROPERTY, adsStatusByRakamValue);
   }
 
   void setRakamUserId(String id) {

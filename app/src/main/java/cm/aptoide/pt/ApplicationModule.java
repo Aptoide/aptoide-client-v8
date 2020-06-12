@@ -40,7 +40,6 @@ import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
-import cm.aptoide.analytics.implementation.loggers.UXCamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
@@ -1462,11 +1461,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RakamEventLogger(logger);
   }
 
-  @Singleton @Provides @Named("uxCamEventLogger") EventLogger providesUXCamEventLogger(
-      AnalyticsLogger logger) {
-    return new UXCamEventLogger(logger);
-  }
-
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
       @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
@@ -1512,15 +1506,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
-      @Named("rakamEvents") Collection<String> rakamEvents,
-      @Named("uxCamEventLogger") EventLogger uxCamEventLogger,
-      @Named("uxCamEvents") Collection<String> uxCamEvents, AnalyticsLogger logger) {
+      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
-        .addLogger(uxCamEventLogger, uxCamEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
@@ -1531,23 +1522,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
         AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
         FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
         AptoideInstallAnalytics.CONVERSION_EVENT);
-  }
-
-  @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
-    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK);
   }
 
   @Singleton @Provides @Named("normalizer")
