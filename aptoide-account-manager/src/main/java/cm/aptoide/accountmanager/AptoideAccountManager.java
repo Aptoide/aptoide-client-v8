@@ -7,9 +7,9 @@ package cm.aptoide.accountmanager;
 
 import android.text.TextUtils;
 import cm.aptoide.pt.crashreports.CrashReport;
+import com.aptoide.authentication.model.CodeAuth;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import rx.Completable;
 import rx.Observable;
@@ -82,10 +82,19 @@ public class AptoideAccountManager {
             .doOnCompleted(() -> accountRelay.call(createLocalAccount())));
   }
 
-  public Completable login(AptoideCredentials credentials) {
-    return credentialsValidator.validate(credentials, false)
-        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getPassword()))
-        .flatMapCompletable(account -> saveAccount(account));
+  public Single<Boolean> login(AptoideCredentials credentials) {
+    return credentialsValidator.validate(credentials)
+        .andThen(accountService.getAccount(credentials.getEmail(), credentials.getCode(),
+            credentials.getState(), credentials.getAgent()))
+        .flatMap(loginPair -> saveAccount(loginPair.first).andThen(Single.just(loginPair.second)));
+  }
+
+  public Single<CodeAuth> sendMagicLink(String email) {
+    return accountService.sendMagicLink(email);
+  }
+
+  public Single<Boolean> isEmailValid(String email) {
+    return credentialsValidator.isEmailValid(email);
   }
 
   public <T> Completable signUp(String type, T data) {
@@ -98,7 +107,8 @@ public class AptoideAccountManager {
   }
 
   private Completable syncAccount() {
-    return accountService.getAccount()
+    return accountPersistence.getAccount()
+        .flatMap(account -> accountService.getAccount(account.getEmail()))
         .flatMapCompletable(account -> saveAccount(account));
   }
 
@@ -177,11 +187,6 @@ public class AptoideAccountManager {
     });
   }
 
-  public Completable changeBirthdayDate(String birthdate) {
-    return accountService.changeBirthdate(birthdate)
-        .andThen(syncAccount());
-  }
-
   public Completable updateTermsAndConditions() {
     return accountService.updateTermsAndConditions()
         .andThen(accountStatus())
@@ -189,16 +194,8 @@ public class AptoideAccountManager {
             new AptoideAccount(account.getId(), account.getEmail(), account.getNickname(),
                 account.getAvatar(), account.getStore(), account.isAdultContentEnabled(),
                 account.getAccess(), account.isAccessConfirmed(), account.getSubscribedStores(),
-                true, true, account.getBirthDate())))
+                true, true)))
         .toCompletable();
-  }
-
-  public Completable changeSubscribeNewsletter(boolean isSubscribed) {
-    if (isSubscribed) {
-      return accountService.changeSubscribeNewsletter("1");
-    } else {
-      return accountService.changeSubscribeNewsletter("0");
-    }
   }
 
   public Observable<Boolean> pinRequired() {
@@ -238,12 +235,18 @@ public class AptoideAccountManager {
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
-      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SocialLink> storeLinksList,
-      List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return storeManager.createOrUpdate(storeName, storeDescription, storeImagePath, hasNewAvatar,
-        storeThemeName, storeExists, storeLinksList, storeDeleteLinksList)
+        storeThemeName, storeExists)
         .andThen(syncAccount());
+  }
+
+  public Completable generateEmailCode(String email) {
+    if (email.isEmpty()) {
+      return Completable.error(
+          new AccountValidationException(AccountValidationException.EMPTY_EMAIL));
+    }
+    return Completable.complete();
   }
 
   public static class Builder {

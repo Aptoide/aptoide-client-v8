@@ -11,6 +11,7 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.ErrorsMapper;
 import cm.aptoide.pt.account.view.AccountErrorMapper;
 import cm.aptoide.pt.account.view.AccountNavigator;
@@ -19,8 +20,16 @@ import cm.aptoide.pt.account.view.ImagePickerNavigator;
 import cm.aptoide.pt.account.view.ImagePickerPresenter;
 import cm.aptoide.pt.account.view.ImagePickerView;
 import cm.aptoide.pt.account.view.ImageValidator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
 import cm.aptoide.pt.account.view.PhotoFileGenerator;
 import cm.aptoide.pt.account.view.UriToPathResolver;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailNavigator;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailPresenter;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailView;
+import cm.aptoide.pt.account.view.magiclink.MagicLinkView;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkNavigator;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkPresenter;
 import cm.aptoide.pt.account.view.store.ManageStoreErrorMapper;
 import cm.aptoide.pt.account.view.store.ManageStoreNavigator;
 import cm.aptoide.pt.account.view.store.ManageStorePresenter;
@@ -169,7 +178,7 @@ import cm.aptoide.pt.wallet.WalletInstallManager;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import dagger.Module;
 import dagger.Provides;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
@@ -197,13 +206,48 @@ import rx.subscriptions.CompositeSubscription;
 
   @FragmentScope @Provides LoginSignupCredentialsFlavorPresenter provideLoginSignUpPresenter(
       AptoideAccountManager accountManager, AccountNavigator accountNavigator,
-      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics) {
+      AccountErrorMapper errorMapper, AccountAnalytics accountAnalytics,
+      @Named("facebookLoginPermissions") List<String> facebookPermissions,
+      LoginSignUpCredentialsConfiguration loginSignUpCredentialsConfiguration) {
     return new LoginSignupCredentialsFlavorPresenter((LoginSignUpCredentialsView) fragment,
-        accountManager, CrashReport.getInstance(),
-        arguments.getBoolean("dismiss_to_navigate_to_main_view"),
-        arguments.getBoolean("clean_back_stack"), accountNavigator,
-        Arrays.asList("email", "user_friends"), Arrays.asList("email"), errorMapper,
-        accountAnalytics);
+        accountManager, CrashReport.getInstance(), loginSignUpCredentialsConfiguration,
+        accountNavigator, facebookPermissions, errorMapper, accountAnalytics);
+  }
+
+  @FragmentScope @Provides
+  LoginSignUpCredentialsConfiguration providesLoginSignUpCredentialsConfiguration() {
+    String magicLinkErrorMessage =
+        arguments.getString(LoginSignUpCredentialsFragment.MAGIC_LINK_ERROR_MESSAGE);
+    if (magicLinkErrorMessage == null) {
+      magicLinkErrorMessage = "";
+    }
+    return new LoginSignUpCredentialsConfiguration(
+        arguments.getBoolean(LoginSignUpCredentialsFragment.DISMISS_TO_NAVIGATE_TO_MAIN_VIEW),
+        arguments.getBoolean(LoginSignUpCredentialsFragment.CLEAN_BACK_STACK),
+        arguments.getBoolean(LoginSignUpCredentialsFragment.HAS_MAGIC_LINK_ERROR),
+        magicLinkErrorMessage);
+  }
+
+  @FragmentScope @Provides SendMagicLinkPresenter provideSendMagicLinkPresenter(
+      AptoideAccountManager accountManager, SendMagicLinkNavigator navigator,
+      AgentPersistence agentPersitence) {
+    return new SendMagicLinkPresenter((MagicLinkView) fragment, accountManager, navigator,
+        AndroidSchedulers.mainThread(), agentPersitence);
+  }
+
+  @FragmentScope @Provides SendMagicLinkNavigator providesSendMagicLinkNavigator(
+      @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
+      ThemeManager themeManager) {
+    return new SendMagicLinkNavigator(fragmentNavigator, fragment.getContext(), themeManager);
+  }
+
+  @FragmentScope @Provides CheckYourEmailPresenter provideCheckYourEmailPresenter(
+      CheckYourEmailNavigator navigator) {
+    return new CheckYourEmailPresenter((CheckYourEmailView) fragment, navigator);
+  }
+
+  @FragmentScope @Provides CheckYourEmailNavigator providesCheckYourEmailNavigator() {
+    return new CheckYourEmailNavigator(((ActivityNavigator) fragment.getActivity()));
   }
 
   @FragmentScope @Provides @Named("home-fragment-navigator")

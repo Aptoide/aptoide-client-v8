@@ -1,6 +1,7 @@
 package cm.aptoide.pt.account;
 
 import android.content.SharedPreferences;
+import androidx.core.util.Pair;
 import cm.aptoide.accountmanager.Account;
 import cm.aptoide.accountmanager.AccountException;
 import cm.aptoide.accountmanager.AccountFactory;
@@ -18,8 +19,6 @@ import cm.aptoide.pt.dataprovider.model.v7.GetUserSettings;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserBirthdateRequest;
-import cm.aptoide.pt.dataprovider.ws.v3.ChangeUserNewsletterSubscription;
 import cm.aptoide.pt.dataprovider.ws.v3.CreateUserRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.GetTermsAndConditionsStatusRequest;
 import cm.aptoide.pt.dataprovider.ws.v3.OAuth2AuthenticationRequest;
@@ -35,8 +34,10 @@ import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.dataprovider.ws.v7.store.ChangeStoreSubscriptionRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
+import com.aptoide.authentication.model.CodeAuth;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Date;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
@@ -63,6 +64,7 @@ public class AccountServiceV3 implements AccountService {
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7;
   private final BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7;
   private final OAuthModeProvider oAuthModeProvider;
+  private final AptoideAuthenticationRx aptoideAuthentication;
 
   public AccountServiceV3(AccountFactory accountFactory, OkHttpClient httpClient,
       OkHttpClient longTimeoutHttpClient, Converter.Factory converterFactory,
@@ -73,7 +75,7 @@ public class AccountServiceV3 implements AccountService {
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptorV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorWebV7,
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
-      OAuthModeProvider oAuthModeProvider) {
+      OAuthModeProvider oAuthModeProvider, AptoideAuthenticationRx aptoideAuthentication) {
     this.accountFactory = accountFactory;
     this.httpClient = httpClient;
     this.longTimeoutHttpClient = longTimeoutHttpClient;
@@ -89,25 +91,41 @@ public class AccountServiceV3 implements AccountService {
     this.bodyInterceptorWebV7 = bodyInterceptorWebV7;
     this.bodyInterceptorPoolV7 = bodyInterceptorPoolV7;
     this.oAuthModeProvider = oAuthModeProvider;
-  }
-
-  @Override public Single<Account> getAccount(String email, String password) {
-    return createAccount(email.toLowerCase(), password, null,
-        AptoideAccountManager.APTOIDE_SIGN_UP_TYPE);
+    this.aptoideAuthentication = aptoideAuthentication;
   }
 
   @Override
-  public Single<Account> createAccount(String email, String metadata, String name, String type) {
-    return OAuth2AuthenticationRequest.of(email, metadata, type, null,
-        v3NoAuthorizationBodyInterceptor, httpClient, converterFactory, tokenInvalidator,
-        sharedPreferences, extraId, oAuthModeProvider.getAuthMode(type))
+  public Single<Pair<Account, Boolean>> getAccount(String email, String code, String state,
+      String agent) {
+    return RxJavaInterop.toV1Single(aptoideAuthentication.authenticate(code, state, agent))
+        .flatMap(oAuth2 -> authenticationPersistence.createAuthentication(email, code,
+            oAuth2.getData()
+                .getRefreshToken(), oAuth2.getData()
+                .getAccessToken(), AptoideAccountManager.APTOIDE_SIGN_UP_TYPE)
+            .andThen(authenticationPersistence.getAuthentication()
+                .flatMap(auth -> getAccount(auth.getEmail()).map(
+                    account -> Pair.create(account, oAuth2.getSignup())))))
+        .onErrorResumeNext(throwable -> {
+          if (throwable instanceof AptoideWsV3Exception) {
+            AptoideWsV3Exception exception = (AptoideWsV3Exception) throwable;
+            return Single.error(new AccountException(exception));
+          }
+          return Single.error(throwable);
+        });
+  }
+
+  @Override public Single<Account> createAccount(String email, String metadata, String type) {
+    return OAuth2AuthenticationRequest.of(email, metadata, type, v3NoAuthorizationBodyInterceptor,
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences, extraId,
+        oAuthModeProvider.getAuthMode(type))
         .observe()
         .toSingle()
         .flatMap(oAuth -> {
           if (!oAuth.hasErrors()) {
             return authenticationPersistence.createAuthentication(email, metadata,
                 oAuth.getRefreshToken(), oAuth.getAccessToken(), type)
-                .andThen(getAccount());
+                .andThen(authenticationPersistence.getAuthentication()
+                    .flatMap(auth -> getAccount(auth.getEmail())));
           } else {
             return Single.error(new AccountException(oAuth));
           }
@@ -121,8 +139,8 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override public Single<Account> createAccount(String email, String password) {
-    return CreateUserRequest.of(email.toLowerCase(), password, v3NoAuthorizationBodyInterceptor,
+  @Override public Single<Account> createAccount(String email, String code) {
+    return CreateUserRequest.of(email.toLowerCase(), code, v3NoAuthorizationBodyInterceptor,
         httpClient, tokenInvalidator, sharedPreferences, extraId)
         .observe(true)
         .toSingle()
@@ -130,7 +148,8 @@ public class AccountServiceV3 implements AccountService {
           if (response.hasErrors()) {
             return Single.error(new AccountException(response.getErrors()));
           }
-          return getAccount(email, password);
+          return getAccount(email, code, "", "").map(
+              accountBooleanPair -> accountBooleanPair.first);
         })
         .onErrorResumeNext(throwable -> {
           if (throwable instanceof AptoideWsV3Exception) {
@@ -138,20 +157,6 @@ public class AccountServiceV3 implements AccountService {
             return Single.error(new AccountException(exception));
           }
           return Single.error(throwable);
-        });
-  }
-
-  @Override public Completable changeBirthdate(String birthdate) {
-    return ChangeUserBirthdateRequest.of(birthdate, defaultBodyInterceptorV3, converterFactory,
-        httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
         });
   }
 
@@ -169,23 +174,9 @@ public class AccountServiceV3 implements AccountService {
         });
   }
 
-  @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-    return ChangeUserNewsletterSubscription.of(isSubscribed, defaultBodyInterceptorV3,
-        converterFactory, httpClient, tokenInvalidator, sharedPreferences)
-        .observe(true)
-        .toSingle()
-        .flatMapCompletable(response -> {
-          if (response.isOk()) {
-            return Completable.complete();
-          } else {
-            return Completable.error(new Exception(V3.getErrorMessage(response)));
-          }
-        });
-  }
-
-  @Override public Single<Account> getAccount() {
+  @Override public Single<Account> getAccount(String email) {
     return Single.zip(getServerAccount(), getSubscribedStores(), getTermsAndConditionsForAccount(),
-        (response, stores, terms) -> mapServerAccountToAccount(response, stores, terms));
+        (response, stores, terms) -> mapServerAccountToAccount(response, stores, terms, email));
   }
 
   @Override public Completable updateAccount(String nickname, String avatarPath) {
@@ -260,10 +251,14 @@ public class AccountServiceV3 implements AccountService {
     return authenticationPersistence.removeAuthentication();
   }
 
+  @Override public Single<CodeAuth> sendMagicLink(String email) {
+    return RxJavaInterop.toV1Single(aptoideAuthentication.sendMagicLink(email));
+  }
+
   /**
    * This retry occurs when user user is being propagated through the server slave machines
-   * (specifically on user creation) so we use a retry with exponential back-off with three
-   * retries to get the data.
+   * (specifically on user creation) so we use a retry with exponential back-off with three retries
+   * to get the data.
    */
   private Observable<Throwable> retryOnTicket(Observable<? extends Throwable> observableError) {
     return observableError.zipWith(Observable.range(2, 4), (throwable, count) -> {
@@ -286,7 +281,7 @@ public class AccountServiceV3 implements AccountService {
   }
 
   private Account mapServerAccountToAccount(GetUserInfo userInfo, List<Store> subscribedStores,
-      TermsAndConditionsResponse terms) {
+      TermsAndConditionsResponse terms, String accountEmail) {
     final GetUserMeta.Data userData = userInfo.getNodes()
         .getMeta()
         .getData();
@@ -294,11 +289,24 @@ public class AccountServiceV3 implements AccountService {
         .getSettings()
         .getData();
     return accountFactory.createAccount(userData.getAccess(), subscribedStores,
-        String.valueOf(userData.getId()), userData.getIdentity()
-            .getEmail(), userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
+        String.valueOf(userData.getId()), getRemoteOrLocalEmail(accountEmail, userData),
+        userData.getName(), userData.getAvatar(), mapToStore(userData.getStore()),
         userSettings.isMature(), userSettings.getAccess()
-            .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos(),
-        terms.isOk() ? terms.getBirthdate() : new Date(1970, 1, 1));
+            .isConfirmed(), terms.isOk() && terms.isPrivacy(), terms.isOk() && terms.isTos());
+  }
+
+  private String getRemoteOrLocalEmail(String accountEmail, GetUserMeta.Data userData) {
+    String email;
+    if (userData.getIdentity()
+        .getEmail() == null || userData.getIdentity()
+        .getEmail()
+        .isEmpty()) {
+      email = accountEmail;
+    } else {
+      email = userData.getIdentity()
+          .getEmail();
+    }
+    return email;
   }
 
   private Completable changeSubscription(String storeName, String storeUserName,

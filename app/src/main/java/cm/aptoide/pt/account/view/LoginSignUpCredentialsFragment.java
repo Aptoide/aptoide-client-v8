@@ -9,22 +9,24 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.widget.CompoundButtonCompat;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.login.SendMagicLinkView;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.account.AccountAnalytics;
+import cm.aptoide.pt.account.view.magiclink.MagicLinkView;
+import cm.aptoide.pt.account.view.magiclink.SendMagicLinkPresenter;
 import cm.aptoide.pt.orientation.ScreenOrientationManager;
+import cm.aptoide.pt.presenter.CompositePresenter;
 import cm.aptoide.pt.presenter.LoginSignUpCredentialsView;
 import cm.aptoide.pt.presenter.LoginSignupCredentialsFlavorPresenter;
 import cm.aptoide.pt.themes.ThemeManager;
@@ -34,20 +36,24 @@ import cm.aptoide.pt.view.rx.RxAlertDialog;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.view.RxView;
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.jetbrains.annotations.NotNull;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
 public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
-    implements LoginSignUpCredentialsView, NotBottomNavigationView {
+    implements LoginSignUpCredentialsView, MagicLinkView, NotBottomNavigationView {
 
-  private static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
-  private static final String CLEAN_BACK_STACK = "clean_back_stack";
+  public static final String DISMISS_TO_NAVIGATE_TO_MAIN_VIEW = "dismiss_to_navigate_to_main_view";
+  public static final String CLEAN_BACK_STACK = "clean_back_stack";
+  public static final String HAS_MAGIC_LINK_ERROR = "has_magic_link_error";
+  public static final String MAGIC_LINK_ERROR_MESSAGE = "magic_link_error_message";
 
   private static final String USERNAME_KEY = "username_key";
-  private static final String PASSWORD_KEY = "password_key";
   @Inject LoginSignupCredentialsFlavorPresenter presenter;
+  @Inject SendMagicLinkPresenter sendMagicLinkPresenter;
   @Inject ScreenOrientationManager orientationManager;
   @Inject AccountAnalytics accountAnalytics;
   @Inject @Named("marketName") String marketName;
@@ -56,45 +62,92 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   private RxAlertDialog facebookEmailRequiredDialog;
   private Button googleLoginButton;
   private View facebookLoginButton;
-  private Button hideShowAptoidePasswordButton;
-  private View loginArea;
-  private View signUpArea;
-  private EditText aptoideEmailEditText;
-  private EditText aptoidePasswordEditText;
-  private TextView forgotPasswordButton;
-  private Button buttonSignUp;
-  private Button buttonLogin;
   private View loginSignupSelectionArea;
-  private Button loginSelectionButton;
-  private Button signUpSelectionButton;
+  private Button connectWithEmailButton;
   private TextView termsAndConditions;
-  private View separator;
-  private boolean isPasswordVisible = false;
-  private View credentialsEditTextsArea;
+  private SendMagicLinkView sendMagicLinkView;
+  private View socialLoginArea;
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private View rootView;
   private CheckBox termsConditionCheckBox;
   private Drawable checkboxDrawable;
-  private int originalHeight;
 
   private PublishSubject<Void> privacyPolicySubject;
   private PublishSubject<Void> termsAndConditionsSubject;
 
   public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
       boolean cleanBackStack) {
+    return newInstance(dismissToNavigateToMainView, cleanBackStack, false, "");
+  }
+
+  public static LoginSignUpCredentialsFragment newInstance(boolean dismissToNavigateToMainView,
+      boolean cleanBackStack, boolean hasMagicLinkError, String magicLinkErrorMessage) {
     final LoginSignUpCredentialsFragment fragment = new LoginSignUpCredentialsFragment();
 
     final Bundle bundle = new Bundle();
     bundle.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
     bundle.putBoolean(CLEAN_BACK_STACK, cleanBackStack);
+    bundle.putBoolean(HAS_MAGIC_LINK_ERROR, hasMagicLinkError);
+    bundle.putString(MAGIC_LINK_ERROR_MESSAGE, magicLinkErrorMessage);
     fragment.setArguments(bundle);
 
     return fragment;
   }
 
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    rootView = getActivity().findViewById(android.R.id.content);
+
+    googleLoginButton = view.findViewById(R.id.google_login_button);
+
+    facebookLoginButton = view.findViewById(R.id.fb_login_button);
+
+    loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
+    sendMagicLinkView = view.findViewById(R.id.send_magic_link_view);
+    socialLoginArea = view.findViewById(R.id.social_login_area);
+    connectWithEmailButton = view.findViewById(R.id.show_login_with_aptoide_area);
+
+    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext(), themeManager).setMessage(
+        R.string.facebook_email_permission_regected_message)
+        .setPositiveButton(R.string.facebook_grant_permission_button)
+        .setNegativeButton(android.R.string.cancel)
+        .build();
+
+    termsConditionCheckBox = view.findViewById(R.id.tc_checkbox);
+    termsAndConditions = view.findViewById(R.id.terms_and_conditions);
+
+    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
+        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
+
+    try {
+      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
+          .findViewById(R.id.login_signup_layout));
+    } catch (IllegalArgumentException ex) {
+      // this happens because in landscape the R.id.login_signup_layout is not
+      // a child of CoordinatorLayout
+    }
+
+    attachPresenter(new CompositePresenter(Arrays.asList(presenter, sendMagicLinkPresenter)));
+    registerClickHandler(presenter);
+  }
+
+  @Override public void onDestroyView() {
+    getActivity().getWindow()
+        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    unregisterClickHandler(presenter);
+    unlockScreenRotation();
+    termsAndConditions = null;
+    sendMagicLinkView = null;
+    termsConditionCheckBox = null;
+    super.onDestroyView();
+  }
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
+    getActivity().getWindow()
+        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     privacyPolicySubject = PublishSubject.create();
     termsAndConditionsSubject = PublishSubject.create();
   }
@@ -123,29 +176,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
     super.onViewStateRestored(savedInstanceState);
-
-    if (savedInstanceState != null) {
-      aptoideEmailEditText.setText(savedInstanceState.getString(USERNAME_KEY, ""));
-      aptoidePasswordEditText.setText(savedInstanceState.getString(PASSWORD_KEY, ""));
-    }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
-    if (outState != null && aptoideEmailEditText != null && aptoidePasswordEditText != null) {
-      outState.putString(USERNAME_KEY, aptoideEmailEditText.getText()
-          .toString());
-      outState.putString(PASSWORD_KEY, aptoidePasswordEditText.getText()
-          .toString());
-    }
   }
 
-  @Override public Observable<Void> showAptoideLoginAreaClick() {
-    return RxView.clicks(loginSelectionButton);
-  }
-
-  @Override public Observable<Boolean> showAptoideSignUpAreaClick() {
-    return RxView.clicks(signUpSelectionButton)
+  @Override public Observable<Boolean> showAptoideLoginAreaClick() {
+    return RxView.clicks(connectWithEmailButton)
         .map(event -> termsConditionCheckBox.isChecked());
   }
 
@@ -153,14 +191,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return RxView.clicks(googleLoginButton)
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
-  }
-
-  @Override public Observable<Void> showHidePasswordClick() {
-    return RxView.clicks(hideShowAptoidePasswordButton);
-  }
-
-  @Override public Observable<Void> forgotPasswordClick() {
-    return RxView.clicks(forgotPasswordButton);
   }
 
   @Override public Observable<Void> facebookSignUpWithRequiredPermissionsInEvent() {
@@ -174,20 +204,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
             getStartupClickOrigin()));
   }
 
-  @Override public Observable<AptoideCredentials> aptoideLoginEvent() {
-    return RxView.clicks(buttonLogin)
-        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.LOGIN,
-            getStartupClickOrigin()))
-        .map(click -> getCredentials());
-  }
-
-  @Override public Observable<AptoideCredentials> aptoideSignUpEvent() {
-    return RxView.clicks(buttonSignUp)
-        .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.JOIN_APTOIDE,
-            getStartupClickOrigin()))
-        .map(click -> getCredentials());
-  }
-
   @Override public Observable<Void> termsAndConditionsClickEvent() {
     return termsAndConditionsSubject;
   }
@@ -196,22 +212,15 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     return privacyPolicySubject;
   }
 
-  @Override public void showAptoideSignUpArea() {
-    setAptoideSignUpAreaVisible();
-    loginArea.setVisibility(View.GONE);
-    signUpArea.setVisibility(View.VISIBLE);
-    separator.setVisibility(View.GONE);
+  @Override public void showAptoideLoginArea() {
+    setAptoideLoginAreaVisible();
+    hideSocialLoginArea();
     termsConditionCheckBox.setVisibility(View.GONE);
     termsAndConditions.setVisibility(View.GONE);
   }
 
-  @Override public void showAptoideLoginArea() {
-    setAptoideLoginAreaVisible();
-    loginArea.setVisibility(View.VISIBLE);
-    signUpArea.setVisibility(View.GONE);
-    separator.setVisibility(View.GONE);
-    termsConditionCheckBox.setVisibility(View.GONE);
-    termsAndConditions.setVisibility(View.GONE);
+  @Override public void showMagicLinkError(String error) {
+    sendMagicLinkView.setState(new SendMagicLinkView.State.Error(error, false));
   }
 
   @Override public void showLoading() {
@@ -229,8 +238,8 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @Override public void showTermsConditionError() {
     //Shifts the bottomsheet up and then down again to create space for the error snack when in portrait
-    Snackbar snackbar =
-        Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error), 4500);
+    Snackbar snackbar = Snackbar.make(rootView, getString(R.string.signup_message_no_tandc_error),
+        Snackbar.LENGTH_SHORT);
 
     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
       snackbar.addCallback(new Snackbar.Callback() {
@@ -271,18 +280,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     facebookLoginButton.setVisibility(View.GONE);
   }
 
-  @Override public void showPassword() {
-    isPasswordVisible = true;
-    aptoidePasswordEditText.setTransformationMethod(null);
-    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.ic_open_eye);
-  }
-
-  @Override public void hidePassword() {
-    isPasswordVisible = false;
-    aptoidePasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
-    hideShowAptoidePasswordButton.setBackgroundResource(R.drawable.ic_closed_eye);
-  }
-
   @Override public void dismiss() {
     getActivity().finish();
   }
@@ -296,13 +293,10 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public boolean tryCloseLoginBottomSheet(boolean shouldShowTCandPP) {
-    if (credentialsEditTextsArea.getVisibility() == View.VISIBLE) {
-      bottomSheetBehavior.setPeekHeight(originalHeight);
-      credentialsEditTextsArea.setVisibility(View.GONE);
+    if (sendMagicLinkView.getVisibility() == View.VISIBLE) {
+      sendMagicLinkView.setVisibility(View.GONE);
       loginSignupSelectionArea.setVisibility(View.VISIBLE);
-      loginArea.setVisibility(View.GONE);
-      signUpArea.setVisibility(View.GONE);
-      separator.setVisibility(View.VISIBLE);
+      socialLoginArea.setVisibility(View.VISIBLE);
       if (shouldShowTCandPP) {
         termsConditionCheckBox.setVisibility(View.VISIBLE);
         termsAndConditions.setVisibility(View.VISIBLE);
@@ -310,10 +304,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       return true;
     }
     return false;
-  }
-
-  @Override public boolean isPasswordVisible() {
-    return isPasswordVisible;
   }
 
   @Override public Context getApplicationContext() {
@@ -329,15 +319,7 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
   }
 
   @Override public void setCobrandText() {
-    buttonSignUp.setText(String.format(getString(R.string.join_company),
-        getResources().getString(R.string.app_name)));
-    signUpSelectionButton.setText(String.format(getString(R.string.join_company),
-        getResources().getString(R.string.app_name)));
-  }
 
-  public void hideTCandPP() {
-    termsConditionCheckBox.setVisibility(View.GONE);
-    termsAndConditions.setVisibility(View.GONE);
   }
 
   public void showTCandPP() {
@@ -381,24 +363,18 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     termsAndConditions.setVisibility(View.VISIBLE);
   }
 
-  private AptoideCredentials getCredentials() {
-    return new AptoideCredentials(aptoideEmailEditText.getText()
-        .toString(), aptoidePasswordEditText.getText()
-        .toString(), termsConditionCheckBox.isChecked());
+  private void hideSocialLoginArea() {
+    socialLoginArea.setVisibility(View.GONE);
   }
 
   private AccountAnalytics.StartupClickOrigin getStartupClickOrigin() {
-    if (loginArea.getVisibility() == View.VISIBLE) {
-      return AccountAnalytics.StartupClickOrigin.LOGIN_UP;
-    } else if (signUpArea.getVisibility() == View.VISIBLE) {
-      return AccountAnalytics.StartupClickOrigin.JOIN_UP;
-    } else {
-      return AccountAnalytics.StartupClickOrigin.MAIN;
-    }
+    return AccountAnalytics.StartupClickOrigin.MAIN;
   }
 
   private void setAptoideLoginAreaVisible() {
-    credentialsEditTextsArea.setVisibility(View.VISIBLE);
+    sendMagicLinkView.setVisibility(View.VISIBLE);
+    termsAndConditions.setVisibility(View.GONE);
+    termsConditionCheckBox.setVisibility(View.GONE);
     loginSignupSelectionArea.setVisibility(View.GONE);
     if (bottomSheetBehavior != null) {
       float newHeight = 320 * getResources().getDisplayMetrics().density;
@@ -406,72 +382,41 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     }
   }
 
-  private void setAptoideSignUpAreaVisible() {
-    credentialsEditTextsArea.setVisibility(View.VISIBLE);
-    loginSignupSelectionArea.setVisibility(View.GONE);
-    if (bottomSheetBehavior != null) {
-      float newHeight = 280 * getResources().getDisplayMetrics().density;
-      bottomSheetBehavior.setPeekHeight((int) newHeight);
-    }
+  @NotNull @Override public Observable<String> getMagicLinkClick() {
+    return sendMagicLinkView.getMagicLinkSubmit();
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    rootView = getActivity().findViewById(android.R.id.content);
-    forgotPasswordButton = (TextView) view.findViewById(R.id.forgot_password);
-
-    googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
-
-    buttonLogin = (Button) view.findViewById(R.id.button_login);
-    buttonSignUp = (Button) view.findViewById(R.id.button_sign_up);
-
-    aptoideEmailEditText = (EditText) view.findViewById(R.id.username);
-    aptoidePasswordEditText = (EditText) view.findViewById(R.id.password);
-    hideShowAptoidePasswordButton = (Button) view.findViewById(R.id.btn_show_hide_pass);
-
-    facebookLoginButton = view.findViewById(R.id.fb_login_button);
-
-    loginSignupSelectionArea = view.findViewById(R.id.login_signup_selection_layout);
-    credentialsEditTextsArea = view.findViewById(R.id.credentials_edit_texts);
-    signUpSelectionButton = (Button) view.findViewById(R.id.show_join_aptoide_area);
-    loginSelectionButton = (Button) view.findViewById(R.id.show_login_with_aptoide_area);
-
-    loginArea = view.findViewById(R.id.login_button_area);
-    signUpArea = view.findViewById(R.id.sign_up_button_area);
-    separator = view.findViewById(R.id.separator);
-
-    facebookEmailRequiredDialog = new RxAlertDialog.Builder(getContext(), themeManager).setMessage(
-        R.string.facebook_email_permission_regected_message)
-        .setPositiveButton(R.string.facebook_grant_permission_button)
-        .setNegativeButton(android.R.string.cancel)
-        .build();
-
-    termsConditionCheckBox = (CheckBox) view.findViewById(R.id.tc_checkbox);
-    termsAndConditions = (TextView) view.findViewById(R.id.terms_and_conditions);
-
-    progressDialog = GenericDialogs.createGenericPleaseWaitDialog(getContext(),
-        themeManager.getAttributeForTheme(R.attr.dialogsTheme).resourceId);
-
-    try {
-      bottomSheetBehavior = BottomSheetBehavior.from(view.getRootView()
-          .findViewById(R.id.login_signup_layout));
-    } catch (IllegalArgumentException ex) {
-      // this happens because in landscape the R.id.login_signup_layout is not
-      // a child of CoordinatorLayout
-    }
-
-    originalHeight = bottomSheetBehavior.getPeekHeight();
-    attachPresenter(presenter);
-    registerClickHandler(presenter);
+  @Override public void setInitialState() {
+    sendMagicLinkView.setState(SendMagicLinkView.State.Initial.INSTANCE);
   }
 
-  @Override public void onDestroyView() {
-    unregisterClickHandler(presenter);
-    unlockScreenRotation();
-    termsAndConditions = null;
-    credentialsEditTextsArea = null;
-    termsConditionCheckBox = null;
-    super.onDestroyView();
+  @Override public void removeTextFieldError() {
+    sendMagicLinkView.resetTextFieldError();
+  }
+
+  @Override public void setEmailInvalidError() {
+    sendMagicLinkView.setState(
+        new SendMagicLinkView.State.Error(getString(R.string.login_error_invalid_email), true));
+  }
+
+  @Override public void setLoadingScreen() {
+    showLoading();
+  }
+
+  @Override public void removeLoadingScreen() {
+    hideKeyboard();
+    hideLoading();
+  }
+
+  @NotNull @Override public Observable<String> getEmailTextChangeEvent() {
+    return sendMagicLinkView.getEmailChangeEvent();
+  }
+
+  @Override public void showUnknownError() {
+    showMagicLinkError(getString(R.string.all_message_general_error));
+  }
+
+  @NotNull @Override public Observable<Void> getSecureLoginTextClick() {
+    return sendMagicLinkView.getSecureLoginTextClick();
   }
 }

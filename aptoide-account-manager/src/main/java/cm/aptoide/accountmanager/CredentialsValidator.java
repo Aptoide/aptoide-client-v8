@@ -1,63 +1,46 @@
 package cm.aptoide.accountmanager;
 
+import android.util.Patterns;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import rx.Completable;
+import rx.Single;
 
 public class CredentialsValidator {
   /**
    * Returns true if email and password are not empty. If validate password content is enable
-   * returns true if password is at least 8 characters long and has at least 1 number and 1 letter.
    *
    * @param credentials
-   * @param validatePassword whether password content should be validated.
    */
-  public Completable validate(AptoideCredentials credentials, boolean validatePassword) {
+  public Completable validate(AptoideCredentials credentials) {
     return Completable.defer(() -> {
-      int x = validateFields(credentials, validatePassword);
-      if (x != -1) return Completable.error(new AccountValidationException(x));
+      int result = validateFields(credentials);
+      if (result != -1) return Completable.error(new AccountValidationException(result));
       return Completable.complete();
     });
   }
 
-  @Nullable @VisibleForTesting
-  protected int validateFields(AptoideCredentials credentials, boolean validatePassword) {
-    if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getPassword())) {
-      return AccountValidationException.EMPTY_EMAIL_AND_PASSWORD;
-    } else if (isEmpty(credentials.getPassword())) {
-      return AccountValidationException.EMPTY_PASSWORD;
-    } else if (isEmpty(credentials.getEmail())) {
-      return AccountValidationException.EMPTY_EMAIL;
-    } else if (validatePassword && (credentials.getPassword()
-        .length() < 8 || !has1number1letter(credentials.getPassword()))) {
-      return AccountValidationException.INVALID_PASSWORD;
-    }
-    return -1;
+  public Single<Boolean> isEmailValid(String email) {
+    return Single.just(checkIsEmailValid(email));
   }
 
-  @VisibleForTesting protected boolean has1number1letter(String password) {
-    boolean hasLetter = false;
-    boolean hasNumber = false;
-
-    for (char c : password.toCharArray()) {
-      if (!hasLetter && Character.isLetter(c)) {
-        if (hasNumber) return true;
-        hasLetter = true;
-      } else if (!hasNumber && Character.isDigit(c)) {
-        if (hasLetter) return true;
-        hasNumber = true;
-      }
+  private boolean checkIsEmailValid(String email) {
+    if (!isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email)
+        .matches()) {
+      return true;
     }
-    if (password.contains("!")
-        || password.contains("@")
-        || password.contains("#")
-        || password.contains("$")
-        || password.contains("#")
-        || password.contains("*")) {
-      hasNumber = true;
-    }
+    return false;
+  }
 
-    return hasNumber && hasLetter;
+  @Nullable @VisibleForTesting protected int validateFields(AptoideCredentials credentials) {
+    if (isEmpty(credentials.getEmail()) && isEmpty(credentials.getCode())) {
+      return AccountValidationException.EMPTY_EMAIL_AND_CODE;
+    } else if (isEmpty(credentials.getCode())) {
+      return AccountValidationException.EMPTY_CODE;
+    } else if (isEmpty(credentials.getEmail())) {
+      return AccountValidationException.EMPTY_EMAIL;
+    }
+    return -1;
   }
 
   private boolean isEmpty(CharSequence str) {

@@ -12,7 +12,6 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.FacebookLoginResult;
@@ -151,13 +150,10 @@ public class MockApplicationModule extends ApplicationModule {
       @Override public boolean acceptedPrivacyPolicy() {
         return true;
       }
-
-      @Override public String getBirthDate() {
-        return "1995";
-      }
     };
     final AccountService accountServiceMock = new AccountService() {
-      @Override public Single<Account> getAccount(String email, String password) {
+      @Override
+      public Single<Account> getAccount(String email, String code, String state, String agent) {
         List<ErrorResponse> list = new ArrayList<>();
         ErrorResponse errorResponse = new ErrorResponse();
         if (TestType.types.equals(TestType.TestTypes.SIGNSIGNUPTESTS)) {
@@ -170,8 +166,7 @@ public class MockApplicationModule extends ApplicationModule {
         return Single.just(account);
       }
 
-      @Override public Single<Account> createAccount(String email, String metadata, String name,
-          String type) {
+      @Override public Single<Account> createAccount(String email, String metadata, String type) {
         return Single.just(account);
       }
 
@@ -192,15 +187,7 @@ public class MockApplicationModule extends ApplicationModule {
         return Single.just(account);
       }
 
-      @Override public Completable changeBirthdate(String birthdate) {
-        return null;
-      }
-
-      @Override public Completable changeSubscribeNewsletter(String isSubscribed) {
-        return null;
-      }
-
-      @Override public Single<Account> getAccount() {
+      @Override public Single<Account> getAccount(String email) {
         return Single.just(account);
       }
 
@@ -304,8 +291,7 @@ public class MockApplicationModule extends ApplicationModule {
             tokenInvalidator, requestBodyFactory, nonNullObjectMapper) {
           @Override
           public Completable createOrUpdate(String a, String b, String c, boolean d, String e,
-              boolean f, List<SocialLink> storeLinksList,
-              List<cm.aptoide.pt.dataprovider.model.v7.store.Store.SocialChannelType> storeDeleteLinksList) {
+              boolean f) {
             return Completable.complete();
           }
         };

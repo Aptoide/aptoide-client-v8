@@ -123,6 +123,7 @@
   <attr name="textColorRed700" format="reference|color" />
   <attr name="textColorOrange" format="reference|color" />
   <attr name="textColorOrangeGradientEnd" format="reference|color" />
+  <attr name="textColorOpenEmailAppButton" format="reference|color" />
   <attr name="textColorCurationGold" format="reference|color" />
   <attr name="textColorAppcOrange" format="reference|color" />
   <attr name="textColorSpendAppc" format="reference|color" />
@@ -172,6 +173,7 @@
   <attr name="buttonTextFont" format="string" />
   <attr name="buttonTextSize" format="dimension" />
   <attr name="buttonTextSizeSmall" format="dimension" />
+  <attr name="buttonTextSizeMedium" format="dimension" />
   <attr name="installButtonBackground" format="reference" />
   <attr name="toolbarBackground" format="reference" />
   <attr name="toolbarBackgroundSecondary" format="color" />
@@ -204,6 +206,11 @@
   <attr name="wizardBackgroundBottom" format="color" />
   <attr name="wizardRadioBackgroundColor" format="color" />
   <attr name="appDescriptionToolbarAppc" format="reference" />
+  <attr name="secureLoginBackground" format="color" />
+  <attr name="connectBottomSheetBackground" format="reference" />
+  <attr name="loginInputBackground" format="reference" />
+  <attr name="loginInputErrorBackground" format="reference" />
+  <attr name="checkYourEmailBackground" format="reference" />
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />

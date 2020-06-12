@@ -23,7 +23,6 @@ import com.jakewharton.rxbinding.view.RxView;
  */
 public class CommentWidget extends Widget<CommentDisplayable> {
 
-  private static final String TAG = CommentWidget.class.getName();
   private static final int MARGIN_IN_DIP = 15;
 
   private View replyLayout;
@@ -39,12 +38,12 @@ public class CommentWidget extends Widget<CommentDisplayable> {
   }
 
   @Override protected void assignViews(View itemView) {
-    userAvatar = (ImageView) itemView.findViewById(R.id.user_icon);
+    userAvatar = itemView.findViewById(R.id.user_icon);
     outerLayout = itemView.findViewById(R.id.outer_layout);
-    userName = (TextView) itemView.findViewById(R.id.user_name);
-    datePos1 = (TextView) itemView.findViewById(R.id.added_date_pos1);
-    datePos2 = (TextView) itemView.findViewById(R.id.added_date_pos2);
-    comment = (TextView) itemView.findViewById(R.id.comment);
+    userName = itemView.findViewById(R.id.user_name);
+    datePos1 = itemView.findViewById(R.id.added_date_pos1);
+    datePos2 = itemView.findViewById(R.id.added_date_pos2);
+    comment = itemView.findViewById(R.id.comment);
     replyLayout = itemView.findViewById(R.id.reply_layout);
   }
 

@@ -92,12 +92,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
-    deepLinkAnalytics.website(uri);
+
     shortcutNavigation = false;
     newFeature = application.getNewFeature();
-
-    Logger.getInstance()
-        .v(TAG, "uri: " + uri);
 
     dealWithShortcuts();
 
@@ -108,6 +105,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+
+    if (!"aptoideauth".equalsIgnoreCase(u.getScheme())) {
+      deepLinkAnalytics.website(uri);
+      Logger.getInstance()
+          .v(TAG, "uri: " + uri);
+    }
+
     Intent intent = null;
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
@@ -118,6 +122,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
         intent = dealWithImagesApoide(uri);
+      } else if (u.getHost()
+          .contains("app.aptoide.com")) {
+        intent = dealWithAptoideAuthentication(uri);
       } else if (u.getHost()
           .contains("aptoide.com")) {
         intent = dealWithAptoideWebsite(u);
@@ -146,6 +153,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = dealWithAptoideSchema(u);
       } else if ("aptoidefeature".equalsIgnoreCase(u.getScheme())) {
         intent = parseFeatureUri(u.getHost());
+      } else if ("aptoideauth".equalsIgnoreCase(u.getScheme())) {
+        String token = uri.split("aptoideauth://")[1];
+        intent = parseAptoideAuthUri(token);
       }
     }
     if (intent != null) {
@@ -153,6 +163,20 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     deepLinkAnalytics.sendWebsite();
     finish();
+  }
+
+  private Intent dealWithAptoideAuthentication(String u) {
+    String path = u.split("app.aptoide.com/auth/code/")[1];
+    String code = path.split("/")[0];
+    return parseAptoideAuthUri(code);
+  }
+
+  private Intent parseAptoideAuthUri(String token) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APTOIDE_AUTH, true);
+    intent.putExtra(DeepLinksKeys.AUTH_TOKEN, token);
+    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    return intent;
   }
 
   private Intent parseFeatureUri(String uri) {
@@ -740,6 +764,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String APPC_INFO_VIEW = "appc_info_view";
     public static final String APPC_ADS = "appc_ads";
     public static final String FEATURE = "feature";
+    public static final String APTOIDE_AUTH = "aptoide_auth";
   }
 
   public static class DeepLinksKeys {
@@ -753,6 +778,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
     public static final String SLUG = "slug";
+    public static final String AUTH_TOKEN = "auth_token";
 
     //deep link query parameters
     public static final String ACTION = "action";
