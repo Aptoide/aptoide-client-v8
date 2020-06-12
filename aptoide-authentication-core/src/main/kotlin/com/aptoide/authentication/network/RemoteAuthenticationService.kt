@@ -4,6 +4,7 @@ import com.aptoide.authentication.AuthenticationException
 import com.aptoide.authentication.model.CodeAuth
 import com.aptoide.authentication.model.OAuth2
 import com.aptoide.authentication.service.AuthenticationService
+import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
@@ -72,6 +73,7 @@ class RemoteAuthenticationService(
 
   }
 
+  @JsonClass(generateAdapter = true)
   data class Credentials(val credential: String, val supported: Array<String>)
 }
 
