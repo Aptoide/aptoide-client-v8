@@ -72,6 +72,7 @@ dependencies {
   implementation project(path: ':crashreports')
   implementation project(path: ':aptoide-analytics-default-implementation')
   implementation project(path: ':utils')
+  api project(path: ':aptoide-authentication-rx')
 
   testImplementation "junit:junit:${JUNIT_VERSION}"
   testImplementation "org.mockito:mockito-core:${MOCKITO_CORE_VERSION}"

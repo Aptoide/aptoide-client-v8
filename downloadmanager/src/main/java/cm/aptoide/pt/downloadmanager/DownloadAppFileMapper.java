@@ -1,14 +1,13 @@
 package cm.aptoide.pt.downloadmanager;
 
-import cm.aptoide.pt.database.realm.FileToDownload;
-import io.realm.RealmList;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
 import java.util.ArrayList;
 import java.util.List;
 
-import static cm.aptoide.pt.database.realm.FileToDownload.APK;
-import static cm.aptoide.pt.database.realm.FileToDownload.GENERIC;
-import static cm.aptoide.pt.database.realm.FileToDownload.OBB;
-import static cm.aptoide.pt.database.realm.FileToDownload.SPLIT;
+import static cm.aptoide.pt.database.room.RoomFileToDownload.APK;
+import static cm.aptoide.pt.database.room.RoomFileToDownload.GENERIC;
+import static cm.aptoide.pt.database.room.RoomFileToDownload.OBB;
+import static cm.aptoide.pt.database.room.RoomFileToDownload.SPLIT;
 
 /**
  * Created by filipegoncalves on 9/12/18.
@@ -16,14 +15,14 @@ import static cm.aptoide.pt.database.realm.FileToDownload.SPLIT;
 
 public class DownloadAppFileMapper {
 
-  public List<DownloadAppFile> mapFileToDownloadList(RealmList<FileToDownload> filesToDownload) {
+  public List<DownloadAppFile> mapFileToDownloadList(List<RoomFileToDownload> filesToDownload) {
     List<DownloadAppFile> downloadAppFileList = new ArrayList<>();
-    for (FileToDownload fileToDownload : filesToDownload) {
+    for (RoomFileToDownload roomFileToDownload : filesToDownload) {
       downloadAppFileList.add(
-          new DownloadAppFile(fileToDownload.getLink(), fileToDownload.getAltLink(),
-              fileToDownload.getMd5(), fileToDownload.getVersionCode(),
-              fileToDownload.getPackageName(), fileToDownload.getFileName(),
-              mapFileType(fileToDownload.getFileType())));
+          new DownloadAppFile(roomFileToDownload.getLink(), roomFileToDownload.getAltLink(),
+              roomFileToDownload.getMd5(), roomFileToDownload.getVersionCode(),
+              roomFileToDownload.getPackageName(), roomFileToDownload.getFileName(),
+              mapFileType(roomFileToDownload.getFileType())));
     }
     return downloadAppFileList;
   }

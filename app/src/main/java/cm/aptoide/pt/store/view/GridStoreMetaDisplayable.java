@@ -1,11 +1,10 @@
 package cm.aptoide.pt.store.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.R;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
+import cm.aptoide.pt.database.room.RoomStore;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.store.GetHomeMeta;
 import cm.aptoide.pt.dataprovider.model.v7.store.HomeUser;
@@ -14,12 +13,12 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetHomeMetaRequest;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
+import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.recycler.displayable.DisplayablePojo;
-import java.util.Collections;
-import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Observable;
@@ -34,13 +33,15 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   private StoreAnalytics storeAnalytics;
   private BadgeDialogFactory badgeDialogFactory;
   private FragmentNavigator fragmentNavigator;
-  private StoreAccessor storeAccessor;
+  private RoomStoreRepository storeRepository;
   private BodyInterceptor<BaseBody> bodyInterceptorV7;
   private OkHttpClient client;
   private Converter.Factory converter;
   private TokenInvalidator tokenInvalidator;
   private SharedPreferences sharedPreferences;
   private ThemeManager themeManager;
+  private StoreUtilsProxy storeUtilsProxy;
+  private AptoideAccountManager aptoideAccountManager;
 
   public GridStoreMetaDisplayable() {
   }
@@ -48,21 +49,24 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
   public GridStoreMetaDisplayable(GetHomeMeta pojo,
       StoreCredentialsProvider storeCredentialsProvider, StoreAnalytics storeAnalytics,
       BadgeDialogFactory badgeDialogFactory, FragmentNavigator fragmentNavigator,
-      StoreAccessor storeAccessor, BodyInterceptor<BaseBody> bodyInterceptorV7, OkHttpClient client,
-      Converter.Factory converter, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, ThemeManager themeManager) {
+      RoomStoreRepository storeRepository, BodyInterceptor<BaseBody> bodyInterceptorV7,
+      OkHttpClient client, Converter.Factory converter, TokenInvalidator tokenInvalidator,
+      SharedPreferences sharedPreferences, ThemeManager themeManager,
+      StoreUtilsProxy storeUtilsProxy, AptoideAccountManager aptoideAccountManager) {
     super(pojo);
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.storeAnalytics = storeAnalytics;
     this.badgeDialogFactory = badgeDialogFactory;
     this.fragmentNavigator = fragmentNavigator;
-    this.storeAccessor = storeAccessor;
+    this.storeRepository = storeRepository;
     this.bodyInterceptorV7 = bodyInterceptorV7;
     this.client = client;
     this.converter = converter;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
     this.themeManager = themeManager;
+    this.storeUtilsProxy = storeUtilsProxy;
+    this.aptoideAccountManager = aptoideAccountManager;
   }
 
   @Override protected Configs getConfig() {
@@ -71,11 +75,6 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
 
   @Override public int getViewLayout() {
     return R.layout.displayable_store_meta;
-  }
-
-  public List<Store.SocialChannel> getSocialLinks() {
-    return getStore() == null || getStore().getSocialChannels() == null ? Collections.EMPTY_LIST
-        : getStore().getSocialChannels();
   }
 
   public StoreCredentialsProvider getStoreCredentialsProvider() {
@@ -124,6 +123,14 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
       return store.getName();
     }
     return getUserName();
+  }
+
+  public StoreUtilsProxy getStoreUtilsProxy() {
+    return storeUtilsProxy;
+  }
+
+  public AptoideAccountManager getAptoideAccountManager() {
+    return aptoideAccountManager;
   }
 
   private String getUserName() {
@@ -211,16 +218,15 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
     }
   }
 
-  public Observable<GridStoreMetaWidget.HomeMeta> getHomeMeta(AptoideAccountManager accountManager,
-      Context context) {
-    return Observable.merge(isFollowingStore(storeAccessor),
-        updateStoreMeta().flatMap(__ -> isFollowingStore(storeAccessor))
-            .first())
+  public Observable<GridStoreMetaWidget.HomeMeta> getHomeMeta(
+      AptoideAccountManager accountManager) {
+    return Observable.merge(isFollowingStore(), updateStoreMeta().flatMap(__ -> isFollowingStore())
+        .first())
         .flatMap(isFollowing -> isStoreOwner(accountManager).map(
             isOwner -> new GridStoreMetaWidget.HomeMeta(getMainIcon(), getSecondaryIcon(),
-                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing,
-                getSocialLinks(), getAppsCount(), getFollowersCount(), getFollowingsCount(),
-                getDescription(), themeManager.getStoreTheme(getStoreThemeName()),
+                getMainName(), getSecondaryName(), isOwner, hasStore(), isFollowing, getAppsCount(),
+                getFollowersCount(), getFollowingsCount(), getDescription(),
+                themeManager.getStoreTheme(getStoreThemeName()),
                 themeManager.getAttributeForTheme(R.attr.themeTextColor).data, getStoreId(),
                 hasStore(), getBadge())));
   }
@@ -234,11 +240,11 @@ public class GridStoreMetaDisplayable extends DisplayablePojo<GetHomeMeta> {
         .doOnNext(pojo -> setPojo(pojo));
   }
 
-  public Observable<Boolean> isFollowingStore(StoreAccessor storeAccessor) {
+  public Observable<Boolean> isFollowingStore() {
     if (getStore() != null) {
-      return storeAccessor.getAll()
+      return storeRepository.getAll()
           .map(stores -> {
-            for (cm.aptoide.pt.database.realm.Store store : stores) {
+            for (RoomStore store : stores) {
               if (store.getStoreName()
                   .equals(getStoreName())) {
                 return true;

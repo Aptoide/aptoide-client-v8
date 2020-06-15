@@ -1,6 +1,5 @@
 package cm.aptoide.pt.account.view.user;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -37,12 +34,8 @@ import cm.aptoide.pt.view.dialog.ImagePickerDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.jakewharton.rxbinding.support.design.widget.RxSnackbar;
 import com.jakewharton.rxbinding.view.RxView;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import javax.inject.Inject;
 import org.parceler.Parcel;
 import org.parceler.Parcels;
@@ -72,12 +65,6 @@ public class ManageUserFragment extends BackButtonFragment
   private Toolbar toolbar;
   private ImagePickerDialog dialogFragment;
   private ImagePickerErrorHandler imagePickerErrorHandler;
-  private View calendarLayout;
-  private DatePickerDialog datePickerDialog;
-  private TextView calendarDateView;
-  private CheckBox newsletterCheckBox;
-  private View birthdayLayout;
-  private View newsLetterLayout;
 
   public static ManageUserFragment newInstanceToEdit() {
     return newInstance(true);
@@ -128,30 +115,18 @@ public class ManageUserFragment extends BackButtonFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    Calendar calendar = Calendar.getInstance();
     bindViews(view);
     setupToolbar();
     if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_USER_MODEL)) {
       currentModel = Parcels.unwrap(savedInstanceState.getParcelable(EXTRA_USER_MODEL));
       loadImageStateless(currentModel.getPictureUri());
       setUserName(currentModel.getName());
-      if (!isEditProfile) {
-        if (currentModel.hasDate()) {
-          setupCalendar(calendar, currentModel.getYear(), currentModel.getMonth(),
-              currentModel.getDay());
-          calendarDateView.setText(currentModel.getDate());
-        }
-      }
     } else {
       currentModel = new ViewModel();
     }
     if (isEditProfile) {
       createUserButton.setText(getString(R.string.edit_profile_save_button));
       cancelUserProfile.setVisibility(View.VISIBLE);
-    } else {
-      birthdayLayout.setVisibility(View.VISIBLE);
-      handleNewsletterVisibility();
-      setupDatePickerDialog(calendar);
     }
     attachPresenters();
   }
@@ -159,52 +134,6 @@ public class ManageUserFragment extends BackButtonFragment
   @Override public ScreenTagHistory getHistoryTracker() {
     return ScreenTagHistory.Builder.build(this.getClass()
         .getSimpleName());
-  }
-
-  private void handleNewsletterVisibility() {
-    if (newsletterManager.shouldShowNewsletter()) {
-      newsLetterLayout.setVisibility(View.VISIBLE);
-    } else {
-      newsLetterLayout.setVisibility(View.GONE);
-    }
-  }
-
-  private void setupDatePickerDialog(Calendar calendar) {
-    DatePickerDialog.OnDateSetListener datePickerDialogListener =
-        (datePicker, year, month, day) -> {
-          int monthNumber = month
-              + 1; //Android starts counting months on 0 to better count time. e.g 22 jan is 0 months and 22 days
-          setupCalendar(calendar, year, monthNumber, day);
-          setupCalendarDateString(year, monthNumber, day);
-        };
-    datePickerDialog = new DatePickerDialog(getContext(),
-        themeManager.getAttributeForTheme(R.attr.datePickerStyle).resourceId,
-        datePickerDialogListener, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH));
-  }
-
-  private void setupCalendarDateString(int year, int month, int day) {
-    String calendarDate = year + "/" + month + "/" + day;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-    Date date = null;
-    try {
-      date = dateFormat.parse(calendarDate);
-    } catch (ParseException parseException) {
-      Snackbar.make(createUserButton, getString(R.string.unknown_error), Snackbar.LENGTH_SHORT)
-          .show();
-      currentModel.setDateError();
-    }
-    if (date != null) {
-      //Sets the date depending on the region of the user
-      calendarDate = DateFormat.getDateInstance(DateFormat.SHORT)
-          .format(date);
-      //Sets the date on the format needed for the request
-      calendarDateView.setText(calendarDate);
-
-      currentModel.setDateInRequestFormat(dateFormat.format(date));
-      currentModel.setDate(calendarDate);
-      currentModel.setDate(year, month, day);
-    }
   }
 
   private void setupCalendar(Calendar calendar, int year, int month, int day) {
@@ -231,11 +160,6 @@ public class ManageUserFragment extends BackButtonFragment
     createUserButton = view.findViewById(R.id.create_user_create_profile);
     cancelUserProfile = view.findViewById(R.id.create_user_cancel_button);
     userPicture = view.findViewById(R.id.create_user_image);
-    birthdayLayout = view.findViewById(R.id.birthday_layout);
-    newsLetterLayout = view.findViewById(R.id.newsletter_layout);
-    calendarLayout = view.findViewById(R.id.calendar_layout);
-    calendarDateView = view.findViewById(R.id.calendar_date);
-    newsletterCheckBox = view.findViewById(R.id.newsletter_checkbox);
   }
 
   private void setupToolbar() {
@@ -260,11 +184,6 @@ public class ManageUserFragment extends BackButtonFragment
     if (uploadWaitDialog != null && uploadWaitDialog.isShowing()) {
       uploadWaitDialog.dismiss();
     }
-    birthdayLayout = null;
-    newsLetterLayout = null;
-    calendarLayout = null;
-    calendarDateView = null;
-    newsletterCheckBox = null;
     super.onDestroyView();
   }
 
@@ -308,20 +227,6 @@ public class ManageUserFragment extends BackButtonFragment
         .loadUsingCircleTransformAndPlaceholder(pictureUri, userPicture, DEFAULT_IMAGE_PLACEHOLDER);
   }
 
-  @Override public Observable<Void> calendarLayoutClick() {
-    return RxView.clicks(calendarLayout);
-  }
-
-  @Override public void showCalendar() {
-    datePickerDialog.show();
-  }
-
-  @Override public void showEmptyBirthdayMessage() {
-    Snackbar.make(createUserButton, getString(R.string.createuser_message_profile_no_dob),
-        Snackbar.LENGTH_SHORT)
-        .show();
-  }
-
   /**
    * @param pictureUri Load image to UI and save image in model to handle configuration changes.
    */
@@ -360,54 +265,29 @@ public class ManageUserFragment extends BackButtonFragment
 
   @Nullable public ViewModel updateModelAndGet() {
     return ViewModel.from(currentModel, userName.getText()
-        .toString(), calendarDateView.getText()
-        .toString(), newsletterCheckBox.isChecked());
+        .toString());
   }
 
   @Parcel protected static class ViewModel {
     String name;
     String pictureUri;
-    String date;
-    String requestDate;
-    boolean hasNewsletterSubscribe;
     boolean hasNewPicture;
-    boolean hasDateError;
-    private int year;
-    private int month;
-    private int day;
 
     public ViewModel() {
       name = "";
       pictureUri = "";
-      date = "";
-      requestDate = "";
-      year = -1;
-      month = -1;
-      day = -1;
       hasNewPicture = false;
-      hasNewsletterSubscribe = false;
-      hasDateError = false;
     }
 
     public ViewModel(String name, String pictureUri) {
       this.name = name;
       this.pictureUri = pictureUri;
       this.hasNewPicture = false;
-      date = "";
-      requestDate = "";
-      year = -1;
-      month = -1;
-      day = -1;
       hasNewPicture = false;
-      hasNewsletterSubscribe = false;
-      hasDateError = false;
     }
 
-    public static ViewModel from(ViewModel otherModel, String otherName, String date,
-        boolean hasNewsletterSubscribe) {
+    public static ViewModel from(ViewModel otherModel, String otherName) {
       otherModel.setName(otherName);
-      otherModel.setDate(date);
-      otherModel.setNewsLetterSubscribe(hasNewsletterSubscribe);
       return otherModel;
     }
 
@@ -433,60 +313,6 @@ public class ManageUserFragment extends BackButtonFragment
 
     public boolean hasNewPicture() {
       return hasNewPicture;
-    }
-
-    public String getDate() {
-      return date;
-    }
-
-    public void setDate(String date) {
-      this.date = date;
-    }
-
-    public String getRequestDate() {
-      return requestDate;
-    }
-
-    public boolean getNewsletterSubscribe() {
-      return hasNewsletterSubscribe;
-    }
-
-    void setNewsLetterSubscribe(boolean hasNewsLetterSubscribe) {
-      this.hasNewsletterSubscribe = hasNewsLetterSubscribe;
-    }
-
-    void setDate(int year, int month, int day) {
-      this.year = year;
-      this.month = month;
-      this.day = day;
-    }
-
-    public int getYear() {
-      return year;
-    }
-
-    public int getMonth() {
-      return month;
-    }
-
-    public int getDay() {
-      return day;
-    }
-
-    public boolean hasDate() {
-      return year != -1 && month != -1 && day != -1;
-    }
-
-    public void setDateInRequestFormat(String requestDate) {
-      this.requestDate = requestDate;
-    }
-
-    public boolean hasDateError() {
-      return hasDateError;
-    }
-
-    public void setDateError() {
-      this.hasDateError = true;
     }
   }
 }

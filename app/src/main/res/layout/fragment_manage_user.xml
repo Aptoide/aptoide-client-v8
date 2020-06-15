@@ -168,7 +168,7 @@
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:layout_marginTop="@dimen/padding_very_small"
-              android:background="@drawable/rounded_corners_white"
+              android:background="@drawable/rounded_corners_reactions"
               android:hint="@string/create_user_username"
               android:imeOptions="actionDone"
               android:inputType="text"
@@ -190,83 +190,6 @@
               android:text="@string/create_user_hint"
               />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/birthday_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_small"
-            android:layout_marginLeft="@dimen/padding_small"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="@dimen/padding_small"
-            android:layout_marginRight="@dimen/padding_small"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible"
-            >
-          <TextView
-              style="@style/Aptoide.TextView.Regular.M"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/createuser_title_date_of_birth"
-              />
-
-          <RelativeLayout
-              android:id="@+id/calendar_layout"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="@dimen/padding_small"
-              >
-            <ImageView
-                android:id="@+id/calendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_calendar"
-                android:tint="?attr/colorPrimaryDark"
-                />
-            <TextView
-                android:id="@+id/calendar_date"
-                style="@style/Aptoide.TextView.Medium.S"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_toEndOf="@id/calendar"
-                android:layout_toRightOf="@id/calendar"
-                android:text="@string/createuser_title_choose_date"
-                android:textColor="?attr/colorPrimaryDark"
-                />
-
-          </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/newsletter_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginTop="30dp"
-            android:visibility="gone"
-            tools:visibility="visible"
-            >
-          <CheckBox
-              android:id="@+id/newsletter_checkbox"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              />
-          <TextView
-              style="@style/Aptoide.TextView.Regular.XS.BlackAlpha"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:layout_marginStart="6dp"
-              android:layout_marginLeft="6dp"
-              android:gravity="center"
-              android:text="@string/createuser_short_subscribe_newsletter"
-              android:textAlignment="center"
-              />
         </LinearLayout>
 
       </LinearLayout>

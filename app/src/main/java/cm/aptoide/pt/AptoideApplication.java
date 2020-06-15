@@ -10,7 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.XmlResourceParser;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -22,7 +21,7 @@ import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.abtesting.experiments.ApkfyExperiment;
+import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.account.AdultContentAnalytics;
 import cm.aptoide.pt.account.MatureBodyInterceptorV7;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -30,13 +29,12 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.crashreports.CrashlyticsCrashLogger;
-import cm.aptoide.pt.database.AccessorFactory;
+import cm.aptoide.pt.database.RealmStoreMigrator;
+import cm.aptoide.pt.database.RoomInstalledPersistence;
+import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.InstalledAccessor;
-import cm.aptoide.pt.database.realm.Installed;
-import cm.aptoide.pt.database.realm.Notification;
-import cm.aptoide.pt.database.realm.Store;
+import cm.aptoide.pt.database.room.AptoideDatabase;
+import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -45,7 +43,6 @@ import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvid
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
-import cm.aptoide.pt.deprecated.SQLiteDatabaseHelper;
 import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -78,17 +75,17 @@ import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.presenter.View;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
+import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
+import cm.aptoide.pt.updates.UpdateRepository;
 import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
@@ -103,7 +100,6 @@ import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
-import com.crashlytics.android.Crashlytics;
 import com.flurry.android.FlurryAgent;
 import com.jakewharton.rxrelay.BehaviorRelay;
 import com.jakewharton.rxrelay.PublishRelay;
@@ -115,7 +111,6 @@ import com.mopub.nativeads.AppLovinBaseAdapterConfiguration;
 import com.mopub.nativeads.AppnextBaseAdapterConfiguration;
 import com.mopub.nativeads.InMobiBaseAdapterConfiguration;
 import com.mopub.nativeads.InneractiveAdapterConfiguration;
-import com.uxcam.UXCam;
 import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
@@ -151,10 +146,13 @@ public abstract class AptoideApplication extends Application {
   private static FragmentProvider fragmentProvider;
   private static ActivityProvider activityProvider;
   private static DisplayableWidgetMapping displayableWidgetMapping;
-  private static boolean autoUpdateWasCalled = false;
+  @Inject AptoideDatabase aptoideDatabase;
+  @Inject RoomNotificationPersistence notificationPersistence;
+  @Inject RoomInstalledPersistence roomInstalledPersistence;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
+  @Inject UpdateRepository updateRepository;
   @Inject CacheHelper cacheHelper;
   @Inject AptoideAccountManager accountManager;
   @Inject Preferences preferences;
@@ -164,7 +162,6 @@ public abstract class AptoideApplication extends Application {
   @Inject @Named("default") OkHttpClient defaultClient;
   @Inject RootAvailabilityManager rootAvailabilityManager;
   @Inject AuthenticationPersistence authenticationPersistence;
-  @Inject Crashlytics crashlytics;
   @Inject SyncScheduler alarmSyncScheduler;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7;
   @Inject @Named("web-v7") BodyInterceptor<BaseBody> bodyInterceptorWebV7;
@@ -182,6 +179,8 @@ public abstract class AptoideApplication extends Application {
   @Inject NewFeatureManager newFeatureManager;
   @Inject ThemeAnalytics themeAnalytics;
   @Inject @Named("mature-pool-v7") BodyInterceptor<BaseBody> accountSettingsBodyInterceptorPoolV7;
+  @Inject StoreCredentialsProvider storeCredentials;
+  @Inject StoreUtilsProxy storeUtilsProxy;
   @Inject TrendingManager trendingManager;
   @Inject AdultContentAnalytics adultContentAnalytics;
   @Inject NotificationAnalytics notificationAnalytics;
@@ -197,13 +196,14 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
-  @Inject ApkfyExperiment apkfyExperiment;
+  @Inject AppsNameExperimentManager appsNameExperimentManager;
+  @Inject RealmStoreMigrator realmStoreMigrator;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
   private NotificationProvider notificationProvider;
   private BehaviorRelay<Map<Integer, Result>> fragmentResultRelay;
-  private Map<Integer, Result> fragmentResulMap;
+  private Map<Integer, Result> fragmentResultMap;
   private BodyInterceptor<BaseBody> accountSettingsBodyInterceptorWebV7;
   private ApplicationComponent applicationComponent;
   private PublishRelay<NotificationInfo> notificationsPublishRelay;
@@ -234,7 +234,6 @@ public abstract class AptoideApplication extends Application {
 
     getApplicationComponent().inject(this);
     CrashReport.getInstance()
-        .addLogger(new CrashlyticsCrashLogger(crashlytics))
         .addLogger(new ConsoleLogger());
     Logger.setDBG(ToolboxManager.isDebug(getDefaultSharedPreferences()) || BuildConfig.DEBUG);
 
@@ -297,14 +296,13 @@ public abstract class AptoideApplication extends Application {
      * AN-1838
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeUXCam())
         .andThen(initializeSentry())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
-        .andThen(checkApkfyUserProperty())
         .andThen(setUpFirstRunAnalytics())
+        .andThen(setUpAppsNameAbTest())
         .observeOn(Schedulers.computation())
         .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
           // in case we have an error preparing the app, log that error and continue
@@ -320,18 +318,12 @@ public abstract class AptoideApplication extends Application {
 
     clearFileCache();
 
-    //
-    // this will trigger the migration if needed
-    //
-
-    SQLiteDatabaseHelper dbHelper = new SQLiteDatabaseHelper(this);
-    SQLiteDatabase db = dbHelper.getWritableDatabase();
-    if (db.isOpen()) {
-      db.close();
-    }
-
     startNotificationCenter();
     startNotificationCleaner();
+
+    realmStoreMigrator.performMigration()
+        .subscribe(() -> {
+        }, throwable -> throwable.printStackTrace());
 
     rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRootAvailable -> {
@@ -355,6 +347,23 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
+  private Completable setUpAppsNameAbTest() {
+    if (SecurePreferences.isAppsAbTest(
+        SecurePreferencesImplementation.getInstance(getApplicationContext(),
+            getDefaultSharedPreferences()))) {
+      return setUpAbTest().doOnCompleted(() -> SecurePreferences.setAppsAbTest(false,
+          SecurePreferencesImplementation.getInstance(getApplicationContext(),
+              getDefaultSharedPreferences())))
+          .subscribeOn(Schedulers.newThread());
+    } else {
+      return Completable.complete();
+    }
+  }
+
+  private Completable setUpAbTest() {
+    return appsNameExperimentManager.setUpExperiment();
+  }
+
   private Completable checkAdsUserProperty() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
@@ -366,18 +375,10 @@ public abstract class AptoideApplication extends Application {
             .enableForegroundTracking(this));
   }
 
-  private Completable checkApkfyUserProperty() {
-    return Completable.fromAction(() -> apkfyExperiment.setSuperProperties());
-  }
-
   private Completable setUpFirstRunAnalytics() {
     return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
         SecurePreferencesImplementation.getInstance(getApplicationContext(),
             getDefaultSharedPreferences())));
-  }
-
-  private Completable initializeUXCam() {
-    return Completable.fromAction(() -> UXCam.startWithKey(BuildConfig.UXCAM_API_KEY));
   }
 
   private Completable initializeSentry() {
@@ -508,10 +509,9 @@ public abstract class AptoideApplication extends Application {
 
   private NotificationsCleaner getNotificationCleaner() {
     if (notificationsCleaner == null) {
-      notificationsCleaner =
-          new NotificationsCleaner(AccessorFactory.getAccessorFor(database, Notification.class),
-              Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
-              getNotificationProvider(), CrashReport.getInstance());
+      notificationsCleaner = new NotificationsCleaner(notificationPersistence,
+          Calendar.getInstance(TimeZone.getTimeZone("UTC")), accountManager,
+          getNotificationProvider(), CrashReport.getInstance());
     }
     return notificationsCleaner;
   }
@@ -560,9 +560,8 @@ public abstract class AptoideApplication extends Application {
 
   public NotificationProvider getNotificationProvider() {
     if (notificationProvider == null) {
-      notificationProvider =
-          new NotificationProvider(AccessorFactory.getAccessorFor(database, Notification.class),
-              Schedulers.io());
+      notificationProvider = new NotificationProvider(
+          new RoomNotificationPersistence(aptoideDatabase.notificationDao()), Schedulers.io());
     }
     return notificationProvider;
   }
@@ -703,25 +702,13 @@ public abstract class AptoideApplication extends Application {
 
   // todo re-factor all this code to proper Rx
   private Completable setupFirstRun() {
-    return Completable.defer(() -> {
-
-      final StoreCredentialsProviderImpl storeCredentials =
-          new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(database, Store.class));
-
-      StoreUtilsProxy proxy =
-          new StoreUtilsProxy(accountManager, accountSettingsBodyInterceptorPoolV7,
-              storeCredentials, AccessorFactory.getAccessorFor(database, Store.class),
-              defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-              getDefaultSharedPreferences());
-
-      return generateAptoideUuid().andThen(
-          setDefaultFollowedStores(storeCredentials, proxy).andThen(refreshUpdates())
-              .doOnError(err -> CrashReport.getInstance()
-                  .log(err)));
-    });
+    return Completable.defer(() -> generateAptoideUuid().andThen(
+        setDefaultFollowedStores(storeCredentials, storeUtilsProxy).andThen(refreshUpdates())
+            .doOnError(err -> CrashReport.getInstance()
+                .log(err))));
   }
 
-  private Completable setDefaultFollowedStores(StoreCredentialsProviderImpl storeCredentials,
+  private Completable setDefaultFollowedStores(StoreCredentialsProvider storeCredentials,
       StoreUtilsProxy proxy) {
 
     return Observable.from(defaultFollowedStores)
@@ -774,11 +761,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable discoverAndSaveInstalledApps() {
-    InstalledAccessor installedAccessor = AccessorFactory.getAccessorFor(database, Installed.class);
     return Observable.fromCallable(() -> {
-      // remove the current installed apps
-      //AccessorFactory.getAccessorFor(Installed.class).removeAll();
-
       // get the installed apps
       List<PackageInfo> installedApps =
           AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
@@ -793,16 +776,13 @@ public abstract class AptoideApplication extends Application {
       return installedApps;
     })  // transform installation package into Installed table entry and save all the data
         .flatMapIterable(list -> list)
-        .map(packageInfo -> new Installed(packageInfo, getPackageManager()))
+        .map(packageInfo -> new RoomInstalled(packageInfo, getPackageManager()))
         .toList()
-        .flatMap(appsInstalled -> installedAccessor.getAll()
+        .flatMap(appsInstalled -> roomInstalledPersistence.getAll()
             .first()
             .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(Installed.STATUS_UNINSTALLED))))
-        .doOnNext(list -> {
-          installedAccessor.removeAll();
-          installedAccessor.insertAll(list);
-        })
+                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
+        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
         .toCompletable();
   }
 
@@ -822,8 +802,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable refreshUpdates() {
-    return RepositoryFactory.getUpdateRepository(this, getDefaultSharedPreferences())
-        .sync(true, false);
+    return updateRepository.sync(true, false);
   }
 
   private void createAppShortcut() {
@@ -861,11 +840,11 @@ public abstract class AptoideApplication extends Application {
     return fragmentResultRelay;
   }
 
-  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResulMap() {
-    if (fragmentResulMap == null) {
-      fragmentResulMap = new HashMap<>();
+  @SuppressLint("UseSparseArrays") public Map<Integer, Result> getFragmentResultMap() {
+    if (fragmentResultMap == null) {
+      fragmentResultMap = new HashMap<>();
     }
-    return fragmentResulMap;
+    return fragmentResultMap;
   }
 
   public NavigationTracker getNavigationTracker() {
@@ -937,6 +916,10 @@ public abstract class AptoideApplication extends Application {
 
   public SettingsManager getSettingsManager() {
     return settingsManager;
+  }
+
+  public StoreCredentialsProvider getStoreCredentials() {
+    return storeCredentials;
   }
 }
 

@@ -1,7 +1,6 @@
 import com.android.builder.model.ProductFlavor
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -11,14 +10,9 @@ apply plugin: 'io.sentry.android.gradle'
 buildscript {
 
   repositories {
-    maven { url 'https://maven.fabric.io/public' }
     maven {
       url "https://maven.google.com"
     }
-  }
-
-  dependencies {
-    classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
   }
 }
 
@@ -120,7 +114,6 @@ android {
     debug {
       testCoverageEnabled = false
       buildConfigField "boolean", "CRASH_REPORTS_DISABLED", "true"
-      ext.enableCrashlytics = false
       zipAlignEnabled false
       minifyEnabled false
       shrinkResources false
@@ -195,7 +188,6 @@ android {
          suggestionProviderAuthority     : "${searchSuggestionProviderAuthority}",
          storeSuggestionProviderAuthority: "${storeSuggestionProviderAuthority}",
          appLovinApiKey                  : "${project.MOPUB_APPLOVIN_SDK_KEY}",
-         fabricApiKey                    : "${project.FABRIC_API_KEY}",
          adMobApiKey                     : "${project.AD_MOB_APPLICATION_ID}"]
 
     variant.resValue "string", "authenticator_account_type", applicationId
@@ -232,6 +224,11 @@ android {
         "\"" + MOPUB_MEDIATION_APPLOVIN_VERSION + "\""
     variant.buildConfigField "String", "APPNEXT_SDK_VERSION",
         "\"" + APPNEXT_SDK_VERSION + "\""
+
+    variant.buildConfigField "int", "ROOM_SCHEMA_VERSION",
+        project.ROOM_SCHEMA_VERSION
+    variant.buildConfigField "String", "ROOM_DATABASE_NAME",
+        "\"" + project.ROOM_DATABASE_NAME + "\""
 
     variant.buildConfigField "int", "INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_21_PLUS",
         project.INSTALLING_STATE_INSTALLER_TIMEOUT_IN_MILLIS_HIGHER_EQ_21_OS
@@ -308,14 +305,6 @@ android {
 
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
-
-    if (flavors[1].name.contains('prod') && type == 'release') {
-      variant.buildConfigField "String", "UXCAM_API_KEY",
-          "\"" + project.UXCAM_API_KEY + "\""
-    } else {
-      variant.buildConfigField "String", "UXCAM_API_KEY",
-          "\"" + project.UXCAM_API_KEY_DEBUG + "\""
-    }
 
     //Sentry
     if (flavors[0].name.contains("vanilla") && flavors[1].name.contains('prod') &&
@@ -486,9 +475,6 @@ dependencies {
   //Rakam
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
 
-  //UXCam
-  implementation 'com.uxcam:uxcam:3.1.11@aar'
-
   //Sentry
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"
 
@@ -496,11 +482,6 @@ dependencies {
   implementation 'org.slf4j:slf4j-simple:1.7.21'
   implementation 'org.slf4j:slf4j-api:1.7.21'
   implementation "org.jmdns:jmdns:${JMDNS_VERSION}"
-
-  // Fabric
-  implementation("com.crashlytics.sdk.android:crashlytics:${CRASHLYTICS_VERSION}@aar") {
-    transitive = true
-  }
 
   implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
   implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
@@ -540,6 +521,17 @@ dependencies {
 
   //careful updating this because of support library conflicts
   implementation "com.airbnb.android:lottie:${LOTTIE_VERSION}"
+
+  // Room components
+  implementation "androidx.room:room-runtime:${ROOM_VERSION}"
+  annotationProcessor "androidx.room:room-compiler:${ROOM_VERSION}"
+  androidTestImplementation "androidx.room:room-testing:${ROOM_VERSION}"
+
+  // RxJava support for Room
+  implementation "androidx.room:room-rxjava2:${ROOM_VERSION}"
+
+  // Rxjava Interop
+  implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
 }
 
 String getDate() {

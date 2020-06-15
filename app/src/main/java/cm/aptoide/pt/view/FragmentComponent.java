@@ -2,6 +2,7 @@ package cm.aptoide.pt.view;
 
 import cm.aptoide.pt.FlavourFragmentModule;
 import cm.aptoide.pt.account.view.LoginSignUpCredentialsFragment;
+import cm.aptoide.pt.account.view.magiclink.CheckYourEmailFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.user.ManageUserFragment;
 import cm.aptoide.pt.account.view.user.ProfileStepOneFragment;
@@ -9,6 +10,7 @@ import cm.aptoide.pt.account.view.user.ProfileStepTwoFragment;
 import cm.aptoide.pt.app.view.AppCoinsInfoFragment;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.MoreBundleFragment;
+import cm.aptoide.pt.app.view.OtherVersionsFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
@@ -25,16 +27,21 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.reviews.LatestReviewsFragment;
 import cm.aptoide.pt.reviews.RateAndReviewsFragment;
 import cm.aptoide.pt.search.view.SearchResultFragment;
+import cm.aptoide.pt.store.view.AddStoreDialog;
 import cm.aptoide.pt.store.view.ListStoresFragment;
+import cm.aptoide.pt.store.view.PrivateStoreDialog;
 import cm.aptoide.pt.store.view.StoreFragment;
 import cm.aptoide.pt.store.view.StoreTabWidgetsGridRecyclerFragment;
 import cm.aptoide.pt.store.view.TopStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresFragment;
 import cm.aptoide.pt.store.view.my.MyStoresSubscribedFragment;
+import cm.aptoide.pt.store.view.recommended.RecommendedStoresFragment;
 import cm.aptoide.pt.themes.NewFeatureDialogFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowersFragment;
 import cm.aptoide.pt.timeline.view.follow.TimeLineFollowingFragment;
+import cm.aptoide.pt.updates.view.excluded.ExcludedUpdatesFragment;
 import cm.aptoide.pt.view.app.ListStoreAppsFragment;
+import cm.aptoide.pt.view.feedback.SendFeedbackFragment;
 import cm.aptoide.pt.view.fragment.DescriptionFragment;
 import cm.aptoide.pt.view.fragment.GridRecyclerSwipeWithToolbarFragment;
 import cm.aptoide.pt.view.settings.MyAccountFragment;
@@ -68,6 +75,8 @@ public interface FragmentComponent {
   void inject(MyStoresSubscribedFragment myStoresSubscribedFragment);
 
   void inject(StoreTabWidgetsGridRecyclerFragment storeTabWidgetsGridRecyclerFragment);
+
+  void inject(RecommendedStoresFragment recommendedStoresFragment);
 
   void inject(MyStoresFragment myStoresFragment);
 
@@ -128,4 +137,16 @@ public interface FragmentComponent {
   void inject(NewFeatureDialogFragment newFeatureDialogFragment);
 
   void inject(CommentDialogFragment commentDialogFragment);
+
+  void inject(SendFeedbackFragment sendFeedbackFragment);
+
+  void inject(ExcludedUpdatesFragment excludedUpdatesFragment);
+
+  void inject(OtherVersionsFragment otherVersionsFragment);
+
+  void inject(AddStoreDialog addStoreDialog);
+
+  void inject(PrivateStoreDialog privateStoreDialog);
+
+  void inject(CheckYourEmailFragment checkYourEmailFragment);
 }

@@ -7,9 +7,10 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
-import cm.aptoide.pt.database.realm.Download;
+import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.notification.AppcPromotionNotificationStringProvider;
@@ -214,15 +215,27 @@ public class AppViewManager {
   public Completable downloadApp(DownloadModel.Action downloadAction, long appId,
       String trustedValue, String editorsChoicePosition,
       WalletAdsOfferManager.OfferResponseStatus status, boolean isApkfy) {
-    return getAppModel().flatMapObservable(app -> Observable.just(
-        downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
-            app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
-            app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
-            app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(), app.getSplits(),
-            app.getRequiredSplits(), app.getMalware()
-                .getRank()
-                .toString(), app.getStore()
-                .getName())))
+    return getAppModel().flatMapObservable(app -> Observable.just(app)
+        .flatMap(__ -> Observable.just(
+            downloadFactory.create(downloadStateParser.parseDownloadAction(downloadAction),
+                app.getAppName(), app.getPackageName(), app.getMd5(), app.getIcon(),
+                app.getVersionName(), app.getVersionCode(), app.getPath(), app.getPathAlt(),
+                app.getObb(), app.hasAdvertising() || app.hasBilling(), app.getSize(),
+                app.getSplits(), app.getRequiredSplits(), app.getMalware()
+                    .getRank()
+                    .toString(), app.getStore()
+                    .getName())))
+        .doOnError(throwable -> {
+          if (throwable instanceof InvalidAppException) {
+            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), downloadAction, status,
+                downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
+                !app.getSplits()
+                    .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
+                    .getRank()
+                    .toString(), app.getStore()
+                    .getName(), isApkfy, throwable);
+          }
+        }))
         .doOnNext(download -> {
           setupDownloadEvents(download, downloadAction, appId, trustedValue, editorsChoicePosition,
               status, download.getStoreName(), isApkfy);
@@ -257,14 +270,14 @@ public class AppViewManager {
         .toCompletable();
   }
 
-  private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
+  private void setupDownloadEvents(RoomDownload download, DownloadModel.Action downloadAction,
       long appId, WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
       String trustedBadge, boolean isApkfy) {
     setupDownloadEvents(download, downloadAction, appId, trustedBadge, null, offerResponseStatus,
         storeName, isApkfy);
   }
 
-  private void setupDownloadEvents(Download download, DownloadModel.Action downloadAction,
+  private void setupDownloadEvents(RoomDownload download, DownloadModel.Action downloadAction,
       long appId, String malwareRank, String editorsChoice,
       WalletAdsOfferManager.OfferResponseStatus offerResponseStatus, String storeName,
       boolean isApkfy) {
@@ -292,7 +305,7 @@ public class AppViewManager {
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
-            install.getProgress(), downloadStateParser.parseDownloadState(install.getState())));
+            install.getProgress(), downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
   }
 
   public Completable pauseDownload(String md5) {
@@ -480,9 +493,11 @@ public class AppViewManager {
         String.format(appcPromotionNotificationStringProvider.getNotificationTitle(), appcValue),
         appcPromotionNotificationStringProvider.getNotificationBody(), image,
         R.string.promo_update2appc_notification_claim_button, "aptoideinstall://package="
-            + packageName + "&store=" + storeName + "&show_install_popup=false",
-        LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION, AptoideNotification.APPC_PROMOTION,
-        LocalNotificationSyncManager.FIVE_MINUTES);
+            + packageName
+            + "&store="
+            + storeName
+            + "&show_install_popup=false", LocalNotificationSync.APPC_CAMPAIGN_NOTIFICATION,
+        AptoideNotification.APPC_PROMOTION, LocalNotificationSyncManager.FIVE_MINUTES);
   }
 
   public void unscheduleNotificationSync() {

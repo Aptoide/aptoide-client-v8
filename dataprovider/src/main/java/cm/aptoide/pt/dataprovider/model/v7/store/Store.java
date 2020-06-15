@@ -6,9 +6,7 @@
 package cm.aptoide.pt.dataprovider.model.v7.store;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by neuro on 27-04-2016.
@@ -22,7 +20,6 @@ public class Store {
   @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "UTC") private Date modified;
   private Appearance appearance;
   private Stats stats;
-  @JsonProperty("links") private List<SocialChannel> socialChannels;
   private String status;
   private String access;
   private Urls urls;
@@ -100,14 +97,6 @@ public class Store {
     this.stats = stats;
   }
 
-  public List<SocialChannel> getSocialChannels() {
-    return socialChannels;
-  }
-
-  public void setSocialChannels(List<SocialChannel> socialChannels) {
-    this.socialChannels = socialChannels;
-  }
-
   public String getStatus() {
     return status;
   }
@@ -122,10 +111,6 @@ public class Store {
 
   public void setAccess(String access) {
     this.access = access;
-  }
-
-  public enum SocialChannelType {
-    FACEBOOK, TWITTER, YOUTUBE, TWITCH, BLOG
   }
 
   public enum BadgeType {
@@ -188,45 +173,6 @@ public class Store {
 
     public void setDescription(String description) {
       this.description = description;
-    }
-  }
-
-  public static class SocialChannel {
-    private SocialChannelType type;
-    private String name;
-    private String graphic;
-    private String url;
-
-    public SocialChannelType getType() {
-      return type;
-    }
-
-    public void setType(SocialChannelType type) {
-      this.type = type;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public String getGraphic() {
-      return graphic;
-    }
-
-    public void setGraphic(String graphic) {
-      this.graphic = graphic;
-    }
-
-    public String getUrl() {
-      return url;
-    }
-
-    public void setUrl(String url) {
-      this.url = url;
     }
   }
 

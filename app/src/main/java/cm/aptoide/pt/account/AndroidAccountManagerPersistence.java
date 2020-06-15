@@ -7,7 +7,6 @@ import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.Store;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
-import java.util.Date;
 import rx.Completable;
 import rx.Scheduler;
 import rx.Single;
@@ -33,12 +32,10 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
   private static final String ACCOUNT_STORE_PASSWORD = "account_store_password";
   private static final String ACCOUNT_PRIVACY_POLICY = "account_privacy_policy";
   private static final String ACCOUNT_TERMS_AND_CONDITIONS = "account_terms_and_conditions";
-  private static final String ACCOUNT_BIRTH_DATE = "account_birth_date";
 
   private final AccountManager androidAccountManager;
   private final DatabaseStoreDataPersist storePersist;
   private final AccountFactory accountFactory;
-  private final AndroidAccountDataMigration accountDataMigration;
   private final AndroidAccountProvider androidAccountProvider;
   private final AuthenticationPersistence authenticationPersistence;
   private final Scheduler scheduler;
@@ -47,13 +44,11 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
 
   public AndroidAccountManagerPersistence(AccountManager androidAccountManager,
       DatabaseStoreDataPersist storePersist, AccountFactory accountFactory,
-      AndroidAccountDataMigration accountDataMigration,
       AndroidAccountProvider androidAccountProvider,
       AuthenticationPersistence authenticationPersistence, Scheduler scheduler) {
     this.androidAccountManager = androidAccountManager;
     this.storePersist = storePersist;
     this.accountFactory = accountFactory;
-    this.accountDataMigration = accountDataMigration;
     this.androidAccountProvider = androidAccountProvider;
     this.authenticationPersistence = authenticationPersistence;
     this.scheduler = scheduler;
@@ -99,14 +94,9 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
               String.valueOf(account.acceptedTermsAndConditions()));
           androidAccountManager.setUserData(androidAccount, ACCOUNT_PRIVACY_POLICY,
               String.valueOf(account.acceptedPrivacyPolicy()));
-          androidAccountManager.setUserData(androidAccount, ACCOUNT_BIRTH_DATE,
-              account.getBirthDate()
-                  .toLocaleString());
 
           return storePersist.persist(account.getSubscribedStores())
-              .doOnCompleted(() -> {
-                accountCache = account;
-              });
+              .doOnCompleted(() -> accountCache = account);
         })
         .subscribeOn(scheduler);
   }
@@ -115,53 +105,44 @@ public class AndroidAccountManagerPersistence implements AccountPersistence {
     if (accountCache != null) {
       return Single.just(accountCache);
     }
-    return accountDataMigration.migrate()
-        .andThen(androidAccountProvider.getAndroidAccount()
-            .flatMap(androidAccount -> {
+    return androidAccountProvider.getAndroidAccount()
+        .flatMap(androidAccount -> {
 
-              final String access =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_LEVEL);
-              final boolean terms =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS)
-                      != null ? Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
-                      ACCOUNT_TERMS_AND_CONDITIONS)) : false;
-              final boolean privacy =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY) != null
-                      ? Boolean.valueOf(
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY))
-                      : false;
-              final Date birthdate =
-                  androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE) != null
-                      ? new Date(
-                      androidAccountManager.getUserData(androidAccount, ACCOUNT_BIRTH_DATE))
-                      : new Date(1970, 1, 1);
-              return storePersist.get()
-                  .doOnError(err -> CrashReport.getInstance()
-                      .log(err))
-                  .flatMap(stores -> {
+          final String access =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_LEVEL);
+          final boolean terms =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS)
+                  != null ? Boolean.valueOf(
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_TERMS_AND_CONDITIONS))
+                  : false;
+          final boolean privacy =
+              androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY) != null
+                  ? Boolean.valueOf(
+                  androidAccountManager.getUserData(androidAccount, ACCOUNT_PRIVACY_POLICY))
+                  : false;
+          return storePersist.get()
+              .doOnError(err -> CrashReport.getInstance()
+                  .log(err))
+              .flatMap(stores -> authenticationPersistence.getAuthentication()
+                  .flatMap(authentication -> {
 
-                    return authenticationPersistence.getAuthentication()
-                        .flatMap(authentication -> {
+                    if (authentication.isAuthenticated()) {
 
-                          if (authentication.isAuthenticated()) {
+                      return Single.just(accountFactory.createAccount(access, stores,
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
+                          androidAccount.name,
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
+                          androidAccountManager.getUserData(androidAccount, ACCOUNT_AVATAR_URL),
+                          createStore(androidAccount), Boolean.valueOf(
+                              androidAccountManager.getUserData(androidAccount,
+                                  ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
+                              androidAccountManager.getUserData(androidAccount,
+                                  ACCOUNT_ACCESS_CONFIRMED)), privacy, terms));
+                    }
 
-                            return Single.just(accountFactory.createAccount(access, stores,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_ID),
-                                androidAccount.name,
-                                androidAccountManager.getUserData(androidAccount, ACCOUNT_NICKNAME),
-                                androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_AVATAR_URL), createStore(androidAccount),
-                                Boolean.valueOf(androidAccountManager.getUserData(androidAccount,
-                                    ACCOUNT_ADULT_CONTENT_ENABLED)), Boolean.valueOf(
-                                    androidAccountManager.getUserData(androidAccount,
-                                        ACCOUNT_ACCESS_CONFIRMED)), privacy, terms, birthdate));
-                          }
-
-                          return Single.error(
-                              new IllegalStateException("Account not authenticated"));
-                        });
-                  });
-            }));
+                    return Single.error(new IllegalStateException("Account not authenticated"));
+                  }));
+        });
   }
 
   @Override public Completable removeAccount() {

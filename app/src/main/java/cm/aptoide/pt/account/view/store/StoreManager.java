@@ -3,14 +3,11 @@ package cm.aptoide.pt.account.view.store;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
-import cm.aptoide.accountmanager.SocialLink;
 import cm.aptoide.pt.account.view.exception.InvalidImageException;
-import cm.aptoide.pt.account.view.exception.SocialLinkException;
 import cm.aptoide.pt.account.view.exception.StoreCreationException;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v3.ErrorResponse;
-import cm.aptoide.pt.dataprovider.model.v7.store.Store;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v3.BaseBody;
@@ -18,10 +15,9 @@ import cm.aptoide.pt.dataprovider.ws.v3.CheckUserCredentialsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SetStoreImageRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.SimpleSetStoreRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.RequestBodyFactory;
-import cm.aptoide.pt.repository.StoreRepository;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.themes.StoreTheme;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -36,7 +32,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   private static final String ERROR_CODE_2 = "WOP-2";
   private static final String ERROR_CODE_3 = "WOP-3";
   private static final String ERROR_API_1 = "API-1";
-  private static final String ERROR_STORE_9 = "STORE-9";
 
   private final OkHttpClient httpClient;
   private final Converter.Factory converterFactory;
@@ -47,7 +42,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   private final TokenInvalidator tokenInvalidator;
   private final RequestBodyFactory requestBodyFactory;
   private final ObjectMapper objectMapper;
-  private final StoreRepository storeRepository;
+  private final RoomStoreRepository storeRepository;
 
   public StoreManager(OkHttpClient httpClient, Converter.Factory converterFactory,
       BodyInterceptor<HashMapNotNull<String, RequestBody>> multipartBodyInterceptor,
@@ -55,7 +50,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorV7,
       SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       RequestBodyFactory requestBodyFactory, ObjectMapper objectMapper,
-      StoreRepository storeRepository) {
+      RoomStoreRepository storeRepository) {
     this.httpClient = httpClient;
     this.converterFactory = converterFactory;
     this.multipartBodyInterceptor = multipartBodyInterceptor;
@@ -69,15 +64,13 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   }
 
   public Completable createOrUpdate(String storeName, String storeDescription,
-      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists,
-      List<SocialLink> storeLinksList, List<Store.SocialChannelType> storeDeleteLinksList) {
+      String storeImagePath, boolean hasNewAvatar, String storeThemeName, boolean storeExists) {
     return Completable.defer(() -> {
       if (storeExists) {
         return updateStore(storeName, storeDescription, storeImagePath, hasNewAvatar,
-            storeThemeName, socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
+            storeThemeName);
       }
-      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName,
-          socialLinkToStoreLink(storeLinksList), storeDeleteLinksList);
+      return createStore(storeName, storeDescription, storeImagePath, hasNewAvatar, storeThemeName);
     })
         .onErrorResumeNext(err -> getOnErrorCompletable(err));
   }
@@ -98,17 +91,6 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
           .equals(ERROR_API_1)) {
         return Completable.error(new InvalidImageException(
             Collections.singletonList(InvalidImageException.ImageError.API_ERROR)));
-      } else if (((AptoideWsV7Exception) err).getBaseResponse()
-          .getErrors()
-          .get(0)
-          .getCode()
-          .equals(ERROR_STORE_9)) {
-        return Completable.error(new SocialLinkException(
-            ((AptoideWsV7Exception) err).getBaseResponse()
-                .getErrors()
-                .get(0)
-                .getDetails()
-                .getStoreLinks()));
       } else {
         return Completable.error(new InvalidImageException(
             Collections.singletonList(InvalidImageException.ImageError.API_ERROR),
@@ -120,20 +102,8 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
     return Completable.error(err);
   }
 
-  private List<SimpleSetStoreRequest.StoreLinks> socialLinkToStoreLink(
-      List<SocialLink> socialLinksList) {
-    List<SimpleSetStoreRequest.StoreLinks> storeLinks = new ArrayList<>();
-    for (SocialLink socialLink : socialLinksList) {
-      storeLinks.add(
-          new SimpleSetStoreRequest.StoreLinks(socialLink.getType(), socialLink.getUrl()));
-    }
-    return storeLinks;
-  }
-
   private Completable createStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
+      boolean hasNewAvatar, String storeThemeName) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -166,7 +136,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
           if (needToUploadMoreStoreData(storeDescription, storeImage, hasNewAvatar,
               storeThemeName)) {
             return updateStore(storeName, storeDescription, storeImage, hasNewAvatar,
-                storeThemeName, storeLinksList, storeDeleteSocialLinksList);
+                storeThemeName);
           }
           return Completable.complete();
         });
@@ -180,9 +150,7 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
   }
 
   private Completable updateStore(String storeName, String storeDescription, String storeImage,
-      boolean hasNewAvatar, String storeThemeName,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-      List<Store.SocialChannelType> socialDeleteLinksList) {
+      boolean hasNewAvatar, String storeThemeName) {
 
     if (TextUtils.isEmpty(storeName)) {
       return Completable.error(new StoreValidationException(StoreValidationException.EMPTY_NAME));
@@ -195,31 +163,25 @@ public class StoreManager implements cm.aptoide.accountmanager.StoreManager {
      * a store image, or a SetStore without image.
      */
     if (hasNewAvatar) {
-      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage,
-          storeLinksList, socialDeleteLinksList);
+      return updateStoreWithAvatar(storeName, storeDescription, storeThemeName, storeImage);
     }
 
-    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName, storeLinksList,
-        socialDeleteLinksList);
+    return updateStoreWithoutAvatar(storeName, storeDescription, storeThemeName);
   }
 
   private Completable updateStoreWithoutAvatar(String storeName, String storeDescription,
-      String storeThemeName, List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-      List<Store.SocialChannelType> storeDeleteSocialLinksList) {
+      String storeThemeName) {
     return SimpleSetStoreRequest.of(storeName, storeThemeName, storeDescription, bodyInterceptorV7,
-        httpClient, converterFactory, tokenInvalidator, sharedPreferences, storeLinksList,
-        storeDeleteSocialLinksList)
+        httpClient, converterFactory, tokenInvalidator, sharedPreferences)
         .observe()
         .toCompletable();
   }
 
   private Completable updateStoreWithAvatar(String storeName, String storeDescription,
-      String storeThemeName, String storeImagePath,
-      List<SimpleSetStoreRequest.StoreLinks> storeLinksList,
-      List<Store.SocialChannelType> socialDeleteLinksList) {
+      String storeThemeName, String storeImagePath) {
     return SetStoreImageRequest.of(storeName, storeThemeName, storeDescription, storeImagePath,
         multipartBodyInterceptor, httpClient, converterFactory, requestBodyFactory, objectMapper,
-        sharedPreferences, tokenInvalidator, storeLinksList, socialDeleteLinksList)
+        sharedPreferences, tokenInvalidator)
         .observe()
         .toSingle()
         .toCompletable();

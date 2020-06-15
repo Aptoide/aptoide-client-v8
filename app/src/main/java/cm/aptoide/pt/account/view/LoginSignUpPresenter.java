@@ -18,13 +18,18 @@ public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallbac
   private final FragmentNavigator navigatorChild;
   private final boolean dismissToNavigateToMainView;
   private final boolean navigateToHome;
+  private boolean hasMagicLinkError;
+  private String magicLinkErrorMessage;
 
   public LoginSignUpPresenter(LoginSignUpView view, FragmentNavigator navigatorChild,
-      boolean dismissToNavigateToMainView, boolean navigateToHome) {
+      boolean dismissToNavigateToMainView, boolean navigateToHome, boolean hasMagicLinkError,
+      String magicLinkErrorMessage) {
     this.view = view;
     this.navigatorChild = navigatorChild;
     this.dismissToNavigateToMainView = dismissToNavigateToMainView;
     this.navigateToHome = navigateToHome;
+    this.hasMagicLinkError = hasMagicLinkError;
+    this.magicLinkErrorMessage = magicLinkErrorMessage;
   }
 
   @Override public void present() {
@@ -42,7 +47,7 @@ public class LoginSignUpPresenter extends BottomSheetBehavior.BottomSheetCallbac
           if (fragment == null) {
             navigatorChild.navigateToWithoutBackSave(
                 LoginSignUpCredentialsFragment.newInstance(dismissToNavigateToMainView,
-                    navigateToHome), true);
+                    navigateToHome, hasMagicLinkError, magicLinkErrorMessage), true);
           }
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

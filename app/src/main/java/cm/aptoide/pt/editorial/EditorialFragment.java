@@ -390,9 +390,12 @@ public class EditorialFragment extends NavigationTrackFragment
             getResources().getString(R.string.appview_button_open),
             getResources().getString(R.string.appview_button_downgrade));
       }
-      if (downloadModel.hasError()) {
-        handleDownloadError(downloadModel.getDownloadState());
-      }
+    }
+  }
+
+  @Override public void showDownloadError(EditorialDownloadModel downloadModel) {
+    if (downloadModel.hasError()) {
+      handleDownloadError(downloadModel.getDownloadState());
     }
   }
 

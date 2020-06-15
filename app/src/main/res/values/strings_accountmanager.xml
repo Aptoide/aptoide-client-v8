@@ -46,15 +46,12 @@
   <string name="create_user_header"><b>Create your user profile</b> to rate, comment and share apps with your friends</string>
   <string name="edit_profile_header_message">Add a nice image to your profile</string>
   <string name="create_user_take_picture">Take a picture for your profile</string>
-  <string name="create_user_choose_username">Choose your username</string>
-  <string name="create_user_username">Username</string>
+  <string name="create_user_choose_username">Choose your nickname</string>
+  <string name="create_user_username">Nickname</string>
   <string name="create_user_hint">Appears when you rate, comment and share apps.</string>
   <string name="create_user_create_button">Create profile</string>
-  <string name="nothing_inserted_user">Insert a username and a photo (optional) to create your profile</string>
-  <string name="no_username_inserted">Add a username to create your profile</string>
-  <string name="createuser_short_subscribe_newsletter">Yes, I want to subscribe to Aptoide\'s newsletter</string>
-  <string name="createuser_title_date_of_birth">Date of Birth</string>
-  <string name="createuser_title_choose_date">Choose date</string>
+  <string name="nothing_inserted_user">Insert a nickname and a photo (optional) to create your profile</string>
+  <string name="no_username_inserted">Add a nickname to create your profile</string>
 
   <!--User interests fragment -->
 
@@ -67,9 +64,6 @@
   <string name="create_store_description_hint">Your store description</string>
   <string name="edit_store_title">Edit your store</string>
   <string name="save_edit_store">Save</string>
-  <string name="edit_store_title_social_networks">Social Networks</string>
-  <string name="edit_store_short_enter_username">Enter username</string>
-
 
   <string name="upload_dialog_title">Upload photo</string>
   <string name="upload_dialog_photo">Take new photo</string>
@@ -100,10 +94,6 @@
   <string name="myaccount_log_out_button">Log out</string>
   <string name="myaccount_header_title">Notifications</string>
   <string name="my_account_product_card_section_title">Aptoide Products</string>
-  <string name="twitch">Twitch</string>
-  <string name="youtube">Youtube</string>
-  <string name="edit_store_facebook_helper_text">Enter Facebook page</string>
-  <string name="edit_store_youtube_helper_text">Enter your username or channel</string>
 
   <!-- New Account Strings -->
   <string name="newaccount_signin_message">Sign in or register to get the most out of %1$s</string>

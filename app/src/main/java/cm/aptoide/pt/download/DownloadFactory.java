@@ -7,12 +7,11 @@ package cm.aptoide.pt.download;
 
 import androidx.annotation.Nullable;
 import cm.aptoide.pt.aab.Split;
-import cm.aptoide.pt.database.realm.Download;
-import cm.aptoide.pt.database.realm.FileToDownload;
-import cm.aptoide.pt.database.realm.RealmString;
-import cm.aptoide.pt.database.realm.Update;
+import cm.aptoide.pt.database.room.RoomDownload;
+import cm.aptoide.pt.database.room.RoomFileToDownload;
+import cm.aptoide.pt.database.room.RoomSplit;
+import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import io.realm.RealmList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +33,7 @@ public class DownloadFactory {
     this.appValidator = appValidator;
   }
 
-  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
+  private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
       String versionName, List<Split> splits) {
 
@@ -66,54 +65,57 @@ public class DownloadFactory {
         splits);
   }
 
-  private RealmList<FileToDownload> createFileList(String md5, String packageName, String filePath,
+  private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
       String patchObbPath, String patchObbMd5, int versionCode, String versionName,
       String mainObbName, String patchObbName, List<Split> splits) {
 
-    final RealmList<FileToDownload> downloads = new RealmList<>();
-    downloads.add(FileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        FileToDownload.APK, packageName, versionCode, versionName, cachePath));
+    final List<RoomFileToDownload> downloads = new ArrayList<>();
+    downloads.add(RoomFileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
+        RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath));
 
     if (mainObbPath != null) {
-      downloads.add(FileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-          FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
+      downloads.add(
+          RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (patchObbPath != null) {
       downloads.add(
-          FileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              FileToDownload.OBB, packageName, versionCode, versionName, cachePath));
+          RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (splits != null) {
       for (Split split : splits) {
-        downloads.add(FileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
-            split.getMd5sum() + "." + split.getName(), FileToDownload.SPLIT, packageName,
-            versionCode, versionName, cachePath));
+        downloads.add(
+            RoomFileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
+                split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT, packageName,
+                versionCode, versionName, cachePath));
       }
     }
 
     return downloads;
   }
 
-  public Download create(Update update, boolean isAppcUpgrade) {
-    List<Split> splits = map(update.getSplits());
+  public RoomDownload create(RoomUpdate update, boolean isAppcUpgrade) {
+    List<Split> splits = map(update.getRoomSplits());
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(update.getMd5(), null, update.getPackageName(), update.getLabel(),
             update.getApkPath(), update.getAlternativeApkPath(), splits,
-            mapRequiredSplits(update.getRequiredSplits()));
+            update.getRequiredSplits());
 
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
       ApkPaths downloadPaths = downloadApkPathsProvider.getDownloadPaths(
-          isAppcUpgrade ? Download.ACTION_DOWNGRADE : Download.ACTION_UPDATE, update.getApkPath(),
-          update.getAlternativeApkPath());
+          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE,
+          update.getApkPath(), update.getAlternativeApkPath());
 
-      Download download = new Download();
+      RoomDownload download = new RoomDownload();
       download.setMd5(update.getMd5());
       download.setIcon(update.getIcon());
       download.setAppName(update.getLabel());
-      download.setAction(isAppcUpgrade ? Download.ACTION_DOWNGRADE : Download.ACTION_UPDATE);
+      download.setAction(
+          isAppcUpgrade ? RoomDownload.ACTION_DOWNGRADE : RoomDownload.ACTION_UPDATE);
       download.setPackageName(update.getPackageName());
       download.setVersionCode(update.getUpdateVersionCode());
       download.setVersionName(update.getUpdateVersionName());
@@ -129,43 +131,33 @@ public class DownloadFactory {
       download.setSize(update.getSize());
       return download;
     } else {
-      throw new IllegalArgumentException(validationResult.getMessage());
+      throw new InvalidAppException(validationResult.getMessage());
     }
   }
 
-  private List<String> mapRequiredSplits(RealmList<RealmString> requiredSplits) {
-    ArrayList<String> requiredSplitsResult = new ArrayList<>();
-    if (requiredSplits == null) return requiredSplitsResult;
-    for (RealmString split : requiredSplits) {
-      requiredSplitsResult.add(split.getString());
-    }
-    return requiredSplitsResult;
-  }
-
-  private List<Split> map(RealmList<cm.aptoide.pt.database.realm.Split> splits) {
-    ArrayList<Split> splitsResult = new ArrayList<>();
-    if (splits == null) return splitsResult;
-    for (cm.aptoide.pt.database.realm.Split split : splits) {
-      splitsResult.add(
-          new Split(split.getName(), split.getType(), split.getPath(), split.getFileSize(),
-              split.getMd5()));
+  private List<Split> map(List<RoomSplit> roomSplits) {
+    List<Split> splitsResult = new ArrayList<>();
+    if (roomSplits == null) return splitsResult;
+    for (RoomSplit roomSplit : roomSplits) {
+      splitsResult.add(new Split(roomSplit.getName(), roomSplit.getType(), roomSplit.getPath(),
+          roomSplit.getFileSize(), roomSplit.getMd5()));
     }
     return splitsResult;
   }
 
-  public Download create(String md5, int versionCode, String packageName, String uri,
+  public RoomDownload create(String md5, int versionCode, String packageName, String uri,
       boolean hasAppc) {
     ApkPaths downloadPaths =
-        downloadApkPathsProvider.getDownloadPaths(Download.ACTION_UPDATE, uri, uri);
+        downloadApkPathsProvider.getDownloadPaths(RoomDownload.ACTION_UPDATE, uri, uri);
     String versionName =
         "Auto-Update"; //This is needed since we're using the version name to compare installs
-    Download download = new Download();
+    RoomDownload download = new RoomDownload();
     download.setAppName(marketName);
     download.setMd5(md5);
     download.setVersionCode(versionCode);
     download.setPackageName(packageName);
     download.setVersionName(versionName);
-    download.setAction(Download.ACTION_UPDATE);
+    download.setAction(RoomDownload.ACTION_UPDATE);
     download.setHasAppc(hasAppc);
     download.setSize(0);
     download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
@@ -173,7 +165,7 @@ public class DownloadFactory {
     return download;
   }
 
-  public Download create(int downloadAction, String appName, String packageName, String md5,
+  public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
       boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
       String trustedBadge, String storeName) {
@@ -187,7 +179,7 @@ public class DownloadFactory {
       ApkPaths downloadPaths =
           downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
 
-      Download download = new Download();
+      RoomDownload download = new RoomDownload();
       download.setMd5(md5);
       download.setIcon(icon);
       download.setAppName(appName);
@@ -205,7 +197,7 @@ public class DownloadFactory {
 
       return download;
     } else {
-      throw new IllegalArgumentException(validationResult.getMessage());
+      throw new InvalidAppException(validationResult.getMessage());
     }
   }
 }

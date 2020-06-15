@@ -1,5 +1,6 @@
 package cm.aptoide.pt.abtesting;
 
+import rx.Completable;
 import rx.Observable;
 
 public interface AbTestRepository {
@@ -13,7 +14,7 @@ public interface AbTestRepository {
   Observable<Boolean> recordAction(String identifier, int position,
       BaseExperiment.ExperimentType type);
 
-  Observable<Void> cacheExperiment(ExperimentModel experiment, String experimentName);
+  Completable cacheExperiment(ExperimentModel experiment, String experimentName);
 
   Observable<String> getExperimentId(String id);
 }

@@ -5,10 +5,17 @@
 
 package cm.aptoide.pt.presenter;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.accountmanager.AptoideCredentials;
+import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
+import cm.aptoide.pt.account.AgentPersistence;
+import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionService;
 import cm.aptoide.pt.autoupdate.AutoUpdateDialogFragment;
 import cm.aptoide.pt.autoupdate.AutoUpdateManager;
+import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationNavigator;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
@@ -26,7 +33,9 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.util.ApkFy;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
+import com.aptoide.authentication.AuthenticationException;
 import java.util.List;
+import rx.Completable;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Single;
@@ -56,6 +65,11 @@ public class MainPresenter implements Presenter {
   private final AutoUpdateManager autoUpdateManager;
   private final PermissionService permissionService;
   private final RootAvailabilityManager rootAvailabilityManager;
+  private final AppsNameExperiment appsNameExperiment;
+  private final BottomNavigationMapper bottomNavigationMapper;
+  private final AptoideAccountManager accountManager;
+  private final AccountNavigator accountNavigator;
+  private final AgentPersistence agentPersistence;
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
@@ -66,7 +80,9 @@ public class MainPresenter implements Presenter {
       AptoideBottomNavigator aptoideBottomNavigator, Scheduler viewScheduler, Scheduler ioScheduler,
       BottomNavigationNavigator bottomNavigationNavigator, UpdatesManager updatesManager,
       AutoUpdateManager autoUpdateManager, PermissionService permissionService,
-      RootAvailabilityManager rootAvailabilityManager) {
+      RootAvailabilityManager rootAvailabilityManager, AppsNameExperiment appsNameExperiment,
+      BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
+      AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
     this.view = view;
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
@@ -88,9 +104,23 @@ public class MainPresenter implements Presenter {
     this.autoUpdateManager = autoUpdateManager;
     this.permissionService = permissionService;
     this.rootAvailabilityManager = rootAvailabilityManager;
+    this.appsNameExperiment = appsNameExperiment;
+    this.bottomNavigationMapper = bottomNavigationMapper;
+    this.accountManager = accountManager;
+    this.accountNavigator = accountNavigator;
+    this.agentPersistence = agentPersistence;
   }
 
   @Override public void present() {
+
+    view.getLifecycleEvent()
+        .filter(View.LifecycleEvent.CREATE::equals)
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .flatMapSingle(__ -> appsNameExperiment.getAppsName())
+        .doOnNext(name -> aptoideBottomNavigator.setAppsName(name))
+        .subscribe(__ -> {
+        }, throwable -> crashReport.log(throwable));
+
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFy.run())
@@ -107,7 +137,9 @@ public class MainPresenter implements Presenter {
         .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
         .flatMap(created -> aptoideBottomNavigator.navigationEvent()
             .observeOn(viewScheduler)
-            .doOnNext(fragmentid -> aptoideBottomNavigator.showFragment(fragmentid))
+            .flatMapCompletable(
+                fragmentid -> handleAppsNameExperimentConversion(fragmentid).doOnCompleted(
+                    () -> aptoideBottomNavigator.showFragment(fragmentid)))
             .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -118,6 +150,54 @@ public class MainPresenter implements Presenter {
     setupInstallErrorsDisplay();
     shortcutManagement();
     setupUpdatesNumber();
+
+    handleAuthentication();
+  }
+
+  private void handleAuthentication() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> View.LifecycleEvent.CREATE.equals(lifecycleEvent))
+        .flatMap(__ -> view.onAuthenticationIntent()
+            .doOnNext(__1 -> accountNavigator.clearBackStackUntilLogin())
+            .flatMapCompletable(token -> authenticate(token))
+            .retry())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace);
+  }
+
+  private Completable authenticate(String authToken) {
+    return accountManager.login(new AptoideCredentials(agentPersistence.getEmail(), authToken, true,
+        agentPersistence.getAgent(), agentPersistence.getState()))
+        .observeOn(viewScheduler)
+        .doOnSubscribe(() -> view.showLoadingView())
+        .doOnSuccess(__ -> view.hideLoadingView())
+        .doOnSuccess(isSignup -> handleFirstSignup(isSignup))
+        .doOnError(throwable -> {
+          view.hideLoadingView();
+          if (throwable instanceof AuthenticationException
+              && (((AuthenticationException) throwable).getCode() >= 400
+              && ((AuthenticationException) throwable).getCode() < 500)) {
+            accountNavigator.navigateToLoginError();
+          } else {
+            view.showGenericErrorMessage();
+          }
+        })
+        .toCompletable();
+  }
+
+  private void handleFirstSignup(Boolean isSignup) {
+    if (isSignup) {
+      accountNavigator.navigateToCreateProfileView();
+    }
+  }
+
+  private Completable handleAppsNameExperimentConversion(Integer fragmentid) {
+    if (bottomNavigationMapper.mapToBottomNavigationPosition(fragmentid)
+        == BottomNavigationMapper.APPS_POSITION) {
+      return appsNameExperiment.recordConversion();
+    }
+    return Completable.complete();
   }
 
   private void setupUpdatesNumber() {
@@ -197,8 +277,9 @@ public class MainPresenter implements Presenter {
 
   // proper up/back navigation to home if needed
   private void navigate() {
+    Intent intent = view.getIntentAfterCreate();
     showHome();
-    if (deepLinkManager.showDeepLink(view.getIntentAfterCreate())) {
+    if (deepLinkManager.showDeepLink(intent)) {
       SecurePreferences.setWizardAvailable(false, securePreferences);
     } else {
       if (SecurePreferences.isWizardAvailable(securePreferences)) {

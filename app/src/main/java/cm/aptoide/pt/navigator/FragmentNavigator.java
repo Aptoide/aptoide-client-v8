@@ -35,4 +35,10 @@ public interface FragmentNavigator {
   void navigateToDialogForResult(DialogFragment fragment, int requestCode);
 
   void popDialogWithResult(Result result);
+
+  void popBackStackUntil(String foundFragmentTag);
+
+  int getBackStackEntryCount();
+
+  String getTagByBackStackEntry(int backstackEntry);
 }

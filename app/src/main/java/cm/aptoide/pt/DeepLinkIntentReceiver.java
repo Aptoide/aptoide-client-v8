@@ -14,18 +14,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import androidx.annotation.Nullable;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
-import cm.aptoide.pt.ads.MinimalAdMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.aab.HardwareSpecsFilterPersistence;
 import cm.aptoide.pt.dataprovider.exception.AptoideWsV7Exception;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
-import cm.aptoide.pt.dataprovider.model.v2.GetAdsResponse;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.link.AptoideInstall;
@@ -37,7 +34,6 @@ import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.design.ShowMessage;
 import cm.aptoide.pt.view.ActivityView;
 import cm.aptoide.pt.wallet.WalletInstallActivity;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -81,7 +77,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private String TMP_MYAPP_FILE;
   private Class startClass = AptoideApplication.getActivityProvider()
       .getMainActivityFragmentClass();
-  private MinimalAdMapper adMapper;
   private AnalyticsManager analyticsManager;
   private NavigationTracker navigationTracker;
   private DeepLinkAnalytics deepLinkAnalytics;
@@ -95,15 +90,11 @@ public class DeepLinkIntentReceiver extends ActivityView {
     navigationTracker = application.getNavigationTracker();
     deepLinkAnalytics = new DeepLinkAnalytics(analyticsManager, navigationTracker);
 
-    adMapper = new MinimalAdMapper();
     TMP_MYAPP_FILE = getCacheDir() + "/myapp.myapp";
     String uri = getIntent().getDataString();
-    deepLinkAnalytics.website(uri);
+
     shortcutNavigation = false;
     newFeature = application.getNewFeature();
-
-    Logger.getInstance()
-        .v(TAG, "uri: " + uri);
 
     dealWithShortcuts();
 
@@ -114,6 +105,13 @@ public class DeepLinkIntentReceiver extends ActivityView {
       CrashReport.getInstance()
           .log(e);
     }
+
+    if (!"aptoideauth".equalsIgnoreCase(u.getScheme())) {
+      deepLinkAnalytics.website(uri);
+      Logger.getInstance()
+          .v(TAG, "uri: " + uri);
+    }
+
     Intent intent = null;
     //Loogin for url from the new site
     if (u != null && u.getHost() != null) {
@@ -124,6 +122,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
       } else if (u.getHost()
           .contains("imgs.aptoide.com")) {
         intent = dealWithImagesApoide(uri);
+      } else if (u.getHost()
+          .contains("app.aptoide.com")) {
+        intent = dealWithAptoideAuthentication(uri);
       } else if (u.getHost()
           .contains("aptoide.com")) {
         intent = dealWithAptoideWebsite(u);
@@ -142,8 +143,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
           .contains("play.google.com") && u.getPath()
           .contains("store/apps/details")) {
         intent = dealWithGoogleHost(u);
-      } else if ("aptword".equalsIgnoreCase(u.getScheme())) {
-        intent = dealWithAptword(uri);
       } else if ("file".equalsIgnoreCase(u.getScheme())) {
         downloadMyApp();
       } else if ("aptoideinstall".equalsIgnoreCase(u.getScheme())) {
@@ -154,6 +153,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
         intent = dealWithAptoideSchema(u);
       } else if ("aptoidefeature".equalsIgnoreCase(u.getScheme())) {
         intent = parseFeatureUri(u.getHost());
+      } else if ("aptoideauth".equalsIgnoreCase(u.getScheme())) {
+        String token = uri.split("aptoideauth://")[1];
+        intent = parseAptoideAuthUri(token);
       }
     }
     if (intent != null) {
@@ -161,6 +163,20 @@ public class DeepLinkIntentReceiver extends ActivityView {
     }
     deepLinkAnalytics.sendWebsite();
     finish();
+  }
+
+  private Intent dealWithAptoideAuthentication(String u) {
+    String path = u.split("app.aptoide.com/auth/code/")[1];
+    String code = path.split("/")[0];
+    return parseAptoideAuthUri(code);
+  }
+
+  private Intent parseAptoideAuthUri(String token) {
+    Intent intent = new Intent(this, startClass);
+    intent.putExtra(DeepLinksTargets.APTOIDE_AUTH, true);
+    intent.putExtra(DeepLinksKeys.AUTH_TOKEN, token);
+    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    return intent;
   }
 
   private Intent parseFeatureUri(String uri) {
@@ -205,37 +221,6 @@ public class DeepLinkIntentReceiver extends ActivityView {
       return startFromAppcAds();
     } else if (sURIMatcher.match(u) == DEEPLINK_ID) {
       return startGenericDeepLink(u);
-    }
-    return null;
-  }
-
-  private Intent dealWithAptword(String uri) {
-    // TODO: 12-08-2016 neuro aptword Seems discontinued???
-    String param = uri.substring("aptword://".length());
-
-    if (!TextUtils.isEmpty(param)) {
-
-      param = param.replaceAll("\\*", "_")
-          .replaceAll("\\+", "/");
-
-      String json = new String(Base64.decode(param.getBytes(), 0));
-
-      Logger.getInstance()
-          .d("AptoideAptWord", json);
-
-      GetAdsResponse.Ad ad = null;
-      try {
-        ad = new ObjectMapper().readValue(json, GetAdsResponse.Ad.class);
-      } catch (IOException e) {
-        CrashReport.getInstance()
-            .log(e);
-      }
-
-      if (ad != null) {
-        Intent intent = new Intent(this, startClass);
-        intent.putExtra(DeepLinksTargets.FROM_AD, adMapper.map(ad));
-        return intent;
-      }
     }
     return null;
   }
@@ -779,6 +764,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String APPC_INFO_VIEW = "appc_info_view";
     public static final String APPC_ADS = "appc_ads";
     public static final String FEATURE = "feature";
+    public static final String APTOIDE_AUTH = "aptoide_auth";
   }
 
   public static class DeepLinksKeys {
@@ -792,6 +778,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
     public static final String URI = "uri";
     public static final String CARD_ID = "cardId";
     public static final String SLUG = "slug";
+    public static final String AUTH_TOKEN = "auth_token";
 
     //deep link query parameters
     public static final String ACTION = "action";

@@ -142,6 +142,13 @@ public class RemoteBundleDataSource implements BundleDataSource {
                     }))));
   }
 
+  /**
+   * As it was done originally, this method alters the original GetStoreWidgets.WSWidget
+   * for each widget request. This is not great as it can cause concurrency issues (e.g. it may
+   * emit the same WSWidget twice). At the moment this does not cause any actual issue (it doesn't
+   * matter if it emits the same object twice). A refactor could be significant,
+   * so it's not priority, but it's important to note it in case of any requirements change.
+   */
   private Observable<GetStoreWidgets> loadAppsInBundles(boolean adultContentEnabled,
       boolean invalidateHttpCache, List<String> packageNames, GetStoreWidgets getStoreWidgets,
       boolean bypassCache, String id) {

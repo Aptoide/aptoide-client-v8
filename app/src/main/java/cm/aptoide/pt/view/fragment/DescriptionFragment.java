@@ -16,8 +16,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.AccessorFactory;
-import cm.aptoide.pt.database.realm.Store;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.model.v7.GetApp;
@@ -27,7 +25,6 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
-import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -48,6 +45,7 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private static final String HAS_APPC = "HAS_APPC";
   @Inject AppBundlesVisibilityManager appBundlesVisibilityManager;
   @Inject ThemeManager themeManager;
+  @Inject StoreCredentialsProvider storeCredentialsProvider;
   private boolean hasAppId = false;
   private long appId;
   private String packageName;
@@ -58,7 +56,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   private String appName;
   private boolean hasAppc;
   private BodyInterceptor<BaseBody> baseBodyBodyInterceptor;
-  private StoreCredentialsProvider storeCredentialsProvider;
   private OkHttpClient httpClient;
   private Converter.Factory converterFactory;
   private String partnerId;
@@ -78,9 +75,6 @@ public class DescriptionFragment extends BaseLoaderToolbarFragment
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     getFragmentComponent(savedInstanceState).inject(this);
-    storeCredentialsProvider = new StoreCredentialsProviderImpl(AccessorFactory.getAccessorFor(
-        ((AptoideApplication) getContext().getApplicationContext()
-            .getApplicationContext()).getDatabase(), Store.class));
     final AptoideApplication application =
         (AptoideApplication) getContext().getApplicationContext();
     baseBodyBodyInterceptor = application.getAccountSettingsBodyInterceptorPoolV7();

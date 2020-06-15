@@ -2,16 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
-buildscript {
-
-  repositories {
-    maven { url 'https://maven.fabric.io/public' }
-  }
-
-  dependencies {
-    classpath "io.fabric.tools:gradle:${FABRIC_VERSION}"
-  }
-}
+buildscript {}
 
 android {
   compileSdkVersion Integer.parseInt(project.COMPILE_SDK_VERSION)
@@ -58,11 +49,6 @@ dependencies {
 
   implementation "io.reactivex:rxjava:1.2.7"
 
-  // Fabric
-  implementation("com.crashlytics.sdk.android:crashlytics:2.6.5@aar") {
-    transitive = true
-  }
-
   // Facebook Core (Analytics)
   implementation 'com.facebook.android:facebook-core:4.41.0'
 
@@ -71,9 +57,6 @@ dependencies {
 
   //Rakam android sdk
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
-
-  //UXCam
-  implementation 'com.uxcam:uxcam:3.1.11@aar'
 }
 
 version = "1.0.3"

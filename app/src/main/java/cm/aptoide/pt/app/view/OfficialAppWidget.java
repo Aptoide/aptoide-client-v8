@@ -17,9 +17,7 @@ import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.GetAppMeta;
-import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.networking.image.ImageLoader;
-import cm.aptoide.pt.repository.RepositoryFactory;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.view.Translator;
 import cm.aptoide.pt.view.recycler.widget.Widget;
@@ -59,8 +57,7 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
 
     final FragmentActivity context = getContext();
     final Pair<String, GetAppMeta> appMeta = displayable.getMessageGetApp();
-    final boolean isAppInstalled = isAppInstalled(appMeta.second.getData()
-        .getPackageName());
+    final boolean isAppInstalled = displayable.isAppInstalled();
 
     int color = displayable.getPrimaryColor();
 
@@ -132,14 +129,6 @@ public class OfficialAppWidget extends Widget<OfficialAppDisplayable> {
           CrashReport.getInstance()
               .log(err);
         }));
-  }
-
-  private boolean isAppInstalled(String packageName) {
-    InstalledRepository installedRepo =
-        RepositoryFactory.getInstalledRepository(getContext().getApplicationContext());
-    return installedRepo.isInstalled(packageName)
-        .toBlocking()
-        .first();
   }
 
   private void hideOfficialAppMessage() {

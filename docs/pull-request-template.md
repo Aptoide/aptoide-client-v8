@@ -15,11 +15,11 @@
 
 **How should this be manually tested?**
 
-  Flow on how to test this or QA Tickets related to this use-case: [ASV-XXXX](https://aptoide.atlassian.net/browse/ASV-XXXX)
+  Flow on how to test this or QA Tickets related to this use-case: [MOB-XXXX](https://aptoide.atlassian.net/browse/MOB-XXXX)
 
 **What are the relevant tickets?**
 
-  Tickets related to this pull-request: [ASV-XXXX](https://aptoide.atlassian.net/browse/ASV-XXXX)
+  Tickets related to this pull-request: [MOB-XXXX](https://aptoide.atlassian.net/browse/MOB-XXXX)
 
 **Questions:**
 

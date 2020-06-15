@@ -39,6 +39,10 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
 
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+
   lintOptions {
     abortOnError false
   }
@@ -54,6 +58,7 @@ dependencies {
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
   implementation "androidx.appcompat:appcompat:${APPCOMPAT_VERSION}"
+  implementation "androidx.core:core-ktx:${CORE_VERSION}"
   implementation "androidx.constraintlayout:constraintlayout:${CONSTRAINT_LAYOUT_VERSION}"
   implementation "io.reactivex:rxjava:${RXJAVA_VERSION}"
   implementation "io.reactivex:rxandroid:${RXANDROID_VERSION}"
