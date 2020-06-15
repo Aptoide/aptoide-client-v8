@@ -9,6 +9,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -17,7 +18,8 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 class RemoteAuthenticationService(
-    private val authenticationBaseHost: String) :
+    private val authenticationBaseHost: String,
+    okHttpClient: OkHttpClient) :
     AuthenticationService {
 
   private val authorizationV7: AuthorizationV7 =
@@ -25,6 +27,7 @@ class RemoteAuthenticationService(
           .addConverterFactory(MoshiConverterFactory.create(
               Moshi.Builder().add(KotlinJsonAdapterFactory())
                   .build()))
+          .client(okHttpClient)
           .build()
           .create(AuthorizationV7::class.java)
 
