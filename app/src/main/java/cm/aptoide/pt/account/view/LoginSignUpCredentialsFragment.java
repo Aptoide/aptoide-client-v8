@@ -187,8 +187,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(event -> termsConditionCheckBox.isChecked());
   }
 
-  @Override public Observable<Void> googleSignUpEvent() {
+  @Override public Observable<Boolean> googleSignUpEvent() {
     return RxView.clicks(googleLoginButton)
+        .map(event -> termsConditionCheckBox.isChecked())
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_GOOGLE,
             getStartupClickOrigin()));
   }
@@ -198,8 +199,9 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
         .map(dialog -> null);
   }
 
-  @Override public Observable<Void> facebookSignUpEvent() {
+  @Override public Observable<Boolean> facebookSignUpEvent() {
     return RxView.clicks(facebookLoginButton)
+        .map(event -> termsConditionCheckBox.isChecked())
         .doOnNext(__ -> accountAnalytics.clickIn(AccountAnalytics.StartupClick.CONNECT_FACEBOOK,
             getStartupClickOrigin()));
   }

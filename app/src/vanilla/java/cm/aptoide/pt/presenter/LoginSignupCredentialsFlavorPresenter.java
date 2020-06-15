@@ -81,12 +81,6 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
         });
   }
 
-  private void showNotCheckedMessage(boolean checked) {
-    if (!checked) {
-      view.showTermsConditionError();
-    }
-  }
-
   @Override public boolean handle() {
     return view.tryCloseLoginBottomSheet(true);
   }

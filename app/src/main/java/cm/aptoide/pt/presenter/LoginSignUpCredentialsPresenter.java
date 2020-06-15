@@ -90,11 +90,20 @@ public abstract class LoginSignUpCredentialsPresenter
             .log(err));
   }
 
+  void showNotCheckedMessage(boolean checked) {
+    if (!checked) {
+      view.showTermsConditionError();
+    }
+  }
+
   private void handleGoogleSignUpEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
-        .flatMap(__ -> view.googleSignUpEvent())
+        .flatMap(__ -> view.googleSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
+            .retry())
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendGoogleLoginButtonPressed();
@@ -143,7 +152,10 @@ public abstract class LoginSignUpCredentialsPresenter
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
-        .flatMap(__ -> view.facebookSignUpEvent())
+        .flatMap(__ -> view.facebookSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
+            .retry())
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendFacebookLoginButtonPressed();
