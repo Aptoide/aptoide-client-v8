@@ -2114,9 +2114,10 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
-      @Named("base-webservices-host") String authenticationBaseHost) {
-    return new AptoideAuthenticationRx(
-        new AptoideAuthentication(new RemoteAuthenticationService(authenticationBaseHost)));
+      @Named("base-webservices-host") String authenticationBaseHost,
+      @Named("default") OkHttpClient okHttpClient) {
+    return new AptoideAuthenticationRx(new AptoideAuthentication(
+        new RemoteAuthenticationService(authenticationBaseHost, okHttpClient)));
   }
 
   @Singleton @Provides AgentPersistence providesAgentPersistence(
