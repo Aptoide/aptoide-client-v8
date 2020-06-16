@@ -463,6 +463,7 @@
 
   <!-- Search Widget-->
   <string name="no_search_results_message">There are no results for your search. \nTry using other words or enabling adult content.</string>
+  <string name="no_search_results_try_filters_message">There are no results for your search.\nTry using other words or play with the filters!</string>
   <string name="no_search_results_enable_adult_content">Show adult content</string>
   <string name="no_search_results_other_filters">Or try different filters</string>
 
