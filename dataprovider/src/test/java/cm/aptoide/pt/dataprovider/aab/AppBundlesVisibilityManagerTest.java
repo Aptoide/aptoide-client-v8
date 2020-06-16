@@ -9,28 +9,28 @@ public class AppBundlesVisibilityManagerTest {
 
   @Test public void shouldEnableAppBundles_MIUI_CompatibleAppsOnly() {
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(true, () -> true);
+        new AppBundlesVisibilityManager(false, true, () -> true);
 
     assertFalse(appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   @Test public void shouldEnableAppBundles_MIUI_ShowNonCompatibleApps() {
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(true, () -> false);
+        new AppBundlesVisibilityManager(false, true, () -> false);
 
     assertTrue(appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   @Test public void shouldEnableAppBundles_NonMIUI_ShowNonCompatibleApps() {
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(false, () -> false);
+        new AppBundlesVisibilityManager(false, false, () -> false);
 
     assertTrue(appBundlesVisibilityManager.shouldEnableAppBundles());
   }
 
   @Test public void shouldEnableAppBundles_NonMIUI_CompatibleAppsOnly() {
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(false, () -> true);
+        new AppBundlesVisibilityManager(false, false, () -> true);
 
     assertTrue(appBundlesVisibilityManager.shouldEnableAppBundles());
   }

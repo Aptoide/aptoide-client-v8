@@ -545,9 +545,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
             WebService.getDefaultConverter(),
             ((AptoideApplication) getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences(),
-            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-                new HardwareSpecsFilterPersistence(
-                    ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())))
+            new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
+                AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(
+                ((AptoideApplication) getApplicationContext()).getDefaultSharedPreferences())))
             .observe()
             .toBlocking()
             .first();

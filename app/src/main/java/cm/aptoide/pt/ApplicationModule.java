@@ -1553,8 +1553,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
       HardwareSpecsFilterPersistence hardwareSpecsFilterPersistence) {
-    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-        hardwareSpecsFilterPersistence);
+    return new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
+        AptoideUtils.isDeviceMIUI(), hardwareSpecsFilterPersistence);
   }
 
   @Singleton @Provides HardwareSpecsFilterPersistence providesHardwareSpecsFilterPersistence(

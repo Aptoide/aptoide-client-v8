@@ -26,7 +26,7 @@ import retrofit2.Converter;
 
 /**
  * Created by neuro on 26-12-2016.
- *
+ * <p>
  * Deprecated since some injected variables such as accountMature are susceptible to change between
  * calls and
  */
@@ -53,8 +53,8 @@ import retrofit2.Converter;
     this.storeCredentialsProvider = storeCredentialsProvider;
     this.googlePlayServicesAvailable = googlePlayServicesAvailable;
     AppBundlesVisibilityManager appBundlesVisibilityManager =
-        new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-            new HardwareSpecsFilterPersistence(sharedPreferences));
+        new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
+            AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(sharedPreferences));
     listStoresRequestFactory =
         new ListStoresRequestFactory(bodyInterceptor, httpClient, converterFactory,
             tokenInvalidator, sharedPreferences);
