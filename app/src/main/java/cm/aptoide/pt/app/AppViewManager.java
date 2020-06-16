@@ -167,15 +167,6 @@ public class AppViewManager {
         .map(SearchAdResult::new));
   }
 
-  public Single<Boolean> recordInterstitialImpression() {
-    return moPubAdsManager.recordInterstitialAdImpression()
-        .subscribeOn(ioScheduler);
-  }
-
-  public Single<Boolean> recordInterstitialClick() {
-    return moPubAdsManager.recordInterstitialAdClick();
-  }
-
   public Single<Boolean> flagApk(String storeName, String md5, FlagsVote.VoteType type) {
     return flagManager.flagApk(storeName, md5, type.name()
         .toLowerCase())
@@ -305,7 +296,8 @@ public class AppViewManager {
         appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId, hasAppc),
         (install, isMigration) -> new DownloadModel(
             downloadStateParser.parseDownloadType(install.getType(), isMigration),
-            install.getProgress(), downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
+            install.getProgress(),
+            downloadStateParser.parseDownloadState(install.getState(), install.isIndeterminate())));
   }
 
   public Completable pauseDownload(String md5) {
@@ -376,17 +368,10 @@ public class AppViewManager {
     if (packageName.equals("com.appcoins.wallet")) {
       return Single.just(false);
     } else {
-      return moPubAdsManager.shouldHaveInterstitialAds()
-          .flatMap(hasAds -> {
-            if (hasAds) {
-              return moPubAdsManager.shouldShowAds()
-                  .doOnSuccess(showAds -> {
-                    if (!showAds) {
-                      sendAdsBlockByOfferEvent();
-                    }
-                  });
-            } else {
-              return Single.just(false);
+      return moPubAdsManager.shouldShowAds()
+          .doOnSuccess(showAds -> {
+            if (!showAds) {
+              sendAdsBlockByOfferEvent();
             }
           })
           .flatMap(this::shouldLoadAds);

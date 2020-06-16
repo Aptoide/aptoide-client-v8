@@ -1,9 +1,6 @@
 package cm.aptoide.pt;
 
 import cm.aptoide.accountmanager.AdultContent;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.LoginPreferences;
 import cm.aptoide.pt.ads.MoPubConsentDialogManager;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
@@ -44,17 +41,6 @@ import javax.inject.Singleton;
     return new LoginPreferences();
   }
 
-  @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment() {
-    return new MoPubBannerAdExperiment();
-  }
-
-  @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment() {
-    return new MoPubNativeAdExperiment();
-  }
-
-  @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment() {
-    return new MoPubInterstitialAdExperiment();
-  }
 
   @Singleton @Provides WalletAdsOfferManager providesWalletAdsOfferManager() {
     return new WalletAdsOfferManager();

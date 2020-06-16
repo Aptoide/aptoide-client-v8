@@ -2,12 +2,7 @@ package cm.aptoide.pt;
 
 import cm.aptoide.accountmanager.AccountService;
 import cm.aptoide.accountmanager.AdultContent;
-import cm.aptoide.pt.abtesting.ABTestManager;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.LoginPreferences;
-import cm.aptoide.pt.ads.MoPubAnalytics;
 import cm.aptoide.pt.ads.MoPubConsentDialogManager;
 import cm.aptoide.pt.ads.MoPubConsentDialogView;
 import cm.aptoide.pt.ads.MoPubConsentManager;
@@ -54,21 +49,6 @@ import javax.inject.Singleton;
 
   @Singleton @Provides LoginPreferences provideLoginPreferences() {
     return new LoginPreferences(application, GoogleApiAvailability.getInstance());
-  }
-
-  @Singleton @Provides MoPubBannerAdExperiment providesMoPubBannerAdExperiment(
-      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
-    return new MoPubBannerAdExperiment(abTestManager, moPubAnalytics);
-  }
-
-  @Singleton @Provides MoPubNativeAdExperiment providesMoPubNativeAdExperiment(
-      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
-    return new MoPubNativeAdExperiment(abTestManager, moPubAnalytics);
-  }
-
-  @Singleton @Provides MoPubInterstitialAdExperiment providesMoPubInterstitialAdExperiment(
-      @Named("ab-test") ABTestManager abTestManager, MoPubAnalytics moPubAnalytics) {
-    return new MoPubInterstitialAdExperiment(abTestManager, moPubAnalytics);
   }
 
   @Singleton @Provides @Named("partnerID") String providePartnerID() {
