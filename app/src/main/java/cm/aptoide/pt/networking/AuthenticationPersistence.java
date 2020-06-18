@@ -26,13 +26,11 @@ public class AuthenticationPersistence {
 
   public Single<Authentication> getAuthentication() {
     return androidAccountProvider.getAndroidAccount()
-        .map(androidAccount -> {
-          return new Authentication(androidAccount.name,
-              androidAccountManager.getUserData(androidAccount, ACCOUNT_REFRESH_TOKEN),
-              androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_TOKEN),
-              androidAccountManager.getPassword(androidAccount),
-              androidAccountManager.getUserData(androidAccount, ACCOUNT_TYPE));
-        })
+        .map(androidAccount -> new Authentication(androidAccount.name,
+            androidAccountManager.getUserData(androidAccount, ACCOUNT_REFRESH_TOKEN),
+            androidAccountManager.getUserData(androidAccount, ACCOUNT_ACCESS_TOKEN),
+            androidAccountManager.getPassword(androidAccount),
+            androidAccountManager.getUserData(androidAccount, ACCOUNT_TYPE)))
         .onErrorReturn(throwable -> new Authentication("", "", "", "", ""));
   }
 

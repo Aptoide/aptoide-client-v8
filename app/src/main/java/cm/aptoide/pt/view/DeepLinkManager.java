@@ -69,7 +69,7 @@ public class DeepLinkManager {
   private final FragmentNavigator fragmentNavigator;
   private final BottomNavigationNavigator bottomNavigationNavigator;
   private final SearchNavigator searchNavigator;
-  private final DeepLinkMessages deepLinkMessages;
+  private final DeepLinkView deepLinkView;
   private final SharedPreferences sharedPreferences;
   private final RoomStoreRepository storeRepository;
   private final NavigationTracker navigationTracker;
@@ -89,7 +89,7 @@ public class DeepLinkManager {
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
-      DeepLinkMessages deepLinkMessages, SharedPreferences sharedPreferences,
+      DeepLinkView deepLinkView, SharedPreferences sharedPreferences,
       RoomStoreRepository storeRepository, NotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
@@ -100,7 +100,7 @@ public class DeepLinkManager {
     this.fragmentNavigator = fragmentNavigator;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
     this.searchNavigator = searchNavigator;
-    this.deepLinkMessages = deepLinkMessages;
+    this.deepLinkView = deepLinkView;
     this.sharedPreferences = sharedPreferences;
     this.storeRepository = storeRepository;
     this.navigationTracker = navigationTracker;
@@ -291,12 +291,12 @@ public class DeepLinkManager {
               .flatMap(isFollowed -> {
                 if (isFollowed) {
                   return Observable.fromCallable(() -> {
-                    deepLinkMessages.showStoreAlreadyAdded();
+                    deepLinkView.showStoreAlreadyAdded();
                     return null;
                   });
                 } else {
                   return storeUtilsProxy.subscribeStoreObservable(storeName)
-                      .doOnNext(getStoreMeta -> deepLinkMessages.showStoreFollowed(storeName));
+                      .doOnNext(getStoreMeta -> deepLinkView.showStoreFollowed(storeName));
                 }
               })
               .map(isSubscribed -> storeName))
@@ -431,7 +431,7 @@ public class DeepLinkManager {
     }
   }
 
-  public interface DeepLinkMessages {
+  public interface DeepLinkView {
     void showStoreAlreadyAdded();
 
     void showStoreFollowed(String storeName);

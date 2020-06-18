@@ -6,17 +6,16 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.FacebookSignUpAdapter;
 import cm.aptoide.pt.account.FacebookSignUpException;
 import cm.aptoide.pt.account.GoogleSignUpAdapter;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.BackButton;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public abstract class LoginSignUpCredentialsPresenter
@@ -26,23 +25,21 @@ public abstract class LoginSignUpCredentialsPresenter
   private final LoginSignUpCredentialsView view;
   private final AptoideAccountManager accountManager;
   private final CrashReport crashReport;
-  private final boolean navigateToHome;
+  private final LoginSignUpCredentialsConfiguration configuration;
   private final AccountNavigator accountNavigator;
   private final Collection<String> permissions;
   private final ThrowableToStringMapper errorMapper;
   private final AccountAnalytics accountAnalytics;
-  private boolean dismissToNavigateToMainView;
 
   public LoginSignUpCredentialsPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
+      LoginSignUpCredentialsConfiguration configuration, AccountNavigator accountNavigator,
+      Collection<String> permissions, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
     this.view = view;
     this.accountManager = accountManager;
     this.crashReport = crashReport;
-    this.dismissToNavigateToMainView = dismissToNavigateToMainView;
-    this.navigateToHome = navigateToHome;
+    this.configuration = configuration;
     this.accountNavigator = accountNavigator;
     this.permissions = permissions;
     this.errorMapper = errorMapper;
@@ -50,10 +47,7 @@ public abstract class LoginSignUpCredentialsPresenter
   }
 
   @Override public void present() {
-
-    handleAptoideLoginEvent();
-    handleAptoideSignUpEvent();
-
+    handleOpenOptions();
     handleGoogleSignUpEvent();
     handleGoogleSignUpResult();
 
@@ -61,104 +55,22 @@ public abstract class LoginSignUpCredentialsPresenter
     handleFacebookSignUpEvent();
     handleFacebookSignUpWithRequiredPermissionsEvent();
 
-    handleAptoideShowLoginEvent();
     handleAccountStatusChangeWhileShowingView();
-    handleForgotPasswordClick();
-    handleTogglePasswordVisibility();
   }
 
-  private void handleTogglePasswordVisibility() {
+  private void handleOpenOptions() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> togglePasswordVisibility())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleForgotPasswordClick() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(resumed -> forgotPasswordSelection())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, err -> crashReport.log(err));
-  }
-
-  private void handleAptoideSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> getAptoideSignUpEvent().doOnNext(click -> {
-          view.hideKeyboard();
-          view.showLoading();
-          lockScreenRotation();
-          accountAnalytics.sendAptoideSignUpButtonPressed();
+        .doOnNext(__ -> {
+          if (configuration.getHasMagicLinkError()) {
+            view.showAptoideLoginArea();
+            view.showMagicLinkError(configuration.getMagicLinkErrorMessage());
+          }
         })
-            .flatMapCompletable(
-                credentials -> accountManager.signUp(AptoideAccountManager.APTOIDE_SIGN_UP_TYPE,
-                    credentials)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnCompleted(() -> {
-                      accountAnalytics.loginSuccess();
-                      navigateToCreateProfile();
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    })
-                    .doOnError(throwable -> {
-                      accountAnalytics.sendSignUpErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                          throwable);
-                      view.showError(errorMapper.map(throwable));
-                      crashReport.log(throwable);
-                      unlockScreenRotation();
-                      view.hideLoading();
-                    }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
-  private void handleAptoideLoginEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> view.aptoideLoginEvent()
-            .doOnNext(click -> {
-              view.hideKeyboard();
-              view.showLoading();
-              lockScreenRotation();
-              accountAnalytics.sendAptoideLoginButtonPressed();
-            })
-            .flatMapCompletable(credentials -> accountManager.login(credentials)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                  unlockScreenRotation();
-                  accountAnalytics.loginSuccess();
-                  navigateToMainView();
-                  view.hideLoading();
-                })
-                .doOnError(throwable -> {
-                  view.showError(errorMapper.map(throwable));
-                  view.hideLoading();
-                  crashReport.log(throwable);
-                  unlockScreenRotation();
-                  accountAnalytics.sendLoginErrorEvent(AccountAnalytics.LoginMethod.APTOIDE,
-                      throwable);
-                }))
-            .retry())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
-  private void handleAptoideShowLoginEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> aptoideShowLoginClick())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
-        }, err -> {
-          view.hideLoading();
-          view.showError(errorMapper.map(err));
-          crashReport.log(err);
-        });
+        }, err -> CrashReport.getInstance()
+            .log(err));
   }
 
   private void handleAccountStatusChangeWhileShowingView() {
@@ -178,11 +90,20 @@ public abstract class LoginSignUpCredentialsPresenter
             .log(err));
   }
 
+  void showNotCheckedMessage(boolean checked) {
+    if (!checked) {
+      view.showTermsConditionError();
+    }
+  }
+
   private void handleGoogleSignUpEvent() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideGoogleSignUp())
-        .flatMap(__ -> view.googleSignUpEvent())
+        .flatMap(__ -> view.googleSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
+            .retry())
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendGoogleLoginButtonPressed();
@@ -231,7 +152,10 @@ public abstract class LoginSignUpCredentialsPresenter
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .doOnNext(__ -> showOrHideFacebookSignUp())
-        .flatMap(__ -> view.facebookSignUpEvent())
+        .flatMap(__ -> view.facebookSignUpEvent()
+            .doOnNext(this::showNotCheckedMessage)
+            .filter(event -> event)
+            .retry())
         .doOnNext(event -> {
           view.showLoading();
           accountAnalytics.sendFacebookLoginButtonPressed();
@@ -290,27 +214,6 @@ public abstract class LoginSignUpCredentialsPresenter
         .subscribe();
   }
 
-  private Observable<Void> aptoideShowLoginClick() {
-    return view.showAptoideLoginAreaClick()
-        .doOnNext(__ -> view.showAptoideLoginArea());
-  }
-
-  private Observable<Void> forgotPasswordSelection() {
-    return view.forgotPasswordClick()
-        .doOnNext(selection -> accountNavigator.navigateToRecoverPasswordView());
-  }
-
-  private Observable<Void> togglePasswordVisibility() {
-    return view.showHidePasswordClick()
-        .doOnNext(__ -> {
-          if (view.isPasswordVisible()) {
-            view.hidePassword();
-          } else {
-            view.showPassword();
-          }
-        });
-  }
-
   private void showOrHideFacebookSignUp() {
     if (accountManager.isSignUpEnabled(FacebookSignUpAdapter.TYPE)) {
       view.showFacebookLogin();
@@ -328,16 +231,14 @@ public abstract class LoginSignUpCredentialsPresenter
   }
 
   private void navigateToMainView() {
-    if (dismissToNavigateToMainView) {
+    if (configuration.getDismissToNavigateToMainView()) {
       view.dismiss();
-    } else if (navigateToHome) {
+    } else if (configuration.getCleanBackStack()) {
       navigateToMainViewCleaningBackStack();
     } else {
       navigateBack();
     }
   }
-
-  protected abstract Observable<AptoideCredentials> getAptoideSignUpEvent();
 
   void lockScreenRotation() {
     view.lockScreenRotation();

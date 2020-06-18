@@ -13,8 +13,8 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("marcelo.benites@aptoide.com", "1aMarcelo", true),
-        true)
+    validator.validate(
+        new AptoideCredentials("marcelo.benites@aptoide.com", "1aMarcelo", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertNoErrors();
@@ -27,7 +27,7 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("", "1aMarcelo", true), true)
+    validator.validate(new AptoideCredentials("", "1aMarcelo", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -42,7 +42,7 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "", true), true)
+    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
@@ -57,54 +57,12 @@ public class AptoideCredentialsValidatorTest {
 
     final TestSubscriber testSubscriber = TestSubscriber.create();
 
-    validator.validate(new AptoideCredentials("", "", true), true)
+    validator.validate(new AptoideCredentials("", "", true, "", ""))
         .subscribe(testSubscriber);
 
     testSubscriber.assertError(AccountValidationException.class);
     assertEquals(3, ((AccountValidationException) testSubscriber.getOnErrorEvents()
         .get(0)).getCode());
     testSubscriber.assertNotCompleted();
-  }
-
-  @Test public void shouldNotValidateLessThan8CharactersPassword() throws Exception {
-
-    CredentialsValidator validator = new CredentialsValidator();
-
-    final TestSubscriber testSubscriber = TestSubscriber.create();
-
-    validator.validate(new AptoideCredentials("paul.mccartney@beatles.com", "1234567", true), true)
-        .subscribe(testSubscriber);
-
-    testSubscriber.assertError(AccountValidationException.class);
-    assertEquals(4, ((AccountValidationException) testSubscriber.getOnErrorEvents()
-        .get(0)).getCode());
-    testSubscriber.assertNotCompleted();
-  }
-
-  @Test public void shouldNotValidatePasswordWithout1LetterAnd1Number() throws Exception {
-
-    CredentialsValidator validator = new CredentialsValidator();
-
-    final TestSubscriber test1 = TestSubscriber.create();
-
-    validator.validate(
-        new AptoideCredentials("paul.mccartney@beatles.com", "beatleswerethebest", true), true)
-        .subscribe(test1);
-
-    test1.assertError(AccountValidationException.class);
-    assertEquals(4, ((AccountValidationException) test1.getOnErrorEvents()
-        .get(0)).getCode());
-    test1.assertNotCompleted();
-
-    final TestSubscriber test2 = TestSubscriber.create();
-
-    validator.validate(
-        new AptoideCredentials("paul.mccartney@beatles.com", "123321432413241", true), true)
-        .subscribe(test2);
-
-    test2.assertError(AccountValidationException.class);
-    assertEquals(4, ((AccountValidationException) test2.getOnErrorEvents()
-        .get(0)).getCode());
-    test2.assertNotCompleted();
   }
 }

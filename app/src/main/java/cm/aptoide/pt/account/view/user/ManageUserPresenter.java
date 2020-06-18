@@ -88,7 +88,6 @@ public class ManageUserPresenter implements Presenter {
     view.getLifecycleEvent()
         .filter(event -> event == View.LifecycleEvent.CREATE)
         .flatMap(__ -> view.saveUserDataButtonClick()
-            .filter(viewModel -> (isEditProfile))
             .doOnNext(__2 -> view.showProgressDialog())
             .flatMapCompletable(userData -> saveUserData(userData))
             .retry())

@@ -217,6 +217,10 @@
         <data android:scheme="aptoiderepo" />
         <data android:scheme="aptoidexml" />
         <data android:scheme="aptoideinstall" />
+        <data android:scheme="aptoideauth" />
+        <data
+            android:host="app.aptoide.com"
+            android:scheme="https" />
         <data android:scheme="aptoidesearch" />
         <data android:scheme="aptword" />
         <data android:scheme="aptoidefeature" />
@@ -410,8 +414,6 @@
     <service android:name=".install.InstallService" />
 
     <service android:name=".install.InstalledIntentService" />
-
-    <service android:name="com.uxcam.service.HttpPostService" />
 
     <receiver
         android:name=".widget.SearchWidgetProvider"

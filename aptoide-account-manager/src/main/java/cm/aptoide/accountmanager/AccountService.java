@@ -1,11 +1,13 @@
 package cm.aptoide.accountmanager;
 
+import androidx.core.util.Pair;
+import com.aptoide.authentication.model.CodeAuth;
 import rx.Completable;
 import rx.Single;
 
 public interface AccountService {
 
-  Single<Account> getAccount(String email, String password);
+  Single<Pair<Account, Boolean>> getAccount(String email, String code, String state, String agent);
 
   Single<Account> createAccount(String email, String metadata, String type);
 
@@ -13,7 +15,7 @@ public interface AccountService {
 
   Completable updateTermsAndConditions();
 
-  Single<Account> getAccount();
+  Single<Account> getAccount(String email);
 
   Completable updateAccount(String nickname, String avatarPath);
 
@@ -28,4 +30,6 @@ public interface AccountService {
   Completable updateAccount(boolean adultContentEnabled);
 
   Completable removeAccount();
+
+  Single<CodeAuth> sendMagicLink(String email);
 }

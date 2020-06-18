@@ -310,14 +310,6 @@ android {
     variant.buildConfigField "String", "RAKAM_API_KEY",
         "\"" + project.RAKAM_API_KEY_TEST + "\""
 
-    if (flavors[1].name.contains('prod') && type == 'release') {
-      variant.buildConfigField "String", "UXCAM_API_KEY",
-          "\"" + project.UXCAM_API_KEY + "\""
-    } else {
-      variant.buildConfigField "String", "UXCAM_API_KEY",
-          "\"" + project.UXCAM_API_KEY_DEBUG + "\""
-    }
-
     //Sentry
     if (flavors[0].name.contains("vanilla") && flavors[1].name.contains('prod') &&
         type ==
@@ -486,9 +478,6 @@ dependencies {
 
   //Rakam
   implementation "io.rakam:android-sdk:${RAKAM_VERSION}"
-
-  //UXCam
-  implementation 'com.uxcam:uxcam:3.1.11@aar'
 
   //Sentry
   implementation "io.sentry:sentry-android:${SENTRY_VERSION}"

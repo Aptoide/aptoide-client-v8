@@ -40,7 +40,6 @@ import cm.aptoide.analytics.implementation.loggers.FacebookEventLogger;
 import cm.aptoide.analytics.implementation.loggers.FlurryEventLogger;
 import cm.aptoide.analytics.implementation.loggers.HttpKnockEventLogger;
 import cm.aptoide.analytics.implementation.loggers.RakamEventLogger;
-import cm.aptoide.analytics.implementation.loggers.UXCamEventLogger;
 import cm.aptoide.analytics.implementation.navigation.NavigationTracker;
 import cm.aptoide.analytics.implementation.network.RetrofitAptoideBiService;
 import cm.aptoide.analytics.implementation.persistence.SharedPreferencesSessionPersistence;
@@ -56,12 +55,10 @@ import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubBannerAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubInterstitialAdExperiment;
-import cm.aptoide.pt.abtesting.experiments.MoPubNativeAdExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
+import cm.aptoide.pt.account.AgentPersistence;
 import cm.aptoide.pt.account.AndroidAccountManagerPersistence;
 import cm.aptoide.pt.account.AndroidAccountProvider;
 import cm.aptoide.pt.account.DatabaseStoreDataPersist;
@@ -277,6 +274,9 @@ import cm.aptoide.pt.view.app.AppService;
 import cm.aptoide.pt.view.settings.SupportEmailProvider;
 import cm.aptoide.pt.wallet.WalletAppProvider;
 import cn.dreamtobe.filedownloader.OkHttp3Connection;
+import com.aptoide.authentication.AptoideAuthentication;
+import com.aptoide.authentication.network.RemoteAuthenticationService;
+import com.aptoide.authenticationrx.AptoideAuthenticationRx;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -780,11 +780,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
           BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v3.BaseBody> bodyInterceptorV3,
       @Named("default") ObjectMapper objectMapper, Converter.Factory converterFactory,
       @Named("extraID") String extraId, AccountFactory accountFactory,
-      OAuthModeProvider oAuthModeProvider) {
+      OAuthModeProvider oAuthModeProvider, AptoideAuthenticationRx aptoideAuthentication) {
     return new AccountServiceV3(accountFactory, httpClient, longTimeoutHttpClient, converterFactory,
         objectMapper, defaultSharedPreferences, extraId, tokenInvalidator,
         authenticationPersistence, noAuthenticationBodyInterceptorV3, bodyInterceptorV3,
-        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, oAuthModeProvider);
+        multipartBodyInterceptor, bodyInterceptorWebV7, bodyInterceptorPoolV7, oAuthModeProvider,
+        aptoideAuthentication);
   }
 
   @Singleton @Provides OAuthModeProvider provideOAuthModeProvider() {
@@ -1213,12 +1214,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides MoPubAdsManager providesMoPubAdsManager(
-      MoPubInterstitialAdExperiment moPubInterstitialAdExperiment,
-      MoPubBannerAdExperiment moPubBannerAdExperiment,
-      MoPubNativeAdExperiment moPubNativeAdExperiment, WalletAdsOfferManager walletAdsOfferManager,
-      MoPubConsentManager moPubConsentDialogManager) {
-    return new MoPubAdsManager(moPubInterstitialAdExperiment, moPubBannerAdExperiment,
-        moPubNativeAdExperiment, walletAdsOfferManager, moPubConsentDialogManager);
+      WalletAdsOfferManager walletAdsOfferManager, MoPubConsentManager moPubConsentDialogManager) {
+    return new MoPubAdsManager(walletAdsOfferManager, moPubConsentDialogManager);
   }
 
   @Singleton @Provides AdsUserPropertyManager providesMoPubAdsService(
@@ -1261,6 +1258,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
         + "://"
         + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_READ_V7_HOST
+        + "/api/7/";
+  }
+
+  @Singleton @Provides @Named("base-webservices-host") String providesBaseWebservicesHost(
+      @Named("default") SharedPreferences sharedPreferences) {
+    return (ToolboxManager.isToolboxEnableHttpScheme(sharedPreferences) ? "http"
+        : cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_SCHEME)
+        + "://"
+        + cm.aptoide.pt.dataprovider.BuildConfig.APTOIDE_WEB_SERVICES_HOST
         + "/api/7/";
   }
 
@@ -1451,11 +1457,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RakamEventLogger(logger);
   }
 
-  @Singleton @Provides @Named("uxCamEventLogger") EventLogger providesUXCamEventLogger(
-      AnalyticsLogger logger) {
-    return new UXCamEventLogger(logger);
-  }
-
   @Singleton @Provides @Named("flurryLogger") EventLogger providesFlurryEventLogger(
       @Named("flurry") FlurryEventLogger eventLogger) {
     return eventLogger;
@@ -1501,15 +1502,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("aptoideSession") SessionLogger aptoideSessionLogger,
       @Named("normalizer") AnalyticsEventParametersNormalizer analyticsNormalizer,
       @Named("rakamEventLogger") EventLogger rakamEventLogger,
-      @Named("rakamEvents") Collection<String> rakamEvents,
-      @Named("uxCamEventLogger") EventLogger uxCamEventLogger,
-      @Named("uxCamEvents") Collection<String> uxCamEvents, AnalyticsLogger logger) {
+      @Named("rakamEvents") Collection<String> rakamEvents, AnalyticsLogger logger) {
 
     return new AnalyticsManager.Builder().addLogger(aptoideBiEventLogger, aptoideEvents)
         .addLogger(facebookEventLogger, facebookEvents)
         .addLogger(flurryEventLogger, flurryEvents)
         .addLogger(rakamEventLogger, rakamEvents)
-        .addLogger(uxCamEventLogger, uxCamEvents)
         .addSessionLogger(flurrySessionLogger)
         .addSessionLogger(aptoideSessionLogger)
         .setKnockLogger(knockEventLogger)
@@ -1520,23 +1518,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides @Named("rakamEvents") Collection<String> providesRakamEvents() {
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
+        InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
         AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
         FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
         AptoideInstallAnalytics.CONVERSION_EVENT);
-  }
-
-  @Singleton @Provides @Named("uxCamEvents") Collection<String> providesUXCamEvents() {
-    return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
-        InstallAnalytics.RAKAM_INSTALL_EVENT,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_PARTICIPATING_EVENT_NAME,
-        AppViewAnalytics.ASV_2053_SIMILAR_APPS_CONVERTING_EVENT_NAME, SearchAnalytics.SEARCH,
-        SearchAnalytics.SEARCH_RESULT_CLICK);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -1568,8 +1556,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides AppBundlesVisibilityManager providesAppBundlesVisibilityManager(
       HardwareSpecsFilterPersistence hardwareSpecsFilterPersistence) {
-    return new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-        hardwareSpecsFilterPersistence);
+    return new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
+        AptoideUtils.isDeviceMIUI(), hardwareSpecsFilterPersistence);
   }
 
   @Singleton @Provides HardwareSpecsFilterPersistence providesHardwareSpecsFilterPersistence(
@@ -2130,5 +2118,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {
     return new UpdatesNotificationManager(application.getApplicationContext());
+  }
+
+  @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
+      @Named("base-webservices-host") String authenticationBaseHost,
+      @Named("default") OkHttpClient okHttpClient) {
+    return new AptoideAuthenticationRx(new AptoideAuthentication(
+        new RemoteAuthenticationService(authenticationBaseHost, okHttpClient)));
+  }
+
+  @Singleton @Provides AgentPersistence providesAgentPersistence(
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new AgentPersistence(secureSharedPreferences);
   }
 }

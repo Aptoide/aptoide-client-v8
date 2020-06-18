@@ -73,7 +73,7 @@
 
         <Button
             android:id="@+id/create_user_create_profile"
-            style="@style/Aptoide.Button"
+            style="@style/Aptoide.Button.Alternative"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/padding_smaller"
             android:layout_marginLeft="@dimen/padding_smaller"
@@ -168,7 +168,7 @@
               android:layout_width="match_parent"
               android:layout_height="43dp"
               android:layout_marginTop="@dimen/padding_very_small"
-              android:background="@drawable/rounded_corners_white"
+              android:background="@drawable/rounded_corners_reactions"
               android:hint="@string/create_user_username"
               android:imeOptions="actionDone"
               android:inputType="text"

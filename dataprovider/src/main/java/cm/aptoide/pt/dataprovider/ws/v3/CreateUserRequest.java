@@ -13,8 +13,6 @@ import cm.aptoide.pt.dataprovider.model.v3.BaseV3Response;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.utils.AptoideUtils;
-import java.io.File;
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -34,84 +32,30 @@ public class CreateUserRequest extends V3<BaseV3Response> {
     multipartRequestBody = null;
   }
 
-  public CreateUserRequest(MultipartBody.Part file, HashMapNotNull<String, RequestBody> body,
-      OkHttpClient okHttpClient, BodyInterceptor<BaseBody> bodyInterceptor,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences) {
-    super(okHttpClient, WebService.getDefaultConverter(), bodyInterceptor, tokenInvalidator,
-        sharedPreferences);
-    multipartBodyFile = file;
-    multipartRequestBody = body;
-  }
-
-  public static CreateUserRequest of(String email, String password,
+  public static CreateUserRequest of(String email, String code,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
     final BaseBody body = new BaseBody();
-    final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
-    addBaseParameters(email, body, passhash, extraId);
+    final String codeHash = AptoideUtils.AlgorithmU.computeSha1(code);
+    addBaseParameters(email, body, codeHash, extraId);
 
-    body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash, "bazaar_hmac"));
+    body.put("hmac", AptoideUtils.AlgorithmU.computeHmacSha1(email + codeHash, "bazaar_hmac"));
 
     return new CreateUserRequest(null, body, httpClient, bodyInterceptor, tokenInvalidator,
         sharedPreferences);
   }
 
-  private static void addBaseParameters(String email, BaseBody parameters, String passhash,
+  private static void addBaseParameters(String email, BaseBody parameters, String codeHash,
       String extraId) {
     parameters.put("mode", "json");
     parameters.put("email", email);
-    parameters.put("passhash", passhash);
+    parameters.put("passhash", codeHash);
 
     if (!TextUtils.isEmpty(extraId)) {
       parameters.put("oem_id", extraId);
     }
 
     parameters.put("accepts", "tos,privacy");
-  }
-
-  public static CreateUserRequest of(String email, String name, String password,
-      String userAvatarPath, String accessToken, BodyInterceptor<BaseBody> bodyInterceptor,
-      OkHttpClient httpClient, OkHttpClient longTimeoutHttpClient,
-      TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences, String extraId) {
-
-    final BaseBody body = new BaseBody();
-    final String passhash = AptoideUtils.AlgorithmU.computeSha1(password);
-    if (!TextUtils.isEmpty(userAvatarPath)) {
-
-      if (!TextUtils.isEmpty(extraId)) {
-        body.put("oem_id", createBodyPartFromString(extraId));
-      }
-      HashMapNotNull<String, RequestBody> multipartBody = new HashMapNotNull<>();
-      multipartBody.put("mode", createBodyPartFromString("json"));
-      multipartBody.put("email", createBodyPartFromString(email));
-      multipartBody.put("passhash", createBodyPartFromString(passhash));
-      multipartBody.put("hmac", createBodyPartFromString(
-          AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true",
-              "bazaar_hmac")));
-      multipartBody.put("name", createBodyPartFromString(name));
-      multipartBody.put("update", createBodyPartFromString("true"));
-      final File file = new File(userAvatarPath);
-      RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-      MultipartBody.Part multipartBodyFile =
-          MultipartBody.Part.createFormData("user_avatar", file.getName(), requestFile);
-      return new CreateUserRequest(multipartBodyFile, multipartBody, longTimeoutHttpClient,
-          bodyInterceptor, tokenInvalidator, sharedPreferences);
-    } else if (userAvatarPath.isEmpty()) {
-      body.put("update", "true");
-      body.put("name", name);
-    }
-
-    addBaseParameters(email, body, passhash, extraId);
-
-    body.put("hmac",
-        AptoideUtils.AlgorithmU.computeHmacSha1(email + passhash + name + "true", "bazaar_hmac"));
-
-    return new CreateUserRequest(null, body, httpClient, bodyInterceptor, tokenInvalidator,
-        sharedPreferences);
-  }
-
-  private static RequestBody createBodyPartFromString(String string) {
-    return RequestBody.create(MediaType.parse("multipart/form-data"), string);
   }
 
   @Override

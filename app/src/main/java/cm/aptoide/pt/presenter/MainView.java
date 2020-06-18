@@ -31,4 +31,12 @@ public interface MainView extends View {
   void showUnknownErrorMessage();
 
   void dismissAutoUpdateDialog();
+
+  void showLoadingView();
+
+  void hideLoadingView();
+
+  void showGenericErrorMessage();
+
+  Observable<String> onAuthenticationIntent();
 }

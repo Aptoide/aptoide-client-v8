@@ -64,7 +64,6 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
    * @param appName
    * @param appImgUrl
    * @param appPackage
-   *
    * @return
    */
   public static OtherVersionsFragment newInstance(String appName, String appImgUrl,
@@ -155,9 +154,9 @@ public class OtherVersionsFragment extends AptoideBaseFragment<BaseAdapter> {
             ((AptoideApplication) getContext().getApplicationContext()).getTokenInvalidator(),
             ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences(),
             getContext().getResources(),
-            new AppBundlesVisibilityManager(AptoideUtils.isDeviceMIUI(),
-                new HardwareSpecsFilterPersistence(
-                    ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()))),
+            new AppBundlesVisibilityManager(AptoideUtils.isMIUIwithAABFix(),
+                AptoideUtils.isDeviceMIUI(), new HardwareSpecsFilterPersistence(
+                ((AptoideApplication) getContext().getApplicationContext()).getDefaultSharedPreferences()))),
         otherVersionsSuccessRequestListener, err -> err.printStackTrace());
 
     getRecyclerView().addOnScrollListener(endlessRecyclerOnScrollListener);

@@ -57,7 +57,7 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
       }
     } else if (throwable instanceof AccountValidationException) {
       switch (((AccountValidationException) throwable).getCode()) {
-        case AccountValidationException.EMPTY_EMAIL_AND_PASSWORD:
+        case AccountValidationException.EMPTY_EMAIL_AND_CODE:
           message = context.getString(R.string.no_email_and_pass_error_message);
           break;
         case AccountValidationException.EMPTY_EMAIL:
@@ -66,7 +66,7 @@ public class AccountErrorMapper implements ThrowableToStringMapper {
         case AccountValidationException.EMPTY_NAME:
           message = context.getString(R.string.nothing_inserted_user);
           break;
-        case AccountValidationException.EMPTY_PASSWORD:
+        case AccountValidationException.EMPTY_CODE:
           message = context.getString(R.string.no_pass_error_message);
           break;
         case AccountValidationException.INVALID_PASSWORD:

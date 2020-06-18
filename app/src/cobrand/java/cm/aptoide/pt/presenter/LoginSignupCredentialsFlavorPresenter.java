@@ -1,13 +1,12 @@
 package cm.aptoide.pt.presenter;
 
 import cm.aptoide.accountmanager.AptoideAccountManager;
-import cm.aptoide.accountmanager.AptoideCredentials;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.view.AccountNavigator;
+import cm.aptoide.pt.account.view.LoginSignUpCredentialsConfiguration;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.view.ThrowableToStringMapper;
 import java.util.Collection;
-import rx.Observable;
 
 public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredentialsPresenter {
 
@@ -17,42 +16,28 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
 
   public LoginSignupCredentialsFlavorPresenter(LoginSignUpCredentialsView view,
       AptoideAccountManager accountManager, CrashReport crashReport,
-      boolean dismissToNavigateToMainView, boolean navigateToHome,
-      AccountNavigator accountNavigator, Collection<String> permissions,
-      ThrowableToStringMapper errorMapper, AccountAnalytics accountAnalytics) {
-    super(view, accountManager, crashReport, dismissToNavigateToMainView, navigateToHome,
-        accountNavigator, permissions, errorMapper, accountAnalytics);
+      LoginSignUpCredentialsConfiguration configuration, AccountNavigator accountNavigator,
+      Collection<String> permissions, ThrowableToStringMapper errorMapper,
+      AccountAnalytics accountAnalytics) {
+    super(view, accountManager, crashReport, configuration, accountNavigator, permissions,
+        errorMapper, accountAnalytics);
     this.view = view;
     this.errorMapper = errorMapper;
     this.crashReport = crashReport;
   }
 
   @Override public void present() {
-
     super.present();
-
+    handleConnectWithEmailClick();
     handleCobrandText();
-    showAptoideSignUpEvent();
-    handleAptoideShowSignUpEvent();
-    hideTCandPP();
   }
 
-  protected Observable<AptoideCredentials> getAptoideSignUpEvent() {
-    return view.aptoideSignUpEvent();
-  }
-
-  private void hideTCandPP() {
+  private void handleConnectWithEmailClick() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .doOnNext(__ -> view.hideTCandPP())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe();
-  }
-
-  private void handleAptoideShowSignUpEvent() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .flatMap(__ -> showAptoideSignUpEvent())
+        .flatMap(__ -> view.showAptoideLoginAreaClick()
+            .doOnNext(___ -> view.showAptoideLoginArea())
+            .retry())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, err -> {
@@ -60,11 +45,6 @@ public class LoginSignupCredentialsFlavorPresenter extends LoginSignUpCredential
           view.showError(errorMapper.map(err));
           crashReport.log(err);
         });
-  }
-
-  private Observable<Boolean> showAptoideSignUpEvent() {
-    return view.showAptoideSignUpAreaClick()
-        .doOnNext(__ -> view.showAptoideSignUpArea());
   }
 
   private void handleCobrandText() {

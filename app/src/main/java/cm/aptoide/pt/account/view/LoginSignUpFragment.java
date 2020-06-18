@@ -22,6 +22,8 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   private static final String ACCOUNT_TYPE = "account_type";
   private static final String AUTH_TYPE = "auth_type";
   private static final String IS_NEW_ACCOUNT = "is_new_account";
+  public static final String HAS_MAGIC_LINK_ERROR = "has_magic_link_error";
+  public static final String MAGIC_LINK_ERROR_MESSAGE = "magic_link_error_message";
 
   private BottomSheetBehavior<View> bottomSheetBehavior;
   private boolean withBottomBar;
@@ -34,15 +36,26 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   private boolean navigateToHome;
   private boolean isWizard;
 
+  private boolean hasMagicLinkError;
+  private String magicLinkErrorMessage;
+
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome, boolean isWizard) {
     return newInstance(withBottomBar, dismissToNavigateToMainView, navigateToHome, "", "", true,
-        isWizard);
+        isWizard, false, "");
+  }
+
+  public static LoginSignUpFragment newInstance(boolean withBottomBar,
+      boolean dismissToNavigateToMainView, boolean navigateToHome, boolean isWizard,
+      boolean hasMagicLinkError, String magicLinkErrorMessage) {
+    return newInstance(withBottomBar, dismissToNavigateToMainView, navigateToHome, "", "", true,
+        isWizard, hasMagicLinkError, magicLinkErrorMessage);
   }
 
   public static LoginSignUpFragment newInstance(boolean withBottomBar,
       boolean dismissToNavigateToMainView, boolean navigateToHome, String accountType,
-      String authType, boolean isNewAccount, boolean isWizard) {
+      String authType, boolean isNewAccount, boolean isWizard, boolean hasMagicLinkError,
+      String magicLinkErrorMessage) {
     Bundle args = new Bundle();
     args.putBoolean(BOTTOM_SHEET_WITH_BOTTOM_BAR, withBottomBar);
     args.putBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW, dismissToNavigateToMainView);
@@ -51,6 +64,8 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     args.putString(AUTH_TYPE, authType);
     args.putBoolean(IS_NEW_ACCOUNT, isNewAccount);
     args.putBoolean(IS_WIZARD, isWizard);
+    args.putBoolean(HAS_MAGIC_LINK_ERROR, hasMagicLinkError);
+    args.putString(MAGIC_LINK_ERROR_MESSAGE, magicLinkErrorMessage);
     LoginSignUpFragment fragment = new LoginSignUpFragment();
     fragment.setArguments(args);
     return fragment;
@@ -67,6 +82,12 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     dismissToNavigateToMainView = args.getBoolean(DISMISS_TO_NAVIGATE_TO_MAIN_VIEW);
     navigateToHome = args.getBoolean(NAVIGATE_TO_HOME);
     isWizard = args.getBoolean(IS_WIZARD);
+
+    hasMagicLinkError = args.getBoolean(LoginSignUpCredentialsFragment.HAS_MAGIC_LINK_ERROR);
+    magicLinkErrorMessage = args.getString(LoginSignUpCredentialsFragment.MAGIC_LINK_ERROR_MESSAGE);
+    if (magicLinkErrorMessage == null) {
+      magicLinkErrorMessage = "";
+    }
   }
 
   @Override public void onAttach(Context context) {
@@ -93,7 +114,7 @@ public class LoginSignUpFragment extends BaseToolbarFragment
   @Override public void setupViews() {
     super.setupViews();
     presenter = new LoginSignUpPresenter(this, getFragmentChildNavigator(R.id.login_signup_layout),
-        dismissToNavigateToMainView, navigateToHome);
+        dismissToNavigateToMainView, navigateToHome, hasMagicLinkError, magicLinkErrorMessage);
     attachPresenter(presenter);
     registerClickHandler(presenter);
     bottomSheetBehavior.setBottomSheetCallback(presenter);
