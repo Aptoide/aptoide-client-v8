@@ -174,6 +174,7 @@ import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundleDataSource;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
@@ -218,6 +219,8 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.UpdatesNotificationManager;
+import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -2116,5 +2119,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
       AppsNameExperiment appsNameExperiment) {
     return new AppsNameExperimentManager(appsNameExperiment);
+  }
+
+  @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
+      UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
+      AptoideInstallManager aptoideInstallManager) {
+    return new UpdatesNotificationWorkerFactory(updateRepository, sharedPreferences,
+        aptoideInstallManager, new AppMapper());
+  }
+
+  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {
+    return new UpdatesNotificationManager(application.getApplicationContext());
   }
 }

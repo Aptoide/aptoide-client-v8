@@ -18,6 +18,10 @@ buildscript {
 
 android {
 
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
+
   // Websockets
   useLibrary 'org.apache.http.legacy'
 
@@ -543,6 +547,12 @@ dependencies {
 
   // Rxjava Interop
   implementation "com.github.akarnokd:rxjava2-interop:${RXJAVA2_INTEROP}"
+
+  // Work Manager
+  // Java
+  implementation "androidx.work:work-runtime:2.3.4"
+  // Kotlin + coroutines
+  implementation "androidx.work:work-runtime-ktx:2.3.4"
 }
 
 String getDate() {

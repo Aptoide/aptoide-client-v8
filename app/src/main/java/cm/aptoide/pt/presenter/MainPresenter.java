@@ -114,7 +114,7 @@ public class MainPresenter implements Presenter {
         .filter(created -> firstCreated)
         .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .doOnNext(__ -> contentPuller.start())
+        //.doOnNext(__ -> contentPuller.start())
         .doOnNext(__ -> navigate())
         .doOnNext(__ -> downloadAutoUpdate())
         .subscribe(__ -> {

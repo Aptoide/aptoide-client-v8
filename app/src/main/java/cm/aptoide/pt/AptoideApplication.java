@@ -66,6 +66,8 @@ import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
+import cm.aptoide.pt.notification.UpdatesNotificationManager;
+import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -140,7 +142,8 @@ import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
 
-public abstract class AptoideApplication extends Application {
+public abstract class AptoideApplication extends Application
+    implements androidx.work.Configuration.Provider {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
@@ -199,6 +202,8 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject AppsNameExperimentManager appsNameExperimentManager;
   @Inject RealmStoreMigrator realmStoreMigrator;
+  @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
+  @Inject UpdatesNotificationManager updatesNotificationManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -299,6 +304,7 @@ public abstract class AptoideApplication extends Application {
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeUXCam())
         .andThen(initializeSentry())
+        .andThen(setUpUpdatesNotification())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
@@ -347,6 +353,16 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
+  }
+
+  @NonNull @Override public androidx.work.Configuration getWorkManagerConfiguration() {
+    return new androidx.work.Configuration.Builder().setMinimumLoggingLevel(android.util.Log.DEBUG)
+        .setWorkerFactory(updatesNotificationWorkerFactory)
+        .build();
+  }
+
+  private Completable setUpUpdatesNotification() {
+    return Completable.fromAction(() -> updatesNotificationManager.setUpNotification());
   }
 
   private Completable setUpAppsNameAbTest() {
