@@ -64,7 +64,7 @@
   <dimen name="other_versions_title_bottom_margin">50dp</dimen>
   <dimen name="appview_side_margin">8dp</dimen>
   <dimen name="fab_margin">20dp</dimen>
-  <dimen format="float" name="appstimeline_card_icon" type="dimen">17.7dp</dimen>
+  <dimen name="appstimeline_card_icon" format="float" type="dimen">17.7dp</dimen>
   <dimen name="bottom_skip_bar_height">48dp</dimen>
   <dimen name="status_bar_height">24dp</dimen>
   <dimen name="padding_smaller">12dp</dimen>
@@ -78,7 +78,7 @@
   <dimen name="profile_picture_large_size">120dp</dimen>
   <dimen name="store_picture_large_size">80dp</dimen>
   <dimen name="padding_login_button">8dp</dimen>
-  <dimen name="login_field_height">38dp</dimen>
+  <dimen name="login_field_height">40dp</dimen>
   <dimen name="partial_view_store_theme_checked_size">22dp</dimen>
   <dimen name="partial_view_store_theme_sample_size">44dp</dimen>
   <dimen name="padding_tiny">4dp</dimen>
