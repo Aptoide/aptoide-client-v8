@@ -321,10 +321,6 @@ public abstract class AptoideApplication extends Application {
     startNotificationCenter();
     startNotificationCleaner();
 
-    realmStoreMigrator.performMigration()
-        .subscribe(() -> {
-        }, throwable -> throwable.printStackTrace());
-
     rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRootAvailable -> {
           if (isRootAvailable) {
