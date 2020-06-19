@@ -1,7 +1,6 @@
 import com.android.builder.model.ProductFlavor
 
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -203,9 +202,6 @@ android {
     variant.buildConfigField "String", "GMS_SERVER_ID", "\"" + project.GMS_SERVER_ID_VANILLA + "\""
     variant.buildConfigField "int", "CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS",
         project.CAMPAIGN_NOTIFICATION_SYNC_INTERVAL_MILLIS
-    variant.buildConfigField "int", "REALM_SCHEMA_VERSION",
-        project.REALM_SCHEMA_VERSION
-    variant.buildConfigField "String", "REALM_FILE_NAME", "\"" + project.REALM_FILE_NAME + "\""
     variant.buildConfigField "int", "ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS",
         project.ANALYTICS_EVENTS_INITIAL_DELAY_IN_MILLIS
     variant.buildConfigField "int", "ANALYTICS_EVENTS_TIME_INTERVAL_IN_MILLIS",
