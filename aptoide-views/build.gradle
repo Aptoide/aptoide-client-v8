@@ -82,12 +82,4 @@ dependencies {
   androidTestImplementation "androidx.test:rules:${RULES_VERSION}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
 
-  // These are just for styling compatibility when we run instrumentation tests.
-  // This essentially means that we are directly dependent on these libraries for resources.
-  androidTestImplementation project(path: ':utils')
-  androidTestImplementation "androidx.preference:preference:${PREFERENCES_VERSION}"
-  androidTestImplementation "com.jpardogo.materialtabstrip:library:${MATERIAL_TAB_STRIP_VERSION}"
-  androidTestImplementation "com.facebook.android:facebook-core:${FACEBOOK_ANDROID_SDK_VERSION}"
-  androidTestImplementation "com.facebook.android:facebook-login:${FACEBOOK_ANDROID_SDK_VERSION}"
-  androidTestImplementation("androidx.multidex:multidex:${MULTIDEX_VERSION}")
 }

@@ -247,8 +247,11 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
       snackbar.addCallback(new Snackbar.Callback() {
 
         @Override public void onShown(Snackbar snackbar) {
-          float newHeight = 360 * getResources().getDisplayMetrics().density;
-          bottomSheetBehavior.setPeekHeight((int) newHeight);
+          changeBottomSheetHeight(330);
+        }
+
+        @Override public void onDismissed(Snackbar transientBottomBar, int event) {
+          changeBottomSheetHeight(250);
         }
       });
     }
@@ -378,10 +381,6 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
     termsAndConditions.setVisibility(View.GONE);
     termsConditionCheckBox.setVisibility(View.GONE);
     loginSignupSelectionArea.setVisibility(View.GONE);
-    if (bottomSheetBehavior != null) {
-      float newHeight = 320 * getResources().getDisplayMetrics().density;
-      bottomSheetBehavior.setPeekHeight((int) newHeight);
-    }
   }
 
   @NotNull @Override public Observable<String> getMagicLinkClick() {
@@ -420,5 +419,14 @@ public class LoginSignUpCredentialsFragment extends GooglePlayServicesFragment
 
   @NotNull @Override public Observable<Void> getSecureLoginTextClick() {
     return sendMagicLinkView.getSecureLoginTextClick();
+  }
+
+  private void changeBottomSheetHeight(int heightPx) {
+    if (bottomSheetBehavior != null) {
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+      bottomSheetBehavior.setPeekHeight(
+          (int) (heightPx * getResources().getDisplayMetrics().density));
+      bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
   }
 }
