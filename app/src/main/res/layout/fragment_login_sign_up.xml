@@ -17,7 +17,6 @@ android:fitsSystemWindows="true"
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@drawable/background_login"
       android:gravity="center_horizontal"
       android:orientation="vertical"
       android:paddingBottom="140dp">
@@ -51,7 +50,7 @@ android:fitsSystemWindows="true"
         android:src="@drawable/wizard_3" />
 
       <TextView
-        style="@style/Aptoide.TextView.Medium.XL.White"
+        style="@style/Aptoide.TextView.Medium.L.White"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -60,7 +59,7 @@ android:fitsSystemWindows="true"
 
 
       <TextView
-        style="@style/Aptoide.TextView.Medium.M.White"
+        style="@style/Aptoide.TextView.Medium.XS.White"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

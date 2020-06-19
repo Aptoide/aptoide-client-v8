@@ -78,7 +78,7 @@
   <dimen name="profile_picture_large_size">120dp</dimen>
   <dimen name="store_picture_large_size">80dp</dimen>
   <dimen name="padding_login_button">8dp</dimen>
-  <dimen name="login_field_height">40dp</dimen>
+  <dimen name="login_field_height">48dp</dimen>
   <dimen name="partial_view_store_theme_checked_size">22dp</dimen>
   <dimen name="partial_view_store_theme_sample_size">44dp</dimen>
   <dimen name="padding_tiny">4dp</dimen>

@@ -56,7 +56,7 @@
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.XL.White"
+          style="@style/Aptoide.TextView.Medium.L.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
@@ -66,7 +66,7 @@
 
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.M.White"
+          style="@style/Aptoide.TextView.Medium.XS.White"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:gravity="center"
