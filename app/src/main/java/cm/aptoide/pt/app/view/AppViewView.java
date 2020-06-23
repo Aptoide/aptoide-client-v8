@@ -6,6 +6,7 @@ import cm.aptoide.pt.ads.MoPubInterstitialAdClickType;
 import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.app.view.similar.SimilarAppClickEvent;
@@ -161,7 +162,7 @@ public interface AppViewView extends InstallAppView {
 
   void showBannerAd(boolean isMature);
 
-  void setupAppcAppView();
+  void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel);
 
   void showAppcWalletPromotionView(Promotion promotionViewModel, WalletApp walletApp,
       Promotion.ClaimAction action, DownloadModel appDownloadModel);

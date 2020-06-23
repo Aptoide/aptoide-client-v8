@@ -180,7 +180,9 @@ public class AppViewPresenter implements Presenter {
       if (appViewModel.getAppCoinsViewModel()
           .hasAdvertising() || appViewModel.getAppCoinsViewModel()
           .hasBilling()) {
-        view.setupAppcAppView();
+        view.setupAppcAppView(appViewModel.getAppCoinsViewModel()
+            .hasBilling(), appViewModel.getAppCoinsViewModel()
+            .getBonusAppcModel());
       }
       view.recoverScrollViewState();
     }

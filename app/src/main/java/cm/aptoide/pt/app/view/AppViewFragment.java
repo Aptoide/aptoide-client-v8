@@ -45,6 +45,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
+import cm.aptoide.aptoideviews.appcoins.BonusAppcView;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
@@ -59,6 +60,7 @@ import cm.aptoide.pt.app.AppModel;
 import cm.aptoide.pt.app.AppReview;
 import cm.aptoide.pt.app.DownloadModel;
 import cm.aptoide.pt.app.ReviewsViewModel;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsAdapter;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
@@ -265,6 +267,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private TextView installStateText;
   private View catappultCard;
 
+  private BonusAppcView bonusAppcView;
+
   //wallet promotions
   private View promotionView;
   private View walletPromotionDownloadLayout;
@@ -434,6 +438,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     toolbar = view.findViewById(R.id.toolbar);
     collapsingAppcBackground = view.findViewById(R.id.collapsing_appc_coins_background);
 
+    bonusAppcView = view.findViewById(R.id.bonus_appc_view);
+
     promotionView = view.findViewById(R.id.wallet_install_promotion);
     walletPromotionTitle = promotionView.findViewById(R.id.wallet_title);
     walletPromotionMessage = promotionView.findViewById(R.id.wallet_message);
@@ -494,6 +500,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
               .setAlpha(1 - (percentage * 1.20f));
           view.findViewById(R.id.app_name)
               .setAlpha(1 - (percentage * 1.20f));
+          bonusAppcView.setAlpha(1 - (percentage * 1.20f));
           ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
               percentage);
           collapsingAppcBackground.setAlpha(1 - percentage);
@@ -1142,23 +1149,28 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     bannerAd.loadAd();
   }
 
-  @Override public void setupAppcAppView() {
+  @Override public void setupAppcAppView(boolean hasBilling, BonusAppcModel bonusAppcModel) {
     TypedValue value = new TypedValue();
     this.getContext()
         .getTheme()
         .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
     int drawableId = value.resourceId;
 
-    TransitionDrawable transition =
-        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
-    collapsingToolbarLayout.setBackgroundDrawable(transition);
-    transition.startTransition(APPC_TRANSITION_MS);
+    if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
+      bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
+      bonusAppcView.setVisibility(View.VISIBLE);
+    } else {
+      TransitionDrawable transition =
+          (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
+      collapsingToolbarLayout.setBackgroundDrawable(transition);
+      transition.startTransition(APPC_TRANSITION_MS);
 
-    AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
-    animation1.setDuration(APPC_TRANSITION_MS);
-    collapsingAppcBackground.setAlpha(1f);
-    collapsingAppcBackground.setVisibility(View.VISIBLE);
-    collapsingAppcBackground.startAnimation(animation1);
+      AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
+      animation1.setDuration(APPC_TRANSITION_MS);
+      collapsingAppcBackground.setAlpha(1f);
+      collapsingAppcBackground.setVisibility(View.VISIBLE);
+      collapsingAppcBackground.startAnimation(animation1);
+    }
 
     install.setBackgroundDrawable(getContext().getResources()
         .getDrawable(R.drawable.appc_gradient_rounded));
