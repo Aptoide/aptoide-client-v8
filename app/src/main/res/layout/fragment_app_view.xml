@@ -25,6 +25,7 @@
     android:layout_width="66dp"
     android:layout_height="72dp"
     android:visibility="gone"
+    android:translationY="-16dp"
     app:side="LEFT"
     app:layout_anchor="@id/app_bar_layout"
     app:layout_anchorGravity="bottom|left"
