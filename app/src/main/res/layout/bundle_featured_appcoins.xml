@@ -27,9 +27,10 @@
 
     <cm.aptoide.aptoideviews.appcoins.BonusAppcView
       android:id="@+id/bonus_appc_view"
-      android:layout_width="66dp"
-      android:layout_height="72dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
       android:visibility="visible"
+      app:enable_card_padding="false"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:placeholder_color="?attr/backgroundCardSecondaryColor"
