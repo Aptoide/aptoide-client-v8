@@ -14,7 +14,7 @@
       android:layout_marginStart="10dp"
       android:layout_marginLeft="10dp"
       android:layout_marginBottom="5dp"
-      android:text="Some apps are ready to be updated!"
+      android:text="@string/notification_updates_available"
       />
   <LinearLayout
       android:layout_width="match_parent"

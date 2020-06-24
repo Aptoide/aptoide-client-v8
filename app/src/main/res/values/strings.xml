@@ -810,6 +810,6 @@
   <string name="login_completed_body">Ready for the best apps?</string>
   
   <!--Updates Notification-->
-  <string name"notification_updates_available">Some apps are ready to be updated!</string>
+  <string name="notification_updates_available">Some apps are ready to be updated!</string>
 
 </resources>
