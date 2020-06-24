@@ -36,6 +36,8 @@ import retrofit2.Converter;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import static cm.aptoide.pt.dataprovider.model.v7.Type.APPCOINS_FEATURED;
+
 /**
  * Created by neuro on 27-04-2016.
  */
@@ -61,7 +63,13 @@ import rx.schedulers.Schedulers;
         url = wsWidget.getView()
             .replace(V7.getHost(sharedPreferences), "");
       }
+      // Ideally this should be replaced by the WS...
+      if (wsWidget.getTag()
+          .equals("appcoins-iab-featured")) {
+        wsWidget.setType(APPCOINS_FEATURED);
+      }
       switch (wsWidget.getType()) {
+        case APPCOINS_FEATURED:
         case APPS_TOP_GROUP:
         case APPS_GROUP:
           return ListAppsRequest.ofAction(url, storeCredentials, bodyInterceptor, httpClient,
@@ -100,7 +108,6 @@ import rx.schedulers.Schedulers;
               .doOnNext(obj -> wsWidget.setViewObject(obj))
               .onErrorResumeNext(throwable -> Observable.empty())
               .map(listApps -> wsWidget);
-
         case APPCOINS_ADS:
           return new GetAppCoinsCampaignsRequest(new GetAppCoinsCampaignsRequest.Body(0, limit),
               httpClient, converterFactory, bodyInterceptor, tokenInvalidator, sharedPreferences,

@@ -16,10 +16,12 @@ import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemData;
 import cm.aptoide.pt.dataprovider.ws.v7.home.ActionItemResponse;
 import cm.aptoide.pt.home.bundles.ads.AdBundle;
 import cm.aptoide.pt.home.bundles.ads.AdsTagWrapper;
+import cm.aptoide.pt.home.bundles.appcoins.BonusAppcBundle;
 import cm.aptoide.pt.home.bundles.apps.RewardApp;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.ActionItem;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
+import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
@@ -81,10 +83,28 @@ public class BundlesResponseMapper {
                 .getList(), type, widgetTag);
           }
           appBundles.add(new AppBundle(title, apps, type, event, widgetTag, widgetActionTag));
+        } else if (type.equals(HomeBundle.BundleType.FEATURED_BONUS_APPC)) {
+          List<Application> apps = null;
+          int percentage = -1;
+          if (viewObject instanceof BonusAppcBundle) {
+            BonusAppcBundle bundle = (BonusAppcBundle) viewObject;
+            apps = map(bundle.getListApps()
+                .getDataList()
+                .getList(), type, widgetTag);
+            percentage = bundle.getBonusAppcBundle()
+                .getBonusPercentage();
+          } else if (viewObject != null) {
+            apps = map(((ListApps) viewObject).getDataList()
+                .getList(), type, widgetTag);
+          }
+          appBundles.add(
+              new FeaturedAppcBundle(title, apps, type, event, widgetTag, widgetActionTag,
+                  percentage));
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           List<Application> applicationList = null;
           if (viewObject != null) {
-            applicationList = map(((ListAppCoinsCampaigns) viewObject).getDataList().getList(), widgetTag);
+            applicationList = map(((ListAppCoinsCampaigns) viewObject).getDataList()
+                .getList(), widgetTag);
           }
           if (applicationList == null || !applicationList.isEmpty()) {
             appBundles.add(new AppBundle(title, applicationList, HomeBundle.BundleType.APPCOINS_ADS,
@@ -187,6 +207,8 @@ public class BundlesResponseMapper {
         }
       case APPCOINS_ADS:
         return HomeBundle.BundleType.APPCOINS_ADS;
+      case APPCOINS_FEATURED:
+        return HomeBundle.BundleType.FEATURED_BONUS_APPC;
       case ADS:
         return HomeBundle.BundleType.ADS;
       case APPS_TOP_GROUP:

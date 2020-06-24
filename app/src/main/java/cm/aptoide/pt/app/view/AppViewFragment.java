@@ -1156,15 +1156,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         .resolveAttribute(R.attr.appview_toolbar_bg_appc, value, true);
     int drawableId = value.resourceId;
 
+    TransitionDrawable transition =
+        (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
+    collapsingToolbarLayout.setBackgroundDrawable(transition);
+    transition.startTransition(APPC_TRANSITION_MS);
+
     if (hasBilling && bonusAppcModel.getHasBonusAppc()) {
       bonusAppcView.setPercentage(bonusAppcModel.getBonusPercentage());
       bonusAppcView.setVisibility(View.VISIBLE);
     } else {
-      TransitionDrawable transition =
-          (TransitionDrawable) ContextCompat.getDrawable(getContext(), drawableId);
-      collapsingToolbarLayout.setBackgroundDrawable(transition);
-      transition.startTransition(APPC_TRANSITION_MS);
-
       AlphaAnimation animation1 = new AlphaAnimation(0f, 1.0f);
       animation1.setDuration(APPC_TRANSITION_MS);
       collapsingAppcBackground.setAlpha(1f);

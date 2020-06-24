@@ -32,5 +32,6 @@
       <enum name="LEFT" value="0"/>
       <enum name="RIGHT" value="1"/>
     </attr>
+    <attr name="placeholder_color" format="reference|color" />
   </declare-styleable>
 </resources>

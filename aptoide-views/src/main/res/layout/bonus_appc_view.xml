@@ -7,6 +7,7 @@
   android:background="@drawable/appc_gradient_right_rounded">
 
   <ImageView
+    android:id="@+id/confetti_img"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:src="@drawable/ic_bonus_appc_confetti"
@@ -49,6 +50,7 @@
 
 
   <TextView
+    android:id="@+id/percentage_sign"
     style="@style/Aptoide.TextView.Medium.XS.White"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

@@ -10,6 +10,7 @@ import cm.aptoide.pt.home.bundles.ads.AdsBundlesViewHolderFactory;
 import cm.aptoide.pt.home.bundles.ads.WalletAdsOfferViewHolder;
 import cm.aptoide.pt.home.bundles.ads.banner.SmallBannerAdBundleViewHolder;
 import cm.aptoide.pt.home.bundles.appcoins.EarnAppCoinsViewHolder;
+import cm.aptoide.pt.home.bundles.appcoins.FeaturedAppcViewHolder;
 import cm.aptoide.pt.home.bundles.apps.AppsBundleViewHolder;
 import cm.aptoide.pt.home.bundles.base.ActionBundle;
 import cm.aptoide.pt.home.bundles.base.AppBundleViewHolder;
@@ -44,6 +45,7 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
   private static final int TOP = 9;
   private static final int LOAD_MORE_ERROR = 10;
   private static final int EARN_APPCOINS = 11;
+  private static final int FEATURED_BONUS_APPCOINS = 12;
   private final ProgressBundle progressBundle;
   private final DecimalFormat oneDecimalFormatter;
   private final PublishSubject<HomeEvent> uiEventsListener;
@@ -110,6 +112,10 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return new EarnAppCoinsViewHolder(LayoutInflater.from(parent.getContext())
             .inflate(R.layout.bundle_earn_appcoins, parent, false), new DecimalFormat("0.00"),
             uiEventsListener);
+      case FEATURED_BONUS_APPCOINS:
+        return new FeaturedAppcViewHolder(LayoutInflater.from(parent.getContext())
+            .inflate(R.layout.bundle_featured_appcoins, parent, false), oneDecimalFormatter,
+            uiEventsListener);
       default:
         throw new IllegalStateException("Invalid bundle view type");
     }
@@ -126,6 +132,8 @@ public class BundlesAdapter extends RecyclerView.Adapter<AppBundleViewHolder> {
         return APPS;
       case APPCOINS_ADS:
         return EARN_APPCOINS;
+      case FEATURED_BONUS_APPC:
+        return FEATURED_BONUS_APPCOINS;
       case EDITORS:
         return EDITORS;
       case ADS:
