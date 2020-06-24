@@ -808,5 +808,8 @@
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
   <string name="login_completed_title">Done!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
+  
+  <!--Updates Notification-->
+  <string name"notification_updates_available">Some apps are ready to be updated!</string>
 
 </resources>

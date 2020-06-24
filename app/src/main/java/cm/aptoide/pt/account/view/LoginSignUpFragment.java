@@ -118,6 +118,8 @@ public class LoginSignUpFragment extends BaseToolbarFragment
     attachPresenter(presenter);
     registerClickHandler(presenter);
     bottomSheetBehavior.setBottomSheetCallback(presenter);
+    bottomSheetBehavior.setDraggable(false);
+    bottomSheetBehavior.setHideable(true);
   }
 
   @Override protected boolean hasToolbar() {

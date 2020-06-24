@@ -17,7 +17,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_login"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="140dp"
@@ -43,7 +42,7 @@
           />
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.XL.White"
+          style="@style/Aptoide.TextView.Medium.L.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="10dp"
@@ -53,7 +52,7 @@
 
 
       <TextView
-          style="@style/Aptoide.TextView.Medium.M.White"
+          style="@style/Aptoide.TextView.Medium.XS.White"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center"
