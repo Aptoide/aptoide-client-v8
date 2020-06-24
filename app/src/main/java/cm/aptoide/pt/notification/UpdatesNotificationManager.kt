@@ -4,17 +4,23 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.work.*
+import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment
+import rx.Completable
 import java.util.concurrent.TimeUnit
 
-class UpdatesNotificationManager(private val context: Context) {
+class UpdatesNotificationManager(private val context: Context,
+                                 private val updatesNotificationExperiment: UpdatesNotificationExperiment) {
 
-  private lateinit var uploadWorkRequest: WorkRequest
+  private lateinit var uploadWorkRequest: PeriodicWorkRequest
 
-  fun setUpNotification() {
-    setUpChannel()
-    setUpWorkRequest()
+  fun setUpNotification(): Completable {
+    return updatesNotificationExperiment.getConfiguration()
+        .doOnSuccess { config ->
+          setUpChannel()
+          setUpWorkRequest(config)
+        }
+        .toCompletable()
   }
 
   private fun setUpChannel() {
@@ -32,27 +38,45 @@ class UpdatesNotificationManager(private val context: Context) {
     }
   }
 
-  private fun setUpWorkRequest() {
-    val constraints = Constraints.Builder()
-        //.setRequiresCharging(true)
-        //.setRequiredNetworkType(NetworkType.UNMETERED)
-        .build()
-    Log.d("MainActivity", "constraints")
-
+  private fun setUpWorkRequest(config: String) {
+    val data = Data.Builder().putString(CONFIGURATION_KEY, config).build()
     uploadWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
-        15, TimeUnit.MINUTES)
-        .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
-        .setConstraints(constraints)
+        1, TimeUnit.DAYS)
+        .setConstraints(getConstraints(config))
+        .setInputData(data)
         .build()
 
     WorkManager
         .getInstance(context)
-        .enqueue(uploadWorkRequest)
+        .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest)
+  }
+
+  private fun getConstraints(config: String): Constraints {
+    when (config) {
+      "wifi" -> {
+        return Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED).build()
+      }
+      "charge" -> {
+        return Constraints.Builder().setRequiresCharging(true).build()
+      }
+      "wifi_charge", "all" -> {
+        return Constraints.Builder().setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresCharging(true).build()
+      }
+      "design", "control" -> {
+        return Constraints.Builder().build()
+      }
+      else -> {
+        return Constraints.Builder().build()
+      }
+    }
   }
 
   companion object {
-    const val CHANNEL_ID = "channel_id"
-    const val NOTIFICATION_ID = 666
+    private const val WORKER_TAG = "UpdatesNotificationWorker"
+    const val CHANNEL_ID = "updates_notification_channel"
+    const val UPDATE_NOTIFICATION_ID = 123
+    const val CONFIGURATION_KEY = "config"
   }
 
 }

@@ -53,8 +53,10 @@ import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
+import cm.aptoide.pt.abtesting.analytics.UpdateNotificationAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
+import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -1524,7 +1526,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
         FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT);
+        AptoideInstallAnalytics.CONVERSION_EVENT,
+        UpdateNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
+        UpdateNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -2111,13 +2115,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
       UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
-      AptoideInstallManager aptoideInstallManager) {
+      AptoideInstallManager aptoideInstallManager,
+      UpdateNotificationAnalytics updateNotificationAnalytics) {
     return new UpdatesNotificationWorkerFactory(updateRepository, sharedPreferences,
-        aptoideInstallManager, new AppMapper());
+        aptoideInstallManager, new AppMapper(), updateNotificationAnalytics);
   }
 
-  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager() {
-    return new UpdatesNotificationManager(application.getApplicationContext());
+  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager(
+      UpdatesNotificationExperiment updatesNotificationExperiment) {
+    return new UpdatesNotificationManager(application.getApplicationContext(),
+        updatesNotificationExperiment);
   }
 
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
@@ -2130,5 +2137,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AgentPersistence providesAgentPersistence(
       @Named("secureShared") SharedPreferences secureSharedPreferences) {
     return new AgentPersistence(secureSharedPreferences);
+  }
+
+  @Singleton @Provides UpdatesNotificationExperiment providesUpdatesNotificationExperiment(
+      @Named("ab-test") ABTestManager abTestManager) {
+    return new UpdatesNotificationExperiment(abTestManager);
+  }
+
+  @Singleton @Provides UpdateNotificationAnalytics providesUpdatesNotificationAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      NotificationAnalytics notificationAnalytics) {
+    return new UpdateNotificationAnalytics(analyticsManager, navigationTracker,
+        notificationAnalytics);
   }
 }

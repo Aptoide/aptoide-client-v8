@@ -1,21 +1,15 @@
 package cm.aptoide.pt.notification;
 
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.os.SystemClock;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
-import cm.aptoide.pt.DeepLinkIntentReceiver;
-import cm.aptoide.pt.R;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomUpdate;
@@ -23,7 +17,6 @@ import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.utils.AptoideUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -40,8 +33,7 @@ public class PullingContentService extends BaseService {
   public static final String PUSH_NOTIFICATIONS_ACTION = "PUSH_NOTIFICATIONS_ACTION";
   public static final String UPDATES_ACTION = "UPDATES_ACTION";
   public static final String BOOT_COMPLETED_ACTION = "BOOT_COMPLETED_ACTION";
-  public static final long UPDATES_INTERVAL = AlarmManager.INTERVAL_DAY;
-  public static final int UPDATE_NOTIFICATION_ID = 123;
+  public static final long UPDATES_INTERVAL = 10000;
   @Inject @Named("marketName") String marketName;
   @Inject DownloadFactory downloadFactory;
   @Inject UpdateRepository updateRepository;
@@ -131,10 +123,7 @@ public class PullingContentService extends BaseService {
         }))
         .filter(__ -> ManagerPreferences.isUpdateNotificationEnable(sharedPreferences))
         .observeOn(Schedulers.io())
-        .doOnNext(updates -> {
-          notificationAnalytics.sendUpdatesNotificationReceivedEvent();
-          setUpdatesNotification(updates, startId);
-        })
+        .doOnNext(updates -> stopSelf(startId))
         .subscribe(__ -> {
         }, throwable -> {
           throwable.printStackTrace();
@@ -165,54 +154,5 @@ public class PullingContentService extends BaseService {
             return Observable.just(false);
           }
         });
-  }
-
-  private void setUpdatesNotification(List<RoomUpdate> updates, int startId) {
-    Intent resultIntent = new Intent(getApplicationContext(),
-        AptoideApplication.getActivityProvider()
-            .getMainActivityFragmentClass());
-    resultIntent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES, true);
-    PendingIntent resultPendingIntent =
-        PendingIntent.getActivity(getApplicationContext(), 0, resultIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
-
-    int numberUpdates = updates.size();
-    if (numberUpdates > 0
-        && numberUpdates != ManagerPreferences.getLastUpdates(sharedPreferences)
-        && ManagerPreferences.isUpdateNotificationEnable(sharedPreferences)) {
-      CharSequence tickerText =
-          AptoideUtils.StringU.getFormattedString(R.string.has_updates, getResources(),
-              getString(R.string.app_name));
-      CharSequence contentTitle = getString(R.string.app_name);
-      CharSequence contentText =
-          AptoideUtils.StringU.getFormattedString(R.string.new_updates, getResources(),
-              numberUpdates);
-      if (numberUpdates == 1) {
-        contentText =
-            AptoideUtils.StringU.getFormattedString(R.string.one_new_update, getResources(),
-                numberUpdates);
-      }
-
-      Notification notification =
-          new NotificationCompat.Builder(getApplicationContext()).setContentIntent(
-              resultPendingIntent)
-              .setOngoing(false)
-              .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
-              .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(),
-                  R.mipmap.ic_launcher))
-              .setContentTitle(contentTitle)
-              .setContentText(contentText)
-              .setTicker(tickerText)
-              .build();
-
-      notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-      final NotificationManager managerNotification =
-          (NotificationManager) getApplicationContext().getSystemService(
-              Context.NOTIFICATION_SERVICE);
-      notificationAnalytics.sendUpdatesNotificationImpressionEvent();
-      managerNotification.notify(UPDATE_NOTIFICATION_ID, notification);
-      ManagerPreferences.setLastUpdates(numberUpdates, sharedPreferences);
-    }
-    stopSelf(startId);
   }
 }

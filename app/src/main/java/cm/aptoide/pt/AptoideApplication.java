@@ -360,7 +360,7 @@ public abstract class AptoideApplication extends Application
   }
 
   private Completable setUpUpdatesNotification() {
-    return Completable.fromAction(() -> updatesNotificationManager.setUpNotification());
+    return updatesNotificationManager.setUpNotification();
   }
 
   private Completable setUpAppsNameAbTest() {
