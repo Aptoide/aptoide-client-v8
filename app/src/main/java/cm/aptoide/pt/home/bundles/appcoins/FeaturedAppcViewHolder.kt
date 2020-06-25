@@ -83,6 +83,10 @@ class FeaturedAppcViewHolder(val view: View,
         itemView.see_more_btn.setOnClickListener {
           uiEventsListener.onNext(HomeEvent(homeBundle, adapterPosition, HomeEvent.Type.MORE))
         }
+        itemView.bonus_appc_view.setOnClickListener {
+          uiEventsListener.onNext(
+              HomeEvent(homeBundle, adapterPosition, HomeEvent.Type.APPC_KNOW_MORE))
+        }
       }
     }
   }

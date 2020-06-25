@@ -52,6 +52,8 @@ public interface AppViewView extends InstallAppView {
 
   Observable<Void> clickGetAppcInfo();
 
+  Observable<Void> clickBonusAppcFlair();
+
   Observable<Void> clickCatappultCard();
 
   void displayNotLoggedInSnack();
