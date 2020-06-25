@@ -93,9 +93,6 @@ public class BundlesResponseMapper {
                 .getList(), type, widgetTag);
             percentage = bundle.getBonusAppcBundle()
                 .getBonusPercentage();
-          } else if (viewObject != null) {
-            apps = map(((ListApps) viewObject).getDataList()
-                .getList(), type, widgetTag);
           }
           appBundles.add(
               new FeaturedAppcBundle(title, apps, type, event, widgetTag, widgetActionTag,
