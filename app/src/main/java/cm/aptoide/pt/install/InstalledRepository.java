@@ -31,9 +31,6 @@ public class InstalledRepository {
 
   /**
    * Get all installed apps
-   * <dl>
-   * <dt><b>Scheduler:</b></dt>
-   * </dl>
    *
    * @return an observable with a list of installed apps
    */
