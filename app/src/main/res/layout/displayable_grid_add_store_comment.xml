@@ -23,7 +23,7 @@
       android:textStyle="bold"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/comment_store_button"
       style="@style/Aptoide.Button.Secondary.S"
       android:layout_width="0dp"

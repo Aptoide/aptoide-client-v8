@@ -23,7 +23,7 @@
       style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/error_ok_button"
       android:layout_width="95dp"
       android:layout_gravity="end"

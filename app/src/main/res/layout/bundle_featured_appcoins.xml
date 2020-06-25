@@ -92,9 +92,9 @@
       android:orientation="horizontal"
       app:layout_constraintTop_toBottomOf="@+id/bonus_appc_view" />
 
-    <Button
+    <android.widget.Button
       android:id="@+id/see_more_btn"
-      style="@style/Aptoide.Button.Flat.White"
+      style="@style/Aptoide.Button.Flat"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="15dp"

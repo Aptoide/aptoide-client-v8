@@ -69,7 +69,7 @@
     <item name="backgroundWidgetSecondary">@android:color/transparent</item>
     <item name="backgroundCard">@style/backgroundCardStyleLight</item>
     <item name="backgroundCardColor">@color/white</item>
-    <item name="backgroundCardColorSecondary">@color/white</item>
+    <item name="backgroundCardColorSecondary">@style/backgroundCardStyleLight</item>
     <item name="flairBackgroundColor">@color/white</item>
     <item name="appviewRatingCardBarckground">@drawable/black_card</item>
     <item name="backgroundHomeSeparator">@color/background_window</item>

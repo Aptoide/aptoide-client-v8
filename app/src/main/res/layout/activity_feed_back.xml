@@ -63,7 +63,7 @@
         android:textColor="?android:attr/textColorSecondary"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/FeedBackSendButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

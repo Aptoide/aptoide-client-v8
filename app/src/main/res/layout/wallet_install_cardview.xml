@@ -6,7 +6,7 @@
     android:layout_height="78dp"
     >
 
-  <Button
+  <android.widget.Button
       android:id="@+id/wallet_install_button"
       android:layout_width="102dp"
       android:layout_height="40dp"

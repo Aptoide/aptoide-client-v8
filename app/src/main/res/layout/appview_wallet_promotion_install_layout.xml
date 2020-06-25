@@ -57,14 +57,14 @@
       android:layout_marginBottom="8dp"
       android:visibility="visible"
       >
-    <Button
+    <android.widget.Button
         android:id="@+id/cancel_button"
         android:layout_weight="1"
         android:text="@string/wallet_promotion_no_button"
         android:textColor="@color/grey"
         style="@style/Aptoide.Button.Flat"
         />
-    <Button
+    <android.widget.Button
         android:id="@+id/download_button"
         android:layout_weight="1"
         android:text="@string/wallet_promotion_install_button"
@@ -204,7 +204,7 @@
       tools:visibility="visible"
       >
 
-    <Button
+    <android.widget.Button
         android:id="@+id/wallet_install_disabled_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -229,7 +229,7 @@
       tools:visibility="visible"
       >
 
-    <Button
+    <android.widget.Button
         android:id="@+id/wallet_claim_appc_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

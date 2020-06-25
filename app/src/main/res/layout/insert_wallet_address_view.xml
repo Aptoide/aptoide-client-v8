@@ -97,7 +97,7 @@
         style="@style/Aptoide.TextView.Medium.XS.BlackAlpha"
         />
   </LinearLayout>
-  <Button
+  <android.widget.Button
       android:id="@+id/get_wallet_button"
       android:layout_width="match_parent"
       android:layout_marginBottom="33dp"
@@ -118,7 +118,7 @@
       android:layout_marginRight="8dp"
       android:orientation="horizontal"
       >
-    <Button
+    <android.widget.Button
         android:id="@+id/wallet_cancel_button"
         android:layout_width="wrap_content"
         android:layout_marginEnd="16dp"
@@ -126,7 +126,7 @@
         android:text="@string/cancel"
         style="@style/Aptoide.Button.Flat"
         />
-    <Button
+    <android.widget.Button
         android:id="@+id/wallet_continue_button"
         android:layout_width="wrap_content"
         android:text="@string/iab_button_next"

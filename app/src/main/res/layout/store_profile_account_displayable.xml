@@ -40,7 +40,7 @@
         />
   </LinearLayout>
 
-  <Button
+  <android.widget.Button
       android:id="@+id/edit_button"
       style="@style/Aptoide.Button.Ghost.S"
       android:layout_width="wrap_content"

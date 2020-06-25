@@ -12,7 +12,7 @@ import cm.aptoide.pt.view.app.Application
 import rx.subjects.PublishSubject
 import java.text.DecimalFormat
 
-class FeaturedAppcBundleAdapter(var apps: List<Application>?,
+class FeaturedAppcBundleAdapter(var apps: List<Application>,
                                 val oneDecimalFormatter: DecimalFormat,
                                 val appClickedEvents: PublishSubject<HomeEvent>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -27,11 +27,11 @@ class FeaturedAppcBundleAdapter(var apps: List<Application>?,
   }
 
   override fun getItemCount(): Int {
-    return apps?.size ?: 0
+    return apps.size
   }
 
   override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-    (holder as AppViewHolder).setApp(apps!![position], homeBundle, bundlePosition)
+    (holder as AppViewHolder).setApp(apps[position], homeBundle, bundlePosition)
   }
 
   fun update(apps: List<Application>) {

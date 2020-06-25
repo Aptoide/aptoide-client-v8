@@ -81,7 +81,7 @@
           android:orientation="horizontal"
           >
 
-        <Button
+        <android.widget.Button
             android:id="@+id/fragment_search_result_followed_stores_button"
             android:layout_width="128dp"
             android:layout_height="match_parent"
@@ -93,7 +93,7 @@
             tools:ignore="SmallSp"
             />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/fragment_search_result_all_stores_button"
             android:layout_width="128dp"
             android:layout_height="match_parent"
