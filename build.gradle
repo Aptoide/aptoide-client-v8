@@ -119,7 +119,7 @@ ext {
   GLIDE_VERSION = '4.9.0'
 
   // Facebook Android SDK
-  FACEBOOK_ANDROID_SDK_VERSION = '7.0.0'
+  FACEBOOK_ANDROID_SDK_VERSION = '5.2.0'
 
   // File Downloader lib
   FILE_DOWNLOADER_VERSION = '1.4.1'
