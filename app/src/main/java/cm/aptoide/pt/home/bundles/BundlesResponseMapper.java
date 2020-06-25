@@ -86,17 +86,25 @@ public class BundlesResponseMapper {
         } else if (type.equals(HomeBundle.BundleType.FEATURED_BONUS_APPC)) {
           List<Application> apps = null;
           int percentage = -1;
+          boolean hasBonus = true;
           if (viewObject instanceof BonusAppcBundle) {
             BonusAppcBundle bundle = (BonusAppcBundle) viewObject;
+            hasBonus = bundle.getBonusAppcBundle()
+                .getHasBonusAppc();
             apps = map(bundle.getListApps()
                 .getDataList()
                 .getList(), type, widgetTag);
             percentage = bundle.getBonusAppcBundle()
                 .getBonusPercentage();
           }
-          appBundles.add(
-              new FeaturedAppcBundle(title, apps, type, event, widgetTag, widgetActionTag,
-                  percentage));
+          if (hasBonus) {
+            appBundles.add(
+                new FeaturedAppcBundle(title, apps, type, event, widgetTag, widgetActionTag,
+                    percentage));
+          } else {
+            appBundles.add(new AppBundle(title, apps, HomeBundle.BundleType.APPS, event, widgetTag,
+                widgetActionTag));
+          }
         } else if (type.equals(HomeBundle.BundleType.APPCOINS_ADS)) {
           List<Application> applicationList = null;
           if (viewObject != null) {
