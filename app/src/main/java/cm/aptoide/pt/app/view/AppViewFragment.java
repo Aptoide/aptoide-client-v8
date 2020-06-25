@@ -501,6 +501,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
           view.findViewById(R.id.app_name)
               .setAlpha(1 - (percentage * 1.20f));
           bonusAppcView.setAlpha(1 - (percentage * 1.20f));
+          bonusAppcView.setTranslationX(-(percentage * 1.15f)*bonusAppcView.getMeasuredWidth());
           ((ToolbarArcBackground) view.findViewById(R.id.toolbar_background_arc)).setScale(
               percentage);
           collapsingAppcBackground.setAlpha(1 - percentage);
