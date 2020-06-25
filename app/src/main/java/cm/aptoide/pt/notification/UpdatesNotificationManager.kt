@@ -6,6 +6,9 @@ import android.content.Context
 import android.os.Build
 import androidx.work.*
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment
+import io.rakam.api.Rakam
+import org.json.JSONException
+import org.json.JSONObject
 import rx.Completable
 import java.util.concurrent.TimeUnit
 
@@ -19,9 +22,23 @@ class UpdatesNotificationManager(private val context: Context,
         .doOnSuccess { config ->
           setUpChannel()
           setUpWorkRequest(config)
+          setRakamSuperProperty(config)
         }
         .toCompletable()
   }
+
+  private fun setRakamSuperProperty(config: String) {
+    var superProperties = Rakam.getInstance().superProperties
+    if (superProperties == null)
+      superProperties = JSONObject()
+    try {
+      superProperties.put("ab_notification_group", config)
+    } catch (e: JSONException) {
+      e.printStackTrace()
+    }
+    Rakam.getInstance().superProperties = superProperties
+  }
+
 
   private fun setUpChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
