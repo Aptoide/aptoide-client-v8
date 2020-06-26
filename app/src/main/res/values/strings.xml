@@ -811,5 +811,11 @@
   
   <!--Updates Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
+  
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">UP TO %s%% BONUS</string>
+  <string name="incentives_badge_up_to">UP TO</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">BONUS</string>
 
 </resources>
