@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -38,7 +37,6 @@ import rx.Single;
   private final Converter.Factory converterFactory;
   private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
   private final AdsRepository adsRepository;
-  private final Database database;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
@@ -48,7 +46,7 @@ import rx.Single;
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      Database database, AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
+      AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
       AppBundlesVisibilityManager appBundlesVisibilityManager,
       RoomStoreRepository storeRepository) {
     this.sharedPreferences = sharedPreferences;
@@ -58,7 +56,6 @@ import rx.Single;
     this.converterFactory = converterFactory;
     this.subscribedStoresAuthMap = subscribedStoresAuthMap;
     this.adsRepository = adsRepository;
-    this.database = database;
     this.accountManager = accountManager;
     this.moPubAdsManager = moPubAdsManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
