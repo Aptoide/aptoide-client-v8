@@ -127,6 +127,8 @@ public class EditorialFragment extends NavigationTrackFragment
   private TopReactionsPreview topReactionsPreview;
   private boolean shouldAnimate;
 
+  private PublishSubject<Void> installClickSubject;
+
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     oneDecimalFormatter = new DecimalFormat("0.0");
@@ -136,6 +138,7 @@ public class EditorialFragment extends NavigationTrackFragment
     downloadEventListener = PublishSubject.create();
     movingCollapseSubject = PublishSubject.create();
     reactionEventListener = PublishSubject.create();
+    installClickSubject = PublishSubject.create();
     snackListener = PublishSubject.create();
     topReactionsPreview = new TopReactionsPreview();
     setHasOptionsMenu(true);
@@ -232,6 +235,7 @@ public class EditorialFragment extends NavigationTrackFragment
         }
       }
     });
+    appCardButton.setOnClickListener(click -> installClickSubject.onNext(null));
     attachPresenter(presenter);
   }
 
@@ -242,6 +246,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public void onDestroy() {
     uiEventsListener = null;
+    installClickSubject = null;
     snackListener = null;
     reactionEventListener = null;
     downloadEventListener = null;
@@ -412,8 +417,7 @@ public class EditorialFragment extends NavigationTrackFragment
 
   @Override public Observable<EditorialDownloadEvent> installButtonClick(
       EditorialViewModel editorialViewModel) {
-    return RxView.clicks(appCardButton)
-        .map(__ -> new EditorialDownloadEvent(editorialViewModel, action))
+    return installClickSubject.map(__ -> new EditorialDownloadEvent(editorialViewModel, action))
         .mergeWith(downloadEventListener.filter(editorialEvent -> editorialEvent.getClickType()
             .equals(EditorialEvent.Type.BUTTON)));
   }
