@@ -240,6 +240,8 @@ android {
     if (flavors[0].name.contains("cobrand")) {
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + project.COBRAND_THEME + "\""
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_COBRAND + "\""
+      resValue "string", "fb_login_protocol_scheme",
+          "\"" + "fb" + project.FACEBOOK_APP_ID_COBRAND + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + project.COBRAND_MARKET_NAME + "\""
       variant.buildConfigField "String", "COBRAND_OEMID", "\"" + project.COBRAND_OEMID + "\""
       if (flavors[1].name.contains("dev")) {
@@ -251,6 +253,8 @@ android {
     } else {
       //vanilla
       variant.resValue "string", "facebook_app_id", "\"" + project.FACEBOOK_APP_ID_VANILLA + "\""
+      resValue "string", "fb_login_protocol_scheme",
+          "\"" + "fb" + project.FACEBOOK_APP_ID_VANILLA + "\""
       variant.buildConfigField "String", "APTOIDE_THEME", "\"" + "default" + "\""
       variant.buildConfigField "String", "MARKET_NAME", "\"" + "Aptoide" + "\""
     }
