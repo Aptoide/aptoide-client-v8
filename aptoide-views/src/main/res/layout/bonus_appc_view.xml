@@ -2,6 +2,7 @@
 
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/card_view"
   style="@style/BonusAppcViewCardStyle"
   android:layout_width="68dp"
@@ -37,7 +38,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:includeFontPadding="false"
-      android:text="up to"
+      android:text="@string/incentives_badge_up_to"
       app:layout_constraintBottom_toTopOf="@id/percentage_number_textview"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -51,14 +52,14 @@
       android:layout_height="wrap_content"
       android:gravity="top"
       android:includeFontPadding="false"
-      android:text="0"
       android:textAlignment="gravity"
       android:textSize="28.4sp"
       android:textStyle="bold"
       app:layout_constraintBottom_toTopOf="@id/bonus_textview"
       app:layout_constraintEnd_toEndOf="@+id/up_to_textview"
       app:layout_constraintStart_toStartOf="@+id/up_to_textview"
-      app:layout_constraintTop_toBottomOf="@+id/up_to_textview" />
+      app:layout_constraintTop_toBottomOf="@+id/up_to_textview"
+      tools:text="0" />
 
 
     <TextView
@@ -78,7 +79,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:includeFontPadding="false"
-      android:text="BONUS"
+      android:text="@string/incentives_badge_bonus"
       android:textAllCaps="true"
       android:textStyle="bold"
       app:layout_constraintBottom_toBottomOf="parent"

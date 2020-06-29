@@ -17,8 +17,13 @@ class BonusAppcView : FrameLayout {
   constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
       defStyleAttr) {
     inflate(context, R.layout.bonus_appc_view, this)
+    setupViews()
     retrievePreferences(attrs, defStyleAttr)
     isSaveEnabled = true
+  }
+
+  private fun setupViews() {
+    up_to_textview.text = context.getText(R.string.incentives_badge_up_to).toString().toLowerCase()
   }
 
   private fun retrievePreferences(attrs: AttributeSet?, defStyleAttr: Int) {

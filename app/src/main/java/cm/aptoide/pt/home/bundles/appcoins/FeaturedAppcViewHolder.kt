@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import cm.aptoide.aptoideviews.common.formatWithHtmlImage
 import cm.aptoide.aptoideviews.skeleton.Skeleton
 import cm.aptoide.aptoideviews.skeleton.applySkeleton
 import cm.aptoide.pt.R
@@ -68,6 +69,11 @@ class FeaturedAppcViewHolder(val view: View,
       } else {
         toggleSkeleton(false)
         itemView.bonus_appc_view.setPercentage(bundle.bonusPercentage)
+        itemView.title.text = itemView.context.getString(R.string.incentives_banner_title,
+            bundle.bonusPercentage.toString())
+        itemView.description.text = itemView.resources.getString(R.string.incentives_banner_body)
+            .formatWithHtmlImage(R.drawable.ic_spend_appc, 24, 20, itemView.resources)
+
         appsInBundleAdapter.updateBundle(homeBundle, position)
         appsInBundleAdapter.update(homeBundle.apps)
         itemView.apps_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {

@@ -2,6 +2,7 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   style="?attr/backgroundCard"
   android:layout_width="match_parent"
   android:layout_height="344dp"
@@ -55,12 +56,12 @@
       android:layout_marginStart="19dp"
       android:layout_marginLeft="19dp"
       android:layout_marginTop="10dp"
-      android:text="Up to 25% Bonus in every purchase!"
       android:textStyle="bold"
       app:layout_constraintBottom_toTopOf="@id/description"
       app:layout_constraintStart_toEndOf="@+id/bonus_appc_view"
       app:layout_constraintTop_toTopOf="@+id/bonus_appc_view"
-      app:layout_constraintVertical_chainStyle="packed" />
+      app:layout_constraintVertical_chainStyle="packed"
+      tools:text="Up to 25% Bonus in every purchase!" />
 
     <cm.aptoide.aptoideviews.skeleton.SkeletonView
       android:id="@+id/description_skeletonview"
@@ -76,13 +77,17 @@
     <TextView
       android:id="@+id/description"
       style="@style/Aptoide.TextView.Medium.XXS"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginTop="4dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginRight="5dp"
       android:maxLines="2"
-      android:text="Use your AppCoins bonus to get more items in apps with this symbol"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0"
       app:layout_constraintStart_toStartOf="@+id/title"
-      app:layout_constraintTop_toBottomOf="@+id/title" />
+      app:layout_constraintTop_toBottomOf="@+id/title"
+      tools:text="Use your AppCoins bonus to get more items in apps with this symbol" />
 
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/apps_list"
