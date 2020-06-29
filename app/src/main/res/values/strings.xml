@@ -808,5 +808,16 @@
   <string name="login_error_invalid_email">This email isn\'t valid!</string>
   <string name="login_completed_title">Done!</string>
   <string name="login_completed_body">Ready for the best apps?</string>
+  
+  <!--Updates Notification-->
+  <string name="notification_updates_available">Some apps are ready to be updated!</string>
+  
+  <!--Incentive Bonus Badge-->
+  <string name="incentives_badge_full">UP TO %s%% BONUS</string>
+  <string name="incentives_badge_up_to">UP TO</string>
+  <string name="incentives_badge_amount">%s%%</string>
+  <string name="incentives_badge_bonus">BONUS</string>
+  <string name="incentives_banner_title">Up to %s% bonus in every purchase!</string>
+  <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
 
 </resources>

@@ -95,8 +95,8 @@ public class MoreBundlePresenter implements Presenter {
           if (bundlesModel.hasErrors()) {
             handleError(bundlesModel.getError());
           } else if (!bundlesModel.isLoading()) {
-            view.hideLoading();
             view.showBundles(bundlesModel.getList());
+            view.hideLoading();
           }
         });
   }

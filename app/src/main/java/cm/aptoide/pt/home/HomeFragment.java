@@ -419,8 +419,13 @@ public class HomeFragment extends NavigationTrackFragment implements HomeView, S
   }
 
   @Override public void showBundlesSkeleton(HomeBundlesModel homeBundles) {
-    hideLoading();
     adapter.update(homeBundles.getList());
+    if (listState != null) {
+      bundlesList.getLayoutManager()
+          .onRestoreInstanceState(listState);
+      listState = null;
+    }
+    hideLoading();
   }
 
   @Override public boolean isAtTop() {
