@@ -6,10 +6,12 @@ import android.net.ConnectivityManager;
 import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.pt.app.AppCoinsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.GetStoreWidgets;
+import cm.aptoide.pt.dataprovider.model.v7.ListApps;
 import cm.aptoide.pt.dataprovider.model.v7.Type;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
@@ -21,6 +23,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.WSWidgetsUtils;
 import cm.aptoide.pt.dataprovider.ws.v7.home.GetHomeBundlesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreWidgetsRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.store.WidgetsArgs;
+import cm.aptoide.pt.home.bundles.appcoins.BonusAppcBundle;
+import cm.aptoide.pt.home.bundles.base.FeaturedAppcBundle;
 import cm.aptoide.pt.home.bundles.base.HomeBundle;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.networking.IdsRepository;
@@ -62,6 +66,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private final int latestPackagesCount;
   private final int randomPackagesCount;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
+  private final AppCoinsManager appCoinsManager;
   private Map<String, Integer> total;
   private Map<String, Boolean> loading;
   private Map<String, Boolean> error;
@@ -76,7 +81,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider versionCodeProvider, PackageRepository packageRepository,
       int latestPackagesCount, int randomPackagesCount,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, AppCoinsManager appCoinsManager) {
     this.limit = limit;
     this.total = initialTotal;
     this.bodyInterceptor = bodyInterceptor;
@@ -102,6 +107,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
     loading = new HashMap<>();
     error = new HashMap<>();
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
+    this.appCoinsManager = appCoinsManager;
   }
 
   private Observable<HomeBundlesModel> getHomeBundles(int offset, int limit,
@@ -163,8 +169,23 @@ public class RemoteBundleDataSource implements BundleDataSource {
                 versionCodeProvider, bypassCache,
                 Type.ADS.getPerLineCount(resources, windowManager) * 3, packageNames,
                 appBundlesVisibilityManager)
+                .flatMap(__ -> loadFeatureAppcApps(wsWidget))
                 .map(__ -> wsWidget))
         .map(__ -> getStoreWidgets);
+  }
+
+  private Observable<GetStoreWidgets.WSWidget> loadFeatureAppcApps(
+      GetStoreWidgets.WSWidget wsWidget) {
+    if (wsWidget.getType() == Type.APPCOINS_FEATURED) {
+      return appCoinsManager.getBonusAppc()
+          .doOnSuccess(bonusAppcModel -> {
+            wsWidget.setViewObject(
+                new BonusAppcBundle((ListApps) wsWidget.getViewObject(), bonusAppcModel));
+          })
+          .toObservable()
+          .map(__ -> wsWidget);
+    }
+    return Observable.just(wsWidget);
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
@@ -222,6 +243,10 @@ public class RemoteBundleDataSource implements BundleDataSource {
   private boolean isComplete(List<HomeBundle> homeBundles) {
     for (HomeBundle bundle : homeBundles) {
       if (bundle.getContent() == null) {
+        return false;
+      }
+      if (bundle instanceof FeaturedAppcBundle
+          && ((FeaturedAppcBundle) bundle).getBonusPercentage() == -1) {
         return false;
       }
     }

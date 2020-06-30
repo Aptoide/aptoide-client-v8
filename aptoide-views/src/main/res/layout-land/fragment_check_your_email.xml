@@ -70,7 +70,7 @@ android:fitsSystemWindows="true"
         android:paddingRight="32dp"
         tools:text="@string/login_check_email_body" />
 
-      <Button
+      <android.widget.Button
         android:id="@+id/open_email_app_button"
         style="@style/Aptoide.Button.Solid"
         android:layout_width="144dp"

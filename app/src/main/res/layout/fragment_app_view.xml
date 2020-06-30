@@ -20,6 +20,18 @@
       tools:src="@drawable/orange_gradient"
       />
 
+  <cm.aptoide.aptoideviews.appcoins.BonusAppcView
+    android:id="@+id/bonus_appc_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    android:translationY="-16dp"
+    app:side="LEFT"
+    app:layout_anchor="@id/app_bar_layout"
+    app:layout_anchorGravity="bottom|left"
+    tools:visibility="visible"
+    />
+
   <androidx.core.widget.NestedScrollView
       android:id="@+id/scroll_view_app"
       android:layout_width="match_parent"

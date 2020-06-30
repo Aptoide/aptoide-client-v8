@@ -58,7 +58,7 @@
           android:layout_weight="1"
           >
 
-        <Button
+        <android.widget.Button
             android:id="@+id/create_user_cancel_button"
             style="@style/Aptoide.Button.Ghost"
             android:layout_width="8dp"
@@ -71,7 +71,7 @@
             tools:visibility="visible"
             />
 
-        <Button
+        <android.widget.Button
             android:id="@+id/create_user_create_profile"
             style="@style/Aptoide.Button.Alternative"
             android:layout_width="0dp"

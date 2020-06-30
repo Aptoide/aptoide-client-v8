@@ -19,7 +19,7 @@
 
     <include layout="@layout/promotion_app_card_top" />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/promotion_app_action_button"
         style="@style/Aptoide.Button.Install.Appc"
         android:layout_width="match_parent"

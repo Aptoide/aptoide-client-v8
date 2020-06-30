@@ -84,7 +84,7 @@
       tools:text="Already installed lorem ipsum"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/close_button"
       style="@style/Aptoide.Button.Flat.GreyMedium"
       android:layout_width="wrap_content"

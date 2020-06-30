@@ -4,6 +4,7 @@ import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.account.view.AccountNavigator;
 import cm.aptoide.pt.actions.PermissionManager;
 import cm.aptoide.pt.actions.PermissionService;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.app.view.AppViewNavigator;
@@ -96,12 +97,12 @@ public class AppViewPresenterTest {
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
 
     appViewModel = new AppViewModel(appModel, downloadModel,
-        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
-        new MigrationModel(false));
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
+            new BonusAppcModel(false, 0)), new MigrationModel(false));
 
     errorAppViewModel = new AppViewModel(errorAppModel, downloadModel,
-        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
-        new MigrationModel(false));
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
+            new BonusAppcModel(false, 0)), new MigrationModel(false));
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -207,8 +208,8 @@ public class AppViewPresenterTest {
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel editorsChoiceAppViewModel =
         new AppViewModel(emptyEditorsChoiceAppModel, downloadModel,
-            new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
-            new MigrationModel(false));
+            new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
+                new BonusAppcModel(false, 0)), new MigrationModel(false));
 
     //Given an initialized presenter
     presenter.handleFirstLoad();
@@ -251,8 +252,8 @@ public class AppViewPresenterTest {
     DownloadModel downloadModel =
         new DownloadModel(DownloadModel.Action.INSTALL, 0, DownloadModel.DownloadState.ACTIVE);
     AppViewModel appViewModel = new AppViewModel(appModel, downloadModel,
-        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel()),
-        new MigrationModel(false));
+        new AppCoinsViewModel(false, false, new AppCoinsAdvertisingModel(),
+            new BonusAppcModel(false, 0)), new MigrationModel(false));
 
     Promotion promotion = new Promotion(false, 10f, "cm.aptoide.pt", "install_prom",
         Collections.singletonList(Promotion.ClaimAction.INSTALL));

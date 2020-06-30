@@ -65,6 +65,8 @@ dependencies {
 
   implementation "com.github.tinder:statemachine:${STATEMACHINE_VERSION}"
 
+  implementation "com.google.android.material:material:${MATERIAL_VERSION}"
+
   implementation "com.jakewharton.rxbinding:rxbinding:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-design:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-support-v4:${JW_RX_BINDING_VERSION}"

@@ -30,7 +30,7 @@
       tools:text="Your AppCoins Credits will be available in your wallet soon! Enjoy your gaming!"
       style="@style/Aptoide.TextView.Regular.M.BlackAlpha"
       />
-  <Button
+  <android.widget.Button
       android:id="@+id/generic_message_button"
       android:layout_width="match_parent"
       android:layout_marginBottom="16dp"

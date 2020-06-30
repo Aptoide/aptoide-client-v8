@@ -26,7 +26,7 @@
       style="@style/Aptoide.TextView.Regular.L.BlackAlpha"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/more"
       android:layout_width="wrap_content"
       android:layout_height="37dp"

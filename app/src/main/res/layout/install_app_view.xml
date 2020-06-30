@@ -6,7 +6,7 @@
     android:orientation="vertical"
     >
 
-  <Button
+  <android.widget.Button
       android:id="@+id/appview_install_button"
       style="@style/Aptoide.Button.Install"
       android:layout_width="249dp"

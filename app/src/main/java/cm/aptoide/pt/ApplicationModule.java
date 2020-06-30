@@ -94,6 +94,8 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
+import cm.aptoide.pt.app.appc.BonusAppcService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
@@ -1322,6 +1324,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .build();
   }
 
+  @Singleton @Provides BonusAppcRemoteService.ServiceApi providesBonusAppcServiceApi(
+      @Named("retrofit-apichain-bds") Retrofit retrofit) {
+    return retrofit.create(BonusAppcRemoteService.ServiceApi.class);
+  }
+
+  @Singleton @Provides BonusAppcService providesBonusAppcService(
+      BonusAppcRemoteService.ServiceApi serviceApi) {
+    return new BonusAppcRemoteService(serviceApi, Schedulers.io());
+  }
+
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
       Retrofit retrofit) {
     return retrofit.create(SearchSuggestionRemoteRepository.class);
@@ -1539,8 +1551,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
-      DonationsService donationsService) {
-    return new AppCoinsManager(appCoinsService, donationsService);
+      DonationsService donationsService, BonusAppcService bonusAppcService) {
+    return new AppCoinsManager(appCoinsService, donationsService, bonusAppcService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
@@ -1562,7 +1574,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       Resources resources, WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
       OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, AppCoinsManager appCoinsManager) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         storeCredentialsProvider, idsRepository,
@@ -1570,7 +1582,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
-        10, 10, appBundlesVisibilityManager);
+        10, 10, appBundlesVisibilityManager, appCoinsManager);
   }
 
   @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {

@@ -168,7 +168,7 @@
       android:visibility="gone"
       tools:visibility="gone"
       />
-  <Button
+  <android.widget.Button
       android:id="@+id/action_button"
       android:layout_width="match_parent"
       android:layout_height="40dp"

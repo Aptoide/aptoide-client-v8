@@ -96,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@id/create_store_message"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/create_store_action"
         style="@style/Aptoide.Button.Secondary.S"
         android:layout_width="wrap_content"

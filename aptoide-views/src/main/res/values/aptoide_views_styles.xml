@@ -27,4 +27,24 @@
     <attr name="progressSecondaryColor" format="reference|color" />
     <attr name="progressBackgroundColor" format="reference|color" />
   </declare-styleable>
+  <declare-styleable name="BonusAppcView">
+    <attr name="side" format="enum">
+      <enum name="LEFT" value="0" />
+      <enum name="RIGHT" value="1" />
+    </attr>
+    <attr name="enable_card_padding" format="boolean" />
+    <attr name="placeholder_color" format="reference|color" />
+  </declare-styleable>
+
+  <style name="BonusAppcViewCardStyle" parent="@style/Widget.MaterialComponents.CardView">
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay_card_custom_corners</item>
+  </style>
+
+  <style name="ShapeAppearanceOverlay_card_custom_corners" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSizeTopRight">16dp</item>
+    <item name="cornerSizeTopLeft">0dp</item>
+    <item name="cornerSizeBottomRight">16dp</item>
+    <item name="cornerSizeBottomLeft">0dp</item>
+  </style>
 </resources>

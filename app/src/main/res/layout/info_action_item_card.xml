@@ -94,7 +94,7 @@
             android:layout_alignParentRight="true"
             >
 
-          <Button
+          <android.widget.Button
               android:id="@+id/dismiss_button"
               style="@style/Aptoide.Button.Flat.GreyMedium"
               android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
               tools:text="@string/all_button_got_it"
               />
 
-          <Button
+          <android.widget.Button
               android:id="@+id/action_button"
               style="@style/Aptoide.Button.Flat.DefaultOrangeGradientEnd"
               android:layout_width="wrap_content"
