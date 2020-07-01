@@ -1,6 +1,5 @@
 package cm.aptoide.pt.downloadmanager;
 
-import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomFileToDownload;
 import cm.aptoide.pt.logger.Logger;
@@ -66,9 +65,10 @@ public class AptoideDownloadManager implements DownloadManager {
     return Completable.fromAction(() -> {
       download.setOverallDownloadStatus(RoomDownload.IN_QUEUE);
       download.setTimeStamp(System.currentTimeMillis());
-      downloadsRepository.save(download);
-      appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download));
-    });
+    })
+        .andThen(downloadsRepository.save(download))
+        .doOnCompleted(
+            () -> appDownloaderMap.put(download.getMd5(), createAppDownloadManager(download)));
   }
 
   @Override public Observable<RoomDownload> getDownloadAsObservable(String md5) {
@@ -139,10 +139,10 @@ public class AptoideDownloadManager implements DownloadManager {
     return downloadsRepository.getDownloadAsObservable(md5)
         .first()
         .doOnError(throwable -> throwable.printStackTrace())
-        .map(download -> {
+        .flatMap(download -> {
           download.setOverallDownloadStatus(RoomDownload.PAUSED);
-          downloadsRepository.save(download);
-          return download;
+          return downloadsRepository.save(download)
+              .andThen(Observable.just(download));
         })
         .flatMap(download -> getAppDownloader(download))
         .flatMapCompletable(appDownloader -> appDownloader.pauseAppDownload())
@@ -200,15 +200,16 @@ public class AptoideDownloadManager implements DownloadManager {
     moveFilesSubscription = downloadsRepository.getWaitingToMoveFilesDownloads()
         .filter(downloads -> !downloads.isEmpty())
         .flatMapIterable(download -> download)
-        .doOnNext(download -> moveCompletedDownloadFiles(download))
+        .flatMap(
+            download -> moveCompletedDownloadFiles(download).andThen(Observable.just(download)))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
 
-  public void moveCompletedDownloadFiles(RoomDownload download) {
+  public Completable moveCompletedDownloadFiles(RoomDownload download) {
     for (final RoomFileToDownload roomFileToDownload : download.getFilesToDownload()) {
-      if (!FileUtils.fileExists(
-          pathProvider.getFilePathFromFileType(roomFileToDownload) + roomFileToDownload.getFileName())) {
+      if (!FileUtils.fileExists(pathProvider.getFilePathFromFileType(roomFileToDownload)
+          + roomFileToDownload.getFileName())) {
         Logger.getInstance()
             .d(TAG, "trying to move file : "
                 + roomFileToDownload.getFileName()
@@ -228,7 +229,7 @@ public class AptoideDownloadManager implements DownloadManager {
       }
     }
     download.setOverallDownloadStatus(RoomDownload.COMPLETED);
-    downloadsRepository.save(download);
+    return downloadsRepository.save(download);
   }
 
   private void removeDownloadFiles(RoomDownload download) {
@@ -273,7 +274,8 @@ public class AptoideDownloadManager implements DownloadManager {
         .flatMap(appDownloadStatus -> downloadsRepository.getDownloadAsObservable(
             appDownloadStatus.getMd5())
             .first()
-            .flatMap(download -> updateDownload(download, appDownloadStatus)))
+            .flatMap(download -> updateDownload(download, appDownloadStatus).andThen(
+                Observable.just(download))))
         .doOnNext(download -> {
           if (download.getOverallDownloadStatus() == RoomDownload.PROGRESS) {
             downloadAnalytics.startProgress(download);
@@ -300,8 +302,7 @@ public class AptoideDownloadManager implements DownloadManager {
     }
   }
 
-  private Observable<RoomDownload> updateDownload(RoomDownload download,
-      AppDownloadStatus appDownloadStatus) {
+  private Completable updateDownload(RoomDownload download, AppDownloadStatus appDownloadStatus) {
     download.setOverallProgress(appDownloadStatus.getOverallProgress());
     download.setOverallDownloadStatus(
         downloadStatusMapper.mapAppDownloadStatus(appDownloadStatus.getDownloadStatus()));
@@ -317,8 +318,7 @@ public class AptoideDownloadManager implements DownloadManager {
         .equals(AppDownloadStatus.AppDownloadState.ERROR_MD5_DOES_NOT_MATCH)) {
       removeDownloadFiles(download);
     }
-    downloadsRepository.save(download);
-    return Observable.just(download);
+    return downloadsRepository.save(download);
   }
 
   private Observable<AppDownloader> getAppDownloader(RoomDownload download) {

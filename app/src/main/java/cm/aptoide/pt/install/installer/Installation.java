@@ -40,5 +40,5 @@ public interface Installation {
 
   List<RoomFileToDownload> getFiles();
 
-  void saveFileChanges();
+  Completable saveFileChanges();
 }
