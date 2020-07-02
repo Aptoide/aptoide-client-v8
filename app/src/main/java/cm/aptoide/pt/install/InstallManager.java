@@ -231,21 +231,26 @@ public class InstallManager {
       boolean forceSplitInstall, boolean shouldInstall) {
     return aptoideDownloadManager.getDownloadAsSingle(download.getMd5())
         .toObservable()
-        .map(storedDownload -> updateDownloadAction(download, storedDownload))
+        .flatMap(storedDownload -> updateDownloadAction(download, storedDownload).andThen(
+            Observable.just(storedDownload)))
         .retryWhen(errors -> createDownloadAndRetry(errors, download))
         .doOnNext(storedDownload -> {
           aptoideInstallManager.addAptoideInstallCandidate(storedDownload.getPackageName());
+        })
+        .flatMap(storedDownload -> {
           if (storedDownload.getOverallDownloadStatus() == RoomDownload.ERROR) {
             storedDownload.setOverallDownloadStatus(RoomDownload.INVALID_STATUS);
-            downloadRepository.save(storedDownload);
+            return downloadRepository.save(storedDownload)
+                .andThen(Observable.just(storedDownload));
           }
+          return Observable.just(storedDownload);
         })
         .flatMap(savedDownload -> {
           if (!installAppSizeValidator.hasEnoughSpaceToInstallApp(savedDownload)) {
             download.setOverallDownloadStatus(RoomDownload.ERROR);
             download.setDownloadError(RoomDownload.NOT_ENOUGH_SPACE_ERROR);
-            downloadRepository.save(download);
-            return Observable.just(download.getMd5());
+            return downloadRepository.save(download)
+                .andThen(Observable.just(download.getMd5()));
           } else {
             return installInBackground(download.getMd5(), forceDefaultInstall,
                 packageInstallerManager.shouldSetInstallerPackageName(download)
@@ -451,12 +456,12 @@ public class InstallManager {
   }
 
   @NonNull
-  private RoomDownload updateDownloadAction(RoomDownload download, RoomDownload storedDownload) {
+  private Completable updateDownloadAction(RoomDownload download, RoomDownload storedDownload) {
     if (storedDownload.getAction() != download.getAction()) {
       storedDownload.setAction(download.getAction());
-      downloadRepository.save(storedDownload);
+      return downloadRepository.save(storedDownload);
     }
-    return storedDownload;
+    return Completable.complete();
   }
 
   private Observable<Throwable> createDownloadAndRetry(Observable<? extends Throwable> errors,
@@ -465,8 +470,8 @@ public class InstallManager {
       if (throwable instanceof DownloadNotFoundException) {
         Logger.getInstance()
             .d(TAG, "saved the newly created download because the other one was null");
-        downloadRepository.save(download);
-        return Observable.just(throwable);
+        return downloadRepository.save(download)
+            .andThen(Observable.just(throwable));
       } else {
         return Observable.error(throwable);
       }
@@ -498,11 +503,9 @@ public class InstallManager {
 
   private Completable startDownload(RoomDownload download) {
     if (download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
-      return Completable.fromAction(() -> {
-        Logger.getInstance()
-            .d(TAG, "Saving an already completed download to trigger the download installation");
-        downloadRepository.save(download);
-      });
+      Logger.getInstance()
+          .d(TAG, "Saving an already completed download to trigger the download installation");
+      return downloadRepository.save(download);
     } else {
       return aptoideDownloadManager.startDownload(download);
     }

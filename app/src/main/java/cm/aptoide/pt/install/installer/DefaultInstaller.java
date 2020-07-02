@@ -102,8 +102,9 @@ public class DefaultInstaller implements Installer {
         .doOnNext(installation -> {
           installation.setStatus(RoomInstalled.STATUS_INSTALLING);
           installation.setType(RoomInstalled.TYPE_UNKNOWN);
-          moveInstallationFiles(installation);
         })
+        .flatMap(installation -> moveInstallationFiles(installation).andThen(
+            Observable.just(installation)))
         .flatMap(installation -> Observable.just(
             isInstalled(installation.getPackageName(), installation.getVersionCode()))
             .onErrorReturn(throwable -> false)
@@ -232,7 +233,7 @@ public class DefaultInstaller implements Installer {
     }
   }
 
-  private void moveInstallationFiles(Installation installation) {
+  private Completable moveInstallationFiles(Installation installation) {
     boolean filesMoved = false;
     String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
 
@@ -249,8 +250,9 @@ public class DefaultInstaller implements Installer {
       }
     }
     if (filesMoved) {
-      installation.saveFileChanges();
+      return installation.saveFileChanges();
     }
+    return Completable.complete();
   }
 
   private Observable<Installation> systemInstall(Context context, Installation installation) {
