@@ -17,6 +17,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
+import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -141,8 +142,7 @@ import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
 
-public abstract class AptoideApplication extends Application
-    implements androidx.work.Configuration.Provider {
+public abstract class AptoideApplication extends Application {
 
   static final String CACHE_FILE_NAME = "aptoide.wscache";
   private static final String TAG = AptoideApplication.class.getName();
@@ -290,6 +290,11 @@ public abstract class AptoideApplication extends Application
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
+    androidx.work.Configuration configuration =
+        new androidx.work.Configuration.Builder().setWorkerFactory(updatesNotificationWorkerFactory)
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build();
+    WorkManager.initialize(this, configuration);
     //
     // async app initialization
     // beware! this code could be executed at the same time the first activity is
@@ -353,11 +358,6 @@ public abstract class AptoideApplication extends Application
     installManager.start();
   }
 
-  @NonNull @Override public androidx.work.Configuration getWorkManagerConfiguration() {
-    return new androidx.work.Configuration.Builder().setMinimumLoggingLevel(android.util.Log.DEBUG)
-        .setWorkerFactory(updatesNotificationWorkerFactory)
-        .build();
-  }
 
   private Completable setUpUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
