@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import cm.aptoide.pt.abtesting.analytics.UpdateNotificationAnalytics
+import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager
 import cm.aptoide.pt.home.apps.AppMapper
 import cm.aptoide.pt.updates.UpdateRepository
@@ -14,12 +14,12 @@ class UpdatesNotificationWorkerFactory(private val updateRepository: UpdateRepos
                                        private val sharedPreferences: SharedPreferences,
                                        private val aptoideInstallManager: AptoideInstallManager,
                                        private val appMapper: AppMapper,
-                                       private val updateNotificationAnalytics: UpdateNotificationAnalytics) :
+                                       private val updatesNotificationAnalytics: UpdatesNotificationAnalytics) :
     WorkerFactory() {
 
   override fun createWorker(appContext: Context, workerClassName: String,
                             workerParameters: WorkerParameters): ListenableWorker? {
     return UpdatesNotificationWorker(appContext, workerParameters, updateRepository,
-        sharedPreferences, aptoideInstallManager, appMapper, updateNotificationAnalytics)
+        sharedPreferences, aptoideInstallManager, appMapper, updatesNotificationAnalytics)
   }
 }

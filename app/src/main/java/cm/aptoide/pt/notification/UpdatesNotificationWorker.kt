@@ -13,7 +13,7 @@ import androidx.work.WorkerParameters
 import cm.aptoide.pt.AptoideApplication
 import cm.aptoide.pt.DeepLinkIntentReceiver
 import cm.aptoide.pt.R
-import cm.aptoide.pt.abtesting.analytics.UpdateNotificationAnalytics
+import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager
 import cm.aptoide.pt.database.room.RoomUpdate
 import cm.aptoide.pt.home.apps.AppMapper
@@ -30,7 +30,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
                                 private val sharedPreferences: SharedPreferences,
                                 private val aptoideInstallManager: AptoideInstallManager,
                                 private val appMapper: AppMapper,
-                                private val updateNotificationAnalytics: UpdateNotificationAnalytics) :
+                                private val updatesNotificationAnalytics: UpdatesNotificationAnalytics) :
     Worker(context, workerParameters) {
 
   private lateinit var config: String
@@ -63,7 +63,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
                 else 0)
               }
               .doOnNext { updates ->
-                updateNotificationAnalytics.sendUpdatesNotificationReceivedEvent()
+                updatesNotificationAnalytics.sendUpdatesNotificationReceivedEvent()
                 handleNotification(updates, config)
               }
         }.toBlocking().first()
@@ -99,7 +99,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
       with(NotificationManagerCompat.from(context)) {
         notify(UpdatesNotificationManager.UPDATE_NOTIFICATION_ID, notification)
       }
-      updateNotificationAnalytics.sendUpdatesNotificationImpressionEvent(config)
+      updatesNotificationAnalytics.sendUpdatesNotificationImpressionEvent(config)
       ManagerPreferences.setLastUpdates(updates.size, sharedPreferences)
     }
   }
@@ -127,6 +127,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
         .setContentTitle(contentTitle)
         .setContentText(contentText)
         .setTicker(tickerText)
+        .setAutoCancel(true)
 
     return builder.build()
   }
@@ -139,8 +140,8 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
     val remoteViews =
         RemoteViews(applicationContext.packageName, R.layout.updates_notification_with_icons)
 
-    val k = min(updates.size, 7)
-    for (i in 0 until k) {
+    val updatesToShow = min(updates.size, 7)
+    for (i in 0 until updatesToShow) {
       remoteViews.setImageViewBitmap(resIdMapper(i),
           ImageLoader.with(applicationContext)
               .load(updates[i].icon))
@@ -155,6 +156,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
         .setCustomContentView(remoteViews)
         .setTicker(tickerText)
         .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+        .setAutoCancel(true)
 
     return builder.build()
   }

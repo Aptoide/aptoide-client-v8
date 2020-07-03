@@ -5,9 +5,9 @@ import cm.aptoide.analytics.implementation.navigation.NavigationTracker
 import cm.aptoide.pt.notification.NotificationAnalytics
 import java.util.*
 
-class UpdateNotificationAnalytics(val analyticsManager: AnalyticsManager,
-                                  val navigationTracker: NavigationTracker,
-                                  val notificationAnalytics: NotificationAnalytics) {
+class UpdatesNotificationAnalytics(val analyticsManager: AnalyticsManager,
+                                   val navigationTracker: NavigationTracker,
+                                   val notificationAnalytics: NotificationAnalytics) {
 
   companion object {
     const val MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT =
@@ -16,16 +16,16 @@ class UpdateNotificationAnalytics(val analyticsManager: AnalyticsManager,
         "mob_657_updates_notification_converting"
   }
 
-  fun sendUpdatesNotificationReceivedEvent(){
+  fun sendUpdatesNotificationReceivedEvent() {
     notificationAnalytics.sendUpdatesNotificationReceivedEvent()
   }
 
-  fun sendUpdatesNotificationImpressionEvent(group: String){
+  fun sendUpdatesNotificationImpressionEvent(group: String) {
     notificationAnalytics.sendUpdatesNotificationImpressionEvent()
     sendAbTestParticipatingEvent(group)
   }
 
-  fun sendUpdatesNotificationClickEvent(group: String){
+  fun sendUpdatesNotificationClickEvent(group: String) {
     notificationAnalytics.sendUpdatesNotificationClickEvent()
     sendAbTestConvertingEvent(group)
   }

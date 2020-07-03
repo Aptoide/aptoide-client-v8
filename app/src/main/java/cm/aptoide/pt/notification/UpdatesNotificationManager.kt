@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit
 class UpdatesNotificationManager(private val context: Context,
                                  private val updatesNotificationExperiment: UpdatesNotificationExperiment) {
 
-  private lateinit var uploadWorkRequest: PeriodicWorkRequest
+  private lateinit var updatesWorkRequest: PeriodicWorkRequest
 
   fun setUpNotification(): Completable {
     return updatesNotificationExperiment.getConfiguration()
@@ -57,7 +57,7 @@ class UpdatesNotificationManager(private val context: Context,
 
   private fun setUpWorkRequest(config: String) {
     val data = Data.Builder().putString(CONFIGURATION_KEY, config).build()
-    uploadWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
+    updatesWorkRequest = PeriodicWorkRequestBuilder<UpdatesNotificationWorker>(
         1, TimeUnit.DAYS)
         .setConstraints(getConstraints(config))
         .setInputData(data)
@@ -65,7 +65,7 @@ class UpdatesNotificationManager(private val context: Context,
 
     WorkManager
         .getInstance(context)
-        .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, uploadWorkRequest)
+        .enqueueUniquePeriodicWork(WORKER_TAG, ExistingPeriodicWorkPolicy.KEEP, updatesWorkRequest)
   }
 
   private fun getConstraints(config: String): Constraints {

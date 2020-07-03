@@ -52,6 +52,6 @@ class UpdatesNotificationExperiment(private val abTestManager: ABTestManager) :
               return@flatMap Single.just(assignment)
             }
           }
-    }
+        }
   }
 }
