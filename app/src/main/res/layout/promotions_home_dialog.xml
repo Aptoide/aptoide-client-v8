@@ -58,7 +58,7 @@
           android:layout_marginTop="32dp"
           android:orientation="horizontal"
           >
-        <Button
+        <android.widget.Button
             android:id="@+id/cancel_button"
             android:layout_width="78dp"
             android:layout_marginEnd="16dp"
@@ -66,7 +66,7 @@
             android:text="@string/skip"
             style="@style/Aptoide.Button.Flat"
             />
-        <Button
+        <android.widget.Button
             android:id="@+id/navigate_button"
             android:layout_width="wrap_content"
             android:text="@string/holidayspromotion_button_popup"

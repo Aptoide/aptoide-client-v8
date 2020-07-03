@@ -177,7 +177,7 @@
         android:visibility="visible"
         >
 
-      <Button
+      <android.widget.Button
           android:id="@+id/help_btn"
           style="@style/Aptoide.Button.Alternative"
           android:layout_width="53.7dp"

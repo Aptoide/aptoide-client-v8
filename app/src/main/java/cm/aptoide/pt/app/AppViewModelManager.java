@@ -1,6 +1,7 @@
 package cm.aptoide.pt.app;
 
 import cm.aptoide.pt.account.view.store.StoreManager;
+import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.AppCoinsViewModel;
 import cm.aptoide.pt.install.InstallManager;
@@ -86,17 +87,23 @@ public class AppViewModelManager {
 
   private Observable<AppCoinsViewModel> getAppCoinsViewModel(AppModel app) {
     if (cachedAppCoinsViewModel == null) {
-      if (app.hasAdvertising()) {
-        return appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode())
-            .flatMapObservable(advertisingModel -> {
-              cachedAppCoinsViewModel =
-                  new AppCoinsViewModel(false, app.hasBilling(), advertisingModel);
-              return Observable.just(cachedAppCoinsViewModel);
-            });
-      } else {
-        cachedAppCoinsViewModel =
-            new AppCoinsViewModel(false, app.hasBilling(), new AppCoinsAdvertisingModel());
+      Single<BonusAppcModel> bonusAppcModelSingle = Single.just(new BonusAppcModel(false, 0));
+      Single<AppCoinsAdvertisingModel> appCoinsAdvertisingModelSingle =
+          Single.just(new AppCoinsAdvertisingModel());
+      if (app.hasBilling()) {
+        bonusAppcModelSingle = appCoinsManager.getBonusAppc();
       }
+      if (app.hasAdvertising()) {
+        appCoinsAdvertisingModelSingle =
+            appCoinsManager.getAdvertising(app.getPackageName(), app.getVersionCode());
+      }
+      return Single.zip(appCoinsAdvertisingModelSingle, bonusAppcModelSingle,
+          (advertisingModel, bonusAppcModel) -> {
+            cachedAppCoinsViewModel =
+                new AppCoinsViewModel(false, app.hasBilling(), advertisingModel, bonusAppcModel);
+            return cachedAppCoinsViewModel;
+          })
+          .toObservable();
     }
     return Observable.just(cachedAppCoinsViewModel);
   }

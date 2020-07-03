@@ -42,7 +42,7 @@
       style="@style/Aptoide.TextView.Regular.XS.GreyMedium"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/load_more_retry_button"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

@@ -30,10 +30,8 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
-import cm.aptoide.pt.database.accessors.Database;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -153,7 +151,6 @@ public abstract class AptoideApplication extends Application {
   @Inject RoomNotificationPersistence notificationPersistence;
   @Inject RoomInstalledPersistence roomInstalledPersistence;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
-  @Inject Database database;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
   @Inject CacheHelper cacheHelper;
@@ -200,7 +197,6 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject AppsNameExperimentManager appsNameExperimentManager;
-  @Inject RealmStoreMigrator realmStoreMigrator;
   @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   private LeakTool leakTool;
@@ -331,10 +327,6 @@ public abstract class AptoideApplication extends Application {
 
     startNotificationCenter();
     startNotificationCleaner();
-
-    realmStoreMigrator.performMigration()
-        .subscribe(() -> {
-        }, throwable -> throwable.printStackTrace());
 
     rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRootAvailable -> {
@@ -627,10 +619,6 @@ public abstract class AptoideApplication extends Application {
 
   public Preferences getPreferences() {
     return preferences;
-  }
-
-  public Database getDatabase() {
-    return database;
   }
 
   public PackageRepository getPackageRepository() {

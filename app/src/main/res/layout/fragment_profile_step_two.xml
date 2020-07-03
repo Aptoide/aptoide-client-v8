@@ -36,7 +36,7 @@
       android:weightSum="2"
       >
 
-    <Button
+    <android.widget.Button
         android:id="@+id/logged_in_private_button"
         style="@style/Aptoide.Button.Ghost"
         android:layout_width="8dp"
@@ -47,7 +47,7 @@
         android:textSize="@dimen/text_size_small"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/logged_in_continue"
         style="@style/Aptoide.Button"
         android:layout_width="0dp"

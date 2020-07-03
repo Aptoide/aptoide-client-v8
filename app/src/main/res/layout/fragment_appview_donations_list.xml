@@ -67,7 +67,7 @@
       android:text="@string/appview_message_donations_leaderboard"
       android:textColor="@color/silver_dark"
       />
-  <Button
+  <android.widget.Button
       android:id="@+id/donate_button"
       style="?attr/appview_button_style"
       android:layout_width="match_parent"

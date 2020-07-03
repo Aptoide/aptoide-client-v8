@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  style="?attr/backgroundCard"
+  android:layout_width="match_parent"
+  android:layout_height="344dp"
+  android:layout_marginTop="16dp"
+  android:background="?attr/backgroundCardColor">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp">
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/bonus_appc_skeleton_view"
+      android:layout_width="82dp"
+      android:layout_height="72dp"
+      android:translationX="-16dp"
+      android:visibility="gone"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:skeleton_color="?attr/backgroundCardSecondaryColor"
+      app:skeleton_corner_radius="16dp" />
+
+    <cm.aptoide.aptoideviews.appcoins.BonusAppcView
+      android:id="@+id/bonus_appc_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="visible"
+      app:enable_card_padding="false"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:placeholder_color="?attr/backgroundCardSecondaryColor"
+      app:side="LEFT" />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/title_skeletonview"
+      android:layout_width="230dp"
+      android:layout_height="20dp"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="@+id/title"
+      app:layout_constraintStart_toStartOf="@+id/title"
+      app:layout_constraintTop_toTopOf="@+id/title"
+      app:skeleton_color="?attr/backgroundCardSecondaryColor"
+      app:skeleton_corner_radius="2dp" />
+
+    <TextView
+      android:id="@+id/title"
+      style="@style/Aptoide.TextView.Medium.S.Tertiary"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="19dp"
+      android:layout_marginLeft="19dp"
+      android:layout_marginTop="10dp"
+      android:textStyle="bold"
+      app:layout_constraintBottom_toTopOf="@id/description"
+      app:layout_constraintStart_toEndOf="@+id/bonus_appc_view"
+      app:layout_constraintTop_toTopOf="@+id/bonus_appc_view"
+      app:layout_constraintVertical_chainStyle="packed"
+      tools:text="Up to 25% Bonus in every purchase!" />
+
+    <cm.aptoide.aptoideviews.skeleton.SkeletonView
+      android:id="@+id/description_skeletonview"
+      android:layout_width="150dp"
+      android:layout_height="14dp"
+      android:visibility="gone"
+      app:layout_constraintBottom_toBottomOf="@+id/description"
+      app:layout_constraintStart_toStartOf="@+id/description"
+      app:layout_constraintTop_toTopOf="@+id/description"
+      app:skeleton_color="?attr/backgroundCardSecondaryColor"
+      app:skeleton_corner_radius="2dp" />
+
+    <TextView
+      android:id="@+id/description"
+      style="@style/Aptoide.TextView.Medium.XXS"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:layout_marginEnd="5dp"
+      android:layout_marginRight="5dp"
+      android:maxLines="2"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintStart_toStartOf="@+id/title"
+      app:layout_constraintTop_toBottomOf="@+id/title"
+      tools:text="Use your AppCoins bonus to get more items in apps with this symbol" />
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/apps_list"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:orientation="horizontal"
+      app:layout_constraintTop_toBottomOf="@+id/bonus_appc_view" />
+
+    <android.widget.Button
+      android:id="@+id/see_more_btn"
+      style="@style/Aptoide.Button.Flat"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15dp"
+      android:text="@string/see_more"
+      android:visibility="visible"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/apps_list" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

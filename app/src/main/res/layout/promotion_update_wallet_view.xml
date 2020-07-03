@@ -27,7 +27,7 @@
       style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
       />
 
-  <Button
+  <android.widget.Button
       android:id="@+id/cancel_wallet_update_button"
       android:layout_width="95dp"
       android:layout_height="56dp"
@@ -40,7 +40,7 @@
       app:layout_constraintTop_toBottomOf="@id/update_wallet_message"
       style="@style/Aptoide.Button.Flat.GreyMedium"
       />
-  <Button
+  <android.widget.Button
       android:id="@+id/update_wallet_button"
       android:layout_width="95dp"
       android:layout_height="56dp"

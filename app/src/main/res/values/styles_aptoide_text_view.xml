@@ -189,6 +189,10 @@
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.S.Tertiary">
+    <item name="android:textColor">?attr/tertiaryTextColor</item>
+  </style>
+
   <style name="Aptoide.TextView.Medium.M.BlackAlpha">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>

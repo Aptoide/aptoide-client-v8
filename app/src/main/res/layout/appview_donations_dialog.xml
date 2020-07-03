@@ -85,7 +85,7 @@
           android:layout_marginBottom="8dp"
           android:orientation="horizontal"
           >
-        <Button
+        <android.widget.Button
             android:id="@+id/cancel_button"
             style="@style/Aptoide.Button.Flat"
             android:layout_width="78dp"
@@ -93,7 +93,7 @@
             android:layout_marginRight="16dp"
             android:text="@string/cancel"
             />
-        <Button
+        <android.widget.Button
             android:id="@+id/donate_button"
             style="@style/Aptoide.Button.Flat"
             android:layout_width="78dp"
@@ -138,7 +138,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         >
-      <Button
+      <android.widget.Button
           android:id="@+id/no_wallet_cancel_button"
           style="@style/Aptoide.Button.Flat"
           android:layout_width="95dp"
@@ -146,7 +146,7 @@
           android:layout_marginRight="12dp"
           android:text="@string/cancel"
           />
-      <Button
+      <android.widget.Button
           android:id="@+id/no_wallet_continue_button"
           style="@style/Aptoide.Button.Flat"
           android:layout_width="95dp"
@@ -181,7 +181,7 @@
         android:text="@string/appview_message_donations_completed"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/thank_you_ok_button"
         style="@style/Aptoide.Button.Flat"
         android:layout_width="95dp"

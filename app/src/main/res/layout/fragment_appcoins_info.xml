@@ -364,7 +364,7 @@
               android:textColor="@color/white"
               />
 
-          <Button
+          <android.widget.Button
               android:id="@+id/catappult_dev_button"
               style="@style/Aptoide.Button.Catappult"
               android:layout_width="match_parent"

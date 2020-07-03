@@ -45,7 +45,7 @@
           android:gravity="center"
           tools:text="@string/newaccount_signin_message"
           />
-      <Button
+      <android.widget.Button
           android:id="@+id/login_button"
           style="?attr/login_button_style"
           android:layout_width="match_parent"
@@ -100,7 +100,7 @@
           android:text="@string/newaccount_create_store_message"
           android:visibility="gone"
           />
-      <Button
+      <android.widget.Button
           android:id="@+id/create_store_button"
           style="?attr/login_button_style"
           android:layout_width="match_parent"
@@ -110,7 +110,7 @@
           android:visibility="gone"
           tools:visibility="visible"
           />
-      <Button
+      <android.widget.Button
           android:id="@+id/logout_button"
           style="?attr/login_button_style"
           android:layout_width="match_parent"

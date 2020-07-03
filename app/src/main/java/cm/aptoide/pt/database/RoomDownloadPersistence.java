@@ -49,8 +49,9 @@ public class RoomDownloadPersistence implements DownloadPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public void save(RoomDownload download) {
-    new Thread(() -> downloadDAO.insert(download)).start();
+  public Completable save(RoomDownload download) {
+    return Completable.fromAction(() -> downloadDAO.insert(download))
+        .subscribeOn(Schedulers.io());
   }
 
   public Observable<List<RoomDownload>> getRunningDownloads() {

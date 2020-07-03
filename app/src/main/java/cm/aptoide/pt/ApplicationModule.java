@@ -96,6 +96,8 @@ import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.app.ReviewsManager;
 import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
+import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
+import cm.aptoide.pt.app.appc.BonusAppcService;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
@@ -113,7 +115,6 @@ import cm.aptoide.pt.blacklist.BlacklistUnitMapper;
 import cm.aptoide.pt.blacklist.Blacklister;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationAnalytics;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RealmStoreMigrator;
 import cm.aptoide.pt.database.RoomAppcMigrationPersistence;
 import cm.aptoide.pt.database.RoomAptoideInstallPersistence;
 import cm.aptoide.pt.database.RoomDownloadPersistence;
@@ -128,9 +129,6 @@ import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.RoomStorePersistence;
 import cm.aptoide.pt.database.RoomStoredMinimalAdPersistence;
 import cm.aptoide.pt.database.RoomUpdatePersistence;
-import cm.aptoide.pt.database.accessors.Database;
-import cm.aptoide.pt.database.accessors.RealmToRealmDatabaseMigration;
-import cm.aptoide.pt.database.accessors.StoreAccessor;
 import cm.aptoide.pt.database.room.AptoideDatabase;
 import cm.aptoide.pt.dataprovider.NetworkOperatorManager;
 import cm.aptoide.pt.dataprovider.WebService;
@@ -252,7 +250,6 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StorePersistence;
-import cm.aptoide.pt.store.StoreRepository;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
@@ -296,8 +293,6 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.services.DownloadMgrInitialParams;
 import dagger.Module;
 import dagger.Provides;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -986,10 +981,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new Preferences(sharedPreferences);
   }
 
-  @Singleton @Provides StoreAccessor provideStoreAccessor(Database database) {
-    return new StoreAccessor(database);
-  }
-
   @Singleton @Provides UpdatePersistence providesUpdatePersistence(AptoideDatabase database) {
     return new RoomUpdatePersistence(database.updateDao());
   }
@@ -997,16 +988,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides SecureCoderDecoder provideSecureCoderDecoder(
       @Named("default") SharedPreferences sharedPreferences) {
     return new SecureCoderDecoder.Builder(application, sharedPreferences).create();
-  }
-
-  @Singleton @Provides StoreRepository provideStoreRepository(StoreAccessor storeAccessor) {
-    return new StoreRepository(storeAccessor);
-  }
-
-  @Singleton @Provides RealmStoreMigrator providesStoreRealmMigrator(
-      StorePersistence storePersistence, StoreRepository storeRepository,
-      @Named("default") SharedPreferences defaultSharedPreferences) {
-    return new RealmStoreMigrator(storePersistence, storeRepository, defaultSharedPreferences);
   }
 
   @Singleton @Provides PageViewsAnalytics providePageViewsAnalytics(
@@ -1033,17 +1014,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       PageViewsAnalytics pageViewsAnalytics, AnalyticsLogger logger) {
     return new NavigationTracker(new ArrayList<>(), new TrackerFilter(), pageViewsAnalytics,
         logger);
-  }
-
-  @Singleton @Provides Database provideDatabase() {
-    Realm.init(application);
-    final RealmConfiguration realmConfiguration =
-        new RealmConfiguration.Builder().name(BuildConfig.REALM_FILE_NAME)
-            .schemaVersion(BuildConfig.REALM_SCHEMA_VERSION)
-            .migration(new RealmToRealmDatabaseMigration(application.getApplicationContext()))
-            .build();
-    Realm.setDefaultConfiguration(realmConfiguration);
-    return new Database();
   }
 
   @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
@@ -1192,12 +1162,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      Database database, AdsRepository adsRepository, AptoideAccountManager accountManager,
+      AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
       RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, database, accountManager, moPubAdsManager, appBundlesVisibilityManager,
+        adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
         storeRepository);
   }
 
@@ -1357,6 +1327,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .addCallAdapterFactory(rxCallAdapterFactory)
         .addConverterFactory(converterFactory)
         .build();
+  }
+
+  @Singleton @Provides BonusAppcRemoteService.ServiceApi providesBonusAppcServiceApi(
+      @Named("retrofit-apichain-bds") Retrofit retrofit) {
+    return retrofit.create(BonusAppcRemoteService.ServiceApi.class);
+  }
+
+  @Singleton @Provides BonusAppcService providesBonusAppcService(
+      BonusAppcRemoteService.ServiceApi serviceApi) {
+    return new BonusAppcRemoteService(serviceApi, Schedulers.io());
   }
 
   @Singleton @Provides SearchSuggestionRemoteRepository providesSearchSuggestionRemoteRepository(
@@ -1578,8 +1558,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AppCoinsManager providesAppCoinsManager(AppCoinsService appCoinsService,
-      DonationsService donationsService) {
-    return new AppCoinsManager(appCoinsService, donationsService);
+      DonationsService donationsService, BonusAppcService bonusAppcService) {
+    return new AppCoinsManager(appCoinsService, donationsService, bonusAppcService);
   }
 
   @Singleton @Provides AppCoinsService providesAppCoinsService(@Named("mature-pool-v7")
@@ -1597,12 +1577,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converter,
       BundlesResponseMapper mapper, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences, AptoideAccountManager accountManager,
-      PackageRepository packageRepository, Database database, IdsRepository idsRepository,
-      QManager qManager, Resources resources, WindowManager windowManager,
-      ConnectivityManager connectivityManager,
+      PackageRepository packageRepository, IdsRepository idsRepository, QManager qManager,
+      Resources resources, WindowManager windowManager, ConnectivityManager connectivityManager,
       AdsApplicationVersionCodeProvider adsApplicationVersionCodeProvider,
       OemidProvider oemidProvider, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      StoreCredentialsProvider storeCredentialsProvider) {
+      StoreCredentialsProvider storeCredentialsProvider, AppCoinsManager appCoinsManager) {
     return new RemoteBundleDataSource(5, new HashMap<>(), bodyInterceptorPoolV7, okHttpClient,
         converter, mapper, tokenInvalidator, sharedPreferences, new WSWidgetsUtils(),
         storeCredentialsProvider, idsRepository,
@@ -1610,7 +1589,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         oemidProvider.getOemid(), accountManager,
         qManager.getFilters(ManagerPreferences.getHWSpecsFilter(sharedPreferences)), resources,
         windowManager, connectivityManager, adsApplicationVersionCodeProvider, packageRepository,
-        10, 10, appBundlesVisibilityManager);
+        10, 10, appBundlesVisibilityManager, appCoinsManager);
   }
 
   @Singleton @Provides StorePersistence providesStorePersistence(AptoideDatabase aptoideDatabase) {
@@ -1996,7 +1975,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides
-  RoomLocalNotificationSyncPersistence providesRealmLocalNotificationSyncPersistence(
+  RoomLocalNotificationSyncPersistence providesRoomLocalNotificationSyncPersistence(
       AptoideDatabase database, NotificationProvider provider) {
     return new RoomLocalNotificationSyncPersistence(new RoomLocalNotificationSyncMapper(), provider,
         database.localNotificationSyncDao());

@@ -58,7 +58,7 @@
         tools:background="@color/grey_medium"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/skip_button"
         style="@style/Aptoide.Button.Flat"
         android:layout_width="wrap_content"

@@ -42,7 +42,7 @@
         tools:text="@string/appc_title_settings_appcoins_wallet"
         />
 
-    <Button
+    <android.widget.Button
         android:id="@+id/appview_install_button"
         style="@style/Aptoide.Button.Install.S"
         android:layout_width="83dp"

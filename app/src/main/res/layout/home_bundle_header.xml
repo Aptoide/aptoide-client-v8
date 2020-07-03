@@ -15,7 +15,7 @@
     android:layout_marginLeft="8dp"
     tools:text="random bundle" />
 
-  <Button
+  <android.widget.Button
     android:id="@+id/bundle_more"
     style="@style/Aptoide.Button.Flat"
     android:layout_width="wrap_content"
