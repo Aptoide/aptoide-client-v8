@@ -14,6 +14,7 @@ import cm.aptoide.pt.AppShortcutsAnalytics;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
 import cm.aptoide.pt.account.view.store.ManageStoreFragment;
 import cm.aptoide.pt.account.view.store.ManageStoreViewModel;
 import cm.aptoide.pt.ads.AdsRepository;
@@ -33,7 +34,6 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
-import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -73,7 +73,7 @@ public class DeepLinkManager {
   private final SharedPreferences sharedPreferences;
   private final RoomStoreRepository storeRepository;
   private final NavigationTracker navigationTracker;
-  private final NotificationAnalytics notificationAnalytics;
+  private final UpdatesNotificationAnalytics notificationAnalytics;
   private final SearchAnalytics searchAnalytics;
   private final AppShortcutsAnalytics appShortcutsAnalytics;
   private final AptoideAccountManager accountManager;
@@ -90,7 +90,7 @@ public class DeepLinkManager {
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       DeepLinkView deepLinkView, SharedPreferences sharedPreferences,
-      RoomStoreRepository storeRepository, NotificationAnalytics notificationAnalytics,
+      RoomStoreRepository storeRepository, UpdatesNotificationAnalytics notificationAnalytics,
       NavigationTracker navigationTracker, SearchAnalytics searchAnalytics,
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
       DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
@@ -148,7 +148,8 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.HOME_DEEPLINK)) {
       fromHomeDeepLink();
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
-      newUpdatesDeepLink();
+      newUpdatesDeepLink(
+          intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UPDATES_NOTIFICATION_GROUP));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
       genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK)) {
@@ -340,8 +341,8 @@ public class DeepLinkManager {
     bottomNavigationNavigator.navigateToHome();
   }
 
-  private void newUpdatesDeepLink() {
-    notificationAnalytics.sendUpdatesNotificationClickEvent();
+  private void newUpdatesDeepLink(String group) {
+    notificationAnalytics.sendUpdatesNotificationClickEvent(group);
     deepLinkAnalytics.newUpdatesNotification();
     bottomNavigationNavigator.navigateToApps();
   }

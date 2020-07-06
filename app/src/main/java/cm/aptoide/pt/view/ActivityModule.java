@@ -18,6 +18,7 @@ import cm.aptoide.pt.DeepLinkAnalytics;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.UserFeedbackAnalytics;
+import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AgentPersistence;
@@ -168,7 +169,7 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides DeepLinkManager provideDeepLinkManager(
-      NotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
+      UpdatesNotificationAnalytics notificationAnalytics, StoreUtilsProxy storeUtilsProxy,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
       @Named("default") SharedPreferences sharedPreferences,
