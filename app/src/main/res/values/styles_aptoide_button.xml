@@ -86,6 +86,10 @@
     <item name="android:textSize">?attr/buttonTextSizeSmall</item>
   </style>
 
+  <style name="Aptoide.Button.Flat.M">
+    <item name="android:textSize">?attr/buttonTextSizeMedium</item>
+  </style>
+
 
   <!--Icon buttons-->
   <style name="Aptoide.Button.Facebook">

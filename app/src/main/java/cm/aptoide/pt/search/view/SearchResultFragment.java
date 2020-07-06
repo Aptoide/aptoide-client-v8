@@ -32,6 +32,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
+import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.aptoideviews.filters.FiltersView;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
@@ -86,7 +88,6 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String VIEW_MODEL = "view_model";
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
-
   private static final int VISIBLE_THRESHOLD = 2;
   private static final long ANIMATION_DURATION = 125L;
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
@@ -103,8 +104,6 @@ public class SearchResultFragment extends BackButtonFragment
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private CardView allAndFollowedStoresButtonsLayout;
-  private Button followedStoresButton;
-  private Button allStoresButton;
   private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
   private RecyclerView suggestionsResultList;
@@ -190,8 +189,6 @@ public class SearchResultFragment extends BackButtonFragment
 
     followedStoresResultList =
         view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
-    allStoresButton = view.findViewById(R.id.fragment_search_result_all_stores_button);
-    followedStoresButton = view.findViewById(R.id.fragment_search_result_followed_stores_button);
 
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
@@ -203,6 +200,12 @@ public class SearchResultFragment extends BackButtonFragment
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
+
+    List<Filter> filters =
+        Arrays.asList(new Filter("Followed Stores", false), new Filter("Trusted", false),
+            new Filter("Beta", false), new Filter("AppCoins", false));
+    FiltersView filtersView = view.findViewById(R.id.filters_view);
+    filtersView.setFilters(filters);
 
     noSearchAdultContentSwitch.setOnClickListener(
         v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
@@ -269,11 +272,11 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public Observable<Void> clickFollowedStoresSearchButton() {
-    return RxView.clicks(followedStoresButton);
+    return Observable.empty();
   }
 
   @Override public Observable<Void> clickEverywhereSearchButton() {
-    return RxView.clicks(allStoresButton);
+    return Observable.empty();
   }
 
   @Override public Observable<Void> clickNoResultsSearchButton() {
@@ -373,23 +376,23 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void setViewWithStoreNameAsSingleTab(String storeName) {
-    followedStoresButton.setText(storeName);
-    allStoresButton.setVisibility(View.GONE);
+    //followedStoresButton.setText(storeName);
+    //allStoresButton.setVisibility(View.GONE);
   }
 
   @Override public void hideFollowedStoresTab() {
-    allStoresButton.setVisibility(View.VISIBLE);
+    //allStoresButton.setVisibility(View.VISIBLE);
     allStoresResultList.setVisibility(View.VISIBLE);
-    followedStoresButton.setVisibility(View.GONE);
+    //followedStoresButton.setVisibility(View.GONE);
     followedStoresResultList.setVisibility(View.GONE);
     setAllStoresButtonSelected();
     viewModel.setAllStoresSelected(true);
   }
 
   @Override public void hideNonFollowedStoresTab() {
-    allStoresButton.setVisibility(View.GONE);
+    //allStoresButton.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
-    followedStoresButton.setVisibility(View.VISIBLE);
+    //followedStoresButton.setVisibility(View.VISIBLE);
     followedStoresResultList.setVisibility(View.VISIBLE);
     setFollowedStoresButtonSelected();
     viewModel.setAllStoresSelected(false);
@@ -651,40 +654,40 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setFollowedStoresButtonSelected() {
-    if (followedStoresButton.getVisibility() == View.VISIBLE) {
-      followedStoresButton.setTextColor(
-          themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
-      followedStoresButton.setBackgroundResource(
-          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
-    }
-    if (allStoresButton.getVisibility() == View.VISIBLE) {
-      allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
-    }
+    //if (followedStoresButton.getVisibility() == View.VISIBLE) {
+    //  followedStoresButton.setTextColor(
+    //      themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
+    //  followedStoresButton.setBackgroundResource(
+    //      themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
+    //}
+    //if (allStoresButton.getVisibility() == View.VISIBLE) {
+    //  allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    //  allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
+    //}
     viewModel.setAllStoresSelected(false);
     String storeTheme = viewModel.getStoreTheme();
-    if (storeThemeExists(storeTheme)) {
-      followedStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
-          R.attr.roundGradientButtonBackground).resourceId);
-    }
+    //if (storeThemeExists(storeTheme)) {
+    //  followedStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+    //      R.attr.roundGradientButtonBackground).resourceId);
+    //}
   }
 
   private void setAllStoresButtonSelected() {
-    if (followedStoresButton.getVisibility() == View.VISIBLE) {
-      followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-      followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
-    }
-    if (allStoresButton.getVisibility() == View.VISIBLE) {
-      allStoresButton.setTextColor(themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
-      allStoresButton.setBackgroundResource(
-          themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
-    }
-    viewModel.setAllStoresSelected(true);
-    String storeTheme = viewModel.getStoreTheme();
-    if (storeThemeExists(storeTheme)) {
-      allStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
-          R.attr.roundGradientButtonBackground).resourceId);
-    }
+    //if (followedStoresButton.getVisibility() == View.VISIBLE) {
+    //  followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
+    //  followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
+    //}
+    //if (allStoresButton.getVisibility() == View.VISIBLE) {
+    //  allStoresButton.setTextColor(themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
+    //  allStoresButton.setBackgroundResource(
+    //      themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
+    //}
+    //viewModel.setAllStoresSelected(true);
+    //String storeTheme = viewModel.getStoreTheme();
+    //if (storeThemeExists(storeTheme)) {
+    //  allStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
+    //      R.attr.roundGradientButtonBackground).resourceId);
+    //}
   }
 
   private boolean storeThemeExists(String storeTheme) {
