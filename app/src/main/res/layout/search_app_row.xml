@@ -66,8 +66,7 @@
         android:layout_height="12dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/ic_appview_download_icon"
-        android:tint="@color/grey"
+        android:src="@drawable/ic_download_icon"
         app:layout_constraintBottom_toBottomOf="@+id/rating"
         app:layout_constraintStart_toEndOf="@id/rating"
         app:layout_constraintTop_toTopOf="@id/rating"
@@ -123,6 +122,7 @@
           layout="@layout/appc_label"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
           android:layout_marginLeft="20dp"
           />
     </LinearLayout>
