@@ -43,6 +43,7 @@
         android:layout_height="12dp"
         android:layout_marginTop="7dp"
         android:src="?attr/ratingDrawable"
+        android:tint="@color/grey"
         app:layout_constraintBottom_toTopOf="@+id/store_icon"
         app:layout_constraintLeft_toLeftOf="@+id/app_name"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
