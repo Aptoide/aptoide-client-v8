@@ -93,8 +93,7 @@
     <item name="loginInputBackground">@drawable/button_border_grey</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
     <item name="checkYourEmailBackground">@drawable/aptoide_gradient_vertical</item>
-
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_light</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
@@ -350,11 +349,12 @@
     <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
     <item name="secureLoginBackground">@color/grey_dark</item>
-    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark</item>
+    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark
+    </item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
     <item name="checkYourEmailBackground">@color/grey_dark</item>
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_light</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>
