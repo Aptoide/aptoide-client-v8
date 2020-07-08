@@ -25,11 +25,11 @@
 
     <ImageView
         android:id="@+id/app_badge"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
+        android:layout_width="14dp"
+        android:layout_height="16dp"
         android:layout_marginTop="6dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         app:layout_constraintEnd_toEndOf="@id/triangle_card_background"
         app:layout_constraintRight_toRightOf="@id/triangle_card_background"
         app:layout_constraintTop_toTopOf="@id/triangle_card_background"
@@ -54,17 +54,18 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="@id/guideline_right"
+        app:layout_constraintEnd_toStartOf="@id/app_badge"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/app_icon"
         app:layout_constraintTop_toTopOf="@+id/app_icon"
-        tools:text="Clash Royale"
+        tools:text="Clash Royale queens land"
         />
     <ImageView
         android:id="@+id/star_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_marginTop="7dp"
+        android:layout_marginBottom="8dp"
         android:src="?attr/ratingDrawable"
         android:tint="@color/grey"
         app:layout_constraintBottom_toTopOf="@+id/store_icon"
@@ -86,8 +87,8 @@
         />
     <ImageView
         android:id="@+id/downloads_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:src="@drawable/ic_download_icon"
@@ -109,8 +110,9 @@
         />
     <ImageView
         android:id="@+id/store_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/ic_store"
         android:tint="@color/grey"
         app:layout_constraintBottom_toBottomOf="@id/app_icon"
