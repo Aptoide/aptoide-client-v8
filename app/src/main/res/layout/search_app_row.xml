@@ -64,8 +64,6 @@
         android:id="@+id/star_icon"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="8dp"
         android:src="?attr/ratingDrawable"
         android:tint="@color/grey"
         app:layout_constraintBottom_toTopOf="@+id/store_icon"
@@ -112,11 +110,11 @@
         android:id="@+id/store_icon"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginTop="8dp"
         android:src="@drawable/ic_store"
         android:tint="@color/grey"
         app:layout_constraintBottom_toBottomOf="@id/app_icon"
         app:layout_constraintStart_toStartOf="@id/star_icon"
+        app:layout_constraintTop_toBottomOf="@id/star_icon"
         />
     <TextView
         android:id="@+id/store_name"
