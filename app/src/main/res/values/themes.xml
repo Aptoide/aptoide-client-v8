@@ -354,7 +354,7 @@
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
     <item name="checkYourEmailBackground">@color/grey_dark</item>
-    <item name="searchBackgroundTriangleColor">@color/search_background_grey_light</item>
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_dark</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>

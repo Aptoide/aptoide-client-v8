@@ -26,8 +26,8 @@
   <color name="appc_spend">#e74258</color>
   <color name="promotions_reward">#ff6b6d</color>
   <color name="flair_grey">#2E2E2E</color>
-  <color name="search_background_grey_light">#33c7c7c7</color>
-  <color name="search_background_grey_dark">#15c7c7c7</color>
+  <color name="search_background_grey_light">#F4F4F4</color>
+  <color name="search_background_grey_dark">#2D2D2D</color>
 
   <!-- social buttons colors -->
   <color name="facebook">#415dae</color>
