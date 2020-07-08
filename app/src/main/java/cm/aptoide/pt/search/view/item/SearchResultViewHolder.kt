@@ -10,16 +10,13 @@ import cm.aptoide.pt.search.model.SearchAppResultWrapper
 import cm.aptoide.pt.utils.AptoideUtils
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxrelay.PublishRelay
-import kotlinx.android.synthetic.main.other_version_row.view.*
 import kotlinx.android.synthetic.main.search_app_row.view.*
-import kotlinx.android.synthetic.main.search_app_row.view.downloads
-import kotlinx.android.synthetic.main.search_app_row.view.store_name
 import rx.subscriptions.CompositeSubscription
 import java.text.DecimalFormat
 
 class SearchResultViewHolder(itemView: View,
                              private val itemClickSubject: PublishRelay<SearchAppResultWrapper>,
-                             val query: String) :
+                             val query: String?) :
     SearchResultItemView<SearchAppResult?>(itemView) {
 
   private val appInfoViewHolder: AppSecondaryInfoViewHolder =
