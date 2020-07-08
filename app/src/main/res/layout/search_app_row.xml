@@ -15,11 +15,25 @@
       >
 
     <View
+        android:id="@+id/triangle_card_background"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:background="@drawable/background_triangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/app_badge"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
+        app:layout_constraintEnd_toEndOf="@id/triangle_card_background"
+        app:layout_constraintRight_toRightOf="@id/triangle_card_background"
+        app:layout_constraintTop_toTopOf="@id/triangle_card_background"
+        tools:src="@drawable/ic_badges_trusted"
         />
 
     <ImageView
