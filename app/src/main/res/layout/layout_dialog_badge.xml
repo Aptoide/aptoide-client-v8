@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_badge_trusted"
+        android:src="@drawable/ic_badges_trusted"
         />
 
     <TextView
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_badge_warning"
+        android:src="@drawable/ic_badges_warning"
         />
 
     <TextView
@@ -76,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_badge_unknown"
+        android:src="@drawable/ic_badges_unknown"
         />
 
     <TextView

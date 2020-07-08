@@ -98,7 +98,7 @@
                 android:id="@+id/trusted_badge"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/ic_badge_trusted"
+                android:src="@drawable/ic_badges_trusted"
                 />
 
             <TextView

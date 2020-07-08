@@ -69,7 +69,7 @@
           android:layout_marginStart="@dimen/appview_recommended_for_you_image_margin_left"
           android:layout_marginLeft="@dimen/appview_recommended_for_you_image_margin_left"
           android:scaleType="centerInside"
-          android:src="@drawable/ic_badge_trusted"
+          android:src="@drawable/ic_badges_trusted"
           />
     </LinearLayout>
 
