@@ -25,14 +25,13 @@
 
     <ImageView
         android:id="@+id/app_badge"
-        android:layout_width="14dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="6dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="4dp"
         android:layout_marginRight="4dp"
         app:layout_constraintEnd_toEndOf="@id/triangle_card_background"
         app:layout_constraintRight_toRightOf="@id/triangle_card_background"
-        app:layout_constraintTop_toTopOf="@id/triangle_card_background"
+        app:layout_constraintTop_toTopOf="@id/guideline_top"
         tools:src="@drawable/ic_badges_trusted"
         />
 
@@ -51,7 +50,6 @@
         style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_chainStyle="spread_inside"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:maxLines="1"
@@ -60,6 +58,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/app_icon"
         app:layout_constraintTop_toTopOf="@+id/app_icon"
+        app:layout_constraintVertical_chainStyle="spread_inside"
         tools:text="Clash Royale queens land"
         />
     <ImageView
@@ -71,8 +70,8 @@
         app:layout_constraintBottom_toTopOf="@+id/store_icon"
         app:layout_constraintLeft_toLeftOf="@+id/app_name"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
-        app:layout_constraintVertical_chainStyle="spread"
         app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_chainStyle="spread"
         />
     <TextView
         android:id="@+id/rating"
