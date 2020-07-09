@@ -166,7 +166,7 @@
     <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/black_87_alpha</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/twitter_color</item>
     <item name="textColorTwitch">@color/twitch</item>
@@ -429,7 +429,7 @@
 
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/grey_medium_light</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/white</item>
     <item name="textColorTwitch">@color/white</item>
