@@ -156,7 +156,7 @@ import org.parceler.Parcel;
 
   public void addFollowedStoresSearchAppResults(
       List<SearchAppResult> followedStoresSearchAppResults) {
-    this.followedStoresSearchAppResults.addAll(followedStoresSearchAppResults);
+    this.followedStoresSearchAppResults = followedStoresSearchAppResults;
   }
 
   public void addFollowedStoresSearchAdResults(List<SearchAdResult> followedStoresSearchAdResults) {
@@ -164,6 +164,6 @@ import org.parceler.Parcel;
   }
 
   public void addAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
-    this.allStoresSearchAppResults.addAll(allStoresSearchAppResults);
+    this.allStoresSearchAppResults = allStoresSearchAppResults;
   }
 }

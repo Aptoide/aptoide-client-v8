@@ -3,6 +3,7 @@ package cm.aptoide.pt.search.view;
 import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -37,9 +38,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void hideLoading();
 
-  void addFollowedStoresResult(String query, List<SearchAppResult> dataList);
+  void addFollowedStoresResult(String query, SearchResultDiffModel dataList);
 
-  void addAllStoresResult(String query, List<SearchAppResult> dataList);
+  void addAllStoresResult(String query, SearchResultDiffModel dataList);
 
   Model getViewModel();
 

@@ -12,6 +12,7 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -185,7 +186,7 @@ import rx.schedulers.Schedulers;
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
+              getItemCount(getResultList(data).getNewSearchResultsList()));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -221,19 +222,21 @@ import rx.schedulers.Schedulers;
         .doOnNext(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
+              getItemCount(getResultList(data).getNewSearchResultsList()));
         })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
-  public List<SearchAppResult> getResultList(SearchResult result) {
-    List<SearchAppResult> list = new ArrayList<>();
+  public SearchResultDiffModel getResultList(SearchResult result) {
+    SearchResultDiffModel searchResultDiffModel =
+        new SearchResultDiffModel(null, new ArrayList<>(), new ArrayList<>());
+
     if (result instanceof SearchResult.Success) {
-      list = ((SearchResult.Success) result).getResult();
+      searchResultDiffModel = ((SearchResult.Success) result).getResult();
     }
-    return list;
+    return searchResultDiffModel;
   }
 
   @VisibleForTesting public void firstAdsDataLoad() {
@@ -419,6 +422,7 @@ import rx.schedulers.Schedulers;
           .andThen(loadDataForSpecificStore(query, storeName, 0).map(
               searchResult -> new Pair<>(searchResult, null)));
     }
+    searchManager.clearCachedApps();
     // search every store. followed and not followed
     return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
         loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
@@ -429,12 +433,17 @@ import rx.schedulers.Schedulers;
   private Single<SearchResult> loadDataFromNonFollowedStores(String query, boolean onlyTrustedApps,
       int offset) {
     return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
+        .doOnSuccess(result -> Logger.getInstance()
+            .d("lol", "emitting load from non followed stores " + getResultList(
+                result).getSearchResultsList()
+                .size()))
+        .subscribeOn(ioScheduler)
         .observeOn(viewScheduler)
         .doOnSuccess(dataList -> view.addAllStoresResult(query, getResultList(dataList)))
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(
-              getItemCount(getResultList(data)));
+              getItemCount(getResultList(data).getNewSearchResultsList()));
         })
         .observeOn(ioScheduler)
         .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
@@ -456,7 +465,7 @@ import rx.schedulers.Schedulers;
         .doOnSuccess(data -> {
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
+              getItemCount(getResultList(data).getNewSearchResultsList()));
         });
   }
 
@@ -469,7 +478,7 @@ import rx.schedulers.Schedulers;
           final SearchResultView.Model viewModel = view.getViewModel();
           viewModel.setAllStoresSelected(false);
           viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
+              getItemCount(getResultList(data).getNewSearchResultsList()));
         });
   }
 
@@ -477,10 +486,12 @@ import rx.schedulers.Schedulers;
     int count = 0;
     if (pair.first instanceof SearchResult.Success) {
       count += ((SearchResult.Success) pair.first).getResult()
+          .getSearchResultsList()
           .size();
     }
     if (pair.second instanceof SearchResult.Success) {
       count += ((SearchResult.Success) pair.second).getResult()
+          .getSearchResultsList()
           .size();
     }
     return count;

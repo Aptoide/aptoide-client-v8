@@ -40,6 +40,8 @@ import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -322,14 +324,16 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addFollowedStoresResult(String query, List<SearchAppResult> dataList) {
-    followedStoresResultAdapter.addResultForSearch(query, dataList);
-    viewModel.addFollowedStoresSearchAppResults(dataList);
+  @Override
+  public void addFollowedStoresResult(String query, SearchResultDiffModel searchResultDiffModel) {
+    followedStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
+    viewModel.addFollowedStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
   }
 
-  @Override public void addAllStoresResult(String query, List<SearchAppResult> dataList) {
-    allStoresResultAdapter.addResultForSearch(query, dataList);
-    viewModel.addAllStoresSearchAppResults(dataList);
+  @Override
+  public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel) {
+    allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
+    viewModel.addAllStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
   }
 
   @Override public Model getViewModel() {
@@ -359,7 +363,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
-    return recyclerViewReachedBottom(allStoresResultList);
+    return recyclerViewReachedBottom(allStoresResultList).doOnNext(__ -> Logger.getInstance()
+        .d("lol", "reached bottom"));
   }
 
   @Override public void showLoadingMore() {
@@ -638,8 +643,12 @@ public class SearchResultFragment extends BackButtonFragment
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .map(this::isEndReached)
+        .doOnNext(end -> Logger.getInstance()
+            .d("lol", "emitting reached end #1 " + end))
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
+        .doOnNext(end -> Logger.getInstance()
+            .d("lol", "emitting reached end #2 " + end))
         .map(__ -> null);
   }
 

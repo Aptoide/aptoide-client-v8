@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -23,7 +25,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
   private final List<SearchAdResult> searchAdResults;
-  private final List<SearchAppResult> searchResults;
+  private List<SearchAppResult> searchResults;
   private String query;
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
@@ -119,10 +121,14 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void addResultForSearch(String query, List<SearchAppResult> dataList) {
+  public void addResultForSearch(String query, SearchResultDiffModel searchResultDiffModel) {
     this.query = query;
-    searchResults.addAll(dataList);
-    notifyDataSetChanged();
+    searchResults = searchResultDiffModel.getSearchResultsList();
+    DiffUtil.DiffResult diffResult = searchResultDiffModel.getDiffResult();
+    if (diffResult != null) {
+      searchResultDiffModel.getDiffResult()
+          .dispatchUpdatesTo(this);
+    }
   }
 
   public void setResultForAd(SearchAdResult searchAd) {
@@ -132,12 +138,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   public void setAdsLoaded() {
     adsLoaded = true;
-    notifyDataSetChanged();
+    //notifyDataSetChanged();
   }
 
   public void setIsLoadingMore(boolean isLoadingMore) {
     this.isLoadingMore = isLoadingMore;
-    notifyDataSetChanged();
+    //otifyDataSetChanged();
   }
 
   public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {

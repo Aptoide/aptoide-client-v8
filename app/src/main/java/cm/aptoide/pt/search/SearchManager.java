@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
+import androidx.recyclerview.widget.DiffUtil;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
@@ -21,6 +22,7 @@ import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreUtils;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -41,6 +43,7 @@ import rx.Single;
   private final MoPubAdsManager moPubAdsManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final RoomStoreRepository storeRepository;
+  private List<SearchAppResult> cachedSearchAppResult;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -60,6 +63,7 @@ import rx.Single;
     this.moPubAdsManager = moPubAdsManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.storeRepository = storeRepository;
+    this.cachedSearchAppResult = new ArrayList<>();
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -112,7 +116,17 @@ import rx.Single;
         .map(searchApp -> new SearchAppResult(searchApp))
         .toList()
         .first()
-        .map(list -> new SearchResult.Success(list));
+        .map(newSearchList -> handleDifferences(newSearchList))
+        .map(result -> new SearchResult.Success(result));
+  }
+
+  private SearchResultDiffModel handleDifferences(List<SearchAppResult> newSearchList) {
+    List<SearchAppResult> searchCompleteList = new ArrayList<>(cachedSearchAppResult);
+    searchCompleteList.addAll(newSearchList);
+    DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+        new SearchResultDiffCallback(this.cachedSearchAppResult, searchCompleteList));
+    this.cachedSearchAppResult = searchCompleteList;
+    return new SearchResultDiffModel(diffResult, searchCompleteList, newSearchList);
   }
 
   private Observable<SearchResult> handleSearchError(Throwable throwable) {
@@ -157,5 +171,9 @@ import rx.Single;
 
   public Completable enableAdultContentWithPin(int pin) {
     return accountManager.enable(pin);
+  }
+
+  public void clearCachedApps() {
+    this.cachedSearchAppResult.clear();
   }
 }
