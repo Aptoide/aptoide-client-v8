@@ -75,6 +75,9 @@ dependencies {
   implementation "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${JW_RX_BINDING_VERSION}"
   implementation "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${JW_RX_BINDING_VERSION}"
 
+  implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
+  kapt "org.parceler:parceler:${PARCELER_VERSION}"
+
   implementation "com.airbnb.android:epoxy:${EPOXY_VERSION}"
   kapt "com.airbnb.android:epoxy-processor:${EPOXY_VERSION}"
 

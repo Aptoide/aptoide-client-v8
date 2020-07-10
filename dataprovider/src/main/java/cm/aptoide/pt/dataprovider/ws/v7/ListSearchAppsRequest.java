@@ -26,6 +26,8 @@ import rx.Observable;
  */
 public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequest.Body> {
 
+  private static final int LIMIT = 25;
+
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
 
   private ListSearchAppsRequest(Body body, String baseHost,
@@ -44,8 +46,8 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
         + "/api/7/";
   }
 
-  public static ListSearchAppsRequest of(String query, String storeName, int offset,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
+  public static ListSearchAppsRequest of(String query, String storeName, boolean trustedOnly,
+      boolean betaOnly, int offset, HashMapNotNull<String, List<String>> subscribedStoresAuthMap,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences,
@@ -60,17 +62,17 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     if (subscribedStoresAuthMap != null && subscribedStoresAuthMap.containsKey(storeName)) {
       HashMapNotNull<String, List<String>> storesAuthMap = new HashMapNotNull<>();
       storesAuthMap.put(storeName, subscribedStoresAuthMap.get(storeName));
-      body = new Body(Endless.DEFAULT_LIMIT, offset, query, storesAuthMap, stores, false,
+      body = new Body(LIMIT, offset, query, storesAuthMap, stores, trustedOnly, betaOnly,
           sharedPreferences);
     } else {
-      body = new Body(Endless.DEFAULT_LIMIT, offset, query, stores, false, sharedPreferences);
+      body = new Body(LIMIT, offset, query, stores, trustedOnly, betaOnly, sharedPreferences);
     }
     return new ListSearchAppsRequest(body, getHost(sharedPreferences), bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, appBundlesVisibilityManager);
   }
 
   public static ListSearchAppsRequest of(String query, int offset, boolean addSubscribedStores,
-      boolean trustedOnly, List<Long> subscribedStoresIds,
+      boolean trustedOnly, boolean betaOnly, List<Long> subscribedStoresIds,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
       SharedPreferences sharedPreferences, Boolean isMature,
@@ -78,12 +80,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
 
     if (addSubscribedStores) {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, subscribedStoresIds, null, trustedOnly,
+          new Body(LIMIT, offset, query, subscribedStoresIds, null, trustedOnly, betaOnly,
               sharedPreferences, isMature), getHost(sharedPreferences), bodyInterceptor, httpClient,
           converterFactory, tokenInvalidator, appBundlesVisibilityManager);
     } else {
       return new ListSearchAppsRequest(
-          new Body(Endless.DEFAULT_LIMIT, offset, query, trustedOnly, sharedPreferences, isMature),
+          new Body(LIMIT, offset, query, trustedOnly, betaOnly, sharedPreferences, isMature),
           getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory,
           tokenInvalidator, appBundlesVisibilityManager);
     }
@@ -103,10 +105,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
     private List<Long> storeIds;
     private List<String> storeNames;
     private HashMapNotNull<String, List<String>> storesAuthMap;
-    private Boolean trusted;
+
+    private Boolean onlyBeta;
+    private Boolean onlyTrusted;
 
     public Body(Integer limit, int offset, String query, List<Long> storeIds,
-        HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted,
+        HashMapNotNull<String, List<String>> storesAuthMap, Boolean trusted, Boolean onlyBeta,
         SharedPreferences sharedPreferences, Boolean isMature) {
       super(sharedPreferences);
       this.limit = limit;
@@ -114,40 +118,44 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       this.query = query;
       this.storeIds = storeIds;
       this.storesAuthMap = storesAuthMap;
-      this.trusted = trusted;
+      this.onlyTrusted = trusted;
       this.setMature(isMature);
+      this.onlyBeta = onlyBeta;
     }
 
     public Body(Integer limit, int offset, String query, List<String> storeNames, Boolean trusted,
-        SharedPreferences sharedPreferences) {
+        Boolean onlyBeta, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.query = query;
       this.storeNames = storeNames;
-      this.trusted = trusted;
+      this.onlyTrusted = trusted;
+      this.onlyBeta = onlyBeta;
     }
 
     public Body(Integer limit, int offset, String query,
         HashMapNotNull<String, List<String>> storesAuthMap, List<String> storeNames,
-        Boolean trusted, SharedPreferences sharedPreferences) {
+        Boolean trusted, Boolean betaOnly, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.query = query;
       this.storesAuthMap = storesAuthMap;
       this.storeNames = storeNames;
-      this.trusted = trusted;
+      this.onlyTrusted = trusted;
+      this.onlyBeta = betaOnly;
     }
 
-    public Body(Integer limit, int offset, String query, Boolean trusted,
+    public Body(Integer limit, int offset, String query, Boolean trusted, Boolean onlyBeta,
         SharedPreferences sharedPreferences, Boolean isMature) {
       super(sharedPreferences);
       this.limit = limit;
       this.offset = offset;
       this.query = query;
-      this.trusted = trusted;
+      this.onlyTrusted = trusted;
       this.setMature(isMature);
+      this.onlyBeta = onlyBeta;
     }
 
     public String getQuery() {
@@ -192,8 +200,12 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
       return storesAuthMap;
     }
 
-    public Boolean getTrusted() {
-      return trusted;
+    public Boolean getOnlyBeta() {
+      return onlyBeta;
+    }
+
+    public Boolean getOnlyTrusted() {
+      return onlyTrusted;
     }
 
     @Override public int getOffset() {
@@ -219,6 +231,10 @@ public class ListSearchAppsRequest extends V7<ListSearchApps, ListSearchAppsRequ
         e.printStackTrace();
       }
       return json;
+    }
+
+    @Override public boolean shouldIncludeTag() {
+      return !onlyBeta;
     }
   }
 }

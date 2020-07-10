@@ -23,7 +23,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
   private final List<SearchAdResult> searchAdResults;
-  private final List<SearchAppResult> searchResults;
+  private List<SearchAppResult> searchResults;
   private String query;
   private boolean adsLoaded = false;
   private boolean isLoadingMore = false;
@@ -121,7 +121,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   public void addResultForSearch(String query, List<SearchAppResult> dataList) {
     this.query = query;
-    searchResults.addAll(dataList);
+    searchResults = dataList;
     notifyDataSetChanged();
   }
 

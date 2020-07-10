@@ -34,7 +34,6 @@ import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
 import cm.aptoide.aptoideviews.errors.ErrorView;
 import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.aptoideviews.filters.FiltersView;
-import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
@@ -46,6 +45,7 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
+import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
@@ -89,11 +89,7 @@ public class SearchResultFragment extends BackButtonFragment
   private static final String FOCUS_IN_SEARCH = "focus_in_search";
   private static final int COMPLETION_THRESHOLD = 0;
   private static final int VISIBLE_THRESHOLD = 2;
-  private static final long ANIMATION_DURATION = 125L;
   private static final String ALL_STORES_SEARCH_LIST_STATE = "all_stores_search_list_state";
-  private static final String FOLLOWED_STORES_SEARCH_LIST_STATE =
-      "followed_stores_search_list_state";
-  private static final String TRENDING_LIST_STATE = "trending_list_state";
   private static final String UNSUBMITTED_QUERY = "unsubmitted_query";
   @Inject SearchResultPresenter searchResultPresenter;
   @Inject ThemeManager themeManager;
@@ -104,13 +100,11 @@ public class SearchResultFragment extends BackButtonFragment
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private CardView allAndFollowedStoresButtonsLayout;
-  private RecyclerView followedStoresResultList;
   private RecyclerView allStoresResultList;
   private RecyclerView suggestionsResultList;
   private RecyclerView trendingResultList;
   private SearchViewModel viewModel;
   private SearchResultAdapter allStoresResultAdapter;
-  private SearchResultAdapter followedStoresResultAdapter;
   private SearchSuggestionsAdapter searchSuggestionsAdapter;
   private SearchSuggestionsAdapter searchTrendingAdapter;
   private Toolbar toolbar;
@@ -138,6 +132,7 @@ public class SearchResultFragment extends BackButtonFragment
   private RxAlertDialog enableAdultContentDialog;
   private InputDialog enableAdultContentDialogWithPin;
   private PublishSubject<Void> noResultsPublishSubject;
+  private FiltersView filtersView;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -187,9 +182,6 @@ public class SearchResultFragment extends BackButtonFragment
 
     trendingResultList = view.findViewById(R.id.trending_list);
 
-    followedStoresResultList =
-        view.findViewById(R.id.fragment_search_result_followed_stores_app_list);
-
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
@@ -200,83 +192,10 @@ public class SearchResultFragment extends BackButtonFragment
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
-
-    List<Filter> filters =
-        Arrays.asList(new Filter("Followed Stores", false), new Filter("Trusted", false),
-            new Filter("Beta", false), new Filter("AppCoins", false));
-    FiltersView filtersView = view.findViewById(R.id.filters_view);
-    filtersView.setFilters(filters);
+    filtersView = view.findViewById(R.id.filters_view);
 
     noSearchAdultContentSwitch.setOnClickListener(
         v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
-  }
-
-  @Override public void showFollowedStoresResult() {
-    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
-      setFollowedStoresButtonSelected();
-      return;
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      int viewWidth = allStoresResultList.getWidth();
-
-      followedStoresResultList.setTranslationX(-viewWidth);
-      followedStoresResultList.setVisibility(View.VISIBLE);
-      followedStoresResultList.animate()
-          .translationXBy(viewWidth)
-          .setDuration(ANIMATION_DURATION)
-          .start();
-
-      allStoresResultList.animate()
-          .translationXBy(viewWidth)
-          .setDuration(ANIMATION_DURATION)
-          .withEndAction(() -> {
-            allStoresResultList.setVisibility(View.INVISIBLE);
-            setFollowedStoresButtonSelected();
-          })
-          .start();
-    } else {
-      followedStoresResultList.setVisibility(View.VISIBLE);
-      allStoresResultList.setVisibility(View.INVISIBLE);
-      setFollowedStoresButtonSelected();
-    }
-  }
-
-  @Override public void showAllStoresResult() {
-    if (allStoresResultList.getVisibility() == View.VISIBLE) {
-      setAllStoresButtonSelected();
-      return;
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-      int viewWidth = followedStoresResultList.getWidth();
-
-      followedStoresResultList.animate()
-          .translationXBy(-viewWidth)
-          .setDuration(ANIMATION_DURATION)
-          .start();
-
-      allStoresResultList.setTranslationX(viewWidth);
-      allStoresResultList.setVisibility(View.VISIBLE);
-      allStoresResultList.animate()
-          .translationXBy(-viewWidth)
-          .setDuration(ANIMATION_DURATION)
-          .withEndAction(() -> {
-            followedStoresResultList.setVisibility(View.INVISIBLE);
-            setAllStoresButtonSelected();
-          })
-          .start();
-    } else {
-      followedStoresResultList.setVisibility(View.INVISIBLE);
-      allStoresResultList.setVisibility(View.VISIBLE);
-      setAllStoresButtonSelected();
-    }
-  }
-
-  @Override public Observable<Void> clickFollowedStoresSearchButton() {
-    return Observable.empty();
-  }
-
-  @Override public Observable<Void> clickEverywhereSearchButton() {
-    return Observable.empty();
   }
 
   @Override public Observable<Void> clickNoResultsSearchButton() {
@@ -295,7 +214,6 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
@@ -325,11 +243,6 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addFollowedStoresResult(String query, List<SearchAppResult> dataList) {
-    followedStoresResultAdapter.addResultForSearch(query, dataList);
-    viewModel.addFollowedStoresSearchAppResults(dataList);
-  }
-
   @Override public void addAllStoresResult(String query, List<SearchAppResult> dataList) {
     allStoresResultAdapter.addResultForSearch(query, dataList);
     viewModel.addAllStoresSearchAppResults(dataList);
@@ -339,26 +252,13 @@ public class SearchResultFragment extends BackButtonFragment
     return viewModel;
   }
 
-  @Override public void setFollowedStoresAdsResult(SearchAdResult ad) {
-    followedStoresResultAdapter.setResultForAd(ad);
-    viewModel.addFollowedStoresSearchAdResults(Arrays.asList(ad));
-  }
-
   @Override public void setAllStoresAdsResult(SearchAdResult ad) {
     allStoresResultAdapter.setResultForAd(ad);
     viewModel.addAllStoresSearchAdResults(Arrays.asList(ad));
   }
 
-  @Override public void setFollowedStoresAdsEmpty() {
-    followedStoresResultAdapter.setAdsLoaded();
-  }
-
   @Override public void setAllStoresAdsEmpty() {
     allStoresResultAdapter.setAdsLoaded();
-  }
-
-  @Override public Observable<Void> followedStoresResultReachedBottom() {
-    return recyclerViewReachedBottom(followedStoresResultList);
   }
 
   @Override public Observable<Void> allStoresResultReachedBottom() {
@@ -367,35 +267,14 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void showLoadingMore() {
     allStoresResultAdapter.setIsLoadingMore(true);
-    followedStoresResultAdapter.setIsLoadingMore(true);
   }
 
   @Override public void hideLoadingMore() {
     allStoresResultAdapter.setIsLoadingMore(false);
-    followedStoresResultAdapter.setIsLoadingMore(false);
   }
 
   @Override public void setViewWithStoreNameAsSingleTab(String storeName) {
-    //followedStoresButton.setText(storeName);
-    //allStoresButton.setVisibility(View.GONE);
-  }
-
-  @Override public void hideFollowedStoresTab() {
-    //allStoresButton.setVisibility(View.VISIBLE);
-    allStoresResultList.setVisibility(View.VISIBLE);
-    //followedStoresButton.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
-    setAllStoresButtonSelected();
-    viewModel.setAllStoresSelected(true);
-  }
-
-  @Override public void hideNonFollowedStoresTab() {
-    //allStoresButton.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
-    //followedStoresButton.setVisibility(View.VISIBLE);
-    followedStoresResultList.setVisibility(View.VISIBLE);
-    setFollowedStoresButtonSelected();
-    viewModel.setAllStoresSelected(false);
+    //TODO: Set view store name for single store search
   }
 
   @Override public Observable<Void> searchSetup() {
@@ -456,12 +335,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void scrollToTop() {
-    RecyclerView list;
-    if (followedStoresResultList.getVisibility() == View.VISIBLE) {
-      list = followedStoresResultList;
-    } else {
-      list = allStoresResultList;
-    }
+    RecyclerView list = allStoresResultList;
     LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {
@@ -471,9 +345,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean hasResults() {
-    return (allStoresResultAdapter.getItemCount() != 0
-        || followedStoresResultAdapter.getItemCount() != 0)
-        && !searchMenuItem.isActionViewExpanded();
+    return allStoresResultAdapter.getItemCount() != 0 && !searchMenuItem.isActionViewExpanded();
   }
 
   @Override public void disableUpNavigation() {
@@ -485,9 +357,8 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean shouldHideUpNavigation() {
-    return (allStoresResultAdapter.getItemCount() == 0
-        || followedStoresResultAdapter.getItemCount() == 0) && (noSearchLayout.getVisibility()
-        != VISIBLE || errorView.getVisibility() != VISIBLE);
+    return allStoresResultAdapter.getItemCount() == 0 && (noSearchLayout.getVisibility() != VISIBLE
+        || errorView.getVisibility() != VISIBLE);
   }
 
   @Override public void setUnsubmittedQuery(String query) {
@@ -538,7 +409,6 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
@@ -553,7 +423,6 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
     allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
-    followedStoresResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
@@ -607,6 +476,11 @@ public class SearchResultFragment extends BackButtonFragment
     return noResultsPublishSubject;
   }
 
+  @Override public Observable<List<Filter>> filtersChangeEvents() {
+    return filtersView.filtersChangedEvents()
+        .doOnNext(filters -> viewModel.setFilters(filters));
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -653,50 +527,12 @@ public class SearchResultFragment extends BackButtonFragment
         <= VISIBLE_THRESHOLD;
   }
 
-  private void setFollowedStoresButtonSelected() {
-    //if (followedStoresButton.getVisibility() == View.VISIBLE) {
-    //  followedStoresButton.setTextColor(
-    //      themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
-    //  followedStoresButton.setBackgroundResource(
-    //      themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
-    //}
-    //if (allStoresButton.getVisibility() == View.VISIBLE) {
-    //  allStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    //  allStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
-    //}
-    viewModel.setAllStoresSelected(false);
-    String storeTheme = viewModel.getStoreTheme();
-    //if (storeThemeExists(storeTheme)) {
-    //  followedStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
-    //      R.attr.roundGradientButtonBackground).resourceId);
-    //}
-  }
-
-  private void setAllStoresButtonSelected() {
-    //if (followedStoresButton.getVisibility() == View.VISIBLE) {
-    //  followedStoresButton.setTextColor(getResources().getColor(R.color.silver_dark));
-    //  followedStoresButton.setBackgroundResource(R.drawable.disabled_search_button_background);
-    //}
-    //if (allStoresButton.getVisibility() == View.VISIBLE) {
-    //  allStoresButton.setTextColor(themeManager.getAttributeForTheme(R.attr.inverseTextColor).data);
-    //  allStoresButton.setBackgroundResource(
-    //      themeManager.getAttributeForTheme(R.attr.roundGradientButtonBackground).resourceId);
-    //}
-    //viewModel.setAllStoresSelected(true);
-    //String storeTheme = viewModel.getStoreTheme();
-    //if (storeThemeExists(storeTheme)) {
-    //  allStoresButton.setBackgroundResource(themeManager.getAttributeForTheme(storeTheme,
-    //      R.attr.roundGradientButtonBackground).resourceId);
-    //}
-  }
-
   private boolean storeThemeExists(String storeTheme) {
     return (storeTheme != null && storeTheme.length() > 0);
   }
 
   private boolean hasSearchResults() {
-    return allStoresResultAdapter.getItemCount() > 0
-        || followedStoresResultAdapter.getItemCount() > 0;
+    return allStoresResultAdapter.getItemCount() > 0;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -722,8 +558,6 @@ public class SearchResultFragment extends BackButtonFragment
           .getFinalQuery();
     }
 
-    final AptoideApplication application = (AptoideApplication) getActivity().getApplication();
-
     noResults = false;
     networkError = false;
 
@@ -736,13 +570,6 @@ public class SearchResultFragment extends BackButtonFragment
     showingSearchResultsView = PublishSubject.create();
     noResultsAdultContentSubject = PublishSubject.create();
     noResultsPublishSubject = PublishSubject.create();
-
-    final List<SearchAppResult> searchResultFollowedStores = new ArrayList<>();
-    final List<SearchAdResult> searchResultAdsFollowedStores = new ArrayList<>();
-
-    followedStoresResultAdapter =
-        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultFollowedStores,
-            searchResultAdsFollowedStores, crashReport, oneDecimalFormatter);
 
     listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
@@ -767,10 +594,10 @@ public class SearchResultFragment extends BackButtonFragment
       bottomNavigationActivity.requestFocus(BOTTOM_NAVIGATION_ITEM);
     }
     findChildViews(view);
-    attachFollowedStoresResultListDependencies();
     attachAllStoresResultListDependencies();
     setupToolbar();
     setupTheme();
+    setupFilters();
 
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -779,11 +606,14 @@ public class SearchResultFragment extends BackButtonFragment
 
     if (viewModel != null && viewModel.hasData()) {
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
-          ALL_STORES_SEARCH_LIST_STATE) : null,
-          savedInstanceState != null ? savedInstanceState.getParcelable(
-              FOLLOWED_STORES_SEARCH_LIST_STATE) : null,
-          savedInstanceState != null ? savedInstanceState.getParcelable(TRENDING_LIST_STATE)
-              : null);
+          ALL_STORES_SEARCH_LIST_STATE) : null);
+    }
+    if (viewModel != null) {
+      if (viewModel.getFilters() != null) {
+        filtersView.setFilters(viewModel.getFilters());
+      } else {
+        viewModel.setFilters(filtersView.getFilters());
+      }
     }
     if (savedInstanceState != null) {
       unsubmittedQuery =
@@ -805,6 +635,15 @@ public class SearchResultFragment extends BackButtonFragment
             .build();
 
     attachPresenter(searchResultPresenter);
+  }
+
+  private void setupFilters() {
+    List<Filter> filters =
+        Arrays.asList(new Filter("Followed Stores", false, SearchFilterType.FOLLOWED_STORES.name()),
+            new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
+            new Filter("Beta", false, SearchFilterType.BETA.name()),
+            new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+    filtersView.setFilters(filters);
   }
 
   @Override public ScreenTagHistory getHistoryTracker() {
@@ -837,7 +676,6 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void onDestroyView() {
     allStoresResultList.clearAnimation();
-    followedStoresResultList.clearAnimation();
     setupDefaultTheme();
     super.onDestroyView();
     if (moPubRecyclerAdapter != null) {
@@ -934,16 +772,9 @@ public class SearchResultFragment extends BackButtonFragment
     outState.putString(UNSUBMITTED_QUERY, unsubmittedQuery);
 
     if (isSearchExpanded) outState.putBoolean(FOCUS_IN_SEARCH, true);
-
-    if (followedStoresResultList != null && followedStoresResultList.getLayoutManager() != null) {
-      outState.putParcelable(FOLLOWED_STORES_SEARCH_LIST_STATE,
-          followedStoresResultList.getLayoutManager()
-              .onSaveInstanceState());
-    }
   }
 
-  private void restoreViewState(@Nullable Parcelable allStoresSearchListState,
-      @Nullable Parcelable followedStoresSearchListState, Parcelable trendingListState) {
+  private void restoreViewState(@Nullable Parcelable allStoresSearchListState) {
 
     final List<SearchAppResult> allStoresSearchAppResults =
         viewModel.getAllStoresSearchAppResults();
@@ -962,37 +793,7 @@ public class SearchResultFragment extends BackButtonFragment
       }
       layoutManager.onRestoreInstanceState(allStoresSearchListState);
     }
-
-    final List<SearchAppResult> followedStoresSearchAppResults =
-        viewModel.getFollowedStoresSearchAppResults();
-    if (followedStoresSearchAppResults.size() > 0) {
-      followedStoresResultAdapter.restoreState(followedStoresSearchAppResults,
-          viewModel.getFollowedStoresSearchAdResults());
-      followedStoresResultAdapter.notifyDataSetChanged();
-    }
-
-    if (followedStoresSearchListState != null) {
-      RecyclerView.LayoutManager layoutManager = followedStoresResultList.getLayoutManager();
-      if (layoutManager == null) {
-        layoutManager = getDefaultLayoutManager();
-        followedStoresResultList.setLayoutManager(layoutManager);
-      }
-      layoutManager.onRestoreInstanceState(followedStoresSearchListState);
-    }
-
     showResultsView();
-
-    if (viewModel.isAllStoresSelected()) {
-      showAllStoresResult();
-    } else {
-      showFollowedStoresResult();
-    }
-  }
-
-  private void attachFollowedStoresResultListDependencies() {
-    followedStoresResultList.addItemDecoration(getDefaultItemDecoration());
-    followedStoresResultList.setAdapter(followedStoresResultAdapter);
-    followedStoresResultList.setLayoutManager(getDefaultLayoutManager());
   }
 
   private void attachAllStoresResultListDependencies() {

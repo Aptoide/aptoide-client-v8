@@ -79,15 +79,6 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_search_result_followed_stores_app_list"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@id/mopub_banner"
-        android:layout_below="@id/fragment_search_result_all_followed_stores_buttons_layout"
-        android:visibility="invisible"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_search_result_all_stores_app_list"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"

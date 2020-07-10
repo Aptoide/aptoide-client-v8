@@ -29,7 +29,8 @@ public class QueryStringMapper {
       put("access_token", body.getAccessToken(), queryMap);
     }
 
-    if (body instanceof BaseBodyWithAlphaBetaKey) {
+    if (body instanceof BaseBodyWithAlphaBetaKey
+        && ((BaseBodyWithAlphaBetaKey) body).shouldIncludeTag()) {
       put("not_apk_tags", ((BaseBodyWithAlphaBetaKey) body).getNotApkTags(), queryMap);
     }
 
@@ -65,12 +66,15 @@ public class QueryStringMapper {
     put("limit", body.getLimit(), data);
     put("offset", body.getOffset(), data);
     put("query", body.getQuery(), data);
-    put("trusted", body.getTrusted(), data);
+    put("trusted", body.getOnlyTrusted(), data);
     if (body.getStoreIds() != null) {
       put("store_ids", body.getStoreIdsAsString(), data);
     }
     if (body.getStoreNames() != null) {
       put("store_names", body.getStoreNamesAsString(), data);
+    }
+    if(body.getOnlyBeta()){
+      put("apk_tags", "alpha,beta", data);
     }
 
     if (body.getStoresAuthMap() != null && !body.getStoresAuthMap()

@@ -9,7 +9,10 @@ import cm.aptoide.aptoideviews.R
 import kotlinx.android.synthetic.main.filters_view_layout.view.*
 import rx.Observable
 
-class FiltersView : FrameLayout {
+class FiltersView @JvmOverloads constructor(context: Context,
+                                            attrs: AttributeSet? = null,
+                                            defStyleAttr: Int = 0) :
+    FrameLayout(context, attrs, defStyleAttr) {
 
   private var filters: List<Filter> = ArrayList()
   private var filterChangedEventsListener: FiltersChangedEventListener? = null
@@ -23,7 +26,7 @@ class FiltersView : FrameLayout {
           val i = filters.indexOf(filter)
           if (i >= 0) {
             val newMutList = ArrayList(filters)
-            newMutList[i] = Filter(filters[i].name, !filters[i].selected)
+            newMutList[i] = Filter(filters[i].name, !filters[i].selected, filters[i].identifier)
             val list = newMutList.toList()
             setFilters(list)
             filterChangedEventsListener?.onFiltersChanged(list)
@@ -34,10 +37,7 @@ class FiltersView : FrameLayout {
   }
   private var controller: FiltersController = FiltersController(filterEventListener)
 
-  constructor(context: Context) : this(context, null)
-  constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-  constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs,
-      defStyleAttr) {
+  init {
     inflate(context, R.layout.filters_view_layout, this)
     initViews()
   }
@@ -66,12 +66,22 @@ class FiltersView : FrameLayout {
     refreshData()
   }
 
+  fun getFilters(): List<Filter> {
+    return filters
+  }
+
+  @CheckResult
+  fun filtersChangedEvents(): Observable<List<Filter>> {
+    return Observable.create(FilterChangedEventOnSubscribe(this))
+  }
+
   private fun clearFilters() {
     val newMutList = ArrayList(filters)
     for (i in 0 until newMutList.size) {
-      newMutList[i] = Filter(filters[i].name, false)
+      newMutList[i] = Filter(filters[i].name, false, filters[i].identifier)
     }
-    setFilters(newMutList)
+    setFilters(newMutList.toList())
+    filterChangedEventsListener?.onFiltersChanged(newMutList.toList())
   }
 
   private fun generateIds(filters: List<Filter>) {
@@ -82,11 +92,6 @@ class FiltersView : FrameLayout {
 
   internal fun setFiltersChangedEventsListener(listener: FiltersChangedEventListener?) {
     this.filterChangedEventsListener = listener
-  }
-
-  @CheckResult
-  fun filtersChangedEvents(): Observable<List<Filter>> {
-    return Observable.create(FilterChangedEventOnSubscribe(this))
   }
 
   private fun refreshData() {

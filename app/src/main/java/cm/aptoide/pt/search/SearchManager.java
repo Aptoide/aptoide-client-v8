@@ -2,6 +2,7 @@ package cm.aptoide.pt.search;
 
 import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
+import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -18,8 +19,6 @@ import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.SearchResultError;
-import cm.aptoide.pt.store.RoomStoreRepository;
-import cm.aptoide.pt.store.StoreUtils;
 import java.net.UnknownHostException;
 import java.util.List;
 import okhttp3.OkHttpClient;
@@ -40,15 +39,16 @@ import rx.Single;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
-  private final RoomStoreRepository storeRepository;
+  private final SearchRepository searchRepository;
+  private final SearchFilterManager searchFilterManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
       AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
-      AppBundlesVisibilityManager appBundlesVisibilityManager,
-      RoomStoreRepository storeRepository) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, SearchRepository searchRepository,
+      SearchFilterManager searchFilterManager) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -59,7 +59,8 @@ import rx.Single;
     this.accountManager = accountManager;
     this.moPubAdsManager = moPubAdsManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
-    this.storeRepository = storeRepository;
+    this.searchRepository = searchRepository;
+    this.searchFilterManager = searchFilterManager;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -67,43 +68,26 @@ import rx.Single;
         .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Single<SearchResult> searchInNonFollowedStores(String query, boolean onlyTrustedApps,
-      int offset) {
-    return searchAppInStores(query, onlyTrustedApps, offset, false);
-  }
-
-  public Single<SearchResult> searchInFollowedStores(String query, boolean onlyTrustedApps,
-      int offset) {
-    return searchAppInStores(query, onlyTrustedApps, offset, true);
-  }
-
-  private Single<SearchResult> searchAppInStores(String query, boolean onlyTrustedApps, int offset,
-      boolean onlyFollowedStores) {
-    return accountManager.enabled()
+  public Single<SearchResult> searchAppInStores(String query, List<Filter> filters) {
+    return accountManager.hasMatureContentEnabled()
         .first()
-        .flatMap(
-            enabled -> ListSearchAppsRequest.of(query, offset, onlyFollowedStores, onlyTrustedApps,
-                StoreUtils.getSubscribedStoresIds(storeRepository), bodyInterceptor, httpClient,
-                converterFactory, tokenInvalidator, sharedPreferences, enabled,
-                appBundlesVisibilityManager)
-                .observe(false))
-        .flatMap(results -> handleSearchResults(results))
-        .onErrorResumeNext(throwable -> handleSearchError(throwable))
-        .toSingle();
+        .toSingle()
+        .flatMap(matureEnabled -> searchRepository.generalSearch(query,
+            searchFilterManager.getSearchFilters(filters), matureEnabled));
   }
 
   public Single<SearchResult> searchInStore(String query, String storeName, int offset) {
-    return ListSearchAppsRequest.of(query, storeName, offset, subscribedStoresAuthMap,
+    return ListSearchAppsRequest.of(query, storeName, false, false, offset, subscribedStoresAuthMap,
         bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
         appBundlesVisibilityManager)
         .observe(false)
-        .flatMap(results -> handleSearchResults(results))
-        .onErrorResumeNext(throwable -> handleSearchError(throwable))
+        .flatMap(results -> handleSearchResults(query, results))
+        .onErrorResumeNext(throwable -> handleSearchError(query, throwable))
         .doOnError(throwable -> throwable.printStackTrace())
         .toSingle();
   }
 
-  private Observable<SearchResult> handleSearchResults(ListSearchApps results) {
+  private Observable<SearchResult> handleSearchResults(String query, ListSearchApps results) {
     return Observable.just(results)
         .filter(listSearchApps -> hasResults(listSearchApps))
         .map(data -> data.getDataList()
@@ -112,15 +96,15 @@ import rx.Single;
         .map(searchApp -> new SearchAppResult(searchApp))
         .toList()
         .first()
-        .map(list -> new SearchResult.Success(list));
+        .map(list -> new SearchResult(query, list));
   }
 
-  private Observable<SearchResult> handleSearchError(Throwable throwable) {
+  private Observable<SearchResult> handleSearchError(String query, Throwable throwable) {
     if (throwable instanceof UnknownHostException
         || throwable instanceof NoNetworkConnectionException) {
-      return Observable.just(new SearchResult.Error(SearchResultError.NO_NETWORK));
+      return Observable.just(new SearchResult(query, SearchResultError.NO_NETWORK));
     }
-    return Observable.just(new SearchResult.Error(SearchResultError.GENERIC));
+    return Observable.just(new SearchResult(query, SearchResultError.GENERIC));
   }
 
   private boolean hasResults(ListSearchApps listSearchApps) {
@@ -148,7 +132,7 @@ import rx.Single;
   }
 
   public Observable<Boolean> isAdultContentEnabled() {
-    return accountManager.enabled();
+    return accountManager.hasMatureContentEnabled();
   }
 
   public Observable<Boolean> isAdultContentPinRequired() {
