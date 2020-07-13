@@ -145,7 +145,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   public void setIsLoadingMore(boolean isLoadingMore) {
     this.isLoadingMore = isLoadingMore;
-    notifyDataSetChanged();
+    if (isLoadingMore) {
+      notifyItemInserted(getItemCount() - 1);
+    } else {
+      notifyItemRemoved(getItemCount() - 1);
+    }
   }
 
   public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
