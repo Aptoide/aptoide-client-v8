@@ -25,8 +25,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class SearchRepository(val searchFilterManager: SearchFilterManager,
-                       val storeRepository: RoomStoreRepository,
+class SearchRepository(val storeRepository: RoomStoreRepository,
                        val bodyInterceptor: BodyInterceptor<BaseBody>,
                        val httpClient: OkHttpClient,
                        val converterFactory: Converter.Factory,

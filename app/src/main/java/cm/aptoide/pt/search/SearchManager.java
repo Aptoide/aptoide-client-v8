@@ -17,6 +17,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAppResult;
+import cm.aptoide.pt.search.model.SearchFilterType;
+import cm.aptoide.pt.search.model.SearchFilters;
 import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.SearchResultError;
 import java.net.UnknownHostException;
@@ -40,15 +42,13 @@ import rx.Single;
   private final MoPubAdsManager moPubAdsManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final SearchRepository searchRepository;
-  private final SearchFilterManager searchFilterManager;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory,
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
       AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, SearchRepository searchRepository,
-      SearchFilterManager searchFilterManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, SearchRepository searchRepository) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -60,7 +60,6 @@ import rx.Single;
     this.moPubAdsManager = moPubAdsManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.searchRepository = searchRepository;
-    this.searchFilterManager = searchFilterManager;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -72,8 +71,32 @@ import rx.Single;
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
-        .flatMap(matureEnabled -> searchRepository.generalSearch(query,
-            searchFilterManager.getSearchFilters(filters), matureEnabled));
+        .flatMap(matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
+            matureEnabled));
+  }
+
+  public SearchFilters getSearchFilters(List<Filter> viewFilters) {
+    boolean onlyFollowedStores = false;
+    boolean onlyTrustedApps = false;
+    boolean onlyBetaApps = false;
+    boolean onlyAppcApps = false;
+    for (Filter filter : viewFilters) {
+      if (filter.getIdentifier() == null) continue;
+      if (filter.getIdentifier()
+          .equals(SearchFilterType.FOLLOWED_STORES.name())) {
+        onlyFollowedStores = filter.getSelected();
+      } else if (filter.getIdentifier()
+          .equals(SearchFilterType.TRUSTED.name())) {
+        onlyTrustedApps = filter.getSelected();
+      } else if (filter.getIdentifier()
+          .equals(SearchFilterType.BETA.name())) {
+        onlyBetaApps = filter.getSelected();
+      } else if (filter.getIdentifier()
+          .equals(SearchFilterType.APPC.name())) {
+        onlyAppcApps = filter.getSelected();
+      }
+    }
+    return new SearchFilters(onlyFollowedStores, onlyTrustedApps, onlyBetaApps, onlyAppcApps);
   }
 
   public Single<SearchResult> searchInStore(String query, String storeName, int offset) {
