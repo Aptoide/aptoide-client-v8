@@ -34,8 +34,7 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
                        val sharedPreferences: SharedPreferences,
                        val appBundlesVisibilityManager: AppBundlesVisibilityManager) {
 
-  private var unfilteredSearchResults: SearchResult? = null
-  private var activeSearchResults: SearchResult? = null
+  private var cachedSearchResults: SearchResult? = null
 
 
   fun generalSearch(query: String, filters: SearchFilters,
@@ -47,39 +46,13 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
 
   private fun search(query: String, filters: SearchFilters,
                      matureEnabled: Boolean): Single<SearchResult> {
-    // If we have previous active search results, check if it has the same filters as this request
-    // If it does, get next results for this search, or return the previous results if it's finished
-    activeSearchResults?.let { activeResults ->
+    cachedSearchResults?.let { activeResults ->
       if (activeResults.query == query && filters == activeResults.filters) {
         if (activeResults.hasMore()) {
           return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled)
               .flatMap { results -> Single.just(updateMemCache(results)) }
         }
         return Single.just(activeResults)
-      }
-    }
-    // There's no active search results for these filters, so we take unfiltered search results and
-    // filter them locally first, if possible.
-    unfilteredSearchResults?.let { unfilteredResults ->
-      // If it includes a beta filter, we don't filter locally
-      if (unfilteredResults.query == query && !unfilteredResults.hasError() && !filters.onlyBetaApps) {
-        return Single.fromCallable {
-          searchFilterManager.filterSearchResults(
-              unfilteredResults.searchResultDiffModel.searchResultsList,
-              filters)
-        }.map { filteredAppsList ->
-          SearchResult(query, calculateSearchListDifferences(filteredAppsList,
-              activeSearchResults?.searchResultDiffModel?.searchResultsList
-                  ?: Collections.emptyList()), filters,
-              unfilteredResults.currentOffset,
-              unfilteredResults.nextOffset, unfilteredResults.total, false, null)
-        }.doOnSuccess { filteredAppsList ->
-          activeSearchResults =
-              SearchResult(query, SearchResultDiffModel(null,
-                  filteredAppsList.searchResultDiffModel.searchResultsList), filters,
-                  unfilteredResults.currentOffset,
-                  0, 1, false, null)
-        }
       }
     }
     return requestSearchResults(query, filters, 0, matureEnabled)
@@ -89,33 +62,21 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
   private fun updateMemCache(results: SearchResult?): SearchResult? {
     var res = results
     results?.let { r ->
-      if (r.filters?.isFiltersActive() == false) {
-        unfilteredSearchResults.let { uR ->
-          var list = ArrayList(r.searchResultDiffModel.searchResultsList)
-          if (uR != null && uR.query == r.query) {
-            list = ArrayList(uR.searchResultDiffModel.searchResultsList)
-            list.addAll(r.searchResultDiffModel.searchResultsList)
-          }
-          unfilteredSearchResults =
-              SearchResult(r.query, SearchResultDiffModel(null, list), r.filters, r.currentOffset,
-                  r.nextOffset, r.total,
-                  r.loading, r.error)
-        }
-      }
-      activeSearchResults.let { aR ->
+      cachedSearchResults.let { cached ->
         var list = ArrayList(r.searchResultDiffModel.searchResultsList)
-        if (aR != null && aR.query == r.query && aR.filters == r.filters) {
-          list = ArrayList(aR.searchResultDiffModel.searchResultsList)
+        if (cached != null && cached.query == r.query && cached.filters == r.filters) {
+          list = ArrayList(cached.searchResultDiffModel.searchResultsList)
           list.addAll(r.searchResultDiffModel.searchResultsList)
         }
 
         res = SearchResult(r.query,
             calculateSearchListDifferences(list,
-                aR?.searchResultDiffModel?.searchResultsList ?: Collections.emptyList()), r.filters,
+                cached?.searchResultDiffModel?.searchResultsList ?: Collections.emptyList()),
+            r.filters,
             r.currentOffset, r.nextOffset, r.total,
             r.loading, r.error)
 
-        activeSearchResults =
+        cachedSearchResults =
             SearchResult(r.query, SearchResultDiffModel(null, list), r.filters, r.currentOffset,
                 r.nextOffset,
                 r.total,

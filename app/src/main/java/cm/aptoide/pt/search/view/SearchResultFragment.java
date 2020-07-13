@@ -13,6 +13,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -101,6 +104,7 @@ public class SearchResultFragment extends BackButtonFragment
   private SwitchCompat noSearchAdultContentSwitch;
   private View searchResultsLayout;
   private ProgressBar progressBar;
+  private ProgressBar progressBarResults;
   private CardView allAndFollowedStoresButtonsLayout;
   private RecyclerView allStoresResultList;
   private RecyclerView suggestionsResultList;
@@ -190,6 +194,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchSettingsButton = view.findViewById(R.id.no_search_settings_button);
     noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+    progressBarResults = (ProgressBar) view.findViewById(R.id.progress_bar_results);
     toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
@@ -229,6 +234,7 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     showingSearchResultsView.onNext(true);
   }
@@ -245,9 +251,37 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
+  @Override public void showResultsLoading() {
+    errorView.setVisibility(View.GONE);
+    noSearchLayout.setVisibility(View.GONE);
+
+    LayoutAnimationController layoutAnimationController =
+        AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
+    layoutAnimationController.getAnimation()
+        .setFillAfter(true);
+    allStoresResultList.setLayoutAnimation(layoutAnimationController);
+    allStoresResultList.scheduleLayoutAnimation();
+
+    progressBarResults.setVisibility(VISIBLE);
+    progressBarResults.startAnimation(
+        AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear));
+  }
+
   @Override
-  public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel) {
-    allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
+  public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel,
+      boolean isLoadMore) {
+    if (!isLoadMore) {
+      allStoresResultAdapter.setResultForSearch(query, searchResultDiffModel);
+      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
+      animation.setFillAfter(true);
+      progressBarResults.startAnimation(animation);
+
+      allStoresResultList.setLayoutAnimation(
+          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.list_apps_anim));
+      allStoresResultList.scheduleLayoutAnimation();
+    } else {
+      allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
+    }
     viewModel.addAllStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
   }
 

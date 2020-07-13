@@ -31,7 +31,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void hideLoading();
 
-  void addAllStoresResult(String query, SearchResultDiffModel dataList);
+  void showResultsLoading();
+
+  void addAllStoresResult(String query, SearchResultDiffModel dataList, boolean isLoadMore);
 
   Model getViewModel();
 

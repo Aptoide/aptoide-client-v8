@@ -12,6 +12,7 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="4dp"
+  android:animateLayoutChanges="true"
     >
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"

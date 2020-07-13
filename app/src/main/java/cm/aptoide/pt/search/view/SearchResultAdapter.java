@@ -42,7 +42,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
     this.oneDecimalFormatter = decimalFormatter;
-    setHasStableIds(true);
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -106,15 +105,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     }
   }
 
-  @Override public long getItemId(int position) {
-    if (position == searchResults.size()) {
-      // This is the id for the loading item
-      return -1;
-    }
-    return searchResults.get(position)
-        .getAppId();
-  }
-
   private Object getItem(int position) {
     if (!adsLoaded && position == 0) {
       return null;
@@ -129,6 +119,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       return searchAdResults.get(position);
     }
     return searchResults.get(position - searchAdResults.size());
+  }
+
+  public void setResultForSearch(String query, SearchResultDiffModel searchResultDiffModel){
+    this.query = query;
+    searchResults = searchResultDiffModel.getSearchResultsList();
+    notifyDataSetChanged();
   }
 
   public void addResultForSearch(String query, SearchResultDiffModel searchResultDiffModel) {
