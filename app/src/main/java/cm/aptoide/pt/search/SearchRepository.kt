@@ -69,7 +69,8 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
               filters)
         }.map { filteredAppsList ->
           SearchResult(query, calculateSearchListDifferences(filteredAppsList,
-              unfilteredResults.searchResultDiffModel.searchResultsList), filters,
+              activeSearchResults?.searchResultDiffModel?.searchResultsList
+                  ?: Collections.emptyList()), filters,
               unfilteredResults.currentOffset,
               unfilteredResults.nextOffset, unfilteredResults.total, false, null)
         }.doOnSuccess { filteredAppsList ->
