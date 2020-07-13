@@ -96,7 +96,7 @@ import rx.Single;
         .map(searchApp -> new SearchAppResult(searchApp))
         .toList()
         .first()
-        .map(list -> new SearchResult(query, list));
+        .map(list -> new SearchResult(query, new SearchResultDiffModel(null, list)));
   }
 
   private Observable<SearchResult> handleSearchError(String query, Throwable throwable) {

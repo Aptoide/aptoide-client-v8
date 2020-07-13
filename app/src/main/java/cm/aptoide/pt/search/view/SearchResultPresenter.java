@@ -12,9 +12,9 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
-import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchResult;
@@ -24,7 +24,7 @@ import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -199,16 +199,13 @@ import rx.schedulers.Schedulers;
         }, e -> crashReport.log(e));
   }
 
-  private int getItemCount(List<SearchAppResult> data) {
-    return data != null ? data.size() : 0;
-  }
-
-  public List<SearchAppResult> getResultList(SearchResult result) {
-    List<SearchAppResult> list = new ArrayList<>();
+  public SearchResultDiffModel getResultList(SearchResult result) {
+    SearchResultDiffModel searchResultDiffModel =
+        new SearchResultDiffModel(null, Collections.emptyList());
     if (!result.hasError()) {
-      list = result.getAppsList();
+      searchResultDiffModel = result.getSearchResultDiffModel();
     }
-    return list;
+    return searchResultDiffModel;
   }
 
   @VisibleForTesting public void firstAdsDataLoad() {
@@ -363,7 +360,6 @@ import rx.schedulers.Schedulers;
   }
 
   private Single<SearchResult> loadData(String query, String storeName, List<Filter> filters) {
-
     if (storeName != null && !storeName.trim()
         .equals("")) {
       return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
@@ -403,7 +399,8 @@ import rx.schedulers.Schedulers;
   private int getResultsCount(SearchResult result) {
     int count = 0;
     if (!result.hasError()) {
-      count += result.getAppsList()
+      count += result.getSearchResultDiffModel()
+          .getSearchResultsList()
           .size();
     }
     return count;

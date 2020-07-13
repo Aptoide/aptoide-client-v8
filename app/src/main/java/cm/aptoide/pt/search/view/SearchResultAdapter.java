@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -119,10 +121,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void addResultForSearch(String query, List<SearchAppResult> dataList) {
+  public void addResultForSearch(String query, SearchResultDiffModel searchResultDiffModel) {
     this.query = query;
-    searchResults = dataList;
-    notifyDataSetChanged();
+    searchResults = searchResultDiffModel.getSearchResultsList();
+    DiffUtil.DiffResult diffResult = searchResultDiffModel.getDiffResult();
+    if (diffResult != null) {
+      searchResultDiffModel.getDiffResult()
+          .dispatchUpdatesTo(this);
+    } else {
+      notifyDataSetChanged();
+    }
   }
 
   public void setResultForAd(SearchAdResult searchAd) {
@@ -147,6 +155,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     this.searchAdResults.clear();
     this.searchAdResults.addAll(ads);
 
+    notifyDataSetChanged();
     adsLoaded = true;
     isLoadingMore = false;
   }

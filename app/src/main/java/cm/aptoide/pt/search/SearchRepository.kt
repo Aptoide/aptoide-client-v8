@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
+import androidx.recyclerview.widget.DiffUtil
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
@@ -20,6 +21,9 @@ import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
 import java.net.UnknownHostException
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class SearchRepository(val searchFilterManager: SearchFilterManager,
                        val storeRepository: RoomStoreRepository,
@@ -36,7 +40,6 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
 
   fun generalSearch(query: String, filters: SearchFilters,
                     matureEnabled: Boolean): Single<SearchResult> {
-    // TODO: This should be redone tu properly use schedulers.io without this ugly mess
     return Single.just(query)
         .flatMap { search(query, filters, matureEnabled) }
         .subscribeOn(Schedulers.io())
@@ -60,13 +63,22 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
     unfilteredSearchResults?.let { unfilteredResults ->
       // If it includes a beta filter, we don't filter locally
       if (unfilteredResults.query == query && !unfilteredResults.hasError() && !filters.onlyBetaApps) {
-        val appsList = searchFilterManager.filterSearchResults(unfilteredResults.appsList, filters)
-        activeSearchResults =
-            SearchResult(query, appsList, filters, unfilteredResults.currentOffset,
-                appsList.size, appsList.size + 1, false, null)
-        // New object so there's no reference between our mem cache and the returned value
-        return Single.just(SearchResult(query, appsList, filters, unfilteredResults.currentOffset,
-            unfilteredResults.nextOffset, unfilteredResults.total, false, null))
+        return Single.fromCallable {
+          searchFilterManager.filterSearchResults(
+              unfilteredResults.searchResultDiffModel.searchResultsList,
+              filters)
+        }.map { filteredAppsList ->
+          SearchResult(query, calculateSearchListDifferences(filteredAppsList,
+              unfilteredResults.searchResultDiffModel.searchResultsList), filters,
+              unfilteredResults.currentOffset,
+              unfilteredResults.nextOffset, unfilteredResults.total, false, null)
+        }.doOnSuccess { filteredAppsList ->
+          activeSearchResults =
+              SearchResult(query, SearchResultDiffModel(null,
+                  filteredAppsList.searchResultDiffModel.searchResultsList), filters,
+                  unfilteredResults.currentOffset,
+                  0, 1, false, null)
+        }
       }
     }
     return requestSearchResults(query, filters, 0, matureEnabled)
@@ -78,34 +90,43 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
     results?.let { r ->
       if (r.filters?.isFiltersActive() == false) {
         unfilteredSearchResults.let { uR ->
-          var list = ArrayList(r.appsList)
+          var list = ArrayList(r.searchResultDiffModel.searchResultsList)
           if (uR != null && uR.query == r.query) {
-            list = ArrayList(uR.appsList)
-            list.addAll(r.appsList)
+            list = ArrayList(uR.searchResultDiffModel.searchResultsList)
+            list.addAll(r.searchResultDiffModel.searchResultsList)
           }
           unfilteredSearchResults =
-              SearchResult(r.query, list, r.filters, r.currentOffset, r.nextOffset, r.total,
+              SearchResult(r.query, SearchResultDiffModel(null, list), r.filters, r.currentOffset,
+                  r.nextOffset, r.total,
                   r.loading, r.error)
         }
       }
       activeSearchResults.let { aR ->
-        var list = ArrayList(r.appsList)
+        var list = ArrayList(r.searchResultDiffModel.searchResultsList)
         if (aR != null && aR.query == r.query && aR.filters == r.filters) {
-          list = ArrayList(aR.appsList)
-          list.addAll(r.appsList)
+          list = ArrayList(aR.searchResultDiffModel.searchResultsList)
+          list.addAll(r.searchResultDiffModel.searchResultsList)
         }
-        activeSearchResults =
-            SearchResult(r.query, list, r.filters, r.currentOffset, r.nextOffset, r.total,
-                r.loading, r.error)
-        res = SearchResult(r.query, list, r.filters, r.currentOffset, r.nextOffset, r.total,
+
+        res = SearchResult(r.query,
+            calculateSearchListDifferences(list,
+                aR?.searchResultDiffModel?.searchResultsList ?: Collections.emptyList()), r.filters,
+            r.currentOffset, r.nextOffset, r.total,
             r.loading, r.error)
+
+        activeSearchResults =
+            SearchResult(r.query, SearchResultDiffModel(null, list), r.filters, r.currentOffset,
+                r.nextOffset,
+                r.total,
+                r.loading, r.error)
       }
     }
     return res
   }
 
   private fun requestSearchResults(query: String, filters: SearchFilters,
-                                   nextOffset: Int, matureEnabled: Boolean): Single<SearchResult> {
+                                   nextOffset: Int,
+                                   matureEnabled: Boolean): Single<SearchResult> {
     return ListSearchAppsRequest.of(query, nextOffset, filters.onlyFollowedStores,
         filters.onlyTrustedApps,
         filters.onlyBetaApps,
@@ -131,12 +152,23 @@ class SearchRepository(val searchFilterManager: SearchFilterManager,
           .toList()
           .first()
           .map { list ->
-            SearchResult(query, list, filters, r.dataList.offset, r.dataList.next, r.dataList.total,
+            SearchResult(query, SearchResultDiffModel(null, list), filters, r.dataList.offset,
+                r.dataList.next, r.dataList.total,
                 !r.dataList.isLoaded, null)
           }
           .toSingle()
     }
     return Single.just(SearchResult(query, SearchResultError.GENERIC))
+  }
+
+  private fun calculateSearchListDifferences(
+      newSearchList: List<SearchAppResult>,
+      oldSearchList: List<SearchAppResult>): SearchResultDiffModel {
+
+    val diffResult = DiffUtil.calculateDiff(
+        SearchResultDiffCallback(oldSearchList, newSearchList))
+    return SearchResultDiffModel(diffResult, newSearchList)
+
   }
 
   private fun handleSearchError(query: String,
