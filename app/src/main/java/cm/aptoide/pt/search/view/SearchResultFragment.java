@@ -245,7 +245,8 @@ public class SearchResultFragment extends BackButtonFragment
     progressBar.setVisibility(View.GONE);
   }
 
-  @Override public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel) {
+  @Override
+  public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel) {
     allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
     viewModel.addAllStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
   }
@@ -587,6 +588,16 @@ public class SearchResultFragment extends BackButtonFragment
         new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
             searchResultAdsAllStores, crashReport, oneDecimalFormatter);
 
+    allStoresResultAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+      @Override public void onItemRangeInserted(int positionStart, int itemCount) {
+        if (positionStart == 0) {
+          RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
+          if (layoutManager != null) {
+            layoutManager.scrollToPosition(0);
+          }
+        }
+      }
+    });
     searchSuggestionsAdapter =
         new SearchSuggestionsAdapter(new ArrayList<>(), suggestionClickedPublishSubject);
     searchTrendingAdapter =
@@ -812,7 +823,6 @@ public class SearchResultFragment extends BackButtonFragment
       allStoresResultList.setAdapter(allStoresResultAdapter);
     }
     allStoresResultList.setLayoutManager(getDefaultLayoutManager());
-    allStoresResultList.addItemDecoration(getDefaultItemDecoration());
   }
 
   public void configureAdRenderers() {

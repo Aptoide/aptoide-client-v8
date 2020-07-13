@@ -42,6 +42,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
     this.oneDecimalFormatter = decimalFormatter;
+    setHasStableIds(true);
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -103,6 +104,15 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       } catch (NullPointerException | ClassCastException e) {
       }
     }
+  }
+
+  @Override public long getItemId(int position) {
+    if (position == searchResults.size()) {
+      // This is the id for the loading item
+      return -1;
+    }
+    return searchResults.get(position)
+        .getAppId();
   }
 
   private Object getItem(int position) {
