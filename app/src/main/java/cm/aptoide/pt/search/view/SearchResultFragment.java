@@ -687,16 +687,21 @@ public class SearchResultFragment extends BackButtonFragment
     final List<Filter> filters;
     if (viewModel != null && viewModel.getStoreName() != null && !viewModel.getStoreName()
         .isEmpty()) {
-      filters = Arrays.asList(new Filter("All Stores", false, SearchFilterType.ALL_STORES.name()),
-          new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
-          new Filter("Beta", false, SearchFilterType.BETA.name()),
-          new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+      filters = Arrays.asList(new Filter(getString(R.string.search_filters_all_stores), false,
+              SearchFilterType.ALL_STORES.name()),
+          new Filter(getString(R.string.search_filters_trusted), false,
+              SearchFilterType.TRUSTED.name()),
+          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()),
+          new Filter(getString(R.string.search_filters_appcoins), false,
+              SearchFilterType.APPC.name()));
     } else {
-      filters = Arrays.asList(
-          new Filter("Followed Stores", false, SearchFilterType.FOLLOWED_STORES.name()),
-          new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
-          new Filter("Beta", false, SearchFilterType.BETA.name()),
-          new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+      filters = Arrays.asList(new Filter(getString(R.string.search_filters_followed_stores), false,
+              SearchFilterType.FOLLOWED_STORES.name()),
+          new Filter(getString(R.string.search_filters_trusted), false,
+              SearchFilterType.TRUSTED.name()),
+          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()),
+          new Filter(getString(R.string.search_filters_appcoins), false,
+              SearchFilterType.APPC.name()));
     }
 
     filtersView.setFilters(filters);
