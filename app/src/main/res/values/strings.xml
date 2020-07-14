@@ -826,7 +826,7 @@
   
   <!--Search Filters-->
   <string name="search_filters_trusted">Trusted</string>
-  <string name="search_filters_beta">Beta</string>
+  <string name="search_filters_beta">Beta versions</string>
   <string name="search_filters_appcoins">AppCoins</string>
   <string name="search_filters_all_stores">All stores</string>
   <string name="search_filters_followed_stores">Followed stores</string>
