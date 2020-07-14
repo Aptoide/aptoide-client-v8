@@ -811,7 +811,7 @@
   
   <!--Updates Notification-->
   <string name="notification_updates_available">Some apps are ready to be updated!</string>
-  
+
   <!--Incentive Bonus Badge-->
   <string name="incentives_badge_full">Up to %s%% Bonus</string>
   <string name="incentives_badge_up_to">Up to</string>
@@ -819,5 +819,17 @@
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  
+  <!--Empty States-->
+  <string name="search_no_results_title">There are no results for your search.</string>
+  <string name="search_no_results_body">Try using other words or play with the filters!</string>
+  
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_beta">Beta versions</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">All stores</string>
+  <string name="search_filters_followed_stores">Followed stores</string>
+  <string name="search_filters_clear">Clear</string>
 
 </resources>

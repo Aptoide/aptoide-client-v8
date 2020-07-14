@@ -53,8 +53,10 @@ import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
+import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
 import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
+import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
 import cm.aptoide.pt.account.AdultContentAnalytics;
@@ -169,6 +171,7 @@ import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
+import cm.aptoide.pt.home.apps.AppMapper;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.bundles.BundleDataSource;
 import cm.aptoide.pt.home.bundles.BundlesRepository;
@@ -213,6 +216,8 @@ import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
+import cm.aptoide.pt.notification.UpdatesNotificationManager;
+import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -1512,7 +1517,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
         AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
         FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT);
+        AptoideInstallAnalytics.CONVERSION_EVENT,
+        UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
+        UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
 
   @Singleton @Provides @Named("normalizer")
@@ -2096,6 +2103,20 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new AppsNameExperimentManager(appsNameExperiment);
   }
 
+  @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
+      UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
+      AptoideInstallManager aptoideInstallManager,
+      UpdatesNotificationAnalytics updatesNotificationAnalytics) {
+    return new UpdatesNotificationWorkerFactory(updateRepository, sharedPreferences,
+        aptoideInstallManager, new AppMapper(), updatesNotificationAnalytics);
+  }
+
+  @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager(
+      UpdatesNotificationExperiment updatesNotificationExperiment) {
+    return new UpdatesNotificationManager(application.getApplicationContext(),
+        updatesNotificationExperiment);
+  }
+
   @Singleton @Provides AptoideAuthenticationRx providesAptoideAuthentication(
       @Named("base-webservices-host") String authenticationBaseHost,
       @Named("default") OkHttpClient okHttpClient) {
@@ -2106,5 +2127,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AgentPersistence providesAgentPersistence(
       @Named("secureShared") SharedPreferences secureSharedPreferences) {
     return new AgentPersistence(secureSharedPreferences);
+  }
+
+  @Singleton @Provides UpdatesNotificationExperiment providesUpdatesNotificationExperiment(
+      @Named("ab-test") ABTestManager abTestManager) {
+    return new UpdatesNotificationExperiment(abTestManager);
+  }
+
+  @Singleton @Provides UpdatesNotificationAnalytics providesUpdatesNotificationAnalytics(
+      AnalyticsManager analyticsManager, NavigationTracker navigationTracker,
+      NotificationAnalytics notificationAnalytics) {
+    return new UpdatesNotificationAnalytics(analyticsManager, navigationTracker,
+        notificationAnalytics);
   }
 }

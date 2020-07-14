@@ -171,6 +171,11 @@
           android:resource="@xml/file_paths" />
     </provider>
 
+    <provider
+        android:name="androidx.work.impl.WorkManagerInitializer"
+        android:authorities="${applicationId}.workmanager-init"
+        tools:node="remove" />
+
     <meta-data
         android:name="cm.aptoide.pt.networking.image.GlideModifications"
         android:value="GlideModule" />
