@@ -823,5 +823,12 @@
   <!--Empty States-->
   <string name="search_no_results_title">There are no results for your search.</string>
   <string name="search_no_results_body">Try using other words or play with the filters!</string>
+  
+  <!--Search Filters-->
+  <string name="search_filters_trusted">Trusted</string>
+  <string name="search_filters_beta">Beta</string>
+  <string name="search_filters_appcoins">AppCoins</string>
+  <string name="search_filters_all_stores">All stores</string>
+  <string name="search_filters_followed_stores">Followed stores</string>
 
 </resources>
