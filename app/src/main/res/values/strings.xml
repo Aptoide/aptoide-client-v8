@@ -830,5 +830,6 @@
   <string name="search_filters_appcoins">AppCoins</string>
   <string name="search_filters_all_stores">All stores</string>
   <string name="search_filters_followed_stores">Followed stores</string>
+  <string name="search_filters_clear">Clear</string>
 
 </resources>
