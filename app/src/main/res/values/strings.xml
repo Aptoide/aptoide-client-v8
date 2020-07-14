@@ -819,5 +819,9 @@
   <string name="incentives_badge_bonus">Bonus</string>
   <string name="incentives_banner_title">Up to %s%% bonus in every purchase!</string>
   <string name="incentives_banner_body">Use your AppCoins Credits to get more items in apps with this symbol %s</string>
+  
+  <!--Empty States-->
+  <string name="search_no_results_title">There are no results for your search.</string>
+  <string name="search_no_results_body">Try using other words or play with the filters!</string>
 
 </resources>
