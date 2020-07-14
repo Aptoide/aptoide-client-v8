@@ -67,7 +67,7 @@ import org.parceler.Parcel;
     return allStoresOffset;
   }
 
-  public boolean hasReachedBottomOfAllStores() {
+  public boolean hasReachedBottomOfSearchResults() {
     return reachedBottomAllStores;
   }
 

@@ -289,18 +289,12 @@ public class SearchResultFragment extends BackButtonFragment
     return viewModel;
   }
 
-  @Override public void setAllStoresAdsResult(SearchAdResult ad) {
-    allStoresResultAdapter.setResultForAd(ad);
-    viewModel.addAllStoresSearchAdResults(Arrays.asList(ad));
-  }
-
   @Override public void setAllStoresAdsEmpty() {
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override public Observable<Void> allStoresResultReachedBottom() {
-    return recyclerViewReachedBottom(allStoresResultList).doOnNext(__ -> Logger.getInstance()
-        .d("lol", "reached bottom"));
+  @Override public Observable<Void> searchResultsReachedBottom() {
+    return recyclerViewReachedBottom(allStoresResultList);
   }
 
   @Override public void showLoadingMore() {
@@ -690,11 +684,21 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void setupFilters() {
-    List<Filter> filters =
-        Arrays.asList(new Filter("Followed Stores", false, SearchFilterType.FOLLOWED_STORES.name()),
-            new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
-            new Filter("Beta", false, SearchFilterType.BETA.name()),
-            new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+    final List<Filter> filters;
+    if (viewModel != null && viewModel.getStoreName() != null && !viewModel.getStoreName()
+        .isEmpty()) {
+      filters = Arrays.asList(new Filter("All Stores", false, SearchFilterType.ALL_STORES.name()),
+          new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
+          new Filter("Beta", false, SearchFilterType.BETA.name()),
+          new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+    } else {
+      filters = Arrays.asList(
+          new Filter("Followed Stores", false, SearchFilterType.FOLLOWED_STORES.name()),
+          new Filter("Trusted", false, SearchFilterType.TRUSTED.name()),
+          new Filter("Beta", false, SearchFilterType.BETA.name()),
+          new Filter("AppCoins", false, SearchFilterType.APPC.name()));
+    }
+
     filtersView.setFilters(filters);
   }
 

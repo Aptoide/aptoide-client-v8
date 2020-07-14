@@ -351,12 +351,12 @@ public class SearchResultPresenterTest {
   }
 
   @Test public void handleAllStoresListReachedBottomTest() {
-    presenter.handleAllStoresListReachedBottom();
+    presenter.handleSearchListReachedBottom();
 
     //When the user reaches the bottom of the list from the all stores tab
-    when(searchResultView.allStoresResultReachedBottom()).thenReturn(Observable.just(null));
+    when(searchResultView.searchResultsReachedBottom()).thenReturn(Observable.just(null));
     when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.hasReachedBottomOfAllStores()).thenReturn(false);
+    when(searchResultModel.hasReachedBottomOfSearchResults()).thenReturn(false);
     when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
     when(searchResultModel.getAllStoresOffset()).thenReturn(0);
     when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));

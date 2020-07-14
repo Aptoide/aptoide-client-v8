@@ -81,7 +81,7 @@ import rx.schedulers.Schedulers;
     handleClickToOpenAppViewFromItem();
     handleClickToOpenAppViewFromAdd();
     handleClickOnNoResultsImage();
-    handleAllStoresListReachedBottom();
+    handleSearchListReachedBottom();
     handleQueryTextSubmitted();
     handleQueryTextChanged();
     handleQueryTextCleaned();
@@ -106,7 +106,8 @@ import rx.schedulers.Schedulers;
             .map(___ -> view.getViewModel())
             .doOnNext(___ -> view.showResultsLoading())
             .flatMap(viewModel -> loadData(viewModel.getSearchQueryModel()
-                .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()).toObservable()
+                    .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(),
+                false).toObservable()
                 .observeOn(viewScheduler)
                 .doOnNext(searchResult -> {
                   if (searchResult.hasError()) {
@@ -198,17 +199,17 @@ import rx.schedulers.Schedulers;
         .subscribe(__ -> view.hideLoadingMore(), e -> crashReport.log(e));
   }
 
-  @VisibleForTesting public void handleAllStoresListReachedBottom() {
+  @VisibleForTesting public void handleSearchListReachedBottom() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> view.allStoresResultReachedBottom())
+        .flatMap(__ -> view.searchResultsReachedBottom())
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
+        .filter(viewModel -> !viewModel.hasReachedBottomOfSearchResults())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getFilters(), true))
+        .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), true))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
@@ -377,14 +378,15 @@ import rx.schedulers.Schedulers;
         .getStoreTheme(), storeName);
   }
 
-  private Single<SearchResult> loadData(String query, String storeName, List<Filter> filters) {
+  private Single<SearchResult> loadData(String query, String storeName, List<Filter> filters,
+      boolean isLoadMore) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
       return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
-          .andThen(loadDataForSpecificStore(query, storeName, 0));
+          .andThen(loadDataForSpecificStore(query, storeName, filters, isLoadMore));
     }
     // search every store. followed and not followed
-    return loadDataFromNonFollowedStores(query, filters, false);
+    return loadDataFromNonFollowedStores(query, filters, isLoadMore);
   }
 
   @NonNull
@@ -395,9 +397,9 @@ import rx.schedulers.Schedulers;
   }
 
   @NonNull private Single<SearchResult> loadDataForSpecificStore(String query, String storeName,
-      int offset) {
-    return searchManager.searchInStore(query, storeName, offset)
-        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, false));
+      List<Filter> filters, boolean isLoadMore) {
+    return searchManager.searchInStore(query, storeName, filters)
+        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, isLoadMore));
   }
 
   private Single<SearchResult> mapToViewAndLoadAds(String query, SearchResult searchResult,
@@ -469,7 +471,7 @@ import rx.schedulers.Schedulers;
         .doOnNext(__ -> view.showLoading())
         .observeOn(ioScheduler)
         .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()).observeOn(
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false).observeOn(
             viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
             .flatMap(searchResult -> {

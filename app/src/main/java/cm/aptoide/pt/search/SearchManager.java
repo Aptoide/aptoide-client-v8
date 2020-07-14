@@ -6,22 +6,14 @@ import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.model.v7.DataList;
-import cm.aptoide.pt.dataprovider.model.v7.search.ListSearchApps;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest;
 import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchFilters;
 import cm.aptoide.pt.search.model.SearchResult;
-import cm.aptoide.pt.search.model.SearchResultError;
-import java.net.UnknownHostException;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -99,43 +91,12 @@ import rx.Single;
     return new SearchFilters(onlyFollowedStores, onlyTrustedApps, onlyBetaApps, onlyAppcApps);
   }
 
-  public Single<SearchResult> searchInStore(String query, String storeName, int offset) {
-    return ListSearchAppsRequest.of(query, storeName, false, false, offset, subscribedStoresAuthMap,
-        bodyInterceptor, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        appBundlesVisibilityManager)
-        .observe(false)
-        .flatMap(results -> handleSearchResults(query, results))
-        .onErrorResumeNext(throwable -> handleSearchError(query, throwable))
-        .doOnError(throwable -> throwable.printStackTrace())
-        .toSingle();
-  }
-
-  private Observable<SearchResult> handleSearchResults(String query, ListSearchApps results) {
-    return Observable.just(results)
-        .filter(listSearchApps -> hasResults(listSearchApps))
-        .map(data -> data.getDataList()
-            .getList())
-        .flatMapIterable(list -> list)
-        .map(searchApp -> new SearchAppResult(searchApp))
-        .toList()
+  public Single<SearchResult> searchInStore(String query, String storeName, List<Filter> filters) {
+    return accountManager.hasMatureContentEnabled()
         .first()
-        .map(list -> new SearchResult(query, new SearchResultDiffModel(null, list)));
-  }
-
-  private Observable<SearchResult> handleSearchError(String query, Throwable throwable) {
-    if (throwable instanceof UnknownHostException
-        || throwable instanceof NoNetworkConnectionException) {
-      return Observable.just(new SearchResult(query, SearchResultError.NO_NETWORK));
-    }
-    return Observable.just(new SearchResult(query, SearchResultError.GENERIC));
-  }
-
-  private boolean hasResults(ListSearchApps listSearchApps) {
-    DataList<SearchApp> dataList = listSearchApps.getDataList();
-    return dataList != null
-        && dataList.getList() != null
-        && dataList.getList()
-        .size() > 0;
+        .toSingle()
+        .flatMap(matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
+            matureEnabled, storeName));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {

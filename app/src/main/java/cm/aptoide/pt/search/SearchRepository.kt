@@ -39,22 +39,31 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
   fun generalSearch(query: String, filters: SearchFilters,
                     matureEnabled: Boolean): Single<SearchResult> {
     return Single.just(query)
-        .flatMap { search(query, filters, matureEnabled) }
+        .flatMap { search(query, filters, matureEnabled, null) }
+        .subscribeOn(Schedulers.io())
+  }
+
+  fun searchInStore(query: String, filters: SearchFilters, matureEnabled: Boolean,
+                    storeName: String): Single<SearchResult> {
+    return Single.just(query)
+        .flatMap { search(query, filters, matureEnabled, storeName) }
         .subscribeOn(Schedulers.io())
   }
 
   private fun search(query: String, filters: SearchFilters,
-                     matureEnabled: Boolean): Single<SearchResult> {
+                     matureEnabled: Boolean, specificStore: String?): Single<SearchResult> {
     cachedSearchResults?.let { activeResults ->
-      if (activeResults.query == query && filters == activeResults.filters) {
+      if (activeResults.query == query && activeResults.specificStore == specificStore
+          && filters == activeResults.filters && !activeResults.hasError()) {
         if (activeResults.hasMore()) {
-          return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled)
+          return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
+              specificStore)
               .flatMap { results -> Single.just(updateMemCache(results)) }
         }
         return Single.just(activeResults)
       }
     }
-    return requestSearchResults(query, filters, 0, matureEnabled)
+    return requestSearchResults(query, filters, 0, matureEnabled, specificStore)
         .flatMap { results -> Single.just(updateMemCache(results)) }
   }
 
@@ -63,12 +72,13 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     results?.let { r ->
       cachedSearchResults.let { cached ->
         var list = ArrayList(r.searchResultDiffModel.searchResultsList)
-        if (cached != null && cached.query == r.query && cached.filters == r.filters) {
+        if (cached != null && cached.query == r.query && cached.filters == r.filters
+            && cached.specificStore == r.specificStore) {
           list = ArrayList(cached.searchResultDiffModel.searchResultsList)
           list.addAll(r.searchResultDiffModel.searchResultsList)
         }
 
-        res = SearchResult(r.query,
+        res = SearchResult(r.query, r.specificStore,
             calculateSearchListDifferences(list,
                 cached?.searchResultDiffModel?.searchResultsList ?: Collections.emptyList()),
             r.filters,
@@ -76,7 +86,8 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
             r.loading, r.error)
 
         cachedSearchResults =
-            SearchResult(r.query, SearchResultDiffModel(null, list), r.filters, r.currentOffset,
+            SearchResult(r.query, r.specificStore, SearchResultDiffModel(null, list), r.filters,
+                r.currentOffset,
                 r.nextOffset,
                 r.total,
                 r.loading, r.error)
@@ -87,24 +98,39 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private fun requestSearchResults(query: String, filters: SearchFilters,
                                    nextOffset: Int,
-                                   matureEnabled: Boolean): Single<SearchResult> {
-    return ListSearchAppsRequest.of(query, nextOffset, filters.onlyFollowedStores,
+                                   matureEnabled: Boolean,
+                                   specificStore: String?): Single<SearchResult> {
+    val authMap = StoreUtils.getSubscribedStoresAuthMap(storeRepository)
+
+    // General search
+    var request = ListSearchAppsRequest.of(query, nextOffset, filters.onlyFollowedStores,
         filters.onlyTrustedApps,
-        filters.onlyBetaApps,
-        StoreUtils.getSubscribedStoresIds(storeRepository), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, matureEnabled,
+        filters.onlyBetaApps, matureEnabled,
+        StoreUtils.getSubscribedStoresIds(storeRepository), authMap, bodyInterceptor, httpClient,
+        converterFactory, tokenInvalidator, sharedPreferences,
         appBundlesVisibilityManager)
+
+    // For specific store search
+    specificStore?.let { store ->
+      request = ListSearchAppsRequest.of(query, nextOffset, store,
+          filters.onlyTrustedApps, filters.onlyBetaApps, matureEnabled, authMap, bodyInterceptor,
+          httpClient,
+          converterFactory, tokenInvalidator, sharedPreferences,
+          appBundlesVisibilityManager)
+    }
+    return request
         .observe(false)
         .toSingle()
-        .flatMap { response -> mapToSearchResult(query, response, filters) }
+        .flatMap { response -> mapToSearchResult(query, response, filters, specificStore) }
         .onErrorResumeNext { throwable ->
           throwable.printStackTrace()
-          handleSearchError(query, throwable)
+          handleSearchError(query, specificStore, throwable)
         }
   }
 
   private fun mapToSearchResult(query: String, response: ListSearchApps?,
-                                filters: SearchFilters): Single<SearchResult> {
+                                filters: SearchFilters,
+                                specificStore: String?): Single<SearchResult> {
     response?.let { r ->
       return Observable.just(r)
           .map { data -> data.dataList.list }
@@ -113,11 +139,16 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
           .toList()
           .first()
           .map { list ->
-            SearchResult(query, SearchResultDiffModel(null, list), filters, r.dataList.offset,
+            SearchResult(query, specificStore, SearchResultDiffModel(null, list), filters,
+                r.dataList.offset,
                 r.dataList.next, r.dataList.total,
                 !r.dataList.isLoaded, null)
           }
           .toSingle()
+          .onErrorResumeNext { throwable ->
+            throwable.printStackTrace()
+            handleSearchError(query, specificStore, throwable)
+          }
     }
     return Single.just(SearchResult(query, SearchResultError.GENERIC))
   }
@@ -133,17 +164,14 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
   }
 
   private fun handleSearchError(query: String,
+                                specificStore: String?,
                                 throwable: Throwable): Single<SearchResult?>? {
     return if (throwable is UnknownHostException
         || throwable is NoNetworkConnectionException) {
       Single.just(
-          SearchResult(query, SearchResultError.NO_NETWORK))
+          SearchResult(query, specificStore, SearchResultError.NO_NETWORK))
     } else Single.just(
-        SearchResult(query, SearchResultError.GENERIC))
+        SearchResult(query, specificStore, SearchResultError.GENERIC))
   }
 
-//  fun searchInStore(query: String, filters: SearchFilters, matureEnabled: Boolean,
-//                    storeName: String): Single<SearchResult> {
-// TODO
-//  }
 }

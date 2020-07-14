@@ -37,11 +37,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Model getViewModel();
 
-  void setAllStoresAdsResult(SearchAdResult ad);
-
   void setAllStoresAdsEmpty();
 
-  Observable<Void> allStoresResultReachedBottom();
+  Observable<Void> searchResultsReachedBottom();
 
   void showLoadingMore();
 
@@ -137,7 +135,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     int getAllStoresOffset();
 
-    boolean hasReachedBottomOfAllStores();
+    boolean hasReachedBottomOfSearchResults();
 
     void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
 
