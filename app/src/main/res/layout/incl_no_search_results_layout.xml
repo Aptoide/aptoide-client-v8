@@ -28,15 +28,25 @@
         android:src="@drawable/ic_search_no_results"
         />
 
+    <TextView
+      style="@style/Aptoide.TextView.Medium.M.Primary"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="32dp"
+
+      android:text="@string/search_no_results_title"/>
 
     <TextView
-        style="@style/Aptoide.TextView.Regular.M.Primary"
+        style="@style/Aptoide.TextView.Regular.S.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="32dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="@string/no_search_results_try_filters_message"
+        android:text="@string/search_no_results_adult_body"
         />
 
     <androidx.cardview.widget.CardView
