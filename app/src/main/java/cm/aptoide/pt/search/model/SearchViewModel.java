@@ -12,8 +12,6 @@ import org.parceler.Parcel;
   SearchQueryModel searchQueryModel;
   String storeName;
   boolean onlyTrustedApps;
-  int allStoresOffset = 0;
-  boolean reachedBottomAllStores = false;
   boolean loadedAds = false;
 
   List<SearchAppResult> allStoresSearchAppResults;
@@ -57,25 +55,6 @@ import org.parceler.Parcel;
 
   @Override public String getStoreTheme() {
     return storeTheme;
-  }
-
-  @Override public boolean isOnlyTrustedApps() {
-    return onlyTrustedApps;
-  }
-
-  public int getAllStoresOffset() {
-    return allStoresOffset;
-  }
-
-  public boolean hasReachedBottomOfSearchResults() {
-    return reachedBottomAllStores;
-  }
-
-  public void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset) {
-    this.allStoresOffset += offset;
-    if (offset == 0) {
-      reachedBottomAllStores = true;
-    }
   }
 
   @Override public boolean hasLoadedAds() {

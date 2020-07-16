@@ -205,7 +205,6 @@ import rx.schedulers.Schedulers;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.searchResultsReachedBottom())
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> !viewModel.hasReachedBottomOfSearchResults())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
         .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
@@ -464,7 +463,6 @@ import rx.schedulers.Schedulers;
 
   public Observable<SearchResultCount> search(SearchResultView.Model resultModel) {
     return Observable.just(resultModel)
-        .filter(viewModel -> viewModel.getAllStoresOffset() == 0)
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())

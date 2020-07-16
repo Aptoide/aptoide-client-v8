@@ -91,8 +91,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showBannerAd();
 
-  Observable<Boolean> showingSearchResultsView();
-
   void showNativeAds(String query);
 
   void showNoNetworkView();
@@ -130,14 +128,6 @@ public interface SearchResultView extends SearchSuggestionsView {
     String getStoreName();
 
     String getStoreTheme();
-
-    boolean isOnlyTrustedApps();
-
-    int getAllStoresOffset();
-
-    boolean hasReachedBottomOfSearchResults();
-
-    void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
 
     boolean hasLoadedAds();
 

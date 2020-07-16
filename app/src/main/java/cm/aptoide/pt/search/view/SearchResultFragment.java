@@ -18,7 +18,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,7 +56,6 @@ import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.themes.ThemeManager;
 import cm.aptoide.pt.view.BackButtonFragment;
-import cm.aptoide.pt.view.custom.DividerItemDecoration;
 import cm.aptoide.pt.view.rx.RxAlertDialog;
 import cm.aptoide.pt.view.settings.InputDialog;
 import com.google.android.material.snackbar.Snackbar;
@@ -131,7 +129,6 @@ public class SearchResultFragment extends BackButtonFragment
   private boolean isSearchExpanded;
   private BottomNavigationActivity bottomNavigationActivity;
   private MoPubView bannerAdBottom;
-  private PublishSubject<Boolean> showingSearchResultsView;
   private PublishSubject<Boolean> noResultsAdultContentSubject;
   private MoPubRecyclerAdapter moPubRecyclerAdapter;
   private ErrorView errorView;
@@ -236,7 +233,6 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     allStoresResultList.setVisibility(VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
-    showingSearchResultsView.onNext(true);
   }
 
   @Override public void showLoading() {
@@ -422,10 +418,6 @@ public class SearchResultFragment extends BackButtonFragment
     bannerAdBottom.loadAd();
   }
 
-  @Override public Observable<Boolean> showingSearchResultsView() {
-    return showingSearchResultsView;
-  }
-
   @Override public void showNativeAds(String query) {
     RequestParameters requestParameters = new RequestParameters.Builder().keywords(query)
         .build();
@@ -603,7 +595,6 @@ public class SearchResultFragment extends BackButtonFragment
     searchSetupPublishSubject = PublishSubject.create();
     queryTextChangedPublisher = PublishSubject.create();
 
-    showingSearchResultsView = PublishSubject.create();
     noResultsAdultContentSubject = PublishSubject.create();
     noResultsPublishSubject = PublishSubject.create();
 
@@ -763,7 +754,6 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
-    showingSearchResultsView = null;
     noResultsAdultContentSubject = null;
     noResultsPublishSubject = null;
   }
@@ -806,12 +796,8 @@ public class SearchResultFragment extends BackButtonFragment
     searchSetupPublishSubject.onNext(null);
   }
 
-  @NonNull private DividerItemDecoration getDefaultItemDecoration() {
-    return new DividerItemDecoration(getContext(), listItemPadding);
-  }
-
   @NonNull private LinearLayoutManager getDefaultLayoutManager() {
-    return new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false);
+    return new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
   }
 
   @Nullable @Override
