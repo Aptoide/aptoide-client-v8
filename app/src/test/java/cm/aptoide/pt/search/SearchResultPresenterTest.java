@@ -248,20 +248,6 @@ public class SearchResultPresenterTest {
     verify(searchNavigator).goToAppView(searchAdResult);
   }
 
-  @Test public void handleClickOnNoResultsImageTest() {
-    presenter.handleClickOnNoResultsImage();
-
-    //When the search has no results and the user clicks on the image from the no result view
-    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just(null));
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getStoreName()).thenReturn("random");
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should navigate back to the search view
-    verify(searchNavigator).goToSettings();
-  }
-
   @Test public void handleSuggestionQueryTextSubmittedTest() {
     presenter.handleQueryTextSubmitted();
 
