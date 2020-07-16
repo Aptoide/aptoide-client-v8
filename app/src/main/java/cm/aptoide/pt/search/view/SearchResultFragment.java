@@ -17,7 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -98,12 +97,10 @@ public class SearchResultFragment extends BackButtonFragment
   @Inject ThemeManager themeManager;
   private DecimalFormat oneDecimalFormatter = new DecimalFormat("#.##");
   private View noSearchLayout;
-  private Button noSearchSettingsButton;
   private SwitchCompat noSearchAdultContentSwitch;
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private ProgressBar progressBarResults;
-  private CardView allAndFollowedStoresButtonsLayout;
   private RecyclerView allStoresResultList;
   private RecyclerView suggestionsResultList;
   private RecyclerView trendingResultList;
@@ -135,6 +132,8 @@ public class SearchResultFragment extends BackButtonFragment
   private RxAlertDialog enableAdultContentDialog;
   private InputDialog enableAdultContentDialogWithPin;
   private PublishSubject<Void> noResultsPublishSubject;
+
+  private CardView filtersCardView;
   private FiltersView filtersView;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
@@ -177,8 +176,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void findChildViews(View view) {
-    allAndFollowedStoresButtonsLayout =
-        view.findViewById(R.id.fragment_search_result_all_followed_stores_buttons_layout);
+    filtersCardView = view.findViewById(R.id.filters_card_view);
     allStoresResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
     suggestionsResultList = view.findViewById(R.id.suggestions_list);
@@ -188,7 +186,6 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultsLayout = view.findViewById(R.id.fragment_search_result_layout);
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
-    noSearchSettingsButton = view.findViewById(R.id.no_search_settings_button);
     noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
     progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
     progressBarResults = (ProgressBar) view.findViewById(R.id.progress_bar_results);
@@ -202,10 +199,6 @@ public class SearchResultFragment extends BackButtonFragment
         v -> noResultsAdultContentSubject.onNext(noSearchAdultContentSwitch.isChecked()));
   }
 
-  @Override public Observable<Void> clickNoResultsSearchButton() {
-    return RxView.clicks(noSearchSettingsButton);
-  }
-
   @Override public Observable<Boolean> clickAdultContentSwitch() {
     return noResultsAdultContentSubject;
   }
@@ -216,8 +209,8 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void showNoResultsView() {
     noSearchLayout.setVisibility(View.VISIBLE);
-    searchResultsLayout.setVisibility(View.GONE);
-    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
@@ -299,10 +292,6 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public void hideLoadingMore() {
     allStoresResultAdapter.setIsLoadingMore(false);
-  }
-
-  @Override public void setViewWithStoreNameAsSingleTab(String storeName) {
-    //TODO: Set view store name for single store search
   }
 
   @Override public Observable<Void> searchSetup() {
@@ -431,8 +420,8 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setError(ErrorView.Error.NO_NETWORK);
     errorView.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
@@ -445,8 +434,8 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setError(ErrorView.Error.GENERIC);
     errorView.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
-    searchResultsLayout.setVisibility(View.GONE);
-    allAndFollowedStoresButtonsLayout.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.VISIBLE);
+    filtersCardView.setVisibility(View.VISIBLE);
     allStoresResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);

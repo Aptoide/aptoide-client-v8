@@ -17,8 +17,6 @@ import rx.Observable;
 
 public interface SearchResultView extends SearchSuggestionsView {
 
-  Observable<Void> clickNoResultsSearchButton();
-
   Observable<Boolean> clickAdultContentSwitch();
 
   Observable<Void> retryClicked();
@@ -44,8 +42,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   void showLoadingMore();
 
   void hideLoadingMore();
-
-  void setViewWithStoreNameAsSingleTab(String storeName);
 
   Observable<Void> searchSetup();
 

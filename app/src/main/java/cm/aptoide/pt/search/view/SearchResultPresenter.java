@@ -80,7 +80,6 @@ import rx.schedulers.Schedulers;
     firstAdsDataLoad();
     handleClickToOpenAppViewFromItem();
     handleClickToOpenAppViewFromAdd();
-    handleClickOnNoResultsImage();
     handleSearchListReachedBottom();
     handleQueryTextSubmitted();
     handleQueryTextChanged();
@@ -276,17 +275,6 @@ import rx.schedulers.Schedulers;
         }, e -> crashReport.log(e));
   }
 
-  @VisibleForTesting public void handleClickOnNoResultsImage() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickNoResultsSearchButton())
-        .doOnNext(query -> navigator.goToSettings())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
   public void handleClickOnAdultContentSwitch() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -381,8 +369,7 @@ import rx.schedulers.Schedulers;
       boolean isLoadMore) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
-          .andThen(loadDataForSpecificStore(query, storeName, filters, isLoadMore));
+      return loadDataForSpecificStore(query, storeName, filters, isLoadMore);
     }
     // search every store. followed and not followed
     return loadDataFromNonFollowedStores(query, filters, isLoadMore);
