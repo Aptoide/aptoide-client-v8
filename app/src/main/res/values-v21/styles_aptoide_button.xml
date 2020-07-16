@@ -44,7 +44,7 @@
     <item name="android:paddingLeft">50dp</item>
     <item name="android:background">@drawable/google_button_rounded</item>
     <item name="android:drawableLeft">@drawable/google_icon_copy</item>
-    <item name="android:text">@string/connect_google</item>
+    <item name="android:text">@string/connect_with_google</item>
     <item name="android:textColor">@color/google_grey</item>
     <item name="android:contentDescription">@string/google</item>
   </style>
