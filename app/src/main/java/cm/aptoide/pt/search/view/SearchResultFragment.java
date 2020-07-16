@@ -301,11 +301,19 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void toggleSuggestionsView() {
     suggestionsResultList.setVisibility(View.VISIBLE);
     trendingResultList.setVisibility(View.GONE);
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
   }
 
   @Override public void toggleTrendingView() {
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.VISIBLE);
+    noSearchLayout.setVisibility(View.GONE);
+    errorView.setVisibility(View.GONE);
+    allStoresResultList.setVisibility(View.GONE);
+    searchResultsLayout.setVisibility(View.GONE);
   }
 
   @Override public void hideSuggestionsViews() {
@@ -667,9 +675,7 @@ public class SearchResultFragment extends BackButtonFragment
     final List<Filter> filters;
     if (viewModel != null && viewModel.getStoreName() != null && !viewModel.getStoreName()
         .isEmpty()) {
-      filters = Arrays.asList(new Filter(getString(R.string.search_filters_all_stores), false,
-              SearchFilterType.ALL_STORES.name()),
-          new Filter(getString(R.string.search_filters_trusted), false,
+      filters = Arrays.asList(new Filter(getString(R.string.search_filters_trusted), false,
               SearchFilterType.TRUSTED.name()),
           new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()),
           new Filter(getString(R.string.search_filters_appcoins), false,
