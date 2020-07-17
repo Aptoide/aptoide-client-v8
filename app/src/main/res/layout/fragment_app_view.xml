@@ -21,16 +21,16 @@
       />
 
   <cm.aptoide.aptoideviews.appcoins.BonusAppcView
-    android:id="@+id/bonus_appc_view"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    android:translationY="-16dp"
-    app:side="LEFT"
-    app:layout_anchor="@id/app_bar_layout"
-    app:layout_anchorGravity="bottom|left"
-    tools:visibility="visible"
-    />
+      android:id="@+id/bonus_appc_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:translationY="-16dp"
+      android:visibility="gone"
+      app:layout_anchor="@id/app_bar_layout"
+      app:layout_anchorGravity="bottom|left"
+      app:side="LEFT"
+      tools:visibility="visible"
+      />
 
   <androidx.core.widget.NestedScrollView
       android:id="@+id/scroll_view_app"
@@ -98,7 +98,7 @@
                 android:id="@+id/trusted_badge"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
-                android:src="@drawable/ic_badge_trusted"
+                android:src="@drawable/ic_badges_trusted"
                 />
 
             <TextView
@@ -140,18 +140,17 @@
               android:layout_width="12dp"
               android:layout_height="16dp"
               android:layout_gravity="center_vertical"
-              android:src="@drawable/ic_appview_download_icon"
-              android:tint="@color/grey"
+              android:src="@drawable/ic_download_icon"
               />
+
           <TextView
               android:id="@+id/header_downloads"
+              style="@style/Aptoide.TextView.Medium.XXS.Grey"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:layout_marginStart="3dp"
               android:layout_marginLeft="3dp"
-              android:textColor="@color/grey"
-              android:textSize="10sp"
               tools:text="5 M"
               />
           <ImageView
@@ -166,13 +165,12 @@
 
           <TextView
               android:id="@+id/header_size"
+              style="@style/Aptoide.TextView.Medium.XXS.Grey"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:layout_marginStart="3dp"
               android:layout_marginLeft="3dp"
-              android:textColor="@color/grey"
-              android:textSize="10sp"
               tools:text="90.7 MB"
               />
 
@@ -188,13 +186,12 @@
 
           <TextView
               android:id="@+id/header_rating"
+              style="@style/Aptoide.TextView.Medium.XXS.Grey"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center"
               android:layout_marginStart="3dp"
               android:layout_marginLeft="3dp"
-              android:textColor="@color/grey"
-              android:textSize="10sp"
               tools:text="4.2"
               />
         </LinearLayout>

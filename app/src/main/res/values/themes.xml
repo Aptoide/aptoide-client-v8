@@ -93,8 +93,7 @@
     <item name="loginInputBackground">@drawable/button_border_grey</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
     <item name="checkYourEmailBackground">@drawable/aptoide_gradient_vertical</item>
-
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_light</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
@@ -167,7 +166,7 @@
     <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/black_87_alpha</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/twitter_color</item>
     <item name="textColorTwitch">@color/twitch</item>
@@ -350,11 +349,12 @@
     <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
     <item name="secureLoginBackground">@color/grey_dark</item>
-    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark</item>
+    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark
+    </item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
     <item name="checkYourEmailBackground">@color/grey_dark</item>
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_dark</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>
@@ -429,7 +429,7 @@
 
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/grey_medium_light</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/white</item>
     <item name="textColorTwitch">@color/white</item>

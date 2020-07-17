@@ -12,26 +12,26 @@
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="8dp"
       >
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintTop_toTopOf="@id/guideline_top"
         tools:src="@drawable/ad_icon"
         />
     <TextView
         android:id="@+id/app_name"
-        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginLeft="13dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/star_icon"
+        app:layout_constraintEnd_toStartOf="@id/guideline_right"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/app_icon"
         app:layout_constraintTop_toTopOf="@+id/app_icon"
@@ -39,20 +39,23 @@
         />
     <ImageView
         android:id="@+id/star_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:src="?attr/ratingDrawable"
         android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/downloads_icon"
+        app:layout_constraintBottom_toTopOf="@+id/ad_label"
         app:layout_constraintLeft_toLeftOf="@+id/app_name"
+        app:layout_constraintStart_toStartOf="@+id/app_name"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
         app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_chainStyle="spread"
         />
     <TextView
         android:id="@+id/rating"
-        style="@style/Aptoide.TextView.Medium.XXS.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/star_icon"
@@ -62,20 +65,22 @@
         />
     <ImageView
         android:id="@+id/downloads_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginBottom="2dp"
-        android:src="@drawable/ic_appview_download_icon"
-        android:tint="@color/grey"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_download_icon"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
-        app:layout_constraintStart_toStartOf="@+id/star_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/rating"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintTop_toTopOf="@id/rating"
         />
     <TextView
         android:id="@+id/downloads"
-        style="@style/Aptoide.TextView.Regular.XXS.Grey"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
@@ -92,9 +97,9 @@
         android:layout_marginRight="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/downloads"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right"
+        app:layout_constraintTop_toTopOf="@+id/ad_label"
         >
 
       <ImageView
@@ -118,13 +123,11 @@
           android:visibility="invisible"
           tools:text="EARN €0.78"
           />
-
-
     </LinearLayout>
 
     <TextView
         android:id="@+id/ad_label"
-        style="@style/Aptoide.TextView.Medium.XS"
+        style="@style/Aptoide.TextView.Medium.XS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -132,6 +135,8 @@
         android:text="@string/all_title_ad"
         app:layout_constraintBottom_toBottomOf="@+id/app_icon"
         app:layout_constraintStart_toStartOf="@+id/star_icon"
+        app:layout_constraintTop_toBottomOf="@+id/star_icon"
+        app:layout_constraintVertical_chainStyle="spread"
         />
 
     <ImageView
@@ -154,5 +159,36 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="8dp"
+        />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
