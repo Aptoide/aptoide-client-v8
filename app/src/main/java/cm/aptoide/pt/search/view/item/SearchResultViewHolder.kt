@@ -8,20 +8,17 @@ import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.search.model.SearchAppResult
 import cm.aptoide.pt.search.model.SearchAppResultWrapper
 import cm.aptoide.pt.utils.AptoideUtils
-import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxrelay.PublishRelay
 import kotlinx.android.synthetic.main.search_app_row.view.*
-import rx.subscriptions.CompositeSubscription
 import java.text.DecimalFormat
 
 class SearchResultViewHolder(itemView: View,
                              private val itemClickSubject: PublishRelay<SearchAppResultWrapper>,
-                             val query: String?) :
+                             private val query: String?) :
     SearchResultItemView<SearchAppResult?>(itemView) {
 
   private val appInfoViewHolder: AppSecondaryInfoViewHolder =
       AppSecondaryInfoViewHolder(itemView, DecimalFormat("0.0"))
-  private val subscriptions: CompositeSubscription = CompositeSubscription()
 
   override fun setup(result: SearchAppResult?) {
     result?.let {
@@ -64,17 +61,10 @@ class SearchResultViewHolder(itemView: View,
       }
     }
 
-    subscriptions.add(
-        RxView.clicks(itemView).doOnNext {
-          itemClickSubject.call(SearchAppResultWrapper(query, result, adapterPosition))
-        }.subscribe())
-
-  }
-
-  override fun prepareToRecycle() {
-    if (subscriptions.hasSubscriptions() && !subscriptions.isUnsubscribed) {
-      subscriptions.unsubscribe()
+    itemView.setOnClickListener {
+      itemClickSubject.call(SearchAppResultWrapper(query, result, adapterPosition))
     }
+
   }
 
   companion object {
