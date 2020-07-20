@@ -46,6 +46,9 @@ android {
   }
 
   signingConfigs {
+    debug {
+      v2SigningEnabled = false
+    }
     release {
       storeFile = file(project.STORE_FILE_VANILLA)
       storePassword = project.STORE_PASSWORD_VANILLA

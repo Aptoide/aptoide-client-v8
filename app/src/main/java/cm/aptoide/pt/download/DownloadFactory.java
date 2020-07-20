@@ -169,6 +169,15 @@ public class DownloadFactory {
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
       boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
       String trustedBadge, String storeName) {
+    return create(downloadAction, appName, packageName, md5, icon, versionName, versionCode,
+        appPath, appPathAlt, obb, hasAppc, size, splits, requiredSplits, trustedBadge, storeName,
+        null);
+  }
+
+  public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
+      String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
+      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
+      String trustedBadge, String storeName, String oemId) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
@@ -177,7 +186,7 @@ public class DownloadFactory {
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
 
       ApkPaths downloadPaths =
-          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
+          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt, oemId);
 
       RoomDownload download = new RoomDownload();
       download.setMd5(md5);

@@ -70,6 +70,7 @@ public class AppModel {
   private List<String> bdsFlags;
   private String campaignUrl;
   private String signature;
+  private String oemId;
 
   public AppModel(long appId, String appName, Store store, String storeTheme, boolean isGoodApp,
       Malware malware, AppFlags appFlags, List<String> tags, List<String> usedFeatures,
@@ -81,7 +82,7 @@ public class AppModel {
       double appc, SearchAdResult minimalAd, String editorsChoice, String originTag,
       boolean isStoreFollowed, String marketName, boolean hasBilling, boolean hasAdvertising,
       List<String> bdsFlags, String campaignUrl, String signature, boolean isMature,
-      List<Split> splits, List<String> requiredSplits) {
+      List<Split> splits, List<String> requiredSplits, String oemId) {
     this.appId = appId;
     this.appName = appName;
     this.store = store;
@@ -131,6 +132,7 @@ public class AppModel {
     this.requiredSplits = requiredSplits;
     this.loading = false;
     this.error = null;
+    this.oemId = oemId;
   }
 
   public AppModel(boolean loading) {
@@ -183,6 +185,7 @@ public class AppModel {
     this.campaignUrl = "";
     this.splits = null;
     this.requiredSplits = null;
+    this.oemId = null;
   }
 
   public AppModel(DetailedAppRequestResult.Error error) {
@@ -236,6 +239,7 @@ public class AppModel {
     this.campaignUrl = "";
     this.splits = null;
     this.requiredSplits = null;
+    this.oemId = null;
   }
 
   public boolean isMature() {
@@ -459,5 +463,9 @@ public class AppModel {
 
   public List<String> getRequiredSplits() {
     return requiredSplits;
+  }
+
+  public String getOemId() {
+    return oemId;
   }
 }

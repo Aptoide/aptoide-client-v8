@@ -87,7 +87,7 @@ import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.themes.ThemeManager;
-import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.util.ApkFyManager;
 import cm.aptoide.pt.util.MarketResourceFormatter;
 import cm.aptoide.pt.view.app.ListStoreAppsNavigator;
 import cm.aptoide.pt.view.dialog.DialogUtils;
@@ -135,9 +135,9 @@ import static android.content.Context.WINDOW_SERVICE;
     this.fileProviderAuthority = fileProviderAuthority;
   }
 
-  @ActivityScope @Provides ApkFy provideApkFy(
+  @ActivityScope @Provides ApkFyManager provideApkFy(
       @Named("secureShared") SharedPreferences securePreferences) {
-    return new ApkFy(activity, intent, securePreferences);
+    return new ApkFyManager(activity, intent, securePreferences);
   }
 
   @ActivityScope @Provides AutoUpdateService providesAutoUpdateService(Service service,
@@ -187,7 +187,7 @@ import static android.content.Context.WINDOW_SERVICE;
   }
 
   @ActivityScope @Provides Presenter provideMainPresenter(
-      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFy apkFy,
+      RootInstallationRetryHandler rootInstallationRetryHandler, ApkFyManager apkFyManager,
       InstallManager installManager, @Named("default") SharedPreferences sharedPreferences,
       @Named("secureShared") SharedPreferences secureSharedPreferences,
       @Named("main-fragment-navigator") FragmentNavigator fragmentNavigator,
@@ -197,7 +197,8 @@ import static android.content.Context.WINDOW_SERVICE;
       BottomNavigationMapper bottomNavigationMapper, AptoideAccountManager accountManager,
       AccountNavigator accountNavigator, AgentPersistence agentPersistence) {
     return new MainPresenter((MainView) view, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, new ContentPuller(activity), notificationSyncScheduler,
+        CrashReport.getInstance(), apkFyManager, new ContentPuller(activity),
+        notificationSyncScheduler,
         new InstallCompletedNotifier(PublishRelay.create(), installManager,
             CrashReport.getInstance()), sharedPreferences, secureSharedPreferences,
         fragmentNavigator, deepLinkManager, firstCreated, (AptoideBottomNavigator) activity,
