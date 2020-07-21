@@ -15,7 +15,11 @@ public class DownloadApkPathsProvider {
   }
 
   public ApkPaths getDownloadPaths(int downloadAction, String path, String altPath) {
-    String oemid = getOemidQueryString();
+    return getDownloadPaths(downloadAction, path, altPath, null);
+  }
+
+  public ApkPaths getDownloadPaths(int downloadAction, String path, String altPath, String oemId) {
+    String oemid = getOemidQueryString(oemId);
     switch (downloadAction) {
       case RoomDownload.ACTION_INSTALL:
         path += INSTALL_ACTION + oemid;
@@ -33,12 +37,13 @@ public class DownloadApkPathsProvider {
     return new ApkPaths(path, altPath);
   }
 
-  private String getOemidQueryString() {
-    String oemid = oemidProvider.getOemid();
-    if (oemid.isEmpty()) {
-      return "";
-    } else {
-      return OEMID_QUERY + oemid;
+  private String getOemidQueryString(String downloadOemId) {
+    String oemId =
+        (downloadOemId == null || downloadOemId.isEmpty()) ? "" : OEMID_QUERY + downloadOemId;
+    if (oemId.isEmpty()) {
+      String providerOemId = oemidProvider.getOemid();
+      oemId = providerOemId.isEmpty() ? "" : OEMID_QUERY + providerOemId;
     }
+    return oemId;
   }
 }

@@ -21,7 +21,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.presenter.MainPresenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.util.ApkFyManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.MainActivity;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class BottomNavigationPresenterTest {
   private static final int MENU_ITEM_ID_TEST = 2;
   @Mock private InstallManager installManager;
   @Mock private RootInstallationRetryHandler rootInstallationRetryHandler;
-  @Mock private ApkFy apkFy;
+  @Mock private ApkFyManager apkFyManager;
   @Mock private ContentPuller contentPuller;
   @Mock private NotificationSyncScheduler notificationSyncScheduler;
   @Mock private InstallCompletedNotifier installCompletedNotifier;
@@ -73,7 +73,7 @@ public class BottomNavigationPresenterTest {
     navigationEvent = PublishSubject.create();
 
     presenter = new MainPresenter(mainView, installManager, rootInstallationRetryHandler,
-        CrashReport.getInstance(), apkFy, contentPuller, notificationSyncScheduler,
+        CrashReport.getInstance(), apkFyManager, contentPuller, notificationSyncScheduler,
         installCompletedNotifier, sharedPreferences, sharedPreferences, fragmentNavigator,
         deepLinkManager, true, bottomNavigationActivity, Schedulers.immediate(), Schedulers.io(),
         bottomNavigationNavigator, updatesManager, autoUpdateManager, permissionService,

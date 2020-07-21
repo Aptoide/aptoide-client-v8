@@ -126,7 +126,8 @@ public class DeepLinkManager {
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1),
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY), true,
-            intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, false));
+            intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, false),
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OEM_ID_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY)) {
         appViewDeepLink(
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
@@ -249,7 +250,8 @@ public class DeepLinkManager {
     appNavigator.navigateWithMd5(md5);
   }
 
-  private void appViewDeepLink(long appId, String packageName, boolean showPopup, boolean isApkfy) {
+  private void appViewDeepLink(long appId, String packageName, boolean showPopup, boolean isApkfy,
+      String oemId) {
     AppViewFragment.OpenType openType;
     if (isApkfy) {
       openType = AppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
@@ -258,7 +260,7 @@ public class DeepLinkManager {
           : AppViewFragment.OpenType.OPEN_ONLY;
     }
 
-    appNavigator.navigateWithAppId(appId, packageName, openType, "");
+    appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId);
   }
 
   private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
@@ -408,7 +410,7 @@ public class DeepLinkManager {
 
   private void pickAppDeeplink() {
     subscriptions.add(adsRepository.getAdForShortcut()
-        .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false, false),
+        .subscribe(ad -> appViewDeepLink(ad.getAppId(), ad.getPackageName(), false, false, null),
             throwable -> Logger.getInstance()
                 .e(TAG, "pickAppDeepLink: " + throwable)));
   }
