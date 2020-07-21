@@ -446,7 +446,7 @@ public class AppViewPresenter implements Presenter {
       PromotionViewModel promotionViewModel) {
     WalletApp walletApp = promotionViewModel.getWalletApp();
     DownloadModel downloadModel = walletApp.getDownloadModel();
-    if (downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+    if (downloadModel != null && downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();

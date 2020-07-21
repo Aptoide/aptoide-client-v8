@@ -118,6 +118,7 @@ public class MainPresenter implements Presenter {
         .filter(View.LifecycleEvent.CREATE::equals)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .flatMapSingle(__ -> appsNameExperiment.getAppsName())
+        .observeOn(viewScheduler)
         .doOnNext(name -> aptoideBottomNavigator.setAppsName(name))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
