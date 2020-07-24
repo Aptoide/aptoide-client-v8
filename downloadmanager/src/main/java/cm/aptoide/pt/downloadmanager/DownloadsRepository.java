@@ -18,8 +18,12 @@ public class DownloadsRepository {
     this.downloadPersistence = downloadPersistence;
   }
 
-  public void save(RoomDownload download) {
-    downloadPersistence.save(download);
+  public Completable save(RoomDownload download) {
+    return downloadPersistence.save(download);
+  }
+
+  public Completable remove(String md5) {
+    return downloadPersistence.delete(md5);
   }
 
   public Single<RoomDownload> getDownloadAsSingle(String md5) {
@@ -44,10 +48,6 @@ public class DownloadsRepository {
 
   public Observable<List<RoomDownload>> getWaitingToMoveFilesDownloads() {
     return downloadPersistence.getUnmovedFilesDownloads();
-  }
-
-  public Completable remove(String md5) {
-    return downloadPersistence.delete(md5);
   }
 
   public Observable<List<RoomDownload>> getDownloadListByMd5(String md5) {

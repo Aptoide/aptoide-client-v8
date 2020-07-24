@@ -56,11 +56,19 @@ public class AppNavigator {
 
   public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
       String tag) {
+    navigateWithAppId(appId, packageName, openType, tag, null);
+  }
+
+  public void navigateWithAppId(long appId, String packageName, AppViewFragment.OpenType openType,
+      String tag, String oemId) {
     Bundle bundle = new Bundle();
     bundle.putString(AppViewFragment.BundleKeys.ORIGIN_TAG.name(), tag);
     bundle.putLong(AppViewFragment.BundleKeys.APP_ID.name(), appId);
     bundle.putString(AppViewFragment.BundleKeys.PACKAGE_NAME.name(), packageName);
     bundle.putSerializable(AppViewFragment.BundleKeys.SHOULD_INSTALL.name(), openType);
+    if (openType == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP && oemId != null) {
+      bundle.putString(AppViewFragment.BundleKeys.OEM_ID.name(), oemId);
+    }
     AppViewFragment fragment = new AppViewFragment();
     fragment.setArguments(bundle);
     fragmentNavigator.navigateTo(fragment, true);

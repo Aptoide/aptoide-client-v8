@@ -16,7 +16,7 @@ public interface DownloadPersistence {
 
   Completable delete(String md5);
 
-  void save(RoomDownload download);
+  Completable save(RoomDownload download);
 
   Observable<List<RoomDownload>> getRunningDownloads();
 

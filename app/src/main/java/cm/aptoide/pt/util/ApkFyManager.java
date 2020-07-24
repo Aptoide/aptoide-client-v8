@@ -17,7 +17,7 @@ import java.util.zip.ZipFile;
  * Created by neuro on 30-12-2016.
  */
 
-public class ApkFy {
+public class ApkFyManager {
 
   private static final String TAG = "ApkFy";
 
@@ -25,7 +25,7 @@ public class ApkFy {
   private final Intent intent;
   private final SharedPreferences securePreferences;
 
-  public ApkFy(Context context, Intent intent, SharedPreferences securePreferences) {
+  public ApkFyManager(Context context, Intent intent, SharedPreferences securePreferences) {
     this.context = context;
     this.intent = intent;
     this.securePreferences = securePreferences;
@@ -33,19 +33,25 @@ public class ApkFy {
 
   public void run() {
     if (SecurePreferences.shouldRunApkFy(securePreferences)) {
-      Long appId = extractAppId(context);
-      if (appId != null) {
+      ApkfyParameters params = extractApkfyParameters(context);
+      if (params.getAppId() != null) {
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT, true);
-        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, appId);
+        intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, params.getAppId());
+        if (params.getOemId() != null && !params.getOemId()
+            .isEmpty()) {
+          intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.OEM_ID_KEY, params.getOemId());
+        }
         intent.putExtra(DeepLinkIntentReceiver.DeepLinksKeys.APK_FY, true);
       }
       SecurePreferences.setApkFyRun(securePreferences);
     }
   }
 
-  private Long extractAppId(Context context) {
+  private ApkfyParameters extractApkfyParameters(Context context) {
+    Long appId = null;
+    String oemId = null;
 
-    String appId = null;
+    String stringAppId = null;
     try {
       final String sourceDir = context.getPackageManager()
           .getPackageInfo(BuildConfig.APPLICATION_ID, 0).applicationInfo.sourceDir;
@@ -57,21 +63,23 @@ public class ApkFy {
         Properties properties = new Properties();
         properties.load(is);
         if (properties.containsKey("downloadId")) {
-          appId = properties.getProperty("downloadId");
+          stringAppId = properties.getProperty("downloadId");
         }
-
-        return appId != null ? Long.parseLong(appId) : null;
+        if (properties.containsKey("oemid")) {
+          oemId = properties.getProperty("oemid");
+        }
+        appId = stringAppId != null ? Long.parseLong(stringAppId) : null;
       }
     } catch (Exception e) {
-      if (appId != null) {
+      if (stringAppId != null) {
         CrashReport.getInstance()
-            .log("APKFY_APP_ID", appId);
+            .log("APKFY_APP_ID", stringAppId);
       }
       Logger.getInstance()
           .d(TAG, e.getMessage());
       CrashReport.getInstance()
           .log(e);
     }
-    return null;
+    return new ApkfyParameters(appId, oemId);
   }
 }

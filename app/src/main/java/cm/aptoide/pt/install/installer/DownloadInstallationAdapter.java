@@ -82,7 +82,7 @@ public class DownloadInstallationAdapter implements Installation {
     return download.getFilesToDownload();
   }
 
-  @Override public void saveFileChanges() {
-    downloadPersistence.save(download);
+  @Override public Completable saveFileChanges() {
+    return downloadPersistence.save(download);
   }
 }

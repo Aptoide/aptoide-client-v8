@@ -704,7 +704,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
       FileOutputStream saveit = new FileOutputStream(TMP_MYAPP_FILE);
       BufferedOutputStream bout = new BufferedOutputStream(saveit, 1024);
-      byte data[] = new byte[1024];
+      byte[] data = new byte[1024];
 
       int readed = getit.read(data, 0, 1024);
       while (readed != -1) {
@@ -771,6 +771,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     public static final String APP_MD5_KEY = "md5";
     public static final String APP_ID_KEY = "appId";
+    public static final String OEM_ID_KEY = "oemId";
     public static final String PACKAGE_NAME_KEY = "packageName";
     public static final String UNAME = "uname";
     public static final String STORENAME_KEY = "storeName";
@@ -792,6 +793,9 @@ public class DeepLinkIntentReceiver extends ActivityView {
 
     // Wallet Install Dialog
     public static final String WALLET_PACKAGE_NAME_KEY = "wallet_package_name";
+
+    //Updates Notification AB Test Group
+    public static final String UPDATES_NOTIFICATION_GROUP = "updates_notification_group";
   }
 
   class MyAppDownloader extends AsyncTask<String, Void, Void> {

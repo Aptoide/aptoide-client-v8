@@ -24,15 +24,20 @@ class AppViewModelManagerTest {
   @Mock
   private lateinit var storeManager: StoreManager
   private lateinit var marketName: String
+
   @Mock
   private lateinit var appCenter: AppCenter
   private lateinit var downloadStateParser: DownloadStateParser
+
   @Mock
   private lateinit var installManager: InstallManager
+
   @Mock
   private lateinit var appcMigrationManager: AppcMigrationManager
+
   @Mock
   private lateinit var appCoinsManager: AppCoinsManager
+
   @Mock
   private lateinit var store: Store
 
@@ -58,7 +63,7 @@ class AppViewModelManagerTest {
     val detailedAppRequestResult = DetailedAppRequestResult(detailedApp)
     val appViewConfiguration =
         AppViewConfiguration(1.toLong(), "anyString", "anyString", "", null, null, "", "", 0.0,
-            "", "", "")
+            "", "", "", null)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -110,7 +115,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, "md5", "",
             0.0,
-            "", "", "")
+            "", "", "", null)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -163,7 +168,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "anyString", "anyString", "", null, null, null,
             "uniqueName", 0.0,
-            "", "", "")
+            "", "", "", null)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -215,7 +220,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
             0.0,
-            "", "", "")
+            "", "", "", null)
 
     val appViewModelManager =
         AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,
@@ -267,7 +272,7 @@ class AppViewModelManagerTest {
     val appViewConfiguration =
         AppViewConfiguration((-1).toLong(), "packageName", "storeName", "", null, null, null, null,
             0.0,
-            "", "", "")
+            "", "", "", null)
 
     val appViewModelManager =
         spy(AppViewModelManager(appViewConfiguration, storeManager, marketName, appCenter,

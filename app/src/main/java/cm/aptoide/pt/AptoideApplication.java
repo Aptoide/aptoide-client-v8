@@ -17,6 +17,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
+import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.analytics.AnalyticsManager;
@@ -64,6 +65,8 @@ import cm.aptoide.pt.notification.NotificationService;
 import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
+import cm.aptoide.pt.notification.UpdatesNotificationManager;
+import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -194,6 +197,8 @@ public abstract class AptoideApplication extends Application {
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
   @Inject AppsNameExperimentManager appsNameExperimentManager;
+  @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
+  @Inject UpdatesNotificationManager updatesNotificationManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -281,6 +286,11 @@ public abstract class AptoideApplication extends Application {
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
+    androidx.work.Configuration configuration =
+        new androidx.work.Configuration.Builder().setWorkerFactory(updatesNotificationWorkerFactory)
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build();
+    WorkManager.initialize(this, configuration);
     //
     // async app initialization
     // beware! this code could be executed at the same time the first activity is
@@ -293,6 +303,7 @@ public abstract class AptoideApplication extends Application {
      */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeSentry())
+        .andThen(setUpUpdatesNotification())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
@@ -337,6 +348,10 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
+  }
+
+  private Completable setUpUpdatesNotification() {
+    return updatesNotificationManager.setUpNotification();
   }
 
   private Completable setUpAppsNameAbTest() {

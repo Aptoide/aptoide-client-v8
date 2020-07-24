@@ -30,7 +30,7 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
-import cm.aptoide.pt.util.ApkFy;
+import cm.aptoide.pt.util.ApkFyManager;
 import cm.aptoide.pt.view.DeepLinkManager;
 import cm.aptoide.pt.view.wizard.WizardFragment;
 import com.aptoide.authentication.AuthenticationException;
@@ -55,7 +55,7 @@ public class MainPresenter implements Presenter {
   private final DeepLinkManager deepLinkManager;
   private final NotificationSyncScheduler notificationSyncScheduler;
   private final InstallCompletedNotifier installCompletedNotifier;
-  private final ApkFy apkFy;
+  private final ApkFyManager apkFyManager;
   private final boolean firstCreated;
   private final AptoideBottomNavigator aptoideBottomNavigator;
   private final Scheduler viewScheduler;
@@ -73,7 +73,8 @@ public class MainPresenter implements Presenter {
 
   public MainPresenter(MainView view, InstallManager installManager,
       RootInstallationRetryHandler rootInstallationRetryHandler, CrashReport crashReport,
-      ApkFy apkFy, ContentPuller contentPuller, NotificationSyncScheduler notificationSyncScheduler,
+      ApkFyManager apkFyManager, ContentPuller contentPuller,
+      NotificationSyncScheduler notificationSyncScheduler,
       InstallCompletedNotifier installCompletedNotifier, SharedPreferences sharedPreferences,
       SharedPreferences securePreferences, FragmentNavigator fragmentNavigator,
       DeepLinkManager deepLinkManager, boolean firstCreated,
@@ -87,7 +88,7 @@ public class MainPresenter implements Presenter {
     this.installManager = installManager;
     this.rootInstallationRetryHandler = rootInstallationRetryHandler;
     this.crashReport = crashReport;
-    this.apkFy = apkFy;
+    this.apkFyManager = apkFyManager;
     this.contentPuller = contentPuller;
     this.notificationSyncScheduler = notificationSyncScheduler;
     this.installCompletedNotifier = installCompletedNotifier;
@@ -117,13 +118,14 @@ public class MainPresenter implements Presenter {
         .filter(View.LifecycleEvent.CREATE::equals)
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .flatMapSingle(__ -> appsNameExperiment.getAppsName())
+        .observeOn(viewScheduler)
         .doOnNext(name -> aptoideBottomNavigator.setAppsName(name))
         .subscribe(__ -> {
         }, throwable -> crashReport.log(throwable));
 
     view.getLifecycleEvent()
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
-        .doOnNext(created -> apkFy.run())
+        .doOnNext(created -> apkFyManager.run())
         .filter(created -> firstCreated)
         .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

@@ -102,8 +102,9 @@ public class DefaultInstaller implements Installer {
         .doOnNext(installation -> {
           installation.setStatus(RoomInstalled.STATUS_INSTALLING);
           installation.setType(RoomInstalled.TYPE_UNKNOWN);
-          moveInstallationFiles(installation);
         })
+        .flatMap(installation -> moveInstallationFiles(installation).andThen(
+            Observable.just(installation)))
         .flatMap(installation -> Observable.just(
             isInstalled(installation.getPackageName(), installation.getVersionCode()))
             .onErrorReturn(throwable -> false)
@@ -122,8 +123,14 @@ public class DefaultInstaller implements Installer {
                 }
               }
             }))
+        .first()
         .doOnError((throwable) -> CrashReport.getInstance()
             .log(throwable))
+        .flatMap(installation -> installedRepository.get(installation.getPackageName(),
+            installation.getVersionCode())
+            .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+            .map(__ -> installation))
+        .doOnNext(this::removeInstallationFiles)
         .toCompletable();
   }
 
@@ -176,8 +183,9 @@ public class DefaultInstaller implements Installer {
 
   private Observable<Installation> startDefaultInstallation(Context context,
       Installation installation, boolean shouldSetPackageInstaller) {
-    return defaultInstall(context, installation, shouldSetPackageInstaller).flatMapCompletable(
-        installation1 -> installation1.save());
+    return defaultInstall(context, installation, shouldSetPackageInstaller).flatMap(
+        installation1 -> installation1.save()
+            .andThen(Observable.just(installation1)));
   }
 
   @NonNull
@@ -193,7 +201,8 @@ public class DefaultInstaller implements Installer {
                     + installation.getPackageName()
                     + ". Error message: "
                     + throwable.getMessage())))
-        .flatMapCompletable(installation1 -> installation1.save());
+        .flatMap(installation1 -> installation1.save()
+            .andThen(Observable.just(installation1)));
   }
 
   private Observable<Installation> rootInstall(Installation installation) {
@@ -232,7 +241,7 @@ public class DefaultInstaller implements Installer {
     }
   }
 
-  private void moveInstallationFiles(Installation installation) {
+  private Completable moveInstallationFiles(Installation installation) {
     boolean filesMoved = false;
     String destinationPath = OBB_FOLDER + installation.getPackageName() + "/";
 
@@ -249,7 +258,18 @@ public class DefaultInstaller implements Installer {
       }
     }
     if (filesMoved) {
-      installation.saveFileChanges();
+      return installation.saveFileChanges();
+    }
+    return Completable.complete();
+  }
+
+  private void removeInstallationFiles(Installation installation) {
+    for (RoomFileToDownload file : installation.getFiles()) {
+      if (file.getFileType() != RoomFileToDownload.OBB) {
+        FileUtils.removeFile(file.getFilePath());
+        Logger.getInstance()
+            .d(TAG, "removing the file " + file.getFilePath() + " " + file.getFileName());
+      }
     }
   }
 
