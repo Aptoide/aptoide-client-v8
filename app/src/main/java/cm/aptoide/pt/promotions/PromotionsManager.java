@@ -7,7 +7,7 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.DownloadStateParser;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.InstallAnalytics;
 import cm.aptoide.pt.install.InstallManager;
@@ -157,7 +157,7 @@ public class PromotionsManager {
         AnalyticsManager.Action.CLICK, offerResponseStatus,
         downloadStateParser.getOrigin(download.getAction()), download.hasSplits());
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.PROMOTIONS,
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.PROMOTIONS,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.getTrustedBadge(), download.getStoreName(), false);
