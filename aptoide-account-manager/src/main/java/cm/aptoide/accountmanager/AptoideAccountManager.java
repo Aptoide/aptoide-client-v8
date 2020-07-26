@@ -222,7 +222,7 @@ public class AptoideAccountManager {
         .toCompletable();
   }
 
-  public Observable<Boolean> enabled() {
+  public Observable<Boolean> hasMatureContentEnabled() {
     return adultContent.enabled();
   }
 

@@ -14,7 +14,6 @@ import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
-import cm.aptoide.pt.search.model.SearchResult;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -36,11 +35,9 @@ import rx.subjects.PublishSubject;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -183,80 +180,6 @@ public class SearchResultPresenterTest {
     verify(searchResultView).setVisibilityOnRestore();
   }
 
-  @Test public void doFirstSearchTestWithNoStoreAndNonEmptyList() {
-    presenter.doFirstSearch();
-
-    //When the user submits a search and has no store associated to the search
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
-    when(searchResultModel.getAllStoresOffset()).thenReturn(0);
-    when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
-    //It should load data
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchResultModel.getStoreName()).thenReturn("");
-    when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
-    List<SearchAppResult> searchAppResultList = new ArrayList<>();
-    searchAppResultList.add(searchAppResult);
-
-    //And search in both followed and non-followed stores
-    when(searchManager.searchInFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(new SearchResult.Success(searchAppResultList)));
-    when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(new SearchResult.Success(searchAppResultList)));
-    when(searchResultModel.isAllStoresSelected()).thenReturn(true);
-    when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(searchResultView).hideSuggestionsViews();
-    verify(searchResultView).showLoading();
-
-    verify(searchResultView).addFollowedStoresResult("non-empty", searchAppResultList);
-    verify(searchResultView).addAllStoresResult("non-empty", searchAppResultList);
-    verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
-    verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfAllStores(anyInt());
-    verify(searchResultView, times(0)).hideFollowedStoresTab();
-    verify(searchResultView, times(0)).hideNonFollowedStoresTab();
-
-    verify(searchResultView).hideLoading();
-    verify(searchResultView).showResultsView();
-    verify(searchResultView).showAllStoresResult();
-  }
-
-  @Test public void doFirstSearchTestWithStoreAndEmptyList() {
-    presenter.doFirstSearch();
-
-    //When the user submits a search and has a store associated to the view
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchManager.isAdultContentEnabled()).thenReturn(Observable.just(false));
-    when(searchResultModel.getAllStoresOffset()).thenReturn(0);
-    when(searchResultModel.getFollowedStoresOffset()).thenReturn(0);
-
-    //It should load data
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchResultModel.getStoreName()).thenReturn("non-empty");
-    when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
-    List<SearchAppResult> searchAppResultList = new ArrayList<>();
-
-    //And search in that specific store
-    when(searchManager.searchInStore(anyString(), anyString(), anyInt())).thenReturn(
-        Single.just(new SearchResult.Success(searchAppResultList)));
-    when(searchResultModel.isAllStoresSelected()).thenReturn(true);
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(searchResultView).hideSuggestionsViews();
-    verify(searchResultView).showLoading();
-
-    verify(searchResultView).setViewWithStoreNameAsSingleTab("non-empty");
-    verify(searchResultModel).setAllStoresSelected(anyBoolean());
-    verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
-
-    verify(searchResultView).hideLoading();
-    verify(searchResultView).showNoResultsView();
-    verify(searchAnalytics).searchNoResults(any(SearchQueryModel.class));
-  }
-
   @Test public void firstAdsDataLoadTestNonEmptyAds() {
     presenter.firstAdsDataLoad();
 
@@ -273,7 +196,6 @@ public class SearchResultPresenterTest {
 
     // We have these ads disabled
     verify(searchResultModel).setHasLoadedAds();
-    verify(searchResultView).setFollowedStoresAdsEmpty();
     verify(searchResultView).setAllStoresAdsEmpty();
   }
 
@@ -289,31 +211,6 @@ public class SearchResultPresenterTest {
 
     verify(searchResultModel).setHasLoadedAds();
     verify(searchResultView).setAllStoresAdsEmpty();
-    verify(searchResultView).setFollowedStoresAdsEmpty();
-  }
-
-  @Test public void handleClickFollowedStoresSearchButtonTest() {
-    presenter.handleClickFollowedStoresSearchButton();
-
-    //When the user clicks on the followed stores tab
-    when(searchResultView.clickFollowedStoresSearchButton()).thenReturn(Observable.just(null));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //It should show the results from the followedStores
-    verify(searchResultView).showFollowedStoresResult();
-  }
-
-  @Test public void handleClickEverywhereSearchButtonTest() {
-    presenter.handleClickEverywhereSearchButton();
-
-    //When the user clicks on the All Stores tab
-    when(searchResultView.clickEverywhereSearchButton()).thenReturn(Observable.just(null));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //It should display the result from all stores
-    verify(searchResultView).showAllStoresResult();
   }
 
   @Test public void handleClickToOpenAppViewFromItemTest() {
@@ -349,71 +246,6 @@ public class SearchResultPresenterTest {
     //It should send the necessary analytics and navigate to the app's App view
     verify(searchAnalytics).searchAdClick(new SearchQueryModel("non-empty"), "random", 1, false);
     verify(searchNavigator).goToAppView(searchAdResult);
-  }
-
-  @Test public void handleClickOnNoResultsImageTest() {
-    presenter.handleClickOnNoResultsImage();
-
-    //When the search has no results and the user clicks on the image from the no result view
-    when(searchResultView.clickNoResultsSearchButton()).thenReturn(Observable.just(null));
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getStoreName()).thenReturn("random");
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should navigate back to the search view
-    verify(searchNavigator).goToSettings();
-  }
-
-  @Test public void handleAllStoresListReachedBottomTest() {
-    presenter.handleAllStoresListReachedBottom();
-
-    //When the user reaches the bottom of the list from the all stores tab
-    when(searchResultView.allStoresResultReachedBottom()).thenReturn(Observable.just(null));
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.hasReachedBottomOfAllStores()).thenReturn(false);
-    when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
-    when(searchResultModel.getAllStoresOffset()).thenReturn(0);
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    List<SearchAppResult> searchAppResultList = new ArrayList<>();
-    searchAppResultList.add(searchAppResult);
-    when(searchManager.searchInNonFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(new SearchResult.Success(searchAppResultList)));
-    when(searchManager.shouldLoadNativeAds()).thenReturn(Single.just(false));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should display the loading more animation and load more
-    verify(searchResultView).showLoadingMore();
-    verify(searchResultView).addAllStoresResult(anyString(), eq(searchAppResultList));
-    verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfAllStores(anyInt());
-    verify(searchResultView).hideLoadingMore();
-    verify(searchResultModel).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(anyInt());
-  }
-
-  @Test public void handleFollowedStoresListReachedBottomTest() {
-    presenter.handleFollowedStoresListReachedBottom();
-
-    //When the user reaches the bottom of the list from the followed stores tab
-    when(searchResultView.followedStoresResultReachedBottom()).thenReturn(Observable.just(null));
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.hasReachedBottomOfFollowedStores()).thenReturn(false);
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchResultModel.isOnlyTrustedApps()).thenReturn(true);
-    when(searchResultModel.getAllStoresOffset()).thenReturn(0);
-    List<SearchAppResult> searchAppResultList = new ArrayList<>();
-    searchAppResultList.add(searchAppResult);
-    when(searchManager.searchInFollowedStores(anyString(), anyBoolean(), anyInt())).thenReturn(
-        Single.just(new SearchResult.Success(searchAppResultList)));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //Then it should display the loading more animation and load more
-    verify(searchResultView).showLoadingMore();
-    verify(searchResultView).addFollowedStoresResult("non-empty", searchAppResultList);
-    verify(searchResultModel, times(2)).incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-        anyInt());
-    verify(searchResultView).hideLoadingMore();
   }
 
   @Test public void handleSuggestionQueryTextSubmittedTest() {
