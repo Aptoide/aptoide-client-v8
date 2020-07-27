@@ -14,16 +14,15 @@ interface Download {
   fun getVersionCode(): Int
   fun getPath(): String
   fun getPathAlt(): String
-  fun getObb(): Obb
+  fun getObb(): Obb?
   fun hasAdvertising(): Boolean
   fun hasBilling(): Boolean
   fun getMalware(): Malware
   fun getSize(): Long
   fun getSplits(): List<Split>
   fun getRequiredSplits(): List<String>
-  fun getTrustedBadge(): String
   fun getStoreName(): String
   fun getOemId(): String
 
-  fun getDownloadModel(): DownloadStatusModel
+  fun getDownloadModel(): DownloadStatusModel?
 }

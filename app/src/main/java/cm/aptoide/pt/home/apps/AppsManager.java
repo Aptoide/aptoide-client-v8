@@ -7,7 +7,6 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
@@ -223,9 +222,9 @@ public class AppsManager {
         download.hasSplits(), download.getTrustedBadge(), null, download.getStoreName(),
         installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false, download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
+        getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
+        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName());
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -237,7 +236,7 @@ public class AppsManager {
         AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
         download.hasSplits(), trustedBadge, tag, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.getTrustedBadge(), download.getStoreName());
   }

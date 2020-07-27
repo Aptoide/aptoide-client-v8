@@ -1,31 +1,55 @@
 package cm.aptoide.pt.search.model;
 
+import cm.aptoide.pt.aab.Split;
+import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
-import org.parceler.Parcel;
+import cm.aptoide.pt.download.view.Download;
+import cm.aptoide.pt.download.view.DownloadStatusModel;
+import java.util.Collections;
+import java.util.List;
 
-@Parcel public class SearchAppResult {
-  int rank;
-  String icon;
-  String storeName;
-  Long storeId;
-  String storeTheme;
-  long modifiedDate;
-  float averageRating;
-  long totalDownloads;
-  String appName;
-  String packageName;
-  long appId;
-  boolean hasOtherVersions;
-  private boolean appcBilling;
-  private boolean appcAdvertising;
+public class SearchAppResult implements Download {
+  private int rank;
+  private String icon;
+  private String storeName;
+  private Long storeId;
+  private String storeTheme;
+  private long modifiedDate;
+  private float averageRating;
+  private long totalDownloads;
+  private String appName;
+  private String packageName;
+  private String md5;
+  private long appId;
+  private boolean hasOtherVersions;
+  private boolean billing;
+  private boolean advertising;
+  private int versionCode;
+  private long size;
+  private String versionName;
+  private String path;
+  private String pathAlt;
+  private Malware malware;
+  private String oemId;
+
+  boolean isHighlightedResult;
+
+  // TODO: Missing from WS
+  Obb obb;
+  List<Split> splits;
+  List<String> requiredSplits;
+  DownloadStatusModel downloadModel;
 
   public SearchAppResult() {
   }
 
   public SearchAppResult(int rank, String icon, String storeName, Long storeId, String storeTheme,
       long modifiedDate, float averageRating, long totalDownloads, String appName,
-      String packageName, long appId, boolean hasOtherVersions, boolean appcBilling,
-      boolean appcAdvertising) {
+      String packageName, String md5, long appId, int versionCode, String versionName, String path,
+      String pathAlt, Malware malware, long size, boolean hasOtherVersions, boolean billing,
+      boolean advertising, String oemId, boolean isHighlightedResult,
+      DownloadStatusModel downloadModel) {
     this.rank = rank;
     this.icon = icon;
     this.storeName = storeName;
@@ -37,12 +61,35 @@ import org.parceler.Parcel;
     this.packageName = packageName;
     this.appId = appId;
     this.hasOtherVersions = hasOtherVersions;
-    this.appcBilling = appcBilling;
-    this.appcAdvertising = appcAdvertising;
+    this.billing = billing;
+    this.advertising = advertising;
     this.storeId = storeId;
+    this.md5 = md5;
+    this.versionName = versionName;
+    this.versionCode = versionCode;
+    this.path = path;
+    this.pathAlt = pathAlt;
+    this.malware = malware;
+    this.size = size;
+    this.oemId = oemId;
+    this.isHighlightedResult = isHighlightedResult;
+
+    this.splits = Collections.emptyList();
+    this.requiredSplits = Collections.emptyList();
+    this.obb = null;
+    this.downloadModel = downloadModel;
   }
 
-  public SearchAppResult(SearchApp searchApp) {
+  public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel) {
+    this(app.getRank(), app.getIcon(), app.getStoreName(), app.getStoreId(), app.getStoreTheme(),
+        app.getModifiedDate(), app.getAverageRating(), app.getTotalDownloads(), app.getAppName(),
+        app.getPackageName(), app.getMd5(), app.getAppId(), app.getVersionCode(),
+        app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
+        app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
+        app.isHighlightedResult(), downloadModel);
+  }
+
+  public SearchAppResult(SearchApp searchApp, String oemId, boolean isHighlighted) {
     this(searchApp.getFile()
             .getMalware()
             .getRank()
@@ -54,8 +101,14 @@ import org.parceler.Parcel;
             .getTime(), searchApp.getStats()
             .getRating()
             .getAvg(), searchApp.getStats()
-            .getPdownloads(), searchApp.getName(), searchApp.getPackageName(), searchApp.getId(),
-        searchApp.hasVersions(), searchApp.hasBilling(), searchApp.hasAdvertising());
+            .getPdownloads(), searchApp.getName(), searchApp.getPackageName(), searchApp.getFile()
+            .getMd5sum(), searchApp.getId(), searchApp.getFile()
+            .getVercode(), searchApp.getFile()
+            .getVername(), searchApp.getFile()
+            .getPath(), searchApp.getFile()
+            .getPathAlt(), searchApp.getFile()
+            .getMalware(), searchApp.getSize(), searchApp.hasVersions(), searchApp.hasBilling(),
+        searchApp.hasAdvertising(), oemId, isHighlighted, null);
   }
 
   public int getRank() {
@@ -102,19 +155,71 @@ import org.parceler.Parcel;
     return hasOtherVersions;
   }
 
-  public boolean hasAppcAdvertising() {
-    return this.appcAdvertising;
+  public boolean hasAdvertising() {
+    return this.advertising;
   }
 
-  public boolean hasAppcBilling() {
-    return this.appcBilling;
+  public boolean hasBilling() {
+    return this.billing;
   }
 
   public boolean isAppcApp() {
-    return hasAppcBilling() || hasAppcAdvertising();
+    return hasBilling() || hasAdvertising();
   }
 
   public Long getStoreId() {
     return storeId;
+  }
+
+  @Override public String getMd5() {
+    return md5;
+  }
+
+  @Override public int getVersionCode() {
+    return versionCode;
+  }
+
+  @Override public String getVersionName() {
+    return versionName;
+  }
+
+  @Override public String getPath() {
+    return path;
+  }
+
+  @Override public String getPathAlt() {
+    return pathAlt;
+  }
+
+  public Obb getObb() {
+    return obb;
+  }
+
+  @Override public Malware getMalware() {
+    return malware;
+  }
+
+  @Override public long getSize() {
+    return size;
+  }
+
+  @Override public List<Split> getSplits() {
+    return splits;
+  }
+
+  @Override public List<String> getRequiredSplits() {
+    return requiredSplits;
+  }
+
+  @Override public DownloadStatusModel getDownloadModel() {
+    return downloadModel;
+  }
+
+  @Override public String getOemId() {
+    return oemId;
+  }
+
+  public boolean isHighlightedResult() {
+    return isHighlightedResult;
   }
 }

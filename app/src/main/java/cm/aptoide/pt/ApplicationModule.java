@@ -1177,9 +1177,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager,
+      DownloadStateParser downloadStateParser, OemidProvider oemidProvider,
+      InstallManager installManager, AppcMigrationManager appcMigrationManager) {
     return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
+        installManager, appcMigrationManager, downloadStateParser, oemidProvider);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(

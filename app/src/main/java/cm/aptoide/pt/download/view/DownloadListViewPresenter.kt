@@ -78,7 +78,7 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
   }
 
   private fun installApp(downloadClick: DownloadClick): Completable {
-    when (downloadClick.download.getDownloadModel().action) {
+    when (downloadClick.download.getDownloadModel()?.action) {
       DownloadStatusModel.Action.MIGRATE,
       DownloadStatusModel.Action.UPDATE,
       DownloadStatusModel.Action.INSTALL -> {
@@ -91,6 +91,9 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
       }
       DownloadStatusModel.Action.OPEN -> {
         return downloadDialogManager.openApp(downloadClick.download.getPackageName())
+      }
+      else -> {
+        return Completable.complete()
       }
     }
   }
@@ -124,9 +127,9 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
                 createDownload(download, status)
                     .doOnNext { roomDownload ->
                       setupDownloadEvents(roomDownload, download.getAppId(),
-                          download.getDownloadModel().action, download.getTrustedBadge(),
-                          status, download.getStoreName(), download.getMalware().rank.name)
-                      if (DownloadStatusModel.Action.MIGRATE == download.getDownloadModel().action) {
+                          download.getDownloadModel()!!.action, status, download.getStoreName(),
+                          download.getMalware().rank.name)
+                      if (DownloadStatusModel.Action.MIGRATE == download.getDownloadModel()!!.action) {
                         installAnalytics.uninstallStarted(download.getPackageName(),
                             AnalyticsManager.Action.INSTALL,
                             analyticsContext)
@@ -146,7 +149,7 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
                              offerResponseStatus: OfferResponseStatus): Observable<RoomDownload> {
     return Observable.just(
         downloadFactory.create(
-            parseDownloadAction(download.getDownloadModel().action),
+            parseDownloadAction(download.getDownloadModel()!!.action),
             download.getAppName(), download.getPackageName(), download.getMd5(), download.getIcon(),
             download.getVersionName(), download.getVersionCode(), download.getPath(),
             download.getPathAlt(),
@@ -157,8 +160,8 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
         .doOnError { throwable ->
           if (throwable is InvalidAppException) {
             downloadAnalytics.sendAppNotValidError(download.getPackageName(),
-                mapDownloadAction(download.getDownloadModel().action), offerResponseStatus,
-                download.getDownloadModel().action == DownloadStatusModel.Action.MIGRATE,
+                mapDownloadAction(download.getDownloadModel()!!.action), offerResponseStatus,
+                download.getDownloadModel()!!.action == DownloadStatusModel.Action.MIGRATE,
                 download.getSplits().isNotEmpty(),
                 download.hasAdvertising() || download.hasBilling(), download.getMalware()
                 .rank
@@ -173,8 +176,8 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
           moPubAdsManager.adsVisibilityStatus
               .doOnSuccess { status ->
                 val dl = downloadClick.download
-                setupDownloadEvents(download, dl.getAppId(), dl.getDownloadModel().action,
-                    dl.getTrustedBadge(), status, dl.getStoreName(), dl.getMalware().rank.name)
+                setupDownloadEvents(download, dl.getAppId(), dl.getDownloadModel()!!.action, status,
+                    dl.getStoreName(), dl.getMalware().rank.name)
               }.map { download }
         }
         .doOnError { throwable -> throwable.printStackTrace() }
@@ -197,7 +200,7 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
 
   fun setupDownloadEvents(download: RoomDownload,
                           appId: Long,
-                          downloadAction: DownloadStatusModel.Action, trustedValue: String?,
+                          downloadAction: DownloadStatusModel.Action,
                           offerResponseStatus: OfferResponseStatus?,
                           storeName: String?, malwareRank: String) {
     val campaignId = notificationAnalytics.getCampaignId(download.packageName, appId)
@@ -209,14 +212,14 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
         storeName, isInApkfyContext)
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
-      downloadAnalytics.migrationClicked(download.md5, download.packageName, trustedValue,
+      downloadAnalytics.migrationClicked(download.md5, download.packageName, malwareRank,
           editorsChoicePosition, InstallType.UPDATE_TO_APPC, AnalyticsManager.Action.INSTALL,
           offerResponseStatus,
           download.hasAppc(), download.hasSplits(), storeName, isInApkfyContext)
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, true, isInApkfyContext)
     } else {
-      downloadAnalytics.installClicked(download.md5, download.packageName, trustedValue,
+      downloadAnalytics.installClicked(download.md5, download.packageName, malwareRank,
           editorsChoicePosition, mapDownloadAction(downloadAction), AnalyticsManager.Action.INSTALL,
           offerResponseStatus,
           download.hasAppc(), download.hasSplits(), storeName, isInApkfyContext)

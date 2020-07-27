@@ -59,12 +59,17 @@ import rx.Single;
         .map(minimalAd -> new SearchAdResult(minimalAd));
   }
 
-  public Single<SearchResult> searchAppInStores(String query, List<Filter> filters) {
+  public Completable searchAppInStores(String query, List<Filter> filters) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
-        .flatMap(matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
-            matureEnabled));
+        .flatMapCompletable(
+            matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
+                matureEnabled));
+  }
+
+  public Observable<SearchResult> observeSearchResults() {
+    return searchRepository.observeSearchResults();
   }
 
   public SearchFilters getSearchFilters(List<Filter> viewFilters) {
@@ -91,12 +96,13 @@ import rx.Single;
     return new SearchFilters(onlyFollowedStores, onlyTrustedApps, onlyBetaApps, onlyAppcApps);
   }
 
-  public Single<SearchResult> searchInStore(String query, String storeName, List<Filter> filters) {
+  public Completable searchInStore(String query, String storeName, List<Filter> filters) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
-        .flatMap(matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
-            matureEnabled, storeName));
+        .flatMapCompletable(
+            matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
+                matureEnabled, storeName));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {

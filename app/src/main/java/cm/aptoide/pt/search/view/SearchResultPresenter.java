@@ -18,7 +18,6 @@ import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchResult;
-import cm.aptoide.pt.search.model.SearchResultCount;
 import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -89,6 +88,7 @@ import rx.schedulers.Schedulers;
     handleErrorRetryClick();
     handleFiltersClick();
     listenToSearchQueries();
+    handleNewSearchResults();
 
     handleClickOnAdultContentSwitch();
     handleAdultContentDialogPositiveClick();
@@ -98,32 +98,56 @@ import rx.schedulers.Schedulers;
     updateAdultContentSwitchOnNoResults();
   }
 
+  private void handleNewSearchResults() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .map(__ -> view.getViewModel())
+        .flatMap(viewModel -> searchManager.observeSearchResults()
+            .observeOn(viewScheduler)
+            .doOnNext(result -> view.addAllStoresResult(result.getQuery(), getResultList(result),
+                !result.getRedrawList()))
+            .observeOn(ioScheduler)
+            .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
+                .observeOn(viewScheduler)
+                .doOnSuccess(loadNativeAds -> {
+                  if (loadNativeAds) {
+                    view.showNativeAds(searchResult.getQuery());
+                  }
+                })
+                .toObservable()
+                .map(___ -> searchResult))
+            .observeOn(viewScheduler)
+            .doOnNext(searchResult -> {
+              view.hideLoadingMore();
+              view.hideLoading();
+              if (searchResult.hasError()) {
+                if (searchResult.getError() == SearchResultError.NO_NETWORK) {
+                  view.showNoNetworkView();
+                } else {
+                  view.showGenericErrorView();
+                }
+              } else {
+                if (getResultsCount(searchResult) <= 0) {
+                  view.showNoResultsView();
+                  analytics.searchNoResults(viewModel.getSearchQueryModel());
+                } else {
+                  view.showResultsView();
+                }
+              }
+            }))
+        .subscribe(__ -> {
+        }, crashReport::log);
+  }
+
   private void handleFiltersClick() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
         .flatMap(__ -> view.filtersChangeEvents()
             .map(___ -> view.getViewModel())
             .doOnNext(___ -> view.showResultsLoading())
-            .flatMap(viewModel -> loadData(viewModel.getSearchQueryModel()
-                    .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(),
-                false).toObservable()
-                .observeOn(viewScheduler)
-                .doOnNext(searchResult -> {
-                  if (searchResult.hasError()) {
-                    if (searchResult.getError() == SearchResultError.NO_NETWORK) {
-                      view.showNoNetworkView();
-                    } else {
-                      view.showGenericErrorView();
-                    }
-                  } else {
-                    if (getResultsCount(searchResult) <= 0) {
-                      view.showNoResultsView();
-                      analytics.searchNoResults(viewModel.getSearchQueryModel());
-                    } else {
-                      view.showResultsView();
-                    }
-                  }
-                }))
+            .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
+                .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
             .retry())
         .doOnNext(filters -> view.getViewModel())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -137,7 +161,7 @@ import rx.schedulers.Schedulers;
         .flatMap(viewCreated -> view.retryClicked())
         .observeOn(viewScheduler)
         .map(__ -> view.getViewModel())
-        .flatMap(model -> search(model))
+        .flatMapCompletable(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -206,11 +230,8 @@ import rx.schedulers.Schedulers;
         .map(__ -> view.getViewModel())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), true))
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.hideLoadingMore())
-        .filter(data -> data != null)
+        .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -365,44 +386,13 @@ import rx.schedulers.Schedulers;
         .getStoreTheme(), storeName);
   }
 
-  private Single<SearchResult> loadData(String query, String storeName, List<Filter> filters,
-      boolean isLoadMore) {
+  private Completable loadData(String query, String storeName, List<Filter> filters) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return loadDataForSpecificStore(query, storeName, filters, isLoadMore);
+      return searchManager.searchInStore(query, storeName, filters);
     }
     // search every store. followed and not followed
-    return loadDataFromNonFollowedStores(query, filters, isLoadMore);
-  }
-
-  @NonNull
-  private Single<SearchResult> loadDataFromNonFollowedStores(String query, List<Filter> filters,
-      boolean isLoadMore) {
-    return searchManager.searchAppInStores(query, filters)
-        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, isLoadMore));
-  }
-
-  @NonNull private Single<SearchResult> loadDataForSpecificStore(String query, String storeName,
-      List<Filter> filters, boolean isLoadMore) {
-    return searchManager.searchInStore(query, storeName, filters)
-        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, isLoadMore));
-  }
-
-  private Single<SearchResult> mapToViewAndLoadAds(String query, SearchResult searchResult,
-      boolean isLoadMore) {
-    return Single.just(searchResult)
-        .observeOn(viewScheduler)
-        .doOnSuccess(
-            dataList -> view.addAllStoresResult(query, getResultList(dataList), isLoadMore))
-        .observeOn(ioScheduler)
-        .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
-            .observeOn(viewScheduler)
-            .doOnSuccess(loadNativeAds -> {
-              if (loadNativeAds) {
-                view.showNativeAds(query);
-              }
-            })
-            .map(__ -> nonFollowedStoresSearchResult));
+    return searchManager.searchAppInStores(query, filters);
   }
 
   private int getResultsCount(SearchResult result) {
@@ -419,7 +409,7 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
-        .flatMap(model -> search(model))
+        .flatMapCompletable(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -431,7 +421,7 @@ import rx.schedulers.Schedulers;
         .flatMap(__ -> Observable.merge(view.adultContentDialogPositiveClick(),
             view.adultContentWithPinDialogPositiveClick()))
         .map(__ -> view.getViewModel())
-        .flatMap(model -> search(model))
+        .flatMapCompletable(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -448,38 +438,17 @@ import rx.schedulers.Schedulers;
         }, e -> crashReport.log(e));
   }
 
-  public Observable<SearchResultCount> search(SearchResultView.Model resultModel) {
+  public Completable search(SearchResultView.Model resultModel) {
     return Observable.just(resultModel)
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
         .observeOn(ioScheduler)
-        .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false).observeOn(
-            viewScheduler)
-            .doOnSuccess(__2 -> view.hideLoading())
-            .flatMap(searchResult -> {
-              int count = 0;
-              if (searchResult.hasError()) {
-                if (searchResult.getError() == SearchResultError.NO_NETWORK) {
-                  view.showNoNetworkView();
-                } else {
-                  view.showGenericErrorView();
-                }
-              } else {
-                count = getResultsCount(searchResult);
-                if (getResultsCount(searchResult) <= 0) {
-                  view.showNoResultsView();
-                  analytics.searchNoResults(viewModel.getSearchQueryModel());
-                } else {
-                  view.showResultsView();
-                }
-              }
-              return Single.just(count);
-            })
-            .zipWith(Single.just(viewModel),
-                (itemCount, model) -> new SearchResultCount(itemCount, model)));
+        .first()
+        .toSingle()
+        .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()));
   }
 
   @VisibleForTesting public void handleQueryTextCleaned() {

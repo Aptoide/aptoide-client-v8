@@ -121,7 +121,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void setResultForSearch(String query, SearchResultDiffModel searchResultDiffModel){
+  public void setResultForSearch(String query, SearchResultDiffModel searchResultDiffModel) {
     this.query = query;
     searchResults = searchResultDiffModel.getSearchResultsList();
     notifyDataSetChanged();
@@ -150,6 +150,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   public void setIsLoadingMore(boolean isLoadingMore) {
+    if (this.isLoadingMore == isLoadingMore) return;
     this.isLoadingMore = isLoadingMore;
     if (isLoadingMore) {
       notifyItemInserted(getItemCount() - 1);

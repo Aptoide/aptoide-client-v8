@@ -5,9 +5,7 @@ import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.search.SearchResultDiffModel;
-import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
-import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -130,11 +128,5 @@ public interface SearchResultView extends SearchSuggestionsView {
     void setHasLoadedAds();
 
     List<Filter> getFilters();
-
-    List<SearchAppResult> getAllStoresSearchAppResults();
-
-    List<SearchAdResult> getAllStoresSearchAdResults();
-
-    boolean hasData();
   }
 }

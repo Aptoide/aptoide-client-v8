@@ -8,8 +8,8 @@ class SearchResultDiffCallback(private val oldSearchResultList: List<SearchAppRe
     DiffUtil.Callback() {
 
   override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-    return oldSearchResultList?.get(oldItemPosition)?.appId == newSearchResultList?.get(
-        newItemPosition)?.appId
+    return oldSearchResultList?.get(oldItemPosition)?.getAppId() == newSearchResultList?.get(
+        newItemPosition)?.getAppId()
   }
 
   override fun getOldListSize(): Int {

@@ -271,7 +271,6 @@ public class SearchResultFragment extends BackButtonFragment
     } else {
       allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
     }
-    viewModel.addAllStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
   }
 
   @Override public Model getViewModel() {
@@ -638,7 +637,7 @@ public class SearchResultFragment extends BackButtonFragment
     suggestionsResultList.setAdapter(searchSuggestionsAdapter);
     trendingResultList.setAdapter(searchTrendingAdapter);
 
-    if (viewModel != null && viewModel.hasData()) {
+    if (viewModel != null) {
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
           ALL_STORES_SEARCH_LIST_STATE) : null);
     }
@@ -813,14 +812,6 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState) {
-
-    final List<SearchAppResult> allStoresSearchAppResults =
-        viewModel.getAllStoresSearchAppResults();
-    if (allStoresSearchAppResults.size() > 0) {
-      allStoresResultAdapter.restoreState(allStoresSearchAppResults,
-          viewModel.getAllStoresSearchAdResults());
-    }
-
     if (allStoresSearchListState != null) {
 
       RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
