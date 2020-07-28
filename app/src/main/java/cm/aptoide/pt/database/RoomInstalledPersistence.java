@@ -34,6 +34,12 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
+  public Observable<List<RoomInstalled>> getAllInstalledAndInstalling() {
+    return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
+        .flatMap(installs -> filterCompletedAndInstalling(installs))
+        .subscribeOn(Schedulers.io());
+  }
+
   public Observable<List<RoomInstalled>> getAll() {
     return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
@@ -102,6 +108,19 @@ public class RoomInstalledPersistence implements InstalledPersistence {
   @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
     return Observable.from(installs)
         .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+        .toList();
+  }
+
+  @NonNull private Observable<List<RoomInstalled>> filterCompletedAndInstalling(List<RoomInstalled> installs) {
+    return Observable.from(installs)
+        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED
+            || installed.getStatus() == RoomInstalled.STATUS_INSTALLING)
+        .doOnNext(roomInstalled -> {
+          if (roomInstalled.getPackageName()
+              .contains("github")) {
+          System.out.println("RoomInstalledPersistence.filterCompletedAndInstalling " + roomInstalled.getStatus());
+          }
+        })
         .toList();
   }
 

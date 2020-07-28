@@ -293,17 +293,15 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    boolean shouldUserPackageInstaller =
-        shouldSetPackageInstaller || !map(installation).getSplitApks()
-            .isEmpty();
+    boolean shouldUsePackageInstaller = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     return Observable.<Void>fromCallable(() -> {
       AppInstall appInstall = map(installation);
-      if (shouldSetPackageInstaller || !appInstall.getSplitApks()
-          .isEmpty()) {
-        appInstaller.install(appInstall);
-      } else {
-        startInstallIntent(context, installation.getFile());
-      }
+      //if (shouldSetPackageInstaller || !appInstall.getSplitApks()
+      //    .isEmpty()) {
+      appInstaller.install(appInstall);
+      //} else {
+      //  startInstallIntent(context, installation.getFile());
+      //}
       return null;
     }).subscribeOn(Schedulers.computation())
         .flatMap(isInstallerInstallation -> Observable.merge(
@@ -311,7 +309,7 @@ public class DefaultInstaller implements Installer {
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
                   if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        shouldUsePackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                             : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
                   }
                   return null;
@@ -330,7 +328,7 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                      shouldUsePackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                           : RoomInstalled.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
@@ -343,7 +341,7 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+            shouldUsePackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                 : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING));
   }
 

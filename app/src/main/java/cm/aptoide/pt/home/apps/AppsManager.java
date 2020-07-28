@@ -119,7 +119,7 @@ public class AppsManager {
   }
 
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {
-    return installManager.getInstallations()
+    return installManager.getInstallationsAndInstalling()
         .distinctUntilChanged()
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
@@ -161,7 +161,7 @@ public class AppsManager {
   }
 
   public Observable<List<DownloadApp>> getDownloadApps() {
-    return installManager.getInstallations()
+    return installManager.getInstallationsAndInstalling()
         .throttleLast(200, TimeUnit.MILLISECONDS)
         .flatMap(installations -> {
           if (installations == null || installations.isEmpty()) {

@@ -21,6 +21,7 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -156,14 +157,39 @@ public class InstallManager {
         .distinctUntilChanged();
   }
 
-  private List<Install> createInstallList(List<RoomDownload> downloads,
+  public Observable<List<Install>> getInstallationsAndInstalling() {
+    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
+        installedRepository.getAllInstalledAndInstalling(), this::createInstallList)
+        .distinctUntilChanged();
+  }
+
+  private synchronized List<Install> createInstallList(List<RoomDownload> downloads,
       List<RoomInstalled> installeds) {
+    List<RoomInstalled> installedList = new ArrayList<>();
+    for (RoomInstalled install : installeds) {
+      if (install.getPackageName()
+          .contains("github")) {
+        installedList.add(install);
+      }
+    }
+
+
+
     List<Install> installList = new ArrayList<>();
     for (RoomDownload download : downloads) {
       boolean found = false;
-      for (RoomInstalled installed : installeds) {
+      if (download.getPackageName()
+          .contains("github")) {
+        System.out.println("InstallManager.createInstallList 2 " + download.getOverallDownloadStatus());
+      }
+      Collections.reverse(installedList);
+      for (RoomInstalled installed : installedList) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
+          if (installed.getPackageName()
+              .contains("github")) {
+            System.out.println("InstallManager.createInstallList 3 " + installed.getStatus());
+          }
           found = true;
           InstallationState installationState;
           if (download.getVersionCode() == installed.getVersionCode()) {
@@ -171,6 +197,10 @@ public class InstallManager {
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                     installed.getVersionName(), installed.getStatus(), installed.getType(),
                     installed.getName(), installed.getIcon());
+            if (installed.getPackageName()
+                .contains("github")) {
+              System.out.println("nzxt installation state " + installed.getStatus() + " " + installationState);
+            }
           } else {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
@@ -609,8 +639,8 @@ public class InstallManager {
   }
 
   /**
-   * The caller is responsible to make sure that the download exists already
-   * this method should only be used when a download exists already(ex: resuming)
+   * The caller is responsible to make sure that the download exists already this method should only
+   * be used when a download exists already(ex: resuming)
    *
    * @return the download object to be resumed or null if doesn't exists
    */
