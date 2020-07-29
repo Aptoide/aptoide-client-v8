@@ -22,19 +22,19 @@ import rx.Scheduler
  * This presenter is only responsible for handling download actions.
  * This means that whoever uses this is responsible for updating the download status correctly
  */
-class DownloadViewActionPresenter(val installManager: InstallManager,
-                                  val moPubAdsManager: MoPubAdsManager,
-                                  val permissionManager: PermissionManager,
-                                  val appcMigrationManager: AppcMigrationManager,
-                                  val downloadDialogManager: DownloadDialogManager,
-                                  val permissionService: PermissionService,
-                                  val ioScheduler: Scheduler,
-                                  val viewScheduler: Scheduler,
-                                  val downloadFactory: DownloadFactory,
-                                  val downloadAnalytics: DownloadAnalytics,
-                                  val installAnalytics: InstallAnalytics,
-                                  val notificationAnalytics: NotificationAnalytics,
-                                  val crashReport: CrashReport) :
+open class DownloadViewActionPresenter(val installManager: InstallManager,
+                                       val moPubAdsManager: MoPubAdsManager,
+                                       val permissionManager: PermissionManager,
+                                       val appcMigrationManager: AppcMigrationManager,
+                                       val downloadDialogManager: DownloadDialogManager,
+                                       val permissionService: PermissionService,
+                                       val ioScheduler: Scheduler,
+                                       val viewScheduler: Scheduler,
+                                       val downloadFactory: DownloadFactory,
+                                       val downloadAnalytics: DownloadAnalytics,
+                                       val installAnalytics: InstallAnalytics,
+                                       val notificationAnalytics: NotificationAnalytics,
+                                       val crashReport: CrashReport) :
     SubListPresenter<DownloadClick>() {
 
   private lateinit var analyticsContext: DownloadAnalytics.AppContext

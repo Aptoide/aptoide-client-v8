@@ -6,9 +6,11 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
+import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
@@ -64,6 +66,7 @@ public class SearchResultPresenterTest {
   @Mock private SearchResultView.Model searchResultModel;
   @Mock private SearchAdResult searchAdResult;
   @Mock private SearchAppResult searchAppResult;
+  @Mock private DownloadViewActionPresenter downloadViewActionPresenter;
 
   private SearchAppResultWrapper searchAppResultWrapper;
   private SearchAdResultWrapper searchAdResultWrapper;
@@ -79,7 +82,8 @@ public class SearchResultPresenterTest {
     presenter =
         new SearchResultPresenter(searchResultView, searchAnalytics, searchNavigator, crashReport,
             Schedulers.immediate(), searchManager, trendingManager, searchSuggestionManager,
-            aptoideBottomNavigator, bottomNavigationMapper, Schedulers.immediate());
+            aptoideBottomNavigator, bottomNavigationMapper, Schedulers.immediate(),
+            downloadViewActionPresenter);
     //simulate view lifecycle event
     when(searchResultView.getLifecycleEvent()).thenReturn(lifecycleEvent);
   }
@@ -171,39 +175,6 @@ public class SearchResultPresenterTest {
     verify(searchResultView).setVisibilityOnRestore();
   }
 
-  @Test public void firstAdsDataLoadTestNonEmptyAds() {
-    presenter.firstAdsDataLoad();
-
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchResultModel.hasLoadedAds()).thenReturn(false);
-    when(searchManager.getAdsForQuery(anyString())).thenReturn(Observable.just(searchAdResult));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //verify(searchResultModel).setHasLoadedAds();
-    //verify(searchResultView).setAllStoresAdsResult(searchAdResult);
-    //verify(searchResultView).setFollowedStoresAdsResult(searchAdResult);
-
-    // We have these ads disabled
-    verify(searchResultModel).setHasLoadedAds();
-    verify(searchResultView).setAllStoresAdsEmpty();
-  }
-
-  @Test public void firstAdsDataLoadTestEmptyAds() {
-    presenter.firstAdsDataLoad();
-
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchResultModel.hasLoadedAds()).thenReturn(false);
-    when(searchManager.getAdsForQuery(anyString())).thenReturn(Observable.just(null));
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    verify(searchResultModel).setHasLoadedAds();
-    verify(searchResultView).setAllStoresAdsEmpty();
-  }
-
   @Test public void handleClickToOpenAppViewFromItemTest() {
     presenter.handleClickToOpenAppViewFromItem();
 
@@ -221,22 +192,6 @@ public class SearchResultPresenterTest {
     //verify(searchManager).recordAbTestAction();
     verify(searchAnalytics).searchAppClick(new SearchQueryModel("non-empty"), "random", 1, false);
     verify(searchNavigator).goToAppView(anyLong(), eq("random"), anyString(), eq("random"));
-  }
-
-  @Test public void handleClickToOpenAppViewFromAddTest() {
-    presenter.handleClickToOpenAppViewFromAdd();
-
-    //When the user clicks on an Ad
-    when(searchResultView.onAdClicked()).thenReturn(Observable.just(searchAdResultWrapper));
-    when(searchResultView.getViewModel()).thenReturn(searchResultModel);
-    when(searchResultModel.getSearchQueryModel()).thenReturn(new SearchQueryModel("non-empty"));
-    when(searchAdResult.getPackageName()).thenReturn("random");
-
-    lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
-
-    //It should send the necessary analytics and navigate to the app's App view
-    verify(searchAnalytics).searchAdClick(new SearchQueryModel("non-empty"), "random", 1, false);
-    verify(searchNavigator).goToAppView(searchAdResult);
   }
 
   @Test public void handleSuggestionQueryTextSubmittedTest() {
