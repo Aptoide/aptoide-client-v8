@@ -52,10 +52,6 @@ import org.parceler.Parcel;
     return loadedAds;
   }
 
-  @Override public void setHasLoadedAds() {
-    loadedAds = true;
-  }
-
   public List<Filter> getFilters() {
     return filters;
   }

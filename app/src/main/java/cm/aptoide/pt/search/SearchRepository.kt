@@ -1,7 +1,6 @@
 package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
-import androidx.recyclerview.widget.DiffUtil
 import cm.aptoide.pt.app.DownloadStateParser
 import cm.aptoide.pt.app.migration.AppcMigrationManager
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager
@@ -30,9 +29,7 @@ import rx.Single
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import java.net.UnknownHostException
-import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 class SearchRepository(val storeRepository: RoomStoreRepository,
@@ -53,7 +50,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
   fun observeSearchResults(): Observable<SearchResult> {
     return subject
         .switchMap { result ->
-          val list = result.searchResultDiffModel.searchResultsList
+          val list = result.searchResultsList
           if (list.isNotEmpty() && list[0].isHighlightedResult) {
             return@switchMap Observable.mergeDelayError(Observable.just(result),
                 observeHighlightedSearchResult(result))
@@ -77,28 +74,21 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
         .subscribeOn(Schedulers.io())
   }
 
-  private fun getHighlightedSearchResultList(result: SearchResult): List<SearchResult> {
-    if (result.redrawList) {
-      return listOf(
-          SearchResult(result.query, result.specificStore, result.searchResultDiffModel,
-              result.filters, result.currentOffset, result.nextOffset, result.total,
-              result.loading, result.error, false))
-    }
-    return listOf(result)
+  private fun getHighlightedSearchResultList(result: SearchResult): Observable<SearchResult> {
+    return Observable.just(
+        SearchResult(result.query, result.specificStore, result.searchResultsList,
+            result.filters, result.currentOffset, result.nextOffset, result.total,
+            result.loading, result.error, false))
   }
 
   private fun observeHighlightedSearchResult(ogResult: SearchResult): Observable<SearchResult> {
-    val first = ogResult.searchResultDiffModel.searchResultsList[0]
-    return Observable.combineLatest(Observable.from(getHighlightedSearchResultList(ogResult))
-        .delay(250, TimeUnit.MILLISECONDS),
+    val first = ogResult.searchResultsList[0]
+    return Observable.combineLatest(getHighlightedSearchResultList(ogResult),
         loadDownloadModel(first.getMd5(), first.getPackageName(), first.getVersionCode(), null,
             first.storeId, first.hasAdvertising() || first.hasBilling())) { r, downloadModel ->
-      val list = ArrayList(r.searchResultDiffModel.searchResultsList)
+      val list = ArrayList(r.searchResultsList)
       list[0] = SearchAppResult(list[0], downloadModel)
-      return@combineLatest SearchResult(r.query, r.specificStore,
-          calculateSearchListDifferences(list.toList(), r.searchResultDiffModel.searchResultsList),
-          r.filters,
-          r.currentOffset,
+      return@combineLatest SearchResult(r.query, r.specificStore, list, r.filters, r.currentOffset,
           r.nextOffset,
           r.total,
           r.loading, r.error, r.redrawList)
@@ -115,7 +105,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       DownloadStatusModel(downloadStateParser.parseStatusDownloadType(install.type, isMigration),
           install.progress,
           downloadStateParser.parseStatusDownloadState(install.state, install.isIndeterminate))
-    }.delay(100, TimeUnit.MILLISECONDS)
+    }.throttleLast(200, TimeUnit.MILLISECONDS)
   }
 
 
@@ -142,24 +132,22 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     return Completable.fromAction {
       results?.let { r ->
         cachedSearchResults.let { cached ->
-          var list = ArrayList(r.searchResultDiffModel.searchResultsList)
+          var list = ArrayList(r.searchResultsList)
           var shouldRedrawList = true
           if (cached != null && cached.query == r.query && cached.filters == r.filters
               && cached.specificStore == r.specificStore) {
-            list = ArrayList(cached.searchResultDiffModel.searchResultsList)
-            list.addAll(r.searchResultDiffModel.searchResultsList)
+            list = ArrayList(cached.searchResultsList)
+            list.addAll(r.searchResultsList)
             shouldRedrawList = false
           }
 
-          subject.onNext(SearchResult(r.query, r.specificStore,
-              calculateSearchListDifferences(list,
-                  cached?.searchResultDiffModel?.searchResultsList ?: Collections.emptyList()),
+          subject.onNext(SearchResult(r.query, r.specificStore, list,
               r.filters,
               r.currentOffset, r.nextOffset, r.total,
               r.loading, r.error, shouldRedrawList))
 
           cachedSearchResults =
-              SearchResult(r.query, r.specificStore, SearchResultDiffModel(null, list), r.filters,
+              SearchResult(r.query, r.specificStore, list, r.filters,
                   r.currentOffset,
                   r.nextOffset,
                   r.total,
@@ -210,7 +198,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
           .flatMap { list -> mapToSearchAppResultList(list, query) }
           .first()
           .map { list ->
-            SearchResult(query, specificStore, SearchResultDiffModel(null, list), filters,
+            SearchResult(query, specificStore, list, filters,
                 r.dataList.offset,
                 r.dataList.next, r.dataList.total,
                 !r.dataList.isLoaded, null)
@@ -230,7 +218,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     val newList: ArrayList<SearchAppResult> = ArrayList()
     for ((i, app) in searchAppList.withIndex()) {
       newList.add(
-          SearchAppResult(app, oemidProvider.getOemid(), isHighlightedResult(i, app, query)))
+          SearchAppResult(app, oemidProvider.oemid, isHighlightedResult(i, app, query)))
     }
     return Observable.just(newList)
   }
@@ -245,16 +233,6 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
   private fun isQuerySameAsAppName(appName: String, query: String): Boolean {
     return appName.toLowerCase().replace(" ", "").replace("-", "") == query.toLowerCase()
         .replace(" ", "").replace("-", "")
-  }
-
-  private fun calculateSearchListDifferences(
-      newSearchList: List<SearchAppResult>,
-      oldSearchList: List<SearchAppResult>): SearchResultDiffModel {
-
-    val diffResult = DiffUtil.calculateDiff(
-        SearchResultDiffCallback(oldSearchList, newSearchList))
-    return SearchResultDiffModel(diffResult, newSearchList)
-
   }
 
   private fun handleSearchError(query: String,

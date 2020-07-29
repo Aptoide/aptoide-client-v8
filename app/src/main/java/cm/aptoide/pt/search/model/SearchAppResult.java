@@ -8,8 +8,9 @@ import cm.aptoide.pt.download.view.Download;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
 import java.util.Collections;
 import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class SearchAppResult implements Download {
+public class SearchAppResult implements Download, SearchItem {
   private int rank;
   private String icon;
   private String storeName;
@@ -33,13 +34,13 @@ public class SearchAppResult implements Download {
   private Malware malware;
   private String oemId;
 
-  boolean isHighlightedResult;
+  private boolean isHighlightedResult;
 
   // TODO: Missing from WS
-  Obb obb;
-  List<Split> splits;
-  List<String> requiredSplits;
-  DownloadStatusModel downloadModel;
+  private Obb obb;
+  private List<Split> splits;
+  private List<String> requiredSplits;
+  private DownloadStatusModel downloadModel;
 
   public SearchAppResult() {
   }
@@ -221,5 +222,13 @@ public class SearchAppResult implements Download {
 
   public boolean isHighlightedResult() {
     return isHighlightedResult;
+  }
+
+  @NotNull @Override public Type getType() {
+    return Type.APP;
+  }
+
+  @Override public long getId() {
+    return SearchItem.Type.APP.ordinal() + appId;
   }
 }

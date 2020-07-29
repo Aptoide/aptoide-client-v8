@@ -15,7 +15,6 @@ import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.Promotion;
 import cm.aptoide.pt.promotions.PromotionsNavigator;
-import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.view.app.AppDeveloper;
 import cm.aptoide.pt.view.app.AppFlags;
 import cm.aptoide.pt.view.app.AppMedia;

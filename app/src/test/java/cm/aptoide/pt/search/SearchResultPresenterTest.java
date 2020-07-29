@@ -9,7 +9,6 @@ import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
-import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
@@ -158,14 +157,6 @@ public class SearchResultPresenterTest {
     verify(searchResultView).collapseSearchBar(anyBoolean());
     verify(searchResultView).hideSuggestionsViews();
     verify(searchNavigator).navigate(any(SearchQueryModel.class));
-  }
-
-  @Test public void stopLoadingMoreOnDestroyTest() {
-    presenter.stopLoadingMoreOnDestroy();
-
-    lifecycleEvent.onNext(View.LifecycleEvent.DESTROY);
-
-    verify(searchResultView).hideLoadingMore();
   }
 
   @Test public void handleFragmentRestorationVisibilityTest() {

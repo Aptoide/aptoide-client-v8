@@ -14,7 +14,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
-import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
@@ -25,7 +24,6 @@ import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -74,17 +72,16 @@ import rx.schedulers.Schedulers;
   }
 
   @Override public void present() {
+    handleNewSearchResults();
     getTrendingOnStart();
     handleToolbarClick();
     handleSearchMenuItemClick();
     focusInSearchBar();
     handleSuggestionClicked();
-    stopLoadingMoreOnDestroy();
     handleFragmentRestorationVisibility();
     doFirstSearch();
     firstAdsDataLoad();
     handleClickToOpenAppViewFromItem();
-    handleClickToOpenAppViewFromAdd();
     handleSearchListReachedBottom();
     handleQueryTextSubmitted();
     handleQueryTextChanged();
@@ -94,7 +91,6 @@ import rx.schedulers.Schedulers;
     handleErrorRetryClick();
     handleFiltersClick();
     listenToSearchQueries();
-    handleNewSearchResults();
 
     handleClickOnAdultContentSwitch();
     handleAdultContentDialogPositiveClick();
@@ -110,12 +106,12 @@ import rx.schedulers.Schedulers;
   private void handleNewSearchResults() {
     view.getLifecycleEvent()
         .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .map(__ -> view.getViewModel())
         .flatMap(viewModel -> searchManager.observeSearchResults()
             .observeOn(viewScheduler)
-            .doOnNext(result -> view.addAllStoresResult(result.getQuery(), getResultList(result),
-                !result.getRedrawList()))
+            .doOnNext(
+                result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
+                    !result.getRedrawList(), result.hasMore()))
             .observeOn(ioScheduler)
             .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
                 .observeOn(viewScheduler)
@@ -128,7 +124,6 @@ import rx.schedulers.Schedulers;
                 .map(___ -> searchResult))
             .observeOn(viewScheduler)
             .doOnNext(searchResult -> {
-              view.hideLoadingMore();
               view.hideLoading();
               if (searchResult.hasError()) {
                 if (searchResult.getError() == SearchResultError.NO_NETWORK) {
@@ -145,6 +140,7 @@ import rx.schedulers.Schedulers;
                 }
               }
             }))
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
   }
@@ -222,15 +218,6 @@ import rx.schedulers.Schedulers;
         }, e -> crashReport.log(e));
   }
 
-  @VisibleForTesting public void stopLoadingMoreOnDestroy() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.DESTROY))
-        .first()
-        .toSingle()
-        .observeOn(viewScheduler)
-        .subscribe(__ -> view.hideLoadingMore(), e -> crashReport.log(e));
-  }
-
   @VisibleForTesting public void handleSearchListReachedBottom() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
@@ -238,21 +225,11 @@ import rx.schedulers.Schedulers;
         .flatMap(__ -> view.searchResultsReachedBottom())
         .map(__ -> view.getViewModel())
         .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showLoadingMore())
         .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
             .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
-  }
-
-  public SearchResultDiffModel getResultList(SearchResult result) {
-    SearchResultDiffModel searchResultDiffModel =
-        new SearchResultDiffModel(null, Collections.emptyList());
-    if (!result.hasError()) {
-      searchResultDiffModel = result.getSearchResultDiffModel();
-    }
-    return searchResultDiffModel;
   }
 
   @VisibleForTesting public void firstAdsDataLoad() {
@@ -261,10 +238,6 @@ import rx.schedulers.Schedulers;
         .map(__ -> view.getViewModel())
         .filter(viewModel -> hasValidQuery(viewModel))
         .filter(viewModel -> !viewModel.hasLoadedAds())
-        .doOnNext(ad -> {
-          ad.setHasLoadedAds();
-          view.setAllStoresAdsEmpty();
-        })
         .flatMapCompletable(__ -> loadBannerAd())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
@@ -283,23 +256,6 @@ import rx.schedulers.Schedulers;
         .observeOn(viewScheduler)
         .flatMap(__ -> view.onViewItemClicked())
         .doOnNext(data -> openAppView(data))
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  @VisibleForTesting public void handleClickToOpenAppViewFromAdd() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.onAdClicked())
-        .doOnNext(data -> {
-          analytics.searchAdClick(view.getViewModel()
-              .getSearchQueryModel(), data.getSearchAdResult()
-              .getPackageName(), data.getPosition(), data.getSearchAdResult()
-              .isAppc());
-          navigator.goToAppView(data.getSearchAdResult());
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -407,8 +363,7 @@ import rx.schedulers.Schedulers;
   private int getResultsCount(SearchResult result) {
     int count = 0;
     if (!result.hasError()) {
-      count += result.getSearchResultDiffModel()
-          .getSearchResultsList()
+      count += result.getSearchResultsList()
           .size();
     }
     return count;

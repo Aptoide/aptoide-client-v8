@@ -5,8 +5,7 @@ import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.download.view.DownloadClick;
-import cm.aptoide.pt.search.SearchResultDiffModel;
-import cm.aptoide.pt.search.model.SearchAdResultWrapper;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -32,17 +31,12 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showResultsLoading();
 
-  void addAllStoresResult(String query, SearchResultDiffModel dataList, boolean isLoadMore);
+  void addAllStoresResult(String query, List<SearchAppResult> dataList, boolean isLoadMore,
+      boolean hasMore);
 
   Model getViewModel();
 
-  void setAllStoresAdsEmpty();
-
   Observable<Void> searchResultsReachedBottom();
-
-  void showLoadingMore();
-
-  void hideLoadingMore();
 
   Observable<Void> searchSetup();
 
@@ -59,8 +53,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<Void> toolbarClick();
 
   Observable<MenuItem> searchMenuItemClick();
-
-  Observable<SearchAdResultWrapper> onAdClicked();
 
   Observable<SearchAppResultWrapper> onViewItemClicked();
 
@@ -127,8 +119,6 @@ public interface SearchResultView extends SearchSuggestionsView {
     String getStoreTheme();
 
     boolean hasLoadedAds();
-
-    void setHasLoadedAds();
 
     List<Filter> getFilters();
   }

@@ -9,6 +9,7 @@ import cm.aptoide.pt.R;
 import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.download.view.DownloadEvent;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
+import cm.aptoide.pt.download.view.DownloadViewStatusHelper;
 import cm.aptoide.pt.home.AppSecondaryInfoViewHolder;
 import cm.aptoide.pt.networking.image.ImageLoader;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -16,7 +17,6 @@ import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.utils.AptoideUtils;
 import java.text.DecimalFormat;
 import rx.subjects.PublishSubject;
-import rx.subscriptions.CompositeSubscription;
 
 public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult> {
 
@@ -35,16 +35,17 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   private SearchAppResult searchApp;
   private Button installButton;
   private DownloadProgressView downloadProgressView;
-  private CompositeSubscription subscriptions;
+
+  private DownloadViewStatusHelper downloadViewStatusHelper;
 
   public SearchResultViewHolder(View itemView,
       PublishSubject<SearchAppResultWrapper> onItemViewClick,
       PublishSubject<DownloadClick> downloadClickPublishSubject, String query) {
     super(itemView);
-    subscriptions = new CompositeSubscription();
     this.onItemViewClick = onItemViewClick;
     this.query = query;
     this.downloadClickPublishSubject = downloadClickPublishSubject;
+    this.downloadViewStatusHelper = new DownloadViewStatusHelper(itemView.getContext());
     appInfoViewHolder = new AppSecondaryInfoViewHolder(itemView, new DecimalFormat("0.0"));
     bindViews(itemView);
   }
@@ -64,45 +65,10 @@ public class SearchResultViewHolder extends SearchResultItemView<SearchAppResult
   public void setDownloadStatus(SearchAppResult app) {
     DownloadStatusModel downloadModel = app.getDownloadModel();
     if (app.isHighlightedResult() && downloadModel != null) {
-      if (downloadModel.isDownloadingOrInstalling()) {
-        installButton.setVisibility(View.GONE);
-        downloadProgressView.setVisibility(View.VISIBLE);
-        setDownloadState(downloadModel.getProgress(), downloadModel.getDownloadState());
-      } else {
-        installButton.setVisibility(View.VISIBLE);
-        downloadProgressView.setVisibility(View.GONE);
-      }
+      downloadViewStatusHelper.setDownloadStatus(app, installButton, downloadProgressView);
     } else {
       installButton.setVisibility(View.GONE);
       downloadProgressView.setVisibility(View.GONE);
-    }
-  }
-
-  private void setDownloadState(int progress, DownloadStatusModel.DownloadState downloadState) {
-    switch (downloadState) {
-      case ACTIVE:
-        downloadProgressView.startDownload();
-        break;
-      case INSTALLING:
-        downloadProgressView.startInstallation();
-        break;
-      case PAUSE:
-        downloadProgressView.pauseDownload();
-        break;
-      case IN_QUEUE:
-      case STANDBY:
-        downloadProgressView.reset();
-        break;
-      case GENERIC_ERROR:
-      case NOT_ENOUGH_STORAGE_ERROR:
-        break;
-    }
-    downloadProgressView.setProgress(progress);
-  }
-
-  public void prepareToRecycle() {
-    if (subscriptions.hasSubscriptions() && !subscriptions.isUnsubscribed()) {
-      subscriptions.unsubscribe();
     }
   }
 
