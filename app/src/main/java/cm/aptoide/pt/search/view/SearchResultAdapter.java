@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
@@ -19,11 +21,13 @@ import cm.aptoide.pt.search.view.item.SearchResultViewHolder;
 import com.jakewharton.rxrelay.PublishRelay;
 import java.text.DecimalFormat;
 import java.util.List;
+import rx.subjects.PublishSubject;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemView> {
 
   private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
-  private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
+  private final PublishSubject<SearchAppResultWrapper> onItemViewClick;
+  private final PublishSubject<DownloadClick> downloadClickPublishSubject;
   private final List<SearchAdResult> searchAdResults;
   private List<SearchAppResult> searchResults;
   private String query;
@@ -33,15 +37,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   private DecimalFormat oneDecimalFormatter;
 
   public SearchResultAdapter(PublishRelay<SearchAdResultWrapper> onAdClickRelay,
-      PublishRelay<SearchAppResultWrapper> onItemViewClick, List<SearchAppResult> searchResults,
-      List<SearchAdResult> searchAdResults, CrashReport crashReport,
-      DecimalFormat decimalFormatter) {
+      PublishSubject<SearchAppResultWrapper> onItemViewClick,
+      PublishSubject<DownloadClick> downloadClickPublishSubject,
+      List<SearchAppResult> searchResults, List<SearchAdResult> searchAdResults,
+      CrashReport crashReport, DecimalFormat decimalFormatter) {
     this.onAdClickRelay = onAdClickRelay;
     this.onItemViewClick = onItemViewClick;
     this.searchResults = searchResults;
     this.searchAdResults = searchAdResults;
     this.crashReport = crashReport;
     this.oneDecimalFormatter = decimalFormatter;
+    this.downloadClickPublishSubject = downloadClickPublishSubject;
+    //setHasStableIds(true);
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -51,7 +58,8 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
-        return new SearchResultViewHolder(view, onItemViewClick, query);
+        return new SearchResultViewHolder(view, onItemViewClick, downloadClickPublishSubject,
+            query);
       }
 
       case SearchResultAdViewHolder.LAYOUT: {
@@ -70,6 +78,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
       holder.setup(getItem(position));
     } catch (ClassCastException e) {
       crashReport.log(e);
+    }
+  }
+
+  @Override public void onBindViewHolder(@NonNull SearchResultItemView holder, int position,
+      @NonNull List<Object> payloads) {
+    // Partial rebind for updating downloads
+    if (holder instanceof SearchResultViewHolder && !payloads.isEmpty()) {
+      ((SearchResultViewHolder) holder).setDownloadStatus((SearchAppResult) payloads.get(0));
+    } else {
+      super.onBindViewHolder(holder, position, payloads);
     }
   }
 
@@ -157,17 +175,5 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     } else {
       notifyItemRemoved(getItemCount() - 1);
     }
-  }
-
-  public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
-    this.searchResults.clear();
-    this.searchResults.addAll(apps);
-
-    this.searchAdResults.clear();
-    this.searchAdResults.addAll(ads);
-
-    notifyDataSetChanged();
-    adsLoaded = true;
-    isLoadingMore = false;
   }
 }

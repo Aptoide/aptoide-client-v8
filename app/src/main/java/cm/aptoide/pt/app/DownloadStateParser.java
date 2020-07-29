@@ -110,30 +110,29 @@ public class DownloadStateParser {
       Install.InstallationStatus state, boolean isIndeterminate) {
     DownloadStatusModel.DownloadState downloadState;
     if (isIndeterminate) {
-      downloadState = DownloadStatusModel.DownloadState.INDETERMINATE;
+      downloadState = DownloadStatusModel.DownloadState.IN_QUEUE;
     } else {
-
       switch (state) {
-        case DOWNLOADING:
-          downloadState = DownloadStatusModel.DownloadState.ACTIVE;
+        case INSTALLATION_TIMEOUT:
+        case GENERIC_ERROR:
+          downloadState = DownloadStatusModel.DownloadState.GENERIC_ERROR;
+          break;
+        case NOT_ENOUGH_SPACE_ERROR:
+          downloadState = DownloadStatusModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+          break;
+        case IN_QUEUE:
+          downloadState = DownloadStatusModel.DownloadState.IN_QUEUE;
           break;
         case PAUSED:
           downloadState = DownloadStatusModel.DownloadState.PAUSE;
           break;
-        case IN_QUEUE:
-        case INITIAL_STATE:
-          downloadState = DownloadStatusModel.DownloadState.INDETERMINATE;
+        case DOWNLOADING:
+          downloadState = DownloadStatusModel.DownloadState.ACTIVE;
           break;
+        case INITIAL_STATE:
         case INSTALLED:
         case UNINSTALLED:
-          downloadState = DownloadStatusModel.DownloadState.COMPLETE;
-          break;
-        case INSTALLATION_TIMEOUT:
-        case GENERIC_ERROR:
-          downloadState = DownloadStatusModel.DownloadState.ERROR;
-          break;
-        case NOT_ENOUGH_SPACE_ERROR:
-          downloadState = DownloadStatusModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR;
+          downloadState = DownloadStatusModel.DownloadState.STANDBY;
           break;
         case INSTALLING:
           downloadState = DownloadStatusModel.DownloadState.INSTALLING;

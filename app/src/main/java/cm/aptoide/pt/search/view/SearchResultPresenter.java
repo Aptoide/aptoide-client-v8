@@ -6,6 +6,8 @@ import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.DownloadAnalytics;
+import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.presenter.Presenter;
@@ -49,11 +51,14 @@ import rx.schedulers.Schedulers;
   private final BottomNavigationMapper bottomNavigationMapper;
   private final Scheduler ioScheduler;
 
+  private final DownloadViewActionPresenter downloadActionPresenter;
+
   public SearchResultPresenter(SearchResultView view, SearchAnalytics analytics,
       SearchNavigator navigator, CrashReport crashReport, Scheduler viewScheduler,
       SearchManager searchManager, TrendingManager trendingManager,
       SearchSuggestionManager suggestionManager, AptoideBottomNavigator bottomNavigator,
-      BottomNavigationMapper bottomNavigationMapper, Scheduler ioScheduler) {
+      BottomNavigationMapper bottomNavigationMapper, Scheduler ioScheduler,
+      DownloadViewActionPresenter downloadActionPresenter) {
     this.view = view;
     this.analytics = analytics;
     this.navigator = navigator;
@@ -65,6 +70,7 @@ import rx.schedulers.Schedulers;
     this.bottomNavigator = bottomNavigator;
     this.bottomNavigationMapper = bottomNavigationMapper;
     this.ioScheduler = ioScheduler;
+    this.downloadActionPresenter = downloadActionPresenter;
   }
 
   @Override public void present() {
@@ -96,6 +102,9 @@ import rx.schedulers.Schedulers;
     handleAdultContentDialogWithPinPositiveClick();
     redoSearchAfterAdultContentSwitch();
     updateAdultContentSwitchOnNoResults();
+
+    downloadActionPresenter.setContextParams(DownloadAnalytics.AppContext.SEARCH, false, null);
+    downloadActionPresenter.present(view.getDownloadClickEvents(), view);
   }
 
   private void handleNewSearchResults() {

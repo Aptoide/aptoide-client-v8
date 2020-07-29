@@ -79,6 +79,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.view.DownloadDialogManager;
+import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -311,11 +313,30 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(
       SearchAnalytics searchAnalytics, SearchNavigator searchNavigator, SearchManager searchManager,
       TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper,
+      DownloadViewActionPresenter downloadViewActionPresenter) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, Schedulers.io());
+        bottomNavigationMapper, Schedulers.io(), downloadViewActionPresenter);
+  }
+
+  @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(
+      InstallManager installManager, MoPubAdsManager moPubAdsManager,
+      PermissionManager permissionManager, AppcMigrationManager appcMigrationManager,
+      DownloadDialogManager downloadDialogManager, DownloadFactory downloadFactory,
+      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
+      NotificationAnalytics notificationAnalytics, CrashReport crashReport) {
+    return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
+        appcMigrationManager, downloadDialogManager, (PermissionService) fragment.getActivity(),
+        Schedulers.io(), AndroidSchedulers.mainThread(), downloadFactory, downloadAnalytics,
+        installAnalytics, notificationAnalytics, crashReport);
+  }
+
+  @FragmentScope @Provides DownloadDialogManager providesDownloadDialogManager(
+      ThemeManager themeManager) {
+    return new DownloadDialogManager(fragment, fragment.getContext()
+        .getPackageManager(), themeManager);
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,

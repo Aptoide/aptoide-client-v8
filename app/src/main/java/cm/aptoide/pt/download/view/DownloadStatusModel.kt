@@ -6,7 +6,7 @@ data class DownloadStatusModel(val action: Action, val progress: Int,
 
 
   fun isDownloading(): Boolean {
-    return downloadState == DownloadState.ACTIVE || downloadState == DownloadState.PAUSE || downloadState == DownloadState.INDETERMINATE
+    return downloadState == DownloadState.ACTIVE || downloadState == DownloadState.PAUSE || downloadState == DownloadState.IN_QUEUE
   }
 
   fun isDownloadingOrInstalling(): Boolean {
@@ -14,7 +14,7 @@ data class DownloadStatusModel(val action: Action, val progress: Int,
   }
 
   fun hasError(): Boolean {
-    return downloadState == DownloadState.ERROR || downloadState == DownloadState.NOT_ENOUGH_STORAGE_ERROR
+    return downloadState == DownloadState.GENERIC_ERROR || downloadState == DownloadState.NOT_ENOUGH_STORAGE_ERROR
   }
 
   fun isDownloadable(): Boolean {
@@ -30,6 +30,6 @@ data class DownloadStatusModel(val action: Action, val progress: Int,
   }
 
   enum class DownloadState {
-    ACTIVE, PAUSE, COMPLETE, INDETERMINATE, ERROR, NOT_ENOUGH_STORAGE_ERROR, INSTALLING
+    STANDBY, IN_QUEUE, GENERIC_ERROR, NOT_ENOUGH_STORAGE_ERROR, PAUSE, ACTIVE, INSTALLING,
   }
 }

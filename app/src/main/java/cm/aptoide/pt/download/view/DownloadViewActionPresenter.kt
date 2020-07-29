@@ -1,7 +1,5 @@
 package cm.aptoide.pt.download.view
 
-import android.content.Context
-import android.content.pm.PackageManager
 import cm.aptoide.analytics.AnalyticsManager
 import cm.aptoide.pt.actions.PermissionManager
 import cm.aptoide.pt.actions.PermissionService
@@ -16,7 +14,6 @@ import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.notification.NotificationAnalytics
 import cm.aptoide.pt.presenter.SubListPresenter
 import cm.aptoide.pt.presenter.View
-import cm.aptoide.pt.themes.ThemeManager
 import rx.Completable
 import rx.Observable
 import rx.Scheduler
@@ -37,9 +34,6 @@ class DownloadViewActionPresenter(val installManager: InstallManager,
                                   val downloadAnalytics: DownloadAnalytics,
                                   val installAnalytics: InstallAnalytics,
                                   val notificationAnalytics: NotificationAnalytics,
-                                  val packageManager: PackageManager,
-                                  val themeManager: ThemeManager,
-                                  val context: Context,
                                   val crashReport: CrashReport) :
     SubListPresenter<DownloadClick>() {
 

@@ -31,6 +31,7 @@ import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import java.net.UnknownHostException
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -51,13 +52,14 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   fun observeSearchResults(): Observable<SearchResult> {
     return subject
-        .flatMap { result ->
+        .switchMap { result ->
           val list = result.searchResultDiffModel.searchResultsList
           if (list.isNotEmpty() && list[0].isHighlightedResult) {
-            return@flatMap observeHighlightedSearchResult(result)
+            return@switchMap Observable.mergeDelayError(Observable.just(result),
+                observeHighlightedSearchResult(result))
           }
 
-          return@flatMap Observable.just(result)
+          return@switchMap Observable.just(result)
         }
   }
 
@@ -77,7 +79,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private fun getHighlightedSearchResultList(result: SearchResult): List<SearchResult> {
     if (result.redrawList) {
-      return listOf(result,
+      return listOf(
           SearchResult(result.query, result.specificStore, result.searchResultDiffModel,
               result.filters, result.currentOffset, result.nextOffset, result.total,
               result.loading, result.error, false))
@@ -87,12 +89,14 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private fun observeHighlightedSearchResult(ogResult: SearchResult): Observable<SearchResult> {
     val first = ogResult.searchResultDiffModel.searchResultsList[0]
-    return Observable.combineLatest(Observable.from(getHighlightedSearchResultList(ogResult)),
+    return Observable.combineLatest(Observable.from(getHighlightedSearchResultList(ogResult))
+        .delay(250, TimeUnit.MILLISECONDS),
         loadDownloadModel(first.getMd5(), first.getPackageName(), first.getVersionCode(), null,
             first.storeId, first.hasAdvertising() || first.hasBilling())) { r, downloadModel ->
       val list = ArrayList(r.searchResultDiffModel.searchResultsList)
       list[0] = SearchAppResult(list[0], downloadModel)
-      return@combineLatest SearchResult(r.query, r.specificStore, SearchResultDiffModel(null, list),
+      return@combineLatest SearchResult(r.query, r.specificStore,
+          calculateSearchListDifferences(list.toList(), r.searchResultDiffModel.searchResultsList),
           r.filters,
           r.currentOffset,
           r.nextOffset,
@@ -111,7 +115,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       DownloadStatusModel(downloadStateParser.parseStatusDownloadType(install.type, isMigration),
           install.progress,
           downloadStateParser.parseStatusDownloadState(install.state, install.isIndeterminate))
-    }
+    }.delay(100, TimeUnit.MILLISECONDS)
   }
 
 
@@ -234,7 +238,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
                                   app: SearchApp,
                                   query: String): Boolean {
     return i == 0 && isQuerySameAsAppName(app.name,
-        query) && app.file.malware.rank == Malware.Rank.TRUSTED && app.stats.downloads >= 1000000
+        query) && app.file.malware.rank == Malware.Rank.TRUSTED && app.stats.pdownloads >= 1000000
   }
 
   private fun isQuerySameAsAppName(appName: String, query: String): Boolean {

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
@@ -14,6 +15,8 @@ import java.util.List;
 import rx.Observable;
 
 public interface SearchResultView extends SearchSuggestionsView {
+
+  Observable<DownloadClick> getDownloadClickEvents();
 
   Observable<Boolean> clickAdultContentSwitch();
 

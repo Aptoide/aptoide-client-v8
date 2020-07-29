@@ -24,4 +24,8 @@ class SearchResultDiffCallback(private val oldSearchResultList: List<SearchAppRe
     return oldSearchResultList?.get(oldItemPosition) == newSearchResultList?.get(
         newItemPosition)
   }
+
+  override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+    return newSearchResultList?.get(newItemPosition)
+  }
 }

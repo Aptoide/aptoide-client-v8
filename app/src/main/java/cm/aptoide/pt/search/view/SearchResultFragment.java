@@ -29,6 +29,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -42,6 +43,7 @@ import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
@@ -109,7 +111,8 @@ public class SearchResultFragment extends BackButtonFragment
   private SearchSuggestionsAdapter searchSuggestionsAdapter;
   private SearchSuggestionsAdapter searchTrendingAdapter;
   private Toolbar toolbar;
-  private PublishRelay<SearchAppResultWrapper> onItemViewClickRelay;
+  private PublishSubject<SearchAppResultWrapper> onItemViewClickSubject;
+  private PublishSubject<DownloadClick> downloadClickPublishSubject;
   private PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
@@ -342,7 +345,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
-    return onItemViewClickRelay;
+    return onItemViewClickSubject;
   }
 
   @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
@@ -585,7 +588,8 @@ public class SearchResultFragment extends BackButtonFragment
     noResults = false;
     networkError = false;
 
-    onItemViewClickRelay = PublishRelay.create();
+    onItemViewClickSubject = PublishSubject.create();
+    downloadClickPublishSubject = PublishSubject.create();
     onAdClickRelay = PublishRelay.create();
     suggestionClickedPublishSubject = PublishSubject.create();
     searchSetupPublishSubject = PublishSubject.create();
@@ -598,10 +602,9 @@ public class SearchResultFragment extends BackButtonFragment
 
     final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
-
     allStoresResultAdapter =
-        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
-            searchResultAdsAllStores, crashReport, oneDecimalFormatter);
+        new SearchResultAdapter(onAdClickRelay, onItemViewClickSubject, downloadClickPublishSubject,
+            searchResultAllStores, searchResultAdsAllStores, crashReport, oneDecimalFormatter);
 
     allStoresResultAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
       @Override public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -631,6 +634,13 @@ public class SearchResultFragment extends BackButtonFragment
     setupToolbar();
     setupTheme();
     setupFilters();
+
+    allStoresResultList.setItemAnimator(new DefaultItemAnimator() {
+      @Override
+      public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return true;
+      }
+    });
 
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -710,6 +720,10 @@ public class SearchResultFragment extends BackButtonFragment
                 PorterDuff.Mode.SRC_IN);
       }
     }
+  }
+
+  @Override public Observable<DownloadClick> getDownloadClickEvents() {
+    return downloadClickPublishSubject;
   }
 
   private void setupDefaultTheme() {
