@@ -67,13 +67,14 @@ public class QueryStringMapper {
     put("offset", body.getOffset(), data);
     put("query", body.getQuery(), data);
     put("trusted", body.getOnlyTrusted(), data);
+    put("appc_only", body.getOnlyAppc(), data);
     if (body.getStoreIds() != null) {
       put("store_ids", body.getStoreIdsAsString(), data);
     }
     if (body.getStoreNames() != null) {
       put("store_names", body.getStoreNamesAsString(), data);
     }
-    if(body.getOnlyBeta()){
+    if (body.getOnlyBeta()) {
       put("apk_tags", "alpha,beta", data);
     }
 
