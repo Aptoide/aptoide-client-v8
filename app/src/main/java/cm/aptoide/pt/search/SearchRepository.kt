@@ -178,7 +178,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     // General search
     var request = ListSearchAppsRequest.of(query, nextOffset, filters.onlyFollowedStores,
         filters.onlyTrustedApps,
-        filters.onlyBetaApps, matureEnabled,
+        filters.onlyBetaApps, filters.onlyAppcApps, matureEnabled,
         StoreUtils.getSubscribedStoresIds(storeRepository), authMap, bodyInterceptor, httpClient,
         converterFactory, tokenInvalidator, sharedPreferences,
         appBundlesVisibilityManager)
@@ -186,7 +186,8 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     // For specific store search
     specificStore?.let { store ->
       request = ListSearchAppsRequest.of(query, nextOffset, store,
-          filters.onlyTrustedApps, filters.onlyBetaApps, matureEnabled, authMap, bodyInterceptor,
+          filters.onlyTrustedApps, filters.onlyBetaApps, filters.onlyAppcApps, matureEnabled,
+          authMap, bodyInterceptor,
           httpClient,
           converterFactory, tokenInvalidator, sharedPreferences,
           appBundlesVisibilityManager)

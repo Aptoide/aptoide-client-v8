@@ -686,13 +686,17 @@ public class SearchResultFragment extends BackButtonFragment
         .isEmpty()) {
       filters = Arrays.asList(new Filter(getString(R.string.search_filters_trusted), false,
               SearchFilterType.TRUSTED.name()),
-          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()));
+          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()),
+          new Filter(getString(R.string.search_filters_appcoins), false,
+              SearchFilterType.APPC.name()));
     } else {
       filters = Arrays.asList(new Filter(getString(R.string.search_filters_followed_stores), false,
               SearchFilterType.FOLLOWED_STORES.name()),
           new Filter(getString(R.string.search_filters_trusted), false,
               SearchFilterType.TRUSTED.name()),
-          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()));
+          new Filter(getString(R.string.search_filters_beta), false, SearchFilterType.BETA.name()),
+          new Filter(getString(R.string.search_filters_appcoins), false,
+              SearchFilterType.APPC.name()));
     }
 
     filtersView.setFilters(filters);
