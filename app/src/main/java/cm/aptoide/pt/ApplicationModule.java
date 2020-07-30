@@ -154,6 +154,7 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.OemidProvider;
+import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
@@ -1165,11 +1166,12 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      SearchRepository searchRepository, RoomStoreRepository storeRepository) {
+      SearchRepository searchRepository, RoomStoreRepository storeRepository,
+      DownloadStatusManager downloadStatusManager) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
         adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        searchRepository);
+        searchRepository, downloadStatusManager);
   }
 
   @Singleton @Provides SearchRepository providesSearchRepository(
@@ -1177,12 +1179,15 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
       @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager,
-      DownloadStateParser downloadStateParser, OemidProvider oemidProvider,
-      InstallManager installManager, AppcMigrationManager appcMigrationManager) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
     return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
         converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
-        installManager, appcMigrationManager, downloadStateParser, oemidProvider);
+        oemidProvider);
+  }
+
+  @Singleton @Provides DownloadStatusManager providesDownloadStatusManager(
+      InstallManager installManager, AppcMigrationManager appcMigrationManager) {
+    return new DownloadStatusManager(installManager, appcMigrationManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(

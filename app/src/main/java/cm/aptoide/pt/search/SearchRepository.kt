@@ -1,8 +1,6 @@
 package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
-import cm.aptoide.pt.app.DownloadStateParser
-import cm.aptoide.pt.app.migration.AppcMigrationManager
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
@@ -13,8 +11,6 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody
 import cm.aptoide.pt.dataprovider.ws.v7.ListSearchAppsRequest
 import cm.aptoide.pt.download.OemidProvider
-import cm.aptoide.pt.download.view.DownloadStatusModel
-import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.search.model.SearchAppResult
 import cm.aptoide.pt.search.model.SearchFilters
 import cm.aptoide.pt.search.model.SearchResult
@@ -29,7 +25,6 @@ import rx.Single
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import java.net.UnknownHostException
-import java.util.concurrent.TimeUnit
 
 
 class SearchRepository(val storeRepository: RoomStoreRepository,
@@ -39,9 +34,6 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
                        val tokenInvalidator: TokenInvalidator,
                        val sharedPreferences: SharedPreferences,
                        val appBundlesVisibilityManager: AppBundlesVisibilityManager,
-                       val installManager: InstallManager,
-                       val appcMigrationManager: AppcMigrationManager,
-                       val downloadStateParser: DownloadStateParser,
                        val oemidProvider: OemidProvider) {
 
   private var cachedSearchResults: SearchResult? = null
@@ -49,15 +41,6 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   fun observeSearchResults(): Observable<SearchResult> {
     return subject
-        .switchMap { result ->
-          val list = result.searchResultsList
-          if (list.isNotEmpty() && list[0].isHighlightedResult) {
-            return@switchMap Observable.mergeDelayError(Observable.just(result),
-                observeHighlightedSearchResult(result))
-          }
-
-          return@switchMap Observable.just(result)
-        }
   }
 
   fun generalSearch(query: String, filters: SearchFilters,
@@ -73,41 +56,6 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
         .flatMapCompletable { search(query, filters, matureEnabled, storeName) }
         .subscribeOn(Schedulers.io())
   }
-
-  private fun getHighlightedSearchResultList(result: SearchResult): Observable<SearchResult> {
-    return Observable.just(
-        SearchResult(result.query, result.specificStore, result.searchResultsList,
-            result.filters, result.currentOffset, result.nextOffset, result.total,
-            result.loading, result.error, false))
-  }
-
-  private fun observeHighlightedSearchResult(ogResult: SearchResult): Observable<SearchResult> {
-    val first = ogResult.searchResultsList[0]
-    return Observable.combineLatest(getHighlightedSearchResultList(ogResult),
-        loadDownloadModel(first.getMd5(), first.getPackageName(), first.getVersionCode(), null,
-            first.storeId, first.hasAdvertising() || first.hasBilling())) { r, downloadModel ->
-      val list = ArrayList(r.searchResultsList)
-      list[0] = SearchAppResult(list[0], downloadModel)
-      return@combineLatest SearchResult(r.query, r.specificStore, list, r.filters, r.currentOffset,
-          r.nextOffset,
-          r.total,
-          r.loading, r.error, r.redrawList)
-    }
-  }
-
-  private fun loadDownloadModel(md5: String, packageName: String,
-                                versionCode: Int, signature: String?,
-                                storeId: Long,
-                                hasAppc: Boolean): Observable<DownloadStatusModel>? {
-    return Observable.combineLatest(installManager.getInstall(md5, packageName, versionCode),
-        appcMigrationManager.isMigrationApp(packageName, signature, versionCode, storeId,
-            hasAppc)) { install, isMigration ->
-      DownloadStatusModel(downloadStateParser.parseStatusDownloadType(install.type, isMigration),
-          install.progress,
-          downloadStateParser.parseStatusDownloadState(install.state, install.isIndeterminate))
-    }.throttleLast(200, TimeUnit.MILLISECONDS)
-  }
-
 
   private fun search(query: String, filters: SearchFilters,
                      matureEnabled: Boolean, specificStore: String?): Completable {

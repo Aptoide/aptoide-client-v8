@@ -7,11 +7,10 @@ import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
 import cm.aptoide.pt.R
 
 /**
- * Used to help updating a DownloadButton + DownloadProgressView combo when using a [Download] model
- *
- * Especially useful in RecyclerView's ViewHolder scenarios
+ * Used to help updating a Download button + DownloadProgressView combo when using a [Download] model
  */
 class DownloadViewStatusHelper(val context: Context) {
+
   fun setDownloadStatus(download: Download, installButton: Button,
                         downloadProgressView: DownloadProgressView) {
     download.getDownloadModel()?.let { downloadModel ->

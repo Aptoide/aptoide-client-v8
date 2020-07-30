@@ -12,7 +12,7 @@ import cm.aptoide.pt.download.*
 import cm.aptoide.pt.install.InstallAnalytics
 import cm.aptoide.pt.install.InstallManager
 import cm.aptoide.pt.notification.NotificationAnalytics
-import cm.aptoide.pt.presenter.SubListPresenter
+import cm.aptoide.pt.presenter.ActionPresenter
 import cm.aptoide.pt.presenter.View
 import rx.Completable
 import rx.Observable
@@ -20,7 +20,13 @@ import rx.Scheduler
 
 /**
  * This presenter is only responsible for handling download actions.
- * This means that whoever uses this is responsible for updating the download status correctly
+ * This means that whoever uses this is responsible for updating the download status correctly.
+ *
+ * This is useful in RecyclerView scenarios, where it does not make sense to tie each download view
+ * to a new presenter and where updating a view means actually updating a list of downloads.
+ *
+ * To update a view based on a Download object, consider observing [DownloadStatusModel] using
+ * [DownloadStatusManager] and rendering [Download] to views using [DownloadViewStatusHelper]
  */
 open class DownloadViewActionPresenter(val installManager: InstallManager,
                                        val moPubAdsManager: MoPubAdsManager,
@@ -35,7 +41,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
                                        val installAnalytics: InstallAnalytics,
                                        val notificationAnalytics: NotificationAnalytics,
                                        val crashReport: CrashReport) :
-    SubListPresenter<DownloadClick>() {
+    ActionPresenter<DownloadClick>() {
 
   private lateinit var analyticsContext: DownloadAnalytics.AppContext
   private var isInApkfyContext = false
