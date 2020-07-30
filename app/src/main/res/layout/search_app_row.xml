@@ -142,14 +142,24 @@
         tools:text="Royale App Store"
         />
 
-    <include
+    <LinearLayout
       android:id="@+id/appc_label_layout"
-      layout="@layout/appc_label"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:visibility="visible"
+      app:layout_constraintBottom_toBottomOf="@id/app_icon"
       app:layout_constraintEnd_toEndOf="@id/guideline_right"
       app:layout_constraintTop_toTopOf="@+id/store_name"
-      />
+      >
+      <include
+        layout="@layout/appc_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        />
+    </LinearLayout>
 
     <FrameLayout
       android:id="@+id/frameLayout"
