@@ -3,13 +3,38 @@ package cm.aptoide.pt.download.view
 import android.content.Context
 import android.view.View
 import android.widget.Button
+import cm.aptoide.aptoideviews.downloadprogressview.DownloadEventListener
 import cm.aptoide.aptoideviews.downloadprogressview.DownloadProgressView
 import cm.aptoide.pt.R
+import rx.subjects.PublishSubject
 
 /**
  * Used to help updating a Download button + DownloadProgressView combo when using a [Download] model
  */
 class DownloadViewStatusHelper(val context: Context) {
+
+  /**
+   * This is useful in case of RecyclerViews where event listeners + subjects must be used.
+   */
+  fun setupListeners(download: Download, downloadClickSubject: PublishSubject<DownloadClick>,
+                     installButton: Button,
+                     downloadProgressView: DownloadProgressView) {
+    installButton.setOnClickListener {
+      downloadClickSubject.onNext(DownloadClick(download, DownloadEvent.INSTALL))
+    }
+    downloadProgressView.setEventListener(object : DownloadEventListener {
+      override fun onActionClick(action: DownloadEventListener.Action) {
+        when (action.type) {
+          DownloadEventListener.Action.Type.CANCEL -> downloadClickSubject.onNext(
+              DownloadClick(download, DownloadEvent.CANCEL))
+          DownloadEventListener.Action.Type.RESUME -> downloadClickSubject.onNext(
+              DownloadClick(download, DownloadEvent.RESUME))
+          DownloadEventListener.Action.Type.PAUSE -> downloadClickSubject.onNext(
+              DownloadClick(download, DownloadEvent.PAUSE))
+        }
+      }
+    })
+  }
 
   fun setDownloadStatus(download: Download, installButton: Button,
                         downloadProgressView: DownloadProgressView) {
