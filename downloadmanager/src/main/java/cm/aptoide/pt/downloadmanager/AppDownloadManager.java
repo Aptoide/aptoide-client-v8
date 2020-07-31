@@ -84,7 +84,7 @@ public class AppDownloadManager implements AppDownloader {
             downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
             downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
             downloadAppFile.getFileName(), PublishSubject.create(),
-            downloadAppFile.getAlternativeDownloadPath()))
+            downloadAppFile.getAlternativeDownloadPath(), downloadAppFile.getAttributionId()))
         .doOnNext(
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))

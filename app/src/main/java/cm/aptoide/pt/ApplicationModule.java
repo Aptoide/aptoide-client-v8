@@ -20,8 +20,11 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -1020,6 +1023,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
+        .addMigrations(new Migration(100, 101) {
+          @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId STRING");
+          }
+        })
         .build();
   }
 

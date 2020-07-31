@@ -25,10 +25,10 @@ public class FileDownloadManagerProvider implements FileDownloaderProvider {
   @Override
   public FileDownloader createFileDownloader(String md5, String mainDownloadPath, int fileType,
       String packageName, int versionCode, String fileName,
-      PublishSubject<FileDownloadCallback> downloadStatusCallback) {
+      PublishSubject<FileDownloadCallback> downloadStatusCallback, String attributionId) {
     return new FileDownloadManager(fileDownloader,
-        new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName), downloadsPath,
-        mainDownloadPath, fileType, packageName, versionCode, fileName);
+        new FileDownloadTask(downloadStatusCallback, md5, md5Comparator, fileName, attributionId),
+        downloadsPath, mainDownloadPath, fileType, packageName, versionCode, fileName);
   }
 }
 

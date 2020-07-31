@@ -26,13 +26,14 @@ public class RoomFileToDownload {
   private String fileName;
   private int versionCode;
   private String versionName;
+  private String attributionId;
 
   public RoomFileToDownload() {
   }
 
   public static RoomFileToDownload createFileToDownload(String link, String altLink, String md5,
       String fileName, @FileType int fileType, String packageName, int versionCode,
-      String versionName, String cachePath) {
+      String versionName, String cachePath, String oemId) {
     RoomFileToDownload roomFileToDownload = new RoomFileToDownload();
     roomFileToDownload.setLink(link);
     roomFileToDownload.setMd5(md5);
@@ -41,6 +42,7 @@ public class RoomFileToDownload {
     roomFileToDownload.versionName = versionName;
     roomFileToDownload.setFileType(fileType);
     roomFileToDownload.setPath(cachePath);
+    roomFileToDownload.setAttributionId(oemId);
     if (!TextUtils.isEmpty(fileName)) {
       if (fileType == APK || fileType == SPLIT) {
         roomFileToDownload.setFileName(fileName + ".apk");
@@ -50,6 +52,10 @@ public class RoomFileToDownload {
     }
     roomFileToDownload.setPackageName(packageName);
     return roomFileToDownload;
+  }
+
+  private void setAttributionId(String oemId) {
+    attributionId = oemId;
   }
 
   public int getVersionCode() {
@@ -195,6 +201,10 @@ public class RoomFileToDownload {
 
   public void setMd5(String md5) {
     this.md5 = md5;
+  }
+
+  public String getAttributionId() {
+    return attributionId;
   }
 
   @IntDef({ APK, OBB, GENERIC, SPLIT }) @Retention(RetentionPolicy.SOURCE)
