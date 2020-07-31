@@ -6,7 +6,6 @@ package cm.aptoide.pt.downloadmanager;
 
 public class DownloadAppFile {
 
-  private final String attributionId;
   private String mainDownloadPath;
   private String alternativeDownloadPath;
   private String downloadMd5;
@@ -16,8 +15,7 @@ public class DownloadAppFile {
   private FileType fileType;
 
   public DownloadAppFile(String mainDownloadPath, String alternativeDownloadPath,
-      String downloadMd5, int versionCode, String packageName, String fileName, FileType fileType,
-      String attributionId) {
+      String downloadMd5, int versionCode, String packageName, String fileName, FileType fileType) {
     this.mainDownloadPath = mainDownloadPath;
     this.alternativeDownloadPath = alternativeDownloadPath;
     this.downloadMd5 = downloadMd5;
@@ -25,7 +23,6 @@ public class DownloadAppFile {
     this.packageName = packageName;
     this.fileName = fileName;
     this.fileType = fileType;
-    this.attributionId = attributionId;
   }
 
   public String getMainDownloadPath() {
@@ -54,10 +51,6 @@ public class DownloadAppFile {
 
   public String getFileName() {
     return fileName;
-  }
-
-  public String getAttributionId() {
-    return attributionId;
   }
 
   public enum FileType {

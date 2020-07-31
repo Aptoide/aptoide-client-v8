@@ -22,8 +22,7 @@ public class DownloadAppFileMapper {
           new DownloadAppFile(roomFileToDownload.getLink(), roomFileToDownload.getAltLink(),
               roomFileToDownload.getMd5(), roomFileToDownload.getVersionCode(),
               roomFileToDownload.getPackageName(), roomFileToDownload.getFileName(),
-              mapFileType(roomFileToDownload.getFileType()),
-              roomFileToDownload.getAttributionId()));
+              mapFileType(roomFileToDownload.getFileType())));
     }
     return downloadAppFileList;
   }

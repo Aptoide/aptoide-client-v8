@@ -35,7 +35,7 @@ public class DownloadFactory {
 
   private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       String fileMd5, Obb appObb, @Nullable String altPathToApk, int versionCode,
-      String versionName, List<Split> splits, String oemId) {
+      String versionName, List<Split> splits) {
 
     String mainObbPath = null;
     String mainObbMd5 = null;
@@ -62,28 +62,28 @@ public class DownloadFactory {
 
     return createFileList(md5, packageName, filePath, altPathToApk, fileMd5, mainObbPath,
         mainObbMd5, patchObbPath, patchObbMd5, versionCode, versionName, mainObbName, patchObbName,
-        splits, oemId);
+        splits);
   }
 
   private List<RoomFileToDownload> createFileList(String md5, String packageName, String filePath,
       @Nullable String altPathToApk, String fileMd5, String mainObbPath, String mainObbMd5,
       String patchObbPath, String patchObbMd5, int versionCode, String versionName,
-      String mainObbName, String patchObbName, List<Split> splits, String oemId) {
+      String mainObbName, String patchObbName, List<Split> splits) {
 
     final List<RoomFileToDownload> downloads = new ArrayList<>();
     downloads.add(RoomFileToDownload.createFileToDownload(filePath, altPathToApk, md5, fileMd5,
-        RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath, oemId));
+        RoomFileToDownload.APK, packageName, versionCode, versionName, cachePath));
 
     if (mainObbPath != null) {
       downloads.add(
           RoomFileToDownload.createFileToDownload(mainObbPath, null, mainObbMd5, mainObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath, oemId));
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (patchObbPath != null) {
       downloads.add(
           RoomFileToDownload.createFileToDownload(patchObbPath, null, patchObbMd5, patchObbName,
-              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath, oemId));
+              RoomFileToDownload.OBB, packageName, versionCode, versionName, cachePath));
     }
 
     if (splits != null) {
@@ -91,7 +91,7 @@ public class DownloadFactory {
         downloads.add(
             RoomFileToDownload.createFileToDownload(split.getPath(), null, split.getMd5sum(),
                 split.getMd5sum() + "." + split.getName(), RoomFileToDownload.SPLIT, packageName,
-                versionCode, versionName, cachePath, oemId));
+                versionCode, versionName, cachePath));
       }
     }
 
@@ -127,7 +127,7 @@ public class DownloadFactory {
               downloadPaths.getAltPath(), update.getMd5(), update.getMainObbPath(),
               update.getMainObbMd5(), update.getPatchObbPath(), update.getPatchObbMd5(),
               update.getUpdateVersionCode(), update.getUpdateVersionName(), update.getMainObbName(),
-              update.getPatchObbName(), splits, null)); //no omeid in apps/updates
+              update.getPatchObbName(), splits));
       download.setSize(update.getSize());
       return download;
     } else {
@@ -161,7 +161,7 @@ public class DownloadFactory {
     download.setHasAppc(hasAppc);
     download.setSize(0);
     download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
-        downloadPaths.getAltPath(), versionCode, versionName, null,
+        downloadPaths.getAltPath(), versionCode, versionName,
         null)); // no splits, no oemid : auto-update
     return download;
   }
@@ -201,9 +201,10 @@ public class DownloadFactory {
       download.setSize(size);
       download.setTrustedBadge(trustedBadge);
       download.setStoreName(storeName);
+      download.setAttributionId(oemId);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
-              downloadPaths.getAltPath(), versionCode, versionName, splits, oemId));
+              downloadPaths.getAltPath(), versionCode, versionName, splits));
 
       return download;
     } else {

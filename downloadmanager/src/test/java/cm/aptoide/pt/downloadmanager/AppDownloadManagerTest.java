@@ -40,19 +40,22 @@ public class AppDownloadManagerTest {
   @Before public void setupAppDownloaderTest() {
     MockitoAnnotations.initMocks(this);
     apk = new DownloadAppFile("http://apkdownload.com/file/app.apk", "", "apkMd5", 123,
-        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK, "jonenz-oem");
+        "cm.aptoide.pt", "app.apk", DownloadAppFile.FileType.APK);
     mainObb = new DownloadAppFile("http://apkdownload.com/file/mainObb.apk", "", "mainObbMd5", 123,
-        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB, "jonenz-oem");
+        "cm.aptoide.pt", "mainObb", DownloadAppFile.FileType.OBB);
     patchObb =
         new DownloadAppFile("http://apkdownload.com/file/patchObb.apk", "", "patchObbMd5", 123,
-            "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB, "jonenz-oem");
+            "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
     DownloadApp appToDownload =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", 1231123);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", 1231123,
+            "jonenzoemid");
     DownloadApp appToDownloadWithObbs =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", 12313);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", 12313,
+            "jonenzoemid");
     DownloadApp appToDownloadEmptyError =
-        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", 123133);
+        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", 123133,
+            "jonenzoemid");
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
@@ -120,7 +123,7 @@ public class AppDownloadManagerTest {
     when(fileDownloaderProvider.createRetryFileDownloader(apk.getDownloadMd5(),
         apk.getMainDownloadPath(), apk.getFileType(), apk.getPackageName(), apk.getVersionCode(),
         apk.getFileName(), fileDownloadCallbackPublishSubjectEmpty,
-        apk.getAlternativeDownloadPath(), apk.getAttributionId())).thenReturn(fileDownloaderApk);
+        apk.getAlternativeDownloadPath(), "jonenzoemid")).thenReturn(fileDownloaderApk);
 
     when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
 
