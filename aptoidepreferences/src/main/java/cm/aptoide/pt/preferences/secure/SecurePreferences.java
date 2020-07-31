@@ -27,16 +27,6 @@ public class SecurePreferences {
         .apply();
   }
 
-  public static boolean isAppsAbTest(SharedPreferences securePreferences) {
-    return securePreferences.getBoolean(SecureKeys.SEND_APPS_ABTEST, true);
-  }
-
-  public static void setAppsAbTest(boolean b, SharedPreferences securePreferences) {
-    securePreferences.edit()
-        .putBoolean(SecureKeys.SEND_APPS_ABTEST, b)
-        .apply();
-  }
-
   public static boolean isWizardAvailable(SharedPreferences securePreferences) {
     return securePreferences.getBoolean(SecureKeys.WIZARD_AVAILABLE, true);
   }

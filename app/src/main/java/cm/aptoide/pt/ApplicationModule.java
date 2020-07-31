@@ -50,11 +50,8 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
-import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
 import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
-import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
 import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
@@ -1503,10 +1500,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
         AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
-        AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
-        AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT,
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
+        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
@@ -2075,21 +2070,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
       AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
     return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides AppsNameAnalytics providesAppsNameAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AppsNameAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides AppsNameExperiment providesAppsNameExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppsNameAnalytics appsNameAnalytics) {
-    return new AppsNameExperiment(abTestManager, appsNameAnalytics);
-  }
-
-  @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
-      AppsNameExperiment appsNameExperiment) {
-    return new AppsNameExperimentManager(appsNameExperiment);
   }
 
   @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
