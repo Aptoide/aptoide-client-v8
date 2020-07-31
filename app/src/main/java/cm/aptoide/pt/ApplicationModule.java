@@ -52,7 +52,6 @@ import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
-import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -95,7 +94,6 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
 import cm.aptoide.pt.app.appc.BonusAppcService;
-import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -1499,9 +1497,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
@@ -2045,10 +2041,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository,
-      AptoideInstallExperiment aptoideInstallExperiment) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallRepository,
-        aptoideInstallExperiment);
+      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallRepository);
   }
 
   @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(
@@ -2059,17 +2053,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
       AptoideDatabase database) {
     return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
-  }
-
-  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
-      @Named("ab-test") ABTestManager abTestManager,
-      AptoideInstallAnalytics aptoideInstallAnalytics) {
-    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
-  }
-
-  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
   }
 
   @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
