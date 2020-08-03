@@ -1025,7 +1025,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
         .addMigrations(new Migration(100, 101) {
           @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId STRING");
+            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId TEXT");
           }
         })
         .build();
