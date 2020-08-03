@@ -350,7 +350,6 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-
   private Completable setUpUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
   }

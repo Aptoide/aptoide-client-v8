@@ -161,7 +161,8 @@ public class DownloadFactory {
     download.setHasAppc(hasAppc);
     download.setSize(0);
     download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
-        downloadPaths.getAltPath(), versionCode, versionName, null)); // no splits : auto-update
+        downloadPaths.getAltPath(), versionCode, versionName,
+        null)); // no splits, no oemid : auto-update
     return download;
   }
 
@@ -169,6 +170,15 @@ public class DownloadFactory {
       String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
       boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
       String trustedBadge, String storeName) {
+    return create(downloadAction, appName, packageName, md5, icon, versionName, versionCode,
+        appPath, appPathAlt, obb, hasAppc, size, splits, requiredSplits, trustedBadge, storeName,
+        null);
+  }
+
+  public RoomDownload create(int downloadAction, String appName, String packageName, String md5,
+      String icon, String versionName, int versionCode, String appPath, String appPathAlt, Obb obb,
+      boolean hasAppc, long size, List<Split> splits, List<String> requiredSplits,
+      String trustedBadge, String storeName, String oemId) {
 
     AppValidator.AppValidationResult validationResult =
         appValidator.validateApp(md5, obb, packageName, appName, appPath, appPathAlt, splits,
@@ -177,7 +187,7 @@ public class DownloadFactory {
     if (validationResult == AppValidator.AppValidationResult.VALID_APP) {
 
       ApkPaths downloadPaths =
-          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt);
+          downloadApkPathsProvider.getDownloadPaths(downloadAction, appPath, appPathAlt, oemId);
 
       RoomDownload download = new RoomDownload();
       download.setMd5(md5);
@@ -191,6 +201,7 @@ public class DownloadFactory {
       download.setSize(size);
       download.setTrustedBadge(trustedBadge);
       download.setStoreName(storeName);
+      download.setAttributionId(oemId);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
               downloadPaths.getAltPath(), versionCode, versionName, splits));

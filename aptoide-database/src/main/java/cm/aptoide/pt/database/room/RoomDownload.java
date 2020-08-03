@@ -61,6 +61,7 @@ import java.util.List;
   private String storeName;
   private String trustedBadge;
   @RoomDownload.DownloadError private int downloadError;
+  private String attributionId;
 
   public RoomDownload() {
   }
@@ -253,6 +254,14 @@ import java.util.List;
 
   public void setTrustedBadge(String trustedBadge) {
     this.trustedBadge = trustedBadge;
+  }
+
+  public void setAttributionId(String oemId) {
+    attributionId = oemId;
+  }
+
+  public String getAttributionId() {
+    return attributionId;
   }
 
   @IntDef({

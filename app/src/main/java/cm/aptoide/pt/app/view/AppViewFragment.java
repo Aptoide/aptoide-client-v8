@@ -1280,7 +1280,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     setupWalletPromotionText(promotion, stringId);
     walletPromotionInstallDisableButton.setText(
         String.format(getString(R.string.wallet_promotion_button_install_disabled),
-            String.valueOf(promotion.getAppc())));
+            promotion.getAppc()));
     walletPromotionInstallDisableLayout.setVisibility(View.VISIBLE);
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
@@ -1291,8 +1291,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   private void setupClaimWalletPromotion(Promotion promotion, WalletApp walletApp) {
     setupWalletPromotionText(promotion, R.string.wallet_promotion_wallet_claim_message);
     walletPromotionClaimButton.setText(
-        String.format(getString(R.string.wallet_promotion_button_claim),
-            String.valueOf(promotion.getAppc())));
+        String.format(getString(R.string.wallet_promotion_button_claim), promotion.getAppc()));
     walletPromotionDownloadLayout.setVisibility(View.GONE);
     walletPromotionInstallDisableLayout.setVisibility(View.GONE);
     walletPromotionButtonsLayout.setVisibility(View.GONE);
@@ -1304,9 +1303,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   private void setupWalletPromotionText(Promotion promotion, @StringRes int walletMessageStringId) {
     walletPromotionTitle.setText(String.format(getString(R.string.wallet_promotion_title),
-        String.valueOf(promotion.getAppc())));
+        promotion.getAppc()));
     walletPromotionMessage.setText(
-        String.format(getString(walletMessageStringId), String.valueOf(promotion.getAppc())));
+        String.format(getString(walletMessageStringId), promotion.getAppc()));
   }
 
   private int getPromotionMessage(DownloadModel appDownloadModel) {
@@ -1745,8 +1744,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
       appcInfoView.setVisibility(View.VISIBLE);
       poaOfferValue.setText(
-          String.format(getResources().getString(R.string.poa_app_view_card_body_2),
-              String.valueOf(appcReward), formatedFiatCurrency));
+          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward, formatedFiatCurrency));
       if (!date.equals("")) {
         poaCountdownMessage.setVisibility(View.VISIBLE);
         setCountdownTimer(date);
@@ -1754,8 +1752,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         int transactionsLeft = (int) (appcBudget / appcReward);
         poaBudgetElement.setVisibility(View.VISIBLE);
         poaBudgetMessage.setText(
-            String.format(getResources().getString(R.string.poa_APPCC_left_body),
-                String.valueOf(transactionsLeft)));
+            String.format(getResources().getString(R.string.poa_APPCC_left_body), transactionsLeft));
       }
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
     } else {
@@ -1966,7 +1963,7 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   public enum BundleKeys {
-    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG,
+    APP_ID, STORE_NAME, STORE_THEME, MINIMAL_AD, PACKAGE_NAME, SHOULD_INSTALL, MD5, UNAME, DOWNLOAD_CONVERSION_URL, APPC, EDITORS_CHOICE_POSITION, ORIGIN_TAG, OEM_ID
   }
 
   public enum OpenType {

@@ -215,7 +215,7 @@ public class AppViewManager {
                 app.getSplits(), app.getRequiredSplits(), app.getMalware()
                     .getRank()
                     .toString(), app.getStore()
-                    .getName())))
+                    .getName(), app.getOemId())))
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
             appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), downloadAction, status,
