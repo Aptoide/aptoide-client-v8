@@ -398,7 +398,9 @@ dependencies {
   androidTestImplementation "androidx.recyclerview:recyclerview:${RECYCLER_VIEW_VERSION}"
   androidTestImplementation "com.jakewharton.rxrelay:rxrelay:${RX_RELAY}"
   androidTestImplementation "org.mockito:mockito-android:${MOCKITO_CORE_ANDROID_VERSION}"
-  androidTestImplementation "com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}"
+  androidTestImplementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}") {
+    force = true
+  }
   androidTestImplementation "com.squareup.retrofit2:retrofit:${RETROFIT_VERSION}"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -490,8 +492,12 @@ dependencies {
   implementation 'org.slf4j:slf4j-api:1.7.21'
   implementation "org.jmdns:jmdns:${JMDNS_VERSION}"
 
-  implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}")
-  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
+  implementation("com.squareup.okhttp3:okhttp:${OKHTTP_VERSION}") {
+    force = true
+  }
+  implementation("com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}") {
+    force = true
+  }
 
   // Parceler - https://github.com/johncarl81/parceler
   implementation "org.parceler:parceler-api:${PARCELER_VERSION}"
