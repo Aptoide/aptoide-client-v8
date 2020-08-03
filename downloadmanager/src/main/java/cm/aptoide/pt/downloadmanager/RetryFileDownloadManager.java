@@ -14,6 +14,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private final String packageName;
   private final int versionCode;
   private final String fileName;
+  private final String attributionId;
   private String md5;
   private FileDownloaderProvider fileDownloaderProvider;
   private String alternativeDownloadPath;
@@ -24,7 +25,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
 
   public RetryFileDownloadManager(String mainDownloadPath, int fileType, String packageName,
       int versionCode, String fileName, String md5, FileDownloaderProvider fileDownloaderProvider,
-      String alternativeDownloadPath) {
+      String alternativeDownloadPath, String attributionId) {
     this.mainDownloadPath = mainDownloadPath;
     this.fileType = fileType;
     this.packageName = packageName;
@@ -33,6 +34,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
     this.md5 = md5;
     this.fileDownloaderProvider = fileDownloaderProvider;
     this.alternativeDownloadPath = alternativeDownloadPath;
+    this.attributionId = attributionId;
     retryFileDownloadSubject = PublishSubject.create();
   }
 
@@ -77,7 +79,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
                 .d(TAG, "File not found error, restarting the download with the alternative link");
             FileDownloader retryFileDownloader =
                 fileDownloaderProvider.createFileDownloader(md5, alternativeDownloadPath, fileType,
-                    packageName, versionCode, fileName, PublishSubject.create());
+                    packageName, versionCode, fileName, PublishSubject.create(), attributionId);
             retried = true;
             this.fileDownloader = retryFileDownloader;
             return retryFileDownloader.startFileDownload()
@@ -92,7 +94,7 @@ public class RetryFileDownloadManager implements RetryFileDownloader {
   private FileDownloader setupFileDownloader() {
     this.fileDownloader =
         fileDownloaderProvider.createFileDownloader(md5, mainDownloadPath, fileType, packageName,
-            versionCode, fileName, PublishSubject.create());
+            versionCode, fileName, PublishSubject.create(), attributionId);
     return fileDownloader;
   }
 }

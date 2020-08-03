@@ -38,7 +38,7 @@ public class AppDownloadManager implements AppDownloader {
 
   @Override public void startAppDownload() {
     subscribe = Observable.from(app.getDownloadFiles())
-        .flatMap(downloadAppFile -> startFileDownload(downloadAppFile))
+        .flatMap(downloadAppFile -> startFileDownload(downloadAppFile, app.getAttributionId()))
         .subscribe(__ -> {
         }, Throwable::printStackTrace);
   }
@@ -78,13 +78,14 @@ public class AppDownloadManager implements AppDownloader {
     }
   }
 
-  private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile) {
+  private Observable<FileDownloadCallback> startFileDownload(DownloadAppFile downloadAppFile,
+      String attributionId) {
     return Observable.just(
         fileDownloaderProvider.createRetryFileDownloader(downloadAppFile.getDownloadMd5(),
             downloadAppFile.getMainDownloadPath(), downloadAppFile.getFileType(),
             downloadAppFile.getPackageName(), downloadAppFile.getVersionCode(),
             downloadAppFile.getFileName(), PublishSubject.create(),
-            downloadAppFile.getAlternativeDownloadPath()))
+            downloadAppFile.getAlternativeDownloadPath(), attributionId))
         .doOnNext(
             fileDownloader -> fileDownloaderPersistence.put(downloadAppFile.getMainDownloadPath(),
                 fileDownloader))
