@@ -1974,7 +1974,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
-    return new PackageInstallerManager();
+    return new PackageInstallerManager(AptoideUtils.isDeviceMIUI(),
+        AptoideUtils.isMIUIwithAABFix());
   }
 
   @Singleton @Provides NotificationProvider provideNotificationProvider(

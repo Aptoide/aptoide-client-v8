@@ -38,10 +38,6 @@ public class InstalledRepository {
     return installedPersistence.getAllInstalled();
   }
 
-  public Observable<List<RoomInstalled>> getAllInstalledAndInstalling() {
-    return installedPersistence.getAllInstalledAndInstalling();
-  }
-
   public Observable<RoomInstalled> getAsList(String packageName, int versionCode) {
     return installedPersistence.getAsList(packageName, versionCode)
         .observeOn(Schedulers.io())
@@ -80,5 +76,9 @@ public class InstalledRepository {
 
   public Observable<List<RoomInstallation>> getInstallationsHistory() {
     return installedPersistence.getInstallationsHistory();
+  }
+
+  public Observable<List<RoomInstalled>> getAllInstalling() {
+    return installedPersistence.getAllInstalling();
   }
 }

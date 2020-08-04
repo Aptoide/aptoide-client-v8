@@ -34,12 +34,6 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  public Observable<List<RoomInstalled>> getAllInstalledAndInstalling() {
-    return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
-        .flatMap(installs -> filterCompletedAndInstalling(installs))
-        .subscribeOn(Schedulers.io());
-  }
-
   public Observable<List<RoomInstalled>> getAll() {
     return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
         .subscribeOn(Schedulers.io());
@@ -105,22 +99,21 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
-  @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
+  @Override public Observable<List<RoomInstalled>> getAllInstalling() {
+    return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
+        .flatMap(installs -> filterInstalling(installs))
+        .subscribeOn(Schedulers.io());
+  }
+
+  private Observable<List<RoomInstalled>> filterInstalling(List<RoomInstalled> installs) {
     return Observable.from(installs)
-        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_INSTALLING)
         .toList();
   }
 
-  @NonNull private Observable<List<RoomInstalled>> filterCompletedAndInstalling(List<RoomInstalled> installs) {
+  @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
     return Observable.from(installs)
-        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED
-            || installed.getStatus() == RoomInstalled.STATUS_INSTALLING)
-        .doOnNext(roomInstalled -> {
-          if (roomInstalled.getPackageName()
-              .contains("github")) {
-          System.out.println("RoomInstalledPersistence.filterCompletedAndInstalling " + roomInstalled.getStatus());
-          }
-        })
+        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
         .toList();
   }
 

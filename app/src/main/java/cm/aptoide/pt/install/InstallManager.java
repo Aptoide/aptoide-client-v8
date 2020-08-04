@@ -153,58 +153,58 @@ public class InstallManager {
 
   public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), this::createInstallList)
+        installedRepository.getAllInstalled(), installedRepository.getAllInstalling(),
+        this::createInstallList)
         .distinctUntilChanged();
   }
 
   public Observable<List<Install>> getInstallationsAndInstalling() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalledAndInstalling(), this::createInstallList)
+        installedRepository.getAllInstalled(), installedRepository.getAllInstalling(),
+        this::createInstallList)
         .distinctUntilChanged();
   }
 
   private synchronized List<Install> createInstallList(List<RoomDownload> downloads,
-      List<RoomInstalled> installeds) {
-    List<RoomInstalled> installedList = new ArrayList<>();
-    for (RoomInstalled install : installeds) {
-      if (install.getPackageName()
-          .contains("github")) {
-        installedList.add(install);
-      }
-    }
-
-
+      List<RoomInstalled> installedAppsList, List<RoomInstalled> installingAppList) {
 
     List<Install> installList = new ArrayList<>();
     for (RoomDownload download : downloads) {
       boolean found = false;
-      if (download.getPackageName()
-          .contains("github")) {
-        System.out.println("InstallManager.createInstallList 2 " + download.getOverallDownloadStatus());
-      }
-      Collections.reverse(installedList);
-      for (RoomInstalled installed : installedList) {
+
+      Collections.reverse(installedAppsList);
+      for (RoomInstalled installed : installedAppsList) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
-          if (installed.getPackageName()
-              .contains("github")) {
-            System.out.println("InstallManager.createInstallList 3 " + installed.getStatus());
-          }
+
           found = true;
+
+          boolean isItInstalling = false;
+          int installStatus = RoomInstalled.STATUS_UNINSTALLED;
+          for (RoomInstalled installing : installingAppList) {
+            if (download.getPackageName()
+                .equals(installing.getPackageName())
+                && download.getVersionCode() == installing.getVersionCode()) {
+              installStatus = RoomInstalled.STATUS_INSTALLING;
+              isItInstalling = true;
+              break;
+            }
+          }
+
+          if (!isItInstalling && download.getVersionCode() == installed.getVersionCode()) {
+            installStatus = installed.getStatus();
+          }
+
           InstallationState installationState;
           if (download.getVersionCode() == installed.getVersionCode()) {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    installed.getVersionName(), installed.getStatus(), installed.getType(),
+                    installed.getVersionName(), installStatus, installed.getType(),
                     installed.getName(), installed.getIcon());
-            if (installed.getPackageName()
-                .contains("github")) {
-              System.out.println("nzxt installation state " + installed.getStatus() + " " + installationState);
-            }
           } else {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN);
+                    installStatus, RoomInstalled.TYPE_UNKNOWN);
           }
 
           Install.InstallationType type;
@@ -222,9 +222,19 @@ public class InstallManager {
       }
 
       if (!found) {
+        int installStatus = RoomInstalled.STATUS_UNINSTALLED;
+        for (RoomInstalled installing : installingAppList) {
+          if (download.getPackageName()
+              .equals(installing.getPackageName())
+              && download.getVersionCode() == installing.getVersionCode()) {
+            installStatus = RoomInstalled.STATUS_INSTALLING;
+            break;
+          }
+        }
+
         installList.add(createInstall(download,
             new InstallationState(download.getPackageName(), download.getVersionCode(),
-                RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN), download.getMd5(),
+                installStatus, RoomInstalled.TYPE_UNKNOWN), download.getMd5(),
             download.getPackageName(), download.getVersionCode(),
             Install.InstallationType.INSTALL));
       }
@@ -283,8 +293,8 @@ public class InstallManager {
                 .andThen(Observable.just(download.getMd5()));
           } else {
             return installInBackground(download.getMd5(), forceDefaultInstall,
-                packageInstallerManager.shouldSetInstallerPackageName(download)
-                    || forceSplitInstall, shouldInstall);
+                packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
+                shouldInstall);
           }
         })
         .toCompletable();
