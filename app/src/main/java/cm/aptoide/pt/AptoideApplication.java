@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -40,8 +39,6 @@ import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v2.aptwords.AdsApplicationVersionCodeProvider;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseRequestWithStore;
-import cm.aptoide.pt.dataprovider.ws.v7.store.GetStoreMetaRequest;
 import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
@@ -87,7 +84,6 @@ import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import cm.aptoide.pt.updates.UpdateRepository;
-import cm.aptoide.pt.util.PreferencesXmlParser;
 import cm.aptoide.pt.utils.AptoideUtils;
 import cm.aptoide.pt.utils.FileUtils;
 import cm.aptoide.pt.utils.q.QManager;
@@ -97,7 +93,6 @@ import cm.aptoide.pt.view.BaseActivity;
 import cm.aptoide.pt.view.BaseFragment;
 import cm.aptoide.pt.view.FragmentModule;
 import cm.aptoide.pt.view.FragmentProvider;
-import cm.aptoide.pt.view.MainActivity;
 import cm.aptoide.pt.view.configuration.implementation.VanillaActivityProvider;
 import cm.aptoide.pt.view.configuration.implementation.VanillaFragmentProvider;
 import cm.aptoide.pt.view.recycler.DisplayableWidgetMapping;
@@ -116,7 +111,6 @@ import io.rakam.api.Rakam;
 import io.rakam.api.RakamClient;
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -130,7 +124,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
-import org.xmlpull.v1.XmlPullParserException;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
@@ -199,6 +192,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AppsNameExperimentManager appsNameExperimentManager;
   @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
+  @Inject LaunchManager launchManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -311,12 +305,7 @@ public abstract class AptoideApplication extends Application {
         .andThen(setUpFirstRunAnalytics())
         .andThen(setUpAppsNameAbTest())
         .observeOn(Schedulers.computation())
-        .andThen(prepareApp(AptoideApplication.this.getAccountManager()).onErrorComplete(err -> {
-          // in case we have an error preparing the app, log that error and continue
-          CrashReport.getInstance()
-              .log(err);
-          return true;
-        }))
+        .andThen(launchManager.launch())
         .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
@@ -383,9 +372,7 @@ public abstract class AptoideApplication extends Application {
   }
 
   private Completable setUpFirstRunAnalytics() {
-    return sendAppStartToAnalytics().doOnCompleted(() -> SecurePreferences.setFirstRun(false,
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences())));
+    return sendAppStartToAnalytics();
   }
 
   private Completable initializeSentry() {
@@ -673,60 +660,6 @@ public abstract class AptoideApplication extends Application {
         .subscribeOn(Schedulers.newThread());
   }
 
-  private Completable prepareApp(AptoideAccountManager accountManager) {
-    if (SecurePreferences.isFirstRun(
-        SecurePreferencesImplementation.getInstance(getApplicationContext(),
-            getDefaultSharedPreferences()))) {
-
-      setSharedPreferencesValues();
-
-      return setupFirstRun().andThen(rootAvailabilityManager.updateRootAvailability())
-          .andThen(Completable.merge(accountManager.updateAccount(), createShortcut()));
-    }
-
-    return Completable.complete();
-  }
-
-  private void setSharedPreferencesValues() {
-    PreferencesXmlParser preferencesXmlParser = new PreferencesXmlParser();
-
-    XmlResourceParser parser = getResources().getXml(R.xml.settings);
-    try {
-      List<String[]> parsedPrefsList = preferencesXmlParser.parse(parser);
-      for (String[] keyValue : parsedPrefsList) {
-        getDefaultSharedPreferences().edit()
-            .putBoolean(keyValue[0], Boolean.valueOf(keyValue[1]))
-            .apply();
-      }
-    } catch (IOException | XmlPullParserException e) {
-      e.printStackTrace();
-    }
-  }
-
-  // todo re-factor all this code to proper Rx
-  private Completable setupFirstRun() {
-    return Completable.defer(() -> generateAptoideUuid().andThen(
-        setDefaultFollowedStores(storeCredentials, storeUtilsProxy).andThen(refreshUpdates())
-            .doOnError(err -> CrashReport.getInstance()
-                .log(err))));
-  }
-
-  private Completable setDefaultFollowedStores(StoreCredentialsProvider storeCredentials,
-      StoreUtilsProxy proxy) {
-
-    return Observable.from(defaultFollowedStores)
-        .flatMapCompletable(followedStoreName -> {
-          BaseRequestWithStore.StoreCredentials defaultStoreCredentials =
-              storeCredentials.get(followedStoreName);
-
-          return proxy.addDefaultStore(
-              GetStoreMetaRequest.of(defaultStoreCredentials, accountSettingsBodyInterceptorPoolV7,
-                  defaultClient, WebService.getDefaultConverter(), tokenInvalidator,
-                  getDefaultSharedPreferences()), accountManager, defaultStoreCredentials);
-        })
-        .toCompletable();
-  }
-
   /**
    * BaseBodyInterceptor for v7 ws calls with CDN = pool configuration
    */
@@ -752,15 +685,6 @@ public abstract class AptoideApplication extends Application {
 
   protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
-  }
-
-  public Completable createShortcut() {
-    return Completable.defer(() -> {
-      if (shortcutManager.shouldCreateShortcut()) {
-        createAppShortcut();
-      }
-      return null;
-    });
   }
 
   private Completable discoverAndSaveInstalledApps() {
@@ -802,22 +726,6 @@ public abstract class AptoideApplication extends Application {
     }
 
     return toReturn;
-  }
-
-  private Completable refreshUpdates() {
-    return updateRepository.sync(true, false);
-  }
-
-  private void createAppShortcut() {
-    Intent shortcutIntent = new Intent(this, MainActivity.class);
-    shortcutIntent.setAction(Intent.ACTION_MAIN);
-    Intent intent = new Intent();
-    intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-    intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, getResources().getString(R.string.app_name));
-    intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
-        Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.mipmap.ic_launcher));
-    intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-    getApplicationContext().sendBroadcast(intent);
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {

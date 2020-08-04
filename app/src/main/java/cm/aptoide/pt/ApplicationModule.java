@@ -338,6 +338,40 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.application = application;
   }
 
+  @Singleton @Provides LaunchManager providesLaunchManager(FirstLaunchManager firstLaunchManager,
+      UpdateLaunchManager updateLaunchManager,
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new LaunchManager(firstLaunchManager, updateLaunchManager, secureSharedPreferences);
+  }
+
+  @Singleton @Provides FirstLaunchManager providesFirstLaunchManager(
+      @Named("default") SharedPreferences defaultSharedPreferences, IdsRepository idsRepository,
+      FollowedStoresManager followedStoresManager, UpdateRepository updateRepository,
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager aptoideAccountManager,
+      AptoideShortcutManager shortcutManager) {
+    return new FirstLaunchManager(defaultSharedPreferences, idsRepository, followedStoresManager,
+        updateRepository, rootAvailabilityManager, aptoideAccountManager, shortcutManager,
+        application);
+  }
+
+  @Singleton @Provides UpdateLaunchManager providesUpdateLaunchManager(
+      FollowedStoresManager followedStoresManager) {
+    return new UpdateLaunchManager(followedStoresManager);
+  }
+
+  @Singleton @Provides FollowedStoresManager providesFollowedStoresManager(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default-followed-stores") List<String> defaultFollowedStores,
+      StoreUtilsProxy storeUtilsProxy, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
+      AptoideAccountManager aptoideAccountManager, @Named("default") OkHttpClient httpClient,
+      TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new FollowedStoresManager(storeCredentialsProvider, defaultFollowedStores,
+        storeUtilsProxy, accountSettingsBodyInterceptorPoolV7, aptoideAccountManager, httpClient,
+        tokenInvalidator, defaultSharedPreferences);
+  }
+
   @Singleton @Provides InstallManager providesInstallManager(
       AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
       RootAvailabilityManager rootAvailabilityManager,
