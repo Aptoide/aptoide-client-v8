@@ -79,7 +79,8 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
-import cm.aptoide.pt.download.view.DownloadDialogManager;
+import cm.aptoide.pt.download.view.DownloadDialogProvider;
+import cm.aptoide.pt.download.view.DownloadNavigator;
 import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
@@ -324,19 +325,24 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(
       InstallManager installManager, MoPubAdsManager moPubAdsManager,
       PermissionManager permissionManager, AppcMigrationManager appcMigrationManager,
-      DownloadDialogManager downloadDialogManager, DownloadFactory downloadFactory,
-      DownloadAnalytics downloadAnalytics, InstallAnalytics installAnalytics,
-      NotificationAnalytics notificationAnalytics, CrashReport crashReport) {
+      DownloadDialogProvider downloadDialogProvider, DownloadNavigator downloadNavigator,
+      DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
+      CrashReport crashReport) {
     return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
-        appcMigrationManager, downloadDialogManager, (PermissionService) fragment.getActivity(),
-        Schedulers.io(), AndroidSchedulers.mainThread(), downloadFactory, downloadAnalytics,
-        installAnalytics, notificationAnalytics, crashReport);
+        appcMigrationManager, downloadDialogProvider, downloadNavigator,
+        (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
+        downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport);
   }
 
-  @FragmentScope @Provides DownloadDialogManager providesDownloadDialogManager(
+  @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
       ThemeManager themeManager) {
-    return new DownloadDialogManager(fragment, fragment.getContext()
-        .getPackageManager(), themeManager);
+    return new DownloadDialogProvider(fragment, themeManager);
+  }
+
+  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator() {
+    return new DownloadNavigator(fragment, fragment.getContext()
+        .getPackageManager());
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,

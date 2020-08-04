@@ -32,7 +32,8 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
                                        val moPubAdsManager: MoPubAdsManager,
                                        val permissionManager: PermissionManager,
                                        val appcMigrationManager: AppcMigrationManager,
-                                       val downloadDialogManager: DownloadDialogManager,
+                                       val downloadDialogProvider: DownloadDialogProvider,
+                                       val downloadNavigator: DownloadNavigator,
                                        val permissionService: PermissionService,
                                        val ioScheduler: Scheduler,
                                        val viewScheduler: Scheduler,
@@ -90,7 +91,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
             .flatMapCompletable { status -> downgradeApp(downloadClick.download, status) }
       }
       DownloadStatusModel.Action.OPEN -> {
-        return downloadDialogManager.openApp(downloadClick.download.getPackageName())
+        return downloadNavigator.openApp(downloadClick.download.getPackageName())
       }
       else -> {
         return Completable.complete()
@@ -100,9 +101,9 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
 
   private fun downgradeApp(download: Download,
                            status: OfferResponseStatus): Completable {
-    return downloadDialogManager.showDowngradeDialog()
+    return downloadDialogProvider.showDowngradeDialog()
         .filter { downgrade -> downgrade }
-        .doOnNext { downloadDialogManager.showDowngradingSnackBar() }
+        .doOnNext { downloadDialogProvider.showDowngradingSnackBar() }
         .flatMapCompletable { downloadApp(download, status) }
         .toCompletable()
   }
@@ -111,7 +112,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
                           status: OfferResponseStatus): Completable {
     return Observable.defer {
       if (installManager.showWarning()) {
-        return@defer downloadDialogManager.showRootInstallWarningPopup()
+        return@defer downloadDialogProvider.showRootInstallWarningPopup()
             .doOnNext { answer -> installManager.rootInstallAllowed(answer) }
             .map { download }
       }

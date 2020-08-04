@@ -1,18 +1,14 @@
 package cm.aptoide.pt.download.view
 
-import android.content.pm.PackageManager
 import androidx.fragment.app.Fragment
 import cm.aptoide.pt.R
 import cm.aptoide.pt.themes.ThemeManager
-import cm.aptoide.pt.utils.AptoideUtils
 import cm.aptoide.pt.utils.GenericDialogs
 import com.google.android.material.snackbar.Snackbar
-import rx.Completable
 import rx.Observable
 
-class DownloadDialogManager(val fragment: Fragment,
-                            val packageManager: PackageManager,
-                            val themeManager: ThemeManager) {
+class DownloadDialogProvider(val fragment: Fragment,
+                             val themeManager: ThemeManager) {
 
 
   fun showRootInstallWarningPopup(): Observable<Boolean> {
@@ -33,12 +29,6 @@ class DownloadDialogManager(val fragment: Fragment,
     fragment.view?.let { v ->
       Snackbar.make(v, R.string.downgrading_msg, Snackbar.LENGTH_SHORT)
           .show()
-    }
-  }
-
-  fun openApp(packageName: String): Completable {
-    return Completable.fromAction {
-      AptoideUtils.SystemU.openApp(packageName, packageManager, fragment.context)
     }
   }
 }
