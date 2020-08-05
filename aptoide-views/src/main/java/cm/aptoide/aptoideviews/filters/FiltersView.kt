@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.annotation.CheckResult
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.aptoideviews.R
 import kotlinx.android.synthetic.main.filters_view_layout.view.*
@@ -68,6 +70,14 @@ class FiltersView @JvmOverloads constructor(context: Context,
 
   fun getFilters(): List<Filter> {
     return filters
+  }
+
+  fun setFiltersTextColorStateList(@ColorRes color: Int) {
+    controller.textColor = color
+  }
+
+  fun setFiltersBackgroundRes(@DrawableRes background: Int) {
+    controller.backgroundRes = background
   }
 
   @CheckResult

@@ -714,6 +714,18 @@ public class SearchResultFragment extends BackButtonFragment
             .setColorFilter(themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
                 PorterDuff.Mode.SRC_IN);
       }
+      filtersView.setFiltersBackgroundRes(
+          themeManager.getAttributeForTheme(storeTheme, R.attr.homeChips).resourceId);
+      filtersView.setFiltersTextColorStateList(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.homeChipsTextColorSelector).resourceId);
+    } else {
+      themeManager.resetToBaseTheme();
+      String theme = themeManager.getBaseTheme()
+          .getThemeName();
+      filtersView.setFiltersBackgroundRes(
+          themeManager.getAttributeForTheme(theme, R.attr.homeChips).resourceId);
+      filtersView.setFiltersTextColorStateList(
+          themeManager.getAttributeForTheme(theme, R.attr.homeChipsTextColorSelector).resourceId);
     }
   }
 

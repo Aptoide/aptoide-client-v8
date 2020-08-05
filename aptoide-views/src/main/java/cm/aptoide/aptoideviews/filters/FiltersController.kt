@@ -7,10 +7,14 @@ class FiltersController(val eventListener: FilterEventListener) :
 
   private var selectionList: List<Filter>? = null
 
+  var textColor: Int? = null
+  var backgroundRes: Int? = null
+
   override fun buildModels(list: List<Filter>) {
     if (list.find { f -> f.selected } != null) {
       ClearFiltersModel_()
           .id("clear_filter")
+          .textColorStateList(textColor)
           .eventListener(eventListener)
           .addTo(this)
     }
@@ -18,6 +22,8 @@ class FiltersController(val eventListener: FilterEventListener) :
       FilterModel_()
           .id(filter.id)
           .filter(filter)
+          .textColorStateList(textColor)
+          .backgroundRes(backgroundRes)
           .eventListener(eventListener)
           .addTo(this)
     }
