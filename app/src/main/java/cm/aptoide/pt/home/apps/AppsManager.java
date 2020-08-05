@@ -114,10 +114,6 @@ public class AppsManager {
             }));
   }
 
-  public Completable sendInstalledWithAptoideImpression() {
-    return aptoideInstallManager.sendImpressionEvent();
-  }
-
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
@@ -272,8 +268,7 @@ public class AppsManager {
                   update.getStoreName(), "update");
               return Single.just(value);
             })
-            .flatMapCompletable(download -> installManager.install(download))
-            .andThen(aptoideInstallManager.sendConversionEvent()))
+            .flatMapCompletable(download -> installManager.install(download)))
         .onErrorComplete();
   }
 
