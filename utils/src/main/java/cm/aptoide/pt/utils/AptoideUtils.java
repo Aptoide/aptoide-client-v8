@@ -107,6 +107,18 @@ public class AptoideUtils {
     return !TextUtils.isEmpty(systemProperty) && versionSupportsAAB;
   }
 
+  public static long getMIUITimestamp() {
+    String systemProperty = getSystemProperty("ro.miui.version.code_time");
+    if (systemProperty != null) {
+      try {
+        return Long.parseLong(systemProperty);
+      } catch (NumberFormatException ignore) {
+      }
+    }
+    return -1;
+  }
+
+
   @SuppressLint("PrivateApi") private static String getSystemProperty(String key) {
     try {
       return (String) Class.forName("android.os.SystemProperties")

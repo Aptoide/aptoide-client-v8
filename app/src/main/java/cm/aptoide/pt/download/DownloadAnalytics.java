@@ -66,6 +66,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
   private static final String ERROR_TYPE = "error_type";
   private static final String ERROR_MESSAGE = "error_message";
   private static final String IS_APKFY = "apkfy_app_install";
+  private static final String MIUI_AAB_FIX = "miui_aab_fix";
   private final Map<String, DownloadEvent> cache;
   private final ConnectivityManager connectivityManager;
   private final TelephonyManager telephonyManager;
@@ -449,6 +450,7 @@ public class DownloadAnalytics implements cm.aptoide.pt.downloadmanager.Download
     result.put(APP_APPC, hasAppc);
     result.put(APP_AAB, isAppBundle);
     result.put(IS_APKFY, isApkfy);
+    result.put(MIUI_AAB_FIX, AptoideUtils.getMIUITimestamp());
     if (trustedBadge != null) result.put(TRUSTED_BADGE, trustedBadge.toLowerCase());
     result.put(ADS_BLOCKED, offerResponseStatus.toString()
         .toLowerCase());
