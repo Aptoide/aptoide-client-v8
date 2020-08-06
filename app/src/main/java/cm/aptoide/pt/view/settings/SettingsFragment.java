@@ -637,7 +637,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
           .retry()
           .subscribe());
 
-      subscriptions.add(accountManager.enabled()
+      subscriptions.add(accountManager.hasMatureContentEnabled()
           .observeOn(AndroidSchedulers.mainThread())
           .doOnNext(state -> adultContentPreferenceView.setChecked(state))
           .doOnNext(state -> adultContentWithPinPreferenceView.setChecked(state))

@@ -239,6 +239,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
 import cm.aptoide.pt.search.SearchManager;
+import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
@@ -1164,11 +1165,21 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      RoomStoreRepository storeRepository) {
+      SearchRepository searchRepository, RoomStoreRepository storeRepository) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
         adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        storeRepository);
+        searchRepository);
+  }
+
+  @Singleton @Provides SearchRepository providesSearchRepository(
+      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      AppBundlesVisibilityManager appBundlesVisibilityManager) {
+    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(

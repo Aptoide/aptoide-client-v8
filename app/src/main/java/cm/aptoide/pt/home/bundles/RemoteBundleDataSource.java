@@ -116,7 +116,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
       return Observable.just(new HomeBundlesModel(true));
     }
 
-    return accountManager.enabled()
+    return accountManager.hasMatureContentEnabled()
         .first()
         .flatMap(adultContentEnabled -> idsRepository.getUniqueIdentifier()
             .toObservable()
@@ -189,7 +189,7 @@ public class RemoteBundleDataSource implements BundleDataSource {
   }
 
   public GetStoreWidgetsRequest getMoreBundlesRequest(String url, int offset, int limit) {
-    final boolean adultContentEnabled = accountManager.enabled()
+    final boolean adultContentEnabled = accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
         .toBlocking()
