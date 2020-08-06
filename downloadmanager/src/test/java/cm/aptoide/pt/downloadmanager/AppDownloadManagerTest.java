@@ -48,18 +48,22 @@ public class AppDownloadManagerTest {
             "cm.aptoide.pt", "patchObb", DownloadAppFile.FileType.OBB);
 
     DownloadApp appToDownload =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", 1231123);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithApk(), "md5Apk", 1231123,
+            "jonenzoemid");
     DownloadApp appToDownloadWithObbs =
-        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", 12313);
+        new DownloadApp("cm.aptoide.pt", 9005, getFilesListWithObbs(), "md5WithObb", 12313,
+            "jonenzoemid");
     DownloadApp appToDownloadEmptyError =
-        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", 123133);
+        new DownloadApp("cm.aptoide.pt", 9005, Collections.emptyList(), "md5Empty", 123133,
+            "jonenzoemid");
     testSubscriber = TestSubscriber.create();
 
     appDownloadManager = new AppDownloadManager(new RetryFileDownloaderProvider() {
       @Override
       public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
           int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
+          String attributionId) {
         return fileDownloaderApk;
       }
     }, appToDownload, createFileDownloaderPersistence(), downloadAnalytics);
@@ -68,7 +72,8 @@ public class AppDownloadManagerTest {
       @Override
       public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
           int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
+          String attributionId) {
         return fileDownloaderApk;
       }
     }, appToDownloadWithObbs, createFileDownloaderPersistence(), downloadAnalytics);
@@ -77,7 +82,8 @@ public class AppDownloadManagerTest {
       @Override
       public RetryFileDownloader createRetryFileDownloader(String md5, String mainDownloadPath,
           int fileType, String packageName, int versionCode, String fileName,
-          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink) {
+          PublishSubject<FileDownloadCallback> fileDownloadCallback, String alternativeLink,
+          String attributionId) {
         return fileDownloaderApk;
       }
     }, appToDownloadEmptyError, createFileDownloaderPersistence(), downloadAnalytics);
@@ -117,7 +123,7 @@ public class AppDownloadManagerTest {
     when(fileDownloaderProvider.createRetryFileDownloader(apk.getDownloadMd5(),
         apk.getMainDownloadPath(), apk.getFileType(), apk.getPackageName(), apk.getVersionCode(),
         apk.getFileName(), fileDownloadCallbackPublishSubjectEmpty,
-        apk.getAlternativeDownloadPath())).thenReturn(fileDownloaderApk);
+        apk.getAlternativeDownloadPath(), "jonenzoemid")).thenReturn(fileDownloaderApk);
 
     when(fileDownloaderApk.pauseDownload()).thenReturn(Completable.complete());
 
