@@ -158,13 +158,6 @@ public class InstallManager {
         .distinctUntilChanged();
   }
 
-  public Observable<List<Install>> getInstallationsAndInstalling() {
-    return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), installedRepository.getAllInstalling(),
-        this::createInstallList)
-        .distinctUntilChanged();
-  }
-
   private synchronized List<Install> createInstallList(List<RoomDownload> downloads,
       List<RoomInstalled> installedAppsList, List<RoomInstalled> installingAppList) {
 
