@@ -8,14 +8,16 @@ import cm.aptoide.pt.download.InstallType
 class EarnAppcListAnalytics(private val downloadAnalytics: DownloadAnalytics) {
 
   fun sendNotEnoughSpaceErrorEvent(packageName: String?,
+                                   versionCode: Int,
                                    downloadAction: DownloadModel.Action,
                                    offerResponseStatus: OfferResponseStatus?,
-                                   isMigration: Boolean,
-                                   isAppBundle: Boolean, hasAppc: Boolean,
-                                   trustedBadge: String?, storeName: String?,
+                                   isMigration: Boolean, isAppBundle: Boolean,
+                                   hasAppc: Boolean, trustedBadge: String?,
+                                   storeName: String?,
                                    isApkfy: Boolean) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy)
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy)
   }
 
   private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {

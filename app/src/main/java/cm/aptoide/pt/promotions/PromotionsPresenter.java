@@ -301,7 +301,7 @@ public class PromotionsPresenter implements Presenter {
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();
             promotionsAnalytics.sendNotEnoughSpaceErrorEvent(promotionViewApp.getPackageName(),
-                downloadModel.getAction(), offerResponseStatus,
+                promotionViewApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !promotionViewApp.getSplits()
                     .isEmpty(), promotionViewApp.hasAppc(), promotionViewApp.getRank(),

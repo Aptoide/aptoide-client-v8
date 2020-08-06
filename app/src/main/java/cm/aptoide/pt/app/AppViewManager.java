@@ -29,7 +29,6 @@ import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.Scheduler;
 import rx.Single;
 
 /**
@@ -50,7 +49,6 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final MoPubAdsManager moPubAdsManager;
-  private final Scheduler ioScheduler;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
@@ -77,8 +75,8 @@ public class AppViewManager {
       AptoideAccountManager aptoideAccountManager, MoPubAdsManager moPubAdsManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      Scheduler ioScheduler, String marketName, AppCoinsManager appCoinsManager,
-      PromotionsManager promotionsManager, AppcMigrationManager appcMigrationManager,
+      String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
+      AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     this.appViewModelManager = appViewModelManager;
@@ -95,7 +93,6 @@ public class AppViewManager {
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
-    this.ioScheduler = ioScheduler;
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
@@ -218,7 +215,8 @@ public class AppViewManager {
                     .getName(), app.getOemId())))
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
-            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), downloadAction, status,
+            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
+                downloadAction, status,
                 downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
                 !app.getSplits()
                     .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
