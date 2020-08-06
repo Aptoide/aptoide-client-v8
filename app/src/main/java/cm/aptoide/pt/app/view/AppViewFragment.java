@@ -1092,9 +1092,9 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
 
   @Override
   public Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
-      float rating, String icon, int downloads) {
-    return createCustomDialogForApkfy(appName, appc, rating, icon, downloads).filter(
-        response -> response.equals(YES))
+      float rating, String icon, int downloads, boolean isGamification) {
+    return createCustomDialogForApkfy(appName, appc, rating, icon, downloads,
+        isGamification).filter(response -> response.equals(YES))
         .map(__ -> null);
   }
 
@@ -1271,6 +1271,12 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
+  @Override public void showDownloadError(DownloadModel downloadModel) {
+    if (downloadModel.hasError()) {
+      handleDownloadError(downloadModel.getDownloadState());
+    }
+  }
+
   private void setupInstallDependencyApp(Promotion promotion, DownloadModel appDownloadModel) {
     int stringId = R.string.wallet_promotion_wallet_installed_message;
     if (appDownloadModel.getAction() == DownloadModel.Action.MIGRATE
@@ -1302,8 +1308,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private void setupWalletPromotionText(Promotion promotion, @StringRes int walletMessageStringId) {
-    walletPromotionTitle.setText(String.format(getString(R.string.wallet_promotion_title),
-        promotion.getAppc()));
+    walletPromotionTitle.setText(
+        String.format(getString(R.string.wallet_promotion_title), promotion.getAppc()));
     walletPromotionMessage.setText(
         String.format(getString(walletMessageStringId), promotion.getAppc()));
   }
@@ -1695,12 +1701,6 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     }
   }
 
-  @Override public void showDownloadError(DownloadModel downloadModel) {
-    if (downloadModel.hasError()) {
-      handleDownloadError(downloadModel.getDownloadState());
-    }
-  }
-
   @Override public void openApp(String packageName) {
     AptoideUtils.SystemU.openApp(packageName, getContext().getPackageManager(), getContext());
   }
@@ -1744,7 +1744,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
       String formatedFiatCurrency = fiatCurrency + poaFiatDecimalFormat.format(fiatReward);
       appcInfoView.setVisibility(View.VISIBLE);
       poaOfferValue.setText(
-          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward, formatedFiatCurrency));
+          String.format(getResources().getString(R.string.poa_app_view_card_body_2), appcReward,
+              formatedFiatCurrency));
       if (!date.equals("")) {
         poaCountdownMessage.setVisibility(View.VISIBLE);
         setCountdownTimer(date);
@@ -1752,7 +1753,8 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
         int transactionsLeft = (int) (appcBudget / appcReward);
         poaBudgetElement.setVisibility(View.VISIBLE);
         poaBudgetMessage.setText(
-            String.format(getResources().getString(R.string.poa_APPCC_left_body), transactionsLeft));
+            String.format(getResources().getString(R.string.poa_APPCC_left_body),
+                transactionsLeft));
       }
       if (hasBilling) poaIabInfo.setVisibility(View.VISIBLE);
     } else {
@@ -1920,10 +1922,15 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
   }
 
   private Observable<GenericDialogs.EResponse> createCustomDialogForApkfy(String appName,
-      double appc, float rating, String icon, int downloads) {
+      double appc, float rating, String icon, int downloads, boolean isGamification) {
     return Observable.create((Subscriber<? super GenericDialogs.EResponse> subscriber) -> {
       LayoutInflater inflater = LayoutInflater.from(getContext());
-      View dialogLayout = inflater.inflate(R.layout.apkfy_new_dialog, null);
+      View dialogLayout;
+      if (isGamification) {
+        dialogLayout = inflater.inflate(R.layout.apkfy_gamification_dialog, null);
+      } else {
+        dialogLayout = inflater.inflate(R.layout.apkfy_new_dialog, null);
+      }
       final AlertDialog dialog = new AlertDialog.Builder(getContext()).setView(dialogLayout)
           .create();
       ((TextView) dialogLayout.findViewById(R.id.app_name)).setText(appName);

@@ -317,7 +317,7 @@ public class AppViewPresenter implements Presenter {
       } else if (appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
         return view.showOpenAndInstallApkFyDialog(appModel.getMarketName(), appModel.getAppName(),
             appModel.getAppc(), appModel.getRating()
-                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads())
+                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads(), false)
             .map(__ -> true);
       }
     }
@@ -446,7 +446,9 @@ public class AppViewPresenter implements Presenter {
       PromotionViewModel promotionViewModel) {
     WalletApp walletApp = promotionViewModel.getWalletApp();
     DownloadModel downloadModel = walletApp.getDownloadModel();
-    if (downloadModel != null && downloadModel.getDownloadState() == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
+    if (downloadModel != null
+        && downloadModel.getDownloadState()
+        == DownloadModel.DownloadState.NOT_ENOUGH_STORAGE_ERROR) {
       return appViewManager.getAdsVisibilityStatus()
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();

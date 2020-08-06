@@ -148,7 +148,7 @@ public interface AppViewView extends InstallAppView {
   Observable<Void> showOpenAndInstallDialog(String title, String appName);
 
   Observable<Void> showOpenAndInstallApkFyDialog(String title, String appName, double appc,
-      float rating, String icon, int downloads);
+      float rating, String icon, int downloads, boolean isGamification);
 
   void showApkfyElement(String appName);
 
