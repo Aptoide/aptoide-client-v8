@@ -165,7 +165,6 @@ public class InstallManager {
     for (RoomDownload download : downloads) {
       boolean found = false;
 
-      Collections.reverse(installedAppsList);
       for (RoomInstalled installed : installedAppsList) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
