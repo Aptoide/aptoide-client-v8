@@ -21,7 +21,6 @@ import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Completable;
@@ -163,31 +162,27 @@ public class InstallManager {
 
     List<Install> installList = new ArrayList<>();
     for (RoomDownload download : downloads) {
-      boolean found = false;
+
+      boolean isInstalling =
+          isAppInstalling(installingAppList, download.getPackageName(), download.getVersionCode());
+      int installStatus = RoomInstalled.STATUS_UNINSTALLED;
+      if (isInstalling) {
+        installStatus = RoomInstalled.STATUS_INSTALLING;
+      }
+      InstallationState installationState =
+          new InstallationState(download.getPackageName(), download.getVersionCode(), installStatus,
+              RoomInstalled.TYPE_UNKNOWN);
+
+      Install.InstallationType installationType = Install.InstallationType.INSTALL;
 
       for (RoomInstalled installed : installedAppsList) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
 
-          found = true;
-
-          boolean isItInstalling = false;
-          int installStatus = RoomInstalled.STATUS_UNINSTALLED;
-          for (RoomInstalled installing : installingAppList) {
-            if (download.getPackageName()
-                .equals(installing.getPackageName())
-                && download.getVersionCode() == installing.getVersionCode()) {
-              installStatus = RoomInstalled.STATUS_INSTALLING;
-              isItInstalling = true;
-              break;
-            }
-          }
-
-          if (!isItInstalling && download.getVersionCode() == installed.getVersionCode()) {
+          if (!isInstalling && download.getVersionCode() == installed.getVersionCode()) {
             installStatus = installed.getStatus();
           }
 
-          InstallationState installationState;
           if (download.getVersionCode() == installed.getVersionCode()) {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
@@ -199,39 +194,33 @@ public class InstallManager {
                     installStatus, RoomInstalled.TYPE_UNKNOWN);
           }
 
-          Install.InstallationType type;
           if (installed.getVersionCode() == download.getVersionCode()) {
-            type = Install.InstallationType.INSTALLED;
+            installationType = Install.InstallationType.INSTALLED;
           } else if (installed.getVersionCode() > download.getVersionCode()) {
-            type = Install.InstallationType.DOWNGRADE;
+            installationType = Install.InstallationType.DOWNGRADE;
           } else {
-            type = Install.InstallationType.UPDATE;
+            installationType = Install.InstallationType.UPDATE;
           }
-          installList.add(createInstall(download, installationState, download.getMd5(),
-              download.getPackageName(), download.getVersionCode(), type));
+
           break;
         }
       }
-
-      if (!found) {
-        int installStatus = RoomInstalled.STATUS_UNINSTALLED;
-        for (RoomInstalled installing : installingAppList) {
-          if (download.getPackageName()
-              .equals(installing.getPackageName())
-              && download.getVersionCode() == installing.getVersionCode()) {
-            installStatus = RoomInstalled.STATUS_INSTALLING;
-            break;
-          }
-        }
-
-        installList.add(createInstall(download,
-            new InstallationState(download.getPackageName(), download.getVersionCode(),
-                installStatus, RoomInstalled.TYPE_UNKNOWN), download.getMd5(),
-            download.getPackageName(), download.getVersionCode(),
-            Install.InstallationType.INSTALL));
-      }
+      installList.add(
+          createInstall(download, installationState, download.getMd5(), download.getPackageName(),
+              download.getVersionCode(), installationType));
     }
     return installList;
+  }
+
+  private boolean isAppInstalling(List<RoomInstalled> installingAppList, String packageName,
+      int versionCode) {
+    for (RoomInstalled installing : installingAppList) {
+      if (packageName.equals(installing.getPackageName())
+          && versionCode == installing.getVersionCode()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Observable<Install> getCurrentInstallation() {
