@@ -179,29 +179,25 @@ public class InstallManager {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
 
-          if (!isInstalling && download.getVersionCode() == installed.getVersionCode()) {
-            installStatus = installed.getStatus();
-          }
-
           if (download.getVersionCode() == installed.getVersionCode()) {
+            if (!isInstalling) {
+              installStatus = installed.getStatus();
+            }
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                     installed.getVersionName(), installStatus, installed.getType(),
                     installed.getName(), installed.getIcon());
+            installationType = Install.InstallationType.INSTALLED;
           } else {
             installationState =
                 new InstallationState(installed.getPackageName(), installed.getVersionCode(),
                     installStatus, RoomInstalled.TYPE_UNKNOWN);
+            if (installed.getVersionCode() > download.getVersionCode()) {
+              installationType = Install.InstallationType.DOWNGRADE;
+            } else {
+              installationType = Install.InstallationType.UPDATE;
+            }
           }
-
-          if (installed.getVersionCode() == download.getVersionCode()) {
-            installationType = Install.InstallationType.INSTALLED;
-          } else if (installed.getVersionCode() > download.getVersionCode()) {
-            installationType = Install.InstallationType.DOWNGRADE;
-          } else {
-            installationType = Install.InstallationType.UPDATE;
-          }
-
           break;
         }
       }
@@ -291,7 +287,8 @@ public class InstallManager {
   }
 
   private Install createInstall(RoomDownload download, InstallationState installationState,
-      String md5, String packageName, int versioncode, Install.InstallationType installationType) {
+      String md5, String packageName, int versioncode, Install.
+      InstallationType installationType) {
     return new Install(mapInstallation(download),
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
