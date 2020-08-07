@@ -108,12 +108,6 @@ android {
       applicationIdSuffix ".leak"
       matchingFallbacks = ['internal', 'prod']
     }
-
-    monetisation {
-      dimension "mode"
-      versionName defaultConfig.getVersionName() + "A"
-      matchingFallbacks = ['prod']
-    }
   }
 
   buildTypes {
@@ -145,8 +139,7 @@ android {
   variantFilter { variant ->
     def names = variant.flavors*.name
 
-    if (names.contains('cobrand') && (names.contains('internal') || names.contains('leak') ||
-        names.contains('monetisation'))) {
+    if (names.contains('cobrand') && (names.contains('internal') || names.contains('leak'))) {
       setIgnore(true)
     }
   }
