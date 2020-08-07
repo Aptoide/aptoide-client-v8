@@ -3,6 +3,8 @@ package cm.aptoide.pt.search.view;
 import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
+import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
 import cm.aptoide.pt.search.model.SearchAppResult;
@@ -14,16 +16,6 @@ import java.util.List;
 import rx.Observable;
 
 public interface SearchResultView extends SearchSuggestionsView {
-
-  void showFollowedStoresResult();
-
-  void showAllStoresResult();
-
-  Observable<Void> clickFollowedStoresSearchButton();
-
-  Observable<Void> clickEverywhereSearchButton();
-
-  Observable<Void> clickNoResultsSearchButton();
 
   Observable<Boolean> clickAdultContentSwitch();
 
@@ -37,33 +29,19 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void hideLoading();
 
-  void addFollowedStoresResult(String query, List<SearchAppResult> dataList);
+  void showResultsLoading();
 
-  void addAllStoresResult(String query, List<SearchAppResult> dataList);
+  void addAllStoresResult(String query, SearchResultDiffModel dataList, boolean isLoadMore);
 
   Model getViewModel();
 
-  void setFollowedStoresAdsResult(SearchAdResult ad);
-
-  void setAllStoresAdsResult(SearchAdResult ad);
-
-  void setFollowedStoresAdsEmpty();
-
   void setAllStoresAdsEmpty();
 
-  Observable<Void> followedStoresResultReachedBottom();
-
-  Observable<Void> allStoresResultReachedBottom();
+  Observable<Void> searchResultsReachedBottom();
 
   void showLoadingMore();
 
   void hideLoadingMore();
-
-  void setViewWithStoreNameAsSingleTab(String storeName);
-
-  void hideFollowedStoresTab();
-
-  void hideNonFollowedStoresTab();
 
   Observable<Void> searchSetup();
 
@@ -109,8 +87,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showBannerAd();
 
-  Observable<Boolean> showingSearchResultsView();
-
   void showNativeAds(String query);
 
   void showNoNetworkView();
@@ -139,11 +115,9 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<Void> viewHasNoResults();
 
+  Observable<List<Filter>> filtersChangeEvents();
+
   interface Model {
-
-    List<SearchAppResult> getFollowedStoresSearchAppResults();
-
-    List<SearchAdResult> getFollowedStoresSearchAdResults();
 
     SearchQueryModel getSearchQueryModel();
 
@@ -151,27 +125,11 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     String getStoreTheme();
 
-    boolean isOnlyTrustedApps();
-
-    boolean isAllStoresSelected();
-
-    void setAllStoresSelected(boolean allStoresSelected);
-
-    int getAllStoresOffset();
-
-    int getFollowedStoresOffset();
-
-    boolean hasReachedBottomOfAllStores();
-
-    boolean hasReachedBottomOfFollowedStores();
-
-    void incrementOffsetAndCheckIfReachedBottomOfFollowedStores(int offset);
-
-    void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
-
     boolean hasLoadedAds();
 
     void setHasLoadedAds();
+
+    List<Filter> getFilters();
 
     List<SearchAppResult> getAllStoresSearchAppResults();
 

@@ -2,7 +2,7 @@ package cm.aptoide.pt.search.view;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pair;
+import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -12,9 +12,9 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
-import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.model.SearchResult;
@@ -24,7 +24,7 @@ import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -78,19 +78,16 @@ import rx.schedulers.Schedulers;
     handleFragmentRestorationVisibility();
     doFirstSearch();
     firstAdsDataLoad();
-    handleClickFollowedStoresSearchButton();
-    handleClickEverywhereSearchButton();
     handleClickToOpenAppViewFromItem();
     handleClickToOpenAppViewFromAdd();
-    handleClickOnNoResultsImage();
-    handleAllStoresListReachedBottom();
-    handleFollowedStoresListReachedBottom();
+    handleSearchListReachedBottom();
     handleQueryTextSubmitted();
     handleQueryTextChanged();
     handleQueryTextCleaned();
     handleClickOnBottomNavWithResults();
     handleClickOnBottomNavWithoutResults();
     handleErrorRetryClick();
+    handleFiltersClick();
     listenToSearchQueries();
 
     handleClickOnAdultContentSwitch();
@@ -99,6 +96,39 @@ import rx.schedulers.Schedulers;
     handleAdultContentDialogWithPinPositiveClick();
     redoSearchAfterAdultContentSwitch();
     updateAdultContentSwitchOnNoResults();
+  }
+
+  private void handleFiltersClick() {
+    view.getLifecycleEvent()
+        .filter(lifecycleEvent -> lifecycleEvent.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.filtersChangeEvents()
+            .map(___ -> view.getViewModel())
+            .doOnNext(___ -> view.showResultsLoading())
+            .flatMap(viewModel -> loadData(viewModel.getSearchQueryModel()
+                    .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(),
+                false).toObservable()
+                .observeOn(viewScheduler)
+                .doOnNext(searchResult -> {
+                  if (searchResult.hasError()) {
+                    if (searchResult.getError() == SearchResultError.NO_NETWORK) {
+                      view.showNoNetworkView();
+                    } else {
+                      view.showGenericErrorView();
+                    }
+                  } else {
+                    if (getResultsCount(searchResult) <= 0) {
+                      view.showNoResultsView();
+                      analytics.searchNoResults(viewModel.getSearchQueryModel());
+                    } else {
+                      view.showResultsView();
+                    }
+                  }
+                }))
+            .retry())
+        .doOnNext(filters -> view.getViewModel())
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, crashReport::log);
   }
 
   private void handleErrorRetryClick() {
@@ -168,72 +198,31 @@ import rx.schedulers.Schedulers;
         .subscribe(__ -> view.hideLoadingMore(), e -> crashReport.log(e));
   }
 
-  @VisibleForTesting public void handleAllStoresListReachedBottom() {
+  @VisibleForTesting public void handleSearchListReachedBottom() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> view.allStoresResultReachedBottom())
+        .flatMap(__ -> view.searchResultsReachedBottom())
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> !viewModel.hasReachedBottomOfAllStores())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> loadDataFromNonFollowedStores(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getAllStoresOffset()))
+        .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), true))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideLoadingMore())
         .filter(data -> data != null)
-        .doOnNext(data -> {
-          final SearchResultView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
-        })
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
   }
 
-  private int getItemCount(List<SearchAppResult> data) {
-    return data != null ? data.size() : 0;
-  }
-
-  @VisibleForTesting public void handleFollowedStoresListReachedBottom() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.followedStoresResultReachedBottom())
-        .map(__ -> view.getViewModel())
-        .filter(viewModel -> !viewModel.hasReachedBottomOfFollowedStores())
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.showLoadingMore())
-        .flatMapSingle(viewModel -> {
-          String storeName = viewModel.getStoreName();
-          if (storeName != null && !storeName.trim()
-              .equals("")) {
-            return loadDataForSpecificStore(viewModel.getSearchQueryModel()
-                .getFinalQuery(), storeName, viewModel.getFollowedStoresOffset());
-          }
-          return loadDataFromFollowedStores(viewModel.getSearchQueryModel()
-              .getFinalQuery(), viewModel.isOnlyTrustedApps(), viewModel.getFollowedStoresOffset());
-        })
-        .observeOn(viewScheduler)
-        .doOnNext(__ -> view.hideLoadingMore())
-        .filter(data -> data != null)
-        .doOnNext(data -> {
-          final SearchResultView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
-        })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  public List<SearchAppResult> getResultList(SearchResult result) {
-    List<SearchAppResult> list = new ArrayList<>();
-    if (result instanceof SearchResult.Success) {
-      list = ((SearchResult.Success) result).getResult();
+  public SearchResultDiffModel getResultList(SearchResult result) {
+    SearchResultDiffModel searchResultDiffModel =
+        new SearchResultDiffModel(null, Collections.emptyList());
+    if (!result.hasError()) {
+      searchResultDiffModel = result.getSearchResultDiffModel();
     }
-    return list;
+    return searchResultDiffModel;
   }
 
   @VisibleForTesting public void firstAdsDataLoad() {
@@ -244,7 +233,6 @@ import rx.schedulers.Schedulers;
         .filter(viewModel -> !viewModel.hasLoadedAds())
         .doOnNext(ad -> {
           ad.setHasLoadedAds();
-          view.setFollowedStoresAdsEmpty();
           view.setAllStoresAdsEmpty();
         })
         .flatMapCompletable(__ -> loadBannerAd())
@@ -282,17 +270,6 @@ import rx.schedulers.Schedulers;
               .isAppc());
           navigator.goToAppView(data.getSearchAdResult());
         })
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  @VisibleForTesting public void handleClickOnNoResultsImage() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickNoResultsSearchButton())
-        .doOnNext(query -> navigator.goToSettings())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -388,54 +365,35 @@ import rx.schedulers.Schedulers;
         .getStoreTheme(), storeName);
   }
 
-  @VisibleForTesting public void handleClickFollowedStoresSearchButton() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickFollowedStoresSearchButton())
-        .doOnNext(__ -> view.showFollowedStoresResult())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  @VisibleForTesting public void handleClickEverywhereSearchButton() {
-    view.getLifecycleEvent()
-        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
-        .observeOn(viewScheduler)
-        .flatMap(__ -> view.clickEverywhereSearchButton())
-        .doOnNext(__ -> view.showAllStoresResult())
-        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
-        .subscribe(__ -> {
-        }, e -> crashReport.log(e));
-  }
-
-  private Single<Pair<SearchResult, SearchResult>> loadData(String query, String storeName,
-      boolean onlyTrustedApps) {
-
+  private Single<SearchResult> loadData(String query, String storeName, List<Filter> filters,
+      boolean isLoadMore) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return Completable.fromAction(() -> view.setViewWithStoreNameAsSingleTab(storeName))
-          .andThen(loadDataForSpecificStore(query, storeName, 0).map(
-              searchResult -> new Pair<>(searchResult, null)));
+      return loadDataForSpecificStore(query, storeName, filters, isLoadMore);
     }
     // search every store. followed and not followed
-    return Single.zip(loadDataFromFollowedStores(query, onlyTrustedApps, 0),
-        loadDataFromNonFollowedStores(query, onlyTrustedApps, 0),
-        (followedStores, nonFollowedStores) -> new Pair<>(followedStores, nonFollowedStores));
+    return loadDataFromNonFollowedStores(query, filters, isLoadMore);
   }
 
   @NonNull
-  private Single<SearchResult> loadDataFromNonFollowedStores(String query, boolean onlyTrustedApps,
-      int offset) {
-    return searchManager.searchInNonFollowedStores(query, onlyTrustedApps, offset)
+  private Single<SearchResult> loadDataFromNonFollowedStores(String query, List<Filter> filters,
+      boolean isLoadMore) {
+    return searchManager.searchAppInStores(query, filters)
+        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, isLoadMore));
+  }
+
+  @NonNull private Single<SearchResult> loadDataForSpecificStore(String query, String storeName,
+      List<Filter> filters, boolean isLoadMore) {
+    return searchManager.searchInStore(query, storeName, filters)
+        .flatMap(searchResult -> mapToViewAndLoadAds(query, searchResult, isLoadMore));
+  }
+
+  private Single<SearchResult> mapToViewAndLoadAds(String query, SearchResult searchResult,
+      boolean isLoadMore) {
+    return Single.just(searchResult)
         .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addAllStoresResult(query, getResultList(dataList)))
-        .doOnSuccess(data -> {
-          final SearchResultView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfAllStores(
-              getItemCount(getResultList(data)));
-        })
+        .doOnSuccess(
+            dataList -> view.addAllStoresResult(query, getResultList(dataList), isLoadMore))
         .observeOn(ioScheduler)
         .flatMap(nonFollowedStoresSearchResult -> searchManager.shouldLoadNativeAds()
             .observeOn(viewScheduler)
@@ -447,40 +405,11 @@ import rx.schedulers.Schedulers;
             .map(__ -> nonFollowedStoresSearchResult));
   }
 
-  @NonNull
-  private Single<SearchResult> loadDataFromFollowedStores(String query, boolean onlyTrustedApps,
-      int offset) {
-    return searchManager.searchInFollowedStores(query, onlyTrustedApps, offset)
-        .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addFollowedStoresResult(query, getResultList(dataList)))
-        .doOnSuccess(data -> {
-          final SearchResultView.Model viewModel = view.getViewModel();
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
-        });
-  }
-
-  @NonNull private Single<SearchResult> loadDataForSpecificStore(String query, String storeName,
-      int offset) {
-    return searchManager.searchInStore(query, storeName, offset)
-        .observeOn(viewScheduler)
-        .doOnSuccess(dataList -> view.addFollowedStoresResult(query, getResultList(dataList)))
-        .doOnSuccess(data -> {
-          final SearchResultView.Model viewModel = view.getViewModel();
-          viewModel.setAllStoresSelected(false);
-          viewModel.incrementOffsetAndCheckIfReachedBottomOfFollowedStores(
-              getItemCount(getResultList(data)));
-        });
-  }
-
-  private int getResultsCount(Pair<SearchResult, SearchResult> pair) {
+  private int getResultsCount(SearchResult result) {
     int count = 0;
-    if (pair.first instanceof SearchResult.Success) {
-      count += ((SearchResult.Success) pair.first).getResult()
-          .size();
-    }
-    if (pair.second instanceof SearchResult.Success) {
-      count += ((SearchResult.Success) pair.second).getResult()
+    if (!result.hasError()) {
+      count += result.getSearchResultDiffModel()
+          .getSearchResultsList()
           .size();
     }
     return count;
@@ -521,38 +450,30 @@ import rx.schedulers.Schedulers;
 
   public Observable<SearchResultCount> search(SearchResultView.Model resultModel) {
     return Observable.just(resultModel)
-        .filter(viewModel -> viewModel.getAllStoresOffset() == 0
-            && viewModel.getFollowedStoresOffset() == 0)
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.hideSuggestionsViews())
         .doOnNext(__ -> view.showLoading())
         .observeOn(ioScheduler)
         .flatMapSingle(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.isOnlyTrustedApps()).observeOn(
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false).observeOn(
             viewScheduler)
             .doOnSuccess(__2 -> view.hideLoading())
-            .flatMap(searchResultPair -> {
+            .flatMap(searchResult -> {
               int count = 0;
-              if (searchResultPair.first instanceof SearchResult.Error) {
-                if (((SearchResult.Error) searchResultPair.first).getError()
-                    == SearchResultError.NO_NETWORK) {
+              if (searchResult.hasError()) {
+                if (searchResult.getError() == SearchResultError.NO_NETWORK) {
                   view.showNoNetworkView();
                 } else {
                   view.showGenericErrorView();
                 }
               } else {
-                count = getResultsCount(searchResultPair);
-                if (getResultsCount(searchResultPair) <= 0) {
+                count = getResultsCount(searchResult);
+                if (getResultsCount(searchResult) <= 0) {
                   view.showNoResultsView();
                   analytics.searchNoResults(viewModel.getSearchQueryModel());
                 } else {
                   view.showResultsView();
-                  if (viewModel.isAllStoresSelected()) {
-                    view.showAllStoresResult();
-                  } else {
-                    view.showFollowedStoresResult();
-                  }
                 }
               }
               return Single.just(count);

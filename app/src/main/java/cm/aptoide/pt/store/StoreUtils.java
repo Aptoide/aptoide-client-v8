@@ -185,14 +185,14 @@ public class StoreUtils {
   }
 
   public static List<Long> getSubscribedStoresIds(RoomStoreRepository storeRepository) {
-    List<Long> storesNames = new LinkedList<>();
+    List<Long> storeIds = new LinkedList<>();
     List<RoomStore> stores = storeRepository.getAll()
         .toBlocking()
         .first();
     for (RoomStore store : stores) {
-      storesNames.add(store.getStoreId());
+      storeIds.add(store.getStoreId());
     }
-    return storesNames;
+    return storeIds;
   }
 
   public static HashMapNotNull<String, List<String>> getSubscribedStoresAuthMap(

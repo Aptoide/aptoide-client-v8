@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appc_info_layout"
     android:layout_width="match_parent"
@@ -24,7 +23,6 @@
       android:id="@+id/appc_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textColor="@color/default_orange_gradient_end"
       tools:text="GET APPC"
       style="@style/Aptoide.TextView.Medium.XXS.SpendAppc"
       />

@@ -136,15 +136,15 @@ public class OtherVersionWidget extends Widget<OtherVersionDisplayable>
         .getRank();
     switch (rank) {
       case TRUSTED:
-        badgeResId = R.drawable.ic_badge_trusted;
+        badgeResId = R.drawable.ic_badges_trusted;
         break;
 
       case WARNING:
-        badgeResId = R.drawable.ic_badge_warning;
+        badgeResId = R.drawable.ic_badges_warning;
         break;
 
       case CRITICAL:
-        badgeResId = R.drawable.ic_badge_critical;
+        badgeResId = R.drawable.ic_badges_critical;
         break;
 
       default:

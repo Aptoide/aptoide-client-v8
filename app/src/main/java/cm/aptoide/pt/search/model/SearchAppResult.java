@@ -7,6 +7,7 @@ import org.parceler.Parcel;
   int rank;
   String icon;
   String storeName;
+  Long storeId;
   String storeTheme;
   long modifiedDate;
   float averageRating;
@@ -21,7 +22,7 @@ import org.parceler.Parcel;
   public SearchAppResult() {
   }
 
-  public SearchAppResult(int rank, String icon, String storeName, String storeTheme,
+  public SearchAppResult(int rank, String icon, String storeName, Long storeId, String storeTheme,
       long modifiedDate, float averageRating, long totalDownloads, String appName,
       String packageName, long appId, boolean hasOtherVersions, boolean appcBilling,
       boolean appcAdvertising) {
@@ -38,6 +39,7 @@ import org.parceler.Parcel;
     this.hasOtherVersions = hasOtherVersions;
     this.appcBilling = appcBilling;
     this.appcAdvertising = appcAdvertising;
+    this.storeId = storeId;
   }
 
   public SearchAppResult(SearchApp searchApp) {
@@ -46,6 +48,7 @@ import org.parceler.Parcel;
             .getRank()
             .ordinal(), searchApp.getIcon(), searchApp.getStore()
             .getName(), searchApp.getStore()
+            .getId(), searchApp.getStore()
             .getAppearance()
             .getTheme(), searchApp.getModified()
             .getTime(), searchApp.getStats()
@@ -109,5 +112,9 @@ import org.parceler.Parcel;
 
   public boolean isAppcApp() {
     return hasAppcBilling() || hasAppcAdvertising();
+  }
+
+  public Long getStoreId() {
+    return storeId;
   }
 }

@@ -7,51 +7,86 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     app:cardCornerRadius="4dp"
+  android:animateLayoutChanges="true"
     >
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_margin="8dp"
       >
+
+    <View
+        android:id="@+id/triangle_card_background"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/background_triangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/app_badge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        app:layout_constraintEnd_toEndOf="@id/triangle_card_background"
+        app:layout_constraintRight_toRightOf="@id/triangle_card_background"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_badges_trusted"
+        />
+
     <ImageView
         android:id="@+id/app_icon"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_left"
+        app:layout_constraintStart_toStartOf="@id/guideline_left"
+        app:layout_constraintTop_toBottomOf="@id/guideline_top"
         tools:src="@drawable/ad_icon"
         />
     <TextView
         android:id="@+id/app_name"
-        style="@style/Aptoide.TextView.Medium.M.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.S.BlackAlpha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginLeft="13dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/star_icon"
+        app:layout_constraintEnd_toStartOf="@id/app_badge"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/app_icon"
         app:layout_constraintTop_toTopOf="@+id/app_icon"
-        tools:text="Clash Royale"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:text="Clash Royale queens land"
         />
     <ImageView
         android:id="@+id/star_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:src="?attr/ratingDrawable"
-        app:layout_constraintBottom_toTopOf="@+id/downloads_icon"
+        android:tint="@color/grey"
+        app:layout_constraintBottom_toTopOf="@+id/store_icon"
         app:layout_constraintLeft_toLeftOf="@+id/app_name"
         app:layout_constraintTop_toBottomOf="@+id/app_name"
         app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_chainStyle="spread"
         />
     <TextView
         android:id="@+id/rating"
-        style="@style/Aptoide.TextView.Medium.XXS.BlackAlpha"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/star_icon"
         app:layout_constraintLeft_toRightOf="@+id/star_icon"
@@ -60,19 +95,21 @@
         />
     <ImageView
         android:id="@+id/downloads_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginBottom="2dp"
-        android:src="@drawable/ic_appview_download_icon"
-        android:tint="@color/grey"
-        app:layout_constraintBottom_toBottomOf="@+id/app_icon"
-        app:layout_constraintStart_toStartOf="@+id/star_icon"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_download_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/rating"
+        app:layout_constraintStart_toEndOf="@id/rating"
+        app:layout_constraintTop_toTopOf="@id/rating"
         />
     <TextView
         android:id="@+id/downloads"
-        style="@style/Aptoide.TextView.Regular.XXS.Grey"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
         app:layout_constraintStart_toEndOf="@+id/downloads_icon"
@@ -81,18 +118,18 @@
         />
     <ImageView
         android:id="@+id/store_icon"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         android:src="@drawable/ic_store"
         android:tint="@color/grey"
-        app:layout_constraintBottom_toBottomOf="@+id/downloads_icon"
-        app:layout_constraintStart_toEndOf="@+id/downloads"
+        app:layout_constraintBottom_toBottomOf="@id/app_icon"
+        app:layout_constraintStart_toStartOf="@id/star_icon"
+        app:layout_constraintTop_toBottomOf="@id/star_icon"
+        app:layout_constraintVertical_chainStyle="spread"
         />
     <TextView
         android:id="@+id/store_name"
-        style="@style/Aptoide.TextView.Regular.XXS.Grey"
+        style="@style/Aptoide.TextView.Medium.XXS.Grey"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
@@ -112,16 +149,49 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/app_icon"
+        app:layout_constraintEnd_toEndOf="@id/guideline_right"
         app:layout_constraintTop_toTopOf="@+id/store_name"
         >
       <include
           layout="@layout/appc_label"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginStart="20dp"
           android:layout_marginLeft="20dp"
           />
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="8dp"
+        />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="8dp"
+        />
   </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
