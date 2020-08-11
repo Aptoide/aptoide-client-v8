@@ -202,7 +202,8 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .observeOn(viewScheduler)
-        .flatMap(__ -> view.searchResultsReachedBottom())
+        .flatMap(
+            __ -> Observable.merge(view.searchResultsReachedBottom(), view.noResultsNewFilter()))
         .map(__ -> view.getViewModel())
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showLoadingMore())

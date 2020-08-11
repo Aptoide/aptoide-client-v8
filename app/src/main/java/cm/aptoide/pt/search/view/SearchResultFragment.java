@@ -42,7 +42,6 @@ import cm.aptoide.pt.ads.MoPubNativeAdsListener;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
@@ -132,6 +131,8 @@ public class SearchResultFragment extends BackButtonFragment
   private RxAlertDialog enableAdultContentDialog;
   private InputDialog enableAdultContentDialogWithPin;
   private PublishSubject<Void> noResultsPublishSubject;
+  private PublishSubject<Void> filtersChanged;
+  private PublishSubject<Void> previousSearchHadNoResults;
 
   private CardView filtersCardView;
   private FiltersView filtersView;
@@ -208,6 +209,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showNoResultsView() {
+    if (noResults) {
+      previousSearchHadNoResults.onNext(null);
+    }
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
@@ -505,7 +509,16 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public Observable<List<Filter>> filtersChangeEvents() {
     return filtersView.filtersChangedEvents()
-        .doOnNext(filters -> viewModel.setFilters(filters));
+        .doOnNext(filters -> viewModel.setFilters(filters))
+        .doOnNext(__ -> filtersChanged.onNext(null));
+  }
+
+  @Override public Observable<Boolean> noResultsNewFilter() {
+    return Observable.zip(filtersChanged(), previousSearchHadNoResults(), (aVoid, aVoid2) -> true);
+  }
+
+  private Observable<Void> previousSearchHadNoResults() {
+    return previousSearchHadNoResults;
   }
 
   public void showSuggestionsView() {
@@ -542,13 +555,13 @@ public class SearchResultFragment extends BackButtonFragment
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .map(this::isEndReached)
-        .doOnNext(end -> Logger.getInstance()
-            .d("lol", "emitting reached end #1 " + end))
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
-        .doOnNext(end -> Logger.getInstance()
-            .d("lol", "emitting reached end #2 " + end))
         .map(__ -> null);
+  }
+
+  private Observable<Void> filtersChanged() {
+    return filtersChanged;
   }
 
   private boolean isEndReached(RecyclerViewScrollEvent event) {
@@ -600,6 +613,8 @@ public class SearchResultFragment extends BackButtonFragment
 
     noResultsAdultContentSubject = PublishSubject.create();
     noResultsPublishSubject = PublishSubject.create();
+    filtersChanged = PublishSubject.create();
+    previousSearchHadNoResults = PublishSubject.create();
 
     listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
@@ -677,6 +692,11 @@ public class SearchResultFragment extends BackButtonFragment
     attachPresenter(searchResultPresenter);
   }
 
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
+  }
+
   private void setupFilters() {
     final List<Filter> filters;
     if (viewModel != null && viewModel.getStoreName() != null && !viewModel.getStoreName()
@@ -697,11 +717,6 @@ public class SearchResultFragment extends BackButtonFragment
     }
 
     filtersView.setFilters(filters);
-  }
-
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
   }
 
   private void setupTheme() {
@@ -769,6 +784,8 @@ public class SearchResultFragment extends BackButtonFragment
     super.onDestroy();
     noResultsAdultContentSubject = null;
     noResultsPublishSubject = null;
+    previousSearchHadNoResults = null;
+    filtersChanged = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
