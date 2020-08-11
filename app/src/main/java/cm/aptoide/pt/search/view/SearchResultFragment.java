@@ -513,7 +513,7 @@ public class SearchResultFragment extends BackButtonFragment
         .doOnNext(__ -> filtersChanged.onNext(null));
   }
 
-  @Override public Observable<Boolean> noResultsNewFilter() {
+  @Override public Observable<Boolean> changeFilterAfterNoResults() {
     return Observable.zip(filtersChanged(), previousSearchHadNoResults(), (aVoid, aVoid2) -> true);
   }
 
