@@ -223,6 +223,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showResultsView() {
+    noResults = false;
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
