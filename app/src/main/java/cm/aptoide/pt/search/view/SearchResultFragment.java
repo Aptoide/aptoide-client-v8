@@ -112,7 +112,6 @@ public class SearchResultFragment extends BackButtonFragment
   private PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
-  private float listItemPadding;
   private MenuItem searchMenuItem;
   private SearchView searchView;
   private String currentQuery;
@@ -615,8 +614,6 @@ public class SearchResultFragment extends BackButtonFragment
     noResultsPublishSubject = PublishSubject.create();
     filtersChanged = PublishSubject.create();
     previousSearchHadNoResults = PublishSubject.create();
-
-    listItemPadding = getResources().getDimension(R.dimen.padding_tiny);
 
     final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
