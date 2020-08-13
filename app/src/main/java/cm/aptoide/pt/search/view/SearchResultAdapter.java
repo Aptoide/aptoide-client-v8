@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
@@ -24,7 +25,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
 
   private final PublishRelay<SearchAdResultWrapper> onAdClickRelay;
   private final PublishRelay<SearchAppResultWrapper> onItemViewClick;
-  private final List<SearchAdResult> searchAdResults;
+  private List<SearchAdResult> searchAdResults;
   private List<SearchAppResult> searchResults;
   private String query;
   private boolean adsLoaded = false;
@@ -121,7 +122,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
     return searchResults.get(position - searchAdResults.size());
   }
 
-  public void setResultForSearch(String query, SearchResultDiffModel searchResultDiffModel){
+  public void setResultForSearch(String query, SearchResultDiffModel searchResultDiffModel) {
     this.query = query;
     searchResults = searchResultDiffModel.getSearchResultsList();
     notifyDataSetChanged();
@@ -159,11 +160,9 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultItemVi
   }
 
   public void restoreState(List<SearchAppResult> apps, List<SearchAdResult> ads) {
-    this.searchResults.clear();
-    this.searchResults.addAll(apps);
+    this.searchResults = apps;
 
-    this.searchAdResults.clear();
-    this.searchAdResults.addAll(ads);
+    this.searchAdResults = ads;
 
     notifyDataSetChanged();
     adsLoaded = true;
