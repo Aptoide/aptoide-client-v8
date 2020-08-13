@@ -37,7 +37,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void setAllStoresAdsEmpty();
 
-  Observable<Void> searchResultsReachedBottom();
+  Observable<Void> shouldLoadMoreResults();
 
   void showLoadingMore();
 
@@ -117,7 +117,7 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<List<Filter>> filtersChangeEvents();
 
-  Observable<Boolean> changeFilterAfterNoResults();
+  //Observable<Boolean> changeFilterAfterNoResults();
 
   interface Model {
 
