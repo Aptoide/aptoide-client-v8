@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.SearchResultDiffModel;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchAdResultWrapper;
