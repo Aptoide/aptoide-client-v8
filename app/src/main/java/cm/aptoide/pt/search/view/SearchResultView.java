@@ -117,8 +117,6 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<List<Filter>> filtersChangeEvents();
 
-  //Observable<Boolean> changeFilterAfterNoResults();
-
   interface Model {
 
     SearchQueryModel getSearchQueryModel();
