@@ -253,9 +253,23 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setLayoutAnimation(layoutAnimationController);
     allStoresResultList.scheduleLayoutAnimation();
 
+    progressBarResults.setAnimation(null);
     progressBarResults.setVisibility(VISIBLE);
     Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
     animation.setFillAfter(true);
+    animation.setAnimationListener(new Animation.AnimationListener() {
+      @Override public void onAnimationStart(Animation animation) {
+
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        progressBarResults.setVisibility(View.GONE);
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
     progressBarResults.startAnimation(animation);
   }
 
@@ -269,8 +283,22 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (!isLoadMore) {
       allStoresResultAdapter.setResultForSearch(query, searchResultDiffModel);
+      progressBarResults.setAnimation(null);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
+      animation.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override public void onAnimationEnd(Animation animation) {
+          progressBarResults.setVisibility(View.GONE);
+        }
+
+        @Override public void onAnimationRepeat(Animation animation) {
+
+        }
+      });
       progressBarResults.startAnimation(animation);
 
       allStoresResultList.setLayoutAnimation(
