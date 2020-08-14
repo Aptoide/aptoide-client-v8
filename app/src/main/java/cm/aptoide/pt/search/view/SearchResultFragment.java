@@ -131,7 +131,7 @@ public class SearchResultFragment extends BackButtonFragment
   private InputDialog enableAdultContentDialogWithPin;
   private PublishSubject<Void> noResultsPublishSubject;
   private PublishSubject<Void> filtersChanged;
-  private PublishSubject<Void> previousSearchHadNoResults;
+  private PublishSubject<Void> searchHasNoResults;
 
   private CardView filtersCardView;
   private FiltersView filtersView;
@@ -187,9 +187,9 @@ public class SearchResultFragment extends BackButtonFragment
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    progressBarResults = (ProgressBar) view.findViewById(R.id.progress_bar_results);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    progressBar = view.findViewById(R.id.progress_bar);
+    progressBarResults = view.findViewById(R.id.progress_bar_results);
+    toolbar = view.findViewById(R.id.toolbar);
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
@@ -208,9 +208,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showNoResultsView() {
-    if (noResults) {
-      previousSearchHadNoResults.onNext(null);
-    }
+    searchHasNoResults.onNext(null);
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
@@ -255,9 +253,23 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultList.setLayoutAnimation(layoutAnimationController);
     allStoresResultList.scheduleLayoutAnimation();
 
+    progressBarResults.setAnimation(null);
     progressBarResults.setVisibility(VISIBLE);
     Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
     animation.setFillAfter(true);
+    animation.setAnimationListener(new Animation.AnimationListener() {
+      @Override public void onAnimationStart(Animation animation) {
+
+      }
+
+      @Override public void onAnimationEnd(Animation animation) {
+        progressBarResults.setVisibility(View.GONE);
+      }
+
+      @Override public void onAnimationRepeat(Animation animation) {
+
+      }
+    });
     progressBarResults.startAnimation(animation);
   }
 
@@ -271,8 +283,22 @@ public class SearchResultFragment extends BackButtonFragment
     }
     if (!isLoadMore) {
       allStoresResultAdapter.setResultForSearch(query, searchResultDiffModel);
+      progressBarResults.setAnimation(null);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
+      animation.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation animation) {
+
+        }
+
+        @Override public void onAnimationEnd(Animation animation) {
+          progressBarResults.setVisibility(View.GONE);
+        }
+
+        @Override public void onAnimationRepeat(Animation animation) {
+
+        }
+      });
       progressBarResults.startAnimation(animation);
 
       allStoresResultList.setLayoutAnimation(
@@ -292,7 +318,7 @@ public class SearchResultFragment extends BackButtonFragment
     allStoresResultAdapter.setAdsLoaded();
   }
 
-  @Override public Observable<Void> searchResultsReachedBottom() {
+  @Override public Observable<Void> shouldLoadMoreResults() {
     return recyclerViewReachedBottom(allStoresResultList);
   }
 
@@ -513,12 +539,8 @@ public class SearchResultFragment extends BackButtonFragment
         .doOnNext(__ -> filtersChanged.onNext(null));
   }
 
-  @Override public Observable<Boolean> changeFilterAfterNoResults() {
-    return Observable.zip(filtersChanged(), previousSearchHadNoResults(), (aVoid, aVoid2) -> true);
-  }
-
-  private Observable<Void> previousSearchHadNoResults() {
-    return previousSearchHadNoResults;
+  private Observable<Void> searchHasNoResults() {
+    return searchHasNoResults;
   }
 
   public void showSuggestionsView() {
@@ -553,8 +575,9 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
-    return RxRecyclerView.scrollEvents(recyclerView)
-        .map(this::isEndReached)
+    return Observable.merge(RxRecyclerView.scrollEvents(recyclerView)
+            .map(this::isEndReached), filtersChanged().map(__ -> false),
+        searchHasNoResults().map(__ -> true))
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .map(__ -> null);
@@ -614,7 +637,7 @@ public class SearchResultFragment extends BackButtonFragment
     noResultsAdultContentSubject = PublishSubject.create();
     noResultsPublishSubject = PublishSubject.create();
     filtersChanged = PublishSubject.create();
-    previousSearchHadNoResults = PublishSubject.create();
+    searchHasNoResults = PublishSubject.create();
 
     final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
     final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
@@ -782,7 +805,7 @@ public class SearchResultFragment extends BackButtonFragment
     super.onDestroy();
     noResultsAdultContentSubject = null;
     noResultsPublishSubject = null;
-    previousSearchHadNoResults = null;
+    searchHasNoResults = null;
     filtersChanged = null;
   }
 
