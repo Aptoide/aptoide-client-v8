@@ -37,7 +37,6 @@
       android:layout_marginTop="?attr/actionBarSize"
       android:visibility="gone"
       tools:visibility="visible"
-      android:animateLayoutChanges="true"
       >
 
     <androidx.cardview.widget.CardView
