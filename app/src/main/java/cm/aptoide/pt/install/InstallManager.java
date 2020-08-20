@@ -74,6 +74,7 @@ public class InstallManager {
 
   public void start() {
     aptoideDownloadManager.start();
+    installer.dispatchInstallations();
   }
 
   private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
@@ -98,6 +99,7 @@ public class InstallManager {
 
   public void stop() {
     aptoideDownloadManager.stop();
+    installer.stopDispatching();
   }
 
   private Completable stopForegroundAndInstall(String md5, int downloadAction,
@@ -106,11 +108,11 @@ public class InstallManager {
         .d(TAG, "going to pop install from: " + md5 + "and download action: " + downloadAction);
     switch (downloadAction) {
       case RoomDownload.ACTION_INSTALL:
-        return installer.install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.install(md5, forceDefaultInstall, shouldSetPackageInstaller);
       case RoomDownload.ACTION_UPDATE:
-        return installer.update(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.update(md5, forceDefaultInstall, shouldSetPackageInstaller);
       case RoomDownload.ACTION_DOWNGRADE:
-        return installer.downgrade(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.downgrade(md5, forceDefaultInstall, shouldSetPackageInstaller);
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + downloadAction));
