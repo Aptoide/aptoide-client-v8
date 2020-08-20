@@ -534,7 +534,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
         installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver,
-        rootInstallerProvider, application);
+        rootInstallerProvider);
   }
 
   private int getInstallingStateTimeout() {
