@@ -373,6 +373,7 @@ import rx.schedulers.Schedulers;
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
+        .filter(viewModel -> !viewModel.hasLoadedResults())
         .flatMapCompletable(model -> search(model))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {

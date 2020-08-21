@@ -120,6 +120,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     boolean hasLoadedAds();
 
+    boolean hasLoadedResults();
+
     List<Filter> getFilters();
   }
 }

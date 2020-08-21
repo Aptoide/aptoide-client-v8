@@ -283,6 +283,7 @@ public class SearchResultFragment extends BackButtonFragment
     } else {
       searchResultsAdapter.addResultForSearch(query, searchAppResults, hasMore);
     }
+    viewModel.setLoadedResults(true);
   }
 
   @Override public Model getViewModel() {
