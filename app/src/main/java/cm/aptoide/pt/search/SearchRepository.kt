@@ -37,10 +37,10 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
                        val oemidProvider: OemidProvider) {
 
   private var cachedSearchResults: SearchResult? = null
-  private val subject: PublishSubject<SearchResult> = PublishSubject.create()
+  private val resultsSubject: PublishSubject<SearchResult> = PublishSubject.create()
 
   fun observeSearchResults(): Observable<SearchResult> {
-    return subject
+    return resultsSubject
   }
 
   fun generalSearch(query: String, filters: SearchFilters,
@@ -69,7 +69,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
               .flatMapCompletable { results -> updateMemCache(results) }
         }
         return Completable.fromAction {
-          subject.onNext(activeResults)
+          resultsSubject.onNext(activeResults)
         }
       }
     }
@@ -95,7 +95,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
             shouldRedrawList = false
           }
 
-          subject.onNext(SearchResult(r.query, r.specificStore, list,
+          resultsSubject.onNext(SearchResult(r.query, r.specificStore, list,
               r.filters,
               r.currentOffset, r.nextOffset, r.total,
               r.loading, r.error, shouldRedrawList))

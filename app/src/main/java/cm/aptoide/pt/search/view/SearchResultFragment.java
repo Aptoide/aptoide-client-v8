@@ -249,16 +249,32 @@ public class SearchResultFragment extends BackButtonFragment
     searchResultList.scheduleLayoutAnimation();
 
     progressBarResults.setVisibility(VISIBLE);
-    progressBarResults.startAnimation(
-        AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear));
+    Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
+    animation.setFillAfter(true);
+    progressBarResults.startAnimation(animation);
   }
 
   @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
       boolean isLoadMore, boolean hasMore) {
+    if (searchAppResults.size() > 0) {
+      hideLoading();
+      showResultsView();
+    }
     if (!isLoadMore) {
       searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
+      animation.setAnimationListener(new Animation.AnimationListener() {
+        @Override public void onAnimationStart(Animation animation) {
+        }
+
+        @Override public void onAnimationEnd(Animation animation) {
+          progressBarResults.setVisibility(View.GONE);
+        }
+
+        @Override public void onAnimationRepeat(Animation animation) {
+        }
+      });
       progressBarResults.startAnimation(animation);
 
       searchResultList.setLayoutAnimation(
