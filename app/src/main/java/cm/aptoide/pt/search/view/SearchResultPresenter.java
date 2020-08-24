@@ -111,7 +111,7 @@ import rx.schedulers.Schedulers;
             .observeOn(viewScheduler)
             .doOnNext(
                 result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
-                    !result.getRedrawList(), result.hasMore()))
+                    result.getCurrentOffset() > 0, result.hasMore()))
             .observeOn(ioScheduler)
             .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
                 .observeOn(viewScheduler)

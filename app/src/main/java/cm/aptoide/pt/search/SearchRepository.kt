@@ -64,6 +64,11 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       if (activeResults.query == query && activeResults.specificStore == specificStore
           && filters == activeResults.filters && !activeResults.hasError()) {
         if (activeResults.hasMore()) {
+          resultsSubject.onNext(SearchResult(activeResults.query, activeResults.specificStore,
+              activeResults.searchResultsList,
+              activeResults.filters,
+              activeResults.currentOffset, activeResults.nextOffset, activeResults.total,
+              activeResults.loading, activeResults.error))
           return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
               specificStore)
               .flatMapCompletable { results -> updateMemCache(results) }
@@ -87,25 +92,23 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       results?.let { r ->
         cachedSearchResults.let { cached ->
           var list = ArrayList(r.searchResultsList)
-          var shouldRedrawList = true
           if (cached != null && cached.query == r.query && cached.filters == r.filters
               && cached.specificStore == r.specificStore) {
             list = ArrayList(cached.searchResultsList)
             list.addAll(r.searchResultsList)
-            shouldRedrawList = false
           }
 
           resultsSubject.onNext(SearchResult(r.query, r.specificStore, list,
               r.filters,
               r.currentOffset, r.nextOffset, r.total,
-              r.loading, r.error, shouldRedrawList))
+              r.loading, r.error))
 
           cachedSearchResults =
               SearchResult(r.query, r.specificStore, list, r.filters,
                   r.currentOffset,
                   r.nextOffset,
                   r.total,
-                  r.loading, r.error, shouldRedrawList)
+                  r.loading, r.error)
         }
       }
     }

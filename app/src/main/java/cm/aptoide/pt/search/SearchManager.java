@@ -103,15 +103,14 @@ import rx.Single;
     ArrayList<SearchAppResult> list = new ArrayList<>(r.getSearchResultsList());
     list.set(0, new SearchAppResult(list.get(0), downloadStatusModel));
     return new SearchResult(r.getQuery(), r.getSpecificStore(), list, r.getFilters(),
-        r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.getError(),
-        r.getRedrawList());
+        r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.getError());
   }
 
   private Observable<SearchResult> getHighlightedSearchResult(SearchResult r) {
     return Observable.just(
         new SearchResult(r.getQuery(), r.getSpecificStore(), r.getSearchResultsList(),
             r.getFilters(), r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(),
-            r.getError(), false));
+            r.getError()));
   }
 
   public SearchFilters getSearchFilters(List<Filter> viewFilters) {
