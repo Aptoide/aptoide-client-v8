@@ -1,6 +1,7 @@
 package cm.aptoide.pt.search
 
 import android.content.SharedPreferences
+import cm.aptoide.pt.aab.Split
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager
 import cm.aptoide.pt.dataprovider.exception.NoNetworkConnectionException
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator
@@ -172,9 +173,39 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     val newList: ArrayList<SearchAppResult> = ArrayList()
     for ((i, app) in searchAppList.withIndex()) {
       newList.add(
-          SearchAppResult(app, oemidProvider.oemid, isHighlightedResult(i, app, query)))
+          mapToSearchAppResult(app, oemidProvider.oemid, isHighlightedResult(i, app, query)))
     }
     return Observable.just(newList)
+  }
+
+  private fun mapToSearchAppResult(app: SearchApp, oemid: String,
+                                   isHighlighted: Boolean): SearchAppResult {
+    var requiredSplits: List<String>? = null
+    var splits: List<cm.aptoide.pt.dataprovider.model.v7.Split>? = null
+    app.aab?.let { aab ->
+      requiredSplits = aab.requiredSplits
+      splits = aab.splits
+    }
+
+    return SearchAppResult(app.file.malware.rank.ordinal, app.icon, app.store.name, app.store
+        .id, app.store.appearance.theme, app.modified.time, app.stats.rating.avg,
+        app.stats.pdownloads.toLong(), app.name, app.packageName,
+        app.file.md5sum, app.id, app.file.vercode, app.file.vername, app.file.path,
+        app.file.pathAlt, app.file.malware, app.size, app.hasVersions(), app.hasBilling(),
+        app.hasAdvertising(), oemid, isHighlighted, app.obb, requiredSplits,
+        mapSplits(splits), null, null)
+  }
+
+  private fun mapSplits(splits: List<cm.aptoide.pt.dataprovider.model.v7.Split>?): List<Split> {
+    val splitsMapResult = ArrayList<Split>()
+    if (splits == null) return splitsMapResult
+    for (split in splits) {
+      splitsMapResult.add(
+          Split(split.name, split.type, split.path,
+              split.filesize,
+              split.md5sum))
+    }
+    return splitsMapResult
   }
 
   private fun isHighlightedResult(i: Int,

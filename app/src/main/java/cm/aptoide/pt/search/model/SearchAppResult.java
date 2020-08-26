@@ -3,10 +3,10 @@ package cm.aptoide.pt.search.model;
 import cm.aptoide.pt.aab.Split;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.model.v7.Obb;
-import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.download.view.Download;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
 import cm.aptoide.pt.view.app.AppScreenshot;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +51,9 @@ public class SearchAppResult implements Download, SearchItem {
       long modifiedDate, float averageRating, long totalDownloads, String appName,
       String packageName, String md5, long appId, int versionCode, String versionName, String path,
       String pathAlt, Malware malware, long size, boolean hasOtherVersions, boolean billing,
-      boolean advertising, String oemId, boolean isHighlightedResult,
-      DownloadStatusModel downloadModel, List<AppScreenshot> screenshots) {
+      boolean advertising, String oemId, boolean isHighlightedResult, Obb obb,
+      List<String> requiredSplits, List<Split> splits, DownloadStatusModel downloadModel,
+      List<AppScreenshot> screenshots) {
     this.rank = rank;
     this.icon = icon;
     this.storeName = storeName;
@@ -79,7 +80,9 @@ public class SearchAppResult implements Download, SearchItem {
 
     this.splits = Collections.emptyList();
     this.requiredSplits = Collections.emptyList();
-    this.obb = null;
+    this.obb = obb;
+    this.splits = splits;
+    this.requiredSplits = requiredSplits;
     this.downloadModel = downloadModel;
     this.screenshots = screenshots;
   }
@@ -91,29 +94,22 @@ public class SearchAppResult implements Download, SearchItem {
         app.getPackageName(), app.getMd5(), app.getAppId(), app.getVersionCode(),
         app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
         app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
-        app.isHighlightedResult(), downloadModel, screenshots);
+        app.isHighlightedResult(), app.getObb(), app.getRequiredSplits(), app.getSplits(),
+        downloadModel, screenshots);
   }
 
-  public SearchAppResult(SearchApp searchApp, String oemId, boolean isHighlighted) {
-    this(searchApp.getFile()
-            .getMalware()
-            .getRank()
-            .ordinal(), searchApp.getIcon(), searchApp.getStore()
-            .getName(), searchApp.getStore()
-            .getId(), searchApp.getStore()
-            .getAppearance()
-            .getTheme(), searchApp.getModified()
-            .getTime(), searchApp.getStats()
-            .getRating()
-            .getAvg(), searchApp.getStats()
-            .getPdownloads(), searchApp.getName(), searchApp.getPackageName(), searchApp.getFile()
-            .getMd5sum(), searchApp.getId(), searchApp.getFile()
-            .getVercode(), searchApp.getFile()
-            .getVername(), searchApp.getFile()
-            .getPath(), searchApp.getFile()
-            .getPathAlt(), searchApp.getFile()
-            .getMalware(), searchApp.getSize(), searchApp.hasVersions(), searchApp.hasBilling(),
-        searchApp.hasAdvertising(), oemId, isHighlighted, null, null);
+  private static List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
+    List<Split> splitsMapResult = new ArrayList<>();
+
+    if (splits == null) return splitsMapResult;
+
+    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
+      splitsMapResult.add(
+          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
+              split.getMd5sum()));
+    }
+
+    return splitsMapResult;
   }
 
   public int getRank() {
@@ -196,7 +192,7 @@ public class SearchAppResult implements Download, SearchItem {
     return pathAlt;
   }
 
-  public Obb getObb() {
+  @Override public Obb getObb() {
     return obb;
   }
 
