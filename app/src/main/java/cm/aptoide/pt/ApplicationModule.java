@@ -1160,31 +1160,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return RxJavaCallAdapterFactory.create();
   }
 
-  @Singleton @Provides SearchManager providesSearchManager(@Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      SearchRepository searchRepository, RoomStoreRepository storeRepository,
-      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
-    return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
-        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        searchRepository, downloadStatusManager, appCenter);
-  }
-
-  @Singleton @Provides SearchRepository providesSearchRepository(
-      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
-    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
-        oemidProvider);
-  }
-
   @Singleton @Provides DownloadStatusManager providesDownloadStatusManager(
       InstallManager installManager, AppcMigrationManager appcMigrationManager) {
     return new DownloadStatusManager(installManager, appcMigrationManager);
