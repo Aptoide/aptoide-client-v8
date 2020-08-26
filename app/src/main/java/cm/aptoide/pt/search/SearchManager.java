@@ -17,8 +17,12 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchFilters;
 import cm.aptoide.pt.search.model.SearchResult;
+import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppScreenshot;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import rx.Completable;
@@ -39,6 +43,7 @@ import rx.Single;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final SearchRepository searchRepository;
   private final DownloadStatusManager downloadStatusManager;
+  private final AppCenter appCenter;
 
   public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
@@ -46,7 +51,7 @@ import rx.Single;
       HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
       AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
       AppBundlesVisibilityManager appBundlesVisibilityManager, SearchRepository searchRepository,
-      DownloadStatusManager downloadStatusManager) {
+      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
     this.sharedPreferences = sharedPreferences;
     this.tokenInvalidator = tokenInvalidator;
     this.bodyInterceptor = bodyInterceptor;
@@ -59,6 +64,7 @@ import rx.Single;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.searchRepository = searchRepository;
     this.downloadStatusManager = downloadStatusManager;
+    this.appCenter = appCenter;
   }
 
   public Observable<SearchAdResult> getAdsForQuery(String query) {
@@ -81,8 +87,11 @@ import rx.Single;
           List<SearchAppResult> list = result.getSearchResultsList();
           if (!list.isEmpty() && list.get(0)
               .isHighlightedResult()) {
-            return Observable.mergeDelayError(Observable.just(result),
-                observeHighlightedSearchResult(result));
+            if (result.isFreshResult()) {
+              return Observable.mergeDelayError(Observable.just(result),
+                  observeHighlightedSearchResult(result));
+            }
+            return observeHighlightedSearchResult(result);
           }
           return Observable.just(result);
         });
@@ -95,22 +104,47 @@ import rx.Single;
         downloadStatusManager.loadDownloadModel(first.getMd5(), first.getPackageName(),
             first.getVersionCode(), null, first.getStoreId(),
             first.hasAdvertising() || first.hasBilling()),
-        (r, downloadModel) -> mergeSearchResultDownloadModel(r, downloadModel));
+        loadAppScreenShots(first.getAppId(), first.getStoreName(), first.getPackageName()),
+        (r, downloadModel, screenshots) -> mergeSearchResult(r, downloadModel, screenshots));
   }
 
-  private SearchResult mergeSearchResultDownloadModel(SearchResult r,
-      DownloadStatusModel downloadStatusModel) {
+  private Observable<List<AppScreenshot>> loadAppScreenShots(long appId, String storeName,
+      String packageName) {
+    return Observable.mergeDelayError(Observable.just(null),
+        appCenter.unsafeLoadDetailedApp(appId, storeName, packageName)
+            .toObservable())
+        .map(app -> {
+          List<AppScreenshot> ssList = Collections.emptyList();
+          if (app != null
+              && app.getDetailedApp() != null
+              && app.getDetailedApp()
+              .getMedia() != null
+              && app.getDetailedApp()
+              .getMedia()
+              .getScreenshots() != null) {
+            ssList = app.getDetailedApp()
+                .getMedia()
+                .getScreenshots();
+          }
+          return ssList;
+        })
+        .throttleLast(700, TimeUnit.MILLISECONDS);
+  }
+
+  private SearchResult mergeSearchResult(SearchResult r, DownloadStatusModel downloadStatusModel,
+      List<AppScreenshot> screenshots) {
     ArrayList<SearchAppResult> list = new ArrayList<>(r.getSearchResultsList());
-    list.set(0, new SearchAppResult(list.get(0), downloadStatusModel));
+    list.set(0, new SearchAppResult(list.get(0), downloadStatusModel, screenshots));
     return new SearchResult(r.getQuery(), r.getSpecificStore(), list, r.getFilters(),
-        r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.getError());
+        r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.isFreshResult(),
+        r.getError());
   }
 
   private Observable<SearchResult> getHighlightedSearchResult(SearchResult r) {
     return Observable.just(
         new SearchResult(r.getQuery(), r.getSpecificStore(), r.getSearchResultsList(),
             r.getFilters(), r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(),
-            r.getError()));
+            false, r.getError()));
   }
 
   public SearchFilters getSearchFilters(List<Filter> viewFilters) {

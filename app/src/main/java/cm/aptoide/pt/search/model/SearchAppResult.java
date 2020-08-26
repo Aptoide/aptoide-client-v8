@@ -6,6 +6,7 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.dataprovider.model.v7.search.SearchApp;
 import cm.aptoide.pt.download.view.Download;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
+import cm.aptoide.pt.view.app.AppScreenshot;
 import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +42,7 @@ public class SearchAppResult implements Download, SearchItem {
   private List<Split> splits;
   private List<String> requiredSplits;
   private DownloadStatusModel downloadModel;
+  private List<AppScreenshot> screenshots;
 
   public SearchAppResult() {
   }
@@ -50,7 +52,7 @@ public class SearchAppResult implements Download, SearchItem {
       String packageName, String md5, long appId, int versionCode, String versionName, String path,
       String pathAlt, Malware malware, long size, boolean hasOtherVersions, boolean billing,
       boolean advertising, String oemId, boolean isHighlightedResult,
-      DownloadStatusModel downloadModel) {
+      DownloadStatusModel downloadModel, List<AppScreenshot> screenshots) {
     this.rank = rank;
     this.icon = icon;
     this.storeName = storeName;
@@ -79,15 +81,17 @@ public class SearchAppResult implements Download, SearchItem {
     this.requiredSplits = Collections.emptyList();
     this.obb = null;
     this.downloadModel = downloadModel;
+    this.screenshots = screenshots;
   }
 
-  public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel) {
+  public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel,
+      List<AppScreenshot> screenshots) {
     this(app.getRank(), app.getIcon(), app.getStoreName(), app.getStoreId(), app.getStoreTheme(),
         app.getModifiedDate(), app.getAverageRating(), app.getTotalDownloads(), app.getAppName(),
         app.getPackageName(), app.getMd5(), app.getAppId(), app.getVersionCode(),
         app.getVersionName(), app.getPath(), app.getPathAlt(), app.getMalware(), app.getSize(),
         app.hasOtherVersions(), app.hasBilling(), app.hasAdvertising(), app.getOemId(),
-        app.isHighlightedResult(), downloadModel);
+        app.isHighlightedResult(), downloadModel, screenshots);
   }
 
   public SearchAppResult(SearchApp searchApp, String oemId, boolean isHighlighted) {
@@ -109,7 +113,7 @@ public class SearchAppResult implements Download, SearchItem {
             .getPath(), searchApp.getFile()
             .getPathAlt(), searchApp.getFile()
             .getMalware(), searchApp.getSize(), searchApp.hasVersions(), searchApp.hasBilling(),
-        searchApp.hasAdvertising(), oemId, isHighlighted, null);
+        searchApp.hasAdvertising(), oemId, isHighlighted, null, null);
   }
 
   public int getRank() {
@@ -214,6 +218,10 @@ public class SearchAppResult implements Download, SearchItem {
 
   @Override public DownloadStatusModel getDownloadModel() {
     return downloadModel;
+  }
+
+  public List<AppScreenshot> getScreenshots() {
+    return screenshots;
   }
 
   @Override public String getOemId() {

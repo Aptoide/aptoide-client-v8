@@ -23,7 +23,7 @@ import rx.Completable
 import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
-import rx.subjects.PublishSubject
+import rx.subjects.BehaviorSubject
 import java.net.UnknownHostException
 
 
@@ -37,7 +37,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
                        val oemidProvider: OemidProvider) {
 
   private var cachedSearchResults: SearchResult? = null
-  private val resultsSubject: PublishSubject<SearchResult> = PublishSubject.create()
+  private val resultsSubject: BehaviorSubject<SearchResult> = BehaviorSubject.create()
 
   fun observeSearchResults(): Observable<SearchResult> {
     return resultsSubject
@@ -64,11 +64,6 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       if (activeResults.query == query && activeResults.specificStore == specificStore
           && filters == activeResults.filters && !activeResults.hasError()) {
         if (activeResults.hasMore()) {
-          resultsSubject.onNext(SearchResult(activeResults.query, activeResults.specificStore,
-              activeResults.searchResultsList,
-              activeResults.filters,
-              activeResults.currentOffset, activeResults.nextOffset, activeResults.total,
-              activeResults.loading, activeResults.error))
           return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
               specificStore)
               .flatMapCompletable { results -> updateMemCache(results) }
@@ -92,23 +87,25 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       results?.let { r ->
         cachedSearchResults.let { cached ->
           var list = ArrayList(r.searchResultsList)
+          var isFreshResponse = true
           if (cached != null && cached.query == r.query && cached.filters == r.filters
               && cached.specificStore == r.specificStore) {
             list = ArrayList(cached.searchResultsList)
             list.addAll(r.searchResultsList)
+            isFreshResponse = false
           }
 
           resultsSubject.onNext(SearchResult(r.query, r.specificStore, list,
               r.filters,
               r.currentOffset, r.nextOffset, r.total,
-              r.loading, r.error))
+              r.loading, isFreshResponse, r.error))
 
           cachedSearchResults =
               SearchResult(r.query, r.specificStore, list, r.filters,
                   r.currentOffset,
                   r.nextOffset,
                   r.total,
-                  r.loading, r.error)
+                  r.loading, isFreshResponse, r.error)
         }
       }
     }
@@ -158,7 +155,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
             SearchResult(query, specificStore, list, filters,
                 r.dataList.offset,
                 r.dataList.next, r.dataList.total,
-                !r.dataList.isLoaded, null)
+                !r.dataList.isLoaded, false, null)
           }
           .toSingle()
           .onErrorResumeNext { throwable ->

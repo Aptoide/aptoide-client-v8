@@ -8,12 +8,13 @@ data class SearchResult @JvmOverloads constructor(
     val searchResultsList: List<SearchAppResult> = Collections.emptyList(),
     val filters: SearchFilters? = null, val currentOffset: Int = -1,
     val nextOffset: Int = -1, val total: Int = -1, val loading: Boolean = false,
+    val isFreshResult: Boolean = false,
     val error: SearchResultError? = null) {
 
   constructor(query: String, error: SearchResultError) : this(query, null, error)
 
   constructor(query: String, specificStore: String?, error: SearchResultError) : this(query,
-      specificStore, Collections.emptyList(), null, -1, -1, -1, false, error)
+      specificStore, Collections.emptyList(), null, -1, -1, -1, false, false, error)
 
   fun hasError(): Boolean {
     return error != null

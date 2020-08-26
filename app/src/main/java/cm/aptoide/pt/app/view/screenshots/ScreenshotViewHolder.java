@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -29,15 +30,26 @@ public class ScreenshotViewHolder extends RecyclerView.ViewHolder {
   private FrameLayout media_layout;
 
   ScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick) {
+    this(itemView, screenShotClick, -1);
+  }
+
+  ScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick,
+      int itemHeightDp) {
     super(itemView);
-    assignViews(itemView);
+    assignViews(itemView, itemHeightDp);
     this.screenShotClick = screenShotClick;
   }
 
-  protected void assignViews(View itemView) {
-    screenshot = (ImageView) itemView.findViewById(R.id.screenshot_image_item);
-    play_button = (ImageView) itemView.findViewById(R.id.play_button);
-    media_layout = (FrameLayout) itemView.findViewById(R.id.media_layout);
+  protected void assignViews(View itemView, int itemHeightDp) {
+    screenshot = itemView.findViewById(R.id.screenshot_image_item);
+    play_button = itemView.findViewById(R.id.play_button);
+    media_layout = itemView.findViewById(R.id.media_layout);
+
+    if (itemHeightDp > 0) {
+      screenshot.getLayoutParams().height =
+          (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 128, itemView.getResources()
+              .getDisplayMetrics());
+    }
   }
 
   public void bindView(AppVideo item) {

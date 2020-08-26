@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
@@ -109,6 +110,8 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<Void> viewHasNoResults();
 
   Observable<List<Filter>> filtersChangeEvents();
+
+  Observable<ScreenShotClickEvent> getScreenshotClickEvent();
 
   interface Model {
 

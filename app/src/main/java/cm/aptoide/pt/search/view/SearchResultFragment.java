@@ -40,6 +40,7 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
@@ -109,6 +110,7 @@ public class SearchResultFragment extends BackButtonFragment
   private Toolbar toolbar;
   private PublishSubject<SearchAppResultWrapper> onItemViewClickSubject;
   private PublishSubject<DownloadClick> downloadClickPublishSubject;
+  private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private MenuItem searchMenuItem;
@@ -184,9 +186,9 @@ public class SearchResultFragment extends BackButtonFragment
 
     noSearchLayout = view.findViewById(R.id.no_search_results_layout);
     noSearchAdultContentSwitch = view.findViewById(R.id.no_search_adult_switch);
-    progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-    progressBarResults = (ProgressBar) view.findViewById(R.id.progress_bar_results);
-    toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+    progressBar = view.findViewById(R.id.progress_bar);
+    progressBarResults = view.findViewById(R.id.progress_bar_results);
+    toolbar = view.findViewById(R.id.toolbar);
 
     bannerAdBottom = view.findViewById(R.id.mopub_banner);
     errorView = view.findViewById(R.id.error_view);
@@ -255,12 +257,12 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
-      boolean isLoadMore, boolean hasMore) {
+      boolean isFreshResult, boolean hasMore) {
     if (searchAppResults.size() > 0) {
       hideLoading();
       showResultsView();
     }
-    if (!isLoadMore) {
+    if (isFreshResult) {
       searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
@@ -498,6 +500,10 @@ public class SearchResultFragment extends BackButtonFragment
         .doOnNext(filters -> viewModel.setFilters(filters));
   }
 
+  @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
+    return screenShotClick;
+  }
+
   public void showSuggestionsView() {
     if (searchView.getQuery()
         .toString()
@@ -584,6 +590,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     onItemViewClickSubject = PublishSubject.create();
     downloadClickPublishSubject = PublishSubject.create();
+    screenShotClick = PublishSubject.create();
     suggestionClickedPublishSubject = PublishSubject.create();
     searchSetupPublishSubject = PublishSubject.create();
     queryTextChangedPublisher = PublishSubject.create();
@@ -593,7 +600,7 @@ public class SearchResultFragment extends BackButtonFragment
 
     searchResultsAdapter =
         new SearchResultAdapter(onItemViewClickSubject, downloadClickPublishSubject,
-            new ArrayList<>(), crashReport);
+            screenShotClick, new ArrayList<>(), crashReport);
 
     searchResultsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
       @Override public void onItemRangeInserted(int positionStart, int itemCount) {

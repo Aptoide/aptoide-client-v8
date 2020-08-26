@@ -1,7 +1,11 @@
 package cm.aptoide.pt.search.view.item
 
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cm.aptoide.pt.R
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent
+import cm.aptoide.pt.app.view.screenshots.ScreenshotsAdapter
 import cm.aptoide.pt.dataprovider.model.v7.Malware
 import cm.aptoide.pt.download.view.DownloadClick
 import cm.aptoide.pt.download.view.DownloadViewStatusHelper
@@ -10,13 +14,16 @@ import cm.aptoide.pt.networking.image.ImageLoader
 import cm.aptoide.pt.search.model.SearchAppResult
 import cm.aptoide.pt.search.model.SearchAppResultWrapper
 import cm.aptoide.pt.utils.AptoideUtils
+import cm.aptoide.pt.view.app.AppScreenshot
 import kotlinx.android.synthetic.main.search_app_row.view.*
 import rx.subjects.PublishSubject
 import java.text.DecimalFormat
+import java.util.*
 
 class SearchResultViewHolder(itemView: View,
                              private val itemClickSubject: PublishSubject<SearchAppResultWrapper>,
                              private val downloadClickSubject: PublishSubject<DownloadClick>,
+                             private val screenShotClick: PublishSubject<ScreenShotClickEvent>,
                              private val query: String?) :
     SearchResultItemView<SearchAppResult?>(itemView) {
 
@@ -25,6 +32,16 @@ class SearchResultViewHolder(itemView: View,
   private val appInfoViewHolder: AppSecondaryInfoViewHolder =
       AppSecondaryInfoViewHolder(itemView, DecimalFormat("0.0"))
 
+  private val adapter =
+      ScreenshotsAdapter(Collections.emptyList(), Collections.emptyList(), screenShotClick, 128)
+
+  init {
+    itemView.media_rv.layoutManager =
+        LinearLayoutManager(itemView.context, RecyclerView.HORIZONTAL, false)
+    itemView.media_rv.isNestedScrollingEnabled = false
+    itemView.media_rv.adapter = adapter
+  }
+
   override fun setup(result: SearchAppResult?) {
     result?.let {
       setAppInfo(result)
@@ -32,16 +49,23 @@ class SearchResultViewHolder(itemView: View,
     }
   }
 
-
   fun setDownloadStatus(app: SearchAppResult) {
     val downloadModel = app.getDownloadModel()
     if (app.isHighlightedResult && downloadModel != null) {
       downloadViewStatusHelper.setDownloadStatus(app, itemView.install_button,
           itemView.download_progress_view)
+      setupMediaAdapter(app.screenshots)
+      itemView.media_rv.visibility = View.VISIBLE
     } else {
       itemView.install_button.visibility = View.GONE
       itemView.download_progress_view.visibility = View.GONE
+      itemView.media_rv.visibility = View.GONE
     }
+  }
+
+  private fun setupMediaAdapter(screenshots: List<AppScreenshot>) {
+    adapter.updateScreenshots(screenshots)
+    adapter.updateVideos(Collections.emptyList())
   }
 
   private fun setAppInfo(result: SearchAppResult) {

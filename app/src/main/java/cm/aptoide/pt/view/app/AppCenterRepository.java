@@ -97,6 +97,11 @@ public class AppCenterRepository {
     return appService.loadDetailedApp(appId, storeName, packageName);
   }
 
+  public Single<DetailedAppRequestResult> unsafeLoadDetailedApp(long appId, String storeName,
+      String packageName) {
+    return appService.unsafeLoadDetailedApp(appId, storeName, packageName);
+  }
+
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
     return appService.loadDetailedApp(packageName, storeName);
   }

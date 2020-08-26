@@ -1167,11 +1167,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       AdsRepository adsRepository, AptoideAccountManager accountManager,
       MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
       SearchRepository searchRepository, RoomStoreRepository storeRepository,
-      DownloadStatusManager downloadStatusManager) {
+      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
     return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
         okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
         adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        searchRepository, downloadStatusManager);
+        searchRepository, downloadStatusManager, appCenter);
   }
 
   @Singleton @Provides SearchRepository providesSearchRepository(

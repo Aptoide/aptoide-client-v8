@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.SearchItemDiffCallback;
@@ -25,17 +26,20 @@ public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResul
 
   private final PublishSubject<SearchAppResultWrapper> onItemViewClick;
   private final PublishSubject<DownloadClick> downloadClickPublishSubject;
+  private final PublishSubject<ScreenShotClickEvent> screenShotClick;
   private List<SearchItem> searchResults;
   private String query;
   private CrashReport crashReport;
 
   public SearchResultAdapter(PublishSubject<SearchAppResultWrapper> onItemViewClick,
-      PublishSubject<DownloadClick> downloadClickPublishSubject, List<SearchItem> searchResults,
+      PublishSubject<DownloadClick> downloadClickPublishSubject,
+      PublishSubject<ScreenShotClickEvent> screenShotClick, List<SearchItem> searchResults,
       CrashReport crashReport) {
     this.onItemViewClick = onItemViewClick;
     this.searchResults = searchResults;
     this.crashReport = crashReport;
     this.downloadClickPublishSubject = downloadClickPublishSubject;
+    this.screenShotClick = screenShotClick;
   }
 
   @Override public SearchResultItemView onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -46,7 +50,7 @@ public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResul
     switch (viewType) {
       case SearchResultViewHolder.LAYOUT: {
         return new SearchResultViewHolder(view, onItemViewClick, downloadClickPublishSubject,
-            query);
+            screenShotClick, query);
       }
       default: {
         return new SearchLoadingViewHolder(view);

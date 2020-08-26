@@ -16,6 +16,7 @@
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:animateLayoutChanges="true"
       >
 
     <View
@@ -46,7 +47,7 @@
         android:layout_height="56dp"
         app:layout_constraintLeft_toLeftOf="@id/guideline_left"
         app:layout_constraintTop_toBottomOf="@id/guideline_top"
-        app:layout_constraintBottom_toTopOf="@id/frameLayout"
+        app:layout_constraintBottom_toTopOf="@id/media_rv"
         tools:src="@drawable/ad_icon"
         />
     <TextView
@@ -161,13 +162,25 @@
         />
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/media_rv"
+      android:layout_width="0dp"
+      android:layout_height="128dp"
+      android:layout_marginTop="8dp"
+      android:visibility="gone"
+      app:layout_constraintTop_toBottomOf="@+id/app_icon"
+      app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+      app:layout_constraintEnd_toEndOf="@+id/guideline_right"
+      app:layout_constraintStart_toStartOf="@+id/guideline_left"
+      />
+
     <FrameLayout
       android:id="@+id/frameLayout"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       app:layout_constraintEnd_toEndOf="@+id/guideline_right"
       app:layout_constraintStart_toStartOf="@+id/guideline_left"
-      app:layout_constraintTop_toBottomOf="@+id/app_icon"
+      app:layout_constraintTop_toBottomOf="@+id/media_rv"
       app:layout_constraintBottom_toTopOf="@+id/guideline_bottom"
       >
       <android.widget.Button

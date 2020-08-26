@@ -2,11 +2,13 @@ package cm.aptoide.pt.search;
 
 import androidx.fragment.app.Fragment;
 import cm.aptoide.pt.app.AppNavigator;
+import cm.aptoide.pt.app.view.screenshots.ScreenshotsViewerFragment;
 import cm.aptoide.pt.navigator.FragmentNavigator;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.search.model.SearchQueryModel;
 import cm.aptoide.pt.search.view.SearchResultFragment;
 import cm.aptoide.pt.view.settings.SettingsFragment;
+import java.util.ArrayList;
 
 public class SearchNavigator {
 
@@ -53,5 +55,10 @@ public class SearchNavigator {
 
   public void goToSettings() {
     navigator.navigateTo(new SettingsFragment(), true);
+  }
+
+  public void navigateToScreenshots(ArrayList<String> imagesUris, int currentPosition) {
+    Fragment fragment = ScreenshotsViewerFragment.newInstance(imagesUris, currentPosition);
+    navigator.navigateTo(fragment, true);
   }
 }

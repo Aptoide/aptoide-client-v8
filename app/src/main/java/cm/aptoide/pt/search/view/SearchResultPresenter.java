@@ -90,6 +90,7 @@ import rx.schedulers.Schedulers;
     handleClickOnBottomNavWithoutResults();
     handleErrorRetryClick();
     handleFiltersClick();
+    handleClickOnScreenshot();
     listenToSearchQueries();
 
     handleClickOnAdultContentSwitch();
@@ -111,7 +112,7 @@ import rx.schedulers.Schedulers;
             .observeOn(viewScheduler)
             .doOnNext(
                 result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
-                    result.getCurrentOffset() > 0, result.hasMore()))
+                    result.isFreshResult(), result.hasMore()))
             .observeOn(ioScheduler)
             .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
                 .observeOn(viewScheduler)
@@ -158,6 +159,19 @@ import rx.schedulers.Schedulers;
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
+  }
+
+  private void handleClickOnScreenshot() {
+    view.getLifecycleEvent()
+        .filter(event -> event.equals(View.LifecycleEvent.CREATE))
+        .flatMap(__ -> view.getScreenshotClickEvent())
+        .filter(event -> !event.isVideo())
+        .doOnNext(imageClick -> {
+          navigator.navigateToScreenshots(imageClick.getImagesUris(), imageClick.getImagesIndex());
+        })
+        .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
+        .subscribe(__ -> {
+        }, err -> crashReport.log(err));
   }
 
   private void handleErrorRetryClick() {
