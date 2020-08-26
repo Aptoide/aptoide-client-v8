@@ -161,7 +161,8 @@ public class DownloadFactory {
     download.setHasAppc(hasAppc);
     download.setSize(0);
     download.setFilesToDownload(createFileList(md5, packageName, downloadPaths.getPath(), md5, null,
-        downloadPaths.getAltPath(), versionCode, versionName, null)); // no splits : auto-update
+        downloadPaths.getAltPath(), versionCode, versionName,
+        null)); // no splits, no oemid : auto-update
     return download;
   }
 
@@ -200,6 +201,7 @@ public class DownloadFactory {
       download.setSize(size);
       download.setTrustedBadge(trustedBadge);
       download.setStoreName(storeName);
+      download.setAttributionId(oemId);
       download.setFilesToDownload(
           createFileList(md5, packageName, downloadPaths.getPath(), md5, obb,
               downloadPaths.getAltPath(), versionCode, versionName, splits));

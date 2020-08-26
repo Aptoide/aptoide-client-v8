@@ -20,8 +20,11 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -50,12 +53,8 @@ import cm.aptoide.pt.abtesting.ABTestManager;
 import cm.aptoide.pt.abtesting.ABTestService;
 import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
-import cm.aptoide.pt.abtesting.AppsNameExperimentManager;
 import cm.aptoide.pt.abtesting.ExperimentModel;
-import cm.aptoide.pt.abtesting.analytics.AppsNameAnalytics;
 import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
-import cm.aptoide.pt.abtesting.experiments.AppsNameExperiment;
-import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -98,7 +97,6 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
 import cm.aptoide.pt.app.appc.BonusAppcService;
-import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -340,6 +338,40 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     this.application = application;
   }
 
+  @Singleton @Provides LaunchManager providesLaunchManager(FirstLaunchManager firstLaunchManager,
+      UpdateLaunchManager updateLaunchManager,
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new LaunchManager(firstLaunchManager, updateLaunchManager, secureSharedPreferences);
+  }
+
+  @Singleton @Provides FirstLaunchManager providesFirstLaunchManager(
+      @Named("default") SharedPreferences defaultSharedPreferences, IdsRepository idsRepository,
+      FollowedStoresManager followedStoresManager, UpdateRepository updateRepository,
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager aptoideAccountManager,
+      AptoideShortcutManager shortcutManager) {
+    return new FirstLaunchManager(defaultSharedPreferences, idsRepository, followedStoresManager,
+        updateRepository, rootAvailabilityManager, aptoideAccountManager, shortcutManager,
+        application);
+  }
+
+  @Singleton @Provides UpdateLaunchManager providesUpdateLaunchManager(
+      FollowedStoresManager followedStoresManager) {
+    return new UpdateLaunchManager(followedStoresManager);
+  }
+
+  @Singleton @Provides FollowedStoresManager providesFollowedStoresManager(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default-followed-stores") List<String> defaultFollowedStores,
+      StoreUtilsProxy storeUtilsProxy, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
+      AptoideAccountManager aptoideAccountManager, @Named("default") OkHttpClient httpClient,
+      TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new FollowedStoresManager(storeCredentialsProvider, defaultFollowedStores,
+        storeUtilsProxy, accountSettingsBodyInterceptorPoolV7, aptoideAccountManager, httpClient,
+        tokenInvalidator, defaultSharedPreferences);
+  }
+
   @Singleton @Provides InstallManager providesInstallManager(
       AptoideDownloadManager aptoideDownloadManager, @Named("default") Installer defaultInstaller,
       RootAvailabilityManager rootAvailabilityManager,
@@ -503,7 +535,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
         installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver,
-        rootInstallerProvider);
+        rootInstallerProvider, application);
   }
 
   private int getInstallingStateTimeout() {
@@ -1022,6 +1054,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
+        .addMigrations(new Migration(100, 101) {
+          @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId TEXT");
+          }
+        })
         .build();
   }
 
@@ -1496,11 +1533,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
-        AppsNameAnalytics.MOB_512_APPS_NAME_PARTICIPATING_EVENT,
-        AppsNameAnalytics.MOB_512_APPS_NAME_CONVERSION_EVENT, SearchAnalytics.SEARCH_RESULT_CLICK,
-        FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM, AptoideInstallAnalytics.PARTICIPATING_EVENT,
-        AptoideInstallAnalytics.CONVERSION_EVENT,
+        SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
@@ -1960,7 +1993,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
-    return new PackageInstallerManager();
+    return new PackageInstallerManager(AptoideUtils.isDeviceMIUI(),
+        AptoideUtils.isMIUIwithAABFix());
   }
 
   @Singleton @Provides NotificationProvider provideNotificationProvider(
@@ -2044,10 +2078,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository,
-      AptoideInstallExperiment aptoideInstallExperiment) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallRepository,
-        aptoideInstallExperiment);
+      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallRepository);
   }
 
   @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(
@@ -2058,32 +2090,6 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   @Singleton @Provides AptoideInstallPersistence providesAptoideInstallPersistence(
       AptoideDatabase database) {
     return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
-  }
-
-  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
-      @Named("ab-test") ABTestManager abTestManager,
-      AptoideInstallAnalytics aptoideInstallAnalytics) {
-    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
-  }
-
-  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides AppsNameAnalytics providesAppsNameAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AppsNameAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides AppsNameExperiment providesAppsNameExperiment(
-      @Named("ab-test") ABTestManager abTestManager, AppsNameAnalytics appsNameAnalytics) {
-    return new AppsNameExperiment(abTestManager, appsNameAnalytics);
-  }
-
-  @Singleton @Provides AppsNameExperimentManager providesAppsNameExperimentManager(
-      AppsNameExperiment appsNameExperiment) {
-    return new AppsNameExperimentManager(appsNameExperiment);
   }
 
   @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(

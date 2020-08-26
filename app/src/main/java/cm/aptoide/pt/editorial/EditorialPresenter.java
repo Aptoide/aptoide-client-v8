@@ -317,7 +317,7 @@ public class EditorialPresenter implements Presenter {
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();
             editorialAnalytics.sendNotEnoughSpaceErrorEvent(editorialContent.getPackageName(),
-                downloadModel.getAction(), offerResponseStatus,
+                editorialContent.getVerCode(), downloadModel.getAction(), offerResponseStatus,
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !editorialContent.getSplits()
                     .isEmpty(), editorialContent.hasAppc(), editorialContent.getRank(),

@@ -1,6 +1,7 @@
 package cm.aptoide.aptoideviews.filters
 
 import android.widget.CheckedTextView
+import androidx.core.content.ContextCompat
 import cm.aptoide.aptoideviews.R
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
@@ -15,6 +16,12 @@ abstract class FilterModel : EpoxyModelWithHolder<FilterModel.CardHolder>() {
   @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
   var eventListener: FilterEventListener? = null
 
+  @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+  var textColorStateList: Int? = null
+
+  @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+  var backgroundRes: Int? = null
+
   override fun bind(holder: CardHolder) {
     super.bind(holder)
 
@@ -23,6 +30,12 @@ abstract class FilterModel : EpoxyModelWithHolder<FilterModel.CardHolder>() {
       holder.button.isChecked = f.selected
       holder.button.setOnClickListener {
         eventListener?.onFilterEvent(FilterEventListener.EventType.FILTER_CLICK, f)
+      }
+      textColorStateList?.let { color ->
+        holder.button.setTextColor(ContextCompat.getColorStateList(holder.itemView.context, color))
+      }
+      backgroundRes?.let { bg ->
+        holder.button.setBackgroundResource(bg)
       }
     }
   }

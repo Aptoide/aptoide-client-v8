@@ -40,7 +40,6 @@ import org.mockito.MockitoAnnotations;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
-import rx.schedulers.Schedulers;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -83,8 +82,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
   }
 
@@ -111,8 +110,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppViewModel()).thenReturn(Single.just(exampleAppViewModel));
@@ -232,8 +231,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));
@@ -337,8 +336,8 @@ public class AppViewManagerTest {
         new AppViewManager(appViewModelManager, installManager, downloadFactory, appCenter,
             reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
             moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
-            installAnalytics, limit, Schedulers.immediate(), "anyString", appCoinsManager,
-            promotionsManager, migrationManager, localNotificationSyncManager,
+            installAnalytics, limit, "anyString", appCoinsManager, promotionsManager,
+            migrationManager, localNotificationSyncManager,
             appcPromotionNotificationStringProvider);
 
     when(appViewModelManager.getAppModel()).thenReturn(Single.just(appModel));

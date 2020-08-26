@@ -21,19 +21,19 @@ public class SecurePreferences {
     return securePreferences.getBoolean(SecureKeys.FIRST_RUN, true);
   }
 
+  public static int getLatestVersionCode(SharedPreferences securePreferences) {
+    return securePreferences.getInt(SecureKeys.LATEST_VERSION_CODE, -1);
+  }
+
   public static void setFirstRun(boolean b, SharedPreferences securePreferences) {
     securePreferences.edit()
         .putBoolean(SecureKeys.FIRST_RUN, b)
         .apply();
   }
 
-  public static boolean isAppsAbTest(SharedPreferences securePreferences) {
-    return securePreferences.getBoolean(SecureKeys.SEND_APPS_ABTEST, true);
-  }
-
-  public static void setAppsAbTest(boolean b, SharedPreferences securePreferences) {
+  public static void setCurrentVersionCode(int versionCode, SharedPreferences securePreferences) {
     securePreferences.edit()
-        .putBoolean(SecureKeys.SEND_APPS_ABTEST, b)
+        .putInt(SecureKeys.LATEST_VERSION_CODE, versionCode)
         .apply();
   }
 

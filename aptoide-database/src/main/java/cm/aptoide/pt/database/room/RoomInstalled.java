@@ -27,7 +27,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
   @Ignore public static final int TYPE_DEFAULT = 0;
   @Ignore public static final int TYPE_ROOT = 1;
   @Ignore public static final int TYPE_SYSTEM = 2;
-  @Ignore public static final int TYPE_SET_PACKAGE_NAME_INSTALLER = 3;
+  @Ignore public static final int TYPE_PACKAGE_INSTALLER = 3;
   @Ignore public static final int TYPE_UNKNOWN = -1;
 
   @PrimaryKey @NonNull private String packageAndVersionCode;

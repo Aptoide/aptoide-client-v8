@@ -44,6 +44,8 @@ import org.jetbrains.annotations.NotNull;
 import rx.Completable;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by marcelobenites on 7/18/16.
@@ -65,13 +67,17 @@ public class DefaultInstaller implements Installer {
   private RootInstallerProvider rootInstallerProvider;
   private int installingStateTimeout;
 
+  private Context context;
+  private CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
+  private PublishSubject<InstallationCandidate> installCandidateSubject = PublishSubject.create();
+
   public DefaultInstaller(PackageManager packageManager, InstallationProvider installationProvider,
       AppInstaller appInstaller, FileUtils fileUtils, boolean debug,
       InstalledRepository installedRepository, int rootTimeout,
       RootAvailabilityManager rootAvailabilityManager, SharedPreferences sharedPreferences,
       InstallerAnalytics installerAnalytics, int installingStateTimeout,
       AppInstallerStatusReceiver appInstallerStatusReceiver,
-      RootInstallerProvider rootInstallerProvider) {
+      RootInstallerProvider rootInstallerProvider, Context context) {
     this.packageManager = packageManager;
     this.installationProvider = installationProvider;
     this.appInstaller = appInstaller;
@@ -85,13 +91,69 @@ public class DefaultInstaller implements Installer {
     this.rootAvailabilityManager = rootAvailabilityManager;
     this.sharedPreferences = sharedPreferences;
     this.installingStateTimeout = installingStateTimeout;
+    this.context = context;
   }
 
   public PackageManager getPackageManager() {
     return packageManager;
   }
 
-  @Override public Completable install(Context context, String md5, boolean forceDefaultInstall,
+  @Override public synchronized void dispatchInstallations() {
+    // Responsible for moving files and starting the installation process
+    dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
+        candidate -> moveInstallationFiles(candidate.getInstallation()).andThen(
+            Observable.just(candidate)))
+        .flatMap(candidate -> Observable.just(isInstalled(candidate.getInstallation()
+            .getPackageName(), candidate.getInstallation()
+            .getVersionCode()))
+            .onErrorReturn(throwable -> false)
+            .first()
+            .flatMap(isInstalled -> {
+              Installation installation = candidate.getInstallation();
+              if (isInstalled) {
+                installation.setStatus(RoomInstalled.STATUS_COMPLETED);
+                return installation.save()
+                    .toObservable()
+                    .map(__ -> installation);
+              } else {
+                if (candidate.getForceDefaultInstall()) {
+                  return startDefaultInstallation(context, installation,
+                      candidate.getShouldSetPackageInstaller());
+                } else {
+                  return startInstallation(context, installation,
+                      candidate.getShouldSetPackageInstaller());
+                }
+              }
+            }))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
+        .retry()
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace));
+
+    // Responsible for removing installation files when an app is installed
+    dispatchInstallationsSubscription.add(
+        installCandidateSubject.map(InstallationCandidate::getInstallation)
+            .flatMap(installation -> installedRepository.get(installation.getPackageName(),
+                installation.getVersionCode())
+                .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
+                .map(__ -> installation))
+            .doOnNext(this::removeInstallationFiles)
+            .doOnError((throwable) -> CrashReport.getInstance()
+                .log(throwable))
+            .retry()
+            .subscribe(__ -> {
+            }, Throwable::printStackTrace));
+  }
+
+  @Override public void stopDispatching() {
+    dispatchInstallationsSubscription.clear();
+    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
+      dispatchInstallationsSubscription.unsubscribe();
+    }
+  }
+
+  @Override public Completable install(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
         .doOnSuccess(isRoot -> installerAnalytics.installationType(
@@ -102,54 +164,31 @@ public class DefaultInstaller implements Installer {
         .doOnNext(installation -> {
           installation.setStatus(RoomInstalled.STATUS_INSTALLING);
           installation.setType(RoomInstalled.TYPE_UNKNOWN);
+          installCandidateSubject.onNext(
+              new InstallationCandidate(installation, forceDefaultInstall,
+                  shouldSetPackageInstaller));
         })
-        .flatMap(installation -> moveInstallationFiles(installation).andThen(
-            Observable.just(installation)))
-        .flatMap(installation -> Observable.just(
-            isInstalled(installation.getPackageName(), installation.getVersionCode()))
-            .onErrorReturn(throwable -> false)
-            .first()
-            .flatMap(isInstalled -> {
-              if (isInstalled) {
-                installation.setStatus(RoomInstalled.STATUS_COMPLETED);
-                return installation.save()
-                    .toObservable()
-                    .map(__ -> installation);
-              } else {
-                if (forceDefaultInstall) {
-                  return startDefaultInstallation(context, installation, shouldSetPackageInstaller);
-                } else {
-                  return startInstallation(context, installation, shouldSetPackageInstaller);
-                }
-              }
-            }))
         .first()
-        .doOnError((throwable) -> CrashReport.getInstance()
-            .log(throwable))
-        .flatMap(installation -> installedRepository.get(installation.getPackageName(),
-            installation.getVersionCode())
-            .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)
-            .map(__ -> installation))
-        .doOnNext(this::removeInstallationFiles)
+        .toSingle()
         .toCompletable();
   }
 
-  @Override public Completable update(Context context, String md5, boolean forceDefaultInstall,
+  @Override public Completable update(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
-    return install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+    return install(md5, forceDefaultInstall, shouldSetPackageInstaller);
   }
 
-  @Override public Completable downgrade(Context context, String md5, boolean forceDefaultInstall,
+  @Override public Completable downgrade(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return installationProvider.getInstallation(md5)
         .first()
-        .flatMapCompletable(installation -> uninstall(context, installation.getPackageName(),
-            installation.getVersionName()))
+        .flatMapCompletable(
+            installation -> uninstall(installation.getPackageName(), installation.getVersionName()))
         .toCompletable()
-        .andThen(install(context, md5, forceDefaultInstall, shouldSetPackageInstaller));
+        .andThen(install(md5, forceDefaultInstall, shouldSetPackageInstaller));
   }
 
-  @Override public Completable uninstall(Context context, String packageName, String versionName) {
+  @Override public Completable uninstall(String packageName, String versionName) {
     final Uri uri = Uri.fromParts("package", packageName, null);
     final IntentFilter intentFilter = new IntentFilter();
     intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -311,13 +350,9 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    boolean shouldUserPackageInstaller =
-        shouldSetPackageInstaller || !map(installation).getSplitApks()
-            .isEmpty();
     return Observable.<Void>fromCallable(() -> {
       AppInstall appInstall = map(installation);
-      if (shouldSetPackageInstaller || !appInstall.getSplitApks()
-          .isEmpty()) {
+      if (shouldSetPackageInstaller) {
         appInstaller.install(appInstall);
       } else {
         startInstallIntent(context, installation.getFile());
@@ -329,7 +364,7 @@ public class DefaultInstaller implements Installer {
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
                   if (installation.getStatus() == RoomInstalled.STATUS_INSTALLING) {
                     updateInstallation(installation,
-                        shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                             : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_UNINSTALLED);
                   }
                   return null;
@@ -348,7 +383,7 @@ public class DefaultInstaller implements Installer {
                       .d("Installer", "status: " + installStatus.getStatus()
                           .name() + " " + installation.getPackageName());
                   updateInstallation(installation,
-                      shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+                      shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                           : RoomInstalled.TYPE_DEFAULT, map(installStatus));
                   if (installStatus.getStatus()
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
@@ -361,7 +396,7 @@ public class DefaultInstaller implements Installer {
                 })))
         .map(success -> installation)
         .startWith(updateInstallation(installation,
-            shouldUserPackageInstaller ? RoomInstalled.TYPE_SET_PACKAGE_NAME_INSTALLER
+            shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
                 : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING));
   }
 

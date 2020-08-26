@@ -74,6 +74,7 @@ public class InstallManager {
 
   public void start() {
     aptoideDownloadManager.start();
+    installer.dispatchInstallations();
   }
 
   private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
@@ -98,6 +99,7 @@ public class InstallManager {
 
   public void stop() {
     aptoideDownloadManager.stop();
+    installer.stopDispatching();
   }
 
   private Completable stopForegroundAndInstall(String md5, int downloadAction,
@@ -106,11 +108,11 @@ public class InstallManager {
         .d(TAG, "going to pop install from: " + md5 + "and download action: " + downloadAction);
     switch (downloadAction) {
       case RoomDownload.ACTION_INSTALL:
-        return installer.install(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.install(md5, forceDefaultInstall, shouldSetPackageInstaller);
       case RoomDownload.ACTION_UPDATE:
-        return installer.update(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.update(md5, forceDefaultInstall, shouldSetPackageInstaller);
       case RoomDownload.ACTION_DOWNGRADE:
-        return installer.downgrade(context, md5, forceDefaultInstall, shouldSetPackageInstaller);
+        return installer.downgrade(md5, forceDefaultInstall, shouldSetPackageInstaller);
       default:
         return Completable.error(
             new IllegalArgumentException("Invalid download action " + downloadAction));
@@ -152,54 +154,71 @@ public class InstallManager {
 
   public Observable<List<Install>> getInstallations() {
     return Observable.combineLatest(aptoideDownloadManager.getDownloadsList(),
-        installedRepository.getAllInstalled(), this::createInstallList)
+        installedRepository.getAllInstalled(), installedRepository.getAllInstalling(),
+        this::createInstallList)
         .distinctUntilChanged();
   }
 
-  private List<Install> createInstallList(List<RoomDownload> downloads,
-      List<RoomInstalled> installeds) {
+  private synchronized List<Install> createInstallList(List<RoomDownload> downloads,
+      List<RoomInstalled> installedAppsList, List<RoomInstalled> installingAppList) {
+
     List<Install> installList = new ArrayList<>();
     for (RoomDownload download : downloads) {
-      boolean found = false;
-      for (RoomInstalled installed : installeds) {
+
+      boolean isInstalling =
+          isAppInstalling(installingAppList, download.getPackageName(), download.getVersionCode());
+      int installStatus = RoomInstalled.STATUS_UNINSTALLED;
+      if (isInstalling) {
+        installStatus = RoomInstalled.STATUS_INSTALLING;
+      }
+      InstallationState installationState =
+          new InstallationState(download.getPackageName(), download.getVersionCode(), installStatus,
+              RoomInstalled.TYPE_UNKNOWN);
+
+      Install.InstallationType installationType = Install.InstallationType.INSTALL;
+
+      for (RoomInstalled installed : installedAppsList) {
         if (download.getPackageName()
             .equals(installed.getPackageName())) {
-          found = true;
-          InstallationState installationState;
-          if (download.getVersionCode() == installed.getVersionCode()) {
-            installationState =
-                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    installed.getVersionName(), installed.getStatus(), installed.getType(),
-                    installed.getName(), installed.getIcon());
-          } else {
-            installationState =
-                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
-                    RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN);
-          }
 
-          Install.InstallationType type;
-          if (installed.getVersionCode() == download.getVersionCode()) {
-            type = Install.InstallationType.INSTALLED;
-          } else if (installed.getVersionCode() > download.getVersionCode()) {
-            type = Install.InstallationType.DOWNGRADE;
+          if (download.getVersionCode() == installed.getVersionCode()) {
+            if (!isInstalling) {
+              installStatus = installed.getStatus();
+            }
+            installationState =
+                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                    installed.getVersionName(), installStatus, installed.getType(),
+                    installed.getName(), installed.getIcon());
+            installationType = Install.InstallationType.INSTALLED;
           } else {
-            type = Install.InstallationType.UPDATE;
+            installationState =
+                new InstallationState(installed.getPackageName(), installed.getVersionCode(),
+                    installStatus, RoomInstalled.TYPE_UNKNOWN);
+            if (installed.getVersionCode() > download.getVersionCode()) {
+              installationType = Install.InstallationType.DOWNGRADE;
+            } else {
+              installationType = Install.InstallationType.UPDATE;
+            }
           }
-          installList.add(createInstall(download, installationState, download.getMd5(),
-              download.getPackageName(), download.getVersionCode(), type));
           break;
         }
       }
-
-      if (!found) {
-        installList.add(createInstall(download,
-            new InstallationState(download.getPackageName(), download.getVersionCode(),
-                RoomInstalled.STATUS_UNINSTALLED, RoomInstalled.TYPE_UNKNOWN), download.getMd5(),
-            download.getPackageName(), download.getVersionCode(),
-            Install.InstallationType.INSTALL));
-      }
+      installList.add(
+          createInstall(download, installationState, download.getMd5(), download.getPackageName(),
+              download.getVersionCode(), installationType));
     }
     return installList;
+  }
+
+  private boolean isAppInstalling(List<RoomInstalled> installingAppList, String packageName,
+      int versionCode) {
+    for (RoomInstalled installing : installingAppList) {
+      if (packageName.equals(installing.getPackageName())
+          && versionCode == installing.getVersionCode()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public Observable<Install> getCurrentInstallation() {
@@ -253,8 +272,8 @@ public class InstallManager {
                 .andThen(Observable.just(download.getMd5()));
           } else {
             return installInBackground(download.getMd5(), forceDefaultInstall,
-                packageInstallerManager.shouldSetInstallerPackageName(download)
-                    || forceSplitInstall, shouldInstall);
+                packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
+                shouldInstall);
           }
         })
         .toCompletable();
@@ -270,7 +289,8 @@ public class InstallManager {
   }
 
   private Install createInstall(RoomDownload download, InstallationState installationState,
-      String md5, String packageName, int versioncode, Install.InstallationType installationType) {
+      String md5, String packageName, int versioncode, Install.
+      InstallationType installationType) {
     return new Install(mapInstallation(download),
         mapInstallationStatus(download, installationState), installationType,
         mapIndeterminateState(download, installationState), getSpeed(download), md5, packageName,
@@ -609,8 +629,8 @@ public class InstallManager {
   }
 
   /**
-   * The caller is responsible to make sure that the download exists already
-   * this method should only be used when a download exists already(ex: resuming)
+   * The caller is responsible to make sure that the download exists already this method should only
+   * be used when a download exists already(ex: resuming)
    *
    * @return the download object to be resumed or null if doesn't exists
    */

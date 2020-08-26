@@ -162,10 +162,11 @@ class EarnAppcListPresenter(private val view: EarnAppcListView,
             .doOnSuccess { offerResponseStatus: OfferResponseStatus? ->
               val action = downloadModel.action
               earnAppcListAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.packageName,
-                  downloadModel.action, offerResponseStatus,
+                  walletApp.versionCode, downloadModel.action,
+                  offerResponseStatus,
                   action != null && action == DownloadModel.Action.MIGRATE,
-                  walletApp.splits.isNotEmpty(), true, walletApp.trustedBadge,
-                  walletApp.storeName, false)
+                  walletApp.splits.isNotEmpty(), true,
+                  walletApp.trustedBadge, walletApp.storeName, false)
             }
             .toObservable()
             .map { downloadModel }

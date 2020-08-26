@@ -38,12 +38,13 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
         DownloadAnalytics.AppContext.WALLET_INSTALL_ACTIVITY, action, false, false)
     if (downloadAction == DownloadModel.Action.INSTALL) {
       downloadAnalytics.installClicked(download.md5, download.packageName,
-          action, offerResponseStatus, false, download.hasAppc(), download.hasSplits(),
-          download.trustedBadge, null, download.storeName, action.toString())
+          download.versionCode, action, offerResponseStatus, false, download.hasAppc(),
+          download.hasSplits(), download.trustedBadge, null, download.storeName, action.toString())
     }
     if (DownloadModel.Action.MIGRATE == downloadAction) {
-      downloadAnalytics.migrationClicked(download.md5, download.packageName, action,
-          offerResponseStatus, download.hasSplits(), download.trustedBadge, null,
+      downloadAnalytics.migrationClicked(download.md5, download.packageName, download.versionCode,
+          action, offerResponseStatus, download.hasSplits(), download.trustedBadge,
+          null,
           download.storeName)
     }
   }
@@ -97,14 +98,16 @@ class WalletInstallAnalytics(val downloadAnalytics: DownloadAnalytics,
   }
 
   fun sendNotEnoughSpaceErrorEvent(packageName: String?,
+                                   versionCode: Int,
                                    downloadAction: DownloadModel.Action,
                                    offerResponseStatus: WalletAdsOfferManager.OfferResponseStatus?,
-                                   isMigration: Boolean,
-                                   isAppBundle: Boolean, hasAppc: Boolean,
-                                   trustedBadge: String?, storeName: String?,
+                                   isMigration: Boolean, isAppBundle: Boolean,
+                                   hasAppc: Boolean, trustedBadge: String?,
+                                   storeName: String?,
                                    isApkfy: Boolean) {
-    downloadAnalytics.sendNotEnoughSpaceError(packageName, mapDownloadAction(downloadAction),
-        offerResponseStatus, isMigration, isAppBundle, hasAppc, trustedBadge, storeName, isApkfy)
+    downloadAnalytics.sendNotEnoughSpaceError(packageName, versionCode,
+        mapDownloadAction(downloadAction), offerResponseStatus, isMigration, isAppBundle, hasAppc,
+        trustedBadge, storeName, isApkfy)
   }
 
   private fun mapDownloadAction(downloadAction: DownloadModel.Action): InstallType? {

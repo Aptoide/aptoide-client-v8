@@ -219,6 +219,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showResultsView() {
+    noResults = false;
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
@@ -538,12 +539,8 @@ public class SearchResultFragment extends BackButtonFragment
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
     return RxRecyclerView.scrollEvents(recyclerView)
         .map(this::isEndReached)
-        .doOnNext(end -> Logger.getInstance()
-            .d("lol", "emitting reached end #1 " + end))
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
-        .doOnNext(end -> Logger.getInstance()
-            .d("lol", "emitting reached end #2 " + end))
         .map(__ -> null);
   }
 
@@ -698,11 +695,6 @@ public class SearchResultFragment extends BackButtonFragment
     filtersView.setFilters(filters);
   }
 
-  @Override public ScreenTagHistory getHistoryTracker() {
-    return ScreenTagHistory.Builder.build(this.getClass()
-        .getSimpleName());
-  }
-
   private void setupTheme() {
     if (viewModel != null && storeThemeExists(viewModel.getStoreTheme())) {
       String storeTheme = viewModel.getStoreTheme();
@@ -719,6 +711,18 @@ public class SearchResultFragment extends BackButtonFragment
             .setColorFilter(themeManager.getAttributeForTheme(R.attr.colorPrimary).data,
                 PorterDuff.Mode.SRC_IN);
       }
+      filtersView.setFiltersBackgroundRes(
+          themeManager.getAttributeForTheme(storeTheme, R.attr.homeChips).resourceId);
+      filtersView.setFiltersTextColorStateList(themeManager.getAttributeForTheme(storeTheme,
+          R.attr.homeChipsTextColorSelector).resourceId);
+    } else {
+      themeManager.resetToBaseTheme();
+      String theme = themeManager.getBaseTheme()
+          .getThemeName();
+      filtersView.setFiltersBackgroundRes(
+          themeManager.getAttributeForTheme(theme, R.attr.homeChips).resourceId);
+      filtersView.setFiltersTextColorStateList(
+          themeManager.getAttributeForTheme(theme, R.attr.homeChipsTextColorSelector).resourceId);
     }
   }
 

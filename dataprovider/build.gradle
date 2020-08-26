@@ -143,7 +143,9 @@ dependencies {
   implementation "com.squareup.retrofit2:converter-jackson:${RETROFIT_VERSION}"
   implementation "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 
-  implementation "com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"
+  implementation ("com.squareup.okhttp3:logging-interceptor:${OKHTTP_VERSION}"){
+    force = true
+  }
 
   // Parceler - https://github.com/johncarl81/parceler
   compileOnly "org.parceler:parceler-api:${PARCELER_VERSION}"

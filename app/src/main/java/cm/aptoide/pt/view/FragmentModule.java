@@ -458,7 +458,7 @@ import rx.subscriptions.CompositeSubscription;
         reviewsManager, adsManager, flagManager, storeUtilsProxy, aptoideAccountManager,
         moPubAdsManager, downloadStateParser, appViewAnalytics, notificationAnalytics,
         installAnalytics, (Type.APPS_GROUP.getPerLineCount(resources, windowManager) * 6),
-        Schedulers.io(), marketName, appCoinsManager, promotionsManager, appcMigrationManager,
+        marketName, appCoinsManager, promotionsManager, appcMigrationManager,
         localNotificationSyncManager, appcPromotionNotificationStringProvider);
   }
 

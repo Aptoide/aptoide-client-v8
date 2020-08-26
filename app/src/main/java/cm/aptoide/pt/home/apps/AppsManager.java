@@ -113,10 +113,6 @@ public class AppsManager {
             }));
   }
 
-  public Completable sendInstalledWithAptoideImpression() {
-    return aptoideInstallManager.sendImpressionEvent();
-  }
-
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
@@ -218,9 +214,9 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), download.getTrustedBadge(), null, download.getStoreName(),
-        installType);
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
+        download.getStoreName(), installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
         getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
@@ -233,8 +229,8 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), trustedBadge, tag, storeName, installType);
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
         AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
@@ -271,8 +267,7 @@ public class AppsManager {
                   update.getStoreName(), "update");
               return Single.just(value);
             })
-            .flatMapCompletable(download -> installManager.install(download))
-            .andThen(aptoideInstallManager.sendConversionEvent()))
+            .flatMapCompletable(download -> installManager.install(download)))
         .onErrorComplete();
   }
 
