@@ -45,7 +45,6 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.view.DownloadClick;
-import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchFilterType;
@@ -671,6 +670,11 @@ public class SearchResultFragment extends BackButtonFragment
             .build();
 
     attachPresenter(searchResultPresenter);
+  }
+
+  @Override public ScreenTagHistory getHistoryTracker() {
+    return ScreenTagHistory.Builder.build(this.getClass()
+        .getSimpleName());
   }
 
   private void setupFilters() {

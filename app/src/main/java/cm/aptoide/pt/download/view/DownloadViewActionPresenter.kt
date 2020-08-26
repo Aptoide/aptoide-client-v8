@@ -161,6 +161,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
         .doOnError { throwable ->
           if (throwable is InvalidAppException) {
             downloadAnalytics.sendAppNotValidError(download.getPackageName(),
+                download.getVersionCode(),
                 mapDownloadAction(download.getDownloadModel()!!.action), offerResponseStatus,
                 download.getDownloadModel()!!.action == DownloadStatusModel.Action.MIGRATE,
                 download.getSplits().isNotEmpty(),
@@ -213,17 +214,18 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
         storeName, isInApkfyContext)
     if (DownloadStatusModel.Action.MIGRATE == downloadAction) {
-      downloadAnalytics.migrationClicked(download.md5, download.packageName, malwareRank,
-          editorsChoicePosition, InstallType.UPDATE_TO_APPC, AnalyticsManager.Action.INSTALL,
-          offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName, isInApkfyContext)
+      downloadAnalytics.migrationClicked(download.md5, download.versionCode, download.packageName,
+          malwareRank, editorsChoicePosition, InstallType.UPDATE_TO_APPC,
+          AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
+          download.hasSplits(), storeName,
+          isInApkfyContext)
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, true, isInApkfyContext)
     } else {
-      downloadAnalytics.installClicked(download.md5, download.packageName, malwareRank,
-          editorsChoicePosition, mapDownloadAction(downloadAction), AnalyticsManager.Action.INSTALL,
-          offerResponseStatus,
-          download.hasAppc(), download.hasSplits(), storeName, isInApkfyContext)
+      downloadAnalytics.installClicked(download.md5, download.versionCode, download.packageName,
+          malwareRank, editorsChoicePosition, mapDownloadAction(downloadAction),
+          AnalyticsManager.Action.INSTALL, offerResponseStatus, download.hasAppc(),
+          download.hasSplits(), storeName, isInApkfyContext)
       downloadAnalytics.downloadStartEvent(download, campaignId, abTestGroup,
           analyticsContext, AnalyticsManager.Action.INSTALL, false, isInApkfyContext)
     }
