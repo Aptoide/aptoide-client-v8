@@ -49,6 +49,8 @@ public class ToolboxContentProvider extends ContentProvider {
   private static final int LOGIN_NAME = 5;
   private static final int CHANGE_PREFERENCE = 6;
   private static final int REFRESH_TOKEN = 7;
+  private static final int LOGIN_NICKNAME = 8;
+  private static final int LOGIN_AVATAR = 9;
 
   @Inject AuthenticationPersistence authenticationPersistence;
   @Inject @Named("default") SharedPreferences sharedPreferences;
@@ -67,6 +69,8 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "passHash", PASSHASH);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginName", LOGIN_NAME);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginNickname", LOGIN_NICKNAME);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginAvatar", LOGIN_AVATAR);
     ((AptoideApplication) getContext().getApplicationContext()).getApplicationComponent()
         .inject(this);
     return true;
@@ -113,6 +117,10 @@ public class ToolboxContentProvider extends ContentProvider {
               .toLowerCase(Locale.US));
         case LOGIN_NAME:
           return create("loginName", authentication.getEmail());
+        case LOGIN_NICKNAME:
+          return create("loginNickname", account.getNickname());
+        case LOGIN_AVATAR:
+          return create("loginAvatar", account.getAvatar());
         default:
           throw new IllegalArgumentException(
               "Only /token, /repo, /passHash, /loginType and /loginName supported.");
