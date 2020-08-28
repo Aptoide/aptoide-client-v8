@@ -1,7 +1,7 @@
 package cm.aptoide.pt.updates;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.database.room.RoomUpdate;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
@@ -11,6 +11,7 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppcAppsUpgradesRequest;
 import cm.aptoide.pt.dataprovider.ws.v7.listapps.ListAppsUpdatesRequest;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.store.RoomStoreRepository;
@@ -39,16 +40,16 @@ public class UpdateRepository {
   private final Converter.Factory converterFactory;
   private final TokenInvalidator tokenInvalidator;
   private final SharedPreferences sharedPreferences;
-  private final PackageManager packageManager;
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
+  private final InstalledRepository installedRepository;
 
   public UpdateRepository(UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
       OkHttpClient httpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, SharedPreferences sharedPreferences,
-      PackageManager packageManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      UpdateMapper updateMapper) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
+      InstalledRepository installedRepository) {
     this.updatePersistence = updatePersistence;
     this.storeRepository = storeRepository;
     this.idsRepository = idsRepository;
@@ -57,9 +58,9 @@ public class UpdateRepository {
     this.converterFactory = converterFactory;
     this.tokenInvalidator = tokenInvalidator;
     this.sharedPreferences = sharedPreferences;
-    this.packageManager = packageManager;
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.updateMapper = updateMapper;
+    this.installedRepository = installedRepository;
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
@@ -88,10 +89,10 @@ public class UpdateRepository {
 
   private Observable<List<App>> getNetworkAppcUpgrades(boolean bypassCache,
       boolean bypassServerCache) {
-    return idsRepository.getUniqueIdentifier()
+    return Single.zip(getInstalledApks(), idsRepository.getUniqueIdentifier(), Pair::new)
         .flatMapObservable(
-            id -> ListAppcAppsUpgradesRequest.of(id, bodyInterceptor, httpClient, converterFactory,
-                tokenInvalidator, sharedPreferences, packageManager)
+            pair -> ListAppcAppsUpgradesRequest.of(pair.first, pair.second, bodyInterceptor,
+                httpClient, converterFactory, tokenInvalidator, sharedPreferences)
                 .observe(bypassCache, bypassServerCache))
         .map(result -> {
           if (result != null && result.isOk()) {
@@ -105,18 +106,29 @@ public class UpdateRepository {
       boolean bypassServerCache) {
     Logger.getInstance()
         .d(TAG, String.format("getNetworkUpdates() -> using %d stores", storeIds.size()));
-    return idsRepository.getUniqueIdentifier()
+    return Single.zip(getInstalledApks(), idsRepository.getUniqueIdentifier(), Pair::new)
         .flatMapObservable(
-            id -> ListAppsUpdatesRequest.of(storeIds, id, bodyInterceptor, httpClient,
-                converterFactory, tokenInvalidator, sharedPreferences, packageManager,
+            pair -> ListAppsUpdatesRequest.of(pair.first, storeIds, pair.second, bodyInterceptor,
+                httpClient, converterFactory, tokenInvalidator, sharedPreferences,
                 appBundlesVisibilityManager)
                 .observe(bypassCache, bypassServerCache))
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();
           }
-          return Collections.<App>emptyList();
+          return Collections.emptyList();
         });
+  }
+
+  private Single<List<ListAppsUpdatesRequest.ApksData>> getInstalledApks() {
+    return installedRepository.getAllSyncedInstalled()
+        .toObservable()
+        .flatMapIterable(list -> list)
+        .map(roomInstalled -> new ListAppsUpdatesRequest.ApksData(roomInstalled.getPackageName(),
+            roomInstalled.getVersionCode(), roomInstalled.getSignature(),
+            roomInstalled.isEnabled()))
+        .toList()
+        .toSingle();
   }
 
   public Completable removeAllNonExcluded() {

@@ -43,6 +43,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -141,7 +142,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
-  @Inject RoomInstalledPersistence roomInstalledPersistence;
+  @Inject InstalledRepository installedRepository;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
@@ -302,8 +303,8 @@ public abstract class AptoideApplication extends Application {
             uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
         .andThen(setUpFirstRunAnalytics())
         .observeOn(Schedulers.computation())
+        .andThen(installedRepository.syncWithDevice())
         .andThen(launchManager.launch())
-        .andThen(discoverAndSaveInstalledApps())
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
@@ -665,47 +666,6 @@ public abstract class AptoideApplication extends Application {
 
   protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
-  }
-
-  private Completable discoverAndSaveInstalledApps() {
-    return Observable.fromCallable(() -> {
-      // get the installed apps
-      List<PackageInfo> installedApps =
-          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.getInstance()
-          .v(TAG, "Found " + installedApps.size() + " user installed apps.");
-
-      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-      Collections.sort(installedApps,
-          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
-
-      // return sorted installed apps
-      return installedApps;
-    })  // transform installation package into Installed table entry and save all the data
-        .flatMapIterable(list -> list)
-        .map(packageInfo -> new RoomInstalled(packageInfo, getPackageManager()))
-        .toList()
-        .flatMap(appsInstalled -> roomInstalledPersistence.getAll()
-            .first()
-            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
-        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
-        .toCompletable();
-  }
-
-  public <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
-    List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
-    toReturn.addAll(list1);
-    for (T item : list2) {
-      if (!toReturn.contains(item)) {
-        if (transformer != null) {
-          transformer.call(item);
-        }
-        toReturn.add(item);
-      }
-    }
-
-    return toReturn;
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {
