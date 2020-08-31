@@ -123,7 +123,7 @@ public class ToolboxContentProvider extends ContentProvider {
           return create("loginAvatar", account.getAvatar());
         default:
           throw new IllegalArgumentException(
-              "Only /token, /repo, /passHash, /loginType and /loginName supported.");
+              "Only /token, /refreshToken, /repo, /passHash, /loginType, /loginName, loginNickname and loginAvatar supported.");
       }
     } else {
       throw new SecurityException("Package not authorized to access provider.");
