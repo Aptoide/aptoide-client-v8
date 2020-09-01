@@ -43,13 +43,13 @@ public class ToolboxContentProvider extends ContentProvider {
   private static final String BACKUP_PACKAGE = "pt.aptoide.backupapps";
   private static final String UPLOADER_PACKAGE = "pt.caixamagica.aptoide.uploader";
   private static final int TOKEN = 1;
-  private static final int REPO = 2;
+  private static final int STORE_NAME = 2;
   private static final int PASSHASH = 3;
   private static final int LOGIN_TYPE = 4;
-  private static final int LOGIN_NAME = 5;
+  private static final int LOGIN_EMAIL = 5;
   private static final int CHANGE_PREFERENCE = 6;
   private static final int REFRESH_TOKEN = 7;
-  private static final int LOGIN_NICKNAME = 8;
+  private static final int LOGIN_NAME = 8;
   private static final int LOGIN_AVATAR = 9;
 
   @Inject AuthenticationPersistence authenticationPersistence;
@@ -64,12 +64,12 @@ public class ToolboxContentProvider extends ContentProvider {
     uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "token", TOKEN);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "refreshToken", REFRESH_TOKEN);
-    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "repo", REPO);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "storeName", STORE_NAME);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginType", LOGIN_TYPE);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "passHash", PASSHASH);
-    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginName", LOGIN_NAME);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginEmail", LOGIN_EMAIL);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "changePreference", CHANGE_PREFERENCE);
-    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginNickname", LOGIN_NICKNAME);
+    uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginName", LOGIN_NAME);
     uriMatcher.addURI(BuildConfig.CONTENT_AUTHORITY, "loginAvatar", LOGIN_AVATAR);
     ((AptoideApplication) getContext().getApplicationContext()).getApplicationComponent()
         .inject(this);
@@ -101,8 +101,8 @@ public class ToolboxContentProvider extends ContentProvider {
           return create("userToken", authentication.getAccessToken());
         case REFRESH_TOKEN:
           return create("userRefreshToken", authentication.getRefreshToken());
-        case REPO:
-          return create("userRepo", account.getStore()
+        case STORE_NAME:
+          return create("storeName", account.getStore()
               .getName());
         case PASSHASH:
           if (AptoideAccountManager.APTOIDE_SIGN_UP_TYPE.equals(authentication.getType())) {
@@ -115,15 +115,15 @@ public class ToolboxContentProvider extends ContentProvider {
         case LOGIN_TYPE:
           return create("loginType", authentication.getType()
               .toLowerCase(Locale.US));
+        case LOGIN_EMAIL:
+          return create("loginEmail", authentication.getEmail());
         case LOGIN_NAME:
-          return create("loginName", authentication.getEmail());
-        case LOGIN_NICKNAME:
-          return create("loginNickname", account.getNickname());
+          return create("loginName", account.getNickname());
         case LOGIN_AVATAR:
           return create("loginAvatar", account.getAvatar());
         default:
           throw new IllegalArgumentException(
-              "Only /token, /refreshToken, /repo, /passHash, /loginType, /loginName, loginNickname and loginAvatar supported.");
+              "Only /token, /refreshToken, /storeName, /passHash, /loginType, /loginEmail, /loginName and /loginAvatar supported.");
       }
     } else {
       throw new SecurityException("Package not authorized to access provider.");
