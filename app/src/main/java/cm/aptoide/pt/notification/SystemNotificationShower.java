@@ -7,11 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.RemoteViews;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
@@ -27,7 +23,6 @@ import cm.aptoide.pt.presenter.Presenter;
 import cm.aptoide.pt.themes.NewFeatureManager;
 import cm.aptoide.pt.themes.ThemeAnalytics;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.NotificationTarget;
 import rx.Completable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
@@ -111,8 +106,7 @@ public class SystemNotificationShower implements Presenter {
         notificationId, context).flatMap(
         pressIntentAction -> buildNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
-            notificationId, getOnDismissAction(notificationId), aptoideNotification.getAppName(),
-            aptoideNotification.getGraphic()));
+            getOnDismissAction(notificationId)));
   }
 
   private Single<Notification> mapLocalToAndroidNotification(
@@ -209,8 +203,7 @@ public class SystemNotificationShower implements Presenter {
   }
 
   @NonNull private Single<android.app.Notification> buildNotification(Context context, String title,
-      String body, String iconUrl, PendingIntent pressIntentAction, int notificationId,
-      PendingIntent onDismissAction, String appName, String graphic) {
+      String body, String iconUrl, PendingIntent pressIntentAction, PendingIntent onDismissAction) {
     return Single.fromCallable(() -> {
       android.app.Notification notification =
           new NotificationCompat.Builder(context).setContentIntent(pressIntentAction)
@@ -221,46 +214,14 @@ public class SystemNotificationShower implements Presenter {
               .setContentTitle(title)
               .setContentText(body)
               .setDeleteIntent(onDismissAction)
+              .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
               .build();
       notification.flags =
           android.app.Notification.DEFAULT_LIGHTS | android.app.Notification.FLAG_AUTO_CANCEL;
       return notification;
     })
         .subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread())
-        .map(notification -> setExpandedView(context, title, body, notificationId, notification,
-            appName, graphic, iconUrl));
-  }
-
-  private android.app.Notification setExpandedView(Context context, String title, String body,
-      int notificationId, Notification notification, String appName, String graphic,
-      String iconUrl) {
-
-    if (Build.VERSION.SDK_INT >= 16) {
-      RemoteViews expandedView =
-          new RemoteViews(context.getPackageName(), R.layout.pushnotificationlayout);
-      //in this case, large icon is loaded already, so instead of reloading it, we just reuse it
-      loadImage(context, notificationId, notification, iconUrl, expandedView, R.id.icon);
-      expandedView.setTextViewText(R.id.title, title);
-      expandedView.setTextViewText(R.id.app_name, appName);
-      expandedView.setTextViewText(R.id.description, body);
-      if (!TextUtils.isEmpty(graphic)) {
-        loadImage(context, notificationId, notification, graphic, expandedView,
-            R.id.push_notification_graphic);
-      } else {
-        expandedView.setViewVisibility(R.id.push_notification_graphic, View.GONE);
-      }
-      notification.bigContentView = expandedView;
-    }
-    return notification;
-  }
-
-  private void loadImage(Context context, int notificationId, Notification notification, String url,
-      RemoteViews expandedView, @IdRes int viewId) {
-    NotificationTarget notificationTarget =
-        new NotificationTarget(context, viewId, expandedView, notification, notificationId);
-    ImageLoader.with(context)
-        .loadImageToNotification(notificationTarget, url);
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   public PendingIntent getOnDismissAction(int notificationId) {
