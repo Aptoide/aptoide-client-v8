@@ -115,7 +115,6 @@ public class MainPresenter implements Presenter {
         .filter(event -> View.LifecycleEvent.CREATE.equals(event))
         .doOnNext(created -> apkFyManager.run())
         .filter(created -> firstCreated)
-        .doOnNext(created -> notificationSyncScheduler.forceSync())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .doOnNext(__ -> contentPuller.start())
         .doOnNext(__ -> navigate())

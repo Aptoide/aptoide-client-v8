@@ -16,6 +16,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
+import androidx.work.DelegatingWorkerFactory;
 import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -52,6 +53,7 @@ import cm.aptoide.pt.navigator.Result;
 import cm.aptoide.pt.networking.AuthenticationPersistence;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.networking.Pnp1AuthorizationInterceptor;
+import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationCenter;
 import cm.aptoide.pt.notification.NotificationInfo;
@@ -62,13 +64,11 @@ import cm.aptoide.pt.notification.NotificationSyncScheduler;
 import cm.aptoide.pt.notification.NotificationsCleaner;
 import cm.aptoide.pt.notification.SystemNotificationShower;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
-import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncFactory;
 import cm.aptoide.pt.notification.sync.NotificationSyncManager;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
 import cm.aptoide.pt.preferences.PRNGFixes;
 import cm.aptoide.pt.preferences.Preferences;
-import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import cm.aptoide.pt.preferences.secure.SecurePreferencesImplementation;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
 import cm.aptoide.pt.presenter.View;
@@ -188,7 +188,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AdsUserPropertyManager adsUserPropertyManager;
   @Inject OemidProvider oemidProvider;
   @Inject AptoideMd5Manager aptoideMd5Manager;
-  @Inject UpdatesNotificationWorkerFactory updatesNotificationWorkerFactory;
+  @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
   private LeakTool leakTool;
@@ -278,8 +278,11 @@ public abstract class AptoideApplication extends Application {
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
+    DelegatingWorkerFactory factory = new DelegatingWorkerFactory();
+    factory.addFactory(aptoideWorkerFactory);
+
     androidx.work.Configuration configuration =
-        new androidx.work.Configuration.Builder().setWorkerFactory(updatesNotificationWorkerFactory)
+        new androidx.work.Configuration.Builder().setWorkerFactory(factory)
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .build();
     WorkManager.initialize(this, configuration);
