@@ -16,7 +16,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
-import androidx.work.DelegatingWorkerFactory;
 import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
 import cm.aptoide.accountmanager.AptoideAccountManager;
@@ -278,11 +277,8 @@ public abstract class AptoideApplication extends Application {
     UiModeManager uiModeManager = (UiModeManager) getSystemService(Context.UI_MODE_SERVICE);
     aptoideApplicationAnalytics = new AptoideApplicationAnalytics(analyticsManager);
 
-    DelegatingWorkerFactory factory = new DelegatingWorkerFactory();
-    factory.addFactory(aptoideWorkerFactory);
-
     androidx.work.Configuration configuration =
-        new androidx.work.Configuration.Builder().setWorkerFactory(factory)
+        new androidx.work.Configuration.Builder().setWorkerFactory(aptoideWorkerFactory)
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .build();
     WorkManager.initialize(this, configuration);

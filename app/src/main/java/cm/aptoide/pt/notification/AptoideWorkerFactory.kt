@@ -29,7 +29,7 @@ class AptoideWorkerFactory(private val updateRepository: UpdateRepository,
       UpdatesNotificationWorker::class.java.name ->
         UpdatesNotificationWorker(appContext, workerParameters, updateRepository,
             sharedPreferences, aptoideInstallManager, appMapper, updatesNotificationAnalytics)
-      CampaignNotificationWorker::class.java.name -> CampaignNotificationWorker(appContext,
+      NotificationWorker::class.java.name -> NotificationWorker(appContext,
           workerParameters, syncScheduler, syncStorage, crashReport)
       else ->
         null

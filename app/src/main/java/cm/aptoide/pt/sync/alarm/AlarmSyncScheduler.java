@@ -7,7 +7,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
-import cm.aptoide.pt.notification.CampaignNotificationWorker;
+import cm.aptoide.pt.notification.NotificationWorker;
 import cm.aptoide.pt.sync.Sync;
 import cm.aptoide.pt.sync.SyncScheduler;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +61,7 @@ public class AlarmSyncScheduler implements SyncScheduler {
         .build();
 
     PeriodicWorkRequest updatesWorkRequest =
-        new PeriodicWorkRequest.Builder(CampaignNotificationWorker.class, sync.getInterval(),
+        new PeriodicWorkRequest.Builder(NotificationWorker.class, sync.getInterval(),
             TimeUnit.MILLISECONDS).setInputData(data)
             .build();
 
@@ -78,7 +78,7 @@ public class AlarmSyncScheduler implements SyncScheduler {
         .build();
 
     OneTimeWorkRequest workRequest =
-        new OneTimeWorkRequest.Builder(CampaignNotificationWorker.class).setInputData(data)
+        new OneTimeWorkRequest.Builder(NotificationWorker.class).setInputData(data)
             .build();
 
     WorkManager.getInstance(context)

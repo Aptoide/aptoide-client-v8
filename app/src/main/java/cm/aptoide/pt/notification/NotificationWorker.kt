@@ -10,10 +10,10 @@ import cm.aptoide.pt.sync.SyncScheduler
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler
 import cm.aptoide.pt.sync.alarm.SyncStorage
 
-class CampaignNotificationWorker(context: Context, workerParameters: WorkerParameters,
-                                 private val scheduler: SyncScheduler,
-                                 private val storage: SyncStorage,
-                                 private val crashReport: CrashReport) :
+class NotificationWorker(context: Context, workerParameters: WorkerParameters,
+                         private val scheduler: SyncScheduler,
+                         private val storage: SyncStorage,
+                         private val crashReport: CrashReport) :
     Worker(context, workerParameters) {
 
 
