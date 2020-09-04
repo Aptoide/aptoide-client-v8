@@ -29,10 +29,6 @@ public class ScreenshotViewHolder extends RecyclerView.ViewHolder {
   private ImageView play_button;
   private FrameLayout media_layout;
 
-  ScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick) {
-    this(itemView, screenShotClick, -1);
-  }
-
   ScreenshotViewHolder(View itemView, PublishSubject<ScreenShotClickEvent> screenShotClick,
       int itemHeightDp) {
     super(itemView);
