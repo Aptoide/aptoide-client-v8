@@ -9,6 +9,7 @@ import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
@@ -33,7 +34,7 @@ public interface SearchResultView extends SearchSuggestionsView {
   void showResultsLoading();
 
   void addAllStoresResult(String query, List<SearchAppResult> dataList, boolean isLoadMore,
-      boolean hasMore);
+      boolean hasMore, boolean hasError, SearchResultError error);
 
   Model getViewModel();
 

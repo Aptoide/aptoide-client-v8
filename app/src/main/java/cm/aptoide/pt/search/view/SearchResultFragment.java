@@ -49,6 +49,7 @@ import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -257,11 +258,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
-      boolean isFreshResult, boolean hasMore) {
-    if (searchAppResults.size() > 0) {
-      hideLoading();
-      showResultsView();
-    }
+      boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
     if (isFreshResult) {
       searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
@@ -286,6 +283,20 @@ public class SearchResultFragment extends BackButtonFragment
       searchResultsAdapter.addResultForSearch(query, searchAppResults, hasMore);
     }
     viewModel.setLoadedResults(true);
+    hideLoading();
+    if (hasError) {
+      if (error == SearchResultError.NO_NETWORK) {
+        showNoNetworkView();
+      } else {
+        showGenericErrorView();
+      }
+    } else {
+      if (searchAppResults.size() <= 0) {
+        showNoResultsView();
+      } else {
+        showResultsView();
+      }
+    }
   }
 
   @Override public Model getViewModel() {

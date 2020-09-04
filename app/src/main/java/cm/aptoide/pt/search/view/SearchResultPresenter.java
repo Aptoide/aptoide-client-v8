@@ -18,8 +18,6 @@ import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.analytics.SearchSource;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
-import cm.aptoide.pt.search.model.SearchResult;
-import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.model.Source;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -112,7 +110,7 @@ import rx.schedulers.Schedulers;
             .observeOn(viewScheduler)
             .doOnNext(
                 result -> view.addAllStoresResult(result.getQuery(), result.getSearchResultsList(),
-                    result.isFreshResult(), result.hasMore()))
+                    result.isFreshResult(), result.hasMore(), result.hasError(), result.getError()))
             .observeOn(ioScheduler)
             .flatMap(searchResult -> searchManager.shouldLoadNativeAds()
                 .observeOn(viewScheduler)
@@ -123,22 +121,11 @@ import rx.schedulers.Schedulers;
                 })
                 .toObservable()
                 .map(___ -> searchResult))
-            .observeOn(viewScheduler)
             .doOnNext(searchResult -> {
-              view.hideLoading();
-              if (searchResult.hasError()) {
-                if (searchResult.getError() == SearchResultError.NO_NETWORK) {
-                  view.showNoNetworkView();
-                } else {
-                  view.showGenericErrorView();
-                }
-              } else {
-                if (getResultsCount(searchResult) <= 0) {
-                  view.showNoResultsView();
-                  analytics.searchNoResults(viewModel.getSearchQueryModel());
-                } else {
-                  view.showResultsView();
-                }
+              if (!searchResult.hasError()
+                  && searchResult.getSearchResultsList()
+                  .size() == 0) {
+                analytics.searchNoResults(viewModel.getSearchQueryModel());
               }
             }))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -372,15 +359,6 @@ import rx.schedulers.Schedulers;
     }
     // search every store. followed and not followed
     return searchManager.searchAppInStores(query, filters);
-  }
-
-  private int getResultsCount(SearchResult result) {
-    int count = 0;
-    if (!result.hasError()) {
-      count += result.getSearchResultsList()
-          .size();
-    }
-    return count;
   }
 
   @VisibleForTesting public void doFirstSearch() {
