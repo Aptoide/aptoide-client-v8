@@ -50,9 +50,9 @@ class SearchResultViewHolder(itemView: View,
   }
 
   fun setDownloadStatus(app: SearchAppResult) {
-    val downloadModel = app.getDownloadModel()
+    val downloadModel = app.downloadModel
     if (app.isHighlightedResult && downloadModel != null) {
-      downloadViewStatusHelper.setDownloadStatus(app, itemView.install_button,
+      downloadViewStatusHelper.setDownloadStatus(app.download, itemView.install_button,
           itemView.download_progress_view)
       setupMediaAdapter(app.screenshots)
       itemView.media_rv.visibility = View.VISIBLE
@@ -69,9 +69,9 @@ class SearchResultViewHolder(itemView: View,
   }
 
   private fun setAppInfo(result: SearchAppResult) {
-    itemView.app_name.text = result.getAppName()
+    itemView.app_name.text = result.appName
     itemView.downloads.text = result.totalDownloads.let { AptoideUtils.StringU.withSuffix(it) }
-    ImageLoader.with(itemView.app_icon.context).load(result.getIcon(), itemView.app_icon)
+    ImageLoader.with(itemView.app_icon.context).load(result.icon, itemView.app_icon)
 
     val avgRating = result.averageRating
     if (avgRating <= 0) {
@@ -81,7 +81,7 @@ class SearchResultViewHolder(itemView: View,
       itemView.rating.text = DecimalFormat("0.0").format(avgRating.toDouble())
     }
 
-    itemView.store_name.text = result.getStoreName()
+    itemView.store_name.text = result.storeName
     appInfoViewHolder.setInfo(result.hasBilling() || result.hasAdvertising(), result.averageRating,
         false, false)
 
@@ -107,7 +107,8 @@ class SearchResultViewHolder(itemView: View,
     itemView.setOnClickListener {
       itemClickSubject.onNext(SearchAppResultWrapper(query, result, adapterPosition))
     }
-    downloadViewStatusHelper.setupListeners(result, downloadClickSubject, itemView.install_button,
+    downloadViewStatusHelper.setupListeners(result.download, downloadClickSubject,
+        itemView.install_button,
         itemView.download_progress_view)
   }
 

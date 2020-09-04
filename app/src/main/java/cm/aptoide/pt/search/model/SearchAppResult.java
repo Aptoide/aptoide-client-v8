@@ -6,42 +6,22 @@ import cm.aptoide.pt.dataprovider.model.v7.Obb;
 import cm.aptoide.pt.download.view.Download;
 import cm.aptoide.pt.download.view.DownloadStatusModel;
 import cm.aptoide.pt.view.app.AppScreenshot;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
-public class SearchAppResult implements Download, SearchItem {
+public class SearchAppResult implements SearchItem {
   private int rank;
-  private String icon;
-  private String storeName;
   private Long storeId;
   private String storeTheme;
   private long modifiedDate;
   private float averageRating;
   private long totalDownloads;
-  private String appName;
-  private String packageName;
-  private String md5;
-  private long appId;
   private boolean hasOtherVersions;
-  private boolean billing;
-  private boolean advertising;
-  private int versionCode;
-  private long size;
-  private String versionName;
-  private String path;
-  private String pathAlt;
-  private Malware malware;
-  private String oemId;
-
   private boolean isHighlightedResult;
 
-  private Obb obb;
-  private List<Split> splits;
-  private List<String> requiredSplits;
-  private DownloadStatusModel downloadModel;
   private List<AppScreenshot> screenshots;
+
+  private Download download;
 
   public SearchAppResult() {
   }
@@ -54,36 +34,19 @@ public class SearchAppResult implements Download, SearchItem {
       List<String> requiredSplits, List<Split> splits, DownloadStatusModel downloadModel,
       List<AppScreenshot> screenshots) {
     this.rank = rank;
-    this.icon = icon;
-    this.storeName = storeName;
     this.storeTheme = storeTheme;
     this.modifiedDate = modifiedDate;
     this.averageRating = averageRating;
     this.totalDownloads = totalDownloads;
-    this.appName = appName;
-    this.packageName = packageName;
-    this.appId = appId;
     this.hasOtherVersions = hasOtherVersions;
-    this.billing = billing;
-    this.advertising = advertising;
     this.storeId = storeId;
-    this.md5 = md5;
-    this.versionName = versionName;
-    this.versionCode = versionCode;
-    this.path = path;
-    this.pathAlt = pathAlt;
-    this.malware = malware;
-    this.size = size;
-    this.oemId = oemId;
     this.isHighlightedResult = isHighlightedResult;
-
-    this.splits = Collections.emptyList();
-    this.requiredSplits = Collections.emptyList();
-    this.obb = obb;
-    this.splits = splits;
-    this.requiredSplits = requiredSplits;
-    this.downloadModel = downloadModel;
     this.screenshots = screenshots;
+
+    this.download =
+        new Download(appId, appName, packageName, md5, versionName, versionCode, icon, path,
+            pathAlt, size, obb, storeName, advertising, billing, malware, splits, requiredSplits,
+            oemId, downloadModel);
   }
 
   public SearchAppResult(SearchAppResult app, DownloadStatusModel downloadModel,
@@ -97,30 +60,16 @@ public class SearchAppResult implements Download, SearchItem {
         downloadModel, screenshots);
   }
 
-  private static List<Split> map(List<cm.aptoide.pt.dataprovider.model.v7.Split> splits) {
-    List<Split> splitsMapResult = new ArrayList<>();
-
-    if (splits == null) return splitsMapResult;
-
-    for (cm.aptoide.pt.dataprovider.model.v7.Split split : splits) {
-      splitsMapResult.add(
-          new Split(split.getName(), split.getType(), split.getPath(), split.getFilesize(),
-              split.getMd5sum()));
-    }
-
-    return splitsMapResult;
-  }
-
   public int getRank() {
     return rank;
   }
 
   public String getIcon() {
-    return icon;
+    return download.getIcon();
   }
 
   public String getStoreName() {
-    return storeName;
+    return download.getStoreName();
   }
 
   public String getStoreTheme() {
@@ -140,15 +89,15 @@ public class SearchAppResult implements Download, SearchItem {
   }
 
   public String getAppName() {
-    return appName;
+    return download.getAppName();
   }
 
   public String getPackageName() {
-    return packageName;
+    return download.getPackageName();
   }
 
   public long getAppId() {
-    return appId;
+    return download.getAppId();
   }
 
   public boolean hasOtherVersions() {
@@ -156,11 +105,11 @@ public class SearchAppResult implements Download, SearchItem {
   }
 
   public boolean hasAdvertising() {
-    return this.advertising;
+    return download.getHasAdvertising();
   }
 
   public boolean hasBilling() {
-    return this.billing;
+    return download.getHasBilling();
   }
 
   public boolean isAppcApp() {
@@ -171,56 +120,60 @@ public class SearchAppResult implements Download, SearchItem {
     return storeId;
   }
 
-  @Override public String getMd5() {
-    return md5;
+  public String getMd5() {
+    return download.getMd5();
   }
 
-  @Override public int getVersionCode() {
-    return versionCode;
+  public int getVersionCode() {
+    return download.getVersionCode();
   }
 
-  @Override public String getVersionName() {
-    return versionName;
+  public String getVersionName() {
+    return download.getVersionName();
   }
 
-  @Override public String getPath() {
-    return path;
+  public String getPath() {
+    return download.getPath();
   }
 
-  @Override public String getPathAlt() {
-    return pathAlt;
+  public String getPathAlt() {
+    return download.getPathAlt();
   }
 
-  @Override public Obb getObb() {
-    return obb;
+  public Obb getObb() {
+    return download.getObb();
   }
 
-  @Override public Malware getMalware() {
-    return malware;
+  public Malware getMalware() {
+    return download.getMalware();
   }
 
-  @Override public long getSize() {
-    return size;
+  public long getSize() {
+    return download.getSize();
   }
 
-  @Override public List<Split> getSplits() {
-    return splits;
+  public List<Split> getSplits() {
+    return download.getSplits();
   }
 
-  @Override public List<String> getRequiredSplits() {
-    return requiredSplits;
+  public List<String> getRequiredSplits() {
+    return download.getRequiredSplits();
   }
 
-  @Override public DownloadStatusModel getDownloadModel() {
-    return downloadModel;
+  public DownloadStatusModel getDownloadModel() {
+    return download.getDownloadModel();
   }
 
   public List<AppScreenshot> getScreenshots() {
     return screenshots;
   }
 
-  @Override public String getOemId() {
-    return oemId;
+  public String getOemId() {
+    return download.getOemId();
+  }
+
+  public Download getDownload() {
+    return download;
   }
 
   public boolean isHighlightedResult() {
@@ -232,6 +185,6 @@ public class SearchAppResult implements Download, SearchItem {
   }
 
   @Override public long getId() {
-    return SearchItem.Type.APP.ordinal() + appId;
+    return SearchItem.Type.APP.ordinal() + download.getAppId();
   }
 }

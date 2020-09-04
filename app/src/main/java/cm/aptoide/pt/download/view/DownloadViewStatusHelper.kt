@@ -38,7 +38,7 @@ class DownloadViewStatusHelper(val context: Context) {
 
   fun setDownloadStatus(download: Download, installButton: Button,
                         downloadProgressView: DownloadProgressView) {
-    download.getDownloadModel()?.let { downloadModel ->
+    download.downloadModel?.let { downloadModel ->
       if (downloadModel.isDownloadingOrInstalling()) {
         setDownloadState(downloadProgressView, downloadModel.progress, downloadModel.downloadState)
         installButton.visibility = View.GONE

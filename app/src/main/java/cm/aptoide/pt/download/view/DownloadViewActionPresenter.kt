@@ -28,20 +28,20 @@ import rx.Scheduler
  * To update a view based on a Download object, consider observing [DownloadStatusModel] using
  * [DownloadStatusManager] and rendering [Download] to views using [DownloadViewStatusHelper]
  */
-open class DownloadViewActionPresenter(val installManager: InstallManager,
-                                       val moPubAdsManager: MoPubAdsManager,
-                                       val permissionManager: PermissionManager,
-                                       val appcMigrationManager: AppcMigrationManager,
-                                       val downloadDialogProvider: DownloadDialogProvider,
-                                       val downloadNavigator: DownloadNavigator,
-                                       val permissionService: PermissionService,
-                                       val ioScheduler: Scheduler,
-                                       val viewScheduler: Scheduler,
-                                       val downloadFactory: DownloadFactory,
-                                       val downloadAnalytics: DownloadAnalytics,
-                                       val installAnalytics: InstallAnalytics,
-                                       val notificationAnalytics: NotificationAnalytics,
-                                       val crashReport: CrashReport) :
+open class DownloadViewActionPresenter(private val installManager: InstallManager,
+                                       private val moPubAdsManager: MoPubAdsManager,
+                                       private val permissionManager: PermissionManager,
+                                       private val appcMigrationManager: AppcMigrationManager,
+                                       private val downloadDialogProvider: DownloadDialogProvider,
+                                       private val downloadNavigator: DownloadNavigator,
+                                       private val permissionService: PermissionService,
+                                       private val ioScheduler: Scheduler,
+                                       private val viewScheduler: Scheduler,
+                                       private val downloadFactory: DownloadFactory,
+                                       private val downloadAnalytics: DownloadAnalytics,
+                                       private val installAnalytics: InstallAnalytics,
+                                       private val notificationAnalytics: NotificationAnalytics,
+                                       private val crashReport: CrashReport) :
     ActionPresenter<DownloadClick>() {
 
   private lateinit var analyticsContext: DownloadAnalytics.AppContext
@@ -79,7 +79,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
   }
 
   private fun installApp(downloadClick: DownloadClick): Completable {
-    when (downloadClick.download.getDownloadModel()?.action) {
+    when (downloadClick.download.downloadModel?.action) {
       DownloadStatusModel.Action.MIGRATE,
       DownloadStatusModel.Action.UPDATE,
       DownloadStatusModel.Action.INSTALL -> {
@@ -91,7 +91,7 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
             .flatMapCompletable { status -> downgradeApp(downloadClick.download, status) }
       }
       DownloadStatusModel.Action.OPEN -> {
-        return downloadNavigator.openApp(downloadClick.download.getPackageName())
+        return downloadNavigator.openApp(downloadClick.download.packageName)
       }
       else -> {
         return Completable.complete()
@@ -121,20 +121,20 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
         .observeOn(viewScheduler)
         .flatMap {
           permissionManager.requestDownloadAccessWithWifiBypass(permissionService,
-              download.getSize())
+              download.size)
               .flatMap { permissionManager.requestExternalStoragePermission(permissionService) }
               .observeOn(ioScheduler)
               .flatMapCompletable {
                 createDownload(download, status)
                     .doOnNext { roomDownload ->
-                      setupDownloadEvents(roomDownload, download.getAppId(),
-                          download.getDownloadModel()!!.action, status, download.getStoreName(),
-                          download.getMalware().rank.name)
-                      if (DownloadStatusModel.Action.MIGRATE == download.getDownloadModel()!!.action) {
-                        installAnalytics.uninstallStarted(download.getPackageName(),
+                      setupDownloadEvents(roomDownload, download.appId,
+                          download.downloadModel!!.action, status, download.storeName,
+                          download.malware.rank.name)
+                      if (DownloadStatusModel.Action.MIGRATE == download.downloadModel.action) {
+                        installAnalytics.uninstallStarted(download.packageName,
                             AnalyticsManager.Action.INSTALL,
                             analyticsContext)
-                        appcMigrationManager.addMigrationCandidate(download.getPackageName())
+                        appcMigrationManager.addMigrationCandidate(download.packageName)
                       }
                     }
                     .flatMapCompletable { download -> installManager.install(download) }
@@ -150,36 +150,36 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
                              offerResponseStatus: OfferResponseStatus): Observable<RoomDownload> {
     return Observable.just(
         downloadFactory.create(
-            parseDownloadAction(download.getDownloadModel()!!.action),
-            download.getAppName(), download.getPackageName(), download.getMd5(), download.getIcon(),
-            download.getVersionName(), download.getVersionCode(), download.getPath(),
-            download.getPathAlt(),
-            download.getObb(), download.hasAdvertising() || download.hasBilling(),
-            download.getSize(),
-            download.getSplits(), download.getRequiredSplits(),
-            download.getMalware().rank.toString(), download.getStoreName(), download.getOemId()))
+            parseDownloadAction(download.downloadModel!!.action),
+            download.appName, download.packageName, download.md5, download.icon,
+            download.versionName, download.versionCode, download.path,
+            download.pathAlt,
+            download.obb, download.hasAdvertising || download.hasBilling,
+            download.size,
+            download.splits, download.requiredSplits,
+            download.malware.rank.toString(), download.storeName, download.oemId))
         .doOnError { throwable ->
           if (throwable is InvalidAppException) {
-            downloadAnalytics.sendAppNotValidError(download.getPackageName(),
-                download.getVersionCode(),
-                mapDownloadAction(download.getDownloadModel()!!.action), offerResponseStatus,
-                download.getDownloadModel()!!.action == DownloadStatusModel.Action.MIGRATE,
-                download.getSplits().isNotEmpty(),
-                download.hasAdvertising() || download.hasBilling(), download.getMalware()
+            downloadAnalytics.sendAppNotValidError(download.packageName,
+                download.versionCode,
+                mapDownloadAction(download.downloadModel.action), offerResponseStatus,
+                download.downloadModel.action == DownloadStatusModel.Action.MIGRATE,
+                download.splits.isNotEmpty(),
+                download.hasAdvertising || download.hasBilling, download.malware
                 .rank
-                .toString(), download.getStoreName(), isInApkfyContext, throwable)
+                .toString(), download.storeName, isInApkfyContext, throwable)
           }
         }
   }
 
   private fun resumeDownload(downloadClick: DownloadClick): Completable {
-    return installManager.getDownload(downloadClick.download.getMd5())
+    return installManager.getDownload(downloadClick.download.md5)
         .flatMap { download ->
           moPubAdsManager.adsVisibilityStatus
               .doOnSuccess { status ->
                 val dl = downloadClick.download
-                setupDownloadEvents(download, dl.getAppId(), dl.getDownloadModel()!!.action, status,
-                    dl.getStoreName(), dl.getMalware().rank.name)
+                setupDownloadEvents(download, dl.appId, dl.downloadModel!!.action, status,
+                    dl.storeName, dl.malware.rank.name)
               }.map { download }
         }
         .doOnError { throwable -> throwable.printStackTrace() }
@@ -188,15 +188,15 @@ open class DownloadViewActionPresenter(val installManager: InstallManager,
 
   private fun pauseDownload(downloadClick: DownloadClick): Completable {
     return Completable.fromAction {
-      downloadAnalytics.downloadInteractEvent(downloadClick.download.getPackageName(), "pause")
-    }.andThen(installManager.pauseInstall(downloadClick.download.getMd5()))
+      downloadAnalytics.downloadInteractEvent(downloadClick.download.packageName, "pause")
+    }.andThen(installManager.pauseInstall(downloadClick.download.md5))
   }
 
   private fun cancelDownload(downloadClick: DownloadClick): Completable {
     return Completable.fromAction {
-      downloadAnalytics.downloadInteractEvent(downloadClick.download.getPackageName(), "cancel")
-    }.andThen(installManager.cancelInstall(downloadClick.download.getMd5(),
-        downloadClick.download.getPackageName(), downloadClick.download.getVersionCode()))
+      downloadAnalytics.downloadInteractEvent(downloadClick.download.packageName, "cancel")
+    }.andThen(installManager.cancelInstall(downloadClick.download.md5,
+        downloadClick.download.packageName, downloadClick.download.versionCode))
   }
 
 

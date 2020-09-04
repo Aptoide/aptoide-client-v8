@@ -26,6 +26,8 @@ import rx.Single
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
 import java.net.UnknownHostException
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SearchRepository(val storeRepository: RoomStoreRepository,
@@ -180,8 +182,8 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private fun mapToSearchAppResult(app: SearchApp, oemid: String,
                                    isHighlighted: Boolean): SearchAppResult {
-    var requiredSplits: List<String>? = null
-    var splits: List<cm.aptoide.pt.dataprovider.model.v7.Split>? = null
+    var requiredSplits: List<String>? = Collections.emptyList()
+    var splits: List<cm.aptoide.pt.dataprovider.model.v7.Split>? = Collections.emptyList()
     app.aab?.let { aab ->
       requiredSplits = aab.requiredSplits
       splits = aab.splits
