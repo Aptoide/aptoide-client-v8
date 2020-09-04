@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.pt.dataprovider.model.v1.GetPullNotificationsResponse;
+import cm.aptoide.pt.dataprovider.ws.v1.notification.PullCampaignNotificationsRequest;
 import cm.aptoide.pt.networking.IdsRepository;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,24 +39,16 @@ public class NotificationService {
   }
 
   public Single<List<AptoideNotification>> getCampaignNotifications() {
-    List<AptoideNotification> aptoideNotifications = new LinkedList<>();
-    aptoideNotifications.add(new AptoideNotification("These are the most installed apps by Minecraft players - check it out!", "http://pool.img.aptoide.com/pietrogamer95/9fd8d2439b492585e62b762cafc67020_icon.png",
-        "Do you like Minecraft?", "https://en.aptoide.com/editorial/tops-of-the-tops", AptoideNotification.CAMPAIGN, "appName",
-        "", AptoideNotification.NOT_DISMISSED, "id", "",
-        "", false, System.currentTimeMillis(),
-        100000000L, "",
-        123456, "en", -1));
-    return Single.just(aptoideNotifications);
-    //return idsRepository.getUniqueIdentifier()
-    //    .flatMapObservable(
-    //        id -> PullCampaignNotificationsRequest.of(id, versionName, applicationId, httpClient,
-    //            converterFactory, extraId, sharedPreferences, resources)
-    //            .observe())
-    //    .flatMap(response -> accountManager.accountStatus()
-    //        .first()
-    //        .map(account -> convertCampaignNotifications(response, account.getId())))
-    //    .first()
-    //    .toSingle();
+    return idsRepository.getUniqueIdentifier()
+        .flatMapObservable(
+            id -> PullCampaignNotificationsRequest.of(id, versionName, applicationId, httpClient,
+                converterFactory, extraId, sharedPreferences, resources)
+                .observe())
+        .flatMap(response -> accountManager.accountStatus()
+            .first()
+            .map(account -> convertCampaignNotifications(response, account.getId())))
+        .first()
+        .toSingle();
   }
 
   private List<AptoideNotification> convertCampaignNotifications(
