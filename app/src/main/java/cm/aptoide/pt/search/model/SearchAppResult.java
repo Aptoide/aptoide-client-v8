@@ -37,7 +37,6 @@ public class SearchAppResult implements Download, SearchItem {
 
   private boolean isHighlightedResult;
 
-  // TODO: Missing from WS
   private Obb obb;
   private List<Split> splits;
   private List<String> requiredSplits;
