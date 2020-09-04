@@ -2,7 +2,6 @@ package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.UiModeManager;
 import android.content.ContentResolver;
@@ -210,12 +209,12 @@ import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
+import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
-import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -253,7 +252,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
-import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
@@ -323,7 +321,6 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.UI_MODE_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
@@ -907,8 +904,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
-    return new AlarmSyncScheduler(application, AlarmSyncService.class,
-        (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
+    return new AlarmSyncScheduler(application, syncStorage);
   }
 
   @Singleton @Provides SyncStorage provideSyncStorage(
@@ -2109,12 +2105,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
   }
 
-  @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
+  @Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
       UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
       AptoideInstallManager aptoideInstallManager,
-      UpdatesNotificationAnalytics updatesNotificationAnalytics) {
-    return new UpdatesNotificationWorkerFactory(updateRepository, sharedPreferences,
-        aptoideInstallManager, new AppMapper(), updatesNotificationAnalytics);
+      UpdatesNotificationAnalytics updatesNotificationAnalytics, SyncScheduler syncScheduler,
+      SyncStorage syncStorage, CrashReport crashReport) {
+    return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
+        new AppMapper(), updatesNotificationAnalytics, syncScheduler, syncStorage, crashReport);
   }
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager(
