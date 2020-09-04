@@ -131,6 +131,8 @@ public class SearchResultFragment extends BackButtonFragment
   private RxAlertDialog enableAdultContentDialog;
   private InputDialog enableAdultContentDialogWithPin;
   private PublishSubject<Void> noResultsPublishSubject;
+  private PublishSubject<Void> filtersChanged;
+  private PublishSubject<Void> searchHasNoResults;
 
   private CardView filtersCardView;
   private FiltersView filtersView;
@@ -207,6 +209,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void showNoResultsView() {
+    searchHasNoResults.onNext(null);
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
@@ -508,11 +511,16 @@ public class SearchResultFragment extends BackButtonFragment
 
   @Override public Observable<List<Filter>> filtersChangeEvents() {
     return filtersView.filtersChangedEvents()
-        .doOnNext(filters -> viewModel.setFilters(filters));
+        .doOnNext(filters -> viewModel.setFilters(filters))
+        .doOnNext(__ -> filtersChanged.onNext(null));
   }
 
   @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
     return screenShotClick;
+  }
+
+  private Observable<Void> searchHasNoResults() {
+    return searchHasNoResults;
   }
 
   public void showSuggestionsView() {
@@ -547,11 +555,16 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private Observable<Void> recyclerViewReachedBottom(RecyclerView recyclerView) {
-    return RxRecyclerView.scrollEvents(recyclerView)
-        .map(this::isEndReached)
+    return Observable.merge(RxRecyclerView.scrollEvents(recyclerView)
+            .map(this::isEndReached), filtersChanged().map(__ -> false),
+        searchHasNoResults().map(__ -> true))
         .distinctUntilChanged()
         .filter(isEnd -> isEnd)
         .map(__ -> null);
+  }
+
+  private Observable<Void> filtersChanged() {
+    return filtersChanged;
   }
 
   private boolean isEndReached(RecyclerViewScrollEvent event) {
@@ -604,6 +617,8 @@ public class SearchResultFragment extends BackButtonFragment
 
     noResultsAdultContentSubject = PublishSubject.create();
     noResultsPublishSubject = PublishSubject.create();
+    filtersChanged = PublishSubject.create();
+    searchHasNoResults = PublishSubject.create();
 
     searchResultsAdapter =
         new SearchResultAdapter(onItemViewClickSubject, downloadClickPublishSubject,
