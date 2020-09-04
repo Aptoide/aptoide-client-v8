@@ -168,7 +168,6 @@ import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
 import cm.aptoide.pt.store.RoomStoreRepository;
-import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -328,18 +327,11 @@ import rx.subscriptions.CompositeSubscription;
         bottomNavigationMapper, Schedulers.io(), downloadViewActionPresenter);
   }
 
-  @FragmentScope @Provides SearchManager providesSearchManager(@Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      SearchRepository searchRepository, RoomStoreRepository storeRepository,
+  @FragmentScope @Provides SearchManager providesSearchManager(AptoideAccountManager accountManager,
+      MoPubAdsManager moPubAdsManager, SearchRepository searchRepository,
       DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
-    return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
-        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        searchRepository, downloadStatusManager, appCenter);
+    return new SearchManager(accountManager, moPubAdsManager, searchRepository,
+        downloadStatusManager, appCenter);
   }
 
   @FragmentScope @Provides SearchRepository providesSearchRepository(
