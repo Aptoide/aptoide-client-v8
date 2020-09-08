@@ -136,6 +136,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   private CardView filtersCardView;
   private FiltersView filtersView;
+  private boolean isFreshLoading = false;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -247,17 +248,20 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setVisibility(View.GONE);
     noSearchLayout.setVisibility(View.GONE);
 
-    LayoutAnimationController layoutAnimationController =
-        AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
-    layoutAnimationController.getAnimation()
-        .setFillAfter(true);
-    searchResultList.setLayoutAnimation(layoutAnimationController);
-    searchResultList.scheduleLayoutAnimation();
+    if (!isFreshLoading) {
+      isFreshLoading = true;
+      LayoutAnimationController layoutAnimationController =
+          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
+      layoutAnimationController.getAnimation()
+          .setFillAfter(true);
+      searchResultList.setLayoutAnimation(layoutAnimationController);
+      searchResultList.scheduleLayoutAnimation();
 
-    progressBarResults.setVisibility(VISIBLE);
-    Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
-    animation.setFillAfter(true);
-    progressBarResults.startAnimation(animation);
+      progressBarResults.setVisibility(VISIBLE);
+      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
+      animation.setFillAfter(true);
+      progressBarResults.startAnimation(animation);
+    }
   }
 
   @Override public void showMoreLoading() {
@@ -267,6 +271,7 @@ public class SearchResultFragment extends BackButtonFragment
   @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
       boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
     if (isFreshResult) {
+      isFreshLoading = false;
       searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);

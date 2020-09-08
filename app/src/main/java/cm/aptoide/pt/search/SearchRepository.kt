@@ -25,6 +25,7 @@ import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
 import rx.subjects.BehaviorSubject
+import rx.subjects.PublishSubject
 import java.net.UnknownHostException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -41,7 +42,9 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private var cachedSearchResults: SearchResult? = null
   private val resultsSubject: BehaviorSubject<SearchResult> = BehaviorSubject.create()
-  private var loading = false
+
+  private val cancelationSubject: PublishSubject<Void> = PublishSubject.create()
+  private var loadingMore = false
 
   fun observeSearchResults(): Observable<SearchResult> {
     return resultsSubject
@@ -68,16 +71,20 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       if (activeResults.query == query && activeResults.specificStore == specificStore
           && filters == activeResults.filters && !activeResults.hasError()) {
         if (activeResults.hasMore()) {
-          if (loading) {
+          if (loadingMore) {
             return Completable.complete()
           }
           return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
               specificStore)
+              .toObservable()
+              .takeUntil(cancelationSubject)
+              .defaultIfEmpty(null)
+              .toSingle()
               .flatMapCompletable { results -> updateMemCache(results) }
-              .doOnSubscribe { loading = true }
-              .doOnUnsubscribe { loading = false }
-              .doOnTerminate { loading = false }
-              .doOnError { loading = false }
+              .doOnSubscribe { loadingMore = true }
+              .doOnUnsubscribe { loadingMore = false }
+              .doOnTerminate { loadingMore = false }
+              .doOnError { loadingMore = false }
         }
         return Completable.fromAction {
           resultsSubject.onNext(activeResults)
@@ -88,7 +95,14 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
     // E.g. Active Filters: F1 , then F1 & F2, then back to F1 before the 2nd response is retrieved
     // Without setting to null, the third request (last F1) will have the offsets of the first F1.
     cachedSearchResults = null
+    // We also cancel emitting/storing any other responses from other requests if still ongoing
+    cancelationSubject.onNext(null)
+
     return requestSearchResults(query, filters, 0, matureEnabled, specificStore)
+        .toObservable()
+        .takeUntil(cancelationSubject)
+        .defaultIfEmpty(null)
+        .toSingle()
         .flatMapCompletable { results -> updateMemCache(results) }
   }
 
