@@ -260,6 +260,10 @@ public class SearchResultFragment extends BackButtonFragment
     progressBarResults.startAnimation(animation);
   }
 
+  @Override public void showMoreLoading() {
+    searchResultsAdapter.setMoreLoading();
+  }
+
   @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
       boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
     if (isFreshResult) {

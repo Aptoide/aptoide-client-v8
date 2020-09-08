@@ -29,6 +29,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showLoading();
 
+  void showMoreLoading();
+
   void hideLoading();
 
   void showResultsLoading();

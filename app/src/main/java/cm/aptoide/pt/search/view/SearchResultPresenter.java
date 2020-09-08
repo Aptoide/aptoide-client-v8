@@ -226,6 +226,7 @@ import rx.schedulers.Schedulers;
         .flatMap(__ -> view.searchResultsReachedBottom())
         .map(__ -> view.getViewModel())
         .observeOn(viewScheduler)
+        .doOnNext(__ -> view.showMoreLoading())
         .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
             .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))

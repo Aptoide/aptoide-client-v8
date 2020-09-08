@@ -96,9 +96,10 @@ public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResul
       boolean hasMore) {
     this.query = query;
     searchResults = new ArrayList<>(searchAppResults);
-    if (hasMore) {
-      searchResults.add(new SearchLoadingItem());
-    }
+    // TODO
+    //if (hasMore) {
+    //  searchResults.add(new SearchLoadingItem());
+    //}
     notifyDataSetChanged();
   }
 
@@ -106,11 +107,29 @@ public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResul
       boolean hasMore) {
     this.query = query;
     List<SearchItem> newList = new ArrayList<>(searchAppResults);
-    if (hasMore) {
-      newList.add(new SearchLoadingItem());
-    }
+    // TODO: Add this back when WS are fixed
+    //if (hasMore) {
+    //  newList.add(new SearchLoadingItem());
+    //}
     applyDiffUtil(new DiffRequest<>(newList,
         new SearchItemDiffCallback(new ArrayList<>(searchResults), newList)));
+  }
+
+  public void setMoreLoading() {
+    if (hasLoadingItem()) return;
+    List<SearchItem> newList = new ArrayList<>(searchResults);
+    newList.add(new SearchLoadingItem());
+    applyDiffUtil(new DiffRequest<>(newList,
+        new SearchItemDiffCallback(new ArrayList<>(searchResults), newList)));
+  }
+
+  private boolean hasLoadingItem() {
+    for (SearchItem item : searchResults) {
+      if (item instanceof SearchLoadingItem) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override public void dispatchUpdates(@NotNull List<? extends SearchItem> newItems,
