@@ -41,6 +41,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
 
   private var cachedSearchResults: SearchResult? = null
   private val resultsSubject: BehaviorSubject<SearchResult> = BehaviorSubject.create()
+  private var loading = false
 
   fun observeSearchResults(): Observable<SearchResult> {
     return resultsSubject
@@ -67,9 +68,16 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
       if (activeResults.query == query && activeResults.specificStore == specificStore
           && filters == activeResults.filters && !activeResults.hasError()) {
         if (activeResults.hasMore()) {
+          if (loading) {
+            return Completable.complete()
+          }
           return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
               specificStore)
               .flatMapCompletable { results -> updateMemCache(results) }
+              .doOnSubscribe { loading = true }
+              .doOnUnsubscribe { loading = false }
+              .doOnTerminate { loading = false }
+              .doOnError { loading = false }
         }
         return Completable.fromAction {
           resultsSubject.onNext(activeResults)
