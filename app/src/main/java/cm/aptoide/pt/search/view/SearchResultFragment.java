@@ -29,6 +29,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.analytics.implementation.navigation.ScreenTagHistory;
@@ -39,16 +40,16 @@ import cm.aptoide.pt.BuildConfig;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.ads.MoPubBannerAdListener;
 import cm.aptoide.pt.ads.MoPubNativeAdsListener;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationActivity;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.search.SearchResultDiffModel;
-import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAdResultWrapper;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.model.SearchViewModel;
 import cm.aptoide.pt.search.model.Suggestion;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
@@ -63,7 +64,6 @@ import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.jakewharton.rxbinding.support.v7.widget.RxToolbar;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxrelay.PublishRelay;
 import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.InMobiNativeAdRenderer;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
@@ -100,16 +100,17 @@ public class SearchResultFragment extends BackButtonFragment
   private View searchResultsLayout;
   private ProgressBar progressBar;
   private ProgressBar progressBarResults;
-  private RecyclerView allStoresResultList;
+  private RecyclerView searchResultList;
   private RecyclerView suggestionsResultList;
   private RecyclerView trendingResultList;
   private SearchViewModel viewModel;
-  private SearchResultAdapter allStoresResultAdapter;
+  private SearchResultAdapter searchResultsAdapter;
   private SearchSuggestionsAdapter searchSuggestionsAdapter;
   private SearchSuggestionsAdapter searchTrendingAdapter;
   private Toolbar toolbar;
-  private PublishRelay<SearchAppResultWrapper> onItemViewClickRelay;
-  private PublishRelay<SearchAdResultWrapper> onAdClickRelay;
+  private PublishSubject<SearchAppResultWrapper> onItemViewClickSubject;
+  private PublishSubject<DownloadClick> downloadClickPublishSubject;
+  private PublishSubject<ScreenShotClickEvent> screenShotClick;
   private PublishSubject<SearchQueryEvent> suggestionClickedPublishSubject;
   private PublishSubject<SearchQueryEvent> queryTextChangedPublisher;
   private MenuItem searchMenuItem;
@@ -135,6 +136,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   private CardView filtersCardView;
   private FiltersView filtersView;
+  private boolean isFreshLoading = false;
 
   public static SearchResultFragment newInstance(SearchQueryModel searchQueryModel) {
     return newInstance(searchQueryModel, false);
@@ -177,7 +179,7 @@ public class SearchResultFragment extends BackButtonFragment
 
   private void findChildViews(View view) {
     filtersCardView = view.findViewById(R.id.filters_card_view);
-    allStoresResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
+    searchResultList = view.findViewById(R.id.fragment_search_result_all_stores_app_list);
 
     suggestionsResultList = view.findViewById(R.id.suggestions_list);
 
@@ -212,7 +214,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
-    allStoresResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     noResults = true;
@@ -226,7 +228,7 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(VISIBLE);
+    searchResultList.setVisibility(VISIBLE);
     searchResultsLayout.setVisibility(View.VISIBLE);
   }
 
@@ -246,49 +248,35 @@ public class SearchResultFragment extends BackButtonFragment
     errorView.setVisibility(View.GONE);
     noSearchLayout.setVisibility(View.GONE);
 
-    LayoutAnimationController layoutAnimationController =
-        AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
-    layoutAnimationController.getAnimation()
-        .setFillAfter(true);
-    allStoresResultList.setLayoutAnimation(layoutAnimationController);
-    allStoresResultList.scheduleLayoutAnimation();
+    if (!isFreshLoading) {
+      isFreshLoading = true;
+      LayoutAnimationController layoutAnimationController =
+          AnimationUtils.loadLayoutAnimation(getContext(), R.anim.exit_list_apps_anim);
+      layoutAnimationController.getAnimation()
+          .setFillAfter(true);
+      searchResultList.setLayoutAnimation(layoutAnimationController);
+      searchResultList.scheduleLayoutAnimation();
 
-    progressBarResults.setAnimation(null);
-    progressBarResults.setVisibility(VISIBLE);
-    Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
-    animation.setFillAfter(true);
-    animation.setAnimationListener(new Animation.AnimationListener() {
-      @Override public void onAnimationStart(Animation animation) {
-
-      }
-
-      @Override public void onAnimationEnd(Animation animation) {
-        progressBarResults.setVisibility(View.GONE);
-      }
-
-      @Override public void onAnimationRepeat(Animation animation) {
-
-      }
-    });
-    progressBarResults.startAnimation(animation);
+      progressBarResults.setVisibility(VISIBLE);
+      Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_appear);
+      animation.setFillAfter(true);
+      progressBarResults.startAnimation(animation);
+    }
   }
 
-  @Override
-  public void addAllStoresResult(String query, SearchResultDiffModel searchResultDiffModel,
-      boolean isLoadMore) {
-    if (searchResultDiffModel.getSearchResultsList()
-        .size() > 0) {
-      hideLoading();
-      showResultsView();
-    }
-    if (!isLoadMore) {
-      allStoresResultAdapter.setResultForSearch(query, searchResultDiffModel);
-      progressBarResults.setAnimation(null);
+  @Override public void showMoreLoading() {
+    searchResultsAdapter.setMoreLoading();
+  }
+
+  @Override public void addAllStoresResult(String query, List<SearchAppResult> searchAppResults,
+      boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
+    if (isFreshResult) {
+      isFreshLoading = false;
+      searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
       animation.setAnimationListener(new Animation.AnimationListener() {
         @Override public void onAnimationStart(Animation animation) {
-
         }
 
         @Override public void onAnimationEnd(Animation animation) {
@@ -296,38 +284,39 @@ public class SearchResultFragment extends BackButtonFragment
         }
 
         @Override public void onAnimationRepeat(Animation animation) {
-
         }
       });
       progressBarResults.startAnimation(animation);
 
-      allStoresResultList.setLayoutAnimation(
+      searchResultList.setLayoutAnimation(
           AnimationUtils.loadLayoutAnimation(getContext(), R.anim.list_apps_anim));
-      allStoresResultList.scheduleLayoutAnimation();
+      searchResultList.scheduleLayoutAnimation();
     } else {
-      allStoresResultAdapter.addResultForSearch(query, searchResultDiffModel);
+      searchResultsAdapter.addResultForSearch(query, searchAppResults, hasMore);
     }
-    viewModel.addAllStoresSearchAppResults(searchResultDiffModel.getSearchResultsList());
+    viewModel.setLoadedResults(true);
+    hideLoading();
+    if (hasError) {
+      if (error == SearchResultError.NO_NETWORK) {
+        showNoNetworkView();
+      } else {
+        showGenericErrorView();
+      }
+    } else {
+      if (searchAppResults.size() <= 0) {
+        showNoResultsView();
+      } else {
+        showResultsView();
+      }
+    }
   }
 
   @Override public Model getViewModel() {
     return viewModel;
   }
 
-  @Override public void setAllStoresAdsEmpty() {
-    allStoresResultAdapter.setAdsLoaded();
-  }
-
-  @Override public Observable<Void> shouldLoadMoreResults() {
-    return recyclerViewReachedBottom(allStoresResultList);
-  }
-
-  @Override public void showLoadingMore() {
-    allStoresResultAdapter.setIsLoadingMore(true);
-  }
-
-  @Override public void hideLoadingMore() {
-    allStoresResultAdapter.setIsLoadingMore(false);
+  @Override public Observable<Void> searchResultsReachedBottom() {
+    return recyclerViewReachedBottom(searchResultList);
   }
 
   @Override public Observable<Void> searchSetup() {
@@ -339,7 +328,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.GONE);
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
   }
 
@@ -348,7 +337,7 @@ public class SearchResultFragment extends BackButtonFragment
     trendingResultList.setVisibility(View.VISIBLE);
     noSearchLayout.setVisibility(View.GONE);
     errorView.setVisibility(View.GONE);
-    allStoresResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.GONE);
   }
 
@@ -374,12 +363,8 @@ public class SearchResultFragment extends BackButtonFragment
         .filter(item -> item.getItemId() == searchMenuItem.getItemId());
   }
 
-  @Override public Observable<SearchAdResultWrapper> onAdClicked() {
-    return onAdClickRelay;
-  }
-
   @Override public Observable<SearchAppResultWrapper> onViewItemClicked() {
-    return onItemViewClickRelay;
+    return onItemViewClickSubject;
   }
 
   @Override public Observable<SearchViewQueryTextEvent> queryChanged() {
@@ -396,7 +381,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public void scrollToTop() {
-    RecyclerView list = allStoresResultList;
+    RecyclerView list = searchResultList;
     LinearLayoutManager layoutManager = ((LinearLayoutManager) list.getLayoutManager());
     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
     if (lastVisibleItemPosition > 10) {
@@ -406,7 +391,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean hasResults() {
-    return allStoresResultAdapter.getItemCount() != 0 && !searchMenuItem.isActionViewExpanded();
+    return searchResultsAdapter.getItemCount() != 0 && !searchMenuItem.isActionViewExpanded();
   }
 
   @Override public void disableUpNavigation() {
@@ -418,7 +403,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   @Override public boolean shouldHideUpNavigation() {
-    return allStoresResultAdapter.getItemCount() == 0 && (noSearchLayout.getVisibility() != VISIBLE
+    return searchResultsAdapter.getItemCount() == 0 && (noSearchLayout.getVisibility() != VISIBLE
         || errorView.getVisibility() != VISIBLE);
   }
 
@@ -466,7 +451,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
-    allStoresResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     networkError = true;
@@ -480,7 +465,7 @@ public class SearchResultFragment extends BackButtonFragment
     noSearchLayout.setVisibility(View.GONE);
     searchResultsLayout.setVisibility(View.VISIBLE);
     filtersCardView.setVisibility(View.VISIBLE);
-    allStoresResultList.setVisibility(View.GONE);
+    searchResultList.setVisibility(View.GONE);
     suggestionsResultList.setVisibility(View.GONE);
     trendingResultList.setVisibility(View.GONE);
     bannerAdBottom.setVisibility(View.GONE);
@@ -537,6 +522,10 @@ public class SearchResultFragment extends BackButtonFragment
     return filtersView.filtersChangedEvents()
         .doOnNext(filters -> viewModel.setFilters(filters))
         .doOnNext(__ -> filtersChanged.onNext(null));
+  }
+
+  @Override public Observable<ScreenShotClickEvent> getScreenshotClickEvent() {
+    return screenShotClick;
   }
 
   private Observable<Void> searchHasNoResults() {
@@ -599,7 +588,7 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private boolean hasSearchResults() {
-    return allStoresResultAdapter.getItemCount() > 0;
+    return searchResultsAdapter.getItemCount() > 0;
   }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -628,8 +617,9 @@ public class SearchResultFragment extends BackButtonFragment
     noResults = false;
     networkError = false;
 
-    onItemViewClickRelay = PublishRelay.create();
-    onAdClickRelay = PublishRelay.create();
+    onItemViewClickSubject = PublishSubject.create();
+    downloadClickPublishSubject = PublishSubject.create();
+    screenShotClick = PublishSubject.create();
     suggestionClickedPublishSubject = PublishSubject.create();
     searchSetupPublishSubject = PublishSubject.create();
     queryTextChangedPublisher = PublishSubject.create();
@@ -639,17 +629,14 @@ public class SearchResultFragment extends BackButtonFragment
     filtersChanged = PublishSubject.create();
     searchHasNoResults = PublishSubject.create();
 
-    final List<SearchAppResult> searchResultAllStores = new ArrayList<>();
-    final List<SearchAdResult> searchResultAdsAllStores = new ArrayList<>();
+    searchResultsAdapter =
+        new SearchResultAdapter(onItemViewClickSubject, downloadClickPublishSubject,
+            screenShotClick, new ArrayList<>(), crashReport);
 
-    allStoresResultAdapter =
-        new SearchResultAdapter(onAdClickRelay, onItemViewClickRelay, searchResultAllStores,
-            searchResultAdsAllStores, crashReport, oneDecimalFormatter);
-
-    allStoresResultAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+    searchResultsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
       @Override public void onItemRangeInserted(int positionStart, int itemCount) {
         if (positionStart == 0) {
-          RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
+          RecyclerView.LayoutManager layoutManager = searchResultList.getLayoutManager();
           if (layoutManager != null) {
             layoutManager.scrollToPosition(0);
           }
@@ -675,12 +662,19 @@ public class SearchResultFragment extends BackButtonFragment
     setupTheme();
     setupFilters();
 
+    searchResultList.setItemAnimator(new DefaultItemAnimator() {
+      @Override
+      public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return true;
+      }
+    });
+
     suggestionsResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     trendingResultList.setLayoutManager(new LinearLayoutManager(getContext()));
     suggestionsResultList.setAdapter(searchSuggestionsAdapter);
     trendingResultList.setAdapter(searchTrendingAdapter);
 
-    if (viewModel != null && viewModel.hasData()) {
+    if (viewModel != null) {
       restoreViewState(savedInstanceState != null ? savedInstanceState.getParcelable(
           ALL_STORES_SEARCH_LIST_STATE) : null);
     }
@@ -771,12 +765,16 @@ public class SearchResultFragment extends BackButtonFragment
     }
   }
 
+  @Override public Observable<DownloadClick> getDownloadClickEvents() {
+    return downloadClickPublishSubject;
+  }
+
   private void setupDefaultTheme() {
     themeManager.resetToBaseTheme();
   }
 
   @Override public void onDestroyView() {
-    allStoresResultList.clearAnimation();
+    searchResultList.clearAnimation();
     setupDefaultTheme();
     super.onDestroyView();
     if (moPubRecyclerAdapter != null) {
@@ -805,8 +803,6 @@ public class SearchResultFragment extends BackButtonFragment
     super.onDestroy();
     noResultsAdultContentSubject = null;
     noResultsPublishSubject = null;
-    searchHasNoResults = null;
-    filtersChanged = null;
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -862,8 +858,8 @@ public class SearchResultFragment extends BackButtonFragment
 
     outState.putParcelable(VIEW_MODEL, Parcels.wrap(viewModel));
 
-    if (allStoresResultList != null && allStoresResultList.getLayoutManager() != null) {
-      outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, allStoresResultList.getLayoutManager()
+    if (searchResultList != null && searchResultList.getLayoutManager() != null) {
+      outState.putParcelable(ALL_STORES_SEARCH_LIST_STATE, searchResultList.getLayoutManager()
           .onSaveInstanceState());
     }
 
@@ -873,20 +869,12 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void restoreViewState(@Nullable Parcelable allStoresSearchListState) {
-
-    final List<SearchAppResult> allStoresSearchAppResults =
-        viewModel.getAllStoresSearchAppResults();
-    if (allStoresSearchAppResults.size() > 0) {
-      allStoresResultAdapter.restoreState(allStoresSearchAppResults,
-          viewModel.getAllStoresSearchAdResults());
-    }
-
     if (allStoresSearchListState != null) {
 
-      RecyclerView.LayoutManager layoutManager = allStoresResultList.getLayoutManager();
+      RecyclerView.LayoutManager layoutManager = searchResultList.getLayoutManager();
       if (layoutManager == null) {
         layoutManager = getDefaultLayoutManager();
-        allStoresResultList.setLayoutManager(layoutManager);
+        searchResultList.setLayoutManager(layoutManager);
       }
       layoutManager.onRestoreInstanceState(allStoresSearchListState);
     }
@@ -894,15 +882,15 @@ public class SearchResultFragment extends BackButtonFragment
   }
 
   private void attachAllStoresResultListDependencies() {
-    moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), allStoresResultAdapter);
+    moPubRecyclerAdapter = new MoPubRecyclerAdapter(getActivity(), searchResultsAdapter);
     configureAdRenderers();
     moPubRecyclerAdapter.setAdLoadedListener(new MoPubNativeAdsListener());
     if (Build.VERSION.SDK_INT >= 21) {
-      allStoresResultList.setAdapter(moPubRecyclerAdapter);
+      searchResultList.setAdapter(moPubRecyclerAdapter);
     } else {
-      allStoresResultList.setAdapter(allStoresResultAdapter);
+      searchResultList.setAdapter(searchResultsAdapter);
     }
-    allStoresResultList.setLayoutManager(getDefaultLayoutManager());
+    searchResultList.setLayoutManager(getDefaultLayoutManager());
   }
 
   public void configureAdRenderers() {

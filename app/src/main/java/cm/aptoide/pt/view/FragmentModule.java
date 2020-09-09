@@ -79,6 +79,11 @@ import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
+import cm.aptoide.pt.download.OemidProvider;
+import cm.aptoide.pt.download.view.DownloadDialogProvider;
+import cm.aptoide.pt.download.view.DownloadNavigator;
+import cm.aptoide.pt.download.view.DownloadStatusManager;
+import cm.aptoide.pt.download.view.DownloadViewActionPresenter;
 import cm.aptoide.pt.editorial.CardId;
 import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialFragment;
@@ -156,11 +161,13 @@ import cm.aptoide.pt.reactions.ReactionsManager;
 import cm.aptoide.pt.repository.request.RewardAppCoinsAppsRepository;
 import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchNavigator;
+import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.TrendingManager;
 import cm.aptoide.pt.search.view.SearchResultPresenter;
 import cm.aptoide.pt.search.view.SearchResultView;
+import cm.aptoide.pt.store.RoomStoreRepository;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment.BundleCons;
 import cm.aptoide.pt.store.view.my.MyStoresNavigator;
@@ -183,6 +190,7 @@ import java.util.Map;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import org.parceler.Parcels;
+import retrofit2.Converter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -311,11 +319,53 @@ import rx.subscriptions.CompositeSubscription;
   @FragmentScope @Provides SearchResultPresenter provideSearchResultPresenter(
       SearchAnalytics searchAnalytics, SearchNavigator searchNavigator, SearchManager searchManager,
       TrendingManager trendingManager, SearchSuggestionManager searchSuggestionManager,
-      BottomNavigationMapper bottomNavigationMapper) {
+      BottomNavigationMapper bottomNavigationMapper,
+      DownloadViewActionPresenter downloadViewActionPresenter) {
     return new SearchResultPresenter((SearchResultView) fragment, searchAnalytics, searchNavigator,
         CrashReport.getInstance(), AndroidSchedulers.mainThread(), searchManager, trendingManager,
         searchSuggestionManager, (AptoideBottomNavigator) fragment.getActivity(),
-        bottomNavigationMapper, Schedulers.io());
+        bottomNavigationMapper, Schedulers.io(), downloadViewActionPresenter);
+  }
+
+  @FragmentScope @Provides SearchManager providesSearchManager(AptoideAccountManager accountManager,
+      MoPubAdsManager moPubAdsManager, SearchRepository searchRepository,
+      DownloadStatusManager downloadStatusManager, AppCenter appCenter) {
+    return new SearchManager(accountManager, moPubAdsManager, searchRepository,
+        downloadStatusManager, appCenter);
+  }
+
+  @FragmentScope @Provides SearchRepository providesSearchRepository(
+      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
+    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
+        oemidProvider);
+  }
+
+  @FragmentScope @Provides DownloadViewActionPresenter providesDownloadViewActionPresenter(
+      InstallManager installManager, MoPubAdsManager moPubAdsManager,
+      PermissionManager permissionManager, AppcMigrationManager appcMigrationManager,
+      DownloadDialogProvider downloadDialogProvider, DownloadNavigator downloadNavigator,
+      DownloadFactory downloadFactory, DownloadAnalytics downloadAnalytics,
+      InstallAnalytics installAnalytics, NotificationAnalytics notificationAnalytics,
+      CrashReport crashReport) {
+    return new DownloadViewActionPresenter(installManager, moPubAdsManager, permissionManager,
+        appcMigrationManager, downloadDialogProvider, downloadNavigator,
+        (PermissionService) fragment.getActivity(), Schedulers.io(), AndroidSchedulers.mainThread(),
+        downloadFactory, downloadAnalytics, installAnalytics, notificationAnalytics, crashReport);
+  }
+
+  @FragmentScope @Provides DownloadDialogProvider providesDownloadDialogManager(
+      ThemeManager themeManager) {
+    return new DownloadDialogProvider(fragment, themeManager);
+  }
+
+  @FragmentScope @Provides DownloadNavigator providesDownloadNavigator() {
+    return new DownloadNavigator(fragment, fragment.getContext()
+        .getPackageManager());
   }
 
   @FragmentScope @Provides HomePresenter providesHomePresenter(Home home,

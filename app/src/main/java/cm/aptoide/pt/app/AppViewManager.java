@@ -8,7 +8,7 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -276,7 +276,7 @@ public class AppViewManager {
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
         isApkfy);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
@@ -285,7 +285,7 @@ public class AppViewManager {
 
   public void setupMigratorUninstallEvent(String packageName) {
     installAnalytics.uninstallStarted(packageName, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW);
+        DownloadAnalytics.AppContext.APPVIEW);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,

@@ -2,7 +2,6 @@ package cm.aptoide.pt.search.model;
 
 import cm.aptoide.aptoideviews.filters.Filter;
 import cm.aptoide.pt.search.view.SearchResultView;
-import java.util.LinkedList;
 import java.util.List;
 import org.parceler.Parcel;
 
@@ -13,36 +12,29 @@ import org.parceler.Parcel;
   String storeName;
   boolean onlyTrustedApps;
   boolean loadedAds = false;
-
-  List<SearchAppResult> allStoresSearchAppResults;
-  List<SearchAdResult> allStoresSearchAdResults;
+  boolean loadedResults = false;
 
   private String storeTheme;
 
   List<Filter> filters;
 
   public SearchViewModel() {
-    this.allStoresSearchAppResults = new LinkedList<>();
-    this.allStoresSearchAdResults = new LinkedList<>();
   }
 
   public SearchViewModel(SearchQueryModel searchQueryModel, String storeName,
-      boolean onlyTrustedApps, List<SearchAppResult> allStoresSearchAppResults,
-      List<SearchAdResult> allStoresSearchAdResults, String storeTheme) {
+      boolean onlyTrustedApps, String storeTheme) {
     this.searchQueryModel = searchQueryModel;
     this.storeName = storeName;
     this.onlyTrustedApps = onlyTrustedApps;
-    this.allStoresSearchAppResults = allStoresSearchAppResults;
-    this.allStoresSearchAdResults = allStoresSearchAdResults;
     this.storeTheme = storeTheme;
   }
 
   public SearchViewModel(SearchQueryModel searchQueryModel, boolean onlyTrustedApps) {
-    this(searchQueryModel, null, onlyTrustedApps, new LinkedList<>(), new LinkedList<>(), "");
+    this(searchQueryModel, null, onlyTrustedApps, "");
   }
 
   public SearchViewModel(SearchQueryModel searchQueryModel, String storeName, String storeTheme) {
-    this(searchQueryModel, storeName, true, new LinkedList<>(), new LinkedList<>(), storeTheme);
+    this(searchQueryModel, storeName, true, storeTheme);
   }
 
   @Override public SearchQueryModel getSearchQueryModel() {
@@ -61,40 +53,19 @@ import org.parceler.Parcel;
     return loadedAds;
   }
 
-  @Override public void setHasLoadedAds() {
-    loadedAds = true;
-  }
-
-  @Override public List<SearchAppResult> getAllStoresSearchAppResults() {
-    return allStoresSearchAppResults;
-  }
-
-  @Override public List<SearchAdResult> getAllStoresSearchAdResults() {
-    return allStoresSearchAdResults;
-  }
-
-  @Override public boolean hasData() {
-    return (allStoresSearchAppResults != null && allStoresSearchAppResults.size() > 0);
-  }
-
-  public void clearListData() {
-    this.allStoresSearchAdResults.clear();
-    this.allStoresSearchAppResults.clear();
-  }
-
-  public void addAllStoresSearchAdResults(List<SearchAdResult> allStoresSearchAdResults) {
-    this.allStoresSearchAdResults.addAll(allStoresSearchAdResults);
-  }
-
-  public void addAllStoresSearchAppResults(List<SearchAppResult> allStoresSearchAppResults) {
-    this.allStoresSearchAppResults = allStoresSearchAppResults;
-  }
-
   public List<Filter> getFilters() {
     return filters;
   }
 
   public void setFilters(List<Filter> filters) {
     this.filters = filters;
+  }
+
+  @Override public boolean hasLoadedResults() {
+    return loadedResults;
+  }
+
+  public void setLoadedResults(boolean loaded) {
+    this.loadedResults = loaded;
   }
 }

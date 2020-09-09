@@ -118,6 +118,21 @@ public class AppService {
         .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
   }
 
+  public Single<DetailedAppRequestResult> unsafeLoadDetailedApp(long appId, String storeName,
+      String packageName) {
+    return GetAppRequest.of(appId, null,
+        StoreUtils.getStoreCredentials(storeName, storeCredentialsProvider), packageName,
+        bodyInterceptorV7, httpClient, converterFactory, tokenInvalidator, sharedPreferences,
+        appBundlesVisibilityManager)
+        .observe(false, false)
+        .doOnSubscribe(() -> loadingApps = true)
+        .doOnUnsubscribe(() -> loadingApps = false)
+        .doOnTerminate(() -> loadingApps = false)
+        .flatMap(getApp -> mapApp(getApp, ""))
+        .toSingle()
+        .onErrorReturn(throwable -> createDetailedAppRequestResultError(throwable));
+  }
+
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
     if (loadingApps) {
       return Single.just(new DetailedAppRequestResult(true));

@@ -1,70 +1,115 @@
 package cm.aptoide.pt.search;
 
-import android.content.SharedPreferences;
 import cm.aptoide.accountmanager.AptoideAccountManager;
 import cm.aptoide.aptoideviews.filters.Filter;
-import cm.aptoide.pt.ads.AdsRepository;
 import cm.aptoide.pt.ads.MoPubAdsManager;
-import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
-import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
-import cm.aptoide.pt.dataprovider.util.HashMapNotNull;
-import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
-import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
-import cm.aptoide.pt.search.model.SearchAdResult;
+import cm.aptoide.pt.download.view.DownloadStatusManager;
+import cm.aptoide.pt.download.view.DownloadStatusModel;
+import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchFilterType;
 import cm.aptoide.pt.search.model.SearchFilters;
 import cm.aptoide.pt.search.model.SearchResult;
+import cm.aptoide.pt.view.app.AppCenter;
+import cm.aptoide.pt.view.app.AppScreenshot;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import okhttp3.OkHttpClient;
-import retrofit2.Converter;
+import java.util.concurrent.TimeUnit;
 import rx.Completable;
 import rx.Observable;
 import rx.Single;
 
 @SuppressWarnings("Convert2MethodRef") public class SearchManager {
 
-  private final SharedPreferences sharedPreferences;
-  private final TokenInvalidator tokenInvalidator;
-  private final BodyInterceptor<BaseBody> bodyInterceptor;
-  private final OkHttpClient httpClient;
-  private final Converter.Factory converterFactory;
-  private final HashMapNotNull<String, List<String>> subscribedStoresAuthMap;
-  private final AdsRepository adsRepository;
   private final AptoideAccountManager accountManager;
   private final MoPubAdsManager moPubAdsManager;
-  private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final SearchRepository searchRepository;
+  private final DownloadStatusManager downloadStatusManager;
+  private final AppCenter appCenter;
 
-  public SearchManager(SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
-      Converter.Factory converterFactory,
-      HashMapNotNull<String, List<String>> subscribedStoresAuthMap, AdsRepository adsRepository,
-      AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, SearchRepository searchRepository) {
-    this.sharedPreferences = sharedPreferences;
-    this.tokenInvalidator = tokenInvalidator;
-    this.bodyInterceptor = bodyInterceptor;
-    this.httpClient = httpClient;
-    this.converterFactory = converterFactory;
-    this.subscribedStoresAuthMap = subscribedStoresAuthMap;
-    this.adsRepository = adsRepository;
+  public SearchManager(AptoideAccountManager accountManager, MoPubAdsManager moPubAdsManager,
+      SearchRepository searchRepository, DownloadStatusManager downloadStatusManager,
+      AppCenter appCenter) {
     this.accountManager = accountManager;
     this.moPubAdsManager = moPubAdsManager;
-    this.appBundlesVisibilityManager = appBundlesVisibilityManager;
     this.searchRepository = searchRepository;
+    this.downloadStatusManager = downloadStatusManager;
+    this.appCenter = appCenter;
   }
 
-  public Observable<SearchAdResult> getAdsForQuery(String query) {
-    return adsRepository.getAdsFromSearch(query)
-        .map(minimalAd -> new SearchAdResult(minimalAd));
-  }
-
-  public Single<SearchResult> searchAppInStores(String query, List<Filter> filters) {
+  public Completable searchAppInStores(String query, List<Filter> filters) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
-        .flatMap(matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
-            matureEnabled));
+        .flatMapCompletable(
+            matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
+                matureEnabled));
+  }
+
+  public Observable<SearchResult> observeSearchResults() {
+    return searchRepository.observeSearchResults()
+        .switchMap(result -> {
+          List<SearchAppResult> list = result.getSearchResultsList();
+          if (!list.isEmpty() && list.get(0)
+              .isHighlightedResult()) {
+            if (result.isFreshResult()) {
+              return Observable.mergeDelayError(Observable.just(result),
+                  observeHighlightedSearchResult(result));
+            }
+            return observeHighlightedSearchResult(result);
+          }
+          return Observable.just(result);
+        });
+  }
+
+  public Observable<SearchResult> observeHighlightedSearchResult(SearchResult result) {
+    SearchAppResult first = result.getSearchResultsList()
+        .get(0);
+    return Observable.combineLatest(getHighlightedSearchResult(result),
+        downloadStatusManager.loadDownloadModel(first.getMd5(), first.getPackageName(),
+            first.getVersionCode(), null, first.getStoreId(),
+            first.hasAdvertising() || first.hasBilling()),
+        loadAppScreenShots(first.getAppId(), first.getStoreName(), first.getPackageName()),
+        (r, downloadModel, screenshots) -> mergeSearchResult(r, downloadModel, screenshots));
+  }
+
+  private Observable<List<AppScreenshot>> loadAppScreenShots(long appId, String storeName,
+      String packageName) {
+    return Observable.mergeDelayError(Observable.just(null),
+        appCenter.unsafeLoadDetailedApp(appId, storeName, packageName)
+            .toObservable())
+        .map(app -> {
+          List<AppScreenshot> ssList = Collections.emptyList();
+          if (app != null
+              && app.getDetailedApp() != null
+              && app.getDetailedApp()
+              .getMedia() != null
+              && app.getDetailedApp()
+              .getMedia()
+              .getScreenshots() != null) {
+            ssList = app.getDetailedApp()
+                .getMedia()
+                .getScreenshots();
+          }
+          return ssList;
+        })
+        .throttleLast(700, TimeUnit.MILLISECONDS);
+  }
+
+  private SearchResult mergeSearchResult(SearchResult r, DownloadStatusModel downloadStatusModel,
+      List<AppScreenshot> screenshots) {
+    ArrayList<SearchAppResult> list = new ArrayList<>(r.getSearchResultsList());
+    list.set(0, new SearchAppResult(list.get(0), downloadStatusModel, screenshots));
+    return new SearchResult(r.getQuery(), r.getSpecificStore(), list, r.getFilters(),
+        r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(), r.isFreshResult(),
+        r.getError());
+  }
+
+  private Observable<SearchResult> getHighlightedSearchResult(SearchResult r) {
+    return Observable.just(
+        new SearchResult(r.getQuery(), r.getSpecificStore(), r.getSearchResultsList(),
+            r.getFilters(), r.getCurrentOffset(), r.getNextOffset(), r.getTotal(), r.getLoading(),
+            false, r.getError()));
   }
 
   public SearchFilters getSearchFilters(List<Filter> viewFilters) {
@@ -91,12 +136,13 @@ import rx.Single;
     return new SearchFilters(onlyFollowedStores, onlyTrustedApps, onlyBetaApps, onlyAppcApps);
   }
 
-  public Single<SearchResult> searchInStore(String query, String storeName, List<Filter> filters) {
+  public Completable searchInStore(String query, String storeName, List<Filter> filters) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
-        .flatMap(matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
-            matureEnabled, storeName));
+        .flatMapCompletable(
+            matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
+                matureEnabled, storeName));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {

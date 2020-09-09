@@ -11,7 +11,7 @@ import cm.aptoide.pt.app.view.AppViewFragment;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
 import cm.aptoide.pt.dataprovider.ws.v2.GenericResponseV2;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.install.Install;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -381,8 +381,8 @@ public class AppViewManagerTest {
         AnalyticsManager.Action.CLICK, "", "aString",
         WalletAdsOfferManager.OfferResponseStatus.ADS_HIDE, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 0, null, false,
-        false, false, "ADS_HIDE", "", "storeName", false);
+        DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
+        0, null, false, false, false, "ADS_HIDE", "", "storeName", false);
   }
 
   @Test public void loadDownloadAppViewModelTest() {
@@ -448,8 +448,8 @@ public class AppViewManagerTest {
         DownloadModel.Action.INSTALL, AnalyticsManager.Action.CLICK, "", null,
         WalletAdsOfferManager.OfferResponseStatus.ADS_SHOW, "storeName", false);
     verify(installAnalytics).installStarted("packageName", 1, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()), 2, "aString",
-        false, false, false, "ADS_SHOW", "", "storeName", false);
+        DownloadAnalytics.AppContext.APPVIEW, downloadStateParser.getOrigin(download.getAction()),
+        2, "aString", false, false, false, "ADS_SHOW", "", "storeName", false);
   }
 
   @Test public void cancelDownloadTest() {

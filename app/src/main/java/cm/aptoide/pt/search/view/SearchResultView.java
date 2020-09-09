@@ -4,18 +4,20 @@ import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
 import cm.aptoide.aptoideviews.filters.Filter;
-import cm.aptoide.pt.search.SearchResultDiffModel;
-import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAdResultWrapper;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
 import rx.Observable;
 
 public interface SearchResultView extends SearchSuggestionsView {
+
+  Observable<DownloadClick> getDownloadClickEvents();
 
   Observable<Boolean> clickAdultContentSwitch();
 
@@ -27,21 +29,18 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showLoading();
 
+  void showMoreLoading();
+
   void hideLoading();
 
   void showResultsLoading();
 
-  void addAllStoresResult(String query, SearchResultDiffModel dataList, boolean isLoadMore);
+  void addAllStoresResult(String query, List<SearchAppResult> dataList, boolean isLoadMore,
+      boolean hasMore, boolean hasError, SearchResultError error);
 
   Model getViewModel();
 
-  void setAllStoresAdsEmpty();
-
-  Observable<Void> shouldLoadMoreResults();
-
-  void showLoadingMore();
-
-  void hideLoadingMore();
+  Observable<Void> searchResultsReachedBottom();
 
   Observable<Void> searchSetup();
 
@@ -58,8 +57,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<Void> toolbarClick();
 
   Observable<MenuItem> searchMenuItemClick();
-
-  Observable<SearchAdResultWrapper> onAdClicked();
 
   Observable<SearchAppResultWrapper> onViewItemClicked();
 
@@ -117,6 +114,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<List<Filter>> filtersChangeEvents();
 
+  Observable<ScreenShotClickEvent> getScreenshotClickEvent();
+
   interface Model {
 
     SearchQueryModel getSearchQueryModel();
@@ -127,14 +126,8 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     boolean hasLoadedAds();
 
-    void setHasLoadedAds();
+    boolean hasLoadedResults();
 
     List<Filter> getFilters();
-
-    List<SearchAppResult> getAllStoresSearchAppResults();
-
-    List<SearchAdResult> getAllStoresSearchAdResults();
-
-    boolean hasData();
   }
 }

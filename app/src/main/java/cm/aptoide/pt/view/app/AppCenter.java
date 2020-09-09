@@ -30,6 +30,11 @@ public class AppCenter {
     return appCenterRepository.loadDetailedApp(appId, storeName, packageName);
   }
 
+  public Single<DetailedAppRequestResult> unsafeLoadDetailedApp(long appId, String storeName,
+      String packageName) {
+    return appCenterRepository.unsafeLoadDetailedApp(appId, storeName, packageName);
+  }
+
   public Single<DetailedAppRequestResult> loadDetailedApp(String packageName, String storeName) {
     return appCenterRepository.loadDetailedApp(packageName, storeName);
   }
