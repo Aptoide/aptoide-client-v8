@@ -94,6 +94,7 @@ public class UpdateRepository {
             pair -> ListAppcAppsUpgradesRequest.of(pair.first, pair.second, bodyInterceptor,
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences)
                 .observe(bypassCache, bypassServerCache))
+        .subscribeOn(Schedulers.io())
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();
@@ -112,6 +113,7 @@ public class UpdateRepository {
                 httpClient, converterFactory, tokenInvalidator, sharedPreferences,
                 appBundlesVisibilityManager)
                 .observe(bypassCache, bypassServerCache))
+        .subscribeOn(Schedulers.io())
         .map(result -> {
           if (result != null && result.isOk()) {
             return result.getList();
