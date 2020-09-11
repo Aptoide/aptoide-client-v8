@@ -29,7 +29,8 @@ class FirstLaunchManager(private val defaultSharedPreferences: SharedPreferences
     return Completable.mergeDelayError(setSharedPreferencesValues(), generateAptoideUuid())
         .andThen(Completable.mergeDelayError(followedStoresManager.setDefaultFollowedStores(),
             updateRepository.sync(true, false),
-            rootAvailabilityManager.updateRootAvailability(), accountManager.updateAccount(),
+            rootAvailabilityManager.updateRootAvailability(),
+            accountManager.updateAccount().onErrorComplete(),
             createShortcut()))
         .doOnError { e -> CrashReport.getInstance().log(e) }
   }

@@ -237,9 +237,6 @@ public abstract class AptoideApplication extends Application {
           .log(e);
     }
 
-    //
-    // call super
-    //
     super.onCreate();
 
     initializeMoPub();
@@ -281,14 +278,8 @@ public abstract class AptoideApplication extends Application {
     // beware! this code could be executed at the same time the first activity is
     // visible
     //
-    /**
-     * There's not test at the moment
-     * TODO change this class in order to accept that there's no test
-     * AN-1838
-     */
     generateAptoideUuid().andThen(initializeRakamSdk())
         .andThen(initializeSentry())
-        .andThen(setUpUpdatesNotification())
         .andThen(setUpAdsUserProperty())
         .andThen(checkAdsUserProperty())
         .andThen(sendAptoideApplicationStartAnalytics(
@@ -297,7 +288,9 @@ public abstract class AptoideApplication extends Application {
         .observeOn(Schedulers.computation())
         .andThen(installedRepository.syncWithDevice())
         .andThen(launchManager.launch())
-        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
+        .andThen(setUpUpdatesNotification())
+        .subscribe(() -> {
+        }, error -> CrashReport.getInstance()
             .log(error));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);

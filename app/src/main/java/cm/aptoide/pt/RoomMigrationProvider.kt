@@ -11,7 +11,7 @@ class RoomMigrationProvider {
   }, object : Migration(101, 102) {
     override fun migrate(database: SupportSQLiteDatabase) {
       // Boolean attributes must be defined as non-null integers with set default
-      database.execSQL("ALTER TABLE installed " + " ADD COLUMN enabled INTEGER DEFAULT 0 NOT NULL")
+      database.execSQL("ALTER TABLE installed " + " ADD COLUMN enabled INTEGER DEFAULT 1 NOT NULL")
     }
   })
 }

@@ -31,6 +31,7 @@ import rx.schedulers.Schedulers;
 public class UpdateRepository {
 
   private static final String TAG = UpdateRepository.class.getName();
+  private static final long SYNC_MIN_INTERVAL_MS = 23 * 60 * 60 * 1000;
 
   private final IdsRepository idsRepository;
   private final UpdatePersistence updatePersistence;
@@ -43,6 +44,8 @@ public class UpdateRepository {
   private final AppBundlesVisibilityManager appBundlesVisibilityManager;
   private final UpdateMapper updateMapper;
   private final InstalledRepository installedRepository;
+
+  private long lastSyncTimestamp = 0;
 
   public UpdateRepository(UpdatePersistence updatePersistence, RoomStoreRepository storeRepository,
       IdsRepository idsRepository, BodyInterceptor<BaseBody> bodyInterceptor,
@@ -64,6 +67,11 @@ public class UpdateRepository {
   }
 
   public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
+    long startTime = System.currentTimeMillis();
+    long dif = startTime - lastSyncTimestamp;
+    if (dif < SYNC_MIN_INTERVAL_MS) {
+      return Completable.complete();
+    }
     return storeRepository.getAll()
         .first()
         .observeOn(Schedulers.io())
@@ -79,7 +87,8 @@ public class UpdateRepository {
           // this is a non-closing Observable, so new db modifications will trigger this observable
           return removeAllNonExcluded().andThen(saveNewUpdates(updates));
         })
-        .andThen(saveAppcUpgrades(bypassCache, bypassServerCache));
+        .andThen(saveAppcUpgrades(bypassCache, bypassServerCache))
+        .doOnCompleted(() -> lastSyncTimestamp = startTime);
   }
 
   private Completable saveAppcUpgrades(boolean bypassCache, boolean bypassServerCache) {
