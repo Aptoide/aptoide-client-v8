@@ -63,7 +63,7 @@ public class GetUserRequestFactory {
 
   public GetUserRequest newGetUser(String url, boolean googlePlayServicesAvailable) {
 
-    final Boolean adultContentEnabled = accountManager.enabled()
+    final Boolean adultContentEnabled = accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
         .toBlocking()

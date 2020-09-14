@@ -22,4 +22,8 @@ public class BaseBodyWithAlphaBetaKey extends BaseBody {
   public String getNotApkTags() {
     return notApkTags;
   }
+
+  public boolean shouldIncludeTag() {
+    return true;
+  }
 }

@@ -427,7 +427,7 @@ public class AppViewPresenter implements Presenter {
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();
             appViewAnalytics.sendNotEnoughSpaceErrorEvent(appModel.getPackageName(),
-                downloadModel.getAction(), offerResponseStatus,
+                appModel.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
                 action != null && action.equals(DownloadModel.Action.MIGRATE), !appModel.getSplits()
                     .isEmpty(), appModel.hasAdvertising() || appModel.hasBilling(),
                 appModel.getMalware()
@@ -453,7 +453,7 @@ public class AppViewPresenter implements Presenter {
           .doOnSuccess(offerResponseStatus -> {
             DownloadModel.Action action = downloadModel.getAction();
             appViewAnalytics.sendNotEnoughSpaceErrorEvent(walletApp.getPackageName(),
-                downloadModel.getAction(), offerResponseStatus,
+                walletApp.getVersionCode(), downloadModel.getAction(), offerResponseStatus,
                 action != null && action.equals(DownloadModel.Action.MIGRATE),
                 !walletApp.getSplits()
                     .isEmpty(), true, "TRUSTED", walletApp.getStoreName(), false);

@@ -7,7 +7,6 @@ import cm.aptoide.pt.ads.MoPubAdsManager;
 import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.download.AppContext;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.Origin;
@@ -114,10 +113,6 @@ public class AppsManager {
             }));
   }
 
-  public Completable sendInstalledWithAptoideImpression() {
-    return aptoideInstallManager.sendImpressionEvent();
-  }
-
   private Observable<List<UpdateApp>> getUpdateDownloadsList() {
     return installManager.getInstallations()
         .distinctUntilChanged()
@@ -219,13 +214,13 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), download.getTrustedBadge(), null, download.getStoreName(),
-        installType);
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.hasAppc(), download.hasSplits(), download.getTrustedBadge(), null,
+        download.getStoreName(), installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, getOrigin(download.getAction()),
-        false, download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
-        download.getTrustedBadge(), download.getStoreName());
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT,
+        getOrigin(download.getAction()), false, download.hasAppc(), download.hasSplits(),
+        offerResponseStatus.toString(), download.getTrustedBadge(), download.getStoreName());
   }
 
   private void setupUpdateEvents(RoomDownload download, Origin origin,
@@ -234,10 +229,10 @@ public class AppsManager {
     downloadAnalytics.downloadStartEvent(download, AnalyticsManager.Action.CLICK,
         DownloadAnalytics.AppContext.APPS_FRAGMENT, false, origin);
     downloadAnalytics.installClicked(download.getMd5(), download.getPackageName(),
-        AnalyticsManager.Action.INSTALL, offerResponseStatus, false, download.hasAppc(),
-        download.hasSplits(), trustedBadge, tag, storeName, installType);
+        download.getVersionCode(), AnalyticsManager.Action.INSTALL, offerResponseStatus, false,
+        download.hasAppc(), download.hasSplits(), trustedBadge, tag, storeName, installType);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPS_FRAGMENT, origin, false,
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPS_FRAGMENT, origin, false,
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(),
         download.getTrustedBadge(), download.getStoreName());
   }
@@ -272,8 +267,7 @@ public class AppsManager {
                   update.getStoreName(), "update");
               return Single.just(value);
             })
-            .flatMapCompletable(download -> installManager.install(download))
-            .andThen(aptoideInstallManager.sendConversionEvent()))
+            .flatMapCompletable(download -> installManager.install(download)))
         .onErrorComplete();
   }
 

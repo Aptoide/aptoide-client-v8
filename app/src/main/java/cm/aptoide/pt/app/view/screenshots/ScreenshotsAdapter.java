@@ -20,18 +20,25 @@ public class ScreenshotsAdapter extends RecyclerView.Adapter<ScreenshotViewHolde
   private List<AppScreenshot> screenshots;
   private ArrayList<String> imageUris;
   private PublishSubject<ScreenShotClickEvent> screenShotClick;
+  private int itemHeightDp = -1;
 
   public ScreenshotsAdapter(List<AppScreenshot> screenshots, List<AppVideo> videos,
       PublishSubject<ScreenShotClickEvent> screenShotClick) {
+    this(screenshots, videos, screenShotClick, -1);
+  }
+
+  public ScreenshotsAdapter(List<AppScreenshot> screenshots, List<AppVideo> videos,
+      PublishSubject<ScreenShotClickEvent> screenShotClick, int itemHeightDp) {
     this.screenshots = screenshots;
     this.videos = videos;
     this.screenShotClick = screenShotClick;
+    this.itemHeightDp = itemHeightDp;
   }
 
   @Override public ScreenshotViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
     View view = LayoutInflater.from(viewGroup.getContext())
         .inflate(ScreenshotViewHolder.LAYOUT_ID, viewGroup, false);
-    return new ScreenshotViewHolder(view, screenShotClick);
+    return new ScreenshotViewHolder(view, screenShotClick, itemHeightDp);
   }
 
   @Override public void onBindViewHolder(ScreenshotViewHolder holder, int position) {

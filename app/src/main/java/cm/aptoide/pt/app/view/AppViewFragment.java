@@ -1457,23 +1457,23 @@ public class AppViewFragment extends NavigationTrackFragment implements AppViewV
     Malware.Rank rank = malware.getRank() == null ? Malware.Rank.UNKNOWN : malware.getRank();
     switch (rank) {
       case TRUSTED:
-        badgeResId = R.drawable.ic_badge_trusted;
+        badgeResId = R.drawable.ic_badges_trusted;
         badgeMessageId = R.string.appview_header_trusted_text;
         break;
 
       case WARNING:
-        badgeResId = R.drawable.ic_badge_warning;
+        badgeResId = R.drawable.ic_badges_warning;
         badgeMessageId = R.string.warning;
         break;
 
       case CRITICAL:
-        badgeResId = R.drawable.ic_badge_critical;
+        badgeResId = R.drawable.ic_badges_critical;
         badgeMessageId = R.string.critical;
         break;
 
       default:
       case UNKNOWN:
-        badgeResId = R.drawable.ic_badge_unknown;
+        badgeResId = R.drawable.ic_badges_unknown;
         badgeMessageId = R.string.unknown;
         break;
     }

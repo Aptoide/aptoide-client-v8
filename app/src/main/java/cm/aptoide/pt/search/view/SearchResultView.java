@@ -3,11 +3,13 @@ package cm.aptoide.pt.search.view;
 import android.content.DialogInterface;
 import android.view.MenuItem;
 import androidx.core.util.Pair;
-import cm.aptoide.pt.search.model.SearchAdResult;
-import cm.aptoide.pt.search.model.SearchAdResultWrapper;
+import cm.aptoide.aptoideviews.filters.Filter;
+import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
+import cm.aptoide.pt.download.view.DownloadClick;
 import cm.aptoide.pt.search.model.SearchAppResult;
 import cm.aptoide.pt.search.model.SearchAppResultWrapper;
 import cm.aptoide.pt.search.model.SearchQueryModel;
+import cm.aptoide.pt.search.model.SearchResultError;
 import cm.aptoide.pt.search.suggestions.SearchQueryEvent;
 import com.jakewharton.rxbinding.support.v7.widget.SearchViewQueryTextEvent;
 import java.util.List;
@@ -15,15 +17,7 @@ import rx.Observable;
 
 public interface SearchResultView extends SearchSuggestionsView {
 
-  void showFollowedStoresResult();
-
-  void showAllStoresResult();
-
-  Observable<Void> clickFollowedStoresSearchButton();
-
-  Observable<Void> clickEverywhereSearchButton();
-
-  Observable<Void> clickNoResultsSearchButton();
+  Observable<DownloadClick> getDownloadClickEvents();
 
   Observable<Boolean> clickAdultContentSwitch();
 
@@ -35,35 +29,18 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   void showLoading();
 
+  void showMoreLoading();
+
   void hideLoading();
 
-  void addFollowedStoresResult(String query, List<SearchAppResult> dataList);
+  void showResultsLoading();
 
-  void addAllStoresResult(String query, List<SearchAppResult> dataList);
+  void addAllStoresResult(String query, List<SearchAppResult> dataList, boolean isLoadMore,
+      boolean hasMore, boolean hasError, SearchResultError error);
 
   Model getViewModel();
 
-  void setFollowedStoresAdsResult(SearchAdResult ad);
-
-  void setAllStoresAdsResult(SearchAdResult ad);
-
-  void setFollowedStoresAdsEmpty();
-
-  void setAllStoresAdsEmpty();
-
-  Observable<Void> followedStoresResultReachedBottom();
-
-  Observable<Void> allStoresResultReachedBottom();
-
-  void showLoadingMore();
-
-  void hideLoadingMore();
-
-  void setViewWithStoreNameAsSingleTab(String storeName);
-
-  void hideFollowedStoresTab();
-
-  void hideNonFollowedStoresTab();
+  Observable<Void> searchResultsReachedBottom();
 
   Observable<Void> searchSetup();
 
@@ -80,8 +57,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   Observable<Void> toolbarClick();
 
   Observable<MenuItem> searchMenuItemClick();
-
-  Observable<SearchAdResultWrapper> onAdClicked();
 
   Observable<SearchAppResultWrapper> onViewItemClicked();
 
@@ -108,8 +83,6 @@ public interface SearchResultView extends SearchSuggestionsView {
   boolean shouldShowSuggestions();
 
   void showBannerAd();
-
-  Observable<Boolean> showingSearchResultsView();
 
   void showNativeAds(String query);
 
@@ -139,11 +112,11 @@ public interface SearchResultView extends SearchSuggestionsView {
 
   Observable<Void> viewHasNoResults();
 
+  Observable<List<Filter>> filtersChangeEvents();
+
+  Observable<ScreenShotClickEvent> getScreenshotClickEvent();
+
   interface Model {
-
-    List<SearchAppResult> getFollowedStoresSearchAppResults();
-
-    List<SearchAdResult> getFollowedStoresSearchAdResults();
 
     SearchQueryModel getSearchQueryModel();
 
@@ -151,32 +124,10 @@ public interface SearchResultView extends SearchSuggestionsView {
 
     String getStoreTheme();
 
-    boolean isOnlyTrustedApps();
-
-    boolean isAllStoresSelected();
-
-    void setAllStoresSelected(boolean allStoresSelected);
-
-    int getAllStoresOffset();
-
-    int getFollowedStoresOffset();
-
-    boolean hasReachedBottomOfAllStores();
-
-    boolean hasReachedBottomOfFollowedStores();
-
-    void incrementOffsetAndCheckIfReachedBottomOfFollowedStores(int offset);
-
-    void incrementOffsetAndCheckIfReachedBottomOfAllStores(int offset);
-
     boolean hasLoadedAds();
 
-    void setHasLoadedAds();
+    boolean hasLoadedResults();
 
-    List<SearchAppResult> getAllStoresSearchAppResults();
-
-    List<SearchAdResult> getAllStoresSearchAdResults();
-
-    boolean hasData();
+    List<Filter> getFilters();
   }
 }

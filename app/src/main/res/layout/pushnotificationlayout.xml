@@ -19,7 +19,6 @@
       >
     <TextView
         android:id="@+id/title"
-        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -27,12 +26,16 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="3dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
         tools:text="teste"
         />
 
     <TextView
         android:id="@+id/description"
-        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -42,13 +45,15 @@
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
         android:autoLink="all"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="3dp"
         android:scrollbars="vertical"
+        android:textSize="14sp"
         tools:text="description"
         />
 
     <TextView
         android:id="@+id/app_name"
-        style="@style/Aptoide.TextView.Regular.S.Black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -56,6 +61,9 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="5dp"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="3dp"
+        android:textSize="14sp"
         tools:text="app name"
         />
 

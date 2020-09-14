@@ -11,7 +11,4 @@ public abstract class SearchResultItemView<T> extends RecyclerView.ViewHolder {
 
   public void setup(T item) {
   }
-
-  public void prepareToRecycle() {
-  }
 }

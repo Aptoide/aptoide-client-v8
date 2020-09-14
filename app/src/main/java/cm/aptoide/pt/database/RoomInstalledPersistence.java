@@ -99,6 +99,18 @@ public class RoomInstalledPersistence implements InstalledPersistence {
         .subscribeOn(Schedulers.io());
   }
 
+  @Override public Observable<List<RoomInstalled>> getAllInstalling() {
+    return RxJavaInterop.toV1Observable(installedDao.getAll(), BackpressureStrategy.BUFFER)
+        .flatMap(installs -> filterInstalling(installs))
+        .subscribeOn(Schedulers.io());
+  }
+
+  private Observable<List<RoomInstalled>> filterInstalling(List<RoomInstalled> installs) {
+    return Observable.from(installs)
+        .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_INSTALLING)
+        .toList();
+  }
+
   @NonNull private Observable<List<RoomInstalled>> filterCompleted(List<RoomInstalled> installs) {
     return Observable.from(installs)
         .filter(installed -> installed.getStatus() == RoomInstalled.STATUS_COMPLETED)

@@ -302,6 +302,10 @@
     <item name="android:textColor">?attr/textColorWhite</item>
   </style>
 
+  <style name="Aptoide.TextView.Medium.XXS.Grey">
+    <item name="android:textColor">?attr/textColorGrey</item>
+  </style>
+
   <style name="Aptoide.TextView.Regular.XL.Black">
     <item name="android:textColor">?attr/textColorBlackAlpha</item>
   </style>

@@ -8,7 +8,7 @@ import cm.aptoide.pt.ads.WalletAdsOfferManager;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.database.room.RoomDownload;
-import cm.aptoide.pt.download.AppContext;
+import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.download.InvalidAppException;
 import cm.aptoide.pt.install.InstallAnalytics;
@@ -29,7 +29,6 @@ import cm.aptoide.pt.view.app.FlagsVote;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
-import rx.Scheduler;
 import rx.Single;
 
 /**
@@ -50,7 +49,6 @@ public class AppViewManager {
   private final int limit;
   private final InstallAnalytics installAnalytics;
   private final MoPubAdsManager moPubAdsManager;
-  private final Scheduler ioScheduler;
   private DownloadStateParser downloadStateParser;
   private AppViewAnalytics appViewAnalytics;
   private NotificationAnalytics notificationAnalytics;
@@ -77,8 +75,8 @@ public class AppViewManager {
       AptoideAccountManager aptoideAccountManager, MoPubAdsManager moPubAdsManager,
       DownloadStateParser downloadStateParser, AppViewAnalytics appViewAnalytics,
       NotificationAnalytics notificationAnalytics, InstallAnalytics installAnalytics, int limit,
-      Scheduler ioScheduler, String marketName, AppCoinsManager appCoinsManager,
-      PromotionsManager promotionsManager, AppcMigrationManager appcMigrationManager,
+      String marketName, AppCoinsManager appCoinsManager, PromotionsManager promotionsManager,
+      AppcMigrationManager appcMigrationManager,
       LocalNotificationSyncManager localNotificationSyncManager,
       AppcPromotionNotificationStringProvider appcPromotionNotificationStringProvider) {
     this.appViewModelManager = appViewModelManager;
@@ -95,7 +93,6 @@ public class AppViewManager {
     this.appViewAnalytics = appViewAnalytics;
     this.notificationAnalytics = notificationAnalytics;
     this.installAnalytics = installAnalytics;
-    this.ioScheduler = ioScheduler;
     this.limit = limit;
     this.marketName = marketName;
     this.appCoinsManager = appCoinsManager;
@@ -218,7 +215,8 @@ public class AppViewManager {
                     .getName(), app.getOemId())))
         .doOnError(throwable -> {
           if (throwable instanceof InvalidAppException) {
-            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), downloadAction, status,
+            appViewAnalytics.sendInvalidAppEventError(app.getPackageName(), app.getVersionCode(),
+                downloadAction, status,
                 downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
                 !app.getSplits()
                     .isEmpty(), app.hasAdvertising() || app.hasBilling(), app.getMalware()
@@ -278,7 +276,7 @@ public class AppViewManager {
         AnalyticsManager.Action.CLICK, malwareRank, editorsChoice, offerResponseStatus, storeName,
         isApkfy);
     installAnalytics.installStarted(download.getPackageName(), download.getVersionCode(),
-        AnalyticsManager.Action.INSTALL, AppContext.APPVIEW,
+        AnalyticsManager.Action.INSTALL, DownloadAnalytics.AppContext.APPVIEW,
         downloadStateParser.getOrigin(download.getAction()), campaignId, abTestGroup,
         downloadAction != null && downloadAction.equals(DownloadModel.Action.MIGRATE),
         download.hasAppc(), download.hasSplits(), offerResponseStatus.toString(), malwareRank,
@@ -287,7 +285,7 @@ public class AppViewManager {
 
   public void setupMigratorUninstallEvent(String packageName) {
     installAnalytics.uninstallStarted(packageName, AnalyticsManager.Action.INSTALL,
-        AppContext.APPVIEW);
+        DownloadAnalytics.AppContext.APPVIEW);
   }
 
   public Observable<DownloadModel> loadDownloadModel(String md5, String packageName,

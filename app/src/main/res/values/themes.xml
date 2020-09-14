@@ -93,8 +93,7 @@
     <item name="loginInputBackground">@drawable/button_border_grey</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange</item>
     <item name="checkYourEmailBackground">@drawable/aptoide_gradient_vertical</item>
-
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_light</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/white</item>
@@ -167,7 +166,7 @@
     <item name="textColorOpenEmailAppButton">@color/default_orange_gradient_end</item>
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/black_87_alpha</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/twitter_color</item>
     <item name="textColorTwitch">@color/twitch</item>
@@ -350,11 +349,12 @@
     <item name="searchDropdownBackgroundColor">@color/grey_900</item>
     <item name="appDescriptionToolbarAppc">@drawable/appc_gradient_toolbar_dark</item>
     <item name="secureLoginBackground">@color/grey_dark</item>
-    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark</item>
+    <item name="connectBottomSheetBackground">@drawable/main_background_top_round_corners_dark
+    </item>
     <item name="loginInputBackground">@drawable/button_border_white_dark</item>
     <item name="loginInputErrorBackground">@drawable/button_border_red_orange_dark</item>
     <item name="checkYourEmailBackground">@color/grey_dark</item>
-
+    <item name="searchBackgroundTriangleColor">@color/search_background_grey_dark</item>
 
     <!-- separators -->
     <item name="reviewsSeparator">@color/grey_dark</item>
@@ -429,7 +429,7 @@
 
     <item name="textColorCurationGold">@color/curation_gold</item>
     <item name="textColorAppcOrange">@color/appc_orange</item>
-    <item name="textColorSpendAppc">@color/appc_spend</item>
+    <item name="textColorSpendAppc">@color/grey_medium_light</item>
     <item name="textColorAppcColor">#ff7867</item>
     <item name="textColorTwitter">@color/white</item>
     <item name="textColorTwitch">@color/white</item>
@@ -591,6 +591,8 @@
   <style name="AptoideThemeDark.Grey" parent="AptoideThemeGrey">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/grey</item>
+    <item name="homeChips">@drawable/grey_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeTeal">
@@ -631,6 +633,8 @@
   <style name="AptoideThemeDark.Teal" parent="AptoideThemeTeal">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/teal</item>
+    <item name="homeChips">@drawable/teal_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeBrown">
@@ -671,6 +675,8 @@
   <style name="AptoideThemeDark.Brown" parent="AptoideThemeBrown">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/brown</item>
+    <item name="homeChips">@drawable/brown_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeBlueGrey">
@@ -694,7 +700,6 @@
     <item name="loggedInIcon">@drawable/blue_grey_ic_logged_in</item>
     <item name="homeChips">@drawable/blue_grey_home_chips_background</item>
 
-
     <item name="customButton">@style/WidgetButtonCustomBluegrey</item>
     <item name="customButtonWhite">@style/WidgetButtonCustomAptoideBluegrey</item>
 
@@ -712,6 +717,8 @@
   <style name="AptoideThemeDark.BlueGrey" parent="AptoideThemeBlueGrey">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/grey_fog_dark</item>
+    <item name="homeChips">@drawable/blue_grey_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeLightGreen">
@@ -752,6 +759,8 @@
 
   <style name="AptoideThemeDark.LightGreen" parent="AptoideThemeLightGreen">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/light_green_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeLightBlue">
@@ -791,6 +800,8 @@
 
   <style name="AptoideThemeDark.LightBlue" parent="AptoideThemeLightBlue">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/light_blue_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeAmber">
@@ -829,6 +840,8 @@
 
   <style name="AptoideThemeDark.Amber" parent="AptoideThemeAmber">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/amber_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeLime">
@@ -867,6 +880,8 @@
 
   <style name="AptoideThemeDark.Lime" parent="AptoideThemeLime">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/lime_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeOrange">
@@ -907,6 +922,8 @@
 
   <style name="AptoideThemeDark.Orange" parent="AptoideThemeOrange">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/orange_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemePink">
@@ -946,6 +963,8 @@
 
   <style name="AptoideThemeDark.Pink" parent="AptoideThemePink">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/pink_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeIndigo">
@@ -985,6 +1004,8 @@
   <style name="AptoideThemeDark.Indigo" parent="AptoideThemeIndigo">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/indigo</item>
+    <item name="homeChips">@drawable/indigo_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeRed">
@@ -1024,6 +1045,8 @@
 
   <style name="AptoideThemeDark.Red" parent="AptoideThemeRed">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/red_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeGreen">
@@ -1063,6 +1086,8 @@
 
   <style name="AptoideThemeDark.Green" parent="AptoideThemeGreen">
     <item name="themeTextColor">@color/white</item>
+    <item name="homeChips">@drawable/green_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeDeepPurple">
@@ -1103,6 +1128,8 @@
   <style name="AptoideThemeDark.DeepPurple" parent="AptoideThemeDeepPurple">
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/deep_purple_light_text</item>
+    <item name="homeChips">@drawable/deep_purple_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
   <style name="AptoideThemeBlack">
@@ -1143,6 +1170,8 @@
     <item name="themeTextColor">@color/white</item>
     <item name="colorAccent">@color/white</item>
     <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
+    <item name="homeChips">@drawable/black_home_chips_background_dark</item>
+    <item name="homeChipsTextColorSelector">@color/white</item>
   </style>
 
 </resources>

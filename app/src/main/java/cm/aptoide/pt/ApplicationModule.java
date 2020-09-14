@@ -2,7 +2,6 @@ package cm.aptoide.pt;
 
 import android.accounts.AccountManager;
 import android.app.ActivityManager;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.UiModeManager;
 import android.content.ContentResolver;
@@ -20,8 +19,11 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -52,7 +54,6 @@ import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
-import cm.aptoide.pt.abtesting.experiments.AptoideInstallExperiment;
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -95,7 +96,6 @@ import cm.aptoide.pt.app.ReviewsRepository;
 import cm.aptoide.pt.app.ReviewsService;
 import cm.aptoide.pt.app.appc.BonusAppcRemoteService;
 import cm.aptoide.pt.app.appc.BonusAppcService;
-import cm.aptoide.pt.app.aptoideinstall.AptoideInstallAnalytics;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallRepository;
 import cm.aptoide.pt.app.migration.AppcMigrationManager;
@@ -151,6 +151,7 @@ import cm.aptoide.pt.download.DownloadMirrorEventInterceptor;
 import cm.aptoide.pt.download.FileDownloadManagerProvider;
 import cm.aptoide.pt.download.Md5Comparator;
 import cm.aptoide.pt.download.OemidProvider;
+import cm.aptoide.pt.download.view.DownloadStatusManager;
 import cm.aptoide.pt.downloadmanager.AppDownloaderProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadAppFileMapper;
@@ -209,12 +210,12 @@ import cm.aptoide.pt.networking.NoOpTokenInvalidator;
 import cm.aptoide.pt.networking.RefreshTokenInvalidator;
 import cm.aptoide.pt.networking.UserAgentInterceptor;
 import cm.aptoide.pt.networking.UserAgentInterceptorV8;
+import cm.aptoide.pt.notification.AptoideWorkerFactory;
 import cm.aptoide.pt.notification.NotificationAnalytics;
 import cm.aptoide.pt.notification.NotificationProvider;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncMapper;
 import cm.aptoide.pt.notification.RoomLocalNotificationSyncPersistence;
 import cm.aptoide.pt.notification.UpdatesNotificationManager;
-import cm.aptoide.pt.notification.UpdatesNotificationWorkerFactory;
 import cm.aptoide.pt.notification.sync.LocalNotificationSyncManager;
 import cm.aptoide.pt.packageinstaller.AppInstaller;
 import cm.aptoide.pt.preferences.AptoideMd5Manager;
@@ -236,6 +237,7 @@ import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
 import cm.aptoide.pt.search.SearchManager;
+import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
@@ -251,7 +253,6 @@ import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
-import cm.aptoide.pt.sync.alarm.AlarmSyncService;
 import cm.aptoide.pt.sync.alarm.SyncStorage;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.themes.NewFeatureManager;
@@ -321,7 +322,6 @@ import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.UI_MODE_SERVICE;
 import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
@@ -333,6 +333,40 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   public ApplicationModule(AptoideApplication application) {
     this.application = application;
+  }
+
+  @Singleton @Provides LaunchManager providesLaunchManager(FirstLaunchManager firstLaunchManager,
+      UpdateLaunchManager updateLaunchManager,
+      @Named("secureShared") SharedPreferences secureSharedPreferences) {
+    return new LaunchManager(firstLaunchManager, updateLaunchManager, secureSharedPreferences);
+  }
+
+  @Singleton @Provides FirstLaunchManager providesFirstLaunchManager(
+      @Named("default") SharedPreferences defaultSharedPreferences, IdsRepository idsRepository,
+      FollowedStoresManager followedStoresManager, UpdateRepository updateRepository,
+      RootAvailabilityManager rootAvailabilityManager, AptoideAccountManager aptoideAccountManager,
+      AptoideShortcutManager shortcutManager) {
+    return new FirstLaunchManager(defaultSharedPreferences, idsRepository, followedStoresManager,
+        updateRepository, rootAvailabilityManager, aptoideAccountManager, shortcutManager,
+        application);
+  }
+
+  @Singleton @Provides UpdateLaunchManager providesUpdateLaunchManager(
+      FollowedStoresManager followedStoresManager) {
+    return new UpdateLaunchManager(followedStoresManager);
+  }
+
+  @Singleton @Provides FollowedStoresManager providesFollowedStoresManager(
+      StoreCredentialsProvider storeCredentialsProvider,
+      @Named("default-followed-stores") List<String> defaultFollowedStores,
+      StoreUtilsProxy storeUtilsProxy, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> accountSettingsBodyInterceptorPoolV7,
+      AptoideAccountManager aptoideAccountManager, @Named("default") OkHttpClient httpClient,
+      TokenInvalidator tokenInvalidator,
+      @Named("default") SharedPreferences defaultSharedPreferences) {
+    return new FollowedStoresManager(storeCredentialsProvider, defaultFollowedStores,
+        storeUtilsProxy, accountSettingsBodyInterceptorPoolV7, aptoideAccountManager, httpClient,
+        tokenInvalidator, defaultSharedPreferences);
   }
 
   @Singleton @Provides InstallManager providesInstallManager(
@@ -498,7 +532,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         new FileUtils(), ToolboxManager.isDebug(sharedPreferences) || BuildConfig.DEBUG,
         installedRepository, BuildConfig.ROOT_TIMEOUT, rootAvailabilityManager, sharedPreferences,
         installerAnalytics, getInstallingStateTimeout(), appInstallerStatusReceiver,
-        rootInstallerProvider);
+        rootInstallerProvider, application);
   }
 
   private int getInstallingStateTimeout() {
@@ -871,8 +905,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides SyncScheduler provideSyncScheduler(SyncStorage syncStorage) {
-    return new AlarmSyncScheduler(application, AlarmSyncService.class,
-        (AlarmManager) application.getSystemService(ALARM_SERVICE), syncStorage);
+    return new AlarmSyncScheduler(application, syncStorage);
   }
 
   @Singleton @Provides SyncStorage provideSyncStorage(
@@ -1017,6 +1050,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
+        .addMigrations(new Migration(100, 101) {
+          @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId TEXT");
+          }
+        })
         .build();
   }
 
@@ -1155,17 +1193,9 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return RxJavaCallAdapterFactory.create();
   }
 
-  @Singleton @Provides SearchManager providesSearchManager(@Named("mature-pool-v7")
-      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
-      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
-      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
-      AdsRepository adsRepository, AptoideAccountManager accountManager,
-      MoPubAdsManager moPubAdsManager, AppBundlesVisibilityManager appBundlesVisibilityManager,
-      RoomStoreRepository storeRepository) {
-    return new SearchManager(sharedPreferences, tokenInvalidator, baseBodyBodyInterceptor,
-        okHttpClient, converterFactory, StoreUtils.getSubscribedStoresAuthMap(storeRepository),
-        adsRepository, accountManager, moPubAdsManager, appBundlesVisibilityManager,
-        storeRepository);
+  @Singleton @Provides DownloadStatusManager providesDownloadStatusManager(
+      InstallManager installManager, AppcMigrationManager appcMigrationManager) {
+    return new DownloadStatusManager(installManager, appcMigrationManager);
   }
 
   @Singleton @Provides SearchSuggestionManager providesSearchSuggestionManager(
@@ -1499,9 +1529,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return Arrays.asList(InstallAnalytics.CLICK_ON_INSTALL, DownloadAnalytics.RAKAM_DOWNLOAD_EVENT,
         InstallAnalytics.RAKAM_INSTALL_EVENT, SearchAnalytics.SEARCH,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         SearchAnalytics.SEARCH_RESULT_CLICK, FirstLaunchAnalytics.FIRST_LAUNCH_RAKAM,
-        AptoideInstallAnalytics.PARTICIPATING_EVENT, AptoideInstallAnalytics.CONVERSION_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_PARTICIPATING_EVENT,
         UpdatesNotificationAnalytics.MOB_657_UPDATES_NOTIFICATION_CONVERSION_EVENT);
   }
@@ -1961,7 +1989,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides PackageInstallerManager providesPackageInstallerManager() {
-    return new PackageInstallerManager();
+    return new PackageInstallerManager(AptoideUtils.isDeviceMIUI(),
+        AptoideUtils.isMIUIwithAABFix());
   }
 
   @Singleton @Provides NotificationProvider provideNotificationProvider(
@@ -2045,10 +2074,8 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
   }
 
   @Singleton @Provides AptoideInstallManager providesAptoideInstallManager(
-      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository,
-      AptoideInstallExperiment aptoideInstallExperiment) {
-    return new AptoideInstallManager(installedRepository, aptoideInstallRepository,
-        aptoideInstallExperiment);
+      InstalledRepository installedRepository, AptoideInstallRepository aptoideInstallRepository) {
+    return new AptoideInstallManager(installedRepository, aptoideInstallRepository);
   }
 
   @Singleton @Provides AptoideInstallRepository providesAptoideInstallRepository(
@@ -2061,23 +2088,13 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
     return new RoomAptoideInstallPersistence(database.aptoideInstallDao());
   }
 
-  @Singleton @Provides AptoideInstallExperiment providesAptoideInstallExperiment(
-      @Named("ab-test") ABTestManager abTestManager,
-      AptoideInstallAnalytics aptoideInstallAnalytics) {
-    return new AptoideInstallExperiment(abTestManager, aptoideInstallAnalytics);
-  }
-
-  @Singleton @Provides AptoideInstallAnalytics providesAptoideInstallAnalytics(
-      AnalyticsManager analyticsManager, NavigationTracker navigationTracker) {
-    return new AptoideInstallAnalytics(analyticsManager, navigationTracker);
-  }
-
-  @Singleton @Provides UpdatesNotificationWorkerFactory providesUpdatesNotificationWorkerFactory(
+  @Singleton @Provides AptoideWorkerFactory providesUpdatesNotificationWorkerFactory(
       UpdateRepository updateRepository, @Named("default") SharedPreferences sharedPreferences,
       AptoideInstallManager aptoideInstallManager,
-      UpdatesNotificationAnalytics updatesNotificationAnalytics) {
-    return new UpdatesNotificationWorkerFactory(updateRepository, sharedPreferences,
-        aptoideInstallManager, new AppMapper(), updatesNotificationAnalytics);
+      UpdatesNotificationAnalytics updatesNotificationAnalytics, SyncScheduler syncScheduler,
+      SyncStorage syncStorage, CrashReport crashReport) {
+    return new AptoideWorkerFactory(updateRepository, sharedPreferences, aptoideInstallManager,
+        new AppMapper(), updatesNotificationAnalytics, syncScheduler, syncStorage, crashReport);
   }
 
   @Singleton @Provides UpdatesNotificationManager providesUpdatesNotificationManager(
