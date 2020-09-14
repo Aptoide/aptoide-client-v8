@@ -24,7 +24,7 @@ import cm.aptoide.pt.logger.Logger;
 import java.util.Locale;
 import javax.inject.Inject;
 
-public class InstallService extends BaseService implements DownloadsNotification {
+public class DownloadService extends BaseService implements DownloadsNotification {
 
   public static final String TAG = "InstallService";
 
@@ -43,7 +43,7 @@ public class InstallService extends BaseService implements DownloadsNotification
   private Notification notification;
 
   public static Intent newInstanceForDownloads(Context context) {
-    Intent intent = new Intent(context, InstallService.class);
+    Intent intent = new Intent(context, DownloadService.class);
     intent.setAction(DOWNLOAD_APP_ACTION);
     return intent;
   }
@@ -106,7 +106,7 @@ public class InstallService extends BaseService implements DownloadsNotification
 
   private PendingIntent getPausePendingIntent(String md5) {
 
-    Intent intent = new Intent(this, InstallService.class);
+    Intent intent = new Intent(this, DownloadService.class);
     if (!TextUtils.isEmpty(md5)) {
       final Bundle bundle = new Bundle();
       bundle.putString(EXTRA_INSTALLATION_MD5, md5);

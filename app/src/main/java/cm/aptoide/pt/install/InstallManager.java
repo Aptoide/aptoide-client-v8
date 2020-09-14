@@ -10,11 +10,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 import cm.aptoide.pt.app.aptoideinstall.AptoideInstallManager;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.downloadmanager.DownloadNotFoundException;
 import cm.aptoide.pt.downloadmanager.DownloadsRepository;
+import cm.aptoide.pt.install.installer.InstallCandidate;
 import cm.aptoide.pt.install.installer.InstallationState;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
@@ -27,9 +29,11 @@ import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
 
-import static cm.aptoide.pt.install.InstallService.ACTION_INSTALL_FINISHED;
-import static cm.aptoide.pt.install.InstallService.EXTRA_INSTALLATION_MD5;
+import static cm.aptoide.pt.install.DownloadService.ACTION_INSTALL_FINISHED;
+import static cm.aptoide.pt.install.DownloadService.EXTRA_INSTALLATION_MD5;
 
 /**
  * Created by marcelobenites on 9/29/16.
@@ -50,6 +54,9 @@ public class InstallManager {
   private final ForegroundManager foregroundManager;
   private final AptoideInstallManager aptoideInstallManager;
   private final InstallAppSizeValidator installAppSizeValidator;
+
+  private CompositeSubscription dispatchInstallationsSubscription = new CompositeSubscription();
+  private PublishSubject<InstallCandidate> installCandidateSubject = PublishSubject.create();
 
   public InstallManager(Context context, AptoideDownloadManager aptoideDownloadManager,
       Installer installer, RootAvailabilityManager rootAvailabilityManager,
@@ -74,22 +81,26 @@ public class InstallManager {
 
   public void start() {
     aptoideDownloadManager.start();
+    dispatchInstallationCandidates();
     installer.dispatchInstallations();
   }
 
-  private void waitForDownloadAndInstall(String md5, boolean forceDefaultInstall,
-      boolean forceSplitInstall) {
-    aptoideDownloadManager.getDownloadAsObservable(md5)
-        .filter(download -> download != null)
-        .takeUntil(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
-        .filter(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
-        .flatMapCompletable(
-            download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
-                forceDefaultInstall, forceSplitInstall).andThen(
-                sendBackgroundInstallFinishedBroadcast(download)))
-        .toCompletable()
-        .subscribe(() -> {
-        }, Throwable::printStackTrace);
+  private void dispatchInstallationCandidates() {
+    dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
+        candidate -> aptoideDownloadManager.getDownloadAsObservable(candidate.getMd5())
+            .filter(download -> download != null)
+            .takeUntil(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
+            .filter(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
+            .flatMapCompletable(
+                download -> stopForegroundAndInstall(download.getMd5(), download.getAction(),
+                    candidate.getForceDefaultInstall(),
+                    candidate.getShouldSetPackageInstaller()).andThen(
+                    sendBackgroundInstallFinishedBroadcast(download))))
+        .doOnError((throwable) -> CrashReport.getInstance()
+            .log(throwable))
+        .retry()
+        .subscribe(__ -> {
+        }, Throwable::printStackTrace));
   }
 
   private Completable sendBackgroundInstallFinishedBroadcast(RoomDownload download) {
@@ -271,7 +282,7 @@ public class InstallManager {
             return downloadRepository.save(download)
                 .andThen(Observable.just(download.getMd5()));
           } else {
-            return installInBackground(download.getMd5(), forceDefaultInstall,
+            return startBackgroundInstallation(download.getMd5(), forceDefaultInstall,
                 packageInstallerManager.shouldSetInstallerPackageName() || forceSplitInstall,
                 shouldInstall);
           }
@@ -498,22 +509,15 @@ public class InstallManager {
     });
   }
 
-  private Observable<String> installInBackground(String md5, boolean forceDefaultInstall,
-      boolean shouldSetPackageInstaller, boolean shouldInstall) {
-    return startBackgroundInstallation(md5, forceDefaultInstall, shouldSetPackageInstaller,
-        shouldInstall);
-  }
-
   private Observable<String> startBackgroundInstallation(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller, boolean shouldInstall) {
-    if (shouldInstall) {
-      waitForDownloadAndInstall(md5, forceDefaultInstall, shouldSetPackageInstaller);
-    }
     return aptoideDownloadManager.getDownloadAsSingle(md5)
         .toObservable()
         .doOnNext(__ -> {
           if (shouldInstall) {
-            startInstallService();
+            installCandidateSubject.onNext(
+                new InstallCandidate(md5, forceDefaultInstall, shouldSetPackageInstaller));
+            foregroundManager.startDownloadService();
           }
         })
         .flatMapCompletable(
@@ -529,10 +533,6 @@ public class InstallManager {
     } else {
       return aptoideDownloadManager.startDownload(download);
     }
-  }
-
-  private void startInstallService() {
-    foregroundManager.startDownloadForeground();
   }
 
   private Completable initInstallationProgress(RoomDownload download) {
