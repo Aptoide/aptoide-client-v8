@@ -142,13 +142,13 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         SharedPreferences sharedPreferences) {
       this(packageName, refresh, sharedPreferences);
       this.storeName = storeName;
-      this.nodes = new Node(appId, packageName);
+      this.nodes = new Node();
     }
 
     public Body(String packageName, Boolean refresh, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.packageName = packageName;
-      this.nodes = new Node(packageName);
+      this.nodes = new Node();
     }
 
     public Body(String uname, SharedPreferences sharedPreferences) {
@@ -166,7 +166,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
     public Body(long appId, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.appId = appId;
-      this.nodes = new Node(appId);
+      this.nodes = new Node();
     }
 
     public Long getAppId() {
