@@ -8,21 +8,21 @@ public class AptoideInstall {
   private final String storeName;
   private final String packageName;
   private final String uname;
-  private final boolean showPopup;
+  private final String openType;
   private final long appId;
 
-  public AptoideInstall(long appId, String packageName, boolean showPopup) {
+  public AptoideInstall(long appId, String packageName, String openType) {
     this.appId = appId;
     this.packageName = packageName;
-    this.showPopup = showPopup;
+    this.openType = openType;
     this.uname = null;
     storeName = null;
   }
 
-  public AptoideInstall(String storeName, String packageName, boolean showPopup) {
+  public AptoideInstall(String storeName, String packageName, String openType) {
     this.storeName = storeName;
     this.packageName = packageName;
-    this.showPopup = showPopup;
+    this.openType = openType;
     this.uname = null;
     appId = -1;
   }
@@ -30,7 +30,7 @@ public class AptoideInstall {
   public AptoideInstall(String uname, String packageName) {
     this.uname = uname;
     this.packageName = packageName;
-    this.showPopup = false;
+    this.openType = null;
     this.appId = -1;
     this.storeName = null;
   }
@@ -43,8 +43,8 @@ public class AptoideInstall {
     return packageName;
   }
 
-  public boolean shouldShowPopup() {
-    return showPopup;
+  public String getOpenType() {
+    return openType;
   }
 
   public long getAppId() {

@@ -18,9 +18,11 @@ import androidx.core.app.NotificationCompat;
 import cm.aptoide.pt.AptoideApplication;
 import cm.aptoide.pt.BaseService;
 import cm.aptoide.pt.DeepLinkIntentReceiver;
+import cm.aptoide.pt.LifecycleTrackerManager;
 import cm.aptoide.pt.R;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.NotificationProvider;
 import java.util.Locale;
 import javax.inject.Inject;
 
@@ -38,9 +40,11 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   private final int OPEN_DOWNLOAD_MANAGER_REQUEST_CODE = 222;
   private final int OPEN_APPVIEW_REQUEST_CODE = 333;
   @Inject AptoideDownloadManager downloadManager;
+  @Inject LifecycleTrackerManager lifecycleTrackerManager;
+  @Inject NotificationProvider notificationProvider;
   private DownloadsNotificationsPresenter downloadsNotificationsPresenter;
   private InstallManager installManager;
-  private Notification notification;
+  private Notification progressNotification;
 
   public static Intent newInstanceForDownloads(Context context) {
     Intent intent = new Intent(context, DownloadService.class);
@@ -55,7 +59,9 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
         .d(TAG, "Install service is starting");
     final AptoideApplication application = (AptoideApplication) getApplicationContext();
     installManager = application.getInstallManager();
-    downloadsNotificationsPresenter = new DownloadsNotificationsPresenter(this, installManager);
+    downloadsNotificationsPresenter =
+        new DownloadsNotificationsPresenter(this, installManager, lifecycleTrackerManager,
+            notificationProvider);
     downloadsNotificationsPresenter.present();
   }
 
@@ -84,7 +90,7 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
   }
 
   private void pauseDownload(String md5) {
-    notification = null;
+    progressNotification = null;
     downloadManager.pauseDownload(md5)
         .subscribe();
   }
@@ -143,31 +149,31 @@ public class DownloadService extends BaseService implements DownloadsNotificatio
     return builder.build();
   }
 
-  @Override
-  public void setupNotification(String md5, String appName, int progress, boolean isIndeterminate) {
+  @Override public void setupProgressNotification(String md5, String appName, int progress,
+      boolean isIndeterminate) {
 
     NotificationCompat.Action downloadManagerAction = getDownloadManagerAction(md5.hashCode());
     PendingIntent appViewPendingIntent = getAppViewOpeningPendingIntent(md5);
     NotificationCompat.Action pauseAction = getPauseAction(md5);
 
-    if (notification == null) {
-      notification =
+    if (progressNotification == null) {
+      progressNotification =
           buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
               appViewPendingIntent);
     } else {
-      long oldWhen = notification.when;
-      notification =
+      long oldWhen = progressNotification.when;
+      progressNotification =
           buildNotification(appName, progress, isIndeterminate, pauseAction, downloadManagerAction,
               appViewPendingIntent);
-      notification.when = oldWhen;
+      progressNotification.when = oldWhen;
     }
 
-    startForeground(NOTIFICATION_ID, notification);
+    startForeground(NOTIFICATION_ID, progressNotification);
   }
 
-  @Override public void removeNotificationAndStop() {
+  @Override public void removeProgressNotificationAndStop() {
     downloadsNotificationsPresenter.onDestroy();
-    notification = null;
+    progressNotification = null;
     stopForeground(true);
     stopSelf();
   }

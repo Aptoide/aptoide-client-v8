@@ -419,7 +419,7 @@ public class InstallManager {
     return isIndeterminate;
   }
 
-  private Install.InstallationStatus mapDownloadState(RoomDownload download) {
+  public Install.InstallationStatus mapDownloadState(RoomDownload download) {
     Install.InstallationStatus status = Install.InstallationStatus.UNINSTALLED;
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {

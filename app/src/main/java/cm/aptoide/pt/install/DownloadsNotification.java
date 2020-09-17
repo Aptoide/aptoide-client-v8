@@ -6,7 +6,7 @@ package cm.aptoide.pt.install;
 
 public interface DownloadsNotification {
 
-  void setupNotification(String md5, String appName, int progress, boolean isIndeterminate);
+  void setupProgressNotification(String md5, String appName, int progress, boolean isIndeterminate);
 
-  void removeNotificationAndStop();
+  void removeProgressNotificationAndStop();
 }
