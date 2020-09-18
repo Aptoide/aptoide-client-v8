@@ -1,11 +1,15 @@
 package cm.aptoide.pt.notification
 
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import cm.aptoide.pt.AptoideApplication
 import cm.aptoide.pt.DeepLinkIntentReceiver
@@ -16,8 +20,19 @@ import rx.Single
 
 class ReadyToInstallNotificationManager(val installManager: InstallManager,
                                         val notificationIdsMapper: NotificationIdsMapper) {
+  val CHANNEL_ID = "ready_to_install_notification_channel"
 
   private var isNotificationDisplayed: Boolean = false
+
+  @RequiresApi(Build.VERSION_CODES.O)
+  fun getNotificationChannel(): NotificationChannel {
+    val name = "Install notifications"
+    val descriptionText = "Install"
+    val importance = NotificationManager.IMPORTANCE_DEFAULT
+    return NotificationChannel(CHANNEL_ID, name, importance).apply {
+      description = descriptionText
+    }
+  }
 
   @Synchronized
   fun setIsNotificationDisplayed(isActive: Boolean) {
@@ -48,13 +63,11 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
               .setContentText(body)
               .setLargeIcon(ImageLoader.with(context)
                   .loadBitmap(icon))
-              .setPriority(NotificationCompat.PRIORITY_DEFAULT)
               .setStyle(NotificationCompat.BigTextStyle().bigText(body))
               .setAutoCancel(true)
-              .setOngoing(false)
+              .setChannelId(CHANNEL_ID)
+              .setOnlyAlertOnce(true)
               .build()
-      notification.flags =
-          Notification.DEFAULT_LIGHTS or Notification.FLAG_AUTO_CANCEL
       notification
     }
   }
@@ -69,16 +82,14 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
               .setContentIntent(getMultiAppPressIntentAction(context))
               .setDeleteIntent(getOnDismissAction(context))
               .setSmallIcon(R.drawable.ic_stat_aptoide_notification)
+              .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
               .setContentTitle(title)
               .setContentText(body)
-              .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-              .setPriority(NotificationCompat.PRIORITY_DEFAULT)
               .setStyle(NotificationCompat.BigTextStyle().bigText(body))
               .setAutoCancel(true)
-              .setOngoing(false)
+              .setChannelId(CHANNEL_ID)
+              .setOnlyAlertOnce(true)
               .build()
-      notification.flags =
-          Notification.DEFAULT_LIGHTS or Notification.FLAG_AUTO_CANCEL
       notification
     }
   }

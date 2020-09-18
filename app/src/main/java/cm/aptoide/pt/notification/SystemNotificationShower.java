@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -73,10 +74,18 @@ public class SystemNotificationShower implements Presenter {
   }
 
   @Override public void present() {
+    setupChannels();
     setNotificationPressSubscribe();
     setNotificationDismissSubscribe();
     setNotificationBootCompletedSubscribe();
     showNewNotification();
+  }
+
+  private void setupChannels() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      notificationManager.createNotificationChannel(
+          readyToInstallNotificationManager.getNotificationChannel());
+    }
   }
 
   private void showNewNotification() {
