@@ -394,10 +394,7 @@ public class DefaultInstaller implements Installer {
                     installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
                   }
                 })))
-        .map(success -> installation)
-        .startWith(updateInstallation(installation,
-            shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
-                : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING));
+        .map(success -> installation);
   }
 
   @NotNull private AppInstall map(Installation installation) {
