@@ -20,7 +20,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
   @Ignore public static final String SIGNATURE = "signature";
   @Ignore public static final String STORE_NAME = "storeName";
   @Ignore public static final int STATUS_UNINSTALLED = 1;
-  @Ignore public static final int STATUS_WAITING = 2;
+  @Ignore public static final int STATUS_PRE_INSTALL = 2;
   @Ignore public static final int STATUS_INSTALLING = 3;
   @Ignore public static final int STATUS_COMPLETED = 4;
   @Ignore public static final int STATUS_ROOT_TIMEOUT = 5;
