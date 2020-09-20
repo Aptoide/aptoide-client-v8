@@ -292,17 +292,14 @@ public abstract class AptoideApplication extends Application {
      * TODO change this class in order to accept that there's no test
      * AN-1838
      */
-    generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeSentry())
-        .andThen(setUpUpdatesNotification())
-        .andThen(setUpAdsUserProperty())
-        .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics(
-            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
-        .andThen(setUpFirstRunAnalytics())
-        .observeOn(Schedulers.computation())
-        .andThen(launchManager.launch())
-        .andThen(discoverAndSaveInstalledApps())
+
+    generateAptoideUuid().andThen(
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
+            startUpdatesNotification(), setUpInitialAdsUserProperty(),
+            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+            setUpFirstRunAnalytics(), launchManager.launch()
+                .subscribeOn(Schedulers.computation()), discoverAndSaveInstalledApps()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
@@ -335,15 +332,15 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-  private Completable setUpUpdatesNotification() {
+  private Completable startUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
   }
 
-  private Completable checkAdsUserProperty() {
+  private Completable handleAdsUserPropertyToggle() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty() {
+  private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
         .doOnCompleted(() -> Rakam.getInstance()
