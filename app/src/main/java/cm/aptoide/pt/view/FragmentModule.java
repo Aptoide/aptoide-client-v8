@@ -103,6 +103,10 @@ import cm.aptoide.pt.editorialList.EditorialListService;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
+import cm.aptoide.pt.gamification.GamificationFragment;
+import cm.aptoide.pt.gamification.GamificationManager;
+import cm.aptoide.pt.gamification.GamificationNavigator;
+import cm.aptoide.pt.gamification.GamificationPresenter;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.Home;
@@ -467,11 +471,13 @@ import rx.subscriptions.CompositeSubscription;
       AccountNavigator accountNavigator, AppViewAnalytics analytics,
       CampaignAnalytics campaignAnalytics, AppViewNavigator appViewNavigator,
       AppViewManager appViewManager, AptoideAccountManager accountManager, CrashReport crashReport,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator,
+      GamificationManager gamificationManager) {
     return new AppViewPresenter((AppViewView) fragment, accountNavigator, analytics,
         campaignAnalytics, appViewNavigator, appViewManager, accountManager,
         AndroidSchedulers.mainThread(), crashReport, new PermissionManager(),
-        ((PermissionService) fragment.getContext()), promotionsNavigator, externalNavigator);
+        ((PermissionService) fragment.getContext()), promotionsNavigator, externalNavigator,
+        gamificationManager);
   }
 
   @FragmentScope @Provides AppViewConfiguration providesAppViewConfiguration() {
@@ -742,5 +748,12 @@ import rx.subscriptions.CompositeSubscription;
     return new RewardAppCoinsAppsRepository(okHttpClient, WebService.getDefaultConverter(),
         baseBodyBodyInterceptor, tokenInvalidator, sharedPreferences, installManager,
         appBundlesVisibilityManager);
+  }
+
+  @FragmentScope @Provides GamificationPresenter providesGamificationPresenter(
+      GamificationManager gamificationManager, GamificationNavigator gamificationNavigator,
+      WalletAppProvider walletAppProvider) {
+    return new GamificationPresenter(gamificationManager, ((GamificationFragment) fragment),
+        gamificationNavigator, AndroidSchedulers.mainThread(), walletAppProvider);
   }
 }

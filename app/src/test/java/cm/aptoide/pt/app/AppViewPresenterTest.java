@@ -11,6 +11,7 @@ import cm.aptoide.pt.app.view.AppViewNavigator;
 import cm.aptoide.pt.app.view.AppViewPresenter;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.model.v7.Malware;
+import cm.aptoide.pt.gamification.GamificationManager;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.View;
 import cm.aptoide.pt.promotions.Promotion;
@@ -56,6 +57,7 @@ public class AppViewPresenterTest {
   @Mock private CampaignAnalytics campaignAnalytics;
   @Mock private PromotionsNavigator promotionsNavigator;
   @Mock private ExternalNavigator externalNavigator;
+  @Mock private GamificationManager gamificationManager;
 
   private AppViewPresenter presenter;
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
@@ -69,7 +71,8 @@ public class AppViewPresenterTest {
     presenter =
         spy(new AppViewPresenter(view, accountNavigator, appViewAnalytics, campaignAnalytics,
             appViewNavigator, appViewManager, accountManager, Schedulers.immediate(), crashReporter,
-            permissionManager, permissionService, promotionsNavigator, externalNavigator));
+            permissionManager, permissionService, promotionsNavigator, externalNavigator,
+            gamificationManager));
 
     lifecycleEvent = PublishSubject.create();
 

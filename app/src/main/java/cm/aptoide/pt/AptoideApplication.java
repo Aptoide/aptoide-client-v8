@@ -42,6 +42,7 @@ import cm.aptoide.pt.download.OemidProvider;
 import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
+import cm.aptoide.pt.gamification.GamificationManager;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
@@ -190,6 +191,7 @@ public abstract class AptoideApplication extends Application {
   @Inject AptoideWorkerFactory aptoideWorkerFactory;
   @Inject UpdatesNotificationManager updatesNotificationManager;
   @Inject LaunchManager launchManager;
+  @Inject GamificationManager gamificationManager;
   private LeakTool leakTool;
   private NotificationCenter notificationCenter;
   private FileManager fileManager;
@@ -333,6 +335,8 @@ public abstract class AptoideApplication extends Application {
     invalidRefreshTokenLogoutManager.start();
 
     installManager.start();
+
+    handleGamification();
   }
 
   private Completable setUpUpdatesNotification() {
@@ -399,6 +403,15 @@ public abstract class AptoideApplication extends Application {
         .build();
 
     MoPub.initializeSdk(this, sdkConfiguration, null);
+  }
+
+  private void handleGamification() {
+    Single.zip(gamificationManager.shouldShowApkfyGamification(),
+        gamificationManager.shouldShowHomeGamification(), (apkfy, home) -> apkfy || home)
+        .toObservable()
+        .filter(isGamification -> isGamification)
+        .flatMap(__ -> gamificationManager.setUpSecondChallenge())
+        .subscribe();
   }
 
   @NonNull private Map<String, String> getMediatedNetworkConfigurationBaseMap(

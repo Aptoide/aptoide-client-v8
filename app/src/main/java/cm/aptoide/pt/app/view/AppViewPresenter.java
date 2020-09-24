@@ -25,6 +25,7 @@ import cm.aptoide.pt.app.SimilarAppsViewModel;
 import cm.aptoide.pt.app.view.similar.SimilarAppsBundle;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.InvalidAppException;
+import cm.aptoide.pt.gamification.GamificationManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.ExternalNavigator;
 import cm.aptoide.pt.presenter.Presenter;
@@ -67,6 +68,7 @@ public class AppViewPresenter implements Presenter {
   private final Scheduler viewScheduler;
   private final CrashReport crashReport;
   private final ExternalNavigator externalNavigator;
+  private final GamificationManager gamificationManager;
   private boolean openTypeAlreadyRegistered = false;
 
   public AppViewPresenter(AppViewView view, AccountNavigator accountNavigator,
@@ -74,7 +76,8 @@ public class AppViewPresenter implements Presenter {
       AppViewNavigator appViewNavigator, AppViewManager appViewManager,
       AptoideAccountManager accountManager, Scheduler viewScheduler, CrashReport crashReport,
       PermissionManager permissionManager, PermissionService permissionService,
-      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator) {
+      PromotionsNavigator promotionsNavigator, ExternalNavigator externalNavigator,
+      GamificationManager gamificationManager) {
     this.view = view;
     this.accountNavigator = accountNavigator;
     this.appViewAnalytics = appViewAnalytics;
@@ -88,6 +91,7 @@ public class AppViewPresenter implements Presenter {
     this.permissionService = permissionService;
     this.promotionsNavigator = promotionsNavigator;
     this.externalNavigator = externalNavigator;
+    this.gamificationManager = gamificationManager;
   }
 
   @Override public void present() {
@@ -276,8 +280,11 @@ public class AppViewPresenter implements Presenter {
     AppModel appModel = appViewModel.getAppModel();
     DownloadModel.Action action = appViewModel.getDownloadModel()
         .getAction();
-    return handleOpenAppViewDialogInput(appViewModel.getAppModel()).filter(
-        shouldDownload -> shouldDownload)
+    return gamificationManager.shouldShowApkfyGamification()
+        .flatMapObservable(
+            isGamification -> handleOpenAppViewDialogInput(appViewModel.getAppModel(),
+                isGamification))
+        .filter(shouldDownload -> shouldDownload)
         .flatMapCompletable(__ -> appViewManager.getAdsVisibilityStatus()
             .doOnSuccess(status -> appViewAnalytics.clickOnInstallButton(appModel.getPackageName(),
                 appModel.getDeveloper()
@@ -306,7 +313,8 @@ public class AppViewPresenter implements Presenter {
         });
   }
 
-  private Observable<Boolean> handleOpenAppViewDialogInput(AppModel appModel) {
+  private Observable<Boolean> handleOpenAppViewDialogInput(AppModel appModel,
+      boolean isGamification) {
     if (!openTypeAlreadyRegistered) {
       openTypeAlreadyRegistered = true;
       if (appModel.getOpenType() == AppViewFragment.OpenType.OPEN_AND_INSTALL) {
@@ -317,7 +325,7 @@ public class AppViewPresenter implements Presenter {
       } else if (appModel.getOpenType() == AppViewFragment.OpenType.APK_FY_INSTALL_POPUP) {
         return view.showOpenAndInstallApkFyDialog(appModel.getMarketName(), appModel.getAppName(),
             appModel.getAppc(), appModel.getRating()
-                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads(), false)
+                .getAverage(), appModel.getIcon(), appModel.getPackageDownloads(), isGamification)
             .map(__ -> true);
       }
     }

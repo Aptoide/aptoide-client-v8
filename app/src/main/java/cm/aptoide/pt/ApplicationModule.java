@@ -54,6 +54,7 @@ import cm.aptoide.pt.abtesting.ABTestServiceProvider;
 import cm.aptoide.pt.abtesting.AbTestCacheValidator;
 import cm.aptoide.pt.abtesting.ExperimentModel;
 import cm.aptoide.pt.abtesting.analytics.UpdatesNotificationAnalytics;
+import cm.aptoide.pt.abtesting.experiments.ApkfyGamificationExperiment;
 import cm.aptoide.pt.abtesting.experiments.UpdatesNotificationExperiment;
 import cm.aptoide.pt.account.AccountAnalytics;
 import cm.aptoide.pt.account.AccountServiceV3;
@@ -167,6 +168,7 @@ import cm.aptoide.pt.editorial.EditorialAnalytics;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.file.CacheHelper;
+import cm.aptoide.pt.gamification.GamificationManager;
 import cm.aptoide.pt.home.ChipManager;
 import cm.aptoide.pt.home.HomeAnalytics;
 import cm.aptoide.pt.home.apps.AppMapper;
@@ -236,8 +238,6 @@ import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
-import cm.aptoide.pt.search.SearchManager;
-import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
@@ -249,7 +249,6 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StorePersistence;
-import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
@@ -2125,5 +2124,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NotificationAnalytics notificationAnalytics) {
     return new UpdatesNotificationAnalytics(analyticsManager, navigationTracker,
         notificationAnalytics);
+  }
+
+  @Singleton @Provides ApkfyGamificationExperiment providesApkfyGamificationExperiment(
+      @Named("ab-test") ABTestManager abTestManager) {
+    return new ApkfyGamificationExperiment(abTestManager);
+  }
+
+  @Singleton @Provides GamificationManager providesGamificationManager(
+      ApkfyGamificationExperiment apkfyGamificationExperiment, InstallManager installManager) {
+    return new GamificationManager(apkfyGamificationExperiment,
+        application.getDefaultSharedPreferences(), installManager);
   }
 }

@@ -16,6 +16,7 @@ import cm.aptoide.pt.comments.view.CommentDialogFragment;
 import cm.aptoide.pt.comments.view.CommentListFragment;
 import cm.aptoide.pt.editorial.EditorialFragment;
 import cm.aptoide.pt.editorialList.EditorialListFragment;
+import cm.aptoide.pt.gamification.GamificationFragment;
 import cm.aptoide.pt.home.HomeContainerFragment;
 import cm.aptoide.pt.home.HomeFragment;
 import cm.aptoide.pt.home.apps.AppsFragment;
@@ -149,4 +150,6 @@ public interface FragmentComponent {
   void inject(PrivateStoreDialog privateStoreDialog);
 
   void inject(CheckYourEmailFragment checkYourEmailFragment);
+
+  void inject(GamificationFragment gamificationFragment);
 }

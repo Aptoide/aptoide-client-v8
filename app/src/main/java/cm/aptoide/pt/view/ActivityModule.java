@@ -50,6 +50,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.download.DownloadAnalytics;
 import cm.aptoide.pt.download.DownloadFactory;
 import cm.aptoide.pt.editorial.EditorialNavigator;
+import cm.aptoide.pt.gamification.GamificationNavigator;
 import cm.aptoide.pt.home.AptoideBottomNavigator;
 import cm.aptoide.pt.home.apps.UpdatesManager;
 import cm.aptoide.pt.home.more.apps.ListAppsMoreRepository;
@@ -421,5 +422,10 @@ import static android.content.Context.WINDOW_SERVICE;
   @ActivityScope @Provides ThemeManager providesThemeManager() {
     return new ThemeManager(activity,
         ((AptoideApplication) activity.getApplicationContext()).getDefaultSharedPreferences());
+  }
+
+  @ActivityScope @Provides GamificationNavigator providesGamificationNavigator(
+      AppNavigator appNavigator) {
+    return new GamificationNavigator(appNavigator);
   }
 }

@@ -11,6 +11,7 @@ import cm.aptoide.pt.bottomNavigation.BottomNavigationItem;
 import cm.aptoide.pt.bottomNavigation.BottomNavigationMapper;
 import cm.aptoide.pt.dataprovider.ws.v7.store.StoreContext;
 import cm.aptoide.pt.editorial.EditorialFragment;
+import cm.aptoide.pt.gamification.GamificationFragment;
 import cm.aptoide.pt.home.bundles.base.AppBundle;
 import cm.aptoide.pt.home.bundles.base.HomeEvent;
 import cm.aptoide.pt.link.CustomTabsHelper;
@@ -20,7 +21,6 @@ import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.model.SearchAdResult;
 import cm.aptoide.pt.store.view.StoreTabGridRecyclerFragment;
 import cm.aptoide.pt.themes.ThemeManager;
-import cm.aptoide.pt.view.settings.MyAccountFragment;
 import rx.Observable;
 
 /**
@@ -89,7 +89,8 @@ public class HomeNavigator {
   }
 
   public void navigateToMyAccount() {
-    fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
+    fragmentNavigator.navigateToDialogFragment(new GamificationFragment());
+    //fragmentNavigator.navigateTo(MyAccountFragment.newInstance(), true);
   }
 
   public void navigateToAppCoinsInformationView() {
