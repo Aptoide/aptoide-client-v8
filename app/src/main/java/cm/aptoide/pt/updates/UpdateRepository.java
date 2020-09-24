@@ -66,10 +66,11 @@ public class UpdateRepository {
     this.installedRepository = installedRepository;
   }
 
-  public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache) {
+  public @NonNull Completable sync(boolean bypassCache, boolean bypassServerCache,
+      boolean bypassInterval) {
     long startTime = System.currentTimeMillis();
     long dif = startTime - lastSyncTimestamp;
-    if (dif < SYNC_MIN_INTERVAL_MS) {
+    if (!bypassInterval && dif < SYNC_MIN_INTERVAL_MS) {
       return Completable.complete();
     }
     return storeRepository.getAll()
