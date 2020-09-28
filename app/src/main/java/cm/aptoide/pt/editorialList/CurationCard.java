@@ -13,12 +13,13 @@ public class CurationCard {
   private final String type;
   private final String date;
   private final String captionColor;
+  private final String flair;
   private List<TopReaction> reactions;
   private String userReaction;
   private int numberOfReactions;
 
   public CurationCard(String id, String subTitle, String icon, String title, String views,
-      String type, String date, String captionColor) {
+      String type, String date, String captionColor, String flair) {
     this.id = id;
     this.subTitle = subTitle;
     this.icon = icon;
@@ -27,6 +28,7 @@ public class CurationCard {
     this.type = type;
     this.date = date;
     this.captionColor = captionColor;
+    this.flair = flair;
     reactions = Collections.emptyList();
     userReaction = "";
     numberOfReactions = -1;
@@ -41,6 +43,7 @@ public class CurationCard {
     type = "";
     date = "";
     captionColor = "";
+    flair = "";
   }
 
   public String getId() {
@@ -97,5 +100,9 @@ public class CurationCard {
 
   public String getCaptionColor() {
     return this.captionColor;
+  }
+
+  public String getFlair() {
+    return flair;
   }
 }

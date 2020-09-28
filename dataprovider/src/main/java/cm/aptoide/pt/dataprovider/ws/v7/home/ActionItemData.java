@@ -9,6 +9,7 @@ public class ActionItemData {
   private String url;
   private String views;
   private String date;
+  private String flair;
   private Appearance appearance;
 
   public String getType() {
@@ -81,5 +82,13 @@ public class ActionItemData {
 
   public void setAppearance(Appearance appearance) {
     this.appearance = appearance;
+  }
+
+  public String getFlair() {
+    return flair;
+  }
+
+  public void setFlair(String flair) {
+    this.flair = flair;
   }
 }

@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.cardview.widget.CardView;
+import cm.aptoide.aptoideviews.appcoins.BonusAppcView;
 import cm.aptoide.aptoideviews.skeleton.Skeleton;
 import cm.aptoide.aptoideviews.skeleton.SkeletonUtils;
 import cm.aptoide.pt.R;
@@ -46,6 +47,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
   private final ImageButton reactButton;
   private final CardView curationTypeCaption;
   private final TextView curationTypeCaptionText;
+  private final BonusAppcView bonusAppcView;
   private final CaptionBackgroundPainter captionBackgroundPainter;
   private final ThemeManager themeAttributeProvider;
   private TopReactionsPreview topReactionsPreview;
@@ -63,6 +65,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     this.reactButton = view.findViewById(R.id.add_reactions);
     this.curationTypeCaption = view.findViewById(R.id.curation_type_bubble);
     this.curationTypeCaptionText = view.findViewById(R.id.curation_type_bubble_text);
+    this.bonusAppcView = view.findViewById(R.id.bonus_appc_view);
     this.captionBackgroundPainter = captionBackgroundPainter;
     this.themeAttributeProvider = themeAttributeProvider;
     topReactionsPreview = new TopReactionsPreview();
@@ -82,14 +85,15 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
       setBundleInformation(actionItem.getIcon(), actionItem.getTitle(), actionItem.getSubTitle(),
           actionItem.getCardId(), actionItem.getNumberOfViews(), actionItem.getType(),
           actionItem.getDate(), getAdapterPosition(), homeBundle, actionItem.getReactionList(),
-          actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor());
+          actionItem.getTotal(), actionItem.getUserReaction(), actionItem.getCaptionColor(),
+          actionItem.getFlair());
     }
   }
 
   private void setBundleInformation(String icon, String title, String subTitle, String cardId,
       String numberOfViews, String type, String date, int position, HomeBundle homeBundle,
-      List<TopReaction> reactions, int numberOfReactions, String userReaction,
-      String captionColor) {
+      List<TopReaction> reactions, int numberOfReactions, String userReaction, String captionColor,
+      String flair) {
     clearReactions();
     setReactions(reactions, numberOfReactions, userReaction);
     ImageLoader.with(itemView.getContext())
@@ -111,6 +115,13 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
     });
     editorialCard.setOnClickListener(view -> uiEventsListener.onNext(
         new EditorialHomeEvent(cardId, type, homeBundle, position, HomeEvent.Type.EDITORIAL)));
+
+    if (flair.equals("appc-bonus-25")) {
+      bonusAppcView.setVisibility(View.VISIBLE);
+      bonusAppcView.setPercentage(25);
+    } else {
+      bonusAppcView.setVisibility(View.GONE);
+    }
   }
 
   private void setupCalendarDateString(String date) {
@@ -145,7 +156,7 @@ public class EditorialBundleViewHolder extends EditorialViewHolder {
         curationCard.getSubTitle(), curationCard.getId(), curationCard.getViews(),
         curationCard.getType(), curationCard.getDate(), position, null, curationCard.getReactions(),
         curationCard.getNumberOfReactions(), curationCard.getUserReaction(),
-        curationCard.getCaptionColor());
+        curationCard.getCaptionColor(), curationCard.getFlair());
   }
 
   public void showReactions(String cardId, String groupId, int position) {

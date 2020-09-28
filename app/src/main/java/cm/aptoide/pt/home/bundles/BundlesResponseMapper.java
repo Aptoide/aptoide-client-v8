@@ -169,7 +169,7 @@ public class BundlesResponseMapper {
         item.getTitle(), item.getCaption(), item.getIcon(), item.getUrl(), item.getViews(),
         item.getDate(), item.getAppearance() != null ? item.getAppearance()
         .getCaption()
-        .getTheme() : "");
+        .getTheme() : "", item.getFlair() != null ? item.getFlair() : "");
   }
 
   private HomeBundle.BundleType actionItemTypeMapper(GetStoreWidgets.WSWidget widget) {

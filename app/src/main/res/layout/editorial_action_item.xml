@@ -30,6 +30,19 @@
         tools:src="@drawable/aptoide_gradient"
         />
 
+    <cm.aptoide.aptoideviews.appcoins.BonusAppcView
+      android:id="@+id/bonus_appc_view"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:layout_alignParentEnd="true"
+      android:visibility="gone"
+      app:side="RIGHT"
+      app:size="COMPACT"
+      app:enable_card_padding="false"
+      tools:visibility="visible"
+      android:layout_alignParentRight="true" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="170dp"

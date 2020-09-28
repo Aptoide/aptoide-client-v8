@@ -79,7 +79,8 @@ public class EditorialListService {
               actionItemData.getType(), actionItemData.getDate(),
               actionItemData.getAppearance() != null ? actionItemData.getAppearance()
                   .getCaption()
-                  .getTheme() : "");
+                  .getTheme() : "",
+              actionItemData.getFlair() != null ? actionItemData.getFlair() : "");
       curationCards.add(curationCard);
     }
     return curationCards;
