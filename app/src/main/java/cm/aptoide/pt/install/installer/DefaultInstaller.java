@@ -146,13 +146,6 @@ public class DefaultInstaller implements Installer {
             }, Throwable::printStackTrace));
   }
 
-  @Override public void stopDispatching() {
-    dispatchInstallationsSubscription.clear();
-    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
-      dispatchInstallationsSubscription.unsubscribe();
-    }
-  }
-
   @Override public Completable install(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
@@ -218,6 +211,13 @@ public class DefaultInstaller implements Installer {
                 + " state is: "
                 + installationState.getStatus()))
         .distinctUntilChanged();
+  }
+
+  @Override public void stopDispatching() {
+    dispatchInstallationsSubscription.clear();
+    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
+      dispatchInstallationsSubscription.unsubscribe();
+    }
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,
@@ -350,15 +350,28 @@ public class DefaultInstaller implements Installer {
     intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
     intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
     intentFilter.addDataScheme("package");
-    return Observable.<Void>fromCallable(() -> {
-      AppInstall appInstall = map(installation);
-      if (shouldSetPackageInstaller) {
-        appInstaller.install(appInstall);
-      } else {
-        startInstallIntent(context, installation.getFile());
-      }
-      return null;
-    }).subscribeOn(Schedulers.computation())
+    return Observable.merge(
+        handleInstallationResult(intentFilter, installation, shouldSetPackageInstaller),
+        Observable.<Void>fromCallable(() -> {
+          AppInstall appInstall = map(installation);
+          if (shouldSetPackageInstaller) {
+            appInstaller.install(appInstall);
+          } else {
+            startInstallIntent(context, installation.getFile());
+          }
+          return null;
+        }))
+        .subscribeOn(Schedulers.computation())
+        .doOnNext(__ -> Logger.getInstance()
+            .d("lol", "Emitting after ordering the installation"))
+        .map(success -> installation);
+  }
+
+  private Observable<Installation> handleInstallationResult(IntentFilter intentFilter,
+      Installation installation, boolean shouldSetPackageInstaller) {
+    return Observable.just(true)
+        .doOnNext(__ -> Logger.getInstance()
+            .d("lol", "i am inside handle Installation result going for the merge"))
         .flatMap(isInstallerInstallation -> Observable.merge(
             waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
@@ -370,13 +383,21 @@ public class DefaultInstaller implements Installer {
                   return null;
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
                 .doOnNext(installStatus -> {
+                  Logger.getInstance()
+                      .d("lol", "inside default install method and received the following status "
+                          + installStatus.getStatus());
                   if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
                     installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
                         installation.getVersionCode());
                   }
                 })
+                .doOnNext(installStatus -> Logger.getInstance()
+                    .d("lol", "going to filter the pcakge name " + installStatus.getPackageName()))
                 .filter(installStatus -> installation.getPackageName()
                     .equalsIgnoreCase(installStatus.getPackageName()))
+                .doOnNext(__ -> Logger.getInstance()
+                    .d("lol",
+                        "AFTER THE filter package name and before the distinct until changed"))
                 .distinctUntilChanged()
                 .doOnNext(installStatus -> {
                   Logger.getInstance()
@@ -394,7 +415,7 @@ public class DefaultInstaller implements Installer {
                     installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
                   }
                 })))
-        .map(success -> installation);
+        .map(__ -> installation);
   }
 
   @NotNull private AppInstall map(Installation installation) {
@@ -414,11 +435,15 @@ public class DefaultInstaller implements Installer {
   }
 
   private int map(InstallStatus installStatus) {
+    Logger.getInstance()
+        .d("lol", "mapping a status : " + installStatus.getStatus());
     switch (installStatus.getStatus()) {
       case INSTALLING:
         return RoomInstalled.STATUS_INSTALLING;
       case SUCCESS:
         return RoomInstalled.STATUS_COMPLETED;
+      case WAITING_INSTALL_FEEDBACK:
+        return RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK;
       case FAIL:
       case CANCELED:
       case UNKNOWN_ERROR:

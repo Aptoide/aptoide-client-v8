@@ -4,6 +4,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.download.InstallType;
 import cm.aptoide.pt.download.Origin;
 import cm.aptoide.pt.install.Install;
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by filipegoncalves on 5/9/18.
@@ -50,6 +51,9 @@ public class DownloadStateParser {
           throw new IllegalStateException("Wrong type of download state");
       }
     }
+    Logger.getInstance()
+        .d("lol",
+            "is idndeterminate: " + isIndeterminate + " and installations status is: " + state);
     return downloadState;
   }
 

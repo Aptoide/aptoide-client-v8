@@ -359,6 +359,10 @@ public class InstallManager {
       return Install.InstallationStatus.INSTALLING;
     }
 
+    if (installationState.getStatus() == RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK) {
+      return Install.InstallationStatus.UNINSTALLED;
+    }
+
     if (installationState.getStatus() == RoomInstalled.STATUS_PRE_INSTALL
         && download != null
         && download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
@@ -470,6 +474,7 @@ public class InstallManager {
     switch (status) {
       case RoomInstalled.STATUS_UNINSTALLED:
       case RoomInstalled.STATUS_COMPLETED:
+      case RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK:
         isIndeterminate = false;
         break;
       case RoomInstalled.STATUS_INSTALLING:

@@ -29,7 +29,9 @@ public final class AppInstaller {
   public AppInstaller(Context context, InstallResultCallback installResultCallback) {
     this.context = context;
     this.installResultCallback = installResultCallback;
-    registerInstallResultBroadcastReceiver();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      registerInstallResultBroadcastReceiver();
+    }
   }
 
   public void install(AppInstall appInstall) {
@@ -54,6 +56,7 @@ public final class AppInstaller {
           .getPackageInstaller();
       PackageInstaller.SessionParams params =
           new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
+      params.setAppPackageName(appInstall.getPackageName());
       int sessionId = packageInstaller.createSession(params);
       session = packageInstaller.openSession(sessionId);
 
@@ -65,6 +68,10 @@ public final class AppInstaller {
           addApkToInstallSession(file, session);
         }
       }
+
+      installResultCallback.onInstallationResult(
+          new InstallStatus(InstallStatus.Status.WAITING_INSTALL_FEEDBACK, "Installing...",
+              appInstall.getPackageName()));
 
       session.commit(PendingIntent.getBroadcast(context, SESSION_INSTALL_REQUEST_CODE,
           new Intent(INSTALL_SESSION_API_COMPLETE_ACTION), 0)
@@ -95,6 +102,7 @@ public final class AppInstaller {
     context.startActivity(promptInstall);
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void registerInstallResultBroadcastReceiver() {
     InstallResultReceiver installResultReceiver =
         new InstallResultReceiver(new PackageInstallerResultCallback() {
@@ -102,18 +110,33 @@ public final class AppInstaller {
             installResultCallback.onInstallationResult(installStatus);
           }
 
-          @Override public void onPendingUserAction(Bundle extras) {
+          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
+          public void onPendingUserAction(Bundle extras) {
             Intent confirmIntent = (Intent) extras.get(Intent.EXTRA_INTENT);
             if (confirmIntent != null) {
               confirmIntent.setFlags(
                   Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             }
-            try {
-              context.startActivity(confirmIntent);
-            } catch (ActivityNotFoundException exception) {
+            int sessionId = extras.getInt(PackageInstaller.EXTRA_SESSION_ID, 0);
+            PackageInstaller.SessionInfo sessionInfo = context.getPackageManager()
+                .getPackageInstaller()
+                .getSessionInfo(sessionId);
+            if (sessionInfo == null) {
               installResultCallback.onInstallationResult(
                   new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
                       "n/a"));
+            } else {
+              String packageName = sessionInfo.getAppPackageName();
+              try {
+                installResultCallback.onInstallationResult(
+                    new InstallStatus(InstallStatus.Status.INSTALLING, "Installing...",
+                        packageName));
+                context.startActivity(confirmIntent);
+              } catch (ActivityNotFoundException exception) {
+                installResultCallback.onInstallationResult(
+                    new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                        "n/a"));
+              }
             }
           }
         });

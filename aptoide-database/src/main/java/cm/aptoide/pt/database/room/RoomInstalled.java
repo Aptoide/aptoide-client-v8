@@ -24,6 +24,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
   @Ignore public static final int STATUS_INSTALLING = 3;
   @Ignore public static final int STATUS_COMPLETED = 4;
   @Ignore public static final int STATUS_ROOT_TIMEOUT = 5;
+  @Ignore public static final int STATUS_WAITING_INSTALL_FEEDBACK = 6;
   @Ignore public static final int TYPE_DEFAULT = 0;
   @Ignore public static final int TYPE_ROOT = 1;
   @Ignore public static final int TYPE_SYSTEM = 2;
