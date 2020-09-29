@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.utils.AptoideUtils;
 
 @Entity(tableName = "installed") public class RoomInstalled {
@@ -41,6 +42,7 @@ import cm.aptoide.pt.utils.AptoideUtils;
   private String storeName;
   private int status;
   private int type;
+  private boolean enabled;
 
   public RoomInstalled() {
   }
@@ -56,6 +58,14 @@ import cm.aptoide.pt.utils.AptoideUtils;
     setPackageName(packageInfo.packageName);
     setVersionCode(packageInfo.versionCode);
     setVersionName(packageInfo.versionName);
+    boolean isEnabled = true;
+    try {
+      isEnabled = packageManager.getApplicationInfo(packageInfo.packageName, 0).enabled;
+    } catch (PackageManager.NameNotFoundException ex) {
+      CrashReport.getInstance()
+          .log(ex);
+    }
+    setEnabled(isEnabled);
     setStoreName(storeName);
     this.packageAndVersionCode = packageInfo.packageName + packageInfo.versionCode;
     setSystemApp((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
@@ -171,5 +181,13 @@ import cm.aptoide.pt.utils.AptoideUtils;
 
   public void setPackageAndVersionCode(String packageAndVersionCode) {
     this.packageAndVersionCode = packageAndVersionCode;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
   }
 }

@@ -6,9 +6,6 @@
 package cm.aptoide.pt.dataprovider.ws.v7.listapps;
 
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.dataprovider.aab.AppBundlesVisibilityManager;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
 import cm.aptoide.pt.dataprovider.model.v7.listapp.ListAppsUpdates;
@@ -17,10 +14,8 @@ import cm.aptoide.pt.dataprovider.ws.v7.BaseBody;
 import cm.aptoide.pt.dataprovider.ws.v7.BaseBodyWithAlphaBetaKey;
 import cm.aptoide.pt.dataprovider.ws.v7.V7;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
-import cm.aptoide.pt.utils.AptoideUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -46,41 +41,16 @@ public class ListAppsUpdatesRequest extends V7<ListAppsUpdates, ListAppsUpdatesR
     this.appBundlesVisibilityManager = appBundlesVisibilityManager;
   }
 
-  public static ListAppsUpdatesRequest of(List<Long> subscribedStoresIds, String clientUniqueId,
+  public static ListAppsUpdatesRequest of(List<ApksData> installedApks,
+      List<Long> subscribedStoresIds, String clientUniqueId,
       BodyInterceptor<BaseBody> bodyInterceptor, OkHttpClient httpClient,
       Converter.Factory converterFactory, TokenInvalidator tokenInvalidator,
-      SharedPreferences sharedPreferences, PackageManager packageManager,
+      SharedPreferences sharedPreferences,
       AppBundlesVisibilityManager appBundlesVisibilityManager) {
     return new ListAppsUpdatesRequest(
-        new Body(getInstalledApks(packageManager), subscribedStoresIds, clientUniqueId,
-            sharedPreferences), getHost(sharedPreferences), bodyInterceptor, httpClient,
-        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager);
-  }
-
-  private static List<PackageInfo> getAllInstalledApps(PackageManager packageManager) {
-    return packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES);
-  }
-
-  static List<ApksData> getInstalledApks(PackageManager packageManager) {
-    // TODO: 01-08-2016 neuro benchmark this, looks heavy
-    List<PackageInfo> allInstalledApps = getAllInstalledApps(packageManager);
-    LinkedList<ApksData> apksDatas = new LinkedList<>();
-
-    for (PackageInfo packageInfo : allInstalledApps) {
-      boolean isEnabled = true;
-      try {
-        isEnabled = packageManager.getApplicationInfo(packageInfo.packageName, 0).enabled;
-      } catch (PackageManager.NameNotFoundException ex) {
-        CrashReport.getInstance()
-            .log(ex);
-      }
-
-      apksDatas.add(new ApksData(packageInfo.packageName, packageInfo.versionCode,
-          AptoideUtils.AlgorithmU.computeSha1WithColon(packageInfo.signatures[0].toByteArray()),
-          isEnabled));
-    }
-
-    return apksDatas;
+        new Body(installedApks, subscribedStoresIds, clientUniqueId, sharedPreferences),
+        getHost(sharedPreferences), bodyInterceptor, httpClient, converterFactory, tokenInvalidator,
+        sharedPreferences, appBundlesVisibilityManager);
   }
 
   @Override protected Observable<ListAppsUpdates> loadDataFromNetwork(Interfaces interfaces,

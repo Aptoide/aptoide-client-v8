@@ -38,7 +38,7 @@ class UpdatesNotificationWorker(private val context: Context, workerParameters: 
   override fun doWork(): Result {
     config = inputData.getString(UpdatesNotificationManager.CONFIGURATION_KEY) ?: "control"
 
-    updateRepository.sync(true, false)
+    updateRepository.sync(true, false, false)
         .andThen(updateRepository.getAll(false))
         .flatMap { updates: List<RoomUpdate> ->
           Observable.just(updates)

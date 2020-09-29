@@ -1,11 +1,20 @@
 package cm.aptoide.pt.install;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import androidx.annotation.Nullable;
 import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.room.RoomInstallation;
 import cm.aptoide.pt.database.room.RoomInstalled;
+import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.utils.AptoideUtils;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import rx.Completable;
 import rx.Observable;
+import rx.Single;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -14,9 +23,54 @@ import rx.schedulers.Schedulers;
 public class InstalledRepository {
 
   private final RoomInstalledPersistence installedPersistence;
+  private final PackageManager packageManager;
+  private boolean synced = false;
 
-  public InstalledRepository(RoomInstalledPersistence installedPersistence) {
+  public InstalledRepository(RoomInstalledPersistence installedPersistence,
+      PackageManager packageManager) {
     this.installedPersistence = installedPersistence;
+    this.packageManager = packageManager;
+  }
+
+  public Completable syncWithDevice() {
+    return Observable.fromCallable(() -> {
+      // get the installed apps
+      List<PackageInfo> installedApps = AptoideUtils.SystemU.getAllInstalledApps(packageManager);
+      Logger.getInstance()
+          .v("InstalledRepository", "Found " + installedApps.size() + " user installed apps.");
+
+      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
+      Collections.sort(installedApps,
+          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
+
+      // return sorted installed apps
+      return installedApps;
+    })  // transform installation package into Installed table entry and save all the data
+        .flatMapIterable(list -> list)
+        .map(packageInfo -> new RoomInstalled(packageInfo, packageManager))
+        .toList()
+        .flatMap(appsInstalled -> installedPersistence.getAll()
+            .first()
+            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
+                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
+        .flatMapCompletable(installedPersistence::replaceAllBy)
+        .toCompletable()
+        .doOnCompleted(() -> synced = true);
+  }
+
+  private <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
+    List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
+    toReturn.addAll(list1);
+    for (T item : list2) {
+      if (!toReturn.contains(item)) {
+        if (transformer != null) {
+          transformer.call(item);
+        }
+        toReturn.add(item);
+      }
+    }
+
+    return toReturn;
   }
 
   public Completable save(RoomInstalled installed) {
@@ -30,10 +84,19 @@ public class InstalledRepository {
   }
 
   /**
-   * Get all installed apps
-   *
-   * @return an observable with a list of installed apps
+   * This method assures that it returns a list of installed apps synced with the the device.
+   * If it hasn't been synced yet, sync it before returning.
+   * Note that it only assures that these apps were synced at least once since the app started.
    */
+  public Single<List<RoomInstalled>> getAllSyncedInstalled() {
+    if (!synced) {
+      return syncWithDevice().andThen(getAllInstalled().first()
+          .toSingle());
+    }
+    return getAllInstalled().first()
+        .toSingle();
+  }
+
   public Observable<List<RoomInstalled>> getAllInstalled() {
     return installedPersistence.getAllInstalled();
   }

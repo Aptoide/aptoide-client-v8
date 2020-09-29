@@ -106,7 +106,7 @@ public class PullingContentService extends BaseService {
    * @param startId service startid
    */
   private void setUpdatesAction(int startId) {
-    subscriptions.add(updateRepository.sync(true, false)
+    subscriptions.add(updateRepository.sync(true, false, true)
         .andThen(updateRepository.getAll(false))
         .flatMap(updates -> Observable.just(updates)
             .flatMapIterable(list -> list)
