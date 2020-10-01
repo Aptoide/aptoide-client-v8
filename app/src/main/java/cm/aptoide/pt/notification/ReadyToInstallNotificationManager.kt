@@ -51,9 +51,8 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
   private fun buildSingleReadyToInstallNotification(appName: String, icon: String, url: String,
                                                     context: Context): Single<Notification> {
     return Single.fromCallable {
-      // TODO: Hardcoded
-      val title = "Your app is ready to be installed!"
-      val body = "Tap to install $appName"
+      val title = context.getString(R.string.notification_install_ready_singular_title)
+      val body = context.getString(R.string.notification_install_ready_singular_body, appName)
       val notification =
           NotificationCompat.Builder(context)
               .setContentIntent(getSingleAppPressIntentAction(url, context))
@@ -74,9 +73,8 @@ class ReadyToInstallNotificationManager(val installManager: InstallManager,
 
   private fun buildMultiReadyToInstallNotification(context: Context): Single<Notification> {
     return Single.fromCallable {
-      // TODO: Hardcoded
-      val title = "Your apps are ready to be installed!"
-      val body = "Tap to install them."
+      val title = context.getString(R.string.notification_install_ready_plural_title)
+      val body = context.getString(R.string.notification_install_ready_plural_body)
       val notification =
           NotificationCompat.Builder(context)
               .setContentIntent(getMultiAppPressIntentAction(context))
