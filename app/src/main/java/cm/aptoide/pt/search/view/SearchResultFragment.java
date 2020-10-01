@@ -272,7 +272,7 @@ public class SearchResultFragment extends BackButtonFragment
       boolean isFreshResult, boolean hasMore, boolean hasError, SearchResultError error) {
     if (isFreshResult) {
       isFreshLoading = false;
-      searchResultsAdapter.setResultForSearch(query, searchAppResults, hasMore);
+      searchResultsAdapter.setResultForSearch(searchResultList,query, searchAppResults, hasMore);
       Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_disappear);
       animation.setFillAfter(true);
       animation.setAnimationListener(new Animation.AnimationListener() {
