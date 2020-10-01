@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import cm.aptoide.pt.app.view.screenshots.ScreenShotClickEvent;
 import cm.aptoide.pt.crashreports.CrashReport;
 import cm.aptoide.pt.download.view.DownloadClick;
@@ -92,14 +93,19 @@ public class SearchResultAdapter extends DiffUtilAdapter<SearchItem, SearchResul
     return searchResults.size();
   }
 
-  public void setResultForSearch(String query, List<SearchAppResult> searchAppResults,
-      boolean hasMore) {
+  public void setResultForSearch(RecyclerView searchResultList, String query,
+      List<SearchAppResult> searchAppResults, boolean hasMore) {
     this.query = query;
     searchResults = new ArrayList<>(searchAppResults);
     // TODO
     //if (hasMore) {
     //  searchResults.add(new SearchLoadingItem());
     //}
+
+    // I'm sorry... Removing this will crash the search randomly on scroll (IndexOutOfBoundsException: Inconsistency detected. Invalid item position)
+    searchResultList.getRecycledViewPool()
+        .clear();
+
     notifyDataSetChanged();
   }
 
