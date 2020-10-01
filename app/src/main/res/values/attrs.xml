@@ -212,7 +212,6 @@
   <attr name="loginInputBackground" format="reference" />
   <attr name="loginInputErrorBackground" format="reference" />
   <attr name="checkYourEmailBackground" format="reference" />
-  <attr name="searchBackgroundTriangleColor" format="color"/>
 
   <!--store theme specific attributes-->
   <attr name="datePickerStyle" format="reference" />
