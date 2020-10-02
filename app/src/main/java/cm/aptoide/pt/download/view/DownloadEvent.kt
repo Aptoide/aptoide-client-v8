@@ -12,5 +12,5 @@ fun DownloadEventListener.Action.toDownloadEvent(): DownloadEvent {
 }
 
 enum class DownloadEvent {
-  INSTALL, RESUME, PAUSE, CANCEL
+  INSTALL, RESUME, PAUSE, CANCEL, GENERIC_ERROR, OUT_OF_SPACE_ERROR
 }
