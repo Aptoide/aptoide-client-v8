@@ -236,7 +236,6 @@ import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
-import cm.aptoide.pt.search.SearchManager;
 import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
@@ -249,7 +248,6 @@ import cm.aptoide.pt.store.StoreAnalytics;
 import cm.aptoide.pt.store.StoreCredentialsProvider;
 import cm.aptoide.pt.store.StoreCredentialsProviderImpl;
 import cm.aptoide.pt.store.StorePersistence;
-import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.store.StoreUtilsProxy;
 import cm.aptoide.pt.sync.SyncScheduler;
 import cm.aptoide.pt.sync.alarm.AlarmSyncScheduler;
@@ -2125,5 +2123,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NotificationAnalytics notificationAnalytics) {
     return new UpdatesNotificationAnalytics(analyticsManager, navigationTracker,
         notificationAnalytics);
+  }
+
+  @Singleton @Provides SearchRepository providesSearchRepository(
+      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
+    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
+        oemidProvider);
   }
 }
