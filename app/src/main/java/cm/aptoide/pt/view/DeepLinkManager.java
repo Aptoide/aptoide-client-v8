@@ -377,7 +377,6 @@ public class DeepLinkManager {
   }
 
   private void goToAppsDownloadsSection() {
-    // TODO: Scroll to Downloads
     bottomNavigationNavigator.navigateToApps();
   }
 
