@@ -6,6 +6,7 @@ import cm.aptoide.pt.database.room.RoomDownload;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.notification.AptoideNotification;
 import cm.aptoide.pt.notification.NotificationProvider;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.presenter.Presenter;
 import rx.Completable;
 import rx.Single;
@@ -66,7 +67,9 @@ public class DownloadsNotificationsPresenter implements Presenter {
                         + download.getPackageName()
                         + "&store="
                         + download.getStoreName()
-                        + "&open_type=open_and_install", download.getIcon(),
+                        + "&open_type=open_and_install"
+                        + "&origin="
+                        + ReadyToInstallNotificationManager.ORIGIN, download.getIcon(),
                     AptoideNotification.APPS_READY_TO_INSTALL));
           }
           if (installationStatus != Install.InstallationStatus.DOWNLOADING

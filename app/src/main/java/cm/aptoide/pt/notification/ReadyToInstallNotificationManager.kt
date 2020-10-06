@@ -20,7 +20,10 @@ import rx.Single
 
 class ReadyToInstallNotificationManager(val installManager: InstallManager,
                                         val notificationIdsMapper: NotificationIdsMapper) {
-  val CHANNEL_ID = "ready_to_install_notification_channel"
+  companion object {
+    const val CHANNEL_ID = "ready_to_install_notification_channel"
+    const val ORIGIN = "ready_to_install"
+  }
 
   private var isNotificationDisplayed: Boolean = false
 

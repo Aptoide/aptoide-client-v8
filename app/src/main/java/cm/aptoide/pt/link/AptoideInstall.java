@@ -9,20 +9,23 @@ public class AptoideInstall {
   private final String packageName;
   private final String uname;
   private final String openType;
+  private final String origin;
   private final long appId;
 
   public AptoideInstall(long appId, String packageName, String openType) {
     this.appId = appId;
     this.packageName = packageName;
     this.openType = openType;
+    this.origin = null;
     this.uname = null;
     storeName = null;
   }
 
-  public AptoideInstall(String storeName, String packageName, String openType) {
+  public AptoideInstall(String storeName, String packageName, String openType, String origin) {
     this.storeName = storeName;
     this.packageName = packageName;
     this.openType = openType;
+    this.origin = origin;
     this.uname = null;
     appId = -1;
   }
@@ -33,6 +36,7 @@ public class AptoideInstall {
     this.openType = null;
     this.appId = -1;
     this.storeName = null;
+    this.origin = null;
   }
 
   public String getStoreName() {
@@ -53,5 +57,9 @@ public class AptoideInstall {
 
   public String getUname() {
     return uname;
+  }
+
+  public String getOrigin() {
+    return origin;
   }
 }

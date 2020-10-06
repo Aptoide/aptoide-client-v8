@@ -28,6 +28,7 @@ import cm.aptoide.pt.dataprovider.ws.v7.GetAppRequest;
 import cm.aptoide.pt.link.AptoideInstall;
 import cm.aptoide.pt.link.AptoideInstallParser;
 import cm.aptoide.pt.logger.Logger;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.store.StoreUtils;
 import cm.aptoide.pt.themes.NewFeature;
 import cm.aptoide.pt.utils.AptoideUtils;
@@ -423,7 +424,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
   private Intent dealWithImagesApoide(String uri) {
     String[] strings = uri.split("-");
     long id = Long.parseLong(strings[strings.length - 1].split("\\.myapp")[0]);
-    return startFromAppView(id, null, null);
+    return startFromAppView(id, null, null, null);
   }
 
   private Intent dealWithWebservicesAptoide(String uri) {
@@ -449,7 +450,7 @@ public class DeepLinkIntentReceiver extends ActivityView {
       if (uid != null) {
         try {
           long id = Long.parseLong(uid);
-          return startFromAppView(id, null, "open_with_install_popup");
+          return startFromAppView(id, null, "open_with_install_popup", null);
         } catch (NumberFormatException e) {
           CrashReport.getInstance()
               .log(e);
@@ -575,12 +576,15 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  public Intent startFromAppView(long id, String packageName, String openType) {
+  public Intent startFromAppView(long id, String packageName, String openType, String origin) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     intent.putExtra(DeepLinksKeys.APP_ID_KEY, id);
     intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
     intent.putExtra(DeepLinksKeys.OPEN_TYPE, openType);
+    if (origin != null && origin.equals(ReadyToInstallNotificationManager.ORIGIN)) {
+      intent.putExtra(DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL, true);
+    }
     return intent;
   }
 
@@ -607,12 +611,12 @@ public class DeepLinkIntentReceiver extends ActivityView {
     AptoideInstall aptoideInstall = parser.parse(host);
     if (aptoideInstall.getAppId() > 0) {
       return startFromAppView(aptoideInstall.getAppId(), aptoideInstall.getPackageName(),
-          aptoideInstall.getOpenType());
+          aptoideInstall.getOpenType(), aptoideInstall.getOrigin());
     } else if (!TextUtils.isEmpty(aptoideInstall.getUname())) {
       return startAppView(aptoideInstall.getUname());
     } else {
       return startFromAppview(aptoideInstall.getStoreName(), aptoideInstall.getPackageName(),
-          aptoideInstall.getOpenType());
+          aptoideInstall.getOpenType(), aptoideInstall.getOrigin());
     }
   }
 
@@ -644,12 +648,15 @@ public class DeepLinkIntentReceiver extends ActivityView {
     return intent;
   }
 
-  private Intent startFromAppview(String repo, String packageName, String openType) {
+  private Intent startFromAppview(String repo, String packageName, String openType, String origin) {
     Intent intent = new Intent(this, startClass);
     intent.putExtra(DeepLinksTargets.APP_VIEW_FRAGMENT, true);
     intent.putExtra(DeepLinksKeys.PACKAGE_NAME_KEY, packageName);
     intent.putExtra(DeepLinksKeys.STORENAME_KEY, repo);
     intent.putExtra(DeepLinksKeys.OPEN_TYPE, openType);
+    if (origin != null && origin.equals(ReadyToInstallNotificationManager.ORIGIN)) {
+      intent.putExtra(DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL, true);
+    }
     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     return intent;
   }

@@ -14,6 +14,7 @@ public class AptoideInstallParser {
     String packageName = null;
     String uname = "";
     String openType = null;
+    String origin = null;
     boolean showPopup = false;
     for (String property : split) {
       if (property.toLowerCase()
@@ -28,6 +29,9 @@ public class AptoideInstallParser {
       } else if (property.toLowerCase()
           .contains("open_type")) {
         openType = property.split("=")[1];
+      } else if (property.toLowerCase()
+          .contains("origin")) {
+        origin = property.split("=")[1];
       } else if (property.toLowerCase()
           .contains("uname")) {
         uname = property.split("=")[1];
@@ -48,6 +52,6 @@ public class AptoideInstallParser {
     if (showPopup) {
       openType = "open_with_install_popup";
     }
-    return new AptoideInstall(repo, packageName, openType);
+    return new AptoideInstall(repo, packageName, openType, origin);
   }
 }
