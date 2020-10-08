@@ -23,6 +23,7 @@ public final class AppInstaller {
   static final String INSTALL_SESSION_API_COMPLETE_ACTION = "install_session_api_complete";
   private static final int REQUEST_INSTALL = 22;
   private static final int SESSION_INSTALL_REQUEST_CODE = 18;
+  private static final float CLICK_INSTALL_PROGRESS_CALLBACK_VALUE = 0.90000004f;
   private final Context context;
   private final InstallResultCallback installResultCallback;
 
@@ -31,6 +32,7 @@ public final class AppInstaller {
     this.installResultCallback = installResultCallback;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       registerInstallResultBroadcastReceiver();
+      observeInstallSession();
     }
   }
 
@@ -102,7 +104,6 @@ public final class AppInstaller {
     context.startActivity(promptInstall);
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   private void registerInstallResultBroadcastReceiver() {
     InstallResultReceiver installResultReceiver =
         new InstallResultReceiver(new PackageInstallerResultCallback() {
@@ -117,31 +118,61 @@ public final class AppInstaller {
               confirmIntent.setFlags(
                   Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             }
-            int sessionId = extras.getInt(PackageInstaller.EXTRA_SESSION_ID, 0);
-            PackageInstaller.SessionInfo sessionInfo = context.getPackageManager()
-                .getPackageInstaller()
-                .getSessionInfo(sessionId);
-            if (sessionInfo == null) {
+            try {
+              context.startActivity(confirmIntent);
+            } catch (ActivityNotFoundException exception) {
               installResultCallback.onInstallationResult(
                   new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
                       "n/a"));
-            } else {
-              String packageName = sessionInfo.getAppPackageName();
-              try {
-                installResultCallback.onInstallationResult(
-                    new InstallStatus(InstallStatus.Status.INSTALLING, "Installing...",
-                        packageName));
-                context.startActivity(confirmIntent);
-              } catch (ActivityNotFoundException exception) {
-                installResultCallback.onInstallationResult(
-                    new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
-                        "n/a"));
-              }
             }
           }
         });
     context.registerReceiver(installResultReceiver,
         new IntentFilter(INSTALL_SESSION_API_COMPLETE_ACTION), null, null);
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) private void observeInstallSession() {
+    context.getPackageManager()
+        .getPackageInstaller()
+        .registerSessionCallback(new PackageInstaller.SessionCallback() {
+          @Override public void onCreated(int sessionId) {
+          }
+
+          @Override public void onBadgingChanged(int sessionId) {
+
+          }
+
+          @Override public void onActiveChanged(int sessionId, boolean active) {
+
+          }
+
+          @Override public void onProgressChanged(int sessionId, float progress) {
+            if (Float.compare(progress, CLICK_INSTALL_PROGRESS_CALLBACK_VALUE) >= 0) {
+              PackageInstaller.SessionInfo sessionInfo = context.getPackageManager()
+                  .getPackageInstaller()
+                  .getSessionInfo(sessionId);
+              if (sessionInfo == null) {
+                installResultCallback.onInstallationResult(
+                    new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                        "n/a"));
+              } else {
+                String packageName = sessionInfo.getAppPackageName();
+                try {
+                  installResultCallback.onInstallationResult(
+                      new InstallStatus(InstallStatus.Status.INSTALLING, "Installing...",
+                          packageName));
+                } catch (ActivityNotFoundException exception) {
+                  installResultCallback.onInstallationResult(
+                      new InstallStatus(InstallStatus.Status.FAIL, "Context - Activity Not Found",
+                          "n/a"));
+                }
+              }
+            }
+          }
+
+          @Override public void onFinished(int sessionId, boolean success) {
+          }
+        });
   }
 
   @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
