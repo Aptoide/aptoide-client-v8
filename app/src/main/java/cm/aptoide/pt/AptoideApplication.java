@@ -278,19 +278,21 @@ public abstract class AptoideApplication extends Application {
     // beware! this code could be executed at the same time the first activity is
     // visible
     //
-    generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeSentry())
-        .andThen(setUpAdsUserProperty())
-        .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics(
-            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
-        .andThen(setUpFirstRunAnalytics())
-        .observeOn(Schedulers.computation())
-        .andThen(installedRepository.syncWithDevice())
-        .andThen(launchManager.launch())
-        .andThen(setUpUpdatesNotification())
-        .subscribe(() -> {
-        }, error -> CrashReport.getInstance()
+    /**
+     * There's not test at the moment
+     * TODO change this class in order to accept that there's no test
+     * AN-1838
+     */
+
+    generateAptoideUuid().andThen(
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
+            startUpdatesNotification(), setUpInitialAdsUserProperty(),
+            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+            setUpFirstRunAnalytics(), installedRepository.syncWithDevice()
+                .subscribeOn(Schedulers.computation()), launchManager.launch()
+                .subscribeOn(Schedulers.computation())))
+        .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
     initializeFlurry(this, BuildConfig.FLURRY_KEY);
@@ -322,15 +324,15 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-  private Completable setUpUpdatesNotification() {
+  private Completable startUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
   }
 
-  private Completable checkAdsUserProperty() {
+  private Completable handleAdsUserPropertyToggle() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty() {
+  private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
         .doOnCompleted(() -> Rakam.getInstance()
