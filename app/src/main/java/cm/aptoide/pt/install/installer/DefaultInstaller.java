@@ -357,6 +357,9 @@ public class DefaultInstaller implements Installer {
           if (shouldSetPackageInstaller) {
             appInstaller.install(appInstall);
           } else {
+            updateInstallation(installation,
+                shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                    : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
             startInstallIntent(context, installation.getFile());
           }
           return null;
@@ -410,6 +413,9 @@ public class DefaultInstaller implements Installer {
                       .equals(InstallStatus.Status.FAIL) && isDeviceMIUI()) {
                     installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.FAIL);
                     startInstallIntent(context, installation.getFile());
+                    updateInstallation(installation,
+                        shouldSetPackageInstaller ? RoomInstalled.TYPE_PACKAGE_INSTALLER
+                            : RoomInstalled.TYPE_DEFAULT, RoomInstalled.STATUS_INSTALLING);
                   } else if (installStatus.getStatus()
                       .equals(InstallStatus.Status.SUCCESS) && isDeviceMIUI()) {
                     installerAnalytics.sendMiuiInstallResultEvent(InstallStatus.Status.SUCCESS);
