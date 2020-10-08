@@ -14,7 +14,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.multidex.MultiDex;
 import androidx.work.WorkManager;
 import cm.aptoide.accountmanager.AdultContent;
@@ -28,10 +27,8 @@ import cm.aptoide.pt.ads.AdsUserPropertyManager;
 import cm.aptoide.pt.analytics.FirstLaunchAnalytics;
 import cm.aptoide.pt.crashreports.ConsoleLogger;
 import cm.aptoide.pt.crashreports.CrashReport;
-import cm.aptoide.pt.database.RoomInstalledPersistence;
 import cm.aptoide.pt.database.RoomNotificationPersistence;
 import cm.aptoide.pt.database.room.AptoideDatabase;
-import cm.aptoide.pt.database.room.RoomInstalled;
 import cm.aptoide.pt.dataprovider.WebService;
 import cm.aptoide.pt.dataprovider.cache.L2Cache;
 import cm.aptoide.pt.dataprovider.interfaces.TokenInvalidator;
@@ -43,6 +40,7 @@ import cm.aptoide.pt.downloadmanager.AptoideDownloadManager;
 import cm.aptoide.pt.file.CacheHelper;
 import cm.aptoide.pt.file.FileManager;
 import cm.aptoide.pt.install.InstallManager;
+import cm.aptoide.pt.install.InstalledRepository;
 import cm.aptoide.pt.install.PackageRepository;
 import cm.aptoide.pt.install.installer.RootInstallationRetryHandler;
 import cm.aptoide.pt.leak.LeakTool;
@@ -111,9 +109,7 @@ import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +119,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import okhttp3.OkHttpClient;
 import rx.Completable;
-import rx.Observable;
 import rx.Single;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static cm.aptoide.pt.preferences.managed.ManagedKeys.CAMPAIGN_SOCIAL_NOTIFICATIONS_PREFERENCE_VIEW_KEY;
@@ -140,7 +134,7 @@ public abstract class AptoideApplication extends Application {
   private static DisplayableWidgetMapping displayableWidgetMapping;
   @Inject AptoideDatabase aptoideDatabase;
   @Inject RoomNotificationPersistence notificationPersistence;
-  @Inject RoomInstalledPersistence roomInstalledPersistence;
+  @Inject InstalledRepository installedRepository;
   @Inject @Named("base-rakam-host") String rakamBaseHost;
   @Inject AptoideDownloadManager aptoideDownloadManager;
   @Inject UpdateRepository updateRepository;
@@ -243,9 +237,6 @@ public abstract class AptoideApplication extends Application {
           .log(e);
     }
 
-    //
-    // call super
-    //
     super.onCreate();
 
     initializeMoPub();
@@ -292,17 +283,15 @@ public abstract class AptoideApplication extends Application {
      * TODO change this class in order to accept that there's no test
      * AN-1838
      */
-    generateAptoideUuid().andThen(initializeRakamSdk())
-        .andThen(initializeSentry())
-        .andThen(setUpUpdatesNotification())
-        .andThen(setUpAdsUserProperty())
-        .andThen(checkAdsUserProperty())
-        .andThen(sendAptoideApplicationStartAnalytics(
-            uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION))
-        .andThen(setUpFirstRunAnalytics())
-        .observeOn(Schedulers.computation())
-        .andThen(launchManager.launch())
-        .andThen(discoverAndSaveInstalledApps())
+
+    generateAptoideUuid().andThen(
+        Completable.mergeDelayError(initializeRakamSdk(), initializeSentry(),
+            startUpdatesNotification(), setUpInitialAdsUserProperty(),
+            handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
+                uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
+            setUpFirstRunAnalytics(), installedRepository.syncWithDevice()
+                .subscribeOn(Schedulers.computation()), launchManager.launch()
+                .subscribeOn(Schedulers.computation())))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 
@@ -335,15 +324,15 @@ public abstract class AptoideApplication extends Application {
     installManager.start();
   }
 
-  private Completable setUpUpdatesNotification() {
+  private Completable startUpdatesNotification() {
     return updatesNotificationManager.setUpNotification();
   }
 
-  private Completable checkAdsUserProperty() {
+  private Completable handleAdsUserPropertyToggle() {
     return Completable.fromAction(() -> adsUserPropertyManager.start());
   }
 
-  private Completable setUpAdsUserProperty() {
+  private Completable setUpInitialAdsUserProperty() {
     return idsRepository.getUniqueIdentifier()
         .flatMapCompletable(id -> adsUserPropertyManager.setUp(id))
         .doOnCompleted(() -> Rakam.getInstance()
@@ -664,47 +653,6 @@ public abstract class AptoideApplication extends Application {
 
   protected String getAptoidePackage() {
     return BuildConfig.APPLICATION_ID;
-  }
-
-  private Completable discoverAndSaveInstalledApps() {
-    return Observable.fromCallable(() -> {
-      // get the installed apps
-      List<PackageInfo> installedApps =
-          AptoideUtils.SystemU.getAllInstalledApps(getPackageManager());
-      Logger.getInstance()
-          .v(TAG, "Found " + installedApps.size() + " user installed apps.");
-
-      // Installed apps are inserted in database based on their firstInstallTime. Older comes first.
-      Collections.sort(installedApps,
-          (lhs, rhs) -> (int) ((lhs.firstInstallTime - rhs.firstInstallTime) / 1000));
-
-      // return sorted installed apps
-      return installedApps;
-    })  // transform installation package into Installed table entry and save all the data
-        .flatMapIterable(list -> list)
-        .map(packageInfo -> new RoomInstalled(packageInfo, getPackageManager()))
-        .toList()
-        .flatMap(appsInstalled -> roomInstalledPersistence.getAll()
-            .first()
-            .map(installedFromDatabase -> combineLists(appsInstalled, installedFromDatabase,
-                installed -> installed.setStatus(RoomInstalled.STATUS_UNINSTALLED))))
-        .flatMapCompletable(list -> roomInstalledPersistence.replaceAllBy(list))
-        .toCompletable();
-  }
-
-  public <T> List<T> combineLists(List<T> list1, List<T> list2, @Nullable Action1<T> transformer) {
-    List<T> toReturn = new ArrayList<>(list1.size() + list2.size());
-    toReturn.addAll(list1);
-    for (T item : list2) {
-      if (!toReturn.contains(item)) {
-        if (transformer != null) {
-          transformer.call(item);
-        }
-        toReturn.add(item);
-      }
-    }
-
-    return toReturn;
   }
 
   public RootAvailabilityManager getRootAvailabilityManager() {

@@ -19,11 +19,8 @@ import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.room.Room;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 import cm.aptoide.accountmanager.AccountFactory;
 import cm.aptoide.accountmanager.AccountPersistence;
 import cm.aptoide.accountmanager.AccountService;
@@ -236,6 +233,7 @@ import cm.aptoide.pt.reactions.network.ReactionsService;
 import cm.aptoide.pt.root.RootAvailabilityManager;
 import cm.aptoide.pt.root.RootValueSaver;
 import cm.aptoide.pt.search.SearchHostProvider;
+import cm.aptoide.pt.search.SearchRepository;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionManager;
 import cm.aptoide.pt.search.suggestions.SearchSuggestionRemoteRepository;
@@ -566,7 +564,7 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
 
   @Singleton @Provides InstalledRepository provideInstalledRepository(
       RoomInstalledPersistence roomInstalledPersistence) {
-    return new InstalledRepository(roomInstalledPersistence);
+    return new InstalledRepository(roomInstalledPersistence, application.getPackageManager());
   }
 
   @Singleton @Provides OemidProvider providesOemidProvider() {
@@ -1043,16 +1041,17 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
         logger);
   }
 
-  @Singleton @Provides AptoideDatabase providesAptoideDataBase() {
+  @Singleton @Provides AptoideDatabase providesAptoideDataBase(
+      RoomMigrationProvider roomMigrationProvider) {
     return Room.databaseBuilder(application.getApplicationContext(), AptoideDatabase.class,
         BuildConfig.ROOM_DATABASE_NAME)
         .fallbackToDestructiveMigrationFrom(getSQLiteIntArrayVersions())
-        .addMigrations(new Migration(100, 101) {
-          @Override public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE download " + " ADD COLUMN attributionId TEXT");
-          }
-        })
+        .addMigrations(roomMigrationProvider.getMigrations())
         .build();
+  }
+
+  @Singleton @Provides RoomMigrationProvider providesRoomMigrationProvider() {
+    return new RoomMigrationProvider();
   }
 
   private int[] getSQLiteIntArrayVersions() {
@@ -1668,10 +1667,11 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
       TokenInvalidator tokenInvalidator, @Named("default") SharedPreferences sharedPreferences,
-      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper) {
+      AppBundlesVisibilityManager appBundlesVisibilityManager, UpdateMapper updateMapper,
+      InstalledRepository installedRepository) {
     return new UpdateRepository(updatePersistence, storeRepository, idsRepository,
         bodyInterceptorPoolV7, okHttpClient, converterFactory, tokenInvalidator, sharedPreferences,
-        application.getPackageManager(), appBundlesVisibilityManager, updateMapper);
+        appBundlesVisibilityManager, updateMapper, installedRepository);
   }
 
   @Singleton @Provides UpdateMapper providesUpdateMapper() {
@@ -2122,5 +2122,16 @@ import static com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API;
       NotificationAnalytics notificationAnalytics) {
     return new UpdatesNotificationAnalytics(analyticsManager, navigationTracker,
         notificationAnalytics);
+  }
+
+  @Singleton @Provides SearchRepository providesSearchRepository(
+      RoomStoreRepository roomStoreRepository, @Named("mature-pool-v7")
+      BodyInterceptor<cm.aptoide.pt.dataprovider.ws.v7.BaseBody> baseBodyBodyInterceptor,
+      @Named("default") SharedPreferences sharedPreferences, TokenInvalidator tokenInvalidator,
+      @Named("default") OkHttpClient okHttpClient, Converter.Factory converterFactory,
+      AppBundlesVisibilityManager appBundlesVisibilityManager, OemidProvider oemidProvider) {
+    return new SearchRepository(roomStoreRepository, baseBodyBodyInterceptor, okHttpClient,
+        converterFactory, tokenInvalidator, sharedPreferences, appBundlesVisibilityManager,
+        oemidProvider);
   }
 }

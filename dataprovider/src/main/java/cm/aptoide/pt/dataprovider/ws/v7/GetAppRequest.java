@@ -13,6 +13,7 @@ import cm.aptoide.pt.dataprovider.model.v7.GetApp;
 import cm.aptoide.pt.dataprovider.ws.BodyInterceptor;
 import cm.aptoide.pt.preferences.managed.ManagerPreferences;
 import cm.aptoide.pt.preferences.toolbox.ToolboxManager;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
@@ -141,13 +142,13 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
         SharedPreferences sharedPreferences) {
       this(packageName, refresh, sharedPreferences);
       this.storeName = storeName;
-      this.nodes = new Node(appId, packageName);
+      this.nodes = new Node();
     }
 
     public Body(String packageName, Boolean refresh, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.packageName = packageName;
-      this.nodes = new Node(packageName);
+      this.nodes = new Node();
     }
 
     public Body(String uname, SharedPreferences sharedPreferences) {
@@ -165,7 +166,7 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
     public Body(long appId, SharedPreferences sharedPreferences) {
       super(sharedPreferences);
       this.appId = appId;
-      this.nodes = new Node(appId);
+      this.nodes = new Node();
     }
 
     public Long getAppId() {
@@ -243,7 +244,8 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       }
 
       private static class Meta {
-        private Long appId;
+
+        @JsonInclude(JsonInclude.Include.NON_NULL) private Long appId;
 
         public Long getAppId() {
           return appId;
@@ -255,7 +257,8 @@ public class GetAppRequest extends V7<GetApp, GetAppRequest.Body> {
       }
 
       private static class Versions {
-        private String packageName;
+
+        @JsonInclude(JsonInclude.Include.NON_NULL) private String packageName;
 
         public String getPackageName() {
           return packageName;

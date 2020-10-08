@@ -84,7 +84,7 @@ public class UpdatesManager {
   }
 
   public Completable refreshUpdates() {
-    return updateRepository.sync(true, false);
+    return updateRepository.sync(true, false, true);
   }
 
   public Observable<Integer> getUpdatesNumber() {

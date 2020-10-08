@@ -11,7 +11,7 @@
         android:pivotX="85%"
         android:pivotY="135%">
       <shape>
-        <solid android:color="@color/search_background_grey_light" />
+        <solid android:color="@color/search_background_grey_dark" />
 
       </shape>
     </rotate>
@@ -22,7 +22,7 @@
         android:pivotX="135%"
         android:pivotY="15%">
       <shape android:shape="rectangle">
-        <solid android:color="@color/search_background_grey_light" />
+        <solid android:color="@color/search_background_grey_dark" />
 
       </shape>
     </rotate>

@@ -140,7 +140,7 @@ import rx.schedulers.Schedulers;
             .map(___ -> view.getViewModel())
             .doOnNext(___ -> view.showResultsLoading())
             .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
-                .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
+                .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false))
             .retry())
         .doOnNext(filters -> view.getViewModel())
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
@@ -167,7 +167,7 @@ import rx.schedulers.Schedulers;
         .flatMap(viewCreated -> view.retryClicked())
         .observeOn(viewScheduler)
         .map(__ -> view.getViewModel())
-        .flatMapCompletable(model -> search(model))
+        .flatMapCompletable(model -> search(model, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, crashReport::log);
@@ -228,7 +228,7 @@ import rx.schedulers.Schedulers;
         .observeOn(viewScheduler)
         .doOnNext(__ -> view.showMoreLoading())
         .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()))
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -353,21 +353,21 @@ import rx.schedulers.Schedulers;
         .getStoreTheme(), storeName);
   }
 
-  private Completable loadData(String query, String storeName, List<Filter> filters) {
+  private Completable loadData(String query, String storeName, List<Filter> filters,
+      boolean useCachedValues) {
     if (storeName != null && !storeName.trim()
         .equals("")) {
-      return searchManager.searchInStore(query, storeName, filters);
+      return searchManager.searchInStore(query, storeName, filters, useCachedValues);
     }
     // search every store. followed and not followed
-    return searchManager.searchAppInStores(query, filters);
+    return searchManager.searchAppInStores(query, filters, useCachedValues);
   }
 
   @VisibleForTesting public void doFirstSearch() {
     view.getLifecycleEvent()
         .filter(event -> event.equals(View.LifecycleEvent.CREATE))
         .map(__ -> view.getViewModel())
-        .filter(viewModel -> !viewModel.hasLoadedResults())
-        .flatMapCompletable(model -> search(model))
+        .flatMapCompletable(model -> search(model, model.hasLoadedResults()))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -379,7 +379,7 @@ import rx.schedulers.Schedulers;
         .flatMap(__ -> Observable.merge(view.adultContentDialogPositiveClick(),
             view.adultContentWithPinDialogPositiveClick()))
         .map(__ -> view.getViewModel())
-        .flatMapCompletable(model -> search(model))
+        .flatMapCompletable(model -> search(model, false))
         .compose(view.bindUntilEvent(View.LifecycleEvent.DESTROY))
         .subscribe(__ -> {
         }, e -> crashReport.log(e));
@@ -396,7 +396,7 @@ import rx.schedulers.Schedulers;
         }, e -> crashReport.log(e));
   }
 
-  public Completable search(SearchResultView.Model resultModel) {
+  public Completable search(SearchResultView.Model resultModel, boolean useCachedValues) {
     return Observable.just(resultModel)
         .filter(viewModel -> hasValidQuery(viewModel))
         .observeOn(viewScheduler)
@@ -406,7 +406,7 @@ import rx.schedulers.Schedulers;
         .first()
         .toSingle()
         .flatMapCompletable(viewModel -> loadData(viewModel.getSearchQueryModel()
-            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters()));
+            .getFinalQuery(), viewModel.getStoreName(), viewModel.getFilters(), useCachedValues));
   }
 
   @VisibleForTesting public void handleQueryTextCleaned() {
