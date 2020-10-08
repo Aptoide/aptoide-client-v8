@@ -18,7 +18,7 @@ public class DownloadStateParser {
   public DownloadModel.DownloadState parseDownloadState(Install.InstallationStatus state,
       boolean isIndeterminate) {
     DownloadModel.DownloadState downloadState;
-    if (isIndeterminate) {
+    if (isIndeterminate && state != Install.InstallationStatus.INSTALLING) {
       downloadState = DownloadModel.DownloadState.INDETERMINATE;
     } else {
 
