@@ -24,7 +24,6 @@ import rx.Completable
 import rx.Observable
 import rx.Single
 import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
 import rx.subjects.PublishSubject
 import java.net.UnknownHostException
 import java.util.*
@@ -41,7 +40,7 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
                        val oemidProvider: OemidProvider) {
 
   private var cachedSearchResults: SearchResult? = null
-  private val resultsSubject: BehaviorSubject<SearchResult> = BehaviorSubject.create()
+  private val resultsSubject: PublishSubject<SearchResult> = PublishSubject.create()
 
   private val cancelationSubject: PublishSubject<Void> = PublishSubject.create()
   private var loadingMore = false
@@ -51,59 +50,69 @@ class SearchRepository(val storeRepository: RoomStoreRepository,
   }
 
   fun generalSearch(query: String, filters: SearchFilters,
-                    matureEnabled: Boolean): Completable {
+                    matureEnabled: Boolean,
+                    useCachedValues: Boolean): Completable {
     return Single.just(query)
-        .flatMapCompletable { search(query, filters, matureEnabled, null) }
+        .flatMapCompletable { search(query, filters, matureEnabled, null, useCachedValues) }
         .subscribeOn(Schedulers.io())
   }
 
-  fun searchInStore(query: String, filters: SearchFilters, matureEnabled: Boolean,
-                    storeName: String): Completable {
+  fun searchInStore(query: String, filters: SearchFilters,
+                    matureEnabled: Boolean,
+                    storeName: String,
+                    useCachedValues: Boolean): Completable {
     return Single.just(query)
-        .flatMapCompletable { search(query, filters, matureEnabled, storeName) }
+        .flatMapCompletable { search(query, filters, matureEnabled, storeName, useCachedValues) }
         .subscribeOn(Schedulers.io())
   }
 
   @Synchronized
   private fun search(query: String, filters: SearchFilters,
-                     matureEnabled: Boolean, specificStore: String?): Completable {
-    cachedSearchResults?.let { activeResults ->
-      if (activeResults.query == query && activeResults.specificStore == specificStore
-          && filters == activeResults.filters && !activeResults.hasError()) {
-        if (activeResults.hasMore()) {
-          if (loadingMore) {
-            return Completable.complete()
+                     matureEnabled: Boolean, specificStore: String?,
+                     useCachedValues: Boolean): Completable {
+    if (useCachedValues) {
+      return Completable.fromAction {
+        resultsSubject.onNext(cachedSearchResults)
+      }
+    } else {
+      cachedSearchResults?.let { activeResults ->
+        if (activeResults.query == query && activeResults.specificStore == specificStore
+            && filters == activeResults.filters && !activeResults.hasError()) {
+          if (activeResults.hasMore()) {
+            if (loadingMore) {
+              return Completable.complete()
+            }
+            return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
+                specificStore)
+                .toObservable()
+                .takeUntil(cancelationSubject)
+                .defaultIfEmpty(null)
+                .toSingle()
+                .flatMapCompletable { results -> updateMemCache(results) }
+                .doOnSubscribe { loadingMore = true }
+                .doOnUnsubscribe { loadingMore = false }
+                .doOnTerminate { loadingMore = false }
+                .doOnError { loadingMore = false }
           }
-          return requestSearchResults(query, filters, activeResults.nextOffset, matureEnabled,
-              specificStore)
-              .toObservable()
-              .takeUntil(cancelationSubject)
-              .defaultIfEmpty(null)
-              .toSingle()
-              .flatMapCompletable { results -> updateMemCache(results) }
-              .doOnSubscribe { loadingMore = true }
-              .doOnUnsubscribe { loadingMore = false }
-              .doOnTerminate { loadingMore = false }
-              .doOnError { loadingMore = false }
-        }
-        return Completable.fromAction {
-          resultsSubject.onNext(activeResults)
+          return Completable.fromAction {
+            resultsSubject.onNext(activeResults)
+          }
         }
       }
-    }
-    // We immediately clear the cache on filter change to avoid any concurrency issues
-    // E.g. Active Filters: F1 , then F1 & F2, then back to F1 before the 2nd response is retrieved
-    // Without setting to null, the third request (last F1) will have the offsets of the first F1.
-    cachedSearchResults = null
-    // We also cancel emitting/storing any other responses from other requests if still ongoing
-    cancelationSubject.onNext(null)
+      // We immediately clear the cache on filter change to avoid any concurrency issues
+      // E.g. Active Filters: F1 , then F1 & F2, then back to F1 before the 2nd response is retrieved
+      // Without setting to null, the third request (last F1) will have the offsets of the first F1.
+      cachedSearchResults = null
+      // We also cancel emitting/storing any other responses from other requests if still ongoing
+      cancelationSubject.onNext(null)
 
-    return requestSearchResults(query, filters, 0, matureEnabled, specificStore)
-        .toObservable()
-        .takeUntil(cancelationSubject)
-        .defaultIfEmpty(null)
-        .toSingle()
-        .flatMapCompletable { results -> updateMemCache(results) }
+      return requestSearchResults(query, filters, 0, matureEnabled, specificStore)
+          .toObservable()
+          .takeUntil(cancelationSubject)
+          .defaultIfEmpty(null)
+          .toSingle()
+          .flatMapCompletable { results -> updateMemCache(results) }
+    }
   }
 
   @Synchronized

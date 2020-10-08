@@ -63,12 +63,15 @@ open class DownloadViewActionPresenter(private val installManager: InstallManage
         .filter { lifecycleEvent -> lifecycleEvent == View.LifecycleEvent.CREATE }
         .flatMap {
           eventObservable
+              .skipWhile { event -> event.action == DownloadEvent.GENERIC_ERROR || event.action == DownloadEvent.OUT_OF_SPACE_ERROR }
               .flatMapCompletable { event ->
                 when (event.action) {
                   DownloadEvent.INSTALL -> installApp(event)
                   DownloadEvent.RESUME -> resumeDownload(event)
                   DownloadEvent.PAUSE -> pauseDownload(event)
                   DownloadEvent.CANCEL -> cancelDownload(event)
+                  DownloadEvent.GENERIC_ERROR -> downloadDialogProvider.showGenericError()
+                  DownloadEvent.OUT_OF_SPACE_ERROR -> downloadDialogProvider.showOutOfSpaceError()
                 }
               }
               .retry()

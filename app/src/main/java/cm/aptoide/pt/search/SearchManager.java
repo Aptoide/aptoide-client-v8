@@ -37,13 +37,13 @@ import rx.Single;
     this.appCenter = appCenter;
   }
 
-  public Completable searchAppInStores(String query, List<Filter> filters) {
+  public Completable searchAppInStores(String query, List<Filter> filters, boolean useCachedValues) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
         .flatMapCompletable(
             matureEnabled -> searchRepository.generalSearch(query, getSearchFilters(filters),
-                matureEnabled));
+                matureEnabled, useCachedValues));
   }
 
   public Observable<SearchResult> observeSearchResults() {
@@ -136,13 +136,14 @@ import rx.Single;
     return new SearchFilters(onlyFollowedStores, onlyTrustedApps, onlyBetaApps, onlyAppcApps);
   }
 
-  public Completable searchInStore(String query, String storeName, List<Filter> filters) {
+  public Completable searchInStore(String query, String storeName, List<Filter> filters,
+      boolean useCachedValues) {
     return accountManager.hasMatureContentEnabled()
         .first()
         .toSingle()
         .flatMapCompletable(
             matureEnabled -> searchRepository.searchInStore(query, getSearchFilters(filters),
-                matureEnabled, storeName));
+                matureEnabled, storeName, useCachedValues));
   }
 
   public Single<Boolean> shouldLoadBannerAd() {

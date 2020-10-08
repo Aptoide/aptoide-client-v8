@@ -63,6 +63,7 @@ public class AlarmSyncScheduler implements SyncScheduler {
     PeriodicWorkRequest updatesWorkRequest =
         new PeriodicWorkRequest.Builder(NotificationWorker.class, sync.getInterval(),
             TimeUnit.MILLISECONDS).setInputData(data)
+            .setInitialDelay(sync.getInterval(), TimeUnit.MILLISECONDS)
             .build();
 
     WorkManager.getInstance(context)
