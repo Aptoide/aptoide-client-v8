@@ -365,16 +365,12 @@ public class DefaultInstaller implements Installer {
           return null;
         }))
         .subscribeOn(Schedulers.computation())
-        .doOnNext(__ -> Logger.getInstance()
-            .d("lol", "Emitting after ordering the installation"))
         .map(success -> installation);
   }
 
   private Observable<Installation> handleInstallationResult(IntentFilter intentFilter,
       Installation installation, boolean shouldSetPackageInstaller) {
     return Observable.just(true)
-        .doOnNext(__ -> Logger.getInstance()
-            .d("lol", "i am inside handle Installation result going for the merge"))
         .flatMap(isInstallerInstallation -> Observable.merge(
             waitPackageIntent(context, intentFilter, installation.getPackageName()).timeout(
                 installingStateTimeout, TimeUnit.MILLISECONDS, Observable.fromCallable(() -> {
@@ -386,21 +382,13 @@ public class DefaultInstaller implements Installer {
                   return null;
                 })), appInstallerStatusReceiver.getInstallerInstallStatus()
                 .doOnNext(installStatus -> {
-                  Logger.getInstance()
-                      .d("lol", "inside default install method and received the following status "
-                          + installStatus.getStatus());
                   if (InstallStatus.Status.CANCELED.equals(installStatus.getStatus())) {
                     installerAnalytics.logInstallCancelEvent(installation.getPackageName(),
                         installation.getVersionCode());
                   }
                 })
-                .doOnNext(installStatus -> Logger.getInstance()
-                    .d("lol", "going to filter the pcakge name " + installStatus.getPackageName()))
                 .filter(installStatus -> installation.getPackageName()
                     .equalsIgnoreCase(installStatus.getPackageName()))
-                .doOnNext(__ -> Logger.getInstance()
-                    .d("lol",
-                        "AFTER THE filter package name and before the distinct until changed"))
                 .distinctUntilChanged()
                 .doOnNext(installStatus -> {
                   Logger.getInstance()
@@ -441,8 +429,6 @@ public class DefaultInstaller implements Installer {
   }
 
   private int map(InstallStatus installStatus) {
-    Logger.getInstance()
-        .d("lol", "mapping a status : " + installStatus.getStatus());
     switch (installStatus.getStatus()) {
       case INSTALLING:
         return RoomInstalled.STATUS_INSTALLING;
