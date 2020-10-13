@@ -290,8 +290,9 @@ public abstract class AptoideApplication extends Application {
             handleAdsUserPropertyToggle(), sendAptoideApplicationStartAnalytics(
                 uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION),
             setUpFirstRunAnalytics(), installedRepository.syncWithDevice()
-                .subscribeOn(Schedulers.computation()), launchManager.launch()
                 .subscribeOn(Schedulers.computation())))
+        .andThen(launchManager.launch()
+            .subscribeOn(Schedulers.computation()))
         .subscribe(() -> { /* do nothing */}, error -> CrashReport.getInstance()
             .log(error));
 

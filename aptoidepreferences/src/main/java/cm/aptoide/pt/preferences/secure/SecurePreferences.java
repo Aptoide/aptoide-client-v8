@@ -1,6 +1,7 @@
 package cm.aptoide.pt.preferences.secure;
 
 import android.content.SharedPreferences;
+import cm.aptoide.pt.logger.Logger;
 
 /**
  * Created by neuro on 21-04-2016.
@@ -26,6 +27,8 @@ public class SecurePreferences {
   }
 
   public static void setFirstRun(boolean b, SharedPreferences securePreferences) {
+    Logger.getInstance()
+        .d("nzxt", "set first run -> " + b);
     securePreferences.edit()
         .putBoolean(SecureKeys.FIRST_RUN, b)
         .apply();
