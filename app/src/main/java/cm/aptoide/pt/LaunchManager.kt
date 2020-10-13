@@ -14,7 +14,6 @@ class LaunchManager(private val firstLaunchManager: FirstLaunchManager,
 
   fun launch(): Completable {
     return Completable.mergeDelayError(runFirstLaunch(), runUpdateLaunch())
-        .andThen(updateLaunchSettings())
   }
 
   /**
@@ -22,7 +21,7 @@ class LaunchManager(private val firstLaunchManager: FirstLaunchManager,
    */
   private fun runFirstLaunch(): Completable {
     if (SecurePreferences.isFirstRun(secureSharedPreferences)) {
-      return firstLaunchManager.runFirstLaunch()
+      return firstLaunchManager.runFirstLaunch().startWith(updateLaunchSettings())
     }
     return Completable.complete()
   }

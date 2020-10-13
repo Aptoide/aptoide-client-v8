@@ -6,6 +6,7 @@ import android.os.Bundle;
 import cm.aptoide.analytics.AnalyticsLogger;
 import cm.aptoide.analytics.AnalyticsManager;
 import cm.aptoide.pt.GmsStatusValueProvider;
+import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.networking.IdsRepository;
 import cm.aptoide.pt.preferences.secure.SecurePreferences;
 import com.facebook.FacebookSdk;
