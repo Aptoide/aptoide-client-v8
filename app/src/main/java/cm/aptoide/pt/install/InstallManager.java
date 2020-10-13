@@ -360,7 +360,11 @@ public class InstallManager {
       return Install.InstallationStatus.INSTALLING;
     }
 
-    if (installationState.getStatus() == RoomInstalled.STATUS_WAITING
+    if (installationState.getStatus() == RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK) {
+      return Install.InstallationStatus.UNINSTALLED;
+    }
+
+    if (installationState.getStatus() == RoomInstalled.STATUS_PRE_INSTALL
         && download != null
         && download.getOverallDownloadStatus() == RoomDownload.COMPLETED) {
       return Install.InstallationStatus.DOWNLOADING;
@@ -472,13 +476,14 @@ public class InstallManager {
     switch (status) {
       case RoomInstalled.STATUS_UNINSTALLED:
       case RoomInstalled.STATUS_COMPLETED:
+      case RoomInstalled.STATUS_WAITING_INSTALL_FEEDBACK:
         isIndeterminate = false;
         break;
       case RoomInstalled.STATUS_INSTALLING:
       case RoomInstalled.STATUS_ROOT_TIMEOUT:
         isIndeterminate = type != RoomInstalled.TYPE_DEFAULT;
         break;
-      case RoomInstalled.STATUS_WAITING:
+      case RoomInstalled.STATUS_PRE_INSTALL:
         isIndeterminate =
             download != null && download.getOverallDownloadStatus() == RoomDownload.COMPLETED;
     }
@@ -547,7 +552,7 @@ public class InstallManager {
     installed.setPackageAndVersionCode(download.getPackageName() + download.getVersionCode());
     installed.setVersionCode(download.getVersionCode());
     installed.setVersionName(download.getVersionName());
-    installed.setStatus(RoomInstalled.STATUS_WAITING);
+    installed.setStatus(RoomInstalled.STATUS_PRE_INSTALL);
     installed.setType(RoomInstalled.TYPE_UNKNOWN);
     installed.setPackageName(download.getPackageName());
     return installed;

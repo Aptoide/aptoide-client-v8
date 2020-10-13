@@ -80,7 +80,7 @@ public class AppMapper {
   private StateApp.Status mapDownloadStatus(Install.InstallationStatus state,
       boolean isIndeterminate) {
     StateApp.Status status;
-    if (isIndeterminate) {
+    if (isIndeterminate && state != Install.InstallationStatus.INSTALLING) {
       status = StateApp.Status.IN_QUEUE;
     } else {
 

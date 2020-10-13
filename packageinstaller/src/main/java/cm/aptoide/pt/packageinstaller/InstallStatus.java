@@ -24,6 +24,6 @@ public final class InstallStatus {
   }
 
   public enum Status {
-    INSTALLING, SUCCESS, FAIL, CANCELED, UNKNOWN_ERROR
+    INSTALLING, SUCCESS, FAIL, CANCELED, UNKNOWN_ERROR, WAITING_INSTALL_FEEDBACK
   }
 }
