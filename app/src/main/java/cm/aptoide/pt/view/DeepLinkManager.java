@@ -34,6 +34,7 @@ import cm.aptoide.pt.home.more.appcoins.EarnAppcListFragment;
 import cm.aptoide.pt.install.InstallManager;
 import cm.aptoide.pt.logger.Logger;
 import cm.aptoide.pt.navigator.FragmentNavigator;
+import cm.aptoide.pt.notification.ReadyToInstallNotificationManager;
 import cm.aptoide.pt.promotions.PromotionsFragment;
 import cm.aptoide.pt.search.SearchNavigator;
 import cm.aptoide.pt.search.analytics.SearchAnalytics;
@@ -86,6 +87,7 @@ public class DeepLinkManager {
   private final NewFeature newFeature;
   private final ThemeManager themeManager;
   private final ThemeAnalytics themeAnalytics;
+  private final ReadyToInstallNotificationManager readyToInstallNotificationManager;
 
   public DeepLinkManager(StoreUtilsProxy storeUtilsProxy, FragmentNavigator fragmentNavigator,
       BottomNavigationNavigator bottomNavigationNavigator, SearchNavigator searchNavigator,
@@ -95,7 +97,8 @@ public class DeepLinkManager {
       AppShortcutsAnalytics appShortcutsAnalytics, AptoideAccountManager accountManager,
       DeepLinkAnalytics deepLinkAnalytics, StoreAnalytics storeAnalytics,
       AdsRepository adsRepository, AppNavigator appNavigator, InstallManager installManager,
-      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics) {
+      NewFeature newFeature, ThemeManager themeManager, ThemeAnalytics themeAnalytics,
+      ReadyToInstallNotificationManager readyToInstallNotificationManager) {
     this.storeUtilsProxy = storeUtilsProxy;
     this.fragmentNavigator = fragmentNavigator;
     this.bottomNavigationNavigator = bottomNavigationNavigator;
@@ -116,12 +119,19 @@ public class DeepLinkManager {
     this.newFeature = newFeature;
     this.themeManager = themeManager;
     this.themeAnalytics = themeAnalytics;
+    this.readyToInstallNotificationManager = readyToInstallNotificationManager;
     this.subscriptions = new CompositeSubscription();
   }
 
   public boolean showDeepLink(Intent intent) {
     if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APP_VIEW_FRAGMENT)) {
-      if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
+      if (intent.getBooleanExtra(
+          DeepLinkIntentReceiver.DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL, false)) {
+        readyToInstallNotificationManager.setIsNotificationDisplayed(false);
+        appViewDeepLinkAutoInstall(
+            intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1),
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY));
+      } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY)) {
         appViewDeepLink(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_MD5_KEY));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY)) {
         appViewDeepLink(intent.getLongExtra(DeepLinkIntentReceiver.DeepLinksKeys.APP_ID_KEY, -1),
@@ -132,8 +142,7 @@ public class DeepLinkManager {
         appViewDeepLink(
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.PACKAGE_NAME_KEY),
             intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.STORENAME_KEY),
-            intent.getBooleanExtra(DeepLinkIntentReceiver.DeepLinksKeys.SHOW_AUTO_INSTALL_POPUP,
-                true));
+            intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.OPEN_TYPE));
       } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME)) {
         appViewDeepLinkUname(intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UNAME));
       }
@@ -151,6 +160,12 @@ public class DeepLinkManager {
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.NEW_UPDATES)) {
       newUpdatesDeepLink(
           intent.getStringExtra(DeepLinkIntentReceiver.DeepLinksKeys.UPDATES_NOTIFICATION_GROUP));
+    } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.APPS)) {
+      if (intent.getBooleanExtra(
+          DeepLinkIntentReceiver.DeepLinksKeys.FROM_NOTIFICATION_READY_TO_INSTALL, false)) {
+        readyToInstallNotificationManager.setIsNotificationDisplayed(false);
+        goToAppsDownloadsSection();
+      }
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.GENERIC_DEEPLINK)) {
       genericDeepLink(intent.getParcelableExtra(DeepLinkIntentReceiver.DeepLinksKeys.URI));
     } else if (intent.hasExtra(DeepLinkIntentReceiver.DeepLinksTargets.USER_DEEPLINK)) {
@@ -250,6 +265,11 @@ public class DeepLinkManager {
     appNavigator.navigateWithMd5(md5);
   }
 
+  private void appViewDeepLinkAutoInstall(long appId, String packageName) {
+    appNavigator.navigateWithAppId(appId, packageName, AppViewFragment.OpenType.OPEN_AND_INSTALL,
+        "");
+  }
+
   private void appViewDeepLink(long appId, String packageName, boolean showPopup, boolean isApkfy,
       String oemId) {
     AppViewFragment.OpenType openType;
@@ -263,10 +283,23 @@ public class DeepLinkManager {
     appNavigator.navigateWithAppId(appId, packageName, openType, "", oemId);
   }
 
-  private void appViewDeepLink(String packageName, String storeName, boolean showPopup) {
-    AppViewFragment.OpenType openType = showPopup ? AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP
-        : AppViewFragment.OpenType.OPEN_ONLY;
-    appNavigator.navigateWithPackageAndStoreNames(packageName, storeName, openType);
+  private void appViewDeepLink(String packageName, String storeName, String openType) {
+    appNavigator.navigateWithPackageAndStoreNames(packageName, storeName, getOpenType(openType));
+  }
+
+  private AppViewFragment.OpenType getOpenType(String openType) {
+    if (openType == null) return AppViewFragment.OpenType.OPEN_ONLY;
+    switch (openType) {
+      case "open_and_install":
+        return AppViewFragment.OpenType.OPEN_AND_INSTALL;
+      case "open_with_install_popup":
+        return AppViewFragment.OpenType.OPEN_WITH_INSTALL_POPUP;
+      case "apkfy_install_popup":
+        return AppViewFragment.OpenType.APK_FY_INSTALL_POPUP;
+      default:
+      case "open_only":
+        return AppViewFragment.OpenType.OPEN_ONLY;
+    }
   }
 
   private void searchDeepLink(String query, boolean shortcutNavigation) {
@@ -341,6 +374,10 @@ public class DeepLinkManager {
 
   private void fromHomeDeepLink() {
     bottomNavigationNavigator.navigateToHome();
+  }
+
+  private void goToAppsDownloadsSection() {
+    bottomNavigationNavigator.navigateToApps();
   }
 
   private void newUpdatesDeepLink(String group) {

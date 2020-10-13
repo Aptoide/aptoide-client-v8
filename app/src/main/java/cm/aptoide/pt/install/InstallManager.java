@@ -88,6 +88,7 @@ public class InstallManager {
   private void dispatchInstallationCandidates() {
     dispatchInstallationsSubscription.add(installCandidateSubject.flatMap(
         candidate -> aptoideDownloadManager.getDownloadAsObservable(candidate.getMd5())
+            .onErrorReturn(null)
             .filter(download -> download != null)
             .takeUntil(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
             .filter(download -> download.getOverallDownloadStatus() == RoomDownload.COMPLETED)
@@ -419,7 +420,7 @@ public class InstallManager {
     return isIndeterminate;
   }
 
-  private Install.InstallationStatus mapDownloadState(RoomDownload download) {
+  public Install.InstallationStatus mapDownloadState(RoomDownload download) {
     Install.InstallationStatus status = Install.InstallationStatus.UNINSTALLED;
     if (download != null) {
       switch (download.getOverallDownloadStatus()) {
@@ -452,6 +453,7 @@ public class InstallManager {
         case RoomDownload.PROGRESS:
         case RoomDownload.PENDING:
         case RoomDownload.WAITING_TO_MOVE_FILES:
+        case RoomDownload.VERIFYING_FILE_INTEGRITY:
           status = Install.InstallationStatus.DOWNLOADING;
           break;
         case RoomDownload.IN_QUEUE:

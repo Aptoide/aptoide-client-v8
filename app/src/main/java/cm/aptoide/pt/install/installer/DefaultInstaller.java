@@ -146,13 +146,6 @@ public class DefaultInstaller implements Installer {
             }, Throwable::printStackTrace));
   }
 
-  @Override public void stopDispatching() {
-    dispatchInstallationsSubscription.clear();
-    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
-      dispatchInstallationsSubscription.unsubscribe();
-    }
-  }
-
   @Override public Completable install(String md5, boolean forceDefaultInstall,
       boolean shouldSetPackageInstaller) {
     return rootAvailabilityManager.isRootAvailable()
@@ -218,6 +211,13 @@ public class DefaultInstaller implements Installer {
                 + " state is: "
                 + installationState.getStatus()))
         .distinctUntilChanged();
+  }
+
+  @Override public void stopDispatching() {
+    dispatchInstallationsSubscription.clear();
+    if (!dispatchInstallationsSubscription.isUnsubscribed()) {
+      dispatchInstallationsSubscription.unsubscribe();
+    }
   }
 
   private Observable<Installation> startDefaultInstallation(Context context,

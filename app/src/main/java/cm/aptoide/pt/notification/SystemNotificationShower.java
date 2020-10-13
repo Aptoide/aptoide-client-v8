@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
@@ -47,6 +48,7 @@ public class SystemNotificationShower implements Presenter {
   private CompositeSubscription subscriptions;
   private NewFeatureManager newFeatureManager;
   private ThemeAnalytics themeAnalytics;
+  private ReadyToInstallNotificationManager readyToInstallNotificationManager;
 
   public SystemNotificationShower(Context context, NotificationManager notificationManager,
       NotificationIdsMapper notificationIdsMapper, NotificationCenter notificationCenter,
@@ -54,7 +56,8 @@ public class SystemNotificationShower implements Presenter {
       NotificationProvider notificationProvider,
       NotificationApplicationView notificationApplicationView, CompositeSubscription subscriptions,
       NavigationTracker navigationTracker, NewFeatureManager newFeatureManager,
-      ThemeAnalytics themeAnalytics) {
+      ThemeAnalytics themeAnalytics,
+      ReadyToInstallNotificationManager readyToInstallNotificationManager) {
     this.context = context;
     this.notificationManager = notificationManager;
     this.notificationIdsMapper = notificationIdsMapper;
@@ -67,13 +70,22 @@ public class SystemNotificationShower implements Presenter {
     this.navigationTracker = navigationTracker;
     this.newFeatureManager = newFeatureManager;
     this.themeAnalytics = themeAnalytics;
+    this.readyToInstallNotificationManager = readyToInstallNotificationManager;
   }
 
   @Override public void present() {
+    setupChannels();
     setNotificationPressSubscribe();
     setNotificationDismissSubscribe();
     setNotificationBootCompletedSubscribe();
     showNewNotification();
+  }
+
+  private void setupChannels() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      notificationManager.createNotificationChannel(
+          readyToInstallNotificationManager.getNotificationChannel());
+    }
   }
 
   private void showNewNotification() {
@@ -82,7 +94,8 @@ public class SystemNotificationShower implements Presenter {
           int notificationId =
               notificationIdsMapper.getNotificationId(aptoideNotification.getType());
           if (aptoideNotification.getType() != AptoideNotification.APPC_PROMOTION
-              && aptoideNotification.getType() != AptoideNotification.NEW_FEATURE) {
+              && aptoideNotification.getType() != AptoideNotification.NEW_FEATURE
+              && aptoideNotification.getType() != AptoideNotification.APPS_READY_TO_INSTALL) {
             notificationAnalytics.sendPushNotficationImpressionEvent(aptoideNotification.getType(),
                 aptoideNotification.getAbTestingGroup(), aptoideNotification.getCampaignId(),
                 aptoideNotification.getUrl());
@@ -118,6 +131,9 @@ public class SystemNotificationShower implements Presenter {
         return buildNewFeatureNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getActionStringRes(),
             pressIntentAction, getOnDismissAction(notificationId));
+      } else if (aptoideNotification.getType() == AptoideNotification.APPS_READY_TO_INSTALL) {
+        return readyToInstallNotificationManager.buildNotification(aptoideNotification, context)
+            .doOnSuccess(__ -> readyToInstallNotificationManager.setIsNotificationDisplayed(true));
       } else {
         return buildLocalNotification(context, aptoideNotification.getTitle(),
             aptoideNotification.getBody(), aptoideNotification.getImg(), pressIntentAction,
@@ -296,6 +312,11 @@ public class SystemNotificationShower implements Presenter {
               notificationInfo.getNotificationType())[0].equals(AptoideNotification.NEW_FEATURE)) {
             themeAnalytics.sendDarkThemeDismissClickEvent("Notification");
           }
+          if (notificationIdsMapper.getNotificationType(
+              notificationInfo.getNotificationType())[0].equals(
+              AptoideNotification.APPS_READY_TO_INSTALL)) {
+            readyToInstallNotificationManager.setIsNotificationDisplayed(false);
+          }
         })
         .flatMapCompletable(notificationInfo -> dismissNotificationAfterAction(
             notificationInfo.getNotificationType()))
@@ -314,7 +335,8 @@ public class SystemNotificationShower implements Presenter {
             notificationIdsMapper.getNotificationType(notificationInfo.getNotificationType()))
             .doOnSuccess(notification -> {
               if (notification.getType() != AptoideNotification.APPC_PROMOTION
-                  && notification.getType() != AptoideNotification.NEW_FEATURE) {
+                  && notification.getType() != AptoideNotification.NEW_FEATURE
+                  && notification.getType() != AptoideNotification.APPS_READY_TO_INSTALL) {
                 notificationAnalytics.sendPushNotificationPressedEvent(notification.getType(),
                     notification.getAbTestingGroup(), notification.getCampaignId(),
                     notification.getUrl());
