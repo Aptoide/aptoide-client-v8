@@ -88,7 +88,6 @@ public class FirstLaunchAnalytics {
     analyticsManager.logEvent(
         createFacebookFirstLaunchDataMap(utmSource, utmMedium, utmCampaign, utmContent, entryPoint),
         FIRST_LAUNCH_BI, AnalyticsManager.Action.OPEN, CONTEXT);
-    Logger.getInstance().d("nzxt", "sending " + FIRST_LAUNCH_RAKAM + " open");
     analyticsManager.logEvent(new HashMap<>(), FIRST_LAUNCH_RAKAM, AnalyticsManager.Action.OPEN,
         CONTEXT);
   }

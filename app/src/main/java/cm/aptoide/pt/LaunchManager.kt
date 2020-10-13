@@ -1,7 +1,6 @@
 package cm.aptoide.pt
 
 import android.content.SharedPreferences
-import cm.aptoide.pt.logger.Logger
 import cm.aptoide.pt.preferences.secure.SecurePreferences
 import rx.Completable
 
@@ -14,13 +13,7 @@ class LaunchManager(private val firstLaunchManager: FirstLaunchManager,
                     private val secureSharedPreferences: SharedPreferences) {
 
   fun launch(): Completable {
-    return Completable.mergeDelayError(runFirstLaunch().doOnCompleted {
-      Logger.getInstance().d("nzxt", "runFirstLaunch() completed")
-    }, runUpdateLaunch().doOnCompleted {
-      Logger.getInstance().d("nzxt", "runUpdateLaunch() completed")
-    }).doOnCompleted {
-      Logger.getInstance().d("nzxt", "merge delay completed")
-    }
+    return Completable.mergeDelayError(runFirstLaunch(), runUpdateLaunch())
   }
 
   /**

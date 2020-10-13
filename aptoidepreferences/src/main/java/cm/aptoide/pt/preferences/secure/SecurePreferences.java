@@ -28,7 +28,7 @@ public class SecurePreferences {
 
   public static void setFirstRun(boolean b, SharedPreferences securePreferences) {
     Logger.getInstance()
-        .d("nzxt", "set first run -> " + b);
+        .d("First Run", "set first run -> " + b);
     securePreferences.edit()
         .putBoolean(SecureKeys.FIRST_RUN, b)
         .apply();
