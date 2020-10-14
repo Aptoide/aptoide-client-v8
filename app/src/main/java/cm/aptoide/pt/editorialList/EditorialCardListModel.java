@@ -3,7 +3,7 @@ package cm.aptoide.pt.editorialList;
 import java.util.Collections;
 import java.util.List;
 
-class EditorialCardListModel {
+public class EditorialCardListModel {
 
   private final Error error;
   private final boolean loading;

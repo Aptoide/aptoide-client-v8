@@ -34,7 +34,8 @@ class UserReactionsTest {
     MockitoAnnotations.initMocks(this)
     userReactions = HashMap()
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager,
+        appCoinsManager)
     emptyReactionModel = LoadReactionModel(10, "", "", emptyList())
     reactedReactionModel = LoadReactionModel(10, "", "", listOf(TopReaction(reaction, 3)))
   }
@@ -55,7 +56,8 @@ class UserReactionsTest {
     //If the user has already reacted with thug
     userReactions.put(cardId + groupId, UserReaction(userId, "thug"))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager,
+        appCoinsManager)
 
     Mockito.`when`(reactionRemoteService.setSecondReaction(userId, reaction))
         .thenReturn(Single.just(null))
@@ -71,7 +73,8 @@ class UserReactionsTest {
     //If the user has already reacted with laugh
     userReactions.put(cardId + groupId, UserReaction(userId, reaction))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager,
+        appCoinsManager)
 
     //And reacts with the same reaction
     editorialListManager.setReaction(cardId, groupId, reaction).subscribe()
@@ -86,7 +89,8 @@ class UserReactionsTest {
     //If the user already reacted on one card
     userReactions.put(cardId + groupId, UserReaction(userId, reaction))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager,
+        appCoinsManager)
 
     Mockito.`when`(reactionRemoteService.setSecondReaction(userId, reaction))
         .thenReturn(Single.just(null))

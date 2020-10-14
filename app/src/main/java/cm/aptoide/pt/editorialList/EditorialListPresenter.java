@@ -73,7 +73,8 @@ public class EditorialListPresenter implements Presenter {
 
   private Observable<CurationCard> loadEditorialAndReactions(boolean loadMore, boolean refresh) {
     return loadEditorialListModel(loadMore, refresh).toObservable()
-        .flatMapIterable(EditorialCardListModel::getCurationCards)
+        .flatMapIterable(editorialListModel -> editorialListModel.getEditorialCardListModel()
+            .getCurationCards())
         .flatMapSingle(
             curationCard -> loadReactionModel(curationCard.getId(), curationCard.getType()));
   }
@@ -162,15 +163,18 @@ public class EditorialListPresenter implements Presenter {
         }, throwable -> crashReporter.log(throwable));
   }
 
-  private Single<EditorialCardListModel> loadEditorialListModel(boolean loadMore, boolean refresh) {
+  private Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean refresh) {
     return editorialListManager.loadEditorialListModel(loadMore, refresh)
         .observeOn(viewScheduler)
         .doOnSuccess(editorialListModel -> {
-          if (!editorialListModel.isLoading()) {
+          if (!editorialListModel.getEditorialCardListModel()
+              .isLoading()) {
             view.hideLoading();
           }
-          if (editorialListModel.hasError()) {
-            if (editorialListModel.getError() == EditorialCardListModel.Error.NETWORK) {
+          if (editorialListModel.getEditorialCardListModel()
+              .hasError()) {
+            if (editorialListModel.getEditorialCardListModel()
+                .getError() == EditorialCardListModel.Error.NETWORK) {
               view.showNetworkError();
             } else {
               view.showGenericError();
@@ -178,9 +182,11 @@ public class EditorialListPresenter implements Presenter {
           } else {
             if (refresh) {
               view.hideRefresh();
-              view.update(editorialListModel.getCurationCards());
+              view.update(editorialListModel.getEditorialCardListModel()
+                  .getCurationCards(), editorialListModel.getBonusAppcModel());
             } else {
-              view.populateView(editorialListModel.getCurationCards());
+              view.populateView(editorialListModel.getEditorialCardListModel()
+                  .getCurationCards(), editorialListModel.getBonusAppcModel());
             }
           }
           view.hideLoadMore();

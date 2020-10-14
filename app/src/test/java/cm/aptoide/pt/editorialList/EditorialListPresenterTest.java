@@ -109,7 +109,8 @@ public class EditorialListPresenterTest {
     //After a success viewModel it should hide the loading
     verify(view).hideLoading();
     //And populate the view with the cards from the viewModel
-    verify(view).populateView(successEditorialCardListModel.getCurationCards());
+    verify(view).populateView(successEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -143,7 +144,8 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showNetworkError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(networkErrorEditorialCardListModel.getCurationCards());
+    verify(view, never()).populateView(networkErrorEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -162,7 +164,8 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showGenericError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(genericErrorEditorialCardListModel.getCurationCards());
+    verify(view, never()).populateView(genericErrorEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -188,7 +191,8 @@ public class EditorialListPresenterTest {
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
     //Then the editorial cards should be shown
-    verify(view).update(successEditorialCardListModel.getCurationCards());
+    verify(view).update(successEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
@@ -205,7 +209,8 @@ public class EditorialListPresenterTest {
     //Then it should hide the swipe refresh icon
     verify(view).hideRefresh();
     //Then the editorial cards should be shown
-    verify(view).update(successEditorialCardListModel.getCurationCards());
+    verify(view).update(successEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
@@ -230,7 +235,8 @@ public class EditorialListPresenterTest {
     verify(view).hideLoadMore();
     verify(view).hideLoading();
     //Then it should show the view again with old cards and added cards, retaining list position
-    verify(view).populateView(successEditorialCardListModel.getCurationCards());
+    verify(view).populateView(successEditorialCardListModel.getCurationCards(),
+        editorialListModel.getBonusAppcModel());
   }
 
   @Test public void loadLoggedInUserImageUserTest() {

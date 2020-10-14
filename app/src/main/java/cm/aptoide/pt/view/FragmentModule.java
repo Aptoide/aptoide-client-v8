@@ -94,12 +94,12 @@ import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.editorial.Slug;
+import cm.aptoide.pt.editorialList.EditorialCardListRepository;
 import cm.aptoide.pt.editorialList.EditorialCardListService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
 import cm.aptoide.pt.editorialList.EditorialListPresenter;
-import cm.aptoide.pt.editorialList.EditorialCardListRepository;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
@@ -599,8 +599,9 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager) {
-    return new EditorialListManager(editorialCardListRepository, reactionsManager);
+      EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager,
+      AppCoinsManager appCoinsManager) {
+    return new EditorialListManager(editorialCardListRepository, reactionsManager, appCoinsManager);
   }
 
   @FragmentScope @Provides EditorialCardListRepository providesEditorialListRepository(
