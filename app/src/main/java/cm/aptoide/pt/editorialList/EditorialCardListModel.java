@@ -3,7 +3,7 @@ package cm.aptoide.pt.editorialList;
 import java.util.Collections;
 import java.util.List;
 
-class EditorialListModel {
+class EditorialCardListModel {
 
   private final Error error;
   private final boolean loading;
@@ -11,7 +11,7 @@ class EditorialListModel {
   private final int offset;
   private final int total;
 
-  public EditorialListModel(Error error) {
+  public EditorialCardListModel(Error error) {
     this.error = error;
     loading = false;
     offset = 0;
@@ -19,7 +19,7 @@ class EditorialListModel {
     curationCards = Collections.emptyList();
   }
 
-  public EditorialListModel(boolean loading) {
+  public EditorialCardListModel(boolean loading) {
     this.loading = loading;
     error = null;
     offset = 0;
@@ -27,7 +27,7 @@ class EditorialListModel {
     curationCards = Collections.emptyList();
   }
 
-  public EditorialListModel(List<CurationCard> curationCards, int offset, int total) {
+  public EditorialCardListModel(List<CurationCard> curationCards, int offset, int total) {
     this.curationCards = curationCards;
     this.offset = offset;
     this.total = total;

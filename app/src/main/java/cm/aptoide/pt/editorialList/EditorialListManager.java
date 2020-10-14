@@ -8,42 +8,42 @@ import rx.Single;
 
 public class EditorialListManager {
 
-  private final EditorialListRepository editorialListRepository;
+  private final EditorialCardListRepository editorialCardListRepository;
   private final ReactionsManager reactionsManager;
 
-  public EditorialListManager(EditorialListRepository editorialListRepository,
+  public EditorialListManager(EditorialCardListRepository editorialCardListRepository,
       ReactionsManager reactionsManager) {
-    this.editorialListRepository = editorialListRepository;
+    this.editorialCardListRepository = editorialCardListRepository;
     this.reactionsManager = reactionsManager;
   }
 
-  Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
+  Single<EditorialCardListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
     if (loadMore) {
       return loadMoreCurationCards();
     } else {
-      return editorialListRepository.loadEditorialListModel(invalidateCache);
+      return editorialCardListRepository.loadEditorialCardListModel(invalidateCache);
     }
   }
 
   public boolean hasMore() {
-    return editorialListRepository.hasMore();
+    return editorialCardListRepository.hasMore();
   }
 
-  private Single<EditorialListModel> loadMoreCurationCards() {
-    return editorialListRepository.loadMoreCurationCards();
+  private Single<EditorialCardListModel> loadMoreCurationCards() {
+    return editorialCardListRepository.loadMoreCurationCards();
   }
 
   public Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
-        .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListModel(false)
+        .flatMap(loadReactionModel -> editorialCardListRepository.loadEditorialCardListModel(false)
             .flatMap(
                 editorialListModel -> getUpdatedCards(editorialListModel, loadReactionModel,
                     cardId)));
   }
 
-  private Single<CurationCard> getUpdatedCards(EditorialListModel editorialListModel,
+  private Single<CurationCard> getUpdatedCards(EditorialCardListModel editorialCardListModel,
       LoadReactionModel loadReactionModel, String cardId) {
-    List<CurationCard> curationCards = editorialListModel.getCurationCards();
+    List<CurationCard> curationCards = editorialCardListModel.getCurationCards();
     CurationCard changedCurationCard = null;
     for (CurationCard curationCard : curationCards) {
       if (curationCard.getId()
@@ -55,7 +55,7 @@ public class EditorialListManager {
         break;
       }
     }
-    editorialListRepository.updateCache(editorialListModel, curationCards);
+    editorialCardListRepository.updateCache(editorialCardListModel, curationCards);
     return Single.just(changedCurationCard);
   }
 

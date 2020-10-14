@@ -35,9 +35,9 @@ public class EditorialListPresenterTest {
   @Mock Account account;
   @Mock private UserFeedbackAnalytics userFeedbackAnalytics;
   private EditorialListPresenter presenter;
-  private EditorialListModel successEditorialListModel;
-  private EditorialListModel loadingEditorialListModel;
-  private EditorialListModel genericErrorEditorialListModel;
+  private EditorialCardListModel successEditorialCardListModel;
+  private EditorialCardListModel loadingEditorialCardListModel;
+  private EditorialCardListModel genericErrorEditorialCardListModel;
 
   private PublishSubject<View.LifecycleEvent> lifecycleEvent;
   private PublishSubject<Object> bottomReachedEvent;
@@ -46,7 +46,7 @@ public class EditorialListPresenterTest {
   private PublishSubject<Void> imageClickEvent;
   private PublishSubject<EditorialHomeEvent> cardClickEvent;
   private PublishSubject<EditorialListEvent> impressionEvent;
-  private EditorialListModel networkErrorEditorialListModel;
+  private EditorialCardListModel networkErrorEditorialCardListModel;
   private PublishSubject<Void> refreshEvent;
   private PublishSubject<EditorialHomeEvent> reactionButtonClickEvent;
   private PublishSubject<EditorialHomeEvent> reactionButtonLongPressEvent;
@@ -76,12 +76,12 @@ public class EditorialListPresenterTest {
         new CurationCard("1", "sub", "icon", "title", "1000", GROUP_ID, "2018-11-29 17:14:56", "",
             "");
     List<CurationCard> curationCardList = Collections.singletonList(curationCard);
-    successEditorialListModel = new EditorialListModel(curationCardList, 0, 0);
-    loadingEditorialListModel = new EditorialListModel(true);
-    genericErrorEditorialListModel =
-        new EditorialListModel(EditorialListModel.Error.GENERIC);
-    networkErrorEditorialListModel =
-        new EditorialListModel(EditorialListModel.Error.NETWORK);
+    successEditorialCardListModel = new EditorialCardListModel(curationCardList, 0, 0);
+    loadingEditorialCardListModel = new EditorialCardListModel(true);
+    genericErrorEditorialCardListModel =
+        new EditorialCardListModel(EditorialCardListModel.Error.GENERIC);
+    networkErrorEditorialCardListModel =
+        new EditorialCardListModel(EditorialCardListModel.Error.NETWORK);
 
     when(view.getLifecycleEvent()).thenReturn(lifecycleEvent);
     when(view.reachesBottom()).thenReturn(bottomReachedEvent);
@@ -100,7 +100,7 @@ public class EditorialListPresenterTest {
   @Test public void onCreateLoadSuccessViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
     when(editorialListManager.loadEditorialListModel(false, false)).thenReturn(
-        Single.just(successEditorialListModel));
+        Single.just(successEditorialCardListModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -109,7 +109,7 @@ public class EditorialListPresenterTest {
     //After a success viewModel it should hide the loading
     verify(view).hideLoading();
     //And populate the view with the cards from the viewModel
-    verify(view).populateView(successEditorialListModel.getCurationCards());
+    verify(view).populateView(successEditorialCardListModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -117,7 +117,7 @@ public class EditorialListPresenterTest {
   @Test public void onCreateLoadLoadingViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
     when(editorialListManager.loadEditorialListModel(false, false)).thenReturn(
-        Single.just(loadingEditorialListModel));
+        Single.just(loadingEditorialCardListModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -132,7 +132,7 @@ public class EditorialListPresenterTest {
   @Test public void onCreateLoadNetworkErrorViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
     when(editorialListManager.loadEditorialListModel(false, false)).thenReturn(
-        Single.just(networkErrorEditorialListModel));
+        Single.just(networkErrorEditorialCardListModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -143,7 +143,7 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showNetworkError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(networkErrorEditorialListModel.getCurationCards());
+    verify(view, never()).populateView(networkErrorEditorialCardListModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -151,7 +151,7 @@ public class EditorialListPresenterTest {
   @Test public void onCreateLoadGenericErrorViewModelTest() {
     //When the viewModel is requested then it should return a viewModel
     when(editorialListManager.loadEditorialListModel(false, false)).thenReturn(
-        Single.just(genericErrorEditorialListModel));
+        Single.just(genericErrorEditorialCardListModel));
     //Given an initialized Presenter
     presenter.onCreateLoadViewModel();
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
@@ -162,7 +162,7 @@ public class EditorialListPresenterTest {
     //And show an error view
     verify(view).showGenericError();
     //And shouldn't populate the view
-    verify(view, never()).populateView(genericErrorEditorialListModel.getCurationCards());
+    verify(view, never()).populateView(genericErrorEditorialCardListModel.getCurationCards());
     //And hide the loadMore card if there's one
     verify(view).hideLoadMore();
   }
@@ -184,11 +184,11 @@ public class EditorialListPresenterTest {
     //Given an initialised presenter
     presenter.handleRetryClick();
     when(editorialListManager.loadEditorialListModel(false, true)).thenReturn(
-        Single.just(successEditorialListModel));
+        Single.just(successEditorialCardListModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     retryClickedEvent.onNext(null);
     //Then the editorial cards should be shown
-    verify(view).update(successEditorialListModel.getCurationCards());
+    verify(view).update(successEditorialCardListModel.getCurationCards());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
@@ -199,13 +199,13 @@ public class EditorialListPresenterTest {
     //Given an initialised presenter
     presenter.handlePullToRefresh();
     when(editorialListManager.loadEditorialListModel(false, true)).thenReturn(
-        Single.just(successEditorialListModel));
+        Single.just(successEditorialCardListModel));
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     refreshEvent.onNext(null);
     //Then it should hide the swipe refresh icon
     verify(view).hideRefresh();
     //Then the editorial cards should be shown
-    verify(view).update(successEditorialListModel.getCurationCards());
+    verify(view).update(successEditorialCardListModel.getCurationCards());
     //Then it should hide the loading indicator
     verify(view).hideLoading();
     //Then it should hide the load more indicator (if exists)
@@ -216,7 +216,7 @@ public class EditorialListPresenterTest {
     //Given an initialised presenter
     presenter.handleBottomReached();
     when(editorialListManager.loadEditorialListModel(true, false)).thenReturn(
-        Single.just(successEditorialListModel));
+        Single.just(successEditorialCardListModel));
     when(editorialListManager.hasMore()).thenReturn(true);
     lifecycleEvent.onNext(View.LifecycleEvent.CREATE);
     //When scrolling to the end of the view is reached
@@ -230,7 +230,7 @@ public class EditorialListPresenterTest {
     verify(view).hideLoadMore();
     verify(view).hideLoading();
     //Then it should show the view again with old cards and added cards, retaining list position
-    verify(view).populateView(successEditorialListModel.getCurationCards());
+    verify(view).populateView(successEditorialCardListModel.getCurationCards());
   }
 
   @Test public void loadLoggedInUserImageUserTest() {

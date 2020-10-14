@@ -94,12 +94,12 @@ import cm.aptoide.pt.editorial.EditorialRepository;
 import cm.aptoide.pt.editorial.EditorialService;
 import cm.aptoide.pt.editorial.EditorialView;
 import cm.aptoide.pt.editorial.Slug;
+import cm.aptoide.pt.editorialList.EditorialCardListService;
 import cm.aptoide.pt.editorialList.EditorialListAnalytics;
 import cm.aptoide.pt.editorialList.EditorialListManager;
 import cm.aptoide.pt.editorialList.EditorialListNavigator;
 import cm.aptoide.pt.editorialList.EditorialListPresenter;
-import cm.aptoide.pt.editorialList.EditorialListRepository;
-import cm.aptoide.pt.editorialList.EditorialListService;
+import cm.aptoide.pt.editorialList.EditorialCardListRepository;
 import cm.aptoide.pt.editorialList.EditorialListView;
 import cm.aptoide.pt.feature.NewFeatureDialogPresenter;
 import cm.aptoide.pt.feature.NoBehaviourNewFeatureListener;
@@ -599,20 +599,20 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @FragmentScope @Provides EditorialListManager providesEditorialListManager(
-      EditorialListRepository editorialListRepository, ReactionsManager reactionsManager) {
-    return new EditorialListManager(editorialListRepository, reactionsManager);
+      EditorialCardListRepository editorialCardListRepository, ReactionsManager reactionsManager) {
+    return new EditorialListManager(editorialCardListRepository, reactionsManager);
   }
 
-  @FragmentScope @Provides EditorialListRepository providesEditorialListRepository(
-      EditorialListService editorialListService) {
-    return new EditorialListRepository(editorialListService);
+  @FragmentScope @Provides EditorialCardListRepository providesEditorialListRepository(
+      EditorialCardListService editorialCardListService) {
+    return new EditorialCardListRepository(editorialCardListService);
   }
 
-  @FragmentScope @Provides EditorialListService providesEditorialService(
+  @FragmentScope @Provides EditorialCardListService providesEditorialService(
       @Named("mature-pool-v7") BodyInterceptor<BaseBody> bodyInterceptorPoolV7,
       @Named("default") OkHttpClient okHttpClient, TokenInvalidator tokenInvalidator,
       @Named("default") SharedPreferences sharedPreferences) {
-    return new EditorialListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
+    return new EditorialCardListService(bodyInterceptorPoolV7, okHttpClient, tokenInvalidator,
         WebService.getDefaultConverter(), sharedPreferences, 10);
   }
 

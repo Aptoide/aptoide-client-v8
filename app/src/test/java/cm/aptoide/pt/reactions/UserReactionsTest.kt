@@ -1,7 +1,7 @@
 package cm.aptoide.pt.reactions
 
 import cm.aptoide.pt.editorialList.EditorialListManager
-import cm.aptoide.pt.editorialList.EditorialListRepository
+import cm.aptoide.pt.editorialList.EditorialCardListRepository
 import cm.aptoide.pt.reactions.data.TopReaction
 import cm.aptoide.pt.reactions.network.LoadReactionModel
 import cm.aptoide.pt.reactions.network.ReactionsRemoteService
@@ -22,7 +22,7 @@ class UserReactionsTest {
   @Mock
   private lateinit var reactionRemoteService: ReactionsRemoteService
   @Mock
-  private lateinit var editoriaListRepository: EditorialListRepository
+  private lateinit var editorialCardListRepository: EditorialCardListRepository
   private lateinit var reactionManager: ReactionsManager
   private lateinit var editorialListManager: EditorialListManager
   private lateinit var userReactions: HashMap<String, UserReaction>
@@ -34,7 +34,7 @@ class UserReactionsTest {
     MockitoAnnotations.initMocks(this)
     userReactions = HashMap()
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editoriaListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
     emptyReactionModel = LoadReactionModel(10, "", "", emptyList())
     reactedReactionModel = LoadReactionModel(10, "", "", listOf(TopReaction(reaction, 3)))
   }
@@ -55,7 +55,7 @@ class UserReactionsTest {
     //If the user has already reacted with thug
     userReactions.put(cardId + groupId, UserReaction(userId, "thug"))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editoriaListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
 
     Mockito.`when`(reactionRemoteService.setSecondReaction(userId, reaction))
         .thenReturn(Single.just(null))
@@ -71,7 +71,7 @@ class UserReactionsTest {
     //If the user has already reacted with laugh
     userReactions.put(cardId + groupId, UserReaction(userId, reaction))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editoriaListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
 
     //And reacts with the same reaction
     editorialListManager.setReaction(cardId, groupId, reaction).subscribe()
@@ -86,7 +86,7 @@ class UserReactionsTest {
     //If the user already reacted on one card
     userReactions.put(cardId + groupId, UserReaction(userId, reaction))
     reactionManager = ReactionsManager(reactionRemoteService, userReactions)
-    editorialListManager = EditorialListManager(editoriaListRepository, reactionManager)
+    editorialListManager = EditorialListManager(editorialCardListRepository, reactionManager)
 
     Mockito.`when`(reactionRemoteService.setSecondReaction(userId, reaction))
         .thenReturn(Single.just(null))
