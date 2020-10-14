@@ -4,14 +4,16 @@ import cm.aptoide.pt.app.appc.BonusAppcModel;
 import cm.aptoide.pt.app.appc.BonusAppcService;
 import cm.aptoide.pt.app.view.donations.Donation;
 import cm.aptoide.pt.app.view.donations.DonationsService;
+import cm.aptoide.pt.logger.Logger;
 import java.util.List;
 import rx.Single;
 
 public class AppCoinsManager {
 
-  private AppCoinsService appCoinsService;
-  private DonationsService donationsService;
-  private BonusAppcService bonusAppcService;
+  private final AppCoinsService appCoinsService;
+  private final DonationsService donationsService;
+  private final BonusAppcService bonusAppcService;
+  private BonusAppcModel cachedBonusAppcModel;
 
   public AppCoinsManager(AppCoinsService appCoinsService, DonationsService donationsService,
       BonusAppcService bonusAppcService) {
@@ -21,7 +23,12 @@ public class AppCoinsManager {
   }
 
   public Single<BonusAppcModel> getBonusAppc() {
-    return bonusAppcService.getBonusAppc();
+    if (cachedBonusAppcModel != null) {
+      return Single.just(cachedBonusAppcModel);
+    } else {
+      return bonusAppcService.getBonusAppc()
+          .doOnSuccess(bonusAppcModel -> cachedBonusAppcModel = bonusAppcModel);
+    }
   }
 
   public Single<AppCoinsAdvertisingModel> getAdvertising(String packageName, int versionCode) {

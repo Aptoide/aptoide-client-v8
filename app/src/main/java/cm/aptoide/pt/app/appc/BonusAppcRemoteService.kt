@@ -1,5 +1,6 @@
 package cm.aptoide.pt.app.appc
 
+import cm.aptoide.pt.logger.Logger
 import retrofit2.http.GET
 import rx.Observable
 import rx.Scheduler
@@ -13,7 +14,7 @@ class BonusAppcRemoteService(private val serviceApi: ServiceApi,
         .map { response -> mapResponse(response) }
         .toSingle()
         .subscribeOn(ioScheduler)
-        .onErrorReturn { mapErrorResponse() };
+        .onErrorReturn { mapErrorResponse() }
   }
 
   private fun mapErrorResponse(): BonusAppcModel {
