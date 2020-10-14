@@ -17,12 +17,11 @@ public class EditorialListManager {
     this.reactionsManager = reactionsManager;
   }
 
-  Single<EditorialListViewModel> loadEditorialListViewModel(boolean loadMore,
-      boolean invalidateCache) {
+  Single<EditorialListModel> loadEditorialListModel(boolean loadMore, boolean invalidateCache) {
     if (loadMore) {
       return loadMoreCurationCards();
     } else {
-      return editorialListRepository.loadEditorialListViewModel(invalidateCache);
+      return editorialListRepository.loadEditorialListModel(invalidateCache);
     }
   }
 
@@ -30,21 +29,21 @@ public class EditorialListManager {
     return editorialListRepository.hasMore();
   }
 
-  private Single<EditorialListViewModel> loadMoreCurationCards() {
+  private Single<EditorialListModel> loadMoreCurationCards() {
     return editorialListRepository.loadMoreCurationCards();
   }
 
   public Single<CurationCard> loadReactionModel(String cardId, String groupId) {
     return reactionsManager.loadReactionModel(cardId, groupId)
-        .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListViewModel(false)
+        .flatMap(loadReactionModel -> editorialListRepository.loadEditorialListModel(false)
             .flatMap(
-                editorialListViewModel -> getUpdatedCards(editorialListViewModel, loadReactionModel,
+                editorialListModel -> getUpdatedCards(editorialListModel, loadReactionModel,
                     cardId)));
   }
 
-  private Single<CurationCard> getUpdatedCards(EditorialListViewModel editorialViewModel,
+  private Single<CurationCard> getUpdatedCards(EditorialListModel editorialListModel,
       LoadReactionModel loadReactionModel, String cardId) {
-    List<CurationCard> curationCards = editorialViewModel.getCurationCards();
+    List<CurationCard> curationCards = editorialListModel.getCurationCards();
     CurationCard changedCurationCard = null;
     for (CurationCard curationCard : curationCards) {
       if (curationCard.getId()
@@ -56,7 +55,7 @@ public class EditorialListManager {
         break;
       }
     }
-    editorialListRepository.updateCache(editorialViewModel, curationCards);
+    editorialListRepository.updateCache(editorialListModel, curationCards);
     return Single.just(changedCurationCard);
   }
 

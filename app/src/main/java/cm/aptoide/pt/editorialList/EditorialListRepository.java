@@ -7,69 +7,67 @@ import rx.Single;
 public class EditorialListRepository {
 
   private final EditorialListService editorialListService;
-  private EditorialListViewModel cachedEditorialListViewModel;
+  private EditorialListModel cachedEditorialListModel;
 
   public EditorialListRepository(EditorialListService editorialListService) {
     this.editorialListService = editorialListService;
   }
 
-  public Single<EditorialListViewModel> loadEditorialListViewModel(boolean invalidateCache) {
-    if (cachedEditorialListViewModel != null && !invalidateCache) {
-      return Single.just(cloneList(cachedEditorialListViewModel));
+  public Single<EditorialListModel> loadEditorialListModel(boolean invalidateCache) {
+    if (cachedEditorialListModel != null && !invalidateCache) {
+      return Single.just(cloneList(cachedEditorialListModel));
     }
-    return loadNewEditorialListViewModel(0, false, invalidateCache);
+    return loadNewEditorialListModel(0, false, invalidateCache);
   }
 
-  private Single<EditorialListViewModel> loadNewEditorialListViewModel(int offset, boolean loadMore,
+  private Single<EditorialListModel> loadNewEditorialListModel(int offset, boolean loadMore,
       boolean invalidateCache) {
-    return editorialListService.loadEditorialListViewModel(offset, invalidateCache)
-        .map(editorialListViewModel -> {
-          if (!editorialListViewModel.hasError() && !editorialListViewModel.isLoading()) {
-            updateCache(editorialListViewModel, loadMore);
+    return editorialListService.loadEditorialListModel(offset, invalidateCache)
+        .map(editorialListModel -> {
+          if (!editorialListModel.hasError() && !editorialListModel.isLoading()) {
+            updateCache(editorialListModel, loadMore);
           }
-          return cloneList(editorialListViewModel);
+          return cloneList(editorialListModel);
         });
   }
 
   public boolean hasMore() {
-    if (cachedEditorialListViewModel != null) {
-      return cachedEditorialListViewModel.getOffset() < cachedEditorialListViewModel.getTotal();
+    if (cachedEditorialListModel != null) {
+      return cachedEditorialListModel.getOffset() < cachedEditorialListModel.getTotal();
     }
     return false;
   }
 
-  public Single<EditorialListViewModel> loadMoreCurationCards() {
+  public Single<EditorialListModel> loadMoreCurationCards() {
     int offset = 0;
-    if (cachedEditorialListViewModel != null) {
-      offset = cachedEditorialListViewModel.getOffset();
+    if (cachedEditorialListModel != null) {
+      offset = cachedEditorialListModel.getOffset();
     }
-    return loadNewEditorialListViewModel(offset, true, false);
+    return loadNewEditorialListModel(offset, true, false);
   }
 
-  private void updateCache(EditorialListViewModel editorialListViewModel, boolean loadMore) {
+  private void updateCache(EditorialListModel editorialListModel, boolean loadMore) {
     if (!loadMore) {
-      cachedEditorialListViewModel = editorialListViewModel;
+      cachedEditorialListModel = editorialListModel;
     } else {
-      List<CurationCard> curationCards = cachedEditorialListViewModel.getCurationCards();
-      curationCards.addAll(editorialListViewModel.getCurationCards());
-      cachedEditorialListViewModel =
-          new EditorialListViewModel(curationCards, editorialListViewModel.getOffset(),
-              editorialListViewModel.getTotal());
+      List<CurationCard> curationCards = cachedEditorialListModel.getCurationCards();
+      curationCards.addAll(editorialListModel.getCurationCards());
+      cachedEditorialListModel =
+          new EditorialListModel(curationCards, editorialListModel.getOffset(),
+              editorialListModel.getTotal());
     }
   }
 
-  public void updateCache(EditorialListViewModel editorialListViewModel,
-      List<CurationCard> curationCards) {
-    cachedEditorialListViewModel =
-        new EditorialListViewModel(curationCards, editorialListViewModel.getOffset(),
-            editorialListViewModel.getTotal());
+  public void updateCache(EditorialListModel editorialListModel, List<CurationCard> curationCards) {
+    cachedEditorialListModel = new EditorialListModel(curationCards, editorialListModel.getOffset(),
+        editorialListModel.getTotal());
   }
 
-  private EditorialListViewModel cloneList(EditorialListViewModel editorialListViewModel) {
-    if (editorialListViewModel.hasError() || editorialListViewModel.isLoading()) {
-      return editorialListViewModel;
+  private EditorialListModel cloneList(EditorialListModel editorialListModel) {
+    if (editorialListModel.hasError() || editorialListModel.isLoading()) {
+      return editorialListModel;
     }
-    return new EditorialListViewModel(new ArrayList<>(editorialListViewModel.getCurationCards()),
-        editorialListViewModel.getOffset(), editorialListViewModel.getTotal());
+    return new EditorialListModel(new ArrayList<>(editorialListModel.getCurationCards()),
+        editorialListModel.getOffset(), editorialListModel.getTotal());
   }
 }
